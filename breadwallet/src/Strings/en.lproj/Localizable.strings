@@ -1,5 +1,3 @@
-/* App name */
-"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
@@ -43,7 +41,7 @@
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
 "Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your BRD app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your paper key.";
 /* Keystore error title */
-"Alert.keystore.title.android" = "Android KeyStore Error";
+"Alert.keystore.title.android" = "Android Key Store Error";
 /* No internet alert message */
 "Alert.noInternet" = "No internet connection found. Check your connection and try again.";
 /* General error message */
@@ -78,22 +76,6 @@
 "Android.screenAlteringMessage" = "BRD will not function properly unless screen-altering apps (such as Twilight) are disabled.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen-Altering App Detected";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Buy €100 of Bitcoin by April 16, 2019 and get a €20 Amazon.de gift card  ⃰";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "Get your gift card";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = " ⃰ Limit one gift card per customer. Available only in Austria, Germany, Luxembourg and the Netherlands";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "Get a €20 Amazon.de gift card!";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "BTC and ETH purchases via your bank will have higher limits, expedited delivery times, and lower fees. Sign up to get notified when it's launched.";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "We will let you know about the changes.";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "New way to buy coming soon!";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "Thank you!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON Serialization Error";
 /* Wallet not ready error message */
@@ -138,12 +120,16 @@
 "Button.buy" = "Buy";
 /* Cancel button label */
 "Button.cancel" = "Cancel";
+/* Confirm button title */
+"Button.confirm" = "Confirm";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "Contact Support";
 /* prompt continue button */
 "Button.continueAction" = "Continue";
 /* prompt dismiss button */
 "Button.dismiss" = "Dismiss";
+/* Done button title */
+"Button.done" = "Done";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Home";
 /* Ignore button label */
@@ -168,6 +154,8 @@
 "Button.send" = "Send";
 /* Settings button label */
 "Button.settings" = "Settings";
+/* Skip button title */
+"Button.skip" = "Skip";
 /* Settings button label */
 "Button.submit" = "Submit";
 /* Button label to uninstall the app. */
@@ -226,8 +214,6 @@
 "ErrorMessages.emailUnavailableMessage" = "This device isn't configured to send email with the iOS mail app.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "Email Unavailable";
-/* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "BRD can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "This device isn't configured to send messages.";
 /* Messaging unavailable alert title */
@@ -421,7 +407,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "We have over $6 billion USD worth of assets under protection.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Join the 1.5 million people around the world who trust BRD.";
+"OnboardingPageTwo.title" = "Join millions of people around the world who trust BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Send %1$@ to purchase %2$@";
 /* Payment confirmation view title */
@@ -437,7 +423,7 @@
 /* Payment too small alert title */
 "PaymentProtocol.Errors.smallOutputError" = "Couldn't make payment";
 /* Amount too small error message */
-"PaymentProtocol.Errors.smallPayment" = "Bitcoin payments can't be less than %1$@.";
+"PaymentProtocol.Errors.smallPayment" = "Payment can’t be less than %1$@. Bitcoin transaction fees are more than the amount of this transaction. Please increase the amount and try again. ";
 /* Output too small error message. */
 "PaymentProtocol.Errors.smallTransaction" = "Bitcoin transaction outputs can't be less than %1$@.";
 /* Unsupported signature type payment protocol error message */
@@ -464,12 +450,12 @@
 "Prompts.NoPasscode.body" = "A device passcode is needed to safeguard your wallet. Go to settings and turn passcode on.";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Turn device passcode on";
-/* Instruction how to enable device encryption */
-"Prompts.NoScreenLock.body.android" = "A device screen lock is needed to safeguard your wallet. Go to \"Settings\" > \"Security\" > \"Screen lock\" and enable to continue.";
+/* Instructions on how to enable screen lock settings */
+"Prompts.NoScreenLock.body.android" = "A device screen lock is needed to safeguard your wallet. Enable screen lock in your settings to continue.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Screen lock disabled";
 /* Warning about paper key. */
-"Prompts.PaperKey.body" = "Your Paper Key must be saved in case you ever lose or change your phone.";
+"Prompts.PaperKey.body" = "Your recovery key must be saved in case you lose or change your phone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
 /* Transaction rejected prompt body */
@@ -544,6 +530,74 @@
 "RecoverWallet.subheader" = "Enter the paper key for the wallet you want to recover.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "To reset your PIN, enter the words from your paper key into the boxes below.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "The word you entered is incorrect. Please try again.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Almost done! Enter the following words from your recovery key.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirm Recovery Key";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Enter Recovery Key";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Please enter your recovery key to unlink this wallet from your device.";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Are you sure you want to set up your recovery key later?";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Set Up Later";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generate Recovery Key";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "This key is required to recover your money if you upgrade or lose your phone.";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Generate your private recovery key";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Go to Wallet";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "How it works - Step %1$@";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Some of the words you entered do not match your recovery key. Please try again.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Keep it secure";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "Your key is only needed for recovery, not for everyday wallet access.";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "For security purposes, do not screenshot or email these words";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Write down your key on paper and confirm it. Screenshots are not recommended for security reasons.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Recover Your Wallet";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Please enter the recovery key of the wallet you want to recover.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Relax, buy, and trade";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Remember to write these words down. Swipe back if you forgot.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Please enter your recovery key to reset your PIN.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Buy and trade knowing that your funds are protected by the best security and privacy in the business.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Store your key in a secure location. This is the only way to recover your wallet. BRD does not keep a copy.";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Congratulations! You completed your recovery key setup.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "You're all set to deposit, trade, and buy crypto from your BRD wallet.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Unlink your wallet from this device.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Start a new wallet by unlinking your device from the currently installed wallet.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "Wallet must be recovered to regain access.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Write down your key";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Write down your recovery key again";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Write down the following words in order.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Your Recovery Key";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ of %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Please enter an amount first.";
 /* Request a specific amount of bitcoin */
@@ -573,7 +627,7 @@
 /* Rewards view expanded body. */
 "RewardsView.expandedBody" = "Learn how you can save on trading fees and unlock future rewards";
 /* Rewards view expanded title. */
-"RewardsView.expandedTitle" = "Introducing BRD Rewards.";
+"RewardsView.expandedTitle" = "Introducing BRD\nRewards.";
 /* Rewards view title */
 "RewardsView.normalTitle" = "Rewards";
 /* Scan bitcoin address camera flash toggle */
@@ -593,7 +647,7 @@
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "The only way to access your assets if you lose or upgrade your phone.";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle" = "Paper Key";
+"SecurityCenter.paperKeyTitle" = "Recovery Key";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protects your BRD from unauthorized users.";
 /* PIN button title */
@@ -609,7 +663,7 @@
 /* Segwit enabled confirmation description */
 "Segwit.ConfirmationInstructionsDescription" = "Thank you for helping move bitcoin forward.";
 /* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "SegWit support is still a beta feature.\nOnce SegWit is enabled, it will not be possible\nto disable it. You will be able to find the legacy address under Settings. \nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \nSegWit will automatically be enabled for all\nusers in a future update.";
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit support is still a beta feature.\n\nOnce SegWit is enabled, it will not be possible\nto disable it. You will be able to find the legacy address under Settings. \n\nSome third-party services, including crypto trading, may be unavailable to users who have enabled SegWit. In case of emergency, you will be able to generate a legacy address from Preferences > Bitcoin Settings. \n\nSegWit will automatically be enabled for all\nusers in a future update. ";
 /* Segwit extra confirmation title. */
 "Segwit.ConfirmChoiceLayout" = "Enabling SegWit is an irreversible feature. Are you sure you want to continue?";
 /* Segwit enableButton */
@@ -621,9 +675,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "Balance: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"BRD\" > \"Permissions\"";
+"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"Bread\" > \"Permissions\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "BRD is not allowed to access the camera";
+"Send.cameraUnavailabeTitle.android" = "Bread is not allowed to access the camera";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Go to Settings to allow camera access.";
 /* Camera not allowed alert title */
@@ -758,8 +812,8 @@
 "StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
-/* Argument is date */
-"StartPaperPhrase.date" = "You last wrote down your paper key on %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Last written down on\n %1$@";
 /* button label */
 "StartViewController.createButton" = "Create New Wallet";
 /* Start view message */
@@ -1058,4 +1112,4 @@ eg. 182930 (45061 confirmations) */
 /* button label */
 "WritePaperPhrase.previous" = "Previous";
 /* 1 of 3 */
-"WritePaperPhrase.step" = "%1$li of %2$li";
+"WritePaperPhrase.step" = "%1$d of %2$d";

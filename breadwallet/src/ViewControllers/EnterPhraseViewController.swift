@@ -32,14 +32,15 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
     private let keyMaster: KeyMaster
     private let reason: PhraseEntryReason
     private let enterPhrase: EnterPhraseCollectionViewController
-    private let errorLabel = UILabel.wrapping(font: .customBody(size: 16.0), color: .cameraGuideNegative)
-    private let instruction = UILabel(font: .customBold(size: 14.0), color: .white)
-    private let subheader = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
+    private let errorLabel = UILabel.wrapping(font: .caption, color: .uiError)
+    private let heading = UILabel.wrapping(font: .h2Title, color: .primaryText)
+    private let subheading = UILabel.wrapping(font: .body1, color: .secondaryText)
     private let faq: UIButton
     private let scrollView = UIScrollView()
     private let container = UIView()
-    private let moreInfoButton = UIButton(type: .system)
 
+    private let headingLeftRightMargins: CGFloat = E.isSmallScreen ? 24 : 54
+    
     deinit {
         NotificationCenter.default.removeObserver(self)
     }
@@ -50,19 +51,27 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faq)
+        
+        setUpHeadings()
         addSubviews()
         addConstraints()
         setInitialData()
     }
-
+    
+    private func setUpHeadings() {
+        [heading, subheading].forEach({
+            $0.textAlignment = .center
+        })
+    }
+    
     private func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(container)
-        container.addSubview(subheader)
+        container.addSubview(heading)
+        container.addSubview(subheading)
         container.addSubview(errorLabel)
-        container.addSubview(instruction)
-        container.addSubview(faq)
-        container.addSubview(moreInfoButton)
 
         addChild(enterPhrase)
         container.addSubview(enterPhrase.view)
@@ -78,31 +87,30 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
         container.constrain(toSuperviewEdges: nil)
         container.constrain([
             container.widthAnchor.constraint(equalTo: view.widthAnchor) ])
-        subheader.constrain([
-            subheader.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            subheader.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[1]),
-            subheader.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[2])])
-        instruction.constrain([
-            instruction.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[3]),
-            instruction.leadingAnchor.constraint(equalTo: subheader.leadingAnchor, constant: C.padding[2])])
+        heading.constrain([
+            heading.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[3]),
+            heading.leftAnchor.constraint(equalTo: container.leftAnchor, constant: headingLeftRightMargins),
+            heading.rightAnchor.constraint(equalTo: container.rightAnchor, constant: -headingLeftRightMargins)
+            ])
+        subheading.constrain([
+            subheading.topAnchor.constraint(equalTo: heading.bottomAnchor, constant: C.padding[2]),
+            subheading.leftAnchor.constraint(equalTo: container.leftAnchor, constant: headingLeftRightMargins),
+            subheading.rightAnchor.constraint(equalTo: container.rightAnchor, constant: -headingLeftRightMargins)
+            ])
+        
+        let enterPhraseMargin: CGFloat = E.isSmallScreen ? (C.padding[2] * 0.75) : C.padding[2]
+        
         enterPhrase.view.constrain([
-            enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            enterPhrase.view.topAnchor.constraint(equalTo: instruction.bottomAnchor, constant: C.padding[1]),
-            enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            enterPhrase.view.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: enterPhraseMargin),
+            enterPhrase.view.topAnchor.constraint(equalTo: subheading.bottomAnchor, constant: C.padding[4]),
+            enterPhrase.view.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -enterPhraseMargin),
             enterPhrase.view.heightAnchor.constraint(equalToConstant: enterPhrase.height) ])
         errorLabel.constrain([
             errorLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: C.padding[1]),
-            errorLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
-            errorLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2] )])
-        faq.constrain([
-            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.centerYAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2]),
-            faq.widthAnchor.constraint(equalToConstant: 44.0),
-            faq.heightAnchor.constraint(equalToConstant: 44.0) ])
-        moreInfoButton.constrain([
-            moreInfoButton.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: C.padding[2]),
-            moreInfoButton.leadingAnchor.constraint(equalTo: subheader.leadingAnchor) ])
+            errorLabel.topAnchor.constraint(equalTo: enterPhrase.view.bottomAnchor, constant: 12),
+            errorLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[4]),
+            errorLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -C.padding[2] )
+            ])
     }
 
     private func setInitialData() {
@@ -113,28 +121,25 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
         enterPhrase.didFinishPhraseEntry = { [weak self] phrase in
             self?.validatePhrase(phrase)
         }
-        instruction.text = S.RecoverWallet.instruction
-        faq.tintColor = .white
+
         switch reason {
         case .setSeed:
             saveEvent("enterPhrase.setSeed")
-            title = S.RecoverWallet.header
-            subheader.text = S.RecoverWallet.subheader
-            moreInfoButton.isHidden = true
+            heading.text = S.RecoverKeyFlow.recoverYourWallet
+            subheading.text = S.RecoverKeyFlow.recoverYourWalletSubtitle
         case .validateForResettingPin:
             saveEvent("enterPhrase.resettingPin")
-            title = S.RecoverWallet.headerResetPin
-            subheader.text = S.RecoverWallet.subheaderResetPin
-            instruction.isHidden = true
-            moreInfoButton.setTitle(S.RecoverWallet.resetPinInfo, for: .normal)
-            moreInfoButton.tap = {
+            heading.text = S.RecoverKeyFlow.enterRecoveryKey
+            subheading.text = S.RecoverKeyFlow.resetPINInstruction
+            faq.tap = {
                 Store.trigger(name: .presentFaq(ArticleIds.resetPinWithPaperKey, nil))
             }
-            faq.isHidden = true
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faq)
+            faq.tintColor = .primaryText
         case .validateForWipingWallet:
             saveEvent("enterPhrase.wipeWallet")
-            title = S.WipeWallet.title
-            subheader.text = S.WipeWallet.instruction
+            heading.text = S.RecoverKeyFlow.enterRecoveryKey
+            subheading.text = S.RecoverKeyFlow.enterRecoveryKeySubtitle
         }
 
         scrollView.delegate = self

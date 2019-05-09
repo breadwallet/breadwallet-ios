@@ -119,16 +119,20 @@ class NodeSelectorViewController: UIViewController, Trackable {
         self.okAction = okAction
         self.okAction?.isEnabled = false
         alert.addAction(okAction)
-        alert.addTextField { textField in
+        alert.addTextField { [unowned self] textField in
             textField.placeholder = "192.168.0.1"
-            textField.keyboardType = .decimalPad
+            textField.keyboardType = self.keyboardType
             textField.addTarget(self, action: #selector(self.ipAddressDidChange(textField:)), for: .editingChanged)
         }
-        alert.addTextField { textField in
+        alert.addTextField { [unowned self] textField in
             textField.placeholder = "8333"
-            textField.keyboardType = .decimalPad
+            textField.keyboardType = self.keyboardType
         }
         present(alert, animated: true, completion: nil)
+    }
+    
+    private var keyboardType: UIKeyboardType {
+        return decimalSeparator == "." ? .decimalPad : .numbersAndPunctuation
     }
 
     private func setCustomNodeText() {

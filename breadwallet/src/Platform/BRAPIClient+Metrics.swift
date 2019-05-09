@@ -97,8 +97,11 @@ extension BRAPIClient {
             if let error = error {
                 print("error fetching attribution details: \(error.localizedDescription)")
             }
-            let attributionInfo = AnyCodable(value: attributionDetails ?? "")
-            completion(attributionInfo)
+            if let attributionInfo = ASADataFormatter().extractAttributionInfo(attributionDetails) {
+                completion(attributionInfo)
+            } else {
+                completion(AnyCodable(value: ""))
+            }
         })
     }
 }

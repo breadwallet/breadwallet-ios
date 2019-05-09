@@ -43,17 +43,20 @@ enum PromptKey: String {
 // Defines the types and priority ordering of prompts. Only one prompt can appear on
 // the home screen at at time.
 enum PromptType: Int {
+    
+    // N.B. The ordering in this enum determines the priority ordering of the prompts,
+    // using the `order` var.
     case none
-    case biometrics
-    case paperKey
     case upgradePin
+    case paperKey
     case noPasscode
+    case biometrics
     case announcement
     case email
 
     var order: Int { return rawValue }
     
-    static var defaultOrder: [PromptType] = {
+    static var defaultTypes: [PromptType] = {
         return [.upgradePin, .paperKey, .noPasscode, .biometrics, .email]
     }()
     
@@ -391,8 +394,7 @@ class PromptFactory: Subscriber {
     }
     
     private func addDefaultPrompts() {
-        // Add the standard prompts in the correct order.
-        PromptType.defaultOrder.forEach { (type) in
+        PromptType.defaultTypes.forEach { (type) in
             if type == PromptType.email {
                 prompts.append(StandardEmailCollectingPrompt())
             } else {

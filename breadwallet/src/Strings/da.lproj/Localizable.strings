@@ -78,24 +78,6 @@
 "Android.screenAlteringMessage" = "BRD fungerer ikke korrekt medmindre apps der ændrer skærmbilledet (så som Twilight) er deaktiveret.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Der er fundet en app der ændrer skærmbilledet";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Køb for 100€ Bitcoins inden 31. marts 2019 og få et gavekort på 20€ til Amazon.de*";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "Få dit gavekort";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Køb for 100 € af Bitcoin senest den 15. april 2019 og få et gavekort på 20 € til Amazon.de gavekort ⃰";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = "*Begrænset: kun et gavekort per kunde. Kun tilgængelig i Østrig, Tyskland, Luxembourg og Holland.";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "Få et gavekort på 20€ til Amazon.de!";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "Køb af BTC og ETH via din bank vil have højere grænser, hurtigere leveringstider og lavere gebyrer. Tilmeld dig for at få besked, når den lanceres.";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "Vi vil fortælle dig om ændringerne.";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "Der kommer snart en ny måde at købe!";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "Tak!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON serialiseringsfejl";
 /* Wallet not ready error message */
@@ -140,12 +122,16 @@
 "Button.buy" = "Køb";
 /* Cancel button label */
 "Button.cancel" = "Annuller";
+/* Confirm button title */
+"Button.confirm" = "Bekræft";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "Kontakt support";
 /* prompt continue button */
 "Button.continueAction" = "Fortsæt";
 /* prompt dismiss button */
 "Button.dismiss" = "Afvis";
+/* Done button title */
+"Button.done" = "Færdig";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Hjem";
 /* Ignore button label */
@@ -170,6 +156,8 @@
 "Button.send" = "send";
 /* Settings button label */
 "Button.settings" = "Indstillinger";
+/* Skip button title */
+"Button.skip" = "Spring over";
 /* Settings button label */
 "Button.submit" = "Send";
 /* Button label to uninstall the app. */
@@ -423,7 +411,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "Vi har aktiver til en værdi af mere end 6 milliarder dollars under vores beskyttelse.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Slut dig til de 1,5 millioner mennesker rundt om i verden der har tillid til BRD.";
+"OnboardingPageTwo.title" = "Gør som millioner af mennesker over hele verden, der stoler på BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Send %1$@ for at købe %2$@";
 /* Payment confirmation view title */
@@ -466,7 +454,7 @@
 "Prompts.NoPasscode.body" = "En adgangskode til enheden er nødvendig for at beskytte din wallet. Gå til indstillinger og slå adgangskode til.";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Slå enhedens adgangskode til";
-/* Instruction how to enable device encryption */
+/* Instructions on how to enable screen lock settings */
 "Prompts.NoScreenLock.body.android" = "Der skal en skærmlås til på enheden, for at beskytte din pung. Gå til \"Indstillinger\" > \"Sikkerhed\" > \"Skærmlås\" og aktiver for at fortsætte.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Skærmlås deaktiveret";
@@ -496,8 +484,8 @@
 "Prompts.UpgradePin.body" = "BRD er blevet opgraderet til at bruge en 6-cifret PIN. Tryk her for at opgradere.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Opgader PIN";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Slå notifikationer til for at modtage særlige meddelelser fra BRD i fremtiden.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "Slå push-notifikationer til, og vær den første til at høre om nye funktioner og specialtilbud.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifikationer deaktiveret";
 /* Push notifications settings instructions */
@@ -509,7 +497,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "Til";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Notifikationer";
+"PushNotifications.title" = "Hold dig opdateret";
 /* Address copied message. */
 "Receive.copied" = "Kopieret til udklipsholder.";
 /* Share via email button label */
@@ -546,6 +534,74 @@
 "RecoverWallet.subheader" = "Indtast paper key til pungen du vil gendanne.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "For at nulstille din PIN, skal du indtaste ordene fra din paper key i boksene nedenfor.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du indtastede er forkert. Prøv igen.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Næsten færdig! Indtast følgende ord fra din genoprettelsesnøgle.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekræft Genoprettelsesnøgle";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Indtast Genoprettelsesnøgle";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Indtast venligst din genoprettelsesnøgle for at fjerne tilknytningen til denne tegnebog fra din enhed.";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Er du sikker på, at du vil opsætte din genoprettelsesnøgle senere?";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Opsæt senere";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generer Genoprettelsesnøgle";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "Denne nøgle er nødvendig for at inddrive dine penge, hvis du opgraderer eller mister din telefon.";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Generer din private genoprettelsesnøgle";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Gå til Tegnebog";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "Sådan fungerer det - Trin %1$@";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Nogle af de indtastede ord matcher ikke din genoprettelsesnøgle. Prøv igen.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Hold den sikker";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "Din nøgle er kun nødvendig til genopretning, ikke til hverdagsadgang til tegnebogen.";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Af sikkerhedshensyn skal du ikke tage skærmbilleder eller e-maile disse ord";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Skriv din nøgle ned på papir og bekræft den. Skærmbilleder anbefales ikke af sikkerhedsmæssige årsager.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Gendan din Tegnebog";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Indtast venligst genoprettelsesnøglen til den tegnebog, du vil gendanne.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Slap af, køb og handel";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Husk at skrive disse ord ned. Stryg tilbage, hvis du har glemt dem.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Indtast venligst din genoprettelsesnøgle for at nulstille din pinkode.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Køb og handel vel vidende, at dine midler er beskyttet af den bedste sikkerhed og privatlivspolitik i branchen.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Gem din nøgle på et sikkert sted. Dette er den eneste måde at genoprette din tegnebog på. BRD beholder ikke en kopi.";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Tillykke! Du har gennemført opsætningen af genoprettelsesnøgle.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "Du er klar til at indbetale, handle og købe krypto fra din BRD-tegnebog.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Fjern forbindelsen til din tegnebog fra denne enhed.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Start en ny tegnebog ved at afkoble din enhed fra den aktuelt installerede tegnebog.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "Tegnebogen skal genoprettes for at genvinde adgangen.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Skriv din nøgle ned";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Skriv din genoprettelsesnøgle ned igen";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Skriv følgende ord ned i rækkefølge.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Din Genoprettelsesnøgle";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ af %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Indtast venligst et beløb først.";
 /* Request a specific amount of bitcoin */
