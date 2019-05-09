@@ -33,7 +33,8 @@ struct State {
     }
     
     var orderedWallets: [WalletState] {
-        return wallets.values.sorted(by: { $0.displayOrder < $1.displayOrder })
+        //TODO:CRYPTO wallet management
+        return wallets.values.sorted(by: { $0.currency.code < $1.currency.code })//wallets.values.sorted(by: { $0.displayOrder < $1.displayOrder })
     }
     
     var currencies: [Currency] {
