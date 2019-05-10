@@ -8,10 +8,10 @@
 
 import XCTest
 @testable import breadwallet
+@testable import BRCrypto
 
 class WalletInfoTest : XCTestCase {
 
-    private var walletManager: BTCWalletManager!
     private var client: BRAPIClient?
     private var keyStore: KeyStore!
 
@@ -20,7 +20,7 @@ class WalletInfoTest : XCTestCase {
         clearKeychain()
         deleteKvStoreDb()
         keyStore = try! KeyStore.create()
-        walletManager = setupNewWallet(keyStore: keyStore)
+        _ = setupNewAccount(keyStore: keyStore)
         client = BRAPIClient(authenticator: keyStore)
     }
 

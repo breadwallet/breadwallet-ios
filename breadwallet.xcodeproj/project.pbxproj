@@ -57,8 +57,6 @@
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
 		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
-		710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */; };
-		710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
 		710B036421F8C208007E8A2A /* AppRatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036321F8C208007E8A2A /* AppRatingManager.swift */; };
 		711730572204FDFB001931B3 /* HomeScreenHiglightableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711730562204FDFB001931B3 /* HomeScreenHiglightableCell.swift */; };
@@ -639,8 +637,6 @@
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
 		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
-		710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BadTransactionChecker.swift; path = src/Utilities/BadTransactionChecker.swift; sourceTree = "<group>"; };
-		710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadTransactionCheckerTests.swift; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		710B036321F8C208007E8A2A /* AppRatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRatingManager.swift; path = src/Utilities/AppRatingManager.swift; sourceTree = "<group>"; };
 		711730562204FDFB001931B3 /* HomeScreenHiglightableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenHiglightableCell.swift; path = src/Views/HomeScreenHiglightableCell.swift; sourceTree = "<group>"; };
@@ -1258,7 +1254,6 @@
 		710B035B21F6603C007E8A2A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */,
 				710B036321F8C208007E8A2A /* AppRatingManager.swift */,
 				714F5D6D22037F2400F7CA70 /* EventMonitor.swift */,
 				3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */,
@@ -1387,7 +1382,6 @@
 				7124991922204CF700BEA491 /* json */,
 				75A2A7AA1DA5934300A983D8 /* Info.plist */,
 				E821D4C921C16A8300B0907B /* AnalyticsEventTests.swift */,
-				710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */,
 				CEC7F929208803FA0083DF64 /* CurrencyMetaDataTests.swift */,
 				CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */,
 				CEC6F8461E8878B6000795B8 /* PaymentRequestTests.swift */,
@@ -2642,7 +2636,6 @@
 				CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */,
 				222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */,
 				CE74F58D1E3BA85600ED5FA9 /* ExchangeUpdater.swift in Sources */,
-				710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */,
 				71C44E92225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift in Sources */,
 				CE6DCC251E6001E50044257B /* UIControl+Callback.swift in Sources */,
 				71904FB92225AB3900A6D027 /* AnnouncementPromptView.swift in Sources */,
@@ -2891,7 +2884,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */,
 				3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */,
 				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,

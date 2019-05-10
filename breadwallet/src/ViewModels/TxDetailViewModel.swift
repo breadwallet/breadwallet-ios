@@ -9,7 +9,6 @@
 import UIKit
 import BRCore
 
-// swiftlint:disable force_cast
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
     

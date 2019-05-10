@@ -94,7 +94,8 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 5).tokenDescription, "1.12346 ETH")
         XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).tokenDescription, "1.12345679 ETH")
         XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).fiatDescription, "$1,123.46")
-        
+
+        //TODO:CRYPTO refactor
         XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
         XCTAssertEqual(Amount(tokenString: "1.0", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
         XCTAssertEqual(Amount(tokenString: "0.000000000000000001", currency: Currencies.eth).rawValue, UInt256(1))
