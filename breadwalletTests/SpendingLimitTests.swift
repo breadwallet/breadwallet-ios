@@ -11,6 +11,8 @@ import XCTest
 
 class SpendingLimitTests : XCTestCase {
 
+    //TODO:CRYPTO spend limit
+    /*
     private var walletManager: BTCWalletManager!
     private var keyStore: KeyStore!
 
@@ -41,4 +43,5 @@ class SpendingLimitTests : XCTestCase {
         walletManager.spendingLimit = 0
         XCTAssertTrue(walletManager.spendingLimit == 0)
     }
+ */
 }

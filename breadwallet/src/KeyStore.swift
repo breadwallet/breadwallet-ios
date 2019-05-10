@@ -148,7 +148,9 @@ struct KeyStore {
     private var account: Account? {
         guard !noWallet, !walletIsDisabled else { return nil }
         guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic) else { return nil }
-        return Account.createFrom(phrase: seedPhrase)
+        var account = Account.createFrom(phrase: seedPhrase)
+        account?.timestamp = UInt64(creationTime)
+        return account
     }
 
     /// Creates the singleton instance of the KeyStore and returns it

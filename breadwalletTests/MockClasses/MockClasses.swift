@@ -12,6 +12,8 @@ import UIKit
 @testable import breadwallet
 @testable import BRCore
 
+//TODO:CRYPTO needs refactor
+/*
 class MockTransaction: Transaction {
     var currency: Currency
     
@@ -88,6 +90,7 @@ class MockCurrencyUnit: CurrencyUnit {
         
     }
 }
+*/
 
 class MockTrackable: Trackable {
     

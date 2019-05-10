@@ -11,8 +11,11 @@ import XCTest
 @testable import breadwallet
 @testable import BRCrypto
 
+typealias CoreCurrency = BRCrypto.Currency
+typealias AppCurrency = breadwallet.Currency
+
 struct Currencies {
-    private let btcMetaData = Data("""
+    private static let btcMetaData = Data("""
 {
   "code": "BTC",
   "name": "Bitcoin",
@@ -29,16 +32,45 @@ struct Currencies {
 }
 """.utf8)
 
-    var btc: Currency? {
-        let btc = BRCrypto.Currency(uids: "Bitcoin", name: "Bitcoin", code: "BTC", type: "native")
+    private static let ethMetaData = Data("""
+{
+  "code": "ETH",
+  "name": "Ethereum",
+  "type": "",
+  "scale": 18,
+  "is_supported": true,
+  "contract_address": "",
+  "sale_address": "",
+  "aliases": [],
+  "colors": [
+    "#f29500",
+    "#f29500"
+  ]
+}
+""".utf8)
+
+    static var btc: AppCurrency {
+        let btc = CoreCurrency(uids: "Bitcoin", name: "Bitcoin", code: "BTC", type: "native")
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
         let BTC_SATOSHI = BRCrypto.Unit (currency: btc, uids: "BTC-SAT",  name: "Satoshi", symbol: "SAT")
         let BTC_BTC = BRCrypto.Unit (currency: btc, uids: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
-        return CurrencyViewModel(model: btc,
-                                 metaData: metaData,
-                                 units: Set([BTC_SATOSHI, BTC_BTC]),
-                                 baseUnit: BTC_SATOSHI,
-                                 defaultUnit: BTC_BTC)
+        return AppCurrency(core: btc,
+                           metaData: metaData,
+                           units: Set([BTC_SATOSHI, BTC_BTC]),
+                           baseUnit: BTC_SATOSHI,
+                           defaultUnit: BTC_BTC)!
+    }
+
+    static var eth: AppCurrency {
+        let eth = CoreCurrency(uids: "Ethereum", name: "Ethereum", code: "ETH", type: "native")
+        let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
+        let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
+        let ETH_ETHER = BRCrypto.Unit (currency: eth, uids: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
+        return AppCurrency(core: eth,
+                           metaData: metaData,
+                           units: Set([ETH_WEI, ETH_ETHER]),
+                           baseUnit: ETH_WEI,
+                           defaultUnit: ETH_ETHER)!
     }
 }
 
@@ -66,32 +98,8 @@ func deleteKvStoreDb() {
     }
 }
 
-func initWallet(walletManager: BTCWalletManager) {
-    guard walletManager.wallet == nil else { return }
-    if walletManager.db == nil {
-        walletManager.db = CoreDatabase()
-    }
-    var didInitWallet = false
-    walletManager.initWallet { success in
-        didInitWallet = success
-    }
-    while !didInitWallet {
-        //This Can't use a semaphore because the initWallet callback gets called on the main thread
-        RunLoop.current.run(mode: RunLoop.Mode.default, before: .distantFuture)
-    }
-}
-
-func setupNewWallet(keyStore: KeyStore) -> BTCWalletManager? {
-    let _ = keyStore.setRandomSeedPhrase()
-    guard let mpk = keyStore.masterPubKey else { XCTFail("masterPubKey should not be nil"); return nil }
-
-    guard let walletManager = try? BTCWalletManager(currency: Currencies.btc,
-                                                       masterPubKey: mpk,
-                                                       earliestKeyTime: keyStore.creationTime,
-                                                       dbPath: Currencies.btc.dbPath) else {
-                                                        XCTFail("failed to create BTCWalletManager")
-                                                        return nil
-    }
-    initWallet(walletManager: walletManager)
-    return walletManager
+func setupNewAccount(keyStore: KeyStore, pin: String = "111111") -> Account? {
+    _ = keyStore.setRandomSeedPhrase()
+    _ = keyStore.setPin(pin)
+    return keyStore.login(withPin: pin)
 }

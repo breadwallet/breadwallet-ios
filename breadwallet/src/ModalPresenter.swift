@@ -53,12 +53,12 @@ class ModalPresenter: Subscriber, Trackable {
     private func addSubscriptions() {
 
         Store.lazySubscribe(self,
-                        selector: { $0.rootModal != $1.rootModal},
-                        callback: { [weak self] in self?.presentModal($0.rootModal) })
+                            selector: { $0.rootModal != $1.rootModal},
+                            callback: { [weak self] in self?.presentModal($0.rootModal) })
         
         Store.lazySubscribe(self,
-                        selector: { $0.alert != $1.alert && $1.alert != .none },
-                        callback: { [weak self] in self?.handleAlertChange($0.alert) })
+                            selector: { $0.alert != $1.alert && $1.alert != .none },
+                            callback: { [weak self] in self?.handleAlertChange($0.alert) })
         
         Store.subscribe(self, name: .presentFaq("", nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
@@ -76,7 +76,7 @@ class ModalPresenter: Subscriber, Trackable {
         })
         Store.subscribe(self, name: .promptBiometrics, callback: { [weak self] _ in
             //TODO:CRYPTO
-//            self?.presentBiometricsMenuItem()
+            //            self?.presentBiometricsMenuItem()
         })
         Store.subscribe(self, name: .promptShareData, callback: { [weak self] _ in
             self?.promptShareData()
