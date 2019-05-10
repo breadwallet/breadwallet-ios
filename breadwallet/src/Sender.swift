@@ -915,8 +915,9 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         let sig = "0xa9059cbb"
         let to = toAddress.withoutHexPrefix
         let amountString = forAmount.rawValue.hexString.withoutHexPrefix
-        let addressPadding = Array(repeating: "0", count: 24).joined()
-        let amountPadding = Array(repeating: "0", count: (66 - amountString.utf8.count)).joined()
+        let maxPaddingLength = 64 //32 bytes
+        let addressPadding = Array(repeating: "0", count: maxPaddingLength - toAddress.withoutHexPrefix.utf8.count).joined()
+        let amountPadding = Array(repeating: "0", count: maxPaddingLength - amountString.utf8.count).joined()
         params.data = "\(sig)\(addressPadding)\(to)\(amountPadding)\(amountString)"
         return params
     }

@@ -55,6 +55,8 @@
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
+		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
+		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
 		710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */; };
 		710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
@@ -635,6 +637,8 @@
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bonjour.swift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
+		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
+		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
 		710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BadTransactionChecker.swift; path = src/Utilities/BadTransactionChecker.swift; sourceTree = "<group>"; };
 		710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadTransactionCheckerTests.swift; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
@@ -1257,6 +1261,7 @@
 				710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */,
 				710B036321F8C208007E8A2A /* AppRatingManager.swift */,
 				714F5D6D22037F2400F7CA70 /* EventMonitor.swift */,
+				3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -1402,6 +1407,7 @@
 				71249917222046EB00BEA491 /* PromptTests.swift */,
 				7138BABA223062F40059091E /* NotificationTests.swift */,
 				3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */,
+				3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -2151,7 +2157,6 @@
 				75A2A78C1DA5934300A983D8 /* Sources */,
 				75A2A78D1DA5934300A983D8 /* Frameworks */,
 				7C3C4695218253DC0036D95A /* SwiftLint */,
-				7CC7D8DB21582397007E1B9A /* Download Asset Bundles */,
 				75A2A78E1DA5934300A983D8 /* Resources */,
 				75A2A7E21DA5934400A983D8 /* Embed Watch Content */,
 				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
@@ -2567,24 +2572,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    if [ \"${CONFIGURATION}\" == \"Release\" ]; then\n        exit 0;\n    else\n        echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint or install via homebrew\"\n        exit 1\n    fi\nfi\n";
 		};
-		7CC7D8DB21582397007E1B9A /* Download Asset Bundles */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Download Asset Bundles";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/bash;
-			shellScript = "#!/bin/bash\n\n# This script downloads the latest asset bundles to embed in the app.\n\nexport PATH=/opt/local/bin/:/opt/local/sbin:$PATH:/usr/local/bin:\nif [ \"${CONFIGURATION}\" == \"Debug\" ]; then\nexit 0;\nfi\n\nbash scripts/download_bundles.sh\n";
-		};
 		7CDC6A5521125C14004AE68E /* Thin Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2832,6 +2819,7 @@
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
 				7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */,
+				3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
@@ -2904,6 +2892,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */,
+				3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */,
 				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
