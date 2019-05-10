@@ -36,7 +36,7 @@ public enum Event: String {
     // general buttons (tapped)
     case helpButton
     case writeDownButton
-    case generateRecoveryKeyButton
+    case generatePaperKeyButton
     
     // onboarding buttons (tapped)
     case getStartedButton
@@ -71,10 +71,6 @@ public enum Screen: String {
     case writePaperKey
     case confirmPaperKey
     
-    case recoveryKeyIntroScreen
-    case writeRecoveryKeyScreen
-    case confirmRecoveryKeyScreen
-
     // onboarding screens
     case landingPage
     case globePage

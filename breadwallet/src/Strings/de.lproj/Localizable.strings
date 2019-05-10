@@ -78,22 +78,6 @@
 "Android.screenAlteringMessage" = "BRD funktioniert nicht ordnungsgemäß, solange bildschirmverändernde Apps (z.B. Twilight) aktiv sind.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Bildschirmverändernde App erkannt";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "Kaufen Sie bis zum 16. April 2019 für 100 € Bitcoins ein und Sie erhalten einen Amazon.de-Geschengutschein im Wert von 20 € ⃰";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "Jetzt Geschenkgutschein erhalten";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = "⃰ Maximal ein Gutschein pro Kunde. Nur erhältlich in Österreich, Deutschland, Luxemburg und den Niederlanden.";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "Holen Sie sich einen Geschenkgutschein für Amazon.de im Wert von 20 €!";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "BTC- und ETH-Käufe über Ihre Bank haben höhere Limits, schnellere Lieferzeiten und niedrigere Gebühren. Melden Sie sich an und erhalten Sie eine Benachrichtigung, sobald es losgeht.";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "Wir informieren Sie über Veränderungen.";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "Eine neue Art zu kaufen, kommt bald!";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "Vielen Dank!";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON-Serialisierungsfehler";
 /* Wallet not ready error message */
@@ -138,12 +122,16 @@
 "Button.buy" = "Kaufen";
 /* Cancel button label */
 "Button.cancel" = "Abbrechen";
+/* Confirm button title */
+"Button.confirm" = "Bestätigen";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "Kontaktieren Sie den Support";
 /* prompt continue button */
 "Button.continueAction" = "Weiter";
 /* prompt dismiss button */
 "Button.dismiss" = "Verwerfen";
+/* Done button title */
+"Button.done" = "Fertig";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Start";
 /* Ignore button label */
@@ -168,6 +156,8 @@
 "Button.send" = "senden";
 /* Settings button label */
 "Button.settings" = "Einstellungen";
+/* Skip button title */
+"Button.skip" = "Überspringen";
 /* Settings button label */
 "Button.submit" = "Abschicken";
 /* Button label to uninstall the app. */
@@ -421,7 +411,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "Bei uns sind Kapitalmittel im Wert von mehr 6 Milliarden US$ sicher verwahrt.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Gehören auch Sie zu den weltweit 1,5 Millionen Menschen, die BRD vertrauen.";
+"OnboardingPageTwo.title" = "Schließen Sie sich Millionen von Menschen überall auf der Welt an, die ihr Vertrauen in BRD gefunden haben.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "%1$@ schicken, um %2$@ zu kaufen";
 /* Payment confirmation view title */
@@ -464,7 +454,7 @@
 "Prompts.NoPasscode.body" = "Ein Gerät-Passcode wird benötigt, um Ihr Wallet zu schützen. Gehen Sie zu den Einstellungen und aktivieren Sie den Passcode.";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Aktivieren Sie den Gerät-Passcode";
-/* Instruction how to enable device encryption */
+/* Instructions on how to enable screen lock settings */
 "Prompts.NoScreenLock.body.android" = "Es ist eine Bildschirmsperre auf dem Gerät erforderlich, um Ihr Wallet abzusichern. Gehen Sie zu „Einstellungen” > „Sicherheit” > „Bildschirmsperre” und aktivieren Sie diese, um fortzufahren.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Bildschirmsperre deaktiviert";
@@ -494,8 +484,8 @@
 "Prompts.UpgradePin.body" = "BRD nutzt mittlerweile eine 6-stellige PIN. Hier antippen, um upzugraden.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "PIN upgraden";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "Schalten Sie Benachrichtigungen ein, um in Zukunft besondere Meldungen von BRD zu erhalten.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "Aktivieren Sie Push-Benachrichtigungen und erfahren Sie als erstes von neuen Funktionen und Sonderaktionen.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Benachrichtigungen sind abgeschaltet";
 /* Push notifications settings instructions */
@@ -507,7 +497,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "Aktivieren";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "Benachrichtigungen";
+"PushNotifications.title" = "Bleiben Sie auf dem Laufenden";
 /* Address copied message. */
 "Receive.copied" = "In die Zwischenablage kopiert.";
 /* Share via email button label */
@@ -544,6 +534,74 @@
 "RecoverWallet.subheader" = "Gib den Offlineschlüssel für das Wallet ein, das du wiederherstellen willst.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "Gib die Wörter des Offlineschlüssels in die Kästen unten ein, um deine PIN zurückzusetzen.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "Das von Ihnen eingegebene Wort ist nicht korrekt. Bitte versuchen Sie es erneut.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Fast erledigt! Geben Sie die folgenden Wörter aus Ihrem Wiederherstellungsschlüssel ein.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Wiederherstellungsschlüssel bestätigen";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Wiederherstellungsschlüssel eingeben";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Bitte geben Sie Ihren Wiederherstellungsschlüssel ein, um die Verbindung dieses Geldbeutels mit Ihrem Gerät aufzuheben.";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Möchten Sie Ihren Wiederherstellungsschlüssel wirklich später einstellen?";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Später einstellen";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Wiederherstellungsschlüssel erstellen";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "Dieser Schlüssel wird benötigt, damit Sie Ihr Geld zurückerlangen können, falls Sie Ihr Telefon heraufstufen oder verlieren.";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Erstellen Sie Ihren privaten Wiederherstellungsschlüssel";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Zum Geldbeutel gehen";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "So funktioniert es - Schritt %1$@";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Einige der von Ihnen eingegebenen Wörter stimmen nicht mit Ihrem Wiederherstellungsschlüssel überein. Bitte versuchen Sie es erneut.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Achten Sie auf Sicherheit";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "Ihr Schlüssel wird nur für die Wiederherstellung benötigt und nicht für den täglichen Zugriff auf Ihren Geldbeutel.";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Erstellen Sie aus Sicherheitsgründen keine Screenshots von diesen Wörtern und versenden Sie sie nicht per E-Mail";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Notieren Sie Ihren Schlüssel auf einem Stück Papier und bestätigen Sie. Von Screenshots ist aus Sicherheitsgründen abzusehen.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Stellen Sie Ihren Geldbeutel wieder her.";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Bitte geben Sie den Wiederherstellungsschlüssel des Geldbeutels ein, den Sie wiederherstellen möchten.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Entspannen Sie sich, kaufen Sie und handeln Sie";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Vergessen Sie nicht, diese Wörter zu notieren. Gehen Sie gegebenenfalls noch einmal zurück.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Bitte geben Sie Ihren Wiederherstellungsschlüssel ein, um Ihre PIN zurückzusetzen.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Kaufen und handeln Sie in dem Wissen, dass Ihr Geld durch höchste Sicherheit und Privatsphäre, die es in der Branche gibt, geschützt sind.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Bewahren Sie Ihren Schlüssel an einem sicheren Ort auf. Dies ist der einzige Weg, um Ihren Geldbeutel wiederherzustellen: BRD verfügt über keine Kopie.";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Herzlichen Glückwunsch! Sie haben das Setup für den Wiederherstellungsschlüssel abgeschlossen.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "Sie sind zum Anlegen, Handeln und Erwerben von Kryptowährung aus Ihrem BRD-Geldbeutel vorbereitet.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Heben Sie die Verbindung Ihres Geldbeutels mit diesem Gerät auf.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Beginnen Sie einen neuen Geldbeutel, indem Sie die Verbindung Ihres Geräts mit dem aktuell eingestellten Geldbeutel aufheben.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "Geldbeutel muss wiederhergestellt werden, um den Zugriff zurückzuerlangen.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Notieren Sie Ihren Schlüssel";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Notieren Sie Ihren Wiederherstellungsschlüssel erneut";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Notieren Sie die folgenden Wörter der Reihe nach.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Ihr Wiederherstellungsschlüssel";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ von %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Bitte geben Sie zuerst einen Betrag ein.";
 /* Request a specific amount of bitcoin */
@@ -609,7 +667,7 @@
 /* Segwit enabled confirmation description */
 "Segwit.ConfirmationInstructionsDescription" = "Vielen Dank, dass Sie mithelfen, Bitcoin voranzutreiben.";
 /* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "SegWit-Unterstützung ist noch eine Betafunktion. \nSobald SegWit aktiviert ist, wird es nicht möglich sein, es zu deaktivieren. Sie werden die Legacy-Adresse in den Einstellungen finden.\nManche Drittdienstleistungen, einschließlich Kryptohandel, könnten für Nutzer nicht verfügbar sein, die SegWit aktiviert haben. Im Falle einer Notfalls werden Sie in der Lage sein, eine Legacy-Adresse in den Einstellungen > Bitcoin-Einstellungen zu erzeugen.\nSegWit wird in einem zukünftigen Update für alle Nutzer automatisch aktiviert werden. ";
+"Segwit.ConfirmationInstructionsInstructions" = "SegWit-Unterstützung ist noch eine Betafunktion. \nSobald SegWit aktiviert ist, wird es nicht möglich sein, es zu deaktivieren. Sie werden die Legacy-Adresse in den Einstellungen finden.\nManche Drittdienstleistungen, einschließlich Kryptohandel, könnten für Nutzer nicht verfügbar sein, die SegWit aktiviert haben. Im Falle einer Notfalls werden Sie in der Lage sein, eine Legacy-Adresse in den Einstellungen > Bitcoin-Einstellungen zu erzeugen.\nSegWit wird in einem zukünftigen Update für alle Nutzer automatisch aktiviert werden.";
 /* Segwit extra confirmation title. */
 "Segwit.ConfirmChoiceLayout" = "Die Aktivierung von SegWit ist eine Funktion, die nicht rückgängig gemacht werden kann. Sind Sie sicher, dass Sie fortfahren möchten?";
 /* Segwit enableButton */
