@@ -141,14 +141,34 @@ class PromptTests: XCTestCase {
     }
 
     func testPromptOrdering() {
+        let biometricsPrompt = StandardPrompt(type: .biometrics)
+        let noPasscodePrompt = StandardPrompt(type: .noPasscode)
         let paperKeyPrompt = StandardPrompt(type: .paperKey)
         let announcementPrompt = StandardAnnouncementPrompt(announcement: Announcement())
         let emailPrompt = StandardEmailCollectingPrompt()
+        let upgradePinPrompt = StandardPrompt(type: .upgradePin)
         
-        XCTAssertTrue(paperKeyPrompt.order < announcementPrompt.order)
+        var unsortedPrompts: [Prompt] = [noPasscodePrompt, emailPrompt, announcementPrompt, biometricsPrompt, paperKeyPrompt]
+        unsortedPrompts.sort { (p1, p2) -> Bool in
+            return p1.order < p2.order
+        }
         
-        XCTAssertTrue(paperKeyPrompt.order < emailPrompt.order)
-        XCTAssertTrue(announcementPrompt.order < emailPrompt.order)
+        let sorted = unsortedPrompts
+        
+        // upgrade PIN beats paper key
+        XCTAssertTrue(upgradePinPrompt.order < paperKeyPrompt.order)
+
+        // make sure paper key appears first (if upgrade PIN not present)
+        XCTAssertTrue(sorted.first?.order == PromptType.paperKey.rawValue)
+        
+        // no passcode beats biometrics
+        XCTAssertTrue(noPasscodePrompt.order < biometricsPrompt.order)
+
+        // biometrics beats announcements
+        XCTAssertTrue(biometricsPrompt.order < announcementPrompt.order)
+        
+        // last prompt should be the email prompt
+        XCTAssertTrue(sorted.last?.order == PromptType.email.rawValue)
     }
     
     func testSupportedAnnouncementTypes() {

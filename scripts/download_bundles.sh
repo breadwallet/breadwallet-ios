@@ -4,7 +4,7 @@
 function downloadBundle() {
     bundle_name="$1-staging"
     host="stage2.breadwallet.com"
-    if [[ "${CONFIGURATION}" == "Release" || ! "${CONFIGURATION}" ]]; then
+    if [[ "$2" == "prod" ]]; then
       bundle_name="$1"
       host="api.breadwallet.com"
     fi
@@ -20,4 +20,5 @@ bundleNames=($("${plistBuddy}" -c "print" "${plist}" | sed -e 1d -e '$d'))
 for bundleName in "${bundleNames[@]}"
 do
   downloadBundle ${bundleName}
+  downloadBundle ${bundleName} "prod"
 done

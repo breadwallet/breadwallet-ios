@@ -78,24 +78,6 @@
 "Android.screenAlteringMessage" = "BRD는 (Twilight과 같은) 화면 변경 앱을 비활성화하지 않으면 제대로 동작하지 않습니다.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "화면 변경 앱이 탐지됨";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "2019년 3월 31까지 100유로의 비트코인을 구매하시면 20유로 짜리 독일 아마존 기프트 카드를 제공해 드립니다.*";
-/* Button title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoActionTitle" = "기프트 카드를 드립니다.";
-/* Body for an announcement promoting Coinify. */
-"Announcement.coinifyPromoBody" = "2019년 4월 15일, 100유로치의 비트코인을 구매하고 20유로 상당의 Amazon.de 기프트 카드를 받으세요. *";
-/* Footnote text for an announcement promoting Coinify. */
-"Announcement.coinifyPromoFootnote" = "*고객 한 분 당 1장으로 한정됩니다. 오스트리아, 독일, 룩셈부르크, 네덜란드에서만 사용 가능합니다.";
-/* Title for an announcement promoting Coinify. */
-"Announcement.coinifyPromoTitle" = "독일 아마존의 20유로 기프트 카드를 놓치지 마세요!";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyOne" = "당신의 은행을 통해 BTC와 ETH를 구입하면 한도가 더 높으며, 인도가 더 신속할 뿐 아니라 수수료도 더 낮습니다. 지금 가입하여 출시 시점에 알림을 받으십시오.";
-/* Body text for in-app announcement about our partner Glidera. Glidera should be capitalized and not translated. */
-"Announcement.glideraBodyTwo" = "변경 사항에 대해 알려드리겠습니다.";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleOne" = "곧 새로운 구입 방식이 등장합니다!";
-/* Title for in-app announcement about our partner Glidera. */
-"Announcement.glideraTitleTwo" = "감사합니다.";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON 직렬화 오류";
 /* Wallet not ready error message */
@@ -140,12 +122,16 @@
 "Button.buy" = "구매하기";
 /* Cancel button label */
 "Button.cancel" = "취소";
+/* Confirm button title */
+"Button.confirm" = "확인";
 /* Button label to open a email compose window with our support email in the to field. */
 "Button.contactSupport.android" = "지원 요청";
 /* prompt continue button */
 "Button.continueAction" = "계획하기";
 /* prompt dismiss button */
 "Button.dismiss" = "해제";
+/* Done button title */
+"Button.done" = "완료";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "홈";
 /* Ignore button label */
@@ -170,6 +156,8 @@
 "Button.send" = "보내기";
 /* Settings button label */
 "Button.settings" = "설정";
+/* Skip button title */
+"Button.skip" = "넘어가기";
 /* Settings button label */
 "Button.submit" = "전송";
 /* Button label to uninstall the app. */
@@ -423,7 +411,7 @@
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "저희는 60억 달러 넘는 가치의 자산을 안전하게 보유하고 있습니다.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "BRD를 신용하는 전 세계 150만 명의 사람들과 함께 하세요.";
+"OnboardingPageTwo.title" = "BRD를 신뢰하는 전 세계 수백만 명과 함께 하십시오.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "%2$@ 구매를 위해 %1$@ 전송";
 /* Payment confirmation view title */
@@ -466,7 +454,7 @@
 "Prompts.NoPasscode.body" = "지갑을 지키려면 장치 비밀번호가 필요합니다. 설정으로 가셔서 비밀번호를 켜십시오.";
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "기기 비밀번호 설정";
-/* Instruction how to enable device encryption */
+/* Instructions on how to enable screen lock settings */
 "Prompts.NoScreenLock.body.android" = "귀하의 지갑을 보호하시려면 장치 화면 잠금이 필요합니다. 계속하시려면 \"설정\" > \"보안\" > \"화면 잠금\"가셔서 켜 주세요.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "화면 잠금 꺼짐";
@@ -496,8 +484,8 @@
 "Prompts.UpgradePin.body" = "6자리 PIN을 사용하도록 브레드가 업그레이드되었습니다. 업그레이드하려면 여기를 탭하세요.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "PIN 업그레이드";
-/* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
-"PushNotifications.body" = "알림을 켜두시면, 향후 브레드의 특별 메시지를 수신할 수 있습니다.";
+/* Body text for the push notifications prompt. */
+"PushNotifications.body" = "푸시 알림을 켜고 새로운 기능과 특가 제공 소식을 제일 먼저 접하세요.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "알림 비활성";
 /* Push notifications settings instructions */
@@ -509,7 +497,7 @@
 /* Push notifications are on label */
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
-"PushNotifications.title" = "알림";
+"PushNotifications.title" = "계속 정보를 받으세요.";
 /* Address copied message. */
 "Receive.copied" = "클립보드에 복사되었습니다.";
 /* Share via email button label */
@@ -546,6 +534,74 @@
 "RecoverWallet.subheader" = "복구하려는 지갑의 페이퍼 키를 입력해 주세요.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "PIN을 재설정하려면, 페이퍼 키의 단어들을 아래 상자에 입력해 주세요.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "입력한 단어가 올바르지 않습니다. 다시 시도해 주세요.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "거의 됐습니다! 복구 키에서 다음 단어를 입력하세요.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "복구 키 확인";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "복구 키 입력";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "기기에서 이 지갑을 연결 해제하려면 복구 키를 입력하세요.";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "복구 키를 나중에 설정하겠습니까?";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "나중에 설정";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "복구 키 생성";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "이 키는 스마트폰을 업그레이드 또는 분실하는 경우 돈을 복구할 때 필수입니다.";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "개인 복구 키 생성";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "지갑으로 이동";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "작동 원리 - %1$@ 단계";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "입력한 단어 일부가 복구 키와 일치하지 않습니다. 다시 시도해 주세요.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "안전하게 보관하세요.";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "키는 복구에만 필요할 뿐 매일 지갑에 액세스할 때는 필요하지 않습니다.";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "보안에 취약하므로 스크린샷이나 이메일로 이 단어를 남기지 마세요.";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "종이에 키를 적고 나서 확인하세요. 보안에 취약하므로 스크린샷을 찍는 것은 추천하지 않습니다.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "내 지갑 복구";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "복구하고자 하는 지갑의 복구 키를 입력해 주세요.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "편안하게 구매하고 거래하세요.";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "이 단어들을 잊지 말고 적어 두세요. 잊으셨다면 가볍게 밀어 뒤로 가세요.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "PIN을 초기화하려면 복구 키를 입력해 주세요.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "비즈니스 최고의 보안과 개인정보 보호정책으로 자금이 보호받는다는 사실을 인지하며 구매하고 거래하세요.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "안전한 장소에 키를 보관하세요. 지갑을 복구할 유일한 방법입니다. BRD는 복사본을 보관하지 않습니다.";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "축하합니다! 복구 키 설정이 완료되었습니다.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "BRD 지갑에서 암호화화폐를 예금하고 거래하고 구매할 준비가 끝났습니다.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "이 기기에서 지갑 연결을 해제합니다.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "현재 설치된 지갑에서 기기 연결을 해제해 새 지갑을 시작하세요.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "액세스 권한을 다시 받으려면 지갑을 복구해야 합니다.";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "키를 적어 주세요.";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "복구 키를 다시 적어 주세요.";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "다음 단어를 순서대로 적으세요.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "내 복구 키";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%2$@ 중 %1$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "먼저 금액을 입력해 주세요.";
 /* Request a specific amount of bitcoin */
