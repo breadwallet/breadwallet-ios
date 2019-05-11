@@ -65,10 +65,11 @@ struct Currencies {
         let eth = CoreCurrency(uids: "Ethereum", name: "Ethereum", code: "ETH", type: "native")
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
         let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
+        let ETH_GWEI = BRCrypto.Unit (currency: eth, uids: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
         let ETH_ETHER = BRCrypto.Unit (currency: eth, uids: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
         return AppCurrency(core: eth,
                            metaData: metaData,
-                           units: Set([ETH_WEI, ETH_ETHER]),
+                           units: Set([ETH_WEI, ETH_GWEI, ETH_ETHER]),
                            baseUnit: ETH_WEI,
                            defaultUnit: ETH_ETHER)!
     }

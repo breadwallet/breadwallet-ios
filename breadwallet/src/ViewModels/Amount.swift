@@ -13,6 +13,7 @@ import BRCrypto
 //TODO:CRYPTO
 // swiftlint:disable all
 
+
 struct Amount {
     static let normalPrecisionDigits = 5
     static let highPrecisionDigits = 8
@@ -63,9 +64,9 @@ struct Amount {
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
-        self.currency = currency
         let amountString = value.string(radix: 10)
         self.core = BRCrypto.Amount.create(string: amountString, negative: negative, unit: currency.baseUnit.core) ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
+        self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
@@ -74,19 +75,14 @@ struct Amount {
     init(tokenString: String,
          currency: Currency,
          locale: Locale = Locale.current,
-         unit: CurrencyUnit? = nil, //TODO:CRYPTO switch to new Unit type
+         unit: CurrencyUnit? = nil,
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
-        self.currency = currency
-        //TODO:CRYPTO should be failable?
-        var decimal = NumberFormatter().number(from: tokenString)?.decimalValue ?? 0.0
-        if negative {
-            decimal *= -1.0
-        }
         let unit = (unit ?? currency.defaultUnit).core
-        self.core = BRCrypto.Amount.create(double: decimal.doubleValue, unit: unit)
+        self.core = BRCrypto.Amount.create(string: tokenString.usDecimalString(fromLocale: locale), negative: negative, unit: unit) ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
+        self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
@@ -192,16 +188,17 @@ struct Amount {
         return format
     }
 
+    /// formatter for raw value with maximum precision and no symbols or separators
     private var rawTokenFormat: NumberFormatter {
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = "-\(format.positiveFormat!)"
-        format.currencyCode = currency.code
+        format.usesGroupingSeparator = false
+        format.currencyCode = ""
         format.currencySymbol = ""
-        format.maximumFractionDigits = min(currency.state?.maxDigits ?? currency.defaultUnit.decimals, maximumFractionDigits)
         format.maximumFractionDigits = 99
+        format.minimumFractionDigits = 0
         return format
     }
 
