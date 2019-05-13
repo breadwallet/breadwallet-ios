@@ -28,8 +28,7 @@ struct Amount {
 
     //TODO:CRYPTO deprecate usage
     var rawValue: UInt256 {
-        guard let baseUnitString = core.string(as: currency.baseUnit.core, formatter: rawTokenFormat) else { return UInt256(0) }
-        return UInt256(string: baseUnitString)
+        return UInt256(string: core.string(base: 10, preface: ""))
     }
     
     // MARK: - Init

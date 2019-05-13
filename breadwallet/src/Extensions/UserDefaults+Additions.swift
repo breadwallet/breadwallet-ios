@@ -48,6 +48,7 @@ private let appLaunchCountKey = "appLaunchCountKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
+private let deviceIdKey = "BR_DEVICE_ID"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -109,6 +110,18 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
+
+    /// A UUID unique to the installation, generated on first use
+    /// Used for BlockchainDB subscription, tx metadata, backend auth
+    static var deviceID: String {
+        if let s = defaults.string(forKey: deviceIdKey) {
+            return s
+        }
+        let s = UUID().uuidString
+        defaults.set(s, forKey: deviceIdKey)
+        print("new device id \(s)")
+        return s
+    }
     
     static var isBiometricsEnabled: Bool {
         get {
