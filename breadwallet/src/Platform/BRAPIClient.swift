@@ -105,7 +105,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     }
     
     var deviceId: String {
-        return UserDefaults.standard.deviceID
+        return UserDefaults.deviceID
     }
     
     var authKey: BRKey? {

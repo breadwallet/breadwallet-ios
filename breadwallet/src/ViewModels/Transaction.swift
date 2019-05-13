@@ -203,7 +203,7 @@ class MetaDataContainer {
                                  exchangeRate: rate.rate,
                                  exchangeRateCurrency: rate.code,
                                  feeRate: feeRate ?? 0.0,
-                                 deviceId: UserDefaults.standard.deviceID,
+                                 deviceId: UserDefaults.deviceID,
                                  comment: comment,
                                  tokenTransfer: tokenTransfer)
         do {

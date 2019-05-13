@@ -148,8 +148,8 @@ struct KeyStore {
     private var account: Account? {
         guard !noWallet, !walletIsDisabled else { return nil }
         guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic) else { return nil }
-        var account = Account.createFrom(phrase: seedPhrase)
-        account?.timestamp = UInt64(creationTime)
+        let account = Account.createFrom(phrase: seedPhrase, uids: UserDefaults.deviceID)
+        account?.timestamp = UInt64(Date(timeIntervalSinceReferenceDate: creationTime).timeIntervalSince1970) //TODO:CRYPTO
         return account
     }
 
@@ -430,6 +430,7 @@ extension KeyStore: WalletAuthenticator {
     /// true if phrase is correct
     func authenticate(withPhrase phrase: String) -> Bool {
         do {
+            //TODO:CRYPTO remove mpk
             var seed = UInt512()
             guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
                 else { return false }
@@ -595,6 +596,7 @@ extension KeyStore: KeyMaster {
         guard noWallet, isSeedPhraseValid(phrase) else { return false }
 
         do {
+            //TODO:CRYPTO remove mpk
             guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
                 else { return false }
             CFStringNormalize(nfkdPhrase, .KD)
@@ -757,6 +759,7 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
     var apiAuthKey: String? { return nil }
     var userAccount: [AnyHashable: Any]?
 
+    //TODO:CRYPTO remove mpk
     var masterPubKey: BRMasterPubKey? { return nil }
     var ethPubKey: BRKey? { return nil }
 

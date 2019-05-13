@@ -108,18 +108,6 @@ public extension String {
     }    
 }
 
-extension UserDefaults {
-    var deviceID: String {
-        if let s = string(forKey: "BR_DEVICE_ID") {
-            return s
-        }
-        let s = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
-        setValue(s, forKey: "BR_DEVICE_ID")
-        print("new device id \(s)")
-        return s
-    }
-}
-
 let VAR_INT16_HEADER: UInt64 = 0xfd
 let VAR_INT32_HEADER: UInt64 = 0xfe
 let VAR_INT64_HEADER: UInt64 = 0xff
