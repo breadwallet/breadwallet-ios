@@ -412,12 +412,6 @@ enum S {
         static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
 
-    enum StartViewController {
-        static let createButton = NSLocalizedString("StartViewController.createButton", value:"Create New Wallet", comment: "button label")
-        static let recoverButton = NSLocalizedString("StartViewController.recoverButton", value:"Recover Wallet", comment: "button label")
-        static let message = NSLocalizedString("StartViewController.message", value: "Moving money forward.", comment: "Start view message")
-    }
-
     enum OnboardingScreen {
         static let browseFirst = NSLocalizedString("Onboarding.browseFirst", value: "I\'ll browse first", comment: "Button that allows the user to browse the app after completing onboarding")
         static let buyCoin = NSLocalizedString("Onboarding.buyCoin", value: "Buy some coin", comment: "Button that allows the user to go directly to buying cryptocurrency after completing onboarding.")
