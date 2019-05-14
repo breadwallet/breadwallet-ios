@@ -21,6 +21,12 @@ class StartFlowPresenter: Subscriber, Trackable {
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
         self.createBuyScreen = createBuyScreen
+
+        // no onboarding, make home screen visible after unlock
+        if !keyMaster.noWallet {
+            self.pushHomeScreen()
+        }
+
         addSubscriptions()
     }
 
@@ -110,8 +116,7 @@ class StartFlowPresenter: Subscriber, Trackable {
                 // the onboarding flow is finished, the home screen will be present. If 
                 // we push it before the present() call you can briefly see the home screen
                 // before the onboarding screen is displayed -- not good.
-                let homeScreen = self.createHomeScreen(self.rootViewController)
-                self.rootViewController.pushViewController(homeScreen, animated: false)
+                self.pushHomeScreen()
             }
         }
     }
@@ -151,6 +156,11 @@ class StartFlowPresenter: Subscriber, Trackable {
         }
                 
         self.navigationController?.pushViewController(buyScreen, animated: true)
+    }
+
+    private func pushHomeScreen() {
+        let homeScreen = self.createHomeScreen(self.rootViewController)
+        self.rootViewController.pushViewController(homeScreen, animated: false)
     }
     
     private func dismissStartFlow() {
