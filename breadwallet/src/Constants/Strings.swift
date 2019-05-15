@@ -23,6 +23,7 @@ enum S {
         static let ok = NSLocalizedString("Button.ok", value:"OK", comment: "OK button label")
         static let cancel = NSLocalizedString("Button.cancel", value:"Cancel", comment: "Cancel button label")
         static let settings = NSLocalizedString("Button.settings", value:"Settings", comment: "Settings button label")
+        static let openSettings = NSLocalizedString("Button.openSettings", value: "Open Settings", comment: "Open settings button label")
         static let submit = NSLocalizedString("Button.submit", value:"Submit", comment: "Settings button label")
         static let ignore = NSLocalizedString("Button.ignore", value:"Ignore", comment: "Ignore button label")
         static let yes = NSLocalizedString("Button.yes", value: "Yes", comment: "Yes button")
@@ -327,12 +328,14 @@ enum S {
     enum PushNotifications {
         static let title = NSLocalizedString("PushNotifications.title", value:"Stay in the Loop", comment: "Push notifications settings view title label")
         static let body = NSLocalizedString("PushNotifications.body", value:"Turn on push notifications and be the first to hear about new features and special offers.", comment: "Push notifications settings view body")
+        static let enabledBody = NSLocalizedString("PushNotifications.enabledBody", value:"You’re receiving special offers and updates from BRD.", comment: "Push notifications settings view body when the toggle is enabled.")
+        static let disabledBody = NSLocalizedString("PushNotifications.disabledBody", value:"Turn on notifications to receive special offers and updates from BRD.", comment: "Push notifications settings view body when the toggle is disabled.")
+        static let enableInstructions = NSLocalizedString("PushNotifications.enableInstructions", value: "Looks like notifications are turned off. Please go to Settings to enable notifications from BRD.", comment: "Instructions for enabling push notifications in Settings")
         static let maybeLater = NSLocalizedString("PushNotifications.maybeLater", value: "Maybe Later", comment: "Button title for the 'Maybe Later' option")
-        static let label = NSLocalizedString("PushNotifications.label", value:"Push Notifications", comment: "Push notifications toggle switch label")
+        static let label = NSLocalizedString("PushNotifications.label", value:"Receive Push Notifications", comment: "Push notifications toggle switch label")
         static let on = NSLocalizedString("PushNotifications.on", value: "On", comment: "Push notifications are on label")
         static let off = NSLocalizedString("PushNotifications.off", value: "Off", comment: "Push notifications are off label")
         static let disabled = NSLocalizedString("PushNotifications.disabled", value: "Notifications Disabled", comment: "Push notifications are disabled alert title")
-        static let enableInstructions = NSLocalizedString("PushNotifications.enableInstructions", value: "Turn on notifications in Settings to receive alerts", comment: "Push notifications settings instructions")
     }
 
     enum DefaultCurrency {

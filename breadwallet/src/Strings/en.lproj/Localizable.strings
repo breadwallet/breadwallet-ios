@@ -144,6 +144,8 @@
 "Button.no" = "No";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open settings button label */
+"Button.openSettings" = "Open Settings";
 /* receive button */
 "Button.receive" = "Receive";
 /* Button label to open Security Settings. */
@@ -484,10 +486,14 @@
 "PushNotifications.body" = "Turn on push notifications and be the first to hear about new features and special offers.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "You’re receiving special offers and updates from BRD.";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Turn on notifications to receive special offers and updates from BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Looks like notifications are turned off. Please go to Settings to enable notifications from BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push Notifications";
+"PushNotifications.label" = "Receive Push Notifications";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
