@@ -7,65 +7,151 @@
 //
 
 import UIKit
+import UserNotifications
 
 class PushNotificationsViewController: UIViewController {
 
-    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let body = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let label = UILabel(font: .customBold(size: 16.0), color: .darkText)
-    private let toggle = GradientSwitch()
-    private let separator = UIView(color: .secondaryShadow)
-
+    private let toggleLabel = UILabel(font: .body1, color: .primaryText)
+    private let body = UILabel.wrapping(font: .body2, color: .secondaryText)
+    private let toggle = UISwitch()
+    private let separator = UIView()
+    private let openSettingsButton = BRDButton(title: S.Button.openSettings, type: .primary)
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    var areNotificationsEnabled: Bool {
+        return Store.state.isPushNotificationsEnabled
+    }
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         setData()
+        listenForForegroundNotification()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkNotificationsSettings()
+    }
+    
+    private func checkNotificationsSettings() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                self.updateForNotificationStatus(status: settings.authorizationStatus)
+            }
+        }
     }
 
+    private func updateForNotificationStatus(status: UNAuthorizationStatus) {
+        self.body.text = bodyText(notificationsStatus: status)
+        toggle.isEnabled = (status == .authorized)
+        if !toggle.isEnabled {
+            toggle.setOn(false, animated: false)
+        }
+        openSettingsButton.isHidden = (status == .authorized)
+    }
+    
+    @objc private func willEnterForeground() {
+        checkNotificationsSettings()
+    }
+    
+    private func listenForForegroundNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+    
     private func addSubviews() {
-        view.addSubview(titleLabel)
         view.addSubview(body)
-        view.addSubview(label)
+        view.addSubview(toggleLabel)
         view.addSubview(toggle)
         view.addSubview(separator)
+        view.addSubview(openSettingsButton)
     }
 
     private func addConstraints() {
-        titleLabel.constrain([
-            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]) ])
-        body.constrain([
-            body.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            body.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[1]),
-            body.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
-        label.constrain([
-            label.leadingAnchor.constraint(equalTo: body.leadingAnchor),
-            label.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[3]) ])
+        
         toggle.constrain([
-            toggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            toggle.centerYAnchor.constraint(equalTo: label.centerYAnchor) ])
+            toggle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
+            toggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])
+            ])
+        
+        toggleLabel.constrain([
+            toggleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[3]),
+            toggleLabel.centerYAnchor.constraint(equalTo: toggle.centerYAnchor)
+            ])
+
         separator.constrain([
-            separator.leadingAnchor.constraint(equalTo: label.leadingAnchor),
+            separator.heightAnchor.constraint(equalToConstant: 1),
             separator.topAnchor.constraint(equalTo: toggle.bottomAnchor, constant: C.padding[2]),
-            separator.trailingAnchor.constraint(equalTo: toggle.trailingAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1.0) ])
+            separator.leftAnchor.constraint(equalTo: view.leftAnchor),
+            separator.rightAnchor.constraint(equalTo: view.rightAnchor)
+            ])
+        
+        body.constrain([
+            body.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            body.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[1]),
+            body.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])
+            ])
+        
+        openSettingsButton.constrain([
+            openSettingsButton.heightAnchor.constraint(equalToConstant: C.Sizes.buttonHeight),
+            openSettingsButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            openSettingsButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2]),
+            openSettingsButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[3])
+            ])
     }
-
+    
+    private func bodyText(notificationsStatus: UNAuthorizationStatus) -> String {
+        if notificationsStatus == .authorized {
+            return areNotificationsEnabled ? S.PushNotifications.enabledBody : S.PushNotifications.disabledBody
+        } else {
+            return S.PushNotifications.enableInstructions
+        }
+    }
+    
     private func setData() {
-        view.backgroundColor = .whiteTint
-        titleLabel.text = S.PushNotifications.title
-        body.text = S.PushNotifications.body
-        label.text = S.PushNotifications.label
-
-        toggle.isOn = Store.state.isPushNotificationsEnabled
+        title = S.Settings.notifications
+        
+        view.backgroundColor = .primaryBackground
+        separator.backgroundColor = .tertiaryText
+        
+        toggleLabel.text = S.PushNotifications.label
+        toggleLabel.textColor = .primaryText
+        
+        toggle.isOn = areNotificationsEnabled
         toggle.sendActions(for: .valueChanged)
         
         toggle.valueChanged = { [weak self] in
-            guard let myself = self else { return }
-            Store.perform(action: PushNotifications.SetIsEnabled(myself.toggle.isOn))
-            if myself.toggle.isOn {
-                Store.trigger(name: .registerForPushNotificationToken)
+            guard let `self` = self else { return }
+            if self.toggle.isOn {
+                UNUserNotificationCenter.current().getNotificationSettings { settings in
+                    DispatchQueue.main.async {
+                        let status = settings.authorizationStatus
+                        switch status {
+                        case .authorized:
+                            Store.perform(action: PushNotifications.SetIsEnabled(true))
+                            Store.trigger(name: .registerForPushNotificationToken)
+                            self.updateForNotificationStatus(status: .authorized)
+                        default:
+                            break
+                        }
+                    }
+                }
+            } else {
+                Store.perform(action: PushNotifications.SetIsEnabled(false))
+                if let token = UserDefaults.pushToken {
+                    Backend.apiClient.deletePushNotificationToken(token)
+                }
+                self.updateForNotificationStatus(status: .authorized)
             }
+        }
+        
+        openSettingsButton.tap = {
+            guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            UIApplication.shared.open(url)
         }
     }
 }
