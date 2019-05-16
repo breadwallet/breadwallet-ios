@@ -522,6 +522,11 @@ class ModalPresenter: Subscriber, Trackable {
                 menuNav.dismiss(animated: true, completion: {
                     Store.trigger(name: .resetDisplayCurrencies)
                 })
+            }),
+            
+            // Notifications
+            MenuItem(title: S.Settings.notifications, callback: {
+                menuNav.pushViewController(PushNotificationsViewController(), animated: true)
             })
         ]
         
