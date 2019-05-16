@@ -43,6 +43,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     var didTapBuy: (() -> Void)?
     var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
+    
+    var okToShowPrompts: Bool {
+        // On the initial display we need to load the walletes in the asset list table view first.
+        // There's already a lot going on, so don't show the home-screen prompts right away.
+        return !Store.state.displayCurrencies.isEmpty
+    }
 
     // MARK: -
     
@@ -364,9 +370,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func attemptShowPrompt() {
-        guard currentPromptView == nil else {
-            return
-        }
+        guard okToShowPrompts else { return }
+        guard currentPromptView == nil else { return }
         
         if let nextPrompt = PromptFactory.nextPrompt(walletAuthenticator: walletAuthenticator) {
             self.saveEvent("prompt.\(nextPrompt.name).displayed")
