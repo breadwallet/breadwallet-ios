@@ -146,6 +146,8 @@
 "Button.no" = "不";
 /* OK button label */
 "Button.ok" = "好";
+/* Open Settings button */
+"Button.openSettings" = "打开设置";
 /* receive button */
 "Button.receive" = "收到";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "发送";
 /* Settings button label */
 "Button.settings" = "设置";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "跳过";
 /* Settings button label */
@@ -368,6 +372,14 @@
 "MenuViewController.modalTitle" = "菜单";
 /* button label */
 "MenuViewController.recoverButton" = "恢复钱包";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "切换到自动模式";
 /* Node is connected label */
@@ -458,8 +470,10 @@
 "Prompts.NoScreenLock.body.android" = "需要设备屏幕锁定才能保护您的钱包。在“设置”>“安全”>“屏幕锁定”中启用它以便继续。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "屏幕锁定已禁用";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "为了应对手机丢失或者更换， 请您务必写下你的纸键。点击此处继续。";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "为了应对手机丢失或者更换， 请您务必写下你的纸键。";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要采取的行动";
 /* Transaction rejected prompt body */
@@ -488,10 +502,14 @@
 "PushNotifications.body" = "打开推送通知，抢先了解新功能和特惠。";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "提示已禁用";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "在设置里开启提示以接收提醒";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "开启接收 BRD 特惠版更新通知。";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "您正在接收 BRD 特惠版更新。";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "疑似关闭通知。请进入设置启用 BRD 通知。";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "推送通知";
+"PushNotifications.label" = "接收推送通知";
 /* Push notifications are off label */
 "PushNotifications.off" = "关闭";
 /* Push notifications are on label */
@@ -650,7 +668,8 @@
 "SecurityCenter.faceIdTitle" = "面部识别";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "若您丢失或升级您的手机，访问您的比特币的唯一方法。";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "纸键";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "保护您的 BRD 免遭未授权用户盗用。";
@@ -814,10 +833,12 @@
 "StartPaperPhrase.againButtonTitle" = "再次书写纸键";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 BRD 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "写下纸键";
-/* Argument is date */
-"StartPaperPhrase.date" = "您最后一次记录纸上密钥是在 %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "您最后一次记录纸上密钥是在 \n%1$@";
 /* button label */
 "StartViewController.createButton" = "创建新钱包";
 /* Start view message */

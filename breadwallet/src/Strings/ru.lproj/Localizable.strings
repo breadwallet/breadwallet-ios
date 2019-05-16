@@ -146,6 +146,8 @@
 "Button.no" = "Нет";
 /* OK button label */
 "Button.ok" = "ОК";
+/* Open Settings button */
+"Button.openSettings" = "Открыть Настройки";
 /* receive button */
 "Button.receive" = "Получить";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "отправить";
 /* Settings button label */
 "Button.settings" = "Настройки";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "Пропустить";
 /* Settings button label */
@@ -368,6 +372,14 @@
 "MenuViewController.modalTitle" = "Меню";
 /* button label */
 "MenuViewController.recoverButton" = "Восстановить кошелек";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Переключиться в автоматический режим";
 /* Node is connected label */
@@ -458,8 +470,10 @@
 "Prompts.NoScreenLock.body.android" = "Для защиты вашего кошелька требуется блокировка экрана вашего устройства. Перейдите в \"Настройки\" > \"Безопасность\" > \"Блокировка экрана\" и включите, чтобы продолжить.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Блокировка экрана отключена";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "Ваш бумажный ключ нужно сохранить на случай, если вы потеряете или смените свой телефон. Нажмите сюда, чтобы продолжить.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "Ваш бумажный ключ нужно сохранить на случай, если вы потеряете или смените свой телефон.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Необходимо совершить действие";
 /* Transaction rejected prompt body */
@@ -488,10 +502,14 @@
 "PushNotifications.body" = "Включите push-уведомления и первыми узнавайте о новых функциях и специальных предложениях.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Уведомления Отключены";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Включить уведомления в Настройках, чтобы получать оповещения";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Включите уведомления, чтобы получать спецпредложения и новости от BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Вы получаете спецпредложения и новости от BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Похоже, уведомления отключены. Перейдите в настройки, чтобы включить уведомления от BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push-уведомления";
+"PushNotifications.label" = "Получать Push-уведомления";
 /* Push notifications are off label */
 "PushNotifications.off" = "Отключено";
 /* Push notifications are on label */
@@ -650,7 +668,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Единственный способ получения доступа к вашим биткойнам в случае потери или изменения вашего телефона.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Бумажный ключ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Защищает ваш BRD от несанкционированных пользователей.";
@@ -814,10 +833,12 @@
 "StartPaperPhrase.againButtonTitle" = "Выписать бумажный ключ снова";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш BRD-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
-/* Argument is date */
-"StartPaperPhrase.date" = "Вы выписывали свой бумажный ключ в последний раз %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Вы выписывали свой бумажный ключ в последний раз \n%1$@";
 /* button label */
 "StartViewController.createButton" = "Создать новый кошелек";
 /* Start view message */
