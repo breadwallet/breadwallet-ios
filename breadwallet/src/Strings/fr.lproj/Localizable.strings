@@ -146,6 +146,8 @@
 "Button.no" = "Non";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Ouvrir les paramètres";
 /* receive button */
 "Button.receive" = "Recevoir";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "envoyer";
 /* Settings button label */
 "Button.settings" = "Paramètres";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "Passer";
 /* Settings button label */
@@ -368,6 +372,14 @@
 "MenuViewController.modalTitle" = "Menu";
 /* button label */
 "MenuViewController.recoverButton" = "Récupérer le portefeuille";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Passer au mode automatique";
 /* Node is connected label */
@@ -458,8 +470,10 @@
 "Prompts.NoScreenLock.body.android" = "Il est nécessaire de configurer un verrouillage d'écran pour protéger votre portefeuille. Allez dans « Paramètres » > « Sécurité » > « Verrouillage d'écran », puis activez-le pour continuer.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Verrouillage d'écran désactivé";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "Votre paperkey doit être sauvegardé au cas où vous perdiez ou changiez votre téléphone. Cliquez ici pour continuer.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "Votre paperkey doit être sauvegardé au cas où vous perdiez ou changiez votre téléphone.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Une action est requise";
 /* Transaction rejected prompt body */
@@ -488,10 +502,14 @@
 "PushNotifications.body" = "Activez les notifications push et soyez le premier à être informé des nouvelles fonctionnalités et des offres spéciales.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications désactivées";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Activer les notifications dans Paramètres pour recevoir des alertes";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Activez les notifications pour recevoir des offres spéciales et des mises à jour de la part de BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Vous recevez des offres spéciales et des mises à jour de la part de BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Il semblerait que les notifications sont désactivées. Aller dans les paramètres pour activer les notifications de BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Notifications push";
+"PushNotifications.label" = "Recevez des notifications push";
 /* Push notifications are off label */
 "PushNotifications.off" = "Non";
 /* Push notifications are on label */
@@ -650,7 +668,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "La seule façon d'accéder à votre bitcoin si vous perdez ou mettez à niveau votre téléphone.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Clé papier";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protège vos BRD contre les utilisateurs non autorisés.";
@@ -814,10 +833,12 @@
 "StartPaperPhrase.againButtonTitle" = "Enregistrez la clé papier à nouveau";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou mis à niveau.\n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Écrire la clé papier";
-/* Argument is date */
-"StartPaperPhrase.date" = "Vous avez écrit votre clé papier la dernière fois sur %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Vous avez écrit votre clé papier la dernière fois sur\n%1$@";
 /* button label */
 "StartViewController.createButton" = "Créer un nouveau portefeuille";
 /* Start view message */

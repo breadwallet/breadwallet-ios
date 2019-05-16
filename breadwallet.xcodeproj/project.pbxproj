@@ -332,7 +332,6 @@
 		CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */; };
 		CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
 		CE20C9011DBBFFF800C8397A /* Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9001DBBFFF800C8397A /* Actions.swift */; };
-		CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9061DBC587200C8397A /* StartViewController.swift */; };
 		CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */; };
 		CE20C90E1DBE52B000C8397A /* UIView+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */; };
 		CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C9101DBE5B6F00C8397A /* Circle.swift */; };
@@ -920,7 +919,6 @@
 		CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+BRWAdditions.swift"; path = "src/Extensions/UIViewController+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIColor+BRWAdditions.swift"; path = "src/Extensions/UIColor+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9001DBBFFF800C8397A /* Actions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Actions.swift; path = src/SimpleRedux/Actions.swift; sourceTree = "<group>"; };
-		CE20C9061DBC587200C8397A /* StartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartViewController.swift; path = src/ViewControllers/StartViewController.swift; sourceTree = "<group>"; };
 		CE20C90B1DBC59E600C8397A /* StartFlowPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartFlowPresenter.swift; path = src/FlowControllers/StartFlowPresenter.swift; sourceTree = "<group>"; };
 		CE20C90D1DBE52B000C8397A /* UIView+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+BRWAdditions.swift"; path = "src/Extensions/UIView+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CE20C9101DBE5B6F00C8397A /* Circle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Circle.swift; path = src/Views/Circle.swift; sourceTree = "<group>"; };
@@ -1680,7 +1678,6 @@
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
 				CE274A601FD7C902000A4E62 /* RootNavigationController.swift */,
 				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
-				CE20C9061DBC587200C8397A /* StartViewController.swift */,
 				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
 				CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */,
 				CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */,
@@ -2776,7 +2773,6 @@
 				CE65C665207B0BEF000C99C4 /* TokenCell.swift in Sources */,
 				7C6E0D912214C9B700CA3BA5 /* AssetArchive.swift in Sources */,
 				CE977109216FA16300B9F621 /* SegwitViewController.swift in Sources */,
-				CE20C9071DBC587200C8397A /* StartViewController.swift in Sources */,
 				22A9A94E1DF61945000F0016 /* BRHTTPIndexMiddleware.swift in Sources */,
 				71173059220CCC91001931B3 /* PromptView.swift in Sources */,
 				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
