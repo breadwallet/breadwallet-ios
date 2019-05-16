@@ -13,6 +13,8 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     
+    let loadingSpinner = UIActivityIndicatorView(style: .white)
+    
     private let assetHeight: CGFloat = 90.0
     private let addWalletButtonHeight: CGFloat = 80.0
     private let addWalletButton = UIButton.icon(image: #imageLiteral(resourceName: "add"), title: S.TokenList.addTitle)
@@ -22,7 +24,15 @@ class AssetListTableView: UITableViewController, Subscriber {
     init() {
         super.init(style: .plain)
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if Store.state.displayCurrencies.isEmpty {
+            showLoadingState(true)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundColor = .darkBackground
@@ -63,13 +73,13 @@ class AssetListTableView: UITableViewController, Subscriber {
             }
             return result
         }, callback: { _ in
-            self.tableView.reloadData()
+            self.reload()
         })
         
         Store.lazySubscribe(self, selector: {
             $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
         }, callback: { _ in
-            self.tableView.reloadData()
+            self.reload()
         })
     }
     
@@ -79,6 +89,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     func reload() {
         tableView.reloadData()
+        showLoadingState(false)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -119,6 +130,35 @@ class AssetListTableView: UITableViewController, Subscriber {
         let currency = Store.state.displayCurrencies[indexPath.row]
         didSelectCurrency?(currency)
         handleCellHighlightingOnSelect(indexPath: indexPath, currency: currency)
+    }
+}
+
+// loading state management
+extension AssetListTableView {
+    
+    func showLoadingState(_ show: Bool) {
+        showLoadingIndicator(show)
+        showAddWalletsButton(!show)
+    }
+    
+    func showLoadingIndicator(_ show: Bool) {
+        guard show else {
+            loadingSpinner.removeFromSuperview()
+            return
+        }
+        
+        view.addSubview(loadingSpinner)
+        
+        loadingSpinner.constrain([
+            loadingSpinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+        
+        loadingSpinner.startAnimating()
+    }
+    
+    func showAddWalletsButton(_ show: Bool) {
+        addWalletButton.isHidden = !show
     }
 }
 
