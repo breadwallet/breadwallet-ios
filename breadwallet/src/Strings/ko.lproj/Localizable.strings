@@ -146,6 +146,8 @@
 "Button.no" = "아니오";
 /* OK button label */
 "Button.ok" = "오케이";
+/* Open Settings button */
+"Button.openSettings" = "설정 열기";
 /* receive button */
 "Button.receive" = "받기";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "보내기";
 /* Settings button label */
 "Button.settings" = "설정";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "넘어가기";
 /* Settings button label */
@@ -368,6 +372,14 @@
 "MenuViewController.modalTitle" = "메뉴";
 /* button label */
 "MenuViewController.recoverButton" = "지갑 복구하기";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "자동 모드로 전환";
 /* Node is connected label */
@@ -458,8 +470,10 @@
 "Prompts.NoScreenLock.body.android" = "귀하의 지갑을 보호하시려면 장치 화면 잠금이 필요합니다. 계속하시려면 \"설정\" > \"보안\" > \"화면 잠금\"가셔서 켜 주세요.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "화면 잠금 꺼짐";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "귀하의 종이 열쇠는 귀하의 핸드폰일 잃어버리거나 바꿀 경우에 대비해 저장되어야만 합니다. 계속하시려면 여기를 탭 하세요.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "귀하의 종이 열쇠는 귀하의 핸드폰일 잃어버리거나 바꿀 경우에 대비해 저장되어야만 합니다.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "조치 필요함";
 /* Transaction rejected prompt body */
@@ -488,10 +502,14 @@
 "PushNotifications.body" = "푸시 알림을 켜고 새로운 기능과 특가 제공 소식을 제일 먼저 접하세요.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "알림 비활성";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "알림을 받으려면 설정에서 알림을 켜세요";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "알림을 켜서 BRD로터 특가 판매와 업데이트를 받으십시오.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "귀하는 BRD로부터 특가 판매 및 업데이트를 받고 있습니다.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "알림이 꺼진 것 같습니다. 설정으로 가서 BRD 알림 받기를 활성화하십시오.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "푸시 알림";
+"PushNotifications.label" = "푸시 알림 받기";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
@@ -650,7 +668,8 @@
 "SecurityCenter.faceIdTitle" = "페이스 ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "전화를 분실하거나 업그레이드하는 경우, 비트코인에 액세스할 수 있는 유일한 방법입니다.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "페이퍼 키";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "허가받지 않은 사용자로부터 브레드를 보호하세요.";
@@ -814,9 +833,11 @@
 "StartPaperPhrase.againButtonTitle" = "페이퍼 키를 다시 쓰기";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\n\n저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "페이퍼 키 작성하기";
-/* Argument is date */
+/* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "%1$@에 마지막으로 페이퍼 키를 작성하셨습니다.";
 /* button label */
 "StartViewController.createButton" = "새 지갑 생성하기";
