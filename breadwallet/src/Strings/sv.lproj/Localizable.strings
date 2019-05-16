@@ -146,6 +146,8 @@
 "Button.no" = "Nej";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Öppna Inställningar";
 /* receive button */
 "Button.receive" = "Ta emot";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "skicka";
 /* Settings button label */
 "Button.settings" = "Inställningar";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "Hoppa över";
 /* Settings button label */
@@ -368,6 +372,14 @@
 "MenuViewController.modalTitle" = "Meny";
 /* button label */
 "MenuViewController.recoverButton" = "Återställ plånbok";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Byt till automatiskt läge";
 /* Node is connected label */
@@ -458,8 +470,10 @@
 "Prompts.NoScreenLock.body.android" = "Ett skärmlås krävs på enheten för att skydda din plånbok. Gå till Inställningar > Säkerhet > Skärmlås och aktivera för att fortsätta.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Skärmlås inaktiverat";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "Din pappersnyckel måste sparas ifall du skulle förlora eller byta ut din telefon. Tryck här för att fortsätta.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "Din pappersnyckel måste sparas ifall du skulle förlora eller byta ut din telefon.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Åtgärd krävs";
 /* Transaction rejected prompt body */
@@ -488,10 +502,14 @@
 "PushNotifications.body" = "Slå på push-meddelanden och var den första att höra om nya funktioner och specialerbjudanden.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Meddelanden avaktiverade";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Aktivera meddelanden i inställningar för att ta emot larm";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Slå på meddelanden för att få specialerbjudanden och uppdateringar från BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Du får specialerbjudanden och uppdateringar från BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Det verkar som att meddelanden är avstängda. Gå till Inställningar för att aktivera meddelanden från BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push-meddelanden";
+"PushNotifications.label" = "Ta emot push-meddelanden";
 /* Push notifications are off label */
 "PushNotifications.off" = "Av";
 /* Push notifications are on label */
@@ -650,7 +668,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Det enda sättet att komma åt dina bitcoin om du förlorar eller uppgraderar din telefon.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Ordnyckel";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Skyddar ditt BRD från obehöriga användare.";
@@ -814,10 +833,12 @@
 "StartPaperPhrase.againButtonTitle" = "Skriv ner ordnyckel på nytt";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ BRD om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\n\nVi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
-/* Argument is date */
-"StartPaperPhrase.date" = "Senast skrev du ner din ordnyckel på %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Senast skrev du ner din ordnyckel på \n%1$@";
 /* button label */
 "StartViewController.createButton" = "Skapa ny plånbok";
 /* Start view message */

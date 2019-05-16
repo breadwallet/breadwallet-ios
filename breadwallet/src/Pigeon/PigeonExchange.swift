@@ -283,8 +283,8 @@ class PigeonExchange: Subscriber {
     }
 
     func startPolling(forPairing isPairing: Bool = false) {
-        print("[EME] start polling")
         guard isPairing || isPaired else { return }
+        print("[EME] start polling")
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: fetchInterval, repeats: true, block: { [weak self] _ in
             self?.fetchInbox()
