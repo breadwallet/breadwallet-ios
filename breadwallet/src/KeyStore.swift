@@ -237,7 +237,7 @@ extension KeyStore: WalletAuthenticator {
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
@@ -267,7 +267,7 @@ extension KeyStore: WalletAuthenticator {
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
                 key.clean()
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
@@ -584,7 +584,7 @@ extension KeyStore: KeyMaster {
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
             guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0, phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
+                BRBIP39Encode($0.baseAddress?.assumingMemoryBound(to: Int8.self), phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
             }) == phraseData.count else { return nil }
             entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
