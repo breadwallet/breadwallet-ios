@@ -411,7 +411,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
 // MARK: -
 
 /// Base class for sending Ethereum-network transactions
-class EthSenderBase<CurrencyType: Currency> : SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
+class EthSenderBase<CurrencyType: Currency>: SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
     
     fileprivate var address: String?
     fileprivate var amount: UInt256?
