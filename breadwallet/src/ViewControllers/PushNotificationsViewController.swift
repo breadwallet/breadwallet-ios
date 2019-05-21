@@ -9,7 +9,7 @@
 import UIKit
 import UserNotifications
 
-class PushNotificationsViewController: UIViewController {
+class PushNotificationsViewController: UIViewController, Trackable {
 
     private let toggleLabel = UILabel(font: .body1, color: .primaryText)
     private let body = UILabel.wrapping(font: .body2, color: .secondaryText)
@@ -23,6 +23,11 @@ class PushNotificationsViewController: UIViewController {
     
     var areNotificationsEnabled: Bool {
         return Store.state.isPushNotificationsEnabled
+    }
+        
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        saveEvent(context: .pushNotifications, screen: .pushNotificationSettings, event: .appeared)
     }
     
     override func viewDidLoad() {
@@ -135,6 +140,7 @@ class PushNotificationsViewController: UIViewController {
                             Store.perform(action: PushNotifications.SetIsEnabled(true))
                             Store.trigger(name: .registerForPushNotificationToken)
                             self.updateForNotificationStatus(status: .authorized)
+                            self.saveEvent(context: .pushNotifications, screen: .pushNotificationSettings, event: .pushNotificationsToggleOn)
                         default:
                             break
                         }
@@ -145,12 +151,16 @@ class PushNotificationsViewController: UIViewController {
                 if let token = UserDefaults.pushToken {
                     Backend.apiClient.deletePushNotificationToken(token)
                 }
+                self.saveEvent(context: .pushNotifications, screen: .pushNotificationSettings, event: .pushNotificationsToggleOff)
                 self.updateForNotificationStatus(status: .authorized)
             }
         }
         
-        openSettingsButton.tap = {
+        openSettingsButton.tap = { [weak self] in
             guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+            guard let `self` = self else { return }
+            
+            self.saveEvent(context: .pushNotifications, screen: .pushNotificationSettings, event: .openNotificationSystemSettings)
             UIApplication.shared.open(url)
         }
     }
