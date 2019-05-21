@@ -230,7 +230,10 @@ class ApplicationController: Subscriber, Trackable {
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
+        
         UNUserNotificationCenter.current().delegate = notificationHandler
+        EventMonitor.shared.register(.pushNotifications)
+        
         setup()
         handleLaunchOptions(options)
         Reachability.addDidChangeCallback({ isReachable in
