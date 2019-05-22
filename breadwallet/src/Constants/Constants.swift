@@ -36,6 +36,7 @@ struct C {
     }()
     static let animationDuration: TimeInterval = 0.3
     static let secondsInDay: TimeInterval = 86400
+    static let secondsInMinute: TimeInterval = 60
     static let maxMoney: UInt64 = 21000000*100000000
     static let satoshis: UInt64 = 100000000
     static let walletQueue = "com.breadwallet.walletqueue"
@@ -47,7 +48,7 @@ struct C {
     static var standardPort: Int {
         return E.isTestnet ? 18333 : 8333
     }
-    static let feeCacheTimeout: TimeInterval = C.secondsInDay*3
+    static let feeCacheTimeout: TimeInterval = C.secondsInMinute*10
     static let bip39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
     static let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
     static let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
