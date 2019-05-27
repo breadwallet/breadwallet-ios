@@ -482,7 +482,7 @@ extension BRWalletPlugin {
         }
         d["receive_address"] = btcWalletState.legacyReceiveAddress // TODO: use segwit address when platform adds support
             //d["watch_only"] = TODO - add watch only
-        d["btc_denomination_digits"] = btcWalletState.maxDigits
+        d["btc_denomination_digits"] = btcWalletState.currency.defaultUnit.decimals
         d["local_currency_code"] = Store.state.defaultCurrencyCode
         let amount = Amount(tokenString: "0",
                             currency: btcWalletState.currency,

@@ -112,9 +112,6 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                         callback: {
                             self.rate = $0[self.currency]?.currentRate
         })
-        Store.subscribe(self, selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits }, callback: {_ in
-            self.reload()
-        })
         
         Store.subscribe(self, name: .txMemoUpdated(""), callback: {
             guard let trigger = $0 else { return }

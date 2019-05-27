@@ -232,16 +232,6 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                                 self.exchangeRate = $0[self.currency]?.currentRate
         })
         
-        Store.lazySubscribe(self,
-                            selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits},
-                            callback: {
-                                if let rate = $0[self.currency]?.currentRate {
-                                    let placeholderAmount = Amount.zero(self.currency, rate: rate)
-                                    self.secondaryBalance.formatter = placeholderAmount.localFormat
-                                    self.primaryBalance.formatter = placeholderAmount.tokenFormat
-                                    self.setBalances()
-                                }
-        })
         Store.subscribe(self,
                         selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
                         callback: { state in

@@ -104,17 +104,12 @@ public struct Amount {
     /// Token value in default units as Decimal number
     /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the base unit value and precision loss is acceptable.
     var tokenValue: Decimal {
-        //TODO:CRYPTO this no longer supports arbitrary (user-defined) unit
-        //TODO:CRYPTO Amount.string(as:) converts to Double first so not sure Decimal preserves any additional precision here
-        //return (Decimal(string: amount.string(decimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)) ?? 0.0) * (negative ? -1.0 : 1.0)
-        return Decimal(string: core.string(as: currency.defaultUnit.core, formatter: rawTokenFormat) ?? "") ?? Decimal.zero
+        return Decimal(string: tokenUnformattedString(in: currency.defaultUnit)) ?? Decimal.zero
     }
     
     /// Token value in default units as formatted string with currency ticker symbol suffix
     var tokenDescription: String {
-        //TODO:CRYPTO this no longer supports arbitrary (user-defined) unit
-        let unit = currency.defaultUnit//let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
-        return tokenDescription(in: unit)
+        return tokenDescription(in: currency.defaultUnit)
     }
 
     /// Token value in default units as formatted string without symbol
@@ -161,7 +156,7 @@ public struct Amount {
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
         format.currencySymbol = ""
-        format.maximumFractionDigits = min(currency.state?.maxDigits ?? currency.defaultUnit.decimals, maximumFractionDigits)
+        format.maximumFractionDigits = min(currency.defaultUnit.decimals, maximumFractionDigits)
         format.minimumFractionDigits = minimumFractionDigits ?? 0
         return format
     }
