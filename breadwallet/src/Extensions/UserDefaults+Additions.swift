@@ -18,7 +18,6 @@ private let hasPromptedBiometricsKey = "haspromptedtouched"
 private let hasPromptedForEmailKey = "hasPromptedForEmail"
 private let hasSubscribedToEmailUpdatesKey = "hasSubscribedToEmailUpdates"
 private let isBtcSwappedKey = "isBtcSwappedKey"
-private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
@@ -160,27 +159,6 @@ extension UserDefaults {
         get { return defaults.bool(forKey: isBtcSwappedKey)
         }
         set { defaults.set(newValue, forKey: isBtcSwappedKey) }
-    }
-
-    //
-    // 2 - bits
-    // 5 - mBTC
-    // 8 - BTC
-    //
-    static var maxDigits: Int {
-        get {
-            guard defaults.object(forKey: maxDigitsKey) != nil else {
-                //TODO:CRYPTO maxdigits
-                return 8//Currencies.btc.commonUnit.decimals
-            }
-            let maxDigits = defaults.integer(forKey: maxDigitsKey)
-            if maxDigits == 5 {
-                return 8 //Convert mBTC to BTC
-            } else {
-                return maxDigits
-            }
-        }
-        set { defaults.set(newValue, forKey: maxDigitsKey) }
     }
 
     static var pushToken: Data? {
