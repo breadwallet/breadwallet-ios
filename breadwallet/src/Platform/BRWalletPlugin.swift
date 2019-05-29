@@ -365,11 +365,15 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             // assume the numerator is in currency's base units
             var amount = UInt256(string: numerator, radix: 10)
             
-            guard let fees = currency.state?.fees else {
-                asyncResp.provide(400, json: ["error": "fee-error"])
-                return asyncResp
+            // ensure priority fee set for bitcoin transactions
+            if currency.matches(Currencies.btc) {
+                guard let fees = currency.state?.fees else {
+                    asyncResp.provide(400, json: ["error": "fee-error"])
+                    return asyncResp
+                }
+                sender.updateFeeRates(fees, toLevel: .priority)
             }
-            sender.updateFeeRates(fees, toLevel: .priority)
+
             guard let fee = sender.fee(forAmount: amount),
                 let balance = currency.state?.balance else {
                     asyncResp.provide(500, json: ["error": "fee-error"])
