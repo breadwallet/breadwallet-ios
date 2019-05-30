@@ -108,7 +108,10 @@ class ApplicationController: Subscriber, Trackable {
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
+        
         UNUserNotificationCenter.current().delegate = notificationHandler
+        EventMonitor.shared.register(.pushNotifications)
+        
         setup()
         handleLaunchOptions(options)
         Reachability.addDidChangeCallback({ isReachable in
@@ -305,7 +308,7 @@ class ApplicationController: Subscriber, Trackable {
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
         // hide back button text
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
-        UISwitch.appearance().onTintColor = .uiAccent
+        UISwitch.appearance().onTintColor = Theme.accent
     }
     
     private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 

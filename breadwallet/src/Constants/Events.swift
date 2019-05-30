@@ -56,6 +56,16 @@ public enum Event: String {
     case allowButton
     case denyButton
     
+    // enable/disable push notifications
+    case pushNotificationsToggleOn
+    case pushNotificationsToggleOff
+    
+    // open notification system settings for BRD
+    case openNotificationSystemSettings
+    
+    // user opened a push notification
+    case openNotification
+    
     case test
     
     var name: String { return rawValue }
@@ -80,6 +90,7 @@ public enum Screen: String {
     // push notifications
     case optInPrompt
     case systemPrompt
+    case pushNotificationSettings
     
     case test
 

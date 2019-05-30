@@ -223,7 +223,7 @@ struct NotificationAuthorizer: Trackable {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    private func logEvent(_ screen: Screen, _ event: Event, _ attributes: [String: String]? = nil) {
+    func logEvent(_ screen: Screen, _ event: Event, _ attributes: [String: String]? = nil) {
         let eventName = makeEventName([EventContext.pushNotifications.name, screen.name, event.name])
         
         if let attr = attributes {

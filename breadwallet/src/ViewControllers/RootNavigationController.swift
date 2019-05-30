@@ -29,7 +29,7 @@ class RootNavigationController: UINavigationController {
     override func viewDidLoad() {
         setDarkStyle()
         
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = Theme.primaryBackground
 
         self.delegate = self
     }

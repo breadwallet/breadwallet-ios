@@ -119,11 +119,6 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
             guard let fees = $0[self.currency]?.fees else { return }
             self.sender.updateFeeRates(fees, level: self.feeSelection)
-            if self.currency.isBitcoinCompatible {
-                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.isBitcoin
-            } else {
-                self.amountView.canEditFee = false
-            }
         })
         
         if currency.isEthereumCompatible {

@@ -337,6 +337,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             // assume the numerator is in currency's base units
             var amount = Amount(tokenString: numerator, currency: currency, unit: currency.baseUnit)
 
+            guard let fees = currency.state?.fees else {
+                asyncResp.provide(400, json: ["error": "fee-error"])
+                return asyncResp
+            }
+            sender.updateFeeRates(fees, level: .priority)
             let fee = sender.fee(forAmount: amount)
             guard let balance = currency.state?.balance else {
                     asyncResp.provide(500, json: ["error": "fee-error"])
