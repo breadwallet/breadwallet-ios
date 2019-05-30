@@ -30,11 +30,11 @@ enum SenderValidationResult {
     
     // BTC errors
     case noFees // fees not downlaoded
-    case outputTooSmall(UInt64)
+    case outputTooSmall(Amount)
     
     // protocol request errors
     case invalidRequest(String)
-    case paymentTooSmall(UInt64)
+    case paymentTooSmall(Amount)
     case usedAddress
     case identityNotCertified(String)
     
@@ -194,7 +194,7 @@ class Sender {
 
     func hasEstimate(forAddress address: String, amount: Amount) -> Bool {
         guard wallet.currency.isEthereumCompatible else { assertionFailure(); return false }
-        return gasEstimate?.address == address && gasEstimate?.amount.rawValue == amount.rawValue
+        return gasEstimate?.address == address && gasEstimate?.amount == amount
     }
 
     func estimateGas(targetAddress: String, amount: Amount) {
@@ -214,9 +214,9 @@ class Sender {
         })
     }
 
-    func transactionParams(fromAddress: String, toAddress: String, forAmount: Amount) -> TransactionParams {
+    func transactionParams(fromAddress: String, toAddress: String, forAmount amount: Amount) -> TransactionParams {
         var params = TransactionParams(from: fromAddress, to: toAddress)
-        params.value = forAmount.rawValue //TODO:CRYPTO rawValue
+        params.value = amount
         return params
     }
 }

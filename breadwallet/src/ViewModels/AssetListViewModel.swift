@@ -13,7 +13,7 @@ struct AssetListViewModel {
     
     var exchangeRate: String {
         guard let rate = currency.state?.currentRate else { return "" }
-        let placeholderAmount = Amount(value: 0, currency: currency, rate: rate)
+        let placeholderAmount = Amount.zero(currency, rate: rate)
         guard let rateText = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) else { return "" }
         return String(format: S.AccountHeader.exchangeRate, rateText, currency.code)
     }

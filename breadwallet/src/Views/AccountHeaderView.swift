@@ -76,7 +76,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         self.syncView =  SyncingHeaderView(currency: currency)
         self.isBtcSwapped = Store.state.isBtcSwapped
         if let rate = currency.state?.currentRate {
-            let placeholderAmount = Amount(value: 0, currency: currency, rate: rate)
+            let placeholderAmount = Amount.zero(currency, rate: rate)
             self.exchangeRate = rate
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.tokenFormat)
@@ -225,7 +225,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                             callback: {
                                 if let rate = $0[self.currency]?.currentRate {
-                                    let placeholderAmount = Amount(value: 0, currency: self.currency, rate: rate)
+                                    let placeholderAmount = Amount.zero(self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                 }
@@ -236,7 +236,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
                             selector: { $0[self.currency]?.maxDigits != $1[self.currency]?.maxDigits},
                             callback: {
                                 if let rate = $0[self.currency]?.currentRate {
-                                    let placeholderAmount = Amount(value: 0, currency: self.currency, rate: rate)
+                                    let placeholderAmount = Amount.zero(self.currency, rate: rate)
                                     self.secondaryBalance.formatter = placeholderAmount.localFormat
                                     self.primaryBalance.formatter = placeholderAmount.tokenFormat
                                     self.setBalances()

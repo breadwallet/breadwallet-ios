@@ -82,7 +82,7 @@ class MessagePaymentRequestWrapper: PigeonRequest {
     var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(value: UInt256(string: paymentRequest.amount), currency: currency)
+        return Amount(tokenString: paymentRequest.amount, currency: currency, unit: currency.baseUnit)
     }
 
     var type: PigeonRequestType {
@@ -106,7 +106,7 @@ class MessagePaymentRequestWrapper: PigeonRequest {
     }
     
     var txFee: Amount? {
-        return paymentRequest.hasTransactionFee ? Amount(value: UInt256(string: paymentRequest.transactionFee), currency: currency) : nil
+        return paymentRequest.hasTransactionFee ? Amount(tokenString: paymentRequest.transactionFee, currency: currency, unit: currency.baseUnit) : nil
     }
 }
 
@@ -122,7 +122,7 @@ class MessageCallRequestWrapper: PigeonRequest {
     var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(value: UInt256(string: callRequest.amount), currency: currency)
+        return Amount(tokenString: callRequest.amount, currency: currency, unit: currency.baseUnit)
     }
 
     var type: PigeonRequestType {
@@ -146,6 +146,6 @@ class MessageCallRequestWrapper: PigeonRequest {
     }
     
     var txFee: Amount? {
-        return callRequest.hasTransactionFee ? Amount(value: UInt256(string: callRequest.transactionFee), currency: currency) : nil
+        return callRequest.hasTransactionFee ? Amount(tokenString: callRequest.transactionFee, currency: currency, unit: currency.baseUnit) : nil
     }
 }

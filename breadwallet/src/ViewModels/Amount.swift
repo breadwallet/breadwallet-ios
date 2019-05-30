@@ -7,14 +7,9 @@
 //
 
 import Foundation
-import BRCore
 import BRCrypto
 
-//TODO:CRYPTO
-// swiftlint:disable all
-
-
-struct Amount {
+public struct Amount {
     static let normalPrecisionDigits = 5
     static let highPrecisionDigits = 8
 
@@ -26,11 +21,6 @@ struct Amount {
     var negative: Bool { return core.isNegative }
     var isZero: Bool { return core == BRCrypto.Amount.create(integer: 0, unit: core.unit) }
 
-    //TODO:CRYPTO deprecate usage
-    var rawValue: UInt256 {
-        return UInt256(string: core.string(base: 10, preface: ""))
-    }
-    
     // MARK: - Init
 
     init(coreAmount: BRCrypto.Amount,
@@ -57,20 +47,6 @@ struct Amount {
         self.maximumFractionDigits = maximumFractionDigits ?? amount.maximumFractionDigits
     }
     
-    init(value: UInt256,
-         currency: Currency,
-         rate: Rate? = nil,
-         minimumFractionDigits: Int? = nil,
-         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
-         negative: Bool = false) {
-        let amountString = value.string(radix: 10)
-        self.core = BRCrypto.Amount.create(string: amountString, negative: negative, unit: currency.baseUnit.core) ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
-        self.currency = currency
-        self.rate = rate
-        self.minimumFractionDigits = minimumFractionDigits
-        self.maximumFractionDigits = maximumFractionDigits
-    }
-    
     init(tokenString: String,
          currency: Currency,
          locale: Locale = Locale.current,
@@ -80,7 +56,10 @@ struct Amount {
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
         let unit = (unit ?? currency.defaultUnit).core
-        self.core = BRCrypto.Amount.create(string: tokenString.usDecimalString(fromLocale: locale), negative: negative, unit: unit) ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
+        self.core = BRCrypto.Amount.create(string: tokenString.usDecimalString(fromLocale: locale),
+                                           negative: negative,
+                                           unit: unit)
+            ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
@@ -94,13 +73,6 @@ struct Amount {
           maximumFractionDigits: Int = Amount.normalPrecisionDigits,
           negative: Bool = false) {
         self.currency = currency
-        let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = currency.defaultUnit.decimals
-        formatter.minimumFractionDigits = 1
-        formatter.minimumIntegerDigits = 1
-        formatter.generatesDecimalNumbers = true
-        formatter.usesGroupingSeparator = false
-        formatter.locale = Locale(identifier: "en_US")
         //TODO:CRYPTO use BRCrypto CurrencyPair for conversion
         guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue else { return nil }
         var decimal = fiatAmount / Decimal(rate.rate)
@@ -113,8 +85,8 @@ struct Amount {
         self.maximumFractionDigits = maximumFractionDigits
     }
 
-    static func zero(_ currency: Currency) -> Amount {
-        return Amount(tokenString: "0", currency: currency)
+    static func zero(_ currency: Currency, rate: Rate? = nil) -> Amount {
+        return Amount(tokenString: "0", currency: currency, rate: rate)
     }
 
     // MARK: - Convenience Accessors
@@ -130,7 +102,7 @@ struct Amount {
     // MARK: Token
     
     /// Token value in default units as Decimal number
-    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the raw value and precision loss is acceptable.
+    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the base unit value and precision loss is acceptable.
     var tokenValue: Decimal {
         //TODO:CRYPTO this no longer supports arbitrary (user-defined) unit
         //TODO:CRYPTO Amount.string(as:) converts to Double first so not sure Decimal preserves any additional precision here
@@ -144,34 +116,41 @@ struct Amount {
         let unit = currency.defaultUnit//let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
         return tokenDescription(in: unit)
     }
-    
+
     /// Token value in default units as formatted string without symbol
-    var tokenFormattedValue: String {
-        //TODO:CRYPTO this no longer supports arbitrary (user-defined) unit
-        let unit = currency.defaultUnit//currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
-        return tokenFormattedValue(inUnit: unit)
+    var tokenFormattedString: String {
+        return tokenFormattedString(in: currency.defaultUnit)
     }
     
-    /// Token value in specified units as formatted string without symbol
-    func tokenFormattedValue(inUnit unit: CurrencyUnit) -> String {
-        var value = Decimal(string: core.string(as: unit.core, formatter: rawTokenFormat) ?? "") ?? 0.0
-        if negative {
-            value *= -1.0
+    /// Token value in specified units as formatted string without symbol (for user display)
+    func tokenFormattedString(in unit: CurrencyUnit) -> String {
+        guard var formattedValue = core.string(as: unit.core, formatter: tokenFormat) else {
+            assertionFailure()
+            return ""
         }
-        guard var formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
-        if !isZero && Double(formattedValue) == 0.0 {
-            // small value requires more precision to be displayed
-            guard let formatter = tokenFormat.copy() as? NumberFormatter else { return "" }
+        // override precision digits if the value is too small to show
+        if !isZero && tokenFormat.number(from: formattedValue) == 0.0 {
+            guard let formatter = tokenFormat.copy() as? NumberFormatter else { assertionFailure(); return "" }
             formatter.maximumFractionDigits = unit.decimals
-            formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
+            formattedValue = core.string(as: unit.core, formatter: formatter) ?? formattedValue
         }
         return formattedValue
-//        return core.string(as: unit.core, formatter: tokenFormat) ?? ""
+    }
+
+    /// Token value in specified units as unformatted string without symbol (used API/internal use)
+    func tokenUnformattedString(in unit: CurrencyUnit) -> String {
+        if unit == currency.baseUnit {
+            return core.string(base: 10, preface: "")
+        }
+        guard let str = core.string(as: unit.core, formatter: rawTokenFormat) else {
+            assertionFailure(); return ""
+        }
+        return str
     }
     
     /// Token value in specified units as formatted string with currency ticker symbol suffix
     func tokenDescription(in unit: CurrencyUnit) -> String {
-        return "\(tokenFormattedValue(inUnit: unit)) \(currency.name(forUnit: unit))"
+        return "\(tokenFormattedString(in: unit)) \(currency.name(forUnit: unit))"
     }
     
     var tokenFormat: NumberFormatter {
@@ -255,18 +234,18 @@ struct Amount {
 }
 
 extension Amount: Equatable, Comparable {
-    static func == (lhs: Amount, rhs: Amount) -> Bool {
+    public static func == (lhs: Amount, rhs: Amount) -> Bool {
         return lhs.core == rhs.core /*&&
         lhs.rate == rhs.rate &&
         lhs.maximumFractionDigits == rhs.maximumFractionDigits &&
         lhs.minimumFractionDigits == rhs.minimumFractionDigits*/
     }
 
-    static func > (lhs: Amount, rhs: Amount) -> Bool {
+    public static func > (lhs: Amount, rhs: Amount) -> Bool {
         return lhs.core > rhs.core
     }
 
-    static func < (lhs: Amount, rhs: Amount) -> Bool {
+    public static func < (lhs: Amount, rhs: Amount) -> Bool {
         return lhs.core < rhs.core
     }
 
@@ -289,7 +268,7 @@ extension Amount: Equatable, Comparable {
     }
 }
 
-struct CurrencyUnit {
+struct CurrencyUnit: Equatable {
     fileprivate let core: BRCrypto.Unit
 
     var decimals: Int { return Int(core.decimals) }
@@ -303,5 +282,32 @@ struct CurrencyUnit {
 extension Decimal {
     var doubleValue: Double {
         return NSDecimalNumber(decimal: self).doubleValue
+    }
+}
+
+extension String {
+    func usDecimalString(fromLocale inputLocale: Locale) -> String {
+        let expectedFormat = NumberFormatter()
+        expectedFormat.numberStyle = .decimal
+        expectedFormat.locale = Locale(identifier: "en_US")
+
+        // createUInt256ParseDecimal expects en_us formatted string
+        let inputFormat = NumberFormatter()
+        inputFormat.locale = inputLocale
+
+        // remove grouping separators
+        var sanitized = self.replacingOccurrences(of: inputFormat.currencyGroupingSeparator, with: "")
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.groupingSeparator, with: "")
+
+        // replace decimal separators
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.currencyDecimalSeparator, with: expectedFormat.decimalSeparator)
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.decimalSeparator, with: expectedFormat.decimalSeparator)
+
+        // createUInt256ParseDecimal does not accept integers
+        if !sanitized.contains(expectedFormat.decimalSeparator) {
+            sanitized += expectedFormat.decimalSeparator
+        }
+
+        return sanitized
     }
 }

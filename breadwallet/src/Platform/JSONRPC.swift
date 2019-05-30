@@ -48,10 +48,10 @@ public struct JSONRPCParams: Encodable {
     }
 }
 
-public struct TransactionParams: Codable {
+public struct TransactionParams: Encodable {
     public var from: String
     public var to: String
-    public var value: UInt256?
+    public var value: Amount?
     public var gas: String?
     public var gasPrice: String?
     public var data: String?
@@ -66,6 +66,14 @@ public struct ListTransactionsParams: Codable {
     public var fromBlock: Quantity
     public var toBlock: Quantity
     public var address: EthAddress
+}
+
+// Encodes Amount as a hex value in base units for use in Ethereum JSON-RPC calls
+extension Amount: Encodable {
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(core.string(base: 16, preface: "0x"))
+    }
 }
 
 // MARK: - Response
