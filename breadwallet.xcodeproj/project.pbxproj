@@ -89,6 +89,7 @@
 		71988B0921EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */; };
 		71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */; };
 		71999FDD22147CD90024271F /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71999FDC22147CD90024271F /* Events.swift */; };
+		71A3170D229C70C00088F97C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3170C229C70C00088F97C /* Theme.swift */; };
 		71C44E90225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */; };
 		71C44E92225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */; };
 		71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */; };
@@ -752,6 +753,7 @@
 		71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BRUserAgentHeaderGenerator.swift; path = src/Platform/BRUserAgentHeaderGenerator.swift; sourceTree = "<group>"; };
 		71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRUserAgentHeaderGeneratorTests.swift; sourceTree = "<group>"; };
 		71999FDC22147CD90024271F /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Events.swift; path = src/Constants/Events.swift; sourceTree = "<group>"; };
+		71A3170C229C70C00088F97C /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = src/Theme/Theme.swift; sourceTree = "<group>"; };
 		71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConfirmRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/ConfirmRecoveryKeyViewController.swift; sourceTree = "<group>"; };
 		71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecoveryKeyCompleteViewController.swift; path = src/ViewControllers/RecoveryKey/RecoveryKeyCompleteViewController.swift; sourceTree = "<group>"; };
 		71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BaseRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/BaseRecoveryKeyViewController.swift; sourceTree = "<group>"; };
@@ -1587,6 +1589,14 @@
 			name = RecoverKey;
 			sourceTree = "<group>";
 		};
+		71A3170B229C70920088F97C /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				71A3170C229C70C00088F97C /* Theme.swift */,
+			);
+			name = Theme;
+			sourceTree = "<group>";
+		};
 		755CD3191DAA0A110075898E /* secp256k1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -1750,6 +1760,7 @@
 				CE08B2A120F66807009FA568 /* Pigeon */,
 				7C377EBC20F64C1200E8CF1C /* Resources */,
 				CE2990171EFD6DAF0093A0F2 /* Strings */,
+				71A3170B229C70920088F97C /* Theme */,
 				710B035B21F6603C007E8A2A /* Utilities */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
@@ -3420,6 +3431,7 @@
 				CEEC707F1E8D6B4100EF788E /* MenuViewController.swift in Sources */,
 				CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */,
 				CE8CD8DF1E2E825100785E02 /* VerifyPinViewController.swift in Sources */,
+				71A3170D229C70C00088F97C /* Theme.swift in Sources */,
 				CE916E331EDA800E00D641D6 /* UserDefaultsUpdater.swift in Sources */,
 				7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */,
 				CE20C9111DBE5B6F00C8397A /* Circle.swift in Sources */,

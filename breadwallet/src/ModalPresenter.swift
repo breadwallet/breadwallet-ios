@@ -549,19 +549,19 @@ class ModalPresenter: Subscriber, Trackable {
         
         var rootItems: [MenuItem] = [
             // Scan QR Code
-            MenuItem(title: S.MenuButton.scan, icon: #imageLiteral(resourceName: "scan")) { [unowned self] in
+            MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [unowned self] in
                 self.presentLoginScan()
             },
             
             // Manage Wallets
-            MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
+            MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) {
                 guard let kvStore = Backend.kvStore else { return }
                 let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
                 menuNav.pushViewController(vc, animated: true)
             },
             
             // Preferences
-            MenuItem(title: S.Settings.preferences, icon: #imageLiteral(resourceName: "prefs"), subMenu: preferencesItems, rootNav: menuNav),
+            MenuItem(title: S.Settings.preferences, icon: MenuItem.Icon.preferences, subMenu: preferencesItems, rootNav: menuNav),
             
             // Security
             MenuItem(title: S.MenuButton.security,
@@ -571,17 +571,17 @@ class ModalPresenter: Subscriber, Trackable {
                      faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
-            MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in
+            MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [unowned self] in
                 self.presentFaq()
             },
                         
             // Rewards
-            MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
+            MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) {
                 self.presentPlatformWebViewController("/rewards")
             },
             
             // About
-            MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
+            MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
             }
         ]
