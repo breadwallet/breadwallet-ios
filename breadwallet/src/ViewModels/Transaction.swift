@@ -64,7 +64,8 @@ class Transaction {
     var feeBasis: FeeBasis? {
         switch transfer.feeBasis {
         case .bitcoin(let feePerKB):
-            return .bitcoin(feePerKB: Amount(value: UInt256(feePerKB), currency: currency))
+            //TODO:CRYPTO Core should provide an Amount instead of UInt64 satoshis
+            return .bitcoin(feePerKB: Amount(tokenString: feePerKB.description, currency: currency, unit: currency.baseUnit))
         case .ethereum(let gasPrice, let gasLimit):
             guard let currency = wallet.manager.currency(from: gasPrice.currency) else { assertionFailure(); return nil }
             return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: currency), gasLimit: gasLimit)

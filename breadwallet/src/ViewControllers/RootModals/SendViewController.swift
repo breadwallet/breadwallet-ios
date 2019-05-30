@@ -276,8 +276,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput):
-            let minOutputAmount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
+            let text = Store.state.isBtcSwapped ? minOutput.fiatDescription : minOutput.tokenDescription
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
             showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
             
@@ -444,13 +443,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             })
             
         case .paymentTooSmall(let minOutput):
-            let amount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.tokenDescription)
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutput.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput):
-            let amount = Amount(value: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
+            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, minOutput.tokenDescription)
             return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
 
         case .insufficientFunds:
@@ -465,27 +462,26 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return
         }
 
+        //TODO:CRYPTO protocol request
         let address = protoReq.address
-        let requestAmount = UInt256(protoReq.amount)
+        let requestAmount = Amount(tokenString: protoReq.amount.description, currency: currency, unit: currency.baseUnit)
         
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         } else {
             addressCell.setContent(currency.isBitcoinCash ? address.bCashAddr : address)
         }
-        
-        if requestAmount > UInt256(0) {
-            amountView.forceUpdateAmount(amount: Amount(value: requestAmount, currency: currency))
-        }
+
         memoCell.content = protoReq.details.memo
 
-        if requestAmount == 0 {
+        if requestAmount.isZero {
             if let amount = amount {
                 guard case .ok = sender.createTransaction(address: address, amount: amount, comment: nil) else {
                     return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
                 }
             }
         } else {
+            amountView.forceUpdateAmount(amount: requestAmount)
             addressCell.isEditable = false
             guard case .ok = sender.createTransaction(forPaymentProtocol: protoReq) else {
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)

@@ -153,9 +153,9 @@ struct PaymentRequest {
         */
     }
 
-    static func requestString(withAddress address: String, forAmount amount: UInt256, currency: Currency) -> String {
-        let amountString = amount.string(decimals: currency.defaultUnit.decimals)
-        guard let uri = currency.addressURI(address) else { return "" }
+    static func requestString(withAddress address: String, forAmount amount: Amount) -> String {
+        let amountString = amount.tokenUnformattedString(in: amount.currency.defaultUnit)
+        guard let uri = amount.currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(amountString)"
     }
 

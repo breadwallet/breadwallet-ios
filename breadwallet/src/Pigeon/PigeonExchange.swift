@@ -525,7 +525,7 @@ class PigeonExchange: Subscriber {
                 tokenCode = token.code
                 if let rate = token.defaultRate {
                     // exchange rate is in the currency's common units
-                    let formatter = Amount(value: 0, currency: token).tokenFormat
+                    let formatter = Amount.zero(token).tokenFormat
                     let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
                     amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
                 }
@@ -535,7 +535,7 @@ class PigeonExchange: Subscriber {
                                              service: requestEnvelope.service,
                                              fromCurrency: request.scope,
                                              fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
-                                             fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                             fromAmount: requestWrapper.purchaseAmount.tokenUnformattedString(in: requestWrapper.currency.defaultUnit),
                                              toCurrency: tokenCode,
                                              toAmount: amountToReceive,
                                              toAddress: request.address,
