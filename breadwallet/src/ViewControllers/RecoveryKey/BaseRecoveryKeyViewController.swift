@@ -79,8 +79,8 @@ class BaseRecoveryKeyViewController: UIViewController, Trackable {
                                        style: .plain,
                                        target: self,
                                        action: #selector(onCloseButton))
-            skip.tintColor = .tertiaryText
-            let fontAttributes = [NSAttributedString.Key.font: UIFont.body2]
+            skip.tintColor = Theme.tertiaryText
+            let fontAttributes = [NSAttributedString.Key.font: Theme.body2]
             skip.setTitleTextAttributes(fontAttributes, for: .normal)
             skip.setTitleTextAttributes(fontAttributes, for: .highlighted)
             navigationItem.rightBarButtonItem = skip

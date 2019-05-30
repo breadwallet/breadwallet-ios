@@ -163,6 +163,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
                 processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
             case .economy:
                 processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
+            case .priority:
+                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.priorityTime)
             }
         } else {
             processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.ethTime)

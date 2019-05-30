@@ -57,7 +57,7 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = Theme.primaryBackground
         
         showBackButton()
         showCloseButton()
@@ -105,9 +105,9 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
     private func setUpTitles() {
         
         let titles = [S.RecoverKeyFlow.confirmRecoveryKeyTitle, S.RecoverKeyFlow.confirmRecoveryKeySubtitle]
-        let fonts = [E.isSmallScreen ? UIFont.h3Title : UIFont.h2Title,
-                     E.isSmallScreen ? UIFont.body2 : UIFont.body1]
-        let colors = [UIColor.primaryText, UIColor.secondaryText]
+        let fonts = [E.isSmallScreen ? Theme.h3Title : Theme.h2Title,
+                     E.isSmallScreen ? Theme.body2 : Theme.body1]
+        let colors = [Theme.primaryText, Theme.secondaryText]
         let margin: CGFloat = E.isSmallScreen ? 35 : 55
         
         for (i, label) in [titleLabel, subtitleLabel].enumerated() {
@@ -243,11 +243,11 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
     var hintLabelAnimationConstraint: NSLayoutConstraint?
     
     var checkImage: UIImage? {
-        return UIImage(named: "Checkmark")?.tinted(with: .uiAccent)
+        return UIImage(named: "Checkmark")?.tinted(with: Theme.accent)
     }
     
     var clearInputImage: UIImage? {
-        return UIImage(named: "CloseModern")?.tinted(with: .tertiaryText)
+        return UIImage(named: "CloseModern")?.tinted(with: Theme.tertiaryText)
     }
     
     var validInput = true {
@@ -337,7 +337,7 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
     }
     
     private func setUpMainContainer() {
-        mainContainer.backgroundColor = .secondaryBackground
+        mainContainer.backgroundColor = Theme.secondaryBackground
         addSubview(mainContainer)
         mainContainer.constrain([
             mainContainer.heightAnchor.constraint(equalToConstant: mainContainerHeight),
@@ -358,14 +358,14 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
             errorLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
             ])
         errorLabel.isHidden = true
-        errorLabel.textColor = .uiError
-        errorLabel.font = .caption
+        errorLabel.textColor = Theme.error
+        errorLabel.font = Theme.caption
         errorLabel.text = S.RecoverKeyFlow.confirmRecoveryInputError
     }
     
     private func setUpFocusBar() {
         mainContainer.addSubview(focusBar)
-        focusBar.backgroundColor = .uiAccent
+        focusBar.backgroundColor = Theme.accent
         focusBar.constrain([
             focusBar.heightAnchor.constraint(equalToConstant: 2),
             focusBar.leftAnchor.constraint(equalTo: mainContainer.leftAnchor),
@@ -376,8 +376,8 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
     }
     
     private func setUpHintLabel() {
-        hintLabel.textColor = .tertiaryText
-        hintLabel.font = .body1
+        hintLabel.textColor = Theme.tertiaryText
+        hintLabel.font = Theme.body1
         
         mainContainer.addSubview(hintLabel)
 
@@ -390,8 +390,8 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
     }
     
     private func setUpInputField() {
-        input.textColor = .primaryText
-        input.font = .body1
+        input.textColor = Theme.primaryText
+        input.font = Theme.body1
         input.backgroundColor = .clear
         input.borderStyle = .none
         input.returnKeyType = returnKeyType
@@ -430,12 +430,12 @@ class RecoveryKeyWordInputView: UIView, UITextFieldDelegate {
     private func showFocusBar() {
         guard input.isFirstResponder else { return }
         focusBar.isHidden = false
-        focusBar.backgroundColor = haveError ? .uiError : .uiAccent
+        focusBar.backgroundColor = haveError ? Theme.error : Theme.accent
     }
     
     private func hideFocusBar() {
         focusBar.isHidden = true
-        focusBar.backgroundColor = .uiAccent
+        focusBar.backgroundColor = Theme.accent
     }
     
     private func showErrorLabel(_ show: Bool) {

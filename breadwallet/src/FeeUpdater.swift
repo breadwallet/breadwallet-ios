@@ -12,18 +12,21 @@ import BRCore
 enum FeeLevel {
     case regular
     case economy
+    case priority
 }
 
 struct Fees: Codable {
+    let priority: UInt64
     let regular: UInt64
     let economy: UInt64
     let gasPrice: UInt256
     let timestamp: TimeInterval
     
-    init(regular: UInt64, economy: UInt64, timestamp: TimeInterval) {
+    init(regular: UInt64, economy: UInt64, priority: UInt64, timestamp: TimeInterval) {
         self.timestamp = timestamp
         self.regular = regular
         self.economy = economy
+        self.priority = priority
         self.gasPrice = 0
     }
     
@@ -31,6 +34,7 @@ struct Fees: Codable {
         self.timestamp = timestamp
         self.regular = 0
         self.economy = 0
+        self.priority = 0
         self.gasPrice = gasPrice
     }
     
@@ -40,6 +44,8 @@ struct Fees: Codable {
             return economy
         case .regular:
             return regular
+        case .priority:
+            return priority
         }
     }
 }
@@ -104,7 +110,7 @@ class FeeUpdater: Trackable {
             guard error == nil else { print("feePerKb error: \(String(describing: error))"); completion(); return }
             print("\(self.currency.code) fees updated: \(newFees.regular) / \(newFees.economy)")
             if self.currency.isBitcoin {
-                guard newFees.regular < maxFeePerKB && newFees.economy > minFeePerKB else {
+                guard newFees.priority < maxFeePerKB && newFees.economy > minFeePerKB else {
                     self.saveEvent("wallet.didUseDefaultFeePerKB")
                     return
                 }

@@ -317,11 +317,11 @@ struct StandardEmailCollectingPrompt: Prompt, EmailCollectingPrompt {
     }
     
     var confirmationImageName: String? {
-        return "Partyhat"
+        return "Email"
     }
 
     var imageName: String? {
-        return "Loudspeaker"
+        return "Email"
     }
     
     var emailList: String? {
