@@ -11,8 +11,8 @@ import UserNotifications
 
 class PushNotificationsViewController: UIViewController, Trackable {
 
-    private let toggleLabel = UILabel(font: .body1, color: .primaryText)
-    private let body = UILabel.wrapping(font: .body2, color: .secondaryText)
+    private let toggleLabel = UILabel(font: Theme.body1, color: Theme.primaryText)
+    private let body = UILabel.wrapping(font: Theme.body2, color: Theme.secondaryText)
     private let toggle = UISwitch()
     private let separator = UIView()
     private let openSettingsButton = BRDButton(title: S.Button.openSettings, type: .primary)
@@ -120,11 +120,11 @@ class PushNotificationsViewController: UIViewController, Trackable {
     private func setData() {
         title = S.Settings.notifications
         
-        view.backgroundColor = .primaryBackground
-        separator.backgroundColor = .tertiaryText
+        view.backgroundColor = Theme.primaryBackground
+        separator.backgroundColor = Theme.tertiaryText
         
         toggleLabel.text = S.PushNotifications.label
-        toggleLabel.textColor = .primaryText
+        toggleLabel.textColor = Theme.primaryText
         
         toggle.isOn = areNotificationsEnabled
         toggle.sendActions(for: .valueChanged)

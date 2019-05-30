@@ -444,7 +444,7 @@ class ApplicationController: Subscriber, Trackable {
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
         // hide back button text
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
-        UISwitch.appearance().onTintColor = .uiAccent
+        UISwitch.appearance().onTintColor = Theme.accent
     }
     
     private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 
