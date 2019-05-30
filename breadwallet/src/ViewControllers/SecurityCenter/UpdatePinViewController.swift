@@ -37,8 +37,8 @@ class UpdatePinViewController: UIViewController, Subscriber {
     }
 
     // MARK: - Private
-    private let header = UILabel.wrapping(font: .h2Title, color: .primaryText)
-    private let instruction = UILabel.wrapping(font: .body1, color: .secondaryText)
+    private let header = UILabel.wrapping(font: Theme.h2Title, color: Theme.primaryText)
+    private let instruction = UILabel.wrapping(font: Theme.body1, color: Theme.secondaryText)
     private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .white)
     private var pinView: PinView
     private let pinPadBackground = UIView(color: .white)
@@ -157,7 +157,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     private func setData() {
         caption.text = S.UpdatePin.caption
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = Theme.primaryBackground
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
         pinPad.ouputDidUpdate = { [weak self] text in
