@@ -82,43 +82,53 @@ class UnitConversionTests : XCTestCase {
     }
     
     func testAmount() {
-        let zero = UInt256(0)
-        let one = UInt256(1)
-        let highP = UInt256(string: "1.123456789987654321", decimals: 18)
+        let highP = "1.123456789987654321"
         let rate = Rate(code: "USD", name: "USD", rate: 1000.0, reciprocalCode: "BTC")
         
-        XCTAssertEqual(Amount(value: zero, currency: Currencies.btc, rate: rate).fiatDescription, "$0.00")
-        XCTAssertEqual(Amount(value: zero, currency: Currencies.btc, rate: rate).tokenDescription, "0 BTC")
-        XCTAssertEqual(Amount(value: one, currency: Currencies.btc, rate: rate).fiatDescription, "$0.01")
-        XCTAssertEqual(Amount(value: one, currency: Currencies.btc, rate: rate).tokenDescription, "0.00000001 BTC")
-        XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 5).tokenDescription, "1.12346 ETH")
-        XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).tokenDescription, "1.12345679 ETH")
-        XCTAssertEqual(Amount(value: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).fiatDescription, "$1,123.46")
+        XCTAssertEqual(Amount.zero(Currencies.btc, rate: rate).fiatDescription, "$0.00")
+        XCTAssertEqual(Amount.zero(Currencies.btc, rate: rate).tokenDescription, "0 BTC")
+        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.btc, unit: Currencies.btc.baseUnit, rate: rate).fiatDescription, "$0.01")
+        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.btc, unit: Currencies.btc.baseUnit, rate: rate).tokenDescription, "0.00000001 BTC")
+        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.eth, unit: Currencies.eth.baseUnit, rate: rate).tokenDescription, "0.000000000000000001 ETH")
+        XCTAssertEqual(Amount(tokenString: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 5).tokenDescription, "1.12346 ETH")
+        XCTAssertEqual(Amount(tokenString: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).tokenDescription, "1.12345679 ETH")
+        XCTAssertEqual(Amount(tokenString: highP, currency: Currencies.eth, rate: rate, maximumFractionDigits: 8).fiatDescription, "$1,123.46")
 
-        //TODO:CRYPTO refactor
-        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
-        XCTAssertEqual(Amount(tokenString: "1.0", currency: Currencies.eth).rawValue, UInt256(1000000000000000000))
-        XCTAssertEqual(Amount(tokenString: "0.000000000000000001", currency: Currencies.eth).rawValue, UInt256(1))
-        XCTAssertEqual(Amount(tokenString: "1.2345678", currency: Currencies.eth).rawValue, UInt256(1234567800000000000))
-        XCTAssertEqual(Amount(tokenString: "1,234,567.891", currency: Currencies.eth).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
-        XCTAssertEqual(Amount(tokenString: "1.234567891234567891", currency: Currencies.eth).rawValue, UInt256(1234567891234567891))
+        let oneETHinWEI = "1000000000000000000"
+
+        XCTAssertEqual(Amount(tokenString: "1", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), oneETHinWEI)
+        XCTAssertEqual(Amount(tokenString: "1.0", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), oneETHinWEI)
+        XCTAssertEqual(Amount(tokenString: "0.000000000000000001", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), "1")
+        XCTAssertEqual(Amount(tokenString: "1.2345678", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567800000000000")
+        XCTAssertEqual(Amount(tokenString: "1,234,567.891", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891000000000000000")
+        XCTAssertEqual(Amount(tokenString: "1.234567891234567891", currency: Currencies.eth).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891234567891")
+
+        XCTAssertEqual(Amount(tokenString: "0.000011", currency: Currencies.eth, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.00001 ETH") // default max digits is 5
+        XCTAssertEqual(Amount(tokenString: "0.0000011", currency: Currencies.eth, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.0000011 ETH") // tests override default max digits
         
         let french = Locale(identifier: "fr_FR")
-        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: french).rawValue, UInt256(1000000000000000000))
-        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: french).rawValue, UInt256(1))
-        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: french).rawValue, UInt256(1234567800000000000))
-        XCTAssertEqual(Amount(tokenString: "1 234 567,891", currency: Currencies.eth, locale: french).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
-        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: french).rawValue, UInt256(1234567891234567891))
+        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: french).tokenUnformattedString(in: Currencies.eth.baseUnit), "1000000000000000000")
+        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: french).tokenUnformattedString(in: Currencies.eth.baseUnit), "1")
+        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: french).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567800000000000")
+        XCTAssertEqual(Amount(tokenString: "1 234 567,891", currency: Currencies.eth, locale: french).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891000000000000000")
+        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: french).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891234567891")
+
+        // input uses the specified locale (parameter is only used for tests), output uses the system locale (assume en_US)
+        XCTAssertEqual(Amount(tokenString: "0,000011", currency: Currencies.eth, locale: french, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.00001 ETH") // default max digits is 5
+        XCTAssertEqual(Amount(tokenString: "0,0000011", currency: Currencies.eth, locale: french, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.0000011 ETH") // tests override default max digits
         
         let portugese = Locale(identifier: "pt_BR")
-        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1000000000000000000))
-        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1))
-        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1234567800000000000))
-        XCTAssertEqual(Amount(tokenString: "1.234.567,891", currency: Currencies.eth, locale: portugese).rawValue, UInt256(hexString: "0x1056E0F39C37A5C9B8000"))
-        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: portugese).rawValue, UInt256(1234567891234567891))
+        XCTAssertEqual(Amount(tokenString: "1,0", currency: Currencies.eth, locale: portugese).tokenUnformattedString(in: Currencies.eth.baseUnit), "1000000000000000000")
+        XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: Currencies.eth, locale: portugese).tokenUnformattedString(in: Currencies.eth.baseUnit), "1")
+        XCTAssertEqual(Amount(tokenString: "1,2345678", currency: Currencies.eth, locale: portugese).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567800000000000")
+        XCTAssertEqual(Amount(tokenString: "1.234.567,891", currency: Currencies.eth, locale: portugese).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891000000000000000")
+        XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: Currencies.eth, locale: portugese).tokenUnformattedString(in: Currencies.eth.baseUnit), "1234567891234567891")
+
+        XCTAssertEqual(Amount(tokenString: "0,000011", currency: Currencies.eth, locale: portugese, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.00001 ETH") // default max digits is 5
+        XCTAssertEqual(Amount(tokenString: "0,0000011", currency: Currencies.eth, locale: portugese, unit: Currencies.eth.defaultUnit, rate: rate).tokenDescription, "0.0000011 ETH") // tests override default max digits
         
-        XCTAssertEqual(Amount(fiatString: "0.01", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(1000))
-        XCTAssertEqual(Amount(fiatString: ".0001", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(10))
-        XCTAssertEqual(Amount(fiatString: "100001.9999", currency: Currencies.btc, rate: rate)?.rawValue, UInt256(10000199990))
+        XCTAssertEqual(Amount(fiatString: "0.01", currency: Currencies.btc, rate: rate)?.tokenUnformattedString(in: Currencies.btc.baseUnit), "1000")
+        XCTAssertEqual(Amount(fiatString: ".0001", currency: Currencies.btc, rate: rate)?.tokenUnformattedString(in: Currencies.btc.baseUnit), "10")
+        XCTAssertEqual(Amount(fiatString: "100001.9999", currency: Currencies.btc, rate: rate)?.tokenUnformattedString(in: Currencies.btc.baseUnit), "10000199990")
     }
 }

@@ -64,27 +64,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         router.get("/_wallet/info") { (request, _) -> BRHTTPResponse in
             return try BRHTTPResponse(request: request, code: 200, json: self.walletInfo())
         }
- 
-        router.get("/_wallet/format") { (request, _) -> BRHTTPResponse in
-            if let amounts = request.query["amount"], !amounts.isEmpty {
-                let amount = amounts[0]
-                
-                //TODO: multi-currency support
-                var intAmount: UInt64 = 0
-                if amount.contains(".") { // assume full bitcoins
-                    if let x = Float(amount) {
-                        intAmount = UInt64(x * 100000000.0)
-                    }
-                } else {
-                    if let x = UInt64(amount) {
-                        intAmount = x
-                    }
-                }
-                return try BRHTTPResponse(request: request, code: 200, json: self.currencyFormat(intAmount))
-            } else {
-                return BRHTTPResponse(request: request, code: 400)
-            }
-        }
         
         // POST /_wallet/sign_bitid
         //
@@ -503,20 +482,6 @@ extension BRWalletPlugin {
         return d
     }
     
-    //TODO:CRYPTO refactor to use Amount string parsing
-    func currencyFormat(_ amount: UInt64) -> [String: Any] {
-        var d = [String: Any]()
-        guard let btcWalletState = Store.state.wallets[Currencies.btc.code] else { return d }
-        if let rate = btcWalletState.currentRate {
-            let amount = Amount(value: UInt256(amount),
-                                currency: btcWalletState.currency,
-                                rate: rate)
-            d["local_currency_amount"] = amount.fiatDescription
-            d["currency_amount"] = amount.tokenDescription
-        }
-        return d
-    }
-    
     func currencyInfo(_ currency: Currency, fiatCode: String?) -> [String: Any] {
         var d = [String: Any]()
         d["id"] = currency.code
@@ -524,8 +489,8 @@ extension BRWalletPlugin {
         d["name"] = currency.name
         d["colors"] = [currency.colors.0.toHex, currency.colors.1.toHex]
         if let balance = currency.state?.balance {
-            var numerator = balance.tokenFormattedValue(inUnit: currency.baseUnit)
-            var denomiator = Amount(tokenString: "1", currency: currency).tokenFormattedValue(inUnit: currency.baseUnit)
+            var numerator = balance.tokenUnformattedString(in: currency.baseUnit)
+            var denomiator = Amount(tokenString: "1", currency: currency, unit: currency.defaultUnit).tokenUnformattedString(in: currency.baseUnit)
             d["balance"] = ["currency": currency.code,
                             "numerator": numerator,
                             "denominator": denomiator]
