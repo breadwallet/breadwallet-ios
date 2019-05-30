@@ -14,8 +14,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoGradient"))
-    private let total = UILabel(font: .customBold(size: 30.0), color: .white)
-    private let totalHeader = UILabel(font: .customBody(size: 12.0), color: .white)
+    private let symbol = UILabel(font: Theme.h3Title, color: Theme.tertiaryText)
+    private let total = UILabel(font: Theme.h1Title, color: Theme.primaryText)
     private let debugLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
     private let prompt = UIView()
     private var promptHiddenConstraint: NSLayoutConstraint!
@@ -82,9 +82,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     private func addSubviews() {
         view.addSubview(subHeaderView)
-        subHeaderView.addSubview(totalHeader)
+        subHeaderView.addSubview(symbol)
         subHeaderView.addSubview(total)
-        subHeaderView.addSubview(logo)
         subHeaderView.addSubview(debugLabel)
         view.addSubview(prompt)
         view.addSubview(toolbar)
@@ -99,26 +98,20 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
             subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
-        
-        logo.constrain([
-            logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
-            logo.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]),
-            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)
+
+        symbol.constrain([
+            symbol.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
+            symbol.centerYAnchor.constraint(equalTo: subHeaderView.topAnchor, constant: C.padding[1])
             ])
-        
+
         total.constrain([
-            total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
-            total.centerYAnchor.constraint(equalTo: logo.centerYAnchor)
+            total.leadingAnchor.constraint(equalTo: symbol.trailingAnchor, constant: 4.0),
+            total.topAnchor.constraint(equalTo: symbol.topAnchor, constant: -4.0)
             ])
-        totalHeader.constrain([
-            totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
-            totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0)
-            ])
-        
+
         debugLabel.constrain([
-            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
-            debugLabel.bottomAnchor.constraint(equalTo: totalHeader.bottomAnchor)
+            debugLabel.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor),
+            debugLabel.topAnchor.constraint(equalTo: subHeaderView.topAnchor)
             ])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
@@ -154,8 +147,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
         navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
         
-        totalHeader.text = S.HomeScreen.totalAssets
-        totalHeader.textAlignment = .left
         total.textAlignment = .left
         total.text = "0"
         title = ""
@@ -233,7 +224,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addTradeNotificationIndicatorIfNeeded()
         
         toolbar.isTranslucent = false
-        toolbar.barTintColor = .secondaryBackground
+        toolbar.barTintColor = Theme.secondaryBackground
     }
     
     private func setupSubscriptions() {
@@ -297,12 +288,18 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                                 rate: rate)
             return amount.fiatValue
             }.reduce(0.0, +)
+        
         let format = NumberFormatter()
+        
         format.isLenient = true
-        format.numberStyle = .currency
+        format.maximumFractionDigits = 2
+        format.numberStyle = .decimal
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        
+        let symbolString = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        
+        self.symbol.text = symbolString
         self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     

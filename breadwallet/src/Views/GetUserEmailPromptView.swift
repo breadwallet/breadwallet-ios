@@ -15,13 +15,8 @@ class GetUserEmailPromptView: PromptView {
     
     let emailInputHeight: CGFloat = 36.0
     let footerHeight: CGFloat = 36.0
-    let continueButtonHeight: CGFloat = 44.0
-    let continueButtonWidth: CGFloat = 90.0
-    let imageViewTrailingMargin: CGFloat = -50.0
-    let imageSize: CGFloat = 44
     
     let emailInput: UITextField = UITextField()
-    let imageView: UIImageView = UIImageView()
     let successFootnoteLabel: UILabel = UILabel()
     
     let footerView = UIView()
@@ -48,17 +43,14 @@ class GetUserEmailPromptView: PromptView {
     }
     
     override var shouldAddContinueButton: Bool {
-        // return false because we'll handle adding positioning the continue button rather
-        // than leaving it to the super view
-        return false
+        return false    // tells the superview not to add the Continue button
     }
     
     override func setup() {
         super.setup()
         
-        title.textColor = .darkPromptTitleColor
-        body.textColor = .darkPromptBodyColor
-        successFootnoteLabel.textColor = .darkPromptBodyColor
+        title.textColor = Theme.primaryText
+        body.textColor = Theme.secondaryText
         
         successFootnoteLabel.textColor = body.textColor
         successFootnoteLabel.font = body.font
@@ -103,6 +95,7 @@ class GetUserEmailPromptView: PromptView {
         
         setUpEmailInput()
         setUpImageView()
+        setUpContinueButton()
     }
     
     private func scheduleAutoDismiss() {
@@ -151,7 +144,7 @@ class GetUserEmailPromptView: PromptView {
     }
     
     override var containerBackgroundColor: UIColor {
-        return .darkPromptBackground
+        return Theme.secondaryBackground
     }
     
     override func addSubviews() {
@@ -176,9 +169,9 @@ class GetUserEmailPromptView: PromptView {
     private func setUpEmailInput() {
         emailInput.delegate = self
         
-        emailInput.backgroundColor = UIColor.emailInputBackgroundColor
+        emailInput.backgroundColor = Theme.tertiaryBackground
         emailInput.layer.cornerRadius = 2.0
-        emailInput.textColor = .primaryText
+        emailInput.textColor = Theme.primaryText
         emailInput.font = UIFont.emailPlaceholder()
         emailInput.attributedPlaceholder = NSAttributedString(string: S.Prompts.Email.emailPlaceholder,
                                                               attributes: [ NSAttributedString.Key.foregroundColor: UIColor.emailPlaceholderText ])
@@ -194,91 +187,41 @@ class GetUserEmailPromptView: PromptView {
         emailInput.returnKeyType = .done
     }
     
+    private func setUpContinueButton() {
+        continueButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: C.padding[2], bottom: 0, right: C.padding[2])
+    }
+    
     override func setupConstraints() {
-        container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
-                                                           left: 10.0,
-                                                           bottom: -C.padding[1],
-                                                           right: -10.0))
-        
-        // The icon (defaults to loudspeaker) goes above the Submit button, slightly offset to the left.
-        // The 60x60 image size will accommodate both images that we display.
-        imageView.constrain([
-            imageView.widthAnchor.constraint(equalToConstant: imageSize),
-            imageView.heightAnchor.constraint(equalToConstant: imageSize),
-            imageView.topAnchor.constraint(equalTo: title.topAnchor, constant: 0),
-            imageView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: imageViewTrailingMargin)
-            ])
+        super.setupConstraints()
 
-        title.constrain([
-            title.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            title.trailingAnchor.constraint(equalTo: imageView.leadingAnchor, constant: -(C.padding[3])),
-            title.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])])
-        
-        body.constrain([
-            body.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            body.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[3]),
-            body.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: C.padding[2])])
-
-        // Place the Dismiss ('x') button in the top-right corner. The 'x' image is 12x12
-        // but the button itself should be larger so there's a decent tappable area. The
-        // padding (8) and dimensions below (24x24) will achieve this with visual top and 
-        // right margins of 14 around the 'x' itself.
-        dismissButton.constrain([
-            dismissButton.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
-            dismissButton.rightAnchor.constraint(equalTo: container.rightAnchor, constant: -8),
-            dismissButton.widthAnchor.constraint(equalToConstant: 24),
-            dismissButton.heightAnchor.constraint(equalToConstant: 24)
-            ])
-        
-        //let heightConstraint = footerView.heightAnchor.constraint(equalToConstant: footerHeight)
         let constraints = [
             footerView.heightAnchor.constraint(equalToConstant: footerHeight),
             footerView.topAnchor.constraint(equalTo: body.bottomAnchor, constant: C.padding[2]),
-            footerView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
-            footerView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -(C.padding[2])),
-            footerView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -(C.padding[1]))
+            footerView.leadingAnchor.constraint(equalTo: body.leadingAnchor),
+            footerView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            footerView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -(C.padding[2]))
         ]
+        
         footerView.constrain(constraints)
         footerViewHeightConstraint = constraints[0]   // save for later if we shrink the prompt height
         
         continueButton.constrain([
-            continueButton.topAnchor.constraint(equalTo: footerView.topAnchor),
+            continueButton.heightAnchor.constraint(equalToConstant: footerHeight),
             continueButton.bottomAnchor.constraint(equalTo: footerView.bottomAnchor),
-            continueButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor),
-            continueButton.widthAnchor.constraint(equalToConstant: continueButtonWidth)
+            continueButton.trailingAnchor.constraint(equalTo: footerView.trailingAnchor)
             ])
 
         emailInput.constrain([
             emailInput.topAnchor.constraint(equalTo: footerView.topAnchor),
             emailInput.leadingAnchor.constraint(equalTo: footerView.leadingAnchor),
             emailInput.bottomAnchor.constraint(equalTo: footerView.bottomAnchor),
-            emailInput.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor, constant: -(C.padding[1]))
+            emailInput.trailingAnchor.constraint(equalTo: continueButton.leadingAnchor)
             ])
     }
     
-    override func styleDismissButton() {
-        let closeButtonImage = UIImage(named: "Close-X-small")
-        dismissButton.setImage(closeButtonImage, for: .normal)
-        dismissButton.backgroundColor = .clear
-        dismissButton.tintColor = .white
-    }
-    
-    override func styleContinueButton() {
-        continueButton.backgroundColor = .clear
-        continueButton.setBackgroundImage(UIImage(), for: .disabled)
-        continueButton.setBackgroundImage(UIImage.imageForColor(.submitButtonEnabledBlue), for: .normal)
-        continueButton.setTitleColor(.white, for: .normal)
-    }
-
     private func enableDisableSubmitButton(enable: Bool) {
         // Note: In the email prompt, the inherited continue button is labeled 'Submit'.
-
         continueButton.isEnabled = enable
-        
-        continueButton.layer.borderWidth = 0.5
-        continueButton.layer.borderColor = enable ? UIColor.clear.cgColor : UIColor.white.cgColor
-        continueButton.layer.cornerRadius = 2.0
-        continueButton.layer.masksToBounds = true                
     }
         
     required init?(coder aDecoder: NSCoder) {
