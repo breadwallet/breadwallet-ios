@@ -45,37 +45,7 @@ extension UIFont {
         guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
         return font                
     }
-    
-    static var h0Title: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 40.0) else { return UIFont.preferredFont(forTextStyle: .title1) }
-        return font
-    }
-    
-    static var h2Title: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 24.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font
-    }
-
-    static var h3Title: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 18.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font
-    }
-
-    static var body1: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 16.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
-    }
-    
-    static var body2: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
-    }
-    
-    static var caption: UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 12.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
-    }
-    
+            
     static var regularAttributes: [NSAttributedString.Key: Any] {
         return [
             NSAttributedString.Key.font: UIFont.customBody(size: 14.0),

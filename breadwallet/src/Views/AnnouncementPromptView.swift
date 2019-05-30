@@ -11,7 +11,6 @@ import UIKit
 class AnnouncementPromptView: PromptView {
 
     private let announcement: Announcement
-    private let imageView: UIImageView = UIImageView()
     private let footnoteLabel: UILabel = UILabel()
     
     override var containerBackgroundColor: UIColor {

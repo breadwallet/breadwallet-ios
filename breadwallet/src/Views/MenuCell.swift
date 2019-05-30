@@ -18,10 +18,9 @@ class MenuCell: SeparatorCell {
         textLabel?.textColor = .white
         
         imageView?.image = item.icon
-        imageView?.tintColor = .navigationTint
         
         if let accessoryText = item.accessoryText?() {
-            let label = UILabel(font: .customMedium(size: 16.0), color: .transparentWhiteText)
+            let label = UILabel(font: Theme.body1, color: Theme.primaryText)
             label.text = accessoryText
             label.sizeToFit()
             accessoryView = label

@@ -53,7 +53,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
 
     override func viewDidLoad() {
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
-        collectionView.backgroundColor = .primaryBackground
+        collectionView.backgroundColor = Theme.primaryBackground
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
@@ -61,7 +61,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
         // Omit the rounded border on small screens due to space constraints.
         if !E.isSmallScreen {
             collectionView.layer.cornerRadius = 8.0
-            collectionView.layer.borderColor = UIColor.secondaryBackground.cgColor
+            collectionView.layer.borderColor = Theme.secondaryBackground.cgColor
             collectionView.layer.borderWidth = 2.0
         }
         

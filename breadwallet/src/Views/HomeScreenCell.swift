@@ -26,7 +26,9 @@ class Background: UIView, GradientDrawable {
         super.layoutSubviews()
         let maskLayer = CAShapeLayer()
         let corners: UIRectCorner = .allCorners
-        maskLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: 4.0, height: 4.0)).cgPath
+        maskLayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners,
+                                      cornerRadii: CGSize(width: C.Sizes.homeCellCornerRadius,
+                                                          height: C.Sizes.homeCellCornerRadius)).cgPath
         layer.mask = maskLayer
     }
 
@@ -41,10 +43,10 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     
     private let iconContainer = UIView(color: .transparentIconBackground)
     private let icon = UIImageView()
-    private let currencyName = UILabel(font: .customBold(size: 18.0), color: .white)
-    private let price = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
-    private let fiatBalance = UILabel(font: .customBold(size: 18.0), color: .white)
-    private let tokenBalance = UILabel(font: .customBold(size: 14.0), color: .transparentWhiteText)
+    private let currencyName = UILabel(font: Theme.body1, color: Theme.primaryText)
+    private let price = UILabel(font: Theme.body2, color: Theme.secondaryText)
+    private let fiatBalance = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
+    private let tokenBalance = UILabel(font: Theme.body2, color: Theme.secondaryText)
     private let syncIndicator = SyncingIndicator(style: .home)
     
     let container = Background()    // not private for inheritance
@@ -70,6 +72,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         container.currency = viewModel.currency
         icon.image = viewModel.currency.imageNoBackground
         icon.tintColor = viewModel.currency.isSupported ? .white : .disabledBackground
+        iconContainer.layer.cornerRadius = (iconContainer.frame.width / 2)
         currencyName.text = viewModel.currency.name
         currencyName.textColor = viewModel.currency.isSupported ? .white : .disabledWhiteText
         price.text = viewModel.exchangeRate
@@ -122,33 +125,32 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         let padding = Padding(increment: 5.0)
         
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: padding[1],
-                                                           left: padding[2],
+                                                           left: C.padding[2],
                                                            bottom: -padding[1],
-                                                           right: -padding[2]))
+                                                           right: -C.padding[2]))
         iconContainer.constrain([
-            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: padding[2]),
+            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
             iconContainer.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-            iconContainer.heightAnchor.constraint(equalToConstant: 36),
+            iconContainer.heightAnchor.constraint(equalToConstant: 40),
             iconContainer.widthAnchor.constraint(equalTo: iconContainer.heightAnchor)
             ])
-        icon.constrain(toSuperviewEdges: UIEdgeInsets(top: 2.0, left: 2.0, bottom: -2.0, right: -2.0))
+        icon.constrain(toSuperviewEdges: .zero)
         currencyName.constrain([
-            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: padding[2]),
-            currencyName.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: -2.0)
+            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: C.padding[2]),
+            currencyName.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])
             ])
         price.constrain([
             price.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor),
-            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor),
-            price.bottomAnchor.constraint(equalTo: iconContainer.bottomAnchor, constant: 1.0)
+            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor)
             ])
         fiatBalance.constrain([
-            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -padding[2]),
+            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
             fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: padding[2]),
             fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)
             ])
         tokenBalance.constrain([
             tokenBalance.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
-            tokenBalance.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: padding[2]),
+            tokenBalance.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[2]),
             tokenBalance.bottomAnchor.constraint(equalTo: price.bottomAnchor)
             ])
         fiatBalance.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -156,7 +158,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         
         syncIndicator.constrain([
             syncIndicator.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
-            syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: padding[2]),
+            syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[2]),
             syncIndicator.bottomAnchor.constraint(equalTo: tokenBalance.bottomAnchor, constant: 5.0)
             ])
         layoutIfNeeded()

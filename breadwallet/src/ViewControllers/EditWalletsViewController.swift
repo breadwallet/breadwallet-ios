@@ -54,6 +54,8 @@ class EditWalletsViewController: UIViewController, Subscriber {
     private let tableView = UITableView()
     private let searchBar = UISearchBar()
 
+    private let addWalletButtonHeight: CGFloat = 72.0
+    
     private var wallets = [Wallet]() {
         didSet { tableView.reloadData() }
     }
@@ -70,6 +72,7 @@ class EditWalletsViewController: UIViewController, Subscriber {
     override func viewDidLoad() {
         view.backgroundColor = .darkBackground
         view.addSubview(tableView)
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: C.padding[2], right: 0)
         tableView.backgroundColor = .darkBackground
         tableView.keyboardDismissMode = .interactive
         tableView.separatorStyle = .none
@@ -81,19 +84,23 @@ class EditWalletsViewController: UIViewController, Subscriber {
         tableView.constrain([
                 tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)])
         
+        view.layoutIfNeeded()
+        
+        if type == .manage {
+            tableView.setEditing(true, animated: true)
+            setupAddButton()    // adds te Add Wallet button to the table view footer
+        }
+
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(TokenCell.self, forCellReuseIdentifier: TokenCell.cellIdentifier)
 
-        if type == .manage {
-            tableView.setEditing(true, animated: true)
-            setupAddButton()
-        }
         setupSearchBar()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         Store.subscribe(self,
                         selector: { $0.availableTokens != $1.availableTokens },
                         callback: {
@@ -130,6 +137,44 @@ class EditWalletsViewController: UIViewController, Subscriber {
     }
 
     private func setupAddButton() {
+        
+        let topInset: CGFloat = C.padding[1]
+        let leftRightInset: CGFloat = C.padding[2]
+        let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: addWalletButtonHeight))
+        
+        let addButton = UIButton()
+        
+        addButton.tintColor = .disabledWhiteText
+        addButton.setTitleColor(Theme.tertiaryText, for: .normal)
+        addButton.setTitleColor(.transparentWhite, for: .highlighted)
+        addButton.titleLabel?.font = Theme.body1
+        
+        addButton.imageView?.contentMode = .scaleAspectFit
+        addButton.setBackgroundImage(UIImage(named: "add"), for: .normal)
+        
+        addButton.contentHorizontalAlignment = .center
+        addButton.contentVerticalAlignment = .center
+        
+        let buttonTitle = "+ " + S.TokenList.addTitle
+        addButton.setTitle(buttonTitle, for: .normal)
+        addButton.accessibilityLabel = E.isScreenshots ? "Add Wallet" : buttonTitle
+        
+        addButton.tap = { [weak self] in
+            guard let `self` = self else { return }
+            self.pushAddWallets()
+        }
+        
+        addButton.frame = CGRect(x: leftRightInset, y: topInset,
+                                       width: footerView.frame.width - (2 * leftRightInset),
+                                       height: addWalletButtonHeight)
+        
+        footerView.addSubview(addButton)
+        footerView.backgroundColor = Theme.primaryBackground
+        tableView.tableFooterView = footerView
+
+        /*
+        
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 70.0))
         tableView.tableFooterView = footerView
         let addButton = UIButton.icon(image: #imageLiteral(resourceName: "add"), title: S.TokenList.addTitle)
@@ -140,6 +185,7 @@ class EditWalletsViewController: UIViewController, Subscriber {
         addButton.tap = {
             self.pushAddWallets()
         }
+        */
     }
 
     private func pushAddWallets() {

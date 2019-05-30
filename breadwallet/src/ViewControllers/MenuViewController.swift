@@ -28,10 +28,14 @@ class MenuViewController: UITableViewController {
     }
 
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = Theme.primaryBackground
+        
         tableView.register(MenuCell.self, forCellReuseIdentifier: MenuCell.cellIdentifier)
         tableView.tableFooterView = UIView()
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .darkBackground
+        tableView.backgroundColor = Theme.primaryBackground
         tableView.rowHeight = 48.0
         
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)

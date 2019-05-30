@@ -136,7 +136,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
-        backgroundView.backgroundColor = .primaryBackground
+        backgroundView.backgroundColor = Theme.primaryBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
         topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
                                                             constant: topControlHeight
@@ -285,7 +285,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
 
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
-        faqButton.tintColor = .primaryText
+        faqButton.tintColor = Theme.primaryText
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
         
         if disabledView.superview == nil {
