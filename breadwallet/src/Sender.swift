@@ -50,7 +50,7 @@ protocol Sender: class {
     
     var canUseBiometrics: Bool { get }
 
-    func updateFeeRates(_ fees: Fees, level: FeeLevel?)
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel?)
     func fee(forAmount: UInt256) -> UInt256?
     
     func validate(paymentRequest: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult
@@ -121,8 +121,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         return authenticator.canUseBiometrics(forTransaction: tx, wallet: wallet)
     }
     
-    func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
-        walletManager.wallet?.feePerKb = fees.fee(forLevel: level ?? .regular)
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel?) {
+        walletManager.wallet?.feePerKb = fees.fee(forLevel: toLevel ?? .regular)
     }
     
     func fee(forAmount amount: UInt256) -> UInt256? {
@@ -420,7 +420,7 @@ class EthSenderBase<CurrencyType: Currency>: SenderBase<CurrencyType, EthWalletM
     
     // MARK: Sender
     
-    func updateFeeRates(_ fees: Fees, level: FeeLevel? = nil) {
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel? = nil) {
         walletManager.gasPrice = fees.gasPrice
     }
     

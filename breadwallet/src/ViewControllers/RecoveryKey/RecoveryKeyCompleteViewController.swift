@@ -39,7 +39,7 @@ class RecoveryKeyCompleteViewController: BaseRecoveryKeyViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = Theme.primaryBackground
         navigationItem.setHidesBackButton(true, animated: false)
         
         //
@@ -58,8 +58,8 @@ class RecoveryKeyCompleteViewController: BaseRecoveryKeyViewController {
         // labels
         //
         let titles = [S.RecoverKeyFlow.successHeading, S.RecoverKeyFlow.successSubheading]
-        let fonts = [UIFont.h2Title, UIFont.body1]
-        let colors = [UIColor.primaryText, UIColor.secondaryText]
+        let fonts = [Theme.h2Title, Theme.body1]
+        let colors = [Theme.primaryText, Theme.secondaryText]
         let xInsets: CGFloat = E.isSmallScreen ? 40 : 62
         
         // define anchor/constant pairs for the label top constraints

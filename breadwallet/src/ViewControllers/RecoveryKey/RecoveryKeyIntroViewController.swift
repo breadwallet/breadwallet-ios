@@ -51,8 +51,8 @@ class RecoveryKeyPageCell: UICollectionViewCell {
     
     var page: RecoveryKeyIntroPage?
     var imageView = UIImageView()
-    var titleLabel = UILabel.wrapping(font: UIFont.h2Title, color: .primaryText)
-    var subTitleLabel = UILabel.wrapping(font: UIFont.body1, color: .secondaryText)
+    var titleLabel = UILabel.wrapping(font: Theme.h2Title, color: Theme.primaryText)
+    var subTitleLabel = UILabel.wrapping(font: Theme.body1, color: Theme.secondaryText)
     
     let headingLeftRightMargin: CGFloat = 32
 
@@ -156,8 +156,8 @@ class RecoveryKeyIntroCell: RecoveryKeyPageCell {
     override func setUpSubviews() {
         super.setUpSubviews()
         
-        introStepLabel.font = UIFont.body2
-        introStepLabel.textColor = UIColor.uiAccent
+        introStepLabel.font = Theme.body2
+        introStepLabel.textColor = Theme.accent
         introStepLabel.textAlignment = .center
         introStepLabel.numberOfLines = 0
         
@@ -352,7 +352,7 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = Theme.primaryBackground
         navigationItem.setHidesBackButton(true, animated: false)
         
         showExitButton()
