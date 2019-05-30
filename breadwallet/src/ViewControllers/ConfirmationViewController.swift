@@ -134,8 +134,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     }
 
     private func confirmationFeeLabel() -> String {
-        //TODO:CRYPTO need another way to determine fee currency
-        if currency.isERC20Token {
+        if amount.currency != feeAmount.currency && feeAmount.currency.isEthereum {
             return S.Confirmation.feeLabelETH
         } else {
             return S.Confirmation.feeLabel
@@ -146,8 +145,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayTotal = Amount(value: amount.rawValue + feeAmount.rawValue,
-                                  currency: currency,
+        let totalAmount = (amount.currency == feeAmount.currency) ? amount + feeAmount : amount
+        let displayTotal = Amount(amount: totalAmount,
                                   rate: amount.rate,
                                   minimumFractionDigits: amount.minimumFractionDigits)
 

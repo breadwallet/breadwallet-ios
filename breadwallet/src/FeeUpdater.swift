@@ -63,7 +63,8 @@ class FeeUpdater: Trackable {
         if currency.isBitcoin {
             refreshBitcoin(completion: completion)
         } else if currency.isEthereumCompatible {
-            refreshEthereum(completion: completion)
+            //TODO:CRYPTO FeeUpdater to be replaced by BlockchainDB-supplied FeeBasis
+            //refreshEthereum(completion: completion)
         } else {
             completion()
         }
@@ -112,6 +113,8 @@ class FeeUpdater: Trackable {
             completion()
         }
     }
+
+    //TODO:CRYPTO replace with BlockchainDB
     
     private func refreshEthereum(completion: @escaping () -> Void) {
         Backend.apiClient.getGasPrice { [weak self] result in

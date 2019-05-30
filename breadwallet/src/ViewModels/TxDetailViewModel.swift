@@ -95,40 +95,16 @@ extension TxDetailViewModel {
             gasFormatter.maximumFractionDigits = 0
             self.gasLimit = gasFormatter.string(from: gasLimitValue as NSNumber)
 
-            //let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-
-            //TODO:CRYPTO need a way to specify GWEI units
-            //gasPrice = Amount(amount: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
             let gasUnit = currency.unit(named: "gwei") ?? currency.defaultUnit
-            gasPrice = gasPriceAmount.tokenDescription(in: gasUnit)//Amount(value: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription
-            
-            //let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            //let feeAmount = Amount(value: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            
-            // gas used is unknown until confirmed
-            if tx.direction == .sent && tx.confirmations > 0 {
-                // omit total for ERC20
-                //TODO:CRYPTO ???
-//                let totalAmount: Amount? = (currency is ERC20Token) ? nil
-//                    : Amount(value: tx.amount + totalFee,
-//                             currency: tx.currency,
-//                             rate: rate,
-//                             maximumFractionDigits: Amount.highPrecisionDigits)
-
-//                if Store.state.isBtcSwapped {
-//                    fee = feeAmount.fiatDescription
-//                    total = totalAmount?.fiatDescription
-//                } else {
-//                    fee = feeAmount.tokenDescription
-//                    total = totalAmount?.tokenDescription
-//                }
-            }
+            gasPrice = gasPriceAmount.tokenDescription(in: gasUnit)
         }
-        
-//        if let tx = tx as? BtcTransaction, tx.direction == .sent {
-//            let feeAmount = Amount(value: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-//            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
-//        }
+
+        // for outgoing txns for native tokens show the total amount sent including fee
+        if tx.direction == .sent, tx.confirmations > 0, tx.amount.currency == tx.fee.currency {
+            var totalWithFee = tx.amount + tx.fee
+            totalWithFee.maximumFractionDigits = Amount.highPrecisionDigits
+            total = Store.state.isBtcSwapped ? totalWithFee.fiatDescription : totalWithFee.tokenDescription
+        }
     }
     
     /// The fiat exchange rate at the time of transaction
