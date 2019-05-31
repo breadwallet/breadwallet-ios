@@ -37,7 +37,10 @@ class Wallet {
     var transfers: [Transaction] {
         return core.transfers
             .filter { $0.isVisible }
-            .map { Transaction(transfer: $0, wallet: self) }
+            .map { Transaction(transfer: $0,
+                               wallet: self,
+                               kvStore: Backend.kvStore,
+                               rate: Store.state[currency]?.currentRate) }
             .sorted(by: { $0.timestamp > $1.timestamp })
     }
 

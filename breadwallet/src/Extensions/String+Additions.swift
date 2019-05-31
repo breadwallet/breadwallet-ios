@@ -10,6 +10,14 @@ import UIKit
 import BRCore
 
 extension String {
+    func matches(regularExpression pattern: String) -> Bool {
+        return range(of: pattern, options: .regularExpression) != nil
+    }
+
+    var isValidHexString: Bool {
+        return withoutHexPrefix.matches(regularExpression: "^([a-fA-F0-9][a-fA-F0-9])*$")
+    }
+
     var isValidAddress: Bool {
         guard lengthOfBytes(using: .utf8) > 0 else { return false }
         return BRAddressIsValid(self) != 0
