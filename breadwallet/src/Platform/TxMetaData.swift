@@ -25,6 +25,7 @@
 
 import Foundation
 import BRCore
+import BRCrypto
 
 // MARK: - Txn Metadata
 
@@ -71,11 +72,6 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
         coder.encode(deviceId, key: "dId")
         coder.encode(comment, key: "comment")
         coder.encode(tokenTransfer, key: "tokenTransfer")
-    }
-    
-    /// Find metadata object based on the txHash
-    public convenience init?(txHash: UInt256, store: BRReplicatedKVStore) {
-        self.init(txKey: txHash.txKey, store: store)
     }
 
     /// Find metadata object based on the txKey
@@ -159,20 +155,17 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
 
 }
 
-extension UInt256 {
-    var sha256: String {
-        var u = self
-        return withUnsafePointer(to: &u) { p in
-            let bd = Data(bytes: p, count: MemoryLayout<UInt256>.stride).sha256
-            return (bd.hexString)
-        }
+extension Transaction {
+    var sha256ofHash: String? {
+        // The hash is a hex string, it was previously converted to bytes through UInt256
+        // which resulted in a reverse-order byte array due to UInt256 being little-endian.
+        // Reverse bytes to maintain backwards-compatibility with keys derived using the old scheme.
+        return Data(hexString: hash, reversed: true)?.sha256.hexString
     }
 
-    var txKey: String {
-        return "txn2-\(sha256)"
-    }
-    
-    var tokenTxKey: String {
-        return "tkxf-\(sha256)"
+    var metaDataKey: String? {
+        guard let sha256hash = sha256ofHash else { return nil }
+        //TODO:CRYPTO generic tokens
+        return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
     }
 }

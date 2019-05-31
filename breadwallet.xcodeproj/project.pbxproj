@@ -150,6 +150,8 @@
 		7CC7D8DA21581C41007E1B9A /* brd-web-3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7CC7D8D621581C41007E1B9A /* brd-web-3.tar */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
+		7CF2B050228F4528004AA905 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2B04F228F4528004AA905 /* StringExtensionTests.swift */; };
+		7CF2B052228F478A004AA905 /* DataExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2B051228F478A004AA905 /* DataExtensionTests.swift */; };
 		7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */; };
 		9A39B1232202AA3400E5018B /* HomeScreenCellHighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A39B1222202AA3400E5018B /* HomeScreenCellHighlightView.swift */; };
 		9A39B1252202AE9E00E5018B /* MultiframeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A39B1242202AE9E00E5018B /* MultiframeAnimation.swift */; };
@@ -737,6 +739,8 @@
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAmountCell.swift; path = src/Views/TransactionCells/TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE19FF221166B27008C55CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
+		7CF2B04F228F4528004AA905 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
+		7CF2B051228F478A004AA905 /* DataExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensionTests.swift; sourceTree = "<group>"; };
 		7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxMemoCell.swift; path = src/Views/TransactionCells/TxMemoCell.swift; sourceTree = "<group>"; };
 		9A39B1222202AA3400E5018B /* HomeScreenCellHighlightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCellHighlightView.swift; path = src/Views/AnimatedIcons/HomeScreenCellHighlightView.swift; sourceTree = "<group>"; };
 		9A39B1242202AE9E00E5018B /* MultiframeAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultiframeAnimation.swift; path = src/Views/AnimatedIcons/MultiframeAnimation.swift; sourceTree = "<group>"; };
@@ -1411,6 +1415,8 @@
 				7138BABA223062F40059091E /* NotificationTests.swift */,
 				3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */,
 				3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */,
+				7CF2B04F228F4528004AA905 /* StringExtensionTests.swift */,
+				7CF2B051228F478A004AA905 /* DataExtensionTests.swift */,
 			);
 			path = breadwalletTests;
 			sourceTree = "<group>";
@@ -2896,8 +2902,10 @@
 				7CA1C47620EC2BFA002E9E68 /* QRCodeTests.swift in Sources */,
 				22C4312E1DF89D970017CAEA /* BRHTTPServerTests.swift in Sources */,
 				CE6DCC2B1E63D6290044257B /* WalletCreationTests.swift in Sources */,
+				7CF2B050228F4528004AA905 /* StringExtensionTests.swift in Sources */,
 				716F824321F91D9A0064E6F4 /* AppRatingManagerTests.swift in Sources */,
 				CEC6F8471E8878B6000795B8 /* PaymentRequestTests.swift in Sources */,
+				7CF2B052228F478A004AA905 /* DataExtensionTests.swift in Sources */,
 				22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */,
 				CEDD8F101E575DD4007A4123 /* WalletAuthenticationTests.swift in Sources */,
 				CEC7F92A208803FA0083DF64 /* CurrencyMetaDataTests.swift in Sources */,
