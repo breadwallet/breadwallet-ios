@@ -125,16 +125,6 @@ struct WalletChange: Trackable {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(transactions: transactions)) })
     }
-    func setWalletName(_ name: String) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(name: name)) })
-    }
-    func setWalletCreationDate(_ date: Date) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(creationDate: date)) })
-    }
     func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
@@ -252,6 +242,21 @@ enum WalletID {
         let reduce: Reducer
         init(_ walletID: String?) {
             reduce = { $0.mutate(walletID: walletID) }
+        }
+    }
+}
+
+enum AccountChange {
+    struct SetName: Action {
+        let reduce: Reducer
+        init(_ name: String) {
+            reduce = { $0.mutate(accountName: name) }
+        }
+    }
+    struct SetCreationDate: Action {
+        let reduce: Reducer
+        init(_ date: Date) {
+            reduce = { $0.mutate(creationDate: date) }
         }
     }
 }

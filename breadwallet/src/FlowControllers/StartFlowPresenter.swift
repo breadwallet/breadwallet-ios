@@ -200,10 +200,8 @@ class StartFlowPresenter: Subscriber, Trackable {
         pinCreationViewController.setPinSuccess = { [unowned self] pin in
             autoreleasepool {
                 guard self.keyMaster.setRandomSeedPhrase() != nil else { self.handleWalletCreationError(); return }
-                //TODO:BCH multi-currency support
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
-                //TODO:CRYPTO wallet info
-                //Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
+                Store.perform(action: AccountChange.SetCreationDate(Date()))
                 DispatchQueue.main.async {
                     self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
                     //TODO:CRYPTO refactor
