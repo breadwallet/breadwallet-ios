@@ -10,7 +10,6 @@ import UIKit
 import BRCore
 
 struct State {
-    let isStartFlowVisible: Bool
     let isOnboardingEnabled: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
@@ -70,8 +69,7 @@ struct State {
 
 extension State {
     static var initial: State {
-        return State(   isStartFlowVisible: false,
-                        isOnboardingEnabled: true,
+        return State(   isOnboardingEnabled: true,
                         isLoginRequired: true,
                         rootModal: .none,
                         showFiatAmounts: UserDefaults.showFiatAmounts,
@@ -95,8 +93,7 @@ extension State {
         )
     }
     
-    func mutate(   isStartFlowVisible: Bool? = nil,
-                   isOnboardingEnabled: Bool? = nil,
+    func mutate(   isOnboardingEnabled: Bool? = nil,
                    isLoginRequired: Bool? = nil,
                    rootModal: RootModal? = nil,
                    showFiatAmounts: Bool? = nil,
@@ -111,8 +108,7 @@ extension State {
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
                    availableTokens: [Currency]? = nil) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
-                     isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
+        return State(isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,

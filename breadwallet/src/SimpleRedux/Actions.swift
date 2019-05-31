@@ -10,18 +10,6 @@ import UIKit
 import BRCore
 
 // MARK: - Startup Modals
-struct ShowStartFlow: Action {
-    let reduce: Reducer = {
-        return $0.mutate(isStartFlowVisible: true)
-    }
-}
-
-struct HideStartFlow: Action {
-    let reduce: Reducer = { state in
-        return state.mutate(isStartFlowVisible: false, rootModal: .none)
-    }
-}
-
 struct Reset: Action {
     let reduce: Reducer = { _ in
         return State.initial.mutate(isLoginRequired: false)
