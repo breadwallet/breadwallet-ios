@@ -21,6 +21,8 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
+    let accountName: String
+    let creationDate: Date
     let walletID: String?
     let wallets: [String: WalletState]
     let availableTokens: [Currency]
@@ -79,6 +81,8 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
+                        accountName: S.AccountHeader.defaultWalletName,
+                        creationDate: Date.zeroValue(),
                         walletID: nil,
                         //TODO:CRYPTO default wallets
                         wallets: [:],
@@ -102,6 +106,8 @@ extension State {
                    isPushNotificationsEnabled: Bool? = nil,
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
+                   accountName: String? = nil,
+                   creationDate: Date? = nil,
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
                    availableTokens: [Currency]? = nil) -> State {
@@ -116,6 +122,8 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
+                     accountName: accountName ?? self.accountName,
+                     creationDate: creationDate ?? self.creationDate,
                      walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets,
                      availableTokens: availableTokens ?? self.availableTokens)
@@ -160,8 +168,6 @@ struct WalletState {
     let balance: Amount?
     let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
-    let name: String
-    let creationDate: Date
     let isRescanning: Bool
     var receiveAddress: String? {
         return wallet?.receiveAddress
@@ -181,8 +187,6 @@ struct WalletState {
                            balance: nil,
                            transactions: [],
                            lastBlockTimestamp: 0,
-                           name: S.AccountHeader.defaultWalletName,
-                           creationDate: Date.zeroValue(),
                            isRescanning: false,
                            legacyReceiveAddress: nil,
                            rates: [],
@@ -197,8 +201,6 @@ struct WalletState {
                     balance: Amount? = nil,
                     transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
-                    name: String? = nil,
-                    creationDate: Date? = nil,
                     isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
@@ -215,8 +217,6 @@ struct WalletState {
                            balance: balance ?? self.balance,
                            transactions: transactions ?? self.transactions,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
-                           name: name ?? self.name,
-                           creationDate: creationDate ?? self.creationDate,
                            isRescanning: isRescanning ?? self.isRescanning,
                            legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
@@ -234,8 +234,6 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
         lhs.transactions == rhs.transactions &&
-        lhs.name == rhs.name &&
-        lhs.creationDate == rhs.creationDate &&
         lhs.isRescanning == rhs.isRescanning &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
