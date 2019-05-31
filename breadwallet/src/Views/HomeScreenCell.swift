@@ -124,9 +124,9 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     private func addConstraints() {
         let padding = Padding(increment: 5.0)
         
-        container.constrain(toSuperviewEdges: UIEdgeInsets(top: padding[1],
+        container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0,
                                                            left: C.padding[2],
-                                                           bottom: -padding[1],
+                                                           bottom: -10,
                                                            right: -C.padding[2]))
         iconContainer.constrain([
             iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
