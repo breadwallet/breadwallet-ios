@@ -161,6 +161,26 @@ public extension Data {
         return objc_getAssociatedObject(self, &AssociatedKeys.hexString) as? String
     }
 
+    /// Create Data with bytes from a hex string
+    ///
+    /// - Parameters:
+    ///   - hexString: <#hexString description#>
+    ///   - reversed: reverse the bytes (for UInt256 little-endian compatibility)
+    init?(hexString: String, reversed: Bool = false) {
+        guard hexString.isValidHexString else { return nil }
+        let hexString = hexString.withoutHexPrefix
+
+        let bytes: [UInt8] =
+            stride(from: 0, to: hexString.count, by: 2)
+                .compactMap {
+                    let i = hexString.index(hexString.startIndex, offsetBy: $0)
+                    let j = hexString.index(i, offsetBy: 2)
+                    let bytes = hexString[i..<j]
+                    return UInt8(bytes, radix: 16)
+        }
+        self = Data(reversed ? bytes.reversed() : bytes)
+    }
+
     var bzCompressedData: Data? {
         guard !self.isEmpty else {
             return self
