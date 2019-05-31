@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "설정";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "설";
 /* Skip button title */
 "Button.skip" = "넘어가기";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "예상 배송 시간: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5분";
+/* Priority fee */
+"FeeSelector.priority" = "우선 순위";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10~30분";
 /* Regular fee */
 "FeeSelector.regular" = "일반";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,13 +377,13 @@
 /* button label */
 "MenuViewController.recoverButton" = "지갑 복구하기";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "휴대폰의 보안 설정 변경 하였다면, 지갑을 열기 위해서도 종이 열쇠는 필요합니다.\n\n종이 열쇠 설정을 정말 나중에 하시겠습니까?";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "설정 계속하";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "나중에 하겠습니다.";
 /* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Attention";
+"Modal.PaperKeySkip.Title" = "주";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "자동 모드로 전환";
 /* Node is connected label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "귀하의 종이 열쇠는 귀하의 핸드폰일 잃어버리거나 바꿀 경우에 대비해 저장되어야만 합니다.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "휴대폰 분실 및 변경을 대비하여 종이 열쇠를 설정하세요. 당신의 열쇠는 휴대폰 보안설정 변경 시에도 필요합니다.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "조치 필요함";
 /* Transaction rejected prompt body */
@@ -834,11 +838,11 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\n\n저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "당신의 종이 열쇠는 휴대폰 분실, 도난, 파손 또는 업그레이드 시, BRD 복구를 위한 유일한 수단입니다.\n\n기기의 보안설정 후에도 당신의 종이 열쇠는 반드시 필요합니다.\n\n단어 리스트를 보여드릴 테니, 종이에 기입 후 안전하게 보관하세요.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "페이퍼 키 작성하기";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "%1$@에 마지막으로 페이퍼 키를 작성하셨습니다.";
+"StartPaperPhrase.date" = "%1$@ 에 마지막으로 페이퍼 키를 작성하셨습니다.";
 /* button label */
 "StartViewController.createButton" = "새 지갑 생성하기";
 /* Start view message */

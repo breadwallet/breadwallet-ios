@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "Inställningar";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "Skapa";
 /* Skip button title */
 "Button.skip" = "Hoppa över";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Beräknad leverans: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minuter";
+/* Priority fee */
+"FeeSelector.priority" = "Prioritet";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10–30 minuter";
 /* Regular fee */
 "FeeSelector.regular" = "Vanlig";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,13 +377,13 @@
 /* button label */
 "MenuViewController.recoverButton" = "Återställ plånbok";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "Din skrivna nyckel krävs för att öppna din plånbok om du ändrar säkerhetsinställningarna på din telefon. \n\nÄr du säker på att du vill vänta med att ordna en skriven nyckel? ";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Fortsätt processen";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Jag gör det senare";
 /* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Attention";
+"Modal.PaperKeySkip.Title" = "Observera";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Byt till automatiskt läge";
 /* Node is connected label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Din pappersnyckel måste sparas ifall du skulle förlora eller byta ut din telefon.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "Ha en skriven nyckel ifall du skulle tappa bort eller byta telefon. Nyckeln krävs också om du ändrar säkerhetsinställningarna på din telefon. ";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Åtgärd krävs";
 /* Transaction rejected prompt body */
@@ -834,7 +838,7 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ BRD om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\n\nVi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Det är enbart med din skrivna nyckel du kan återställa BRD om din telefon försvinner, går sönder eller uppgraderas. \n\nDen skrivna nyckeln behövs också om du ändrar säkerhetsinställningarna på din enhet. \n\nVi visar dig en lista med ord som du ska nedteckna på ett papper och förvara säkert. ";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
 /* Argument is date; date should be on a new line */
