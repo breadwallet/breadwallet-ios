@@ -173,6 +173,28 @@ class Sender {
         }
     }
 
+    private func setMetaData() {
+        guard let transfer = transfer,
+            let rate = wallet.currency.state?.currentRate else { print("[SEND] missing tx metadata")
+            return
+        }
+        let tx = Transaction(transfer: transfer,
+                             wallet: wallet,
+                             kvStore: kvStore,
+                             rate: rate)
+
+        //TODO:CRYPTO feeRate should be feePerKb for BTC
+        //TODO:CRYPTO need to create two transaction metadata entries for token transfers, one for the ETH originating tx (no amount, just gas) and one for the ERC20 transfer.
+        // the ETH originating tx for a ERC20 transfer should have the tokenTransfer param set as the token code and have no memo
+        tx.createMetaData(rate: rate,
+                          comment: comment,
+                          feeRate: nil,
+                          tokenTransfer: nil)
+        // the ETH transaction (token transfer contract execution) is flagged as a token transfer with the token code
+        //ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
+        //tokenTx.createMetaData(rate: tokenRate, comment: comment)
+    }
+
     // MARK: -
 
     //TODO:CRYPTO spend limit
@@ -232,7 +254,8 @@ extension Sender: SendListener {
     func transferSubmitted(success: Bool) {
         self.submitTimeoutTimer = nil
         if success {
-            //TODO:CRYPTO raw tx
+            setMetaData()
+            //TODO:CRYPTO raw tx is only needed by platform, but currently unused
             completionHandler?(.success(hash: pendingTransfer.hash?.description, rawTx: nil))
         } else {
             //TODO:CRYPTO send error

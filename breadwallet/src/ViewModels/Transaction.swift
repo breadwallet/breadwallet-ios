@@ -41,6 +41,8 @@ class Transaction {
     private let transfer: BRCrypto.Transfer
     let wallet: Wallet
 
+    var metaDataContainer: MetaDataContainer?
+
     var currency: Currency { return wallet.currency }
     var confirmations: UInt64 {
         return transfer.confirmations ?? 0
@@ -60,15 +62,14 @@ class Transaction {
     var fromAddress: String { return sourceAddress }
 
     var amount: Amount { return Amount(coreAmount: transfer.amount, currency: currency) }
-    var fee: Amount { return Amount(coreAmount: transfer.fee, currency: currency) }
+    var fee: Amount { return Amount(coreAmount: transfer.fee, currency: wallet.feeCurrency) }
     var feeBasis: FeeBasis? {
         switch transfer.feeBasis {
         case .bitcoin(let feePerKB):
             //TODO:CRYPTO Core should provide an Amount instead of UInt64 satoshis
             return .bitcoin(feePerKB: Amount(tokenString: feePerKB.description, currency: currency, unit: currency.baseUnit))
         case .ethereum(let gasPrice, let gasLimit):
-            guard let currency = wallet.manager.currency(from: gasPrice.currency) else { assertionFailure(); return nil }
-            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: currency), gasLimit: gasLimit)
+            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: wallet.feeCurrency), gasLimit: gasLimit)
         }
     }
 
@@ -99,7 +100,7 @@ class Transaction {
             switch confirmations {
             case 0:
                 return .pending
-            case 1..<6:
+            case 1..<6: //TODO:CRYPTO BlockchainDB will provide these values
                 return .confirmed
             default:
                 return .complete
@@ -120,9 +121,20 @@ class Transaction {
 
     // MARK: Init
 
-    init(transfer: BRCrypto.Transfer, wallet: Wallet) {
+    init(transfer: BRCrypto.Transfer, wallet: Wallet, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.transfer = transfer
         self.wallet = wallet
+
+        if let kvStore = kvStore, let metaDataKey = metaDataKey {
+            metaDataContainer = MetaDataContainer(key: metaDataKey, kvStore: kvStore)
+            // metadata is created for outgoing transactions when they are sent
+            // incoming transactions only get metadata when they are recently confirmed to ensure
+            // a relatively recent exchange rate is applied
+            if let rate = rate,
+                confirmations < 6 && direction == .received {
+                metaDataContainer!.createMetaData(tx: self, rate: rate)
+            }
+        }
     }
 }
 
@@ -130,9 +142,6 @@ extension Transaction {
 
     var metaData: TxMetaData? { return metaDataContainer?.metaData }
     var comment: String? { return metaData?.comment }
-
-    //TODO:CRYPTO tx metadata
-    var metaDataContainer: MetaDataContainer? { return nil }
 
     //TODO:CRYPTO remove this dependency
     var kvStore: BRReplicatedKVStore? { return nil }
