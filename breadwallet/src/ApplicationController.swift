@@ -69,8 +69,7 @@ class ApplicationController: Subscriber, Trackable {
 
     private func enterOnboarding() {
         assert(keyStore.noWallet)
-        //TODO:CRYPTO no need for this to be a global action
-        Store.perform(action: ShowStartFlow())
+        startFlowController?.showStartFlow()
     }
 
     /// Prompts to unlock the wallet for initial launch, then setup the system

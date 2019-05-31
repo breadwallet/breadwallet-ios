@@ -56,7 +56,7 @@ class RecoveryKeyFlowController {
                                      keyMaster: KeyMaster,
                                      from viewController: UIViewController,
                                      context: EventContext,
-                                     dismissAction: Action?,
+                                     dismissAction: (() -> Void)?,
                                      modalPresentation: Bool = true,
                                      canExit: Bool = true) {
         
@@ -92,8 +92,8 @@ class RecoveryKeyFlowController {
             
             EventMonitor.shared.deregister(eventContext)
             
-            if let dismiss = dismissAction {
-                Store.perform(action: dismiss)
+            if let dismissAction = dismissAction {
+                dismissAction()
             } else {
                 if modalPresentation {
                     modalPresentingViewController?.dismiss(animated: true, completion: nil)
@@ -163,7 +163,7 @@ class RecoveryKeyFlowController {
                 
                 // The onboarding flow has its own dismiss action.
                 if let dismissAction = dismissAction {
-                    Store.perform(action: dismissAction)
+                    dismissAction()
                 } else {
                     modalPresentingViewController?.dismiss(animated: true, completion: nil)
                 }
