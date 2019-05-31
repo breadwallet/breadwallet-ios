@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "Einstellungen";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "Einrichten";
 /* Skip button title */
 "Button.skip" = "Überspringen";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Voraussichtliche Lieferzeit: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2–5 Minuten";
+/* Priority fee */
+"FeeSelector.priority" = "Priorität";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 Minuten";
 /* Regular fee */
 "FeeSelector.regular" = "Regulär";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,13 +377,13 @@
 /* button label */
 "MenuViewController.recoverButton" = "Wallet wiederherstellen";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "Sie benötigen Ihren Papierschlüssel, um auf Ihre Wallet zuzugreifen, wenn Sie einmal die Sicherheitseinstellungen Ihres Smartphones ändern.\n\nMöchten Sie Ihren Papierschlüssel wirklich erst später einrichten?";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Weiter einrichten";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Ich mache das später";
 /* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Attention";
+"Modal.PaperKeySkip.Title" = "Achtung";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Zum automatischen Modus wechseln";
 /* Node is connected label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Ihr Paper-Key muss für den Fall, dass Sie Ihr Telefon verlieren oder wechseln, gespeichert werden.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "Richten Sie Ihren Papierschlüssel für den Fall ein, dass Sie Ihr Smartphone einmal verlieren. Sie benötigen den Schlüssel ebenfalls, wenn Sie die Sicherheitseinstellungen Ihre Smartphones ändern.s";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Maßnahme erforderlich";
 /* Transaction rejected prompt body */
@@ -834,7 +838,7 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Dein Offlineschlüssel ist die einzige Möglichkeit, dein BRD wiederherzustellen, falls du dein Smartphone verlierst, austauscht, es gestohlen wird oder kaputtgeht.\n\nHierfür zeigen wir dir eine Liste von Wörtern an, damit du sie dir auf ein Stück Papier notieren kannst, das es sicher aufzubewahren gilt.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Ihr Papierschlüssel ist der einzige Weg, um Ihr BRD wiederherzustellen, wenn Ihr Smartphone gestohlen wird, kaputt oder verloren geht oder wenn Sie ein neues kaufen.\n\nIhr Papierschlüssel wird ebenfalls benötigt, wenn Sie die Sicherheitseinstellungen Ihres Geräts ändern.\n\nWir zeigen Ihnen eine Liste an Wörtern, die Sie auf einen Zettel Papier (daher Papierschlüssel) schreiben und sicher aufbewahren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Offlineschlüssel notieren";
 /* Argument is date; date should be on a new line */
