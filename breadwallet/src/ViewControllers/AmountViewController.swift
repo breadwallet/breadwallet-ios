@@ -21,7 +21,7 @@ class AmountViewController: UIViewController, Trackable {
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
+        if let rate = currency.state?.currentRate, Store.state.showFiatAmounts {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
             let title = currency.unitName(forDecimals: currency.defaultUnit.decimals)
@@ -175,7 +175,7 @@ class AmountViewController: UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if Store.state.isBtcSwapped {
+        if Store.state.showFiatAmounts {
             if let rate = currency.state?.currentRate {
                 selectedRate = rate
             }

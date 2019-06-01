@@ -32,12 +32,12 @@ class TxListCell: UITableViewCell {
         setupViews()
     }
     
-    func setTransaction(_ viewModel: TxListViewModel, isBtcSwapped: Bool, rate: Rate, isSyncing: Bool) {
+    func setTransaction(_ viewModel: TxListViewModel, showFiatAmounts: Bool, rate: Rate, isSyncing: Bool) {
         self.viewModel = viewModel
         
         timestamp.text = viewModel.shortTimestamp
         descriptionLabel.text = viewModel.shortDescription
-        amount.attributedText = viewModel.amount(isBtcSwapped: isBtcSwapped, rate: rate)
+        amount.attributedText = viewModel.amount(showFiatAmounts: showFiatAmounts, rate: rate)
         
         statusIndicator.status = viewModel.status
         

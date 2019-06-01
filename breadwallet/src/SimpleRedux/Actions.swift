@@ -120,16 +120,6 @@ struct WalletChange: Trackable {
             guard let walletState = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: walletState.mutate(balance: balance)) })
     }
-    func setTransactions(_ transactions: [Transaction]) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(transactions: transactions)) })
-    }
-    func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(isRescanning: isRescanning)) })
-    }
     
     func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
         UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
@@ -159,15 +149,15 @@ struct WalletChange: Trackable {
 enum CurrencyChange {
     struct Toggle: Action {
         let reduce: Reducer = {
-            UserDefaults.isBtcSwapped = !$0.isBtcSwapped
-            return $0.mutate(isBtcSwapped: !$0.isBtcSwapped)
+            UserDefaults.showFiatAmounts = !$0.showFiatAmounts
+            return $0.mutate(showFiatAmounts: !$0.showFiatAmounts)
         }
     }
 
-    struct SetIsSwapped: Action {
+    struct SetShowFiatAmounts: Action {
         let reduce: Reducer
-        init(_ isBtcSwapped: Bool) {
-            reduce = { $0.mutate(isBtcSwapped: isBtcSwapped) }
+        init(_ showFiatAmounts: Bool) {
+            reduce = { $0.mutate(showFiatAmounts: showFiatAmounts) }
         }
     }
 }

@@ -155,8 +155,6 @@ class Sender {
             guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet.core, pin: pin) else {
                 return completion(.creationError(message: ""))
             }
-            //TODO:CRYPTO wait for send events?
-            //completion(.success(hash: nil, rawTx: nil))
             self.completionHandler = completion
             self.wallet.subscribe(sendListener: self)
         }

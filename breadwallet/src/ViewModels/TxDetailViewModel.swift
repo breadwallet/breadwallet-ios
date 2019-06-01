@@ -87,7 +87,7 @@ extension TxDetailViewModel {
         var feeAmount = tx.fee
         feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
         feeAmount.rate = rate
-        fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
+        fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
 
         if case .ethereum(let gasPriceAmount, let gasLimitValue)? = tx.feeBasis {
             let gasFormatter = NumberFormatter()
@@ -103,7 +103,7 @@ extension TxDetailViewModel {
         if tx.direction == .sent, tx.confirmations > 0, tx.amount.currency == tx.fee.currency {
             var totalWithFee = tx.amount + tx.fee
             totalWithFee.maximumFractionDigits = Amount.highPrecisionDigits
-            total = Store.state.isBtcSwapped ? totalWithFee.fiatDescription : totalWithFee.tokenDescription
+            total = Store.state.showFiatAmounts ? totalWithFee.fiatDescription : totalWithFee.tokenDescription
         }
     }
     

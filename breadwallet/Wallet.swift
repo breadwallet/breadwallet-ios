@@ -34,6 +34,10 @@ class Wallet {
 
     var kvStore: BRReplicatedKVStore? //TODO:CRYPTO temp hack
 
+    var balance: Amount {
+        return Amount(coreAmount: core.balance, currency: self.currency)
+    }
+
     var transfers: [Transaction] {
         return core.transfers
             .filter { $0.isVisible }
