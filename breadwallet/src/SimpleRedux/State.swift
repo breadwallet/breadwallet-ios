@@ -14,7 +14,7 @@ struct State {
     let isOnboardingEnabled: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
-    let isBtcSwapped: Bool //move to CurrencyState
+    let showFiatAmounts: Bool
     let alert: AlertType
     let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
@@ -74,7 +74,7 @@ extension State {
                         isOnboardingEnabled: true,
                         isLoginRequired: true,
                         rootModal: .none,
-                        isBtcSwapped: UserDefaults.isBtcSwapped,
+                        showFiatAmounts: UserDefaults.showFiatAmounts,
                         alert: .none,
                         isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
@@ -99,7 +99,7 @@ extension State {
                    isOnboardingEnabled: Bool? = nil,
                    isLoginRequired: Bool? = nil,
                    rootModal: RootModal? = nil,
-                   isBtcSwapped: Bool? = nil,
+                   showFiatAmounts: Bool? = nil,
                    alert: AlertType? = nil,
                    isBiometricsEnabled: Bool? = nil,
                    defaultCurrencyCode: String? = nil,
@@ -115,7 +115,7 @@ extension State {
                      isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
-                     isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped,
+                     showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
                      alert: alert ?? self.alert,
                      isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled,
                      defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode,
@@ -166,9 +166,7 @@ struct WalletState {
     let syncProgress: Double
     let syncState: SyncState
     let balance: Amount?
-    let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
-    let isRescanning: Bool
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }
@@ -185,9 +183,7 @@ struct WalletState {
                            syncProgress: 0.0,
                            syncState: .success,
                            balance: nil,
-                           transactions: [],
                            lastBlockTimestamp: 0,
-                           isRescanning: false,
                            legacyReceiveAddress: nil,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
@@ -199,9 +195,7 @@ struct WalletState {
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
                     balance: Amount? = nil,
-                    transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
-                    isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
@@ -215,9 +209,7 @@ struct WalletState {
                            syncProgress: syncProgress ?? self.syncProgress,
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
-                           transactions: transactions ?? self.transactions,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
-                           isRescanning: isRescanning ?? self.isRescanning,
                            legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
@@ -233,8 +225,6 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
-        lhs.transactions == rhs.transactions &&
-        lhs.isRescanning == rhs.isRescanning &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&

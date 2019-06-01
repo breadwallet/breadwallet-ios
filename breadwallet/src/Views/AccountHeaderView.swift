@@ -61,7 +61,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         }
     }
     
-    private var isBtcSwapped: Bool {
+    private var showFiatAmounts: Bool {
         didSet {
             DispatchQueue.main.async {
                 self.setBalances()
@@ -74,7 +74,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
     init(currency: Currency) {
         self.currency = currency
         self.syncView =  SyncingHeaderView(currency: currency)
-        self.isBtcSwapped = Store.state.isBtcSwapped
+        self.showFiatAmounts = Store.state.showFiatAmounts
         if let rate = currency.state?.currentRate {
             let placeholderAmount = Amount.zero(currency, rate: rate)
             self.exchangeRate = rate
@@ -195,7 +195,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
             conversionSymbol.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]),
             currencyTapView.leadingAnchor.constraint(equalTo: primaryBalance.leadingAnchor)
         ]
-        NSLayoutConstraint.activate(isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+        NSLayoutConstraint.activate(showFiatAmounts ? self.swappedConstraints : self.regularConstraints)
 
         modeLabel.constrain([
             modeLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
@@ -219,8 +219,8 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
 
     private func addSubscriptions() {
         Store.lazySubscribe(self,
-                            selector: { $0.isBtcSwapped != $1.isBtcSwapped },
-                            callback: { self.isBtcSwapped = $0.isBtcSwapped })
+                            selector: { $0.showFiatAmounts != $1.showFiatAmounts },
+                            callback: { self.showFiatAmounts = $0.showFiatAmounts })
         Store.lazySubscribe(self,
                             selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                             callback: {
@@ -301,9 +301,9 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
     }
     
     private func swapLabels() {
-        NSLayoutConstraint.deactivate(isBtcSwapped ? regularConstraints : swappedConstraints)
-        NSLayoutConstraint.activate(isBtcSwapped ? swappedConstraints : regularConstraints)
-        if isBtcSwapped {
+        NSLayoutConstraint.deactivate(showFiatAmounts ? regularConstraints : swappedConstraints)
+        NSLayoutConstraint.activate(showFiatAmounts ? swappedConstraints : regularConstraints)
+        if showFiatAmounts {
             primaryBalance.makeSecondary()
             secondaryBalance.makePrimary()
         } else {
@@ -321,8 +321,8 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber {
         UIView.spring(0.7, animations: {
             self.primaryBalance.toggle()
             self.secondaryBalance.toggle()
-            NSLayoutConstraint.deactivate(!self.isBtcSwapped ? self.regularConstraints : self.swappedConstraints)
-            NSLayoutConstraint.activate(!self.isBtcSwapped ? self.swappedConstraints : self.regularConstraints)
+            NSLayoutConstraint.deactivate(!self.showFiatAmounts ? self.regularConstraints : self.swappedConstraints)
+            NSLayoutConstraint.activate(!self.showFiatAmounts ? self.swappedConstraints : self.regularConstraints)
             self.layoutIfNeeded()
         }, completion: { _ in })
 

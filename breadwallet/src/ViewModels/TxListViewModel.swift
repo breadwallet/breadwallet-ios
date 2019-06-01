@@ -42,7 +42,7 @@ struct TxListViewModel: TxViewModel {
         }
     }
 
-    func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
+    func amount(showFiatAmounts: Bool, rate: Rate) -> NSAttributedString {
         var amount = tx.amount
 
         if tokenTransferCode != nil {
@@ -52,7 +52,7 @@ struct TxListViewModel: TxViewModel {
         }
 
         let text = Amount(amount: amount,
-                          rate: isBtcSwapped ? rate : nil,
+                          rate: showFiatAmounts ? rate : nil,
                           negative: (tx.direction == .sent)).description
         let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray
         

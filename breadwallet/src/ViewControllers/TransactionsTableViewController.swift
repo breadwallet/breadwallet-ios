@@ -17,7 +17,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     init(wallet: Wallet, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.wallet = wallet
         self.didSelectTransaction = didSelectTransaction
-        self.isBtcSwapped = Store.state.isBtcSwapped
+        self.showFiatAmounts = Store.state.showFiatAmounts
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -40,7 +40,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     private var allTransactions: [Transaction] = [] {
         didSet { transactions = allTransactions }
     }
-    private var isBtcSwapped: Bool {
+    private var showFiatAmounts: Bool {
         didSet { reload() }
     }
     private var rate: Rate? {
@@ -105,8 +105,8 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     
     private func setupSubscriptions() {
         Store.subscribe(self,
-                        selector: { $0.isBtcSwapped != $1.isBtcSwapped },
-                        callback: { self.isBtcSwapped = $0.isBtcSwapped })
+                        selector: { $0.showFiatAmounts != $1.showFiatAmounts },
+                        callback: { self.showFiatAmounts = $0.showFiatAmounts })
         Store.subscribe(self,
                         selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                         callback: {
@@ -118,15 +118,6 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
             if case .txMemoUpdated(let txHash) = trigger {
                 self.reload(txHash: txHash)
             }
-        })
-        
-        Store.subscribe(self, selector: {
-            guard let oldTransactions = $0[self.currency]?.transactions else { return false }
-            guard let newTransactions = $1[self.currency]?.transactions else { return false }
-            return oldTransactions != newTransactions },
-                        callback: { state in
-                            self.allTransactions = state[self.currency]?.transactions ?? [Transaction]()
-                            self.reload()
         })
     }
 
@@ -229,7 +220,7 @@ extension TransactionsTableViewController {
         let rate = self.rate ?? Rate.empty
         let viewModel = TxListViewModel(tx: transactions[indexPath.row])
         cell.setTransaction(viewModel,
-                            isBtcSwapped: isBtcSwapped,
+                            showFiatAmounts: showFiatAmounts,
                             rate: rate,
                             isSyncing: currency.state?.syncState != .success)
         return cell

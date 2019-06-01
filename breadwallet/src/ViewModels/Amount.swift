@@ -96,7 +96,7 @@ public struct Amount {
     }
 
     var combinedDescription: String {
-        return Store.state.isBtcSwapped ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
+        return Store.state.showFiatAmounts ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
     }
     
     // MARK: Token

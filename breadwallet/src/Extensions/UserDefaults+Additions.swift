@@ -17,7 +17,7 @@ private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
 private let hasPromptedForEmailKey = "hasPromptedForEmail"
 private let hasSubscribedToEmailUpdatesKey = "hasSubscribedToEmailUpdates"
-private let isBtcSwappedKey = "isBtcSwappedKey"
+private let showFiatAmountsKey = "isBtcSwappedKey" // legacy key name
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
@@ -155,10 +155,10 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
-    static var isBtcSwapped: Bool {
-        get { return defaults.bool(forKey: isBtcSwappedKey)
+    static var showFiatAmounts: Bool {
+        get { return defaults.bool(forKey: showFiatAmountsKey)
         }
-        set { defaults.set(newValue, forKey: isBtcSwappedKey) }
+        set { defaults.set(newValue, forKey: showFiatAmountsKey) }
     }
 
     static var pushToken: Data? {
