@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "設定";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "設定";
 /* Skip button title */
 "Button.skip" = "略過";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "預計發送時間：%1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 分鐘";
+/* Priority fee */
+"FeeSelector.priority" = "優先";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 分鐘";
 /* Regular fee */
 "FeeSelector.regular" = "標準";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,13 +377,13 @@
 /* button label */
 "MenuViewController.recoverButton" = "復原電子錢包";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "如果變更手機上的安全設定,則需要使用紙上金鑰才能開啟錢包。\n\n您確定要稍後設定紙上金鑰嗎？";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "繼續設定";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "稍後再做";
 /* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Attention";
+"Modal.PaperKeySkip.Title" = "注意";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "切換至自動模式";
 /* Node is connected label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "必須儲存紙上金鑰，以防萬一您遺失或換電話。";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "設定您的紙上金鑰,以防您遺失或更換手機。如果變更手機的安全設定,也需要您的金鑰。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要採取動作";
 /* Transaction rejected prompt body */
@@ -834,7 +838,7 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "您的手機遺失、損壞或升級時，紙本金鑰是復原\n BRD 唯一的方式。\n\n我們會向您出示一個字串，請寫在紙上並妥善保管。";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "如果您的手機遺失,遭竊,損壞或升級,您的紙上金鑰是恢復比特幣錢包 (BRD) 的唯一方法。\n\n如果變更裝置上的安全設定,也需要提供紙上金鑰。\n\n我們將向您展示一張單詞列表,寫在一張紙上並妥善保管。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "寫下紙本金鑰";
 /* Argument is date; date should be on a new line */
