@@ -420,12 +420,13 @@ class BRWebSocketImpl: BRWebSocket {
             }
             lengtharray[lengtharrayWritten - 1] = byte
             if lengtharrayWritten == 2 {
-                let ll = Data(lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
+                let ll = Data(lengtharray).withUnsafeBytes { (p: UnsafeRawBufferPointer) -> UInt16 in
+                    let value = p.load(as: UInt16.self)
                     if Int(OSHostByteOrder()) != OSBigEndian {
-                        return CFSwapInt16BigToHost(p.pointee)
+                        return CFSwapInt16BigToHost(value)
                     }
-                    return p.pointee
-                })
+                    return value
+                }
                 length = Int(ll)
                 if hasMask {
                     maskarray = [UInt8](repeating: 0, count: 4)
@@ -453,12 +454,13 @@ class BRWebSocketImpl: BRWebSocket {
             }
             lengtharray[lengtharrayWritten - 1] = byte
             if lengtharrayWritten == 8 {
-                let ll = Data(lengtharray).withUnsafeBytes({ (p: UnsafePointer<UInt64>) -> UInt64 in
+                let ll = Data(lengtharray).withUnsafeBytes { (p: UnsafeRawBufferPointer) -> UInt64 in
+                    let value = p.load(as: UInt64.self)
                     if Int(OSHostByteOrder()) != OSBigEndian {
-                        return CFSwapInt64BigToHost(p.pointee)
+                        return CFSwapInt64BigToHost(value)
                     }
-                    return p.pointee
-                })
+                    return value
+                }
                 length = Int(ll)
                 if hasMask {
                     maskarray = [UInt8](repeating: 0, count: 4)
@@ -544,9 +546,10 @@ class BRWebSocketImpl: BRWebSocket {
             var reason = ""
             if dataWritten >= 2 {
                 let lt = Array(data.prefix(2))
-                let ll = Data(lt).withUnsafeBytes({ (p: UnsafePointer<UInt16>) -> UInt16 in
-                    return CFSwapInt16BigToHost(p.pointee)
-                })
+                let ll = Data(lt).withUnsafeBytes { (p: UnsafeRawBufferPointer) -> UInt16 in
+                    let value = p.load(as: UInt16.self)
+                    return CFSwapInt16BigToHost(value)
+                }
                 if let ss = SocketCloseEventCode(rawValue: ll) {
                     status = ss
                 } else {

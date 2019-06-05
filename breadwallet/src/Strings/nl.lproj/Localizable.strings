@@ -146,6 +146,8 @@
 "Button.no" = "Nee";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Instellingen openen";
 /* receive button */
 "Button.receive" = "Ontvangen";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "versturen";
 /* Settings button label */
 "Button.settings" = "Instellingen";
+/* Setup button label */
+"Button.setup" = "Instellen";
 /* Skip button title */
 "Button.skip" = "Overslaan";
 /* Settings button label */
@@ -250,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Geschatte levering: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 tot 5 minuten";
+/* Priority fee */
+"FeeSelector.priority" = "Voorrang";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 minuten";
 /* Regular fee */
 "FeeSelector.regular" = "Normaal";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -368,6 +376,14 @@
 "MenuViewController.modalTitle" = "Menu";
 /* button label */
 "MenuViewController.recoverButton" = "Portemonnee Herstellen";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "U heeft uw papieren sleutel nodig om uw wallet te openen als u uw beveiligingsinstellingen op uw telefoon wijzigt.\n\nWeet u zeker dat u uw papieren sleutel later wilt instellen?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Doorgaan met instellen";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Ik doe dit later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attentie";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Omschakelen naar automatische modus";
 /* Node is connected label */
@@ -458,8 +474,10 @@
 "Prompts.NoScreenLock.body.android" = "Een schermvergrendeling voor uw apparaat is nodig om uw portemonnee te beveiligen. Ga naar \"Instellingen\" > \"Beveiliging\" > \"Schermvergrendeling\" en stel in om door te gaan.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Schermvergrendeling uitgeschakeld";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "Uw Papiersleutel moet opgeslagen worden voor het geval dat u uw telefoon ooit verliest of vervangt. Klik hier om door te gaan.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "Uw Papiersleutel moet opgeslagen worden voor het geval dat u uw telefoon ooit verliest of vervangt.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Stel uw papieren sleutel in voor het geval dat u uw telefoon ooit kwijtraakt of vervangt. U heeft uw sleutel nodig indien u de beveiligingsinstellingen van uw telefoon aanpast.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Actie Vereist";
 /* Transaction rejected prompt body */
@@ -488,10 +506,14 @@
 "PushNotifications.body" = "Schakel pushmeldingen in en hoor als eerste over nieuwe functies en speciale aanbiedingen.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Meldingen Uitgeschakeld";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Schakel meldingen in in Instellingen om notificaties te ontvangen";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Schakel meldingen in om speciale aanbiedingen en updates van BRD te ontvangen.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "U ontvangt speciale aanbiedingen en updates van BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "U ontvangt speciale aanbiedingen en updates van BRD. Ga naar Instellingen van BRD i om meldingen in te schakelen.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push Meldingen";
+"PushNotifications.label" = "Pushmeldingen ontvangen";
 /* Push notifications are off label */
 "PushNotifications.off" = "Uit";
 /* Push notifications are on label */
@@ -650,7 +672,8 @@
 "SecurityCenter.faceIdTitle" = "Face-ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "De enige manier om toegang te hebben tot je Bitcoins is als je je telefoon verliest of upgrade.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Papieren Sleutel";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Beschermt je BRD van ongeautoriseerde gebruikers.";
@@ -814,10 +837,12 @@
 "StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je BRD te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Uw papieren sleutel is de enige manier om uw BRD te herstellen indien u uw telefoon kwijtraakt of als deze gestolen of geüpgraded wordt. \n\nU heeft uw papieren sleutel tevens nodig indien u de beveiligingsinstellingen van uw apparaat aanpast.\n\nWe tonen u een lijst met woorden die u op een stuk papier kunt opschrijven en veilig dient te bewaren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
-/* Argument is date */
-"StartPaperPhrase.date" = "Je hebt voor het laatst je papieren sleutel opgeschreven op %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Je hebt voor het laatst je papieren sleutel opgeschreven op \n%1$@";
 /* button label */
 "StartViewController.createButton" = "Nieuwe wallet maken";
 /* Start view message */

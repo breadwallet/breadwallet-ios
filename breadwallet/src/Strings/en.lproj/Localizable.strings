@@ -1,3 +1,5 @@
+/* App name */
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
@@ -144,6 +146,8 @@
 "Button.no" = "No";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Open Settings";
 /* receive button */
 "Button.receive" = "Receive";
 /* Button label to open Security Settings. */
@@ -154,6 +158,8 @@
 "Button.send" = "Send";
 /* Settings button label */
 "Button.settings" = "Settings";
+/* Setup button label */
+"Button.setup" = "Set Up";
 /* Skip button title */
 "Button.skip" = "Skip";
 /* Settings button label */
@@ -214,6 +220,8 @@
 "ErrorMessages.emailUnavailableMessage" = "This device isn't configured to send email with the iOS mail app.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "Email Unavailable";
+/* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
+"ErrorMessages.loopingLockScreen.android" = "Bread can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "This device isn't configured to send messages.";
 /* Messaging unavailable alert title */
@@ -246,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Estimated Delivery: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minutes";
+/* Priority fee */
+"FeeSelector.priority" = "Priority";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 minutes";
 /* Regular fee */
 "FeeSelector.regular" = "Regular";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -364,6 +376,14 @@
 "MenuViewController.modalTitle" = "Menu";
 /* button label */
 "MenuViewController.recoverButton" = "Recover Wallet";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Switch to Automatic Mode";
 /* Node is connected label */
@@ -454,8 +474,10 @@
 "Prompts.NoScreenLock.body.android" = "A device screen lock is needed to safeguard your wallet. Enable screen lock in your settings to continue.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Screen lock disabled";
-/* Warning about paper key. */
+/* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Your recovery key must be saved in case you lose or change your phone.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
 /* Transaction rejected prompt body */
@@ -484,10 +506,14 @@
 "PushNotifications.body" = "Turn on push notifications and be the first to hear about new features and special offers.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Turn on notifications in Settings to receive alerts";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Turn on notifications to receive special offers and updates from BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "You’re receiving special offers and updates from BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Looks like notifications are turned off. Please go to Settings to enable notifications from BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push Notifications";
+"PushNotifications.label" = "Receive Push Notifications";
 /* Push notifications are off label */
 "PushNotifications.off" = "Off";
 /* Push notifications are on label */
@@ -646,7 +672,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "The only way to access your assets if you lose or upgrade your phone.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Recovery Key";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protects your BRD from unauthorized users.";
@@ -810,6 +837,8 @@
 "StartPaperPhrase.againButtonTitle" = "Write Down Paper Key Again";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
 /* Argument is date; date should be on a new line */

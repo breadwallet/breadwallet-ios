@@ -146,6 +146,8 @@
 "Button.no" = "No";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Apri le Impostazioni";
 /* receive button */
 "Button.receive" = "Ricevi";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "invia";
 /* Settings button label */
 "Button.settings" = "Impostazioni";
+/* Setup button label */
+"Button.setup" = "Impostazioni";
 /* Skip button title */
 "Button.skip" = "Salta";
 /* Settings button label */
@@ -250,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Consegna Stimata: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minuti";
+/* Priority fee */
+"FeeSelector.priority" = "Priorità";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 minuti";
 /* Regular fee */
 "FeeSelector.regular" = "Regolare";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -368,6 +376,14 @@
 "MenuViewController.modalTitle" = "Menu";
 /* button label */
 "MenuViewController.recoverButton" = "Recupera Portafoglio";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "La tua chiave di protezione è richiesta per aprire il tuo portafoglio se cambi le impostazioni di sicurezza sul cellulare.\n\nSei sicuro di voler impostare la chiave di sicurezza più tardi?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continua Impostazioni";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Lo farò più tardi";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Attenzione";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Passa alla modalità automatica";
 /* Node is connected label */
@@ -458,8 +474,10 @@
 "Prompts.NoScreenLock.body.android" = "È necessaria una schermata di blocco del dispositivo per proteggere il tuo portafoglio. Vai su “Impostazioni” > “Sicurezza” > “Schermata di Blocco” e abilitala per continuare.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Schermata di blocco disabilitata";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "È necessario salvare la tua Paper Key nel caso in cui dovessi perdere o cambiare telefono. Premi qui per continuare.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "È necessario salvare la tua Paper Key nel caso in cui dovessi perdere o cambiare telefono.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Imposta la tua chiave di protezione in caso dovessi perdere o sostituire il tuo cellulare.\nLa chiave è richiesta anche se cambi le impostazioni di sicurezza del telefono.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Azione necessaria";
 /* Transaction rejected prompt body */
@@ -488,10 +506,14 @@
 "PushNotifications.body" = "Attiva le notifiche push e sii il primo a conoscere le nuove funzionalità e le offerte speciali.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifiche Disabilitate";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Abilita le notifiche in Impostazioni per ricevere avvertimenti";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Attiva le notifiche per ricevere offerte speciali e aggiornamenti da BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Stai ricevendo offerte speciali e aggiornamenti da BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Sembra che le notifiche siano disattivate. Accedi alle Impostazioni per abilitare le notifiche da BRD.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Notifiche Push";
+"PushNotifications.label" = "Ricevi notifiche push";
 /* Push notifications are off label */
 "PushNotifications.off" = "Spento";
 /* Push notifications are on label */
@@ -650,7 +672,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "L'unico modo per accedere al tuo  bitcoin se perdi o aggiorni il telefono.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Paper Key";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protegge il tuo BRD dagli utenti non autorizzati.";
@@ -814,10 +837,12 @@
 "StartPaperPhrase.againButtonTitle" = "Annota di nuovo la Paper Key";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "La tua Paper Key è l'unico modo per ripristinare il tuo BRD, nel caso il tuo telefono sia perso, rubato, rotto o aggiornato.\n\nTi mostreremo un elenco di parole da annotare su un pezzo di carta e conservare al sicuro.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "La chiave di sicurezza è il solo modo per ripristinare il tuo BRD se il tuo telefono viene perso, rubato, rotto, o aggiornato.\n\nLa tua chiave di sicurezza è richiesta anche se cambi le impostazioni di sicurezza del dispositivo.\n\nTi mostreremo una lista di parole da scrivere su un pezzo di carta e tenere al sicuro.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Annota la Paper Key";
-/* Argument is date */
-"StartPaperPhrase.date" = "Hai annotato la Paper Key l'ultima volta il %1$@";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Hai annotato la Paper Key l'ultima volta il\n%1$@";
 /* button label */
 "StartViewController.createButton" = "Crea nuovo portafoglio";
 /* Start view message */
