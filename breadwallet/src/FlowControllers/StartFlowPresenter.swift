@@ -31,7 +31,7 @@ class StartFlowPresenter: Subscriber, Trackable {
     private let keyMaster: KeyMaster
     private var loginViewController: UIViewController?
     private let loginTransitionDelegate = LoginTransitionDelegate()
-    private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)?
+    private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)
     private var createBuyScreen: (() -> BRWebViewController)?
     private var shouldBuyCoinAfterOnboarding: Bool = false
     
@@ -60,11 +60,7 @@ class StartFlowPresenter: Subscriber, Trackable {
     private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
             guardProtected(queue: DispatchQueue.main) { [weak self] in
-                if Store.state.shouldShowOnboarding {
-                    self?.presentOnboardingFlow() 
-                } else {
-                    self?.presentStartFlow()
-                }
+                self?.presentOnboardingFlow()
             }
         } else {
             dismissStartFlow()
@@ -124,30 +120,15 @@ class StartFlowPresenter: Subscriber, Trackable {
             // This will be set to true if the user exits onboarding with the `createWalletBuyCoin` action.
             shouldBuyCoinAfterOnboarding = false
             
-            rootViewController.present(onboardingFlow, animated: false, completion: {
+            rootViewController.present(onboardingFlow, animated: false) {
                 
                 // Stuff the home screen in as the root view controller so that when
                 // the onboarding flow is finished, the home screen will be present. If 
                 // we push it before the present() call you can briefly see the home screen
                 // before the onboarding screen is displayed -- not good.
-                if let createHomeScreen = self.createHomeScreen {
-                    let homeScreen = createHomeScreen(self.rootViewController)
-                    self.rootViewController.pushViewController(homeScreen, animated: false)
-                }                
-            })
-        }
-    }
-    
-    private func presentStartFlow() {
-        let startViewController = StartViewController(didTapCreate: enterCreateWalletFlow,
-                                                      didTapRecover: enterRecoverWalletFlow)
-
-        navigationController = ModalNavigationController(rootViewController: startViewController)
-        navigationController?.delegate = navigationControllerDelegate
-        if let startFlow = navigationController {
-            rootViewController.popToRootViewController(animated: false)
-            startFlow.setNavigationBarHidden(true, animated: false)
-            rootViewController.present(startFlow, animated: false, completion: nil)
+                let homeScreen = self.createHomeScreen(self.rootViewController)
+                self.rootViewController.pushViewController(homeScreen, animated: false)
+            }
         }
     }
 

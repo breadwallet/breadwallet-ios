@@ -230,7 +230,10 @@ class ApplicationController: Subscriber, Trackable {
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
+        
         UNUserNotificationCenter.current().delegate = notificationHandler
+        EventMonitor.shared.register(.pushNotifications)
+        
         setup()
         handleLaunchOptions(options)
         Reachability.addDidChangeCallback({ isReachable in
@@ -333,6 +336,8 @@ class ApplicationController: Subscriber, Trackable {
                         walletManagers: walletManagers.map { $0.1 })
         Backend.sendLaunchEvent()
 
+        checkForNotificationSettingsChange(appActive: true)
+        
         if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
             ethWalletManager.apiClient = Backend.apiClient
             if !UserDefaults.hasScannedForTokenBalances {
@@ -439,6 +444,7 @@ class ApplicationController: Subscriber, Trackable {
         UINavigationBar.appearance().backIndicatorTransitionMaskImage = backImage
         // hide back button text
         UIBarButtonItem.appearance().setBackButtonBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .normal, barMetrics: .default)
+        UISwitch.appearance().onTintColor = .uiAccent
     }
     
     private func addHomeScreenHandlers(homeScreen: HomeScreenViewController, 
@@ -666,28 +672,38 @@ class ApplicationController: Subscriber, Trackable {
     
     func willResignActive() {
         self.applyBlurEffect()        
-        if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
-            Backend.apiClient.deletePushNotificationToken(pushToken)
-        }
+        checkForNotificationSettingsChange(appActive: false)
     }
     
     func didBecomeActive() {
         removeBlurEffect()
-        // check if notification settings changed
-        NotificationAuthorizer().areNotificationsAuthorized { authorized in
-            DispatchQueue.main.async {
-                if authorized {
-                    if !Store.state.isPushNotificationsEnabled {
-                        self.saveEvent("push.enabledSettings")
-                    }
-                    UIApplication.shared.registerForRemoteNotifications()
-                } else {
-                    if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
-                        self.saveEvent("push.disabledSettings")
-                        Store.perform(action: PushNotifications.SetIsEnabled(false))
-                        Backend.apiClient.deletePushNotificationToken(pushToken)
+        checkForNotificationSettingsChange(appActive: true)
+    }
+    
+    private func checkForNotificationSettingsChange(appActive: Bool) {
+        guard Backend.isConnected else { return }
+        
+        if appActive {
+            // check if notification settings changed
+            NotificationAuthorizer().areNotificationsAuthorized { authorized in
+                DispatchQueue.main.async {
+                    if authorized {
+                        if !Store.state.isPushNotificationsEnabled {
+                            self.saveEvent("push.enabledSettings")
+                        }
+                        UIApplication.shared.registerForRemoteNotifications()
+                    } else {
+                        if Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+                            self.saveEvent("push.disabledSettings")
+                            Store.perform(action: PushNotifications.SetIsEnabled(false))
+                            Backend.apiClient.deletePushNotificationToken(pushToken)
+                        }
                     }
                 }
+            }
+        } else {
+            if !Store.state.isPushNotificationsEnabled, let pushToken = UserDefaults.pushToken {
+                Backend.apiClient.deletePushNotificationToken(pushToken)
             }
         }
     }

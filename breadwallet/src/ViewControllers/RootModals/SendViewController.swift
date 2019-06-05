@@ -115,12 +115,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         })
         Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
             guard let fees = $0[self.currency]?.fees else { return }
-            self.sender.updateFeeRates(fees, level: self.feeSelection)
-            if self.currency is Bitcoin {
-                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
-            } else {
-                self.amountView.canEditFee = false
-            }
+            self.sender.updateFeeRates(fees, toLevel: self.feeSelection)
         })
         
         if currency.matches(Currencies.eth) || currency is ERC20Token {
@@ -180,7 +175,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             guard myself.currency is Bitcoin else { return }
             myself.feeSelection = fee
             if let fees = myself.currency.state?.fees {
-                myself.sender.updateFeeRates(fees, level: fee)
+                myself.sender.updateFeeRates(fees, toLevel: fee)
             }
             myself.amountView.updateBalanceLabel()
         }

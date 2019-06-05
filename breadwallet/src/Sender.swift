@@ -50,7 +50,7 @@ protocol Sender: class {
     
     var canUseBiometrics: Bool { get }
 
-    func updateFeeRates(_ fees: Fees, level: FeeLevel?)
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel?)
     func fee(forAmount: UInt256) -> UInt256?
     
     func validate(paymentRequest: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult
@@ -121,8 +121,8 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
         return authenticator.canUseBiometrics(forTransaction: tx, wallet: wallet)
     }
     
-    func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
-        walletManager.wallet?.feePerKb = fees.fee(forLevel: level ?? .regular)
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel?) {
+        walletManager.wallet?.feePerKb = fees.fee(forLevel: toLevel ?? .regular)
     }
     
     func fee(forAmount amount: UInt256) -> UInt256? {
@@ -411,14 +411,14 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
 // MARK: -
 
 /// Base class for sending Ethereum-network transactions
-class EthSenderBase<CurrencyType: Currency> : SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
+class EthSenderBase<CurrencyType: Currency>: SenderBase<CurrencyType, EthWalletManager>, GasEstimator {
     
     fileprivate var address: String?
     fileprivate var amount: UInt256?
     
     // MARK: Sender
     
-    func updateFeeRates(_ fees: Fees, level: FeeLevel? = nil) {
+    func updateFeeRates(_ fees: Fees, toLevel: FeeLevel? = nil) {
         walletManager.gasPrice = fees.gasPrice
     }
     
@@ -670,8 +670,9 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
         let sig = "0xa9059cbb"
         let to = toAddress.withoutHexPrefix
         let amountString = forAmount.rawValue.hexString.withoutHexPrefix
-        let addressPadding = Array(repeating: "0", count: 24).joined()
-        let amountPadding = Array(repeating: "0", count: (66 - amountString.utf8.count)).joined()
+        let maxPaddingLength = 64 //32 bytes
+        let addressPadding = Array(repeating: "0", count: maxPaddingLength - toAddress.withoutHexPrefix.utf8.count).joined()
+        let amountPadding = Array(repeating: "0", count: maxPaddingLength - amountString.utf8.count).joined()
         params.data = "\(sig)\(addressPadding)\(to)\(amountPadding)\(amountString)"
         return params
     }

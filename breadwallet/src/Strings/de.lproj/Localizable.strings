@@ -146,6 +146,8 @@
 "Button.no" = "Nein";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "Einstellungen öffnen";
 /* receive button */
 "Button.receive" = "Erhalten";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "senden";
 /* Settings button label */
 "Button.settings" = "Einstellungen";
+/* Setup button label */
+"Button.setup" = "Einrichten";
 /* Skip button title */
 "Button.skip" = "Überspringen";
 /* Settings button label */
@@ -250,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Voraussichtliche Lieferzeit: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2–5 Minuten";
+/* Priority fee */
+"FeeSelector.priority" = "Priorität";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 Minuten";
 /* Regular fee */
 "FeeSelector.regular" = "Regulär";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -368,6 +376,14 @@
 "MenuViewController.modalTitle" = "Menü";
 /* button label */
 "MenuViewController.recoverButton" = "Wallet wiederherstellen";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Sie benötigen Ihren Papierschlüssel, um auf Ihre Wallet zuzugreifen, wenn Sie einmal die Sicherheitseinstellungen Ihres Smartphones ändern.\n\nMöchten Sie Ihren Papierschlüssel wirklich erst später einrichten?";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Weiter einrichten";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Ich mache das später";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Achtung";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Zum automatischen Modus wechseln";
 /* Node is connected label */
@@ -458,8 +474,10 @@
 "Prompts.NoScreenLock.body.android" = "Es ist eine Bildschirmsperre auf dem Gerät erforderlich, um Ihr Wallet abzusichern. Gehen Sie zu „Einstellungen” > „Sicherheit” > „Bildschirmsperre” und aktivieren Sie diese, um fortzufahren.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Bildschirmsperre deaktiviert";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "Ihr Paper-Key muss für den Fall, dass Sie Ihr Telefon verlieren oder wechseln, gespeichert werden. Tippen Sie hier, um fortzufahren.";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "Ihr Paper-Key muss für den Fall, dass Sie Ihr Telefon verlieren oder wechseln, gespeichert werden.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Richten Sie Ihren Papierschlüssel für den Fall ein, dass Sie Ihr Smartphone einmal verlieren. Sie benötigen den Schlüssel ebenfalls, wenn Sie die Sicherheitseinstellungen Ihre Smartphones ändern.s";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Maßnahme erforderlich";
 /* Transaction rejected prompt body */
@@ -488,10 +506,14 @@
 "PushNotifications.body" = "Aktivieren Sie Push-Benachrichtigungen und erfahren Sie als erstes von neuen Funktionen und Sonderaktionen.";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Benachrichtigungen sind abgeschaltet";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "Schalten Sie in den Einstellungen Benachrichtigungen ein, um Alarmierungen zu empfangen.";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Aktivieren Sie Benachrichtigungen, um Sonderangebote und Updates von BRD zu erhalten.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Sie erhalten spezielle Angebote und Updates von BRD.";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Es sieht so aus, als wären Benachrichtigungen deaktiviert. Bitte gehen Sie zu Einstellungen, um Benachrichtigungen von BRD zu aktivieren.";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "Push-Benachrichtigungen";
+"PushNotifications.label" = "Push-Benachrichtigungen erhalten";
 /* Push notifications are off label */
 "PushNotifications.off" = "Deaktivieren";
 /* Push notifications are on label */
@@ -650,7 +672,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Die einzige Möglichkeit, wie du auf deine Bitcoins zugreifen kannst, falls du dein Smartphone verlierst oder wechselst.";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Offlineschlüssel";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Schütze dein BRD vor nicht autorisierten Benutzern.";
@@ -814,10 +837,12 @@
 "StartPaperPhrase.againButtonTitle" = "Offlineschlüssel erneut notieren";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Dein Offlineschlüssel ist die einzige Möglichkeit, dein BRD wiederherzustellen, falls du dein Smartphone verlierst, austauscht, es gestohlen wird oder kaputtgeht.\n\nHierfür zeigen wir dir eine Liste von Wörtern an, damit du sie dir auf ein Stück Papier notieren kannst, das es sicher aufzubewahren gilt.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Ihr Papierschlüssel ist der einzige Weg, um Ihr BRD wiederherzustellen, wenn Ihr Smartphone gestohlen wird, kaputt oder verloren geht oder wenn Sie ein neues kaufen.\n\nIhr Papierschlüssel wird ebenfalls benötigt, wenn Sie die Sicherheitseinstellungen Ihres Geräts ändern.\n\nWir zeigen Ihnen eine Liste an Wörtern, die Sie auf einen Zettel Papier (daher Papierschlüssel) schreiben und sicher aufbewahren.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Offlineschlüssel notieren";
-/* Argument is date */
-"StartPaperPhrase.date" = "Du hast dir deinen Offlineschlüssel zuletzt am %1$@ notiert";
+/* Argument is date; date should be on a new line */
+"StartPaperPhrase.date" = "Du hast dir deinen Offlineschlüssel zuletzt am \n%1$@";
 /* button label */
 "StartViewController.createButton" = "Neue Geldbörse erstellen";
 /* Start view message */
