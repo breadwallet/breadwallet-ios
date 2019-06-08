@@ -137,7 +137,7 @@ class CheckoutConfirmationViewController: UIViewController {
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 feeType: .regular,
+                                                 displayFeeLevel: .regular,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
