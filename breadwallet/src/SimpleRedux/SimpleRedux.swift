@@ -57,7 +57,7 @@ enum TriggerName {
     case scanQr
     case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(Currency, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
+    case confirmTransaction(Currency, Amount, Amount, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)

@@ -366,12 +366,13 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             var amount = UInt256(string: numerator, radix: 10)
             
             // ensure priority fee set for bitcoin transactions
+            let tradeFeeLevel: FeeLevel = .priority
             if currency.matches(Currencies.btc) {
                 guard let fees = currency.state?.fees else {
                     asyncResp.provide(400, json: ["error": "fee-error"])
                     return asyncResp
                 }
-                sender.updateFeeRates(fees, toLevel: .priority)
+                sender.updateFeeRates(fees, toLevel: tradeFeeLevel)
             }
 
             guard let fee = sender.fee(forAmount: amount),
@@ -426,7 +427,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 DispatchQueue.main.sync {
                     CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
                         self.isPresentingAuth = true
-                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, toAddress, { (confirmed) in
+                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, tradeFeeLevel, toAddress, { (confirmed) in
                             self.isPresentingAuth = false
                             guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
                             
