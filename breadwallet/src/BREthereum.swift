@@ -96,9 +96,16 @@ enum EthereumNetwork: EthereumPointer {
 
 // MARK: - Token
 
-extension ERC20Token: EthereumPointer {
+extension ERC20Token {
     var core: BREthereumToken? {
         return tokenLookup(self.address)
+    }
+}
+
+extension ERC20Token: Equatable {
+    public static func == (lhs: ERC20Token, rhs: ERC20Token) -> Bool {
+        return (lhs.code.compare(rhs.code, options: .caseInsensitive) == .orderedSame) &&
+            (lhs.address.compare(rhs.address, options: .caseInsensitive) == .orderedSame)
     }
 }
 
@@ -660,6 +667,9 @@ class EthereumWalletManager: EthereumPointer {
                 self.walletsById[identifier] = wallet
                 self.walletsByTicker[currency.code] = wallet
                 print("[BRETH] create wallet \(currency.code)")
+                self.serialAsync {
+                    ewmUpdateWalletBalance(self.core, identifier)
+                }
             }
         }
     }
@@ -711,7 +721,7 @@ class EthereumWalletManager: EthereumPointer {
     /// - sets all transactions to pending until state is refetched
     func rescan() {
         serialAsync {
-            ewmSync(self.core)
+            ewmSync(self.core, ETHEREUM_BOOLEAN_TRUE)
         }
     }
     
@@ -941,7 +951,7 @@ class EthereumWalletManager: EthereumPointer {
             funcWalletEvent: { (coreClient, coreEWM, wid, event, _, _) in
                 guard let client = coreClient.map ({ Unmanaged<AnyEthereumClient>.fromOpaque($0).takeUnretainedValue() }),
                     let ewm = EthereumWalletManager.lookup(core: coreEWM),
-                    let wallet = ewm.findWallet(withIdentifier: wid) else { return }
+                    let wallet = ewm.findWallet(withIdentifier: wid) else { print("[EWM] WARNING: unhandled Wallet Event: \(event)"); return }
                 ewm.serialAsync {
                     client.handleWalletEvent(ewm: ewm,
                                              wallet: wallet,
