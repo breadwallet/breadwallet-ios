@@ -398,7 +398,6 @@ class EthWalletManager: WalletManager {
         node.serialAsync {
             guard let txs = self.node.wallet(for: currency)?.transactions else { return assertionFailure("missing wallet") }
 
-            DispatchQueue.global(qos: .utility).async {
                 var viewModels: [Transaction]
                 if let token = currency as? ERC20Token {
                     viewModels = txs.map { ERC20Transaction(tx: $0,
@@ -417,7 +416,6 @@ class EthWalletManager: WalletManager {
                 DispatchQueue.main.async {
                     Store.perform(action: WalletChange(currency).setTransactions(viewModels))
                 }
-            }
         }
     }
 
@@ -498,7 +496,6 @@ extension EthWalletManager: EthereumClient {
         
         if let token = currency as? ERC20Token {
             guard tokens.contains(token) else { return } // skip tokens not in the wallet
-            syncState[token.code]?.willBeginSync()
             apiClient.getTokenBalance(address: address, token: token) { result in
                 switch result {
                 case .success(let value):
@@ -508,7 +505,6 @@ extension EthWalletManager: EthereumClient {
                 }
             }
         } else {
-            syncState[currency.code]?.willBeginSync()
             apiClient.getBalance(address: address) { result in
                 switch result {
                 case .success(let value):
@@ -530,8 +526,6 @@ extension EthWalletManager: EthereumClient {
     }
     
     func getTransactions(address: String, blockStart: UInt64, blockStop: UInt64, completion: @escaping TransactionsHandler) {
-        syncState[currency.code]?.willBeginSync()
-
         apiClient.getEthTxList(address: address, fromBlock: blockStart, toBlock: blockStop) { result in
             completion(result) // imports transaction json data into core
             if case .error(let error) = result {
@@ -545,8 +539,6 @@ extension EthWalletManager: EthereumClient {
                  blockStart: UInt64,
                  blockStop: UInt64,
                  completion: @escaping LogsHandler) {
-        tokens.forEach { syncState[$0.code]?.willBeginSync() }
-
         apiClient.getTokenTransferLogs(address: address, contractAddress: nil, fromBlock: blockStart, toBlock: blockStop) { result in
             completion(result) // imports logs json data into core
             if case .error(let error) = result {
@@ -594,6 +586,18 @@ extension EthWalletManager: EthereumClient {
 
     func handleEWMEvent(ewm: EthereumWalletManager, event: EthereumEWMEvent) {
         print("[EWM] node event: \(event)")
+        switch event {
+        case .sync_started:
+            syncState[Currencies.eth.code]?.willBeginSync()
+            tokens.forEach { syncState[$0.code]?.willBeginSync() }
+
+        case .sync_stopped:
+            syncState[Currencies.eth.code]?.didFinishSync()
+            tokens.forEach { syncState[$0.code]?.didFinishSync() }
+
+        default:
+            break
+        }
     }
 
     func handleWalletEvent(ewm: EthereumWalletManager, wallet: EthereumWallet, event: EthereumWalletEvent) {
@@ -601,6 +605,10 @@ extension EthWalletManager: EthereumClient {
         switch event {
         case .created:
             syncState[wallet.currency.code]?.didCreateWallet()
+            // set initial balance since balance updated event is not triggered for token wallets with no tx history
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
+            }
         case .balanceUpdated:
             syncState[wallet.currency.code]?.didFinishSync()
             DispatchQueue.main.async {
@@ -725,7 +733,7 @@ extension EthWalletManager {
         }
 
         func didCreateWallet() {
-            guard state == .waitingForInitialSync else { return } // sometimes willBeginSync happens before didCreateWallet
+            guard state == .waitingForInitialSync else { return }
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setProgress(progress: -1.0, timestamp: 0))
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.connecting))
@@ -749,19 +757,7 @@ extension EthWalletManager {
         }
 
         func didFinishSync() {
-            // N.B. The order of events we receive from Core for ETH and ERC20 tokens can be slightly unpredicatable,
-            // such that the balance could be updated, resulting in a call to `didFinishSync()` *before* we've moved
-            // to the `initialSync` state. The result is that didFinishSync() is not called again, and the wallet won't
-            // move out of the "connecting" state at the UI layer.
-            //
-            // The guard below was intended to ensure that we don't prematurely show a balane of zero before the wallet
-            // has been sync'd. For the initial LES release, we're skipping the guard to ensure the wallets are not stuck
-            // connecting, with the understanding that an unsync'd wallet may briefly display a zero balance.
-            //
-            // (ray vander veen, May 7/19)
-            
-            //guard state != .waitingForInitialSync else { return } // ignore until syncing has started
-            
+            state = .idle
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setProgress(progress: 1.0, timestamp: 0))
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
