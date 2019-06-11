@@ -110,7 +110,8 @@ class BRAPIClientTests: XCTestCase {
     
     func testHandshake() {
         // test that we can get a token and access /me
-        let req = URLRequest(url: client.url("/me"))
+        // TODO revert this back to /me from /me/features when /me is back up and running
+        let req = URLRequest(url: client.url("/me/features"))
         let exp = expectation(description: "auth")
         client.dataTaskWithRequest(req, authenticated: true, retryCount: 0) { (data, resp, err) in
             XCTAssertEqual(resp?.statusCode, 200)

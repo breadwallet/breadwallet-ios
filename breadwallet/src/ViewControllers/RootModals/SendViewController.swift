@@ -327,7 +327,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 feeType: feeSelection ?? .regular,
+                                                 displayFeeLevel: feeSelection ?? .regular,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)

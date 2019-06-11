@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Estimated Delivery: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minutes";
+/* Priority fee */
+"FeeSelector.priority" = "Priority";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 minutes";
 /* Regular fee */
 "FeeSelector.regular" = "Regular";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
