@@ -365,11 +365,16 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             // assume the numerator is in currency's base units
             var amount = UInt256(string: numerator, radix: 10)
             
-            guard let fees = currency.state?.fees else {
-                asyncResp.provide(400, json: ["error": "fee-error"])
-                return asyncResp
+            // ensure priority fee set for bitcoin transactions
+            let tradeFeeLevel: FeeLevel = .priority
+            if currency.matches(Currencies.btc) {
+                guard let fees = currency.state?.fees else {
+                    asyncResp.provide(400, json: ["error": "fee-error"])
+                    return asyncResp
+                }
+                sender.updateFeeRates(fees, toLevel: tradeFeeLevel)
             }
-            sender.updateFeeRates(fees, toLevel: .priority)
+
             guard let fee = sender.fee(forAmount: amount),
                 let balance = currency.state?.balance else {
                     asyncResp.provide(500, json: ["error": "fee-error"])
@@ -422,7 +427,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 DispatchQueue.main.sync {
                     CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
                         self.isPresentingAuth = true
-                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, toAddress, { (confirmed) in
+                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, tradeFeeLevel, toAddress, { (confirmed) in
                             self.isPresentingAuth = false
                             guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
                             
