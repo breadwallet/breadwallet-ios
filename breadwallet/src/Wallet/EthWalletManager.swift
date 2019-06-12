@@ -90,8 +90,14 @@ class EthWalletManager: WalletManager {
         didSet {
             print("[EWM] user token list updated: \(tokens.map { $0.code })")
             tokens.forEach { token in
-                if token.core != nil, node.wallet(for: token) == nil {
-                    createWallet(token)
+                if token.core != nil {
+                    if let wallet = node.wallet(for: token) {
+                        DispatchQueue.main.async {
+                            Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
+                        }
+                    } else {
+                        createWallet(token)
+                    }
                 }
             }
         }
@@ -721,7 +727,7 @@ extension EthWalletManager {
 
         private let currency: Currency
         private var timeoutTimer: Timer? {
-            didSet {
+            willSet {
                 timeoutTimer?.invalidate()
             }
         }
