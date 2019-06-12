@@ -485,7 +485,7 @@ class EthSenderBase<CurrencyType: Currency>: SenderBase<CurrencyType, EthWalletM
     }
 }
 
-class EthereumSender: EthSenderBase<Ethereum>, Sender {
+class EthereumSender: EthSenderBase<Ethereum>, Sender, Trackable {
     
     // customGasPrice and customGasLimit parameters are only used for contract transactions
     // only used for che checkout feature
@@ -559,8 +559,12 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
                         case .failure(let error):
                             switch error {
                             case .invalidWalletState:
+                                self.saveEvent(Event.iOSError.name, attributes: ["context": "send",
+                                                                                 "error": "invalidWalletState"])
                                 completion(.creationError(message: S.Send.createTransactionError))
                             case .timedOut:
+                                self.saveEvent(Event.iOSError.name, attributes: ["context": "send",
+                                                                                 "error": "timedOut"])
                                 completion(.publishFailure(code: -1, message: S.Alert.timedOut))
                             case .publishError(let publishError):
                                 completion(.publishFailure(code: publishError.code, message: publishError.message))
@@ -597,7 +601,7 @@ class EthereumSender: EthSenderBase<Ethereum>, Sender {
 
 // MARK: -
 
-class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
+class ERC20Sender: EthSenderBase<ERC20Token>, Sender, Trackable {
     
     // MARK: Sender
     private var gasLimit: UInt256? {
@@ -659,8 +663,12 @@ class ERC20Sender: EthSenderBase<ERC20Token>, Sender {
                         case .failure(let error):
                             switch error {
                             case .invalidWalletState:
+                                self.saveEvent(Event.iOSError.name, attributes: ["context": "send",
+                                                                                 "error": "invalidWalletState"])
                                 completion(.creationError(message: S.Send.createTransactionError))
                             case .timedOut:
+                                self.saveEvent(Event.iOSError.name, attributes: ["context": "send",
+                                                                                 "error": "timedOut"])
                                 completion(.publishFailure(code: -1, message: S.Alert.timedOut))
                             case .publishError(let publishError):
                                 //TODO: hack, need a better way to detect this scenario
