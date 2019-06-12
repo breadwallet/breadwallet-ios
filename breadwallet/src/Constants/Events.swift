@@ -65,7 +65,8 @@ public enum Event: String {
     
     // user opened a push notification
     case openNotification
-    
+
+    case iOSError
     case test
     
     var name: String { return rawValue }
