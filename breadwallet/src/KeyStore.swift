@@ -241,8 +241,8 @@ extension KeyStore: WalletAuthenticator {
     fileprivate var ethPrivKey: String? {
         return autoreleasepool {
             do {
-                if let ethKey: String? = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String??) {
-                    if ethKey != nil { return ethKey }
+                if let ethKey: String = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String?), !ethKey.isEmpty {
+                    return ethKey
                 }
                 // TODO: move to setSeedPhrase?
                 var key = BRKey()
@@ -272,10 +272,8 @@ extension KeyStore: WalletAuthenticator {
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
-                if let apiKey: String? = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String??) {
-                    if apiKey != nil {
-                        return apiKey
-                    }
+                if let apiKey: String = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String?), !apiKey.isEmpty {
+                    return apiKey
                 }
                 var key = BRKey()
                 var seed = UInt512()
