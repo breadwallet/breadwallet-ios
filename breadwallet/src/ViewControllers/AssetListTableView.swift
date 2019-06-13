@@ -14,7 +14,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didTapAddWallet: (() -> Void)?
     
     private let assetHeight: CGFloat = 82.0
-    private let addWalletButtonHeight: CGFloat = 72.0
+    private let addWalletButtonHeight: CGFloat = 56.0
     private let addWalletButton = UIButton()
 
     // MARK: - Init
@@ -30,7 +30,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         tableView.register(HomeScreenHiglightableCell.self, forCellReuseIdentifier: HomeScreenCellIds.highlightableCell.rawValue)
         tableView.separatorStyle = .none
         tableView.rowHeight = assetHeight
-        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: C.padding[2], right: 0)
+        tableView.contentInset = UIEdgeInsets(top: C.padding[1], left: 0, bottom: C.padding[2], right: 0)
 
         setupSubscriptions()
         reload()
@@ -42,12 +42,14 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
     
     private func setupAddWalletButton() {
-        let topInset: CGFloat = C.padding[1]
+        let topInset: CGFloat = 0
         let leftRightInset: CGFloat = C.padding[2]
         let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: addWalletButtonHeight))
         
-        addWalletButton.tintColor = .disabledWhiteText
+        addWalletButton.titleLabel?.font = Theme.body1
+        
+        addWalletButton.tintColor = Theme.tertiaryBackground
         addWalletButton.setTitleColor(Theme.tertiaryText, for: .normal)
         addWalletButton.setTitleColor(.transparentWhite, for: .highlighted)
         addWalletButton.titleLabel?.font = Theme.body1
