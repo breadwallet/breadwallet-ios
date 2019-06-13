@@ -96,7 +96,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func addConstraints() {
-        let headerHeight: CGFloat = 46.0
+        let headerHeight: CGFloat = 30.0
         let toolbarHeight: CGFloat = 74.0
 
         subHeaderView.constrain([
@@ -131,7 +131,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addChildViewController(assetList, layout: {
             assetList.view.constrain([
                 assetList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor, constant: C.padding[1]),
+                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor, constant: 2),
                 assetList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 assetList.view.bottomAnchor.constraint(equalTo: toolbar.topAnchor)])
         })

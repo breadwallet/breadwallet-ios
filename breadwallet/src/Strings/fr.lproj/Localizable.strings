@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "Paramètres";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "Paramétrage";
 /* Skip button title */
 "Button.skip" = "Passer";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Délai de réception estimé : %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 à 5 minutes";
+/* Priority fee */
+"FeeSelector.priority" = "Priorité";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 minutes";
 /* Regular fee */
 "FeeSelector.regular" = "Régulier";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,11 +377,11 @@
 /* button label */
 "MenuViewController.recoverButton" = "Récupérer le portefeuille";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "Votre clé papier est nécessaire pour ouvrir votre portefeuille si vous modifier les paramètres de sécurité de votre téléphone. \n\nÊtes-vous certain de vouloir paramétrer votre clé papier plus tard ?";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continuer le paramétrage";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Je le ferai plus tard";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "Attention";
 /* Switch to automatic mode button label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Votre paperkey doit être sauvegardé au cas où vous perdiez ou changiez votre téléphone.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "Paramétrez votre clé papier au cas où vous perdriez ou remplaceriez votre téléphone. Votre clé sera également requise si vous modifiez les paramètres de sécurité de votre téléphone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Une action est requise";
 /* Transaction rejected prompt body */
@@ -834,7 +838,7 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou mis à niveau.\n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Votre clé papier est la seule façon de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou changé. \n\nVotre clé papier est également nécessaire si vous modifiez les paramètres de sécurité de votre appareil.\n\nNous afficherons une liste de mots que vous devrez noter sur un papier et conserver en sécurité.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Écrire la clé papier";
 /* Argument is date; date should be on a new line */

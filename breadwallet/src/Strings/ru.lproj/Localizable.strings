@@ -159,7 +159,7 @@
 /* Settings button label */
 "Button.settings" = "Настройки";
 /* Setup button label */
-"Button.setup" = "Set Up";
+"Button.setup" = "Настроить";
 /* Skip button title */
 "Button.skip" = "Пропустить";
 /* Settings button label */
@@ -254,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "Ожидаемое исполнение: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 минут";
+/* Priority fee */
+"FeeSelector.priority" = "Приоритет";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 минут";
 /* Regular fee */
 "FeeSelector.regular" = "Обычна сумма";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -373,13 +377,13 @@
 /* button label */
 "MenuViewController.recoverButton" = "Восстановить кошелек";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "Бумажный ключ будет необходим, чтобы открыть ваш кошелек, если вы измените настройки безопасности на вашем телефоне.\n\nВы уверены, что хотите настроить бумажный ключ позже?";
 /* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Продолжить настройку";
 /* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Я сделаю это позже";
 /* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Attention";
+"Modal.PaperKeySkip.Title" = "Внимание";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Переключиться в автоматический режим";
 /* Node is connected label */
@@ -473,7 +477,7 @@
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Ваш бумажный ключ нужно сохранить на случай, если вы потеряете или смените свой телефон.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "Создайте бумажный ключ на случай, если вы потеряете или смените ваш телефон. Ключ будет также необходим, если вы измените настройки безопасности на вашем телефоне.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Необходимо совершить действие";
 /* Transaction rejected prompt body */
@@ -834,7 +838,7 @@
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш BRD-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your BRD if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Бумажный ключ — это единственный способ восстановить ваш кошелек BRD в случае, если ваш телефон окажется утерян, украден, сломан или обновлен.\n\nБумажный ключ будет также необходим, если вы измените настройки безопасности на вашем устройстве.\n\nМы покажем вам список слов, которые необходимо записать на бумаге и хранить в безопасном месте.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
 /* Argument is date; date should be on a new line */

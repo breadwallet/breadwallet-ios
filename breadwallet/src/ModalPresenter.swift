@@ -112,10 +112,10 @@ class ModalPresenter: Subscriber, Trackable {
                 self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
-        Store.subscribe(self, name: .confirmTransaction(nil, nil, nil, "", {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .confirmTransaction(nil, nil, nil, .regular, "", {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
-            if case .confirmTransaction(let currency?, let amount?, let fee?, let address, let callback) = trigger {
-                self.confirmTransaction(currency: currency, amount: amount, fee: fee, address: address, callback: callback)
+            if case .confirmTransaction(let currency?, let amount?, let fee?, let displayFeeLevel, let address, let callback) = trigger {
+                self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
             }
         })
         Reachability.addDidChangeCallback({ [weak self] isReachable in
@@ -1112,10 +1112,10 @@ class ModalPresenter: Subscriber, Trackable {
         topViewController?.present(verify, animated: true, completion: nil)
     }
     
-    private func confirmTransaction(currency: Currency, amount: Amount, fee: Amount, address: String, callback: @escaping (Bool) -> Void) {
+    private func confirmTransaction(currency: Currency, amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, callback: @escaping (Bool) -> Void) {
         let confirm = ConfirmationViewController(amount: amount,
                                                  fee: fee,
-                                                 feeType: .regular,
+                                                 displayFeeLevel: displayFeeLevel,
                                                  address: address,
                                                  isUsingBiometrics: false,
                                                  currency: currency)
