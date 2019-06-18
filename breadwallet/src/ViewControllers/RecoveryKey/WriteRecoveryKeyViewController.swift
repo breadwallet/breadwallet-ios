@@ -546,8 +546,8 @@ class RecoveryWordCell: UICollectionViewCell {
     private func setUp() {
         wordLabel.textColor = Theme.primaryText
         wordLabel.font = E.isIPhone6OrSmaller ? smallScreenWordFont : Theme.h0Title
-
         wordLabel.textAlignment = .center
+        wordLabel.adjustsFontSizeToFitWidth = true
         
         contentView.addSubview(wordLabel)
         
