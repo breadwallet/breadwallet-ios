@@ -79,8 +79,8 @@ class PromptView: UIView {
         imageView.constrain([
             imageView.heightAnchor.constraint(equalToConstant: imageViewSize),
             imageView.widthAnchor.constraint(equalToConstant: imageViewSize),
-            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 20.0),
-            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 20.0)
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])
             ])
 
         dismissButton.constrain([
@@ -105,9 +105,9 @@ class PromptView: UIView {
         if shouldAddContinueButton {
             continueButton.constrain([
                 continueButton.heightAnchor.constraint(equalToConstant: 48),
-                continueButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: (C.padding[1] / 2)),
+                continueButton.topAnchor.constraint(equalTo: body.bottomAnchor, constant: 0),
                 continueButton.leadingAnchor.constraint(equalTo: body.leadingAnchor),
-                continueButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -12.0)
+                continueButton.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: 0)
                 ])
         }
     }
@@ -139,13 +139,7 @@ class PromptView: UIView {
         imageView.image = UIImage(named: "ExclamationStandalone")
         
         container.backgroundColor = Theme.secondaryBackground
-        container.layer.cornerRadius = 4.0
-        container.layer.shadowRadius = 4.0
-        container.layer.shadowColor = UIColor.black.cgColor
-        container.layer.shadowOpacity = 0.08
-        container.layer.shadowOffset = CGSize(width: 0.0, height: 1.0)
-        container.layer.borderColor = UIColor.black.withAlphaComponent(0.12).cgColor
-        container.layer.borderWidth = 1.0
+        container.layer.cornerRadius = 2.0
     }
         
     required init?(coder aDecoder: NSCoder) {

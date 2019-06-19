@@ -70,6 +70,7 @@ class Theme: BRDTheme {
     enum FontName: String {
         case book = "CircularPro-Book"
         case medium = "CircularPro-Medium"
+        case bold = "CircularPro-Bold"
     }
     
     enum ColorHex: String {
@@ -116,7 +117,7 @@ class Theme: BRDTheme {
     }
     
     static var body1Accent: UIFont {
-        return font(.medium, .body1, .body)
+        return font(.bold, .body1, .body)
     }
     
     static var body2: UIFont {

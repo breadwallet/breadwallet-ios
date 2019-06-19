@@ -98,6 +98,9 @@ struct C {
             return (E.isDebug || E.isTestFlight) ? "brd-web-3-staging" : "brd-web-3"
         }
     }
+    
+    static let daiContractAddress = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+    static let daiContractCode = "DAI"
 }
 
 enum Words {
