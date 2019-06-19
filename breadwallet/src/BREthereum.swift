@@ -951,7 +951,7 @@ class EthereumWalletManager: EthereumPointer {
             funcWalletEvent: { (coreClient, coreEWM, wid, event, _, _) in
                 guard let client = coreClient.map ({ Unmanaged<AnyEthereumClient>.fromOpaque($0).takeUnretainedValue() }),
                     let ewm = EthereumWalletManager.lookup(core: coreEWM),
-                    let wallet = ewm.findWallet(withIdentifier: wid) else { print("[EWM] WARNING: unhandled Wallet Event: \(event)"); return }
+                    let wallet = ewm.findWallet(withIdentifier: wid) else { assertionFailure(); print("[EWM] WARNING: unhandled Wallet Event: \(event)"); return }
                 ewm.serialAsync {
                     client.handleWalletEvent(ewm: ewm,
                                              wallet: wallet,
