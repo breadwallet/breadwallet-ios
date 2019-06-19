@@ -214,7 +214,6 @@ class ApplicationController: Subscriber, Trackable {
         tokens.forEach { token in
             self.walletManagers[token.code] = ethWalletManager
             self.modalPresenter?.walletManagers[token.code] = ethWalletManager
-            Store.perform(action: WalletChange(token).setSyncingState(.connecting))
             Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
             guard let state = token.state else { return }
             Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
