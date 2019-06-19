@@ -644,6 +644,12 @@ class EthereumWalletManager: EthereumPointer {
     private func findWallet(withIdentifier identifier: EthereumWalletId) -> EthereumWallet? {
         return readSync { return self.walletsById[identifier] }
     }
+
+    /// Looks up the wallet's token in allTokensByAddress
+    private func tokenForWallet(withIdentifier wid: BREthereumWallet) -> ERC20Token? {
+        guard let coreToken = ewmWalletGetToken(self.core, wid) else { return nil }
+        return findToken(coreToken: coreToken)
+    }
     
     func wallet(for currency: Currency) -> EthereumWallet? {
         return readSync { return self.walletsByTicker[currency.code] }
@@ -652,26 +658,36 @@ class EthereumWalletManager: EthereumPointer {
     func createWallet(for currency: Currency) {
         serialAsync {
             guard self.wallet(for: currency) == nil else { return print("[BRETH] \(currency.code) wallet already exists") } // this can happen in a race condition
+            print("[BRETH] creating wallet \(currency.code)")
 
             var identifier: EthereumWalletId
-
             if let token = currency as? ERC20Token {
                 assert(token.core != nil, "wait for core token to be created before accessing its wallet")
+                // this triggeres a WALLET_EVENT_CREATED
                 identifier = ewmGetWalletHoldingToken(self.core, token.core!)
             } else {
                 identifier = ewmGetWallet(self.core)
             }
+            _ = self.handleWalletCreation(wid: identifier, currency: currency)
+        }
+    }
 
-            self.writeAsync {
-                let wallet = EthereumWallet(ewm: self, wid: identifier, currency: currency)
-                self.walletsById[identifier] = wallet
-                self.walletsByTicker[currency.code] = wallet
-                print("[BRETH] create wallet \(currency.code)")
-                self.serialAsync {
-                    ewmUpdateWalletBalance(self.core, identifier)
-                }
+    /// This adds the token/wallet mapping and may be triggered by `createWallet` or by `WALLET_EVENT_CREATED`
+    private func handleWalletCreation(wid: EthereumWalletId, currency: Currency) -> EthereumWallet {
+        if let existingWallet = self.wallet(for: currency) {
+            print("[BRETH] \(currency.code) wallet already exists")
+            return existingWallet
+        }
+        let wallet = EthereumWallet(ewm: self, wid: wid, currency: currency)
+        self.writeAsync {
+            self.walletsById[wid] = wallet
+            self.walletsByTicker[currency.code] = wallet
+            print("[BRETH] created wallet \(currency.code)")
+            self.serialAsync {
+                ewmUpdateWalletBalance(self.core, wid)
             }
         }
+        return wallet
     }
     
     /// Sets default gas price on all wallets
@@ -951,10 +967,20 @@ class EthereumWalletManager: EthereumPointer {
             funcWalletEvent: { (coreClient, coreEWM, wid, event, _, _) in
                 guard let client = coreClient.map ({ Unmanaged<AnyEthereumClient>.fromOpaque($0).takeUnretainedValue() }),
                     let ewm = EthereumWalletManager.lookup(core: coreEWM),
-                    let wallet = ewm.findWallet(withIdentifier: wid) else { assertionFailure(); print("[EWM] WARNING: unhandled Wallet Event: \(event)"); return }
+                    let wid = wid else { return }
                 ewm.serialAsync {
+                    var wallet: EthereumWallet?
+                    // token wallet creation can be triggered by the app or by core
+                    // this handles the case where core initiated wallet creation
+                    if event == WALLET_EVENT_CREATED, let token = ewm.tokenForWallet(withIdentifier: wid) {
+                        print("[BRETH] token wallet creation event: \(token.code)")
+                        wallet = ewm.handleWalletCreation(wid: wid, currency: token)
+                    } else {
+                        wallet = ewm.findWallet(withIdentifier: wid)
+                    }
+                    guard wallet != nil else { return assertionFailure("[EWM] WARNING: event for unknown wallet: \(event)") }
                     client.handleWalletEvent(ewm: ewm,
-                                             wallet: wallet,
+                                             wallet: wallet!,
                                              event: EthereumWalletEvent (event))
                 }
         },
