@@ -47,7 +47,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
     private var phrase: String {
         return (0...11).map { index in
                 guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
-                return phraseCell.textField.text ?? ""
+                return phraseCell.textField.text?.lowercased() ?? ""
             }.joined(separator: " ")
     }
 
@@ -101,7 +101,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
         }
         enterPhraseCell.isWordValid = { [weak self] word in
             guard let myself = self else { return false }
-            return myself.keyMaster.isSeedWordValid(word)
+            return myself.keyMaster.isSeedWordValid(word.lowercased())
         }
         enterPhraseCell.didEnterSpace = {
             enterPhraseCell.didTapNext?()
