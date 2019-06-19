@@ -611,10 +611,11 @@ extension EthWalletManager: EthereumClient {
         switch event {
         case .created:
             syncState[wallet.currency.code]?.didCreateWallet()
-            // set initial balance since balance updated event is not triggered for token wallets with no tx history
+            // get balance and transaction list immediately to show any persisted data
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(wallet.currency).setBalance(wallet.balance))
             }
+            updateTransactions(currency: wallet.currency)
         case .balanceUpdated:
             syncState[wallet.currency.code]?.didFinishSync()
             DispatchQueue.main.async {
@@ -700,7 +701,7 @@ extension EthWalletManager: EthereumClient {
     }
 
     func handleTokenEvent(ewm: EthereumWalletManager, token: ERC20Token, event: EthereumTokenEvent) {
-        print("[EWM] token (\(token.code)) \(event)")
+        print("[EWM] token \(event): \(token.code)")
         switch event {
         case .created:
             if tokens.contains(token), node.wallet(for: token) == nil {
