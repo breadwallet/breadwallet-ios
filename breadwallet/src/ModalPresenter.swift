@@ -110,7 +110,7 @@ class ModalPresenter: Subscriber, Trackable {
                 self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
-        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, .regular,"", {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, .regular, "", {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
             if case .confirmTransaction(let currency, let amount, let fee, let displayFeeLevel, let address, let callback) = trigger {
                 self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
