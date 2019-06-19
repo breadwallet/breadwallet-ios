@@ -186,8 +186,6 @@ extension EnterPhraseCell: UITextFieldDelegate {
             if text.last == " " {
                 textField.text = text.replacingOccurrences(of: " ", with: "")
                 didEnterSpace?()
-            } else {
-                textField.text = textField.text?.lowercased()
             }
         }
         if hasDisplayedInvalidState {
