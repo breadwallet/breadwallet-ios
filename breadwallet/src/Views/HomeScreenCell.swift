@@ -43,7 +43,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     
     private let iconContainer = UIView(color: .transparentIconBackground)
     private let icon = UIImageView()
-    private let currencyName = UILabel(font: Theme.body1, color: Theme.primaryText)
+    private let currencyName = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
     private let price = UILabel(font: Theme.body2, color: Theme.secondaryText)
     private let fiatBalance = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
     private let tokenBalance = UILabel(font: Theme.body2, color: Theme.secondaryText)

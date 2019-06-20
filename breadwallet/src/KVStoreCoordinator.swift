@@ -22,7 +22,7 @@ class KVStoreCoordinator: Subscriber {
             let newCurrencyListMetaData = CurrencyListMetaData()
             newCurrencyListMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
             set(newCurrencyListMetaData)
-            setInitialDisplayWallets(metaData: newCurrencyListMetaData, tokens: [])
+            setInitialDisplayWallets(metaData: newCurrencyListMetaData)
             return
         }
 
@@ -40,7 +40,7 @@ class KVStoreCoordinator: Subscriber {
             currencyMetaData.enabledCurrencies = CurrencyListMetaData.defaultCurrencies
             set(currencyMetaData)
         }
-        self.setInitialDisplayWallets(metaData: currencyMetaData, tokens: Store.state.availableTokens)
+        self.setInitialDisplayWallets(metaData: currencyMetaData)
 
         Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
             self.resetDisplayCurrencies()
@@ -55,14 +55,15 @@ class KVStoreCoordinator: Subscriber {
         currencyMetaData.hiddenCurrencies = []
         set(currencyMetaData)
         try? kvStore.syncKey(tokenListMetaDataKey, completionHandler: {_ in })
-        setInitialDisplayWallets(metaData: currencyMetaData, tokens: [])
+        setInitialDisplayWallets(metaData: currencyMetaData)
     }
 
     //TODO:CRYPTO user token list / token address
-    private func setInitialDisplayWallets(metaData: CurrencyListMetaData, tokens: [Currency]) {
+    private func setInitialDisplayWallets(metaData: CurrencyListMetaData) {
         //skip this setup if stored wallets are the same as wallets in the state
         guard walletsHaveChanged(displayCurrencies: Store.state.displayCurrencies, enabledCurrencies: metaData.enabledCurrencies) else { return }
 
+        let availableTokens = Store.state.availableTokens
         let oldWallets = Store.state.wallets
         var newWallets = [String: WalletState]()
         var displayOrder = 0
@@ -80,7 +81,7 @@ class KVStoreCoordinator: Subscriber {
 //                    newWallets[Currencies.brd.code] = oldWallets[Currencies.brd.code]!.mutate(displayOrder: displayOrder)
 //                    displayOrder += 1
 //                } else {
-                    let filteredTokens = tokens.filter { $0.tokenAddress?.lowercased() == tokenAddress.lowercased() }
+                    let filteredTokens = availableTokens.filter { $0.tokenAddress?.lowercased() == tokenAddress.lowercased() }
                     if let token = filteredTokens.first {
                         if let oldWallet = oldWallets[token.code] {
                             newWallets[token.code] = oldWallet.mutate(displayOrder: displayOrder)
