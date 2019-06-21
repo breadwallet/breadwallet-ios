@@ -35,7 +35,7 @@ struct EthTransaction: EthLikeTransaction {
     
     // MARK: - Init
     
-    init(tx: EthereumTransaction, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init(tx: EthereumTransfer, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         
         switch tx.confirmations {
         case 0:

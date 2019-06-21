@@ -96,6 +96,11 @@ class SyncingIndicator: UIView {
     }
 
     private func updateTextLabel() {
+        guard progress > 0.0 else {
+            label.text = text
+            return
+        }
+
         let nf = NumberFormatter()
         nf.numberStyle = .percent
         nf.maximumFractionDigits = 0

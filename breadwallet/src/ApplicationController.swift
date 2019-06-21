@@ -22,6 +22,10 @@ class ApplicationController: Subscriber, Trackable {
     private var modalPresenter: ModalPresenter?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var walletManagers = [String: WalletManager]()
+    private var ethWalletManager: EthWalletManager? {
+        guard let ewm = walletManagers[Currencies.eth.code] as? EthWalletManager else { return nil }
+        return ewm
+    }
     private var walletCoordinator: WalletCoordinator?
     private var keyStore: KeyStore!
     private var appRatingManager: AppRatingManager = AppRatingManager()
@@ -205,12 +209,11 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Init all Ethereum token wallets
     private func initTokenWallets() {
-        guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+        guard let ethWalletManager = ethWalletManager else { return }
         let tokens = Store.state.currencies.compactMap { $0 as? ERC20Token }
         tokens.forEach { token in
             self.walletManagers[token.code] = ethWalletManager
             self.modalPresenter?.walletManagers[token.code] = ethWalletManager
-            Store.perform(action: WalletChange(token).setSyncingState(.connecting))
             Store.perform(action: WalletChange(token).setMaxDigits(token.commonUnit.decimals))
             guard let state = token.state else { return }
             Store.perform(action: WalletChange(token).set(state.mutate(receiveAddress: ethWalletManager.address)))
@@ -218,6 +221,7 @@ class ApplicationController: Subscriber, Trackable {
         ethWalletManager.tokens = tokens
     }
 
+    // TODO: refactor - init or init not, there is no "attempt"
     private func didAttemptInitWallet() {
         DispatchQueue.main.async {
             self.didInitWallet = true
@@ -286,10 +290,8 @@ class ApplicationController: Subscriber, Trackable {
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
-        DispatchQueue.walletQueue.async {
-            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-        }
-        updateTokenList {}
+        connectWallets()
+        ethWalletManager?.updateTokenList()
         updateAssetBundles()
         Backend.updateExchangeRates()
         Backend.updateFees()
@@ -301,12 +303,7 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        // disconnect synced peer managers
-        Store.state.currencies.filter { $0.state?.syncState == .success }.forEach { currency in
-            DispatchQueue.walletQueue.async {
-                self.walletManagers[currency.code]?.peerManager?.disconnect()
-            }
-        }
+        disconnectWallets()
         //Save the backgrounding time if the user is logged in
         if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
@@ -337,15 +334,6 @@ class ApplicationController: Subscriber, Trackable {
         Backend.sendLaunchEvent()
 
         checkForNotificationSettingsChange(appActive: true)
-        
-        if let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager {
-            ethWalletManager.apiClient = Backend.apiClient
-            if !UserDefaults.hasScannedForTokenBalances {
-                ethWalletManager.discoverAndAddTokensWithBalance(in: Store.state.availableTokens) {
-                    UserDefaults.hasScannedForTokenBalances = true
-                }
-            }
-        }
         
         initTokenWallets()
         addTokenListChangeListener()
@@ -378,10 +366,7 @@ class ApplicationController: Subscriber, Trackable {
             addWalletCreationListener()
             Store.perform(action: ShowStartFlow())
         } else {
-            DispatchQueue.walletQueue.async {
-                self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-            }
-            
+            connectWallets()
             startDataFetchers()
 
             if let rescanNeeded = rescanNeeded {
@@ -413,13 +398,13 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     private func setupEthInitialState(completion: @escaping () -> Void) {
-        guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return assertionFailure() }
+        guard let ethWalletManager = ethWalletManager else { return }
         DispatchQueue.main.async {
             Store.perform(action: WalletChange(Currencies.eth).setSyncingState(.connecting))
             Store.perform(action: WalletChange(Currencies.eth).setMaxDigits(Currencies.eth.commonUnit.decimals))
             Store.perform(action: WalletID.Set(ethWalletManager.walletID))
         }
-        updateTokenList {
+        ethWalletManager.updateTokenList {
             completion()
         }
     }
@@ -526,6 +511,24 @@ class ApplicationController: Subscriber, Trackable {
         window.rootViewController = navigationController
     }
 
+    private func connectWallets() {
+        DispatchQueue.walletQueue.async {
+            // connect only one of BTC or BCH depending on which was last used (to save bandwidth)
+            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.connect()
+            // always connect ETH
+            self.ethWalletManager?.connect()
+        }
+    }
+
+    private func disconnectWallets() {
+        // for BTC only disconnect synced peer managers, for ETH always disconnect
+        Store.state.currencies.filter { $0 is Ethereum || ($0 is Bitcoin && $0.state?.syncState == .success) }.forEach { currency in
+            DispatchQueue.walletQueue.async {
+                self.walletManagers[currency.code]?.disconnect()
+            }
+        }
+    }
+
     private func startDataFetchers() {
         Backend.apiClient.updateFeatureFlags()
         Backend.apiClient.fetchAnnouncements()
@@ -539,74 +542,14 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
     
-    private func updateTokenList(completion: @escaping () -> Void) {
-        guard let ethWalletManager = walletManagers[Currencies.eth.code] as? EthWalletManager else { return assertionFailure() }
-        let processTokens: ([ERC20Token]) -> Void = { tokens in
-            var tokens = tokens.sorted(by: { $0.code.lowercased() < $1.code.lowercased() })
-            if E.isDebug {
-                tokens.append(Currencies.tst)
-            }
-            ethWalletManager.setAvailableTokens(tokens)
-            DispatchQueue.main.async {
-                Store.perform(action: ManageWallets.SetAvailableTokens(tokens))
-            }
-            print("[TokenList] tokens updated: \(tokens.count) tokens")
-            completion()
-        }
-        
-        let fm = FileManager.default
-        guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
-        let cachedFilePath = documentsDir.appendingPathComponent("tokens.json").path
-        
-        if let embeddedFilePath = Bundle.main.path(forResource: "tokens", ofType: "json"), !fm.fileExists(atPath: cachedFilePath) {
-            do {
-                try fm.copyItem(atPath: embeddedFilePath, toPath: cachedFilePath)
-                print("[TokenList] copied bundle tokens list to cache")
-            } catch let e {
-                print("[TokenList] unable to copy bundled \(embeddedFilePath) -> \(cachedFilePath): \(e)")
-            }
-        }
-        // fetch from network and update cached copy on success or return the cached copy if fetch fails
-        Backend.apiClient.getTokenList { result in
-            switch result {
-            case .success(let tokens):
-                DispatchQueue.global(qos: .utility).async {
-                    // update cache
-                    do {
-                        let data = try JSONEncoder().encode(tokens)
-                        try data.write(to: URL(fileURLWithPath: cachedFilePath))
-                    } catch let e {
-                        print("[TokenList] failed to write to cache: \(e.localizedDescription)")
-                    }
-                }
-                processTokens(tokens)
-                
-            case .error(let error):
-                print("[TokenList] error fetching tokens: \(error)")
-                var tokens = [ERC20Token]()
-                do {
-                    print("[TokenList] using cached token list")
-                    let cachedData = try Data(contentsOf: URL(fileURLWithPath: cachedFilePath))
-                    tokens = try JSONDecoder().decode([ERC20Token].self, from: cachedData)
-                } catch let e {
-                    print("[TokenList] error reading from cache: \(e)")
-                    fatalError("unable to read token list!")
-                }
-                processTokens(tokens)
-            }
-        }
-    }
-    
     private func retryAfterIsReachable() {
         guard !keyStore.noWallet else { return }
         walletManagers.values.filter { $0 is BTCWalletManager }.map { $0.currency }.forEach {
             // reset sync state before re-connecting
             Store.perform(action: WalletChange($0).setSyncingState(.success))
         }
-        DispatchQueue.walletQueue.async {
-            self.walletManagers[UserDefaults.mostRecentSelectedCurrencyCode]?.peerManager?.connect()
-        }
-        updateTokenList {}
+        connectWallets()
+        ethWalletManager?.updateTokenList()
         Backend.updateExchangeRates()
         Backend.updateFees()
         Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }

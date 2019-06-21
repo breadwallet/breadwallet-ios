@@ -372,7 +372,7 @@ public struct Currencies {
                                 code: "BRD",
                                 symbol: "🍞",
                                 colors: (UIColor.fromHex("ff5193"), UIColor.fromHex("f9a43a")),
-                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" : "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6",
+                                address: E.isTestnet ? "0x7108ca7c4718efa810457f228305c9c71390931a" : "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6",
                                 abi: ERC20Token.standardAbi,
                                 decimals: 18,
                                 isSupported: true,
