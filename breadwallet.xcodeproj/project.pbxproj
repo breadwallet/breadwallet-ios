@@ -58,12 +58,6 @@
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
 		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
-		3C83B27620631739001D08CE /* BRRlpCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11614205C943700C03D42 /* BRRlpCoder.c */; };
-		3C83B27720631740001D08CE /* BRUtilMath.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11600205C943500C03D42 /* BRUtilMath.c */; };
-		3C83B27820631740001D08CE /* BRUtilMathParse.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FE205C943500C03D42 /* BRUtilMathParse.c */; };
-		3C83B280206317A7001D08CE /* BRCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C83B27F206317A7001D08CE /* BRCoreTests.swift */; };
-		3C83B282206317A7001D08CE /* libBRCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 755CD9D11DAA197C0075898E /* libBRCore.a */; };
-		3C83B28D20631837001D08CE /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC783C1DAA05B500932D9A /* test.c */; };
 		710B035D21F6605C007E8A2A /* BadTransactionChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */; };
 		710B035F21F662F9007E8A2A /* BadTransactionCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
@@ -99,28 +93,10 @@
 		754AE0B71DFCA870007FD001 /* libbz2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		754AE0B81DFCA870007FD001 /* sqlite3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		754AE0BC1DFE8A46007FD001 /* BRCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 754AE0BB1DFE8A46007FD001 /* BRCore.swift */; };
-		755CD9DA1DAA1A270075898E /* BRAddress.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77AE1DAA05B500932D9A /* BRAddress.c */; };
-		755CD9DB1DAA1A270075898E /* BRBase58.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B11DAA05B500932D9A /* BRBase58.c */; };
-		755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B31DAA05B500932D9A /* BRBIP32Sequence.c */; };
-		755CD9DD1DAA1A270075898E /* BRBIP38Key.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B51DAA05B500932D9A /* BRBIP38Key.c */; };
-		755CD9DE1DAA1A270075898E /* BRBIP39Mnemonic.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77B71DAA05B500932D9A /* BRBIP39Mnemonic.c */; };
-		755CD9DF1DAA1A270075898E /* BRBloomFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77BA1DAA05B500932D9A /* BRBloomFilter.c */; };
-		755CD9E01DAA1A270075898E /* BRCrypto.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77BC1DAA05B500932D9A /* BRCrypto.c */; };
-		755CD9E11DAA1A270075898E /* BRKey.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77BF1DAA05B500932D9A /* BRKey.c */; };
-		755CD9E21DAA1A270075898E /* BRMerkleBlock.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C11DAA05B500932D9A /* BRMerkleBlock.c */; };
-		755CD9E31DAA1A270075898E /* BRPaymentProtocol.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C31DAA05B500932D9A /* BRPaymentProtocol.c */; };
-		755CD9E41DAA1A270075898E /* BRPeer.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C51DAA05B500932D9A /* BRPeer.c */; };
-		755CD9E51DAA1A270075898E /* BRPeerManager.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C71DAA05B500932D9A /* BRPeerManager.c */; };
-		755CD9E61DAA1A270075898E /* BRSet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77C91DAA05B500932D9A /* BRSet.c */; };
-		755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CB1DAA05B500932D9A /* BRTransaction.c */; };
-		755CD9E81DAA1A270075898E /* BRWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 75DC77CD1DAA05B500932D9A /* BRWallet.c */; };
-		759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */ = {isa = PBXBuildFile; fileRef = 759B4BDD203E5A31002C68CA /* BRBCashAddr.c */; };
-		759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 755CD9D11DAA197C0075898E /* libBRCore.a */; };
 		75A2A7941DA5934300A983D8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7931DA5934300A983D8 /* AppDelegate.swift */; };
 		75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79A1DA5934300A983D8 /* Assets.xcassets */; };
 		75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */; };
 		75A2A7B41DA5934300A983D8 /* breadwalletUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A7B31DA5934300A983D8 /* breadwalletUITests.swift */; };
-		75C468AA2056E5F800113F92 /* BRBech32.c in Sources */ = {isa = PBXBuildFile; fileRef = 75C468A82056E5F700113F92 /* BRBech32.c */; };
 		7C0A3ACE210A0E1D006C2783 /* NotificationAuthorizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0A3ACD210A0E1D006C2783 /* NotificationAuthorizer.swift */; };
 		7C0F3DC42124A81100531E54 /* Backend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C0F3DC32124A81100531E54 /* Backend.swift */; };
 		7C230E752037AD52002F0FF1 /* SyncingIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C230E742037AD52002F0FF1 /* SyncingIndicator.swift */; };
@@ -136,9 +112,16 @@
 		7C40DE2D20E09207000E289D /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C40DE2C20E09207000E289D /* ToggleButton.swift */; };
 		7C424A6E20FD34F20064557E /* NotificationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C424A6D20FD34F20064557E /* NotificationHandler.swift */; };
 		7C45481A2187E65B0002E884 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4548192187E65B0002E884 /* AnyCodable.swift */; };
+		7C4D64B6222B4DC700DE2C2B /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
+		7C4D64CB222C511900DE2C2B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64CA222C511900DE2C2B /* libresolv.tbd */; };
 		7C54FF9E2165866A007BF3EF /* tokens.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* tokens.json */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C6628392107B8D600ABCD10 /* PigeonExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6628382107B8D600ABCD10 /* PigeonExchange.swift */; };
+		7C662B0C222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */; };
+		7C662B0D222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
+		7C662B0F222F6E800008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
+		7C662B10222F6E820008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C67B6362056FB13006487BE /* BRAPIClient+Ethereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */; };
 		7C67B6382056FBFA006487BE /* JSONRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6372056FBFA006487BE /* JSONRPC.swift */; };
 		7C67B63A2057180E006487BE /* JSONRPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6392057180E006487BE /* JSONRPCTests.swift */; };
@@ -147,9 +130,6 @@
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
 		7C6E0D912214C9B700CA3BA5 /* AssetArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */; };
 		7C6FD3F4213F205400EFF35F /* InboxMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */; };
-		7C705A0820C5E8E3008E75D2 /* BRKeyECIES.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0620C5E8E2008E75D2 /* BRKeyECIES.c */; };
-		7C705A0F20C5E936008E75D2 /* BREthereumAccountState.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0A20C5E935008E75D2 /* BREthereumAccountState.c */; };
-		7C705A1020C5E93B008E75D2 /* test.c in Sources */ = {isa = PBXBuildFile; fileRef = 7C705A0920C5E935008E75D2 /* test.c */; };
 		7C787AE221ED89510017EA7E /* KeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C787AE121ED89510017EA7E /* KeyStore.swift */; };
 		7C787AE421ED8BB40017EA7E /* SimpleRedux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C787AE321ED8BB40017EA7E /* SimpleRedux.swift */; };
 		7C7F18ED1FED9A3B0030230E /* TxStatusIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */; };
@@ -161,23 +141,6 @@
 		7CA238142011A97C00A4A59D /* TxDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA238132011A97C00A4A59D /* TxDetailViewController.swift */; };
 		7CA3BC302006864C00517BF7 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA3BC2F2006864C00517BF7 /* Currency.swift */; };
 		7CB2286F20A2286700105FFF /* BREthereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2286E20A2286700105FFF /* BREthereum.swift */; };
-		7CB2287120A4D26200105FFF /* BREthereum.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287020A4D26200105FFF /* BREthereum.c */; };
-		7CB2287820A4D2AC00105FFF /* BREthereumLightNodeAnnounce.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287220A4D2AC00105FFF /* BREthereumLightNodeAnnounce.c */; };
-		7CB2287920A4D2AC00105FFF /* BREthereumBlock.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287320A4D2AC00105FFF /* BREthereumBlock.c */; };
-		7CB2287A20A4D2AC00105FFF /* BREthereumLightNodeListen.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287520A4D2AC00105FFF /* BREthereumLightNodeListen.c */; };
-		7CB2287C20A4D2FD00105FFF /* BREthereumHash.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287B20A4D2FD00105FFF /* BREthereumHash.c */; };
-		7CB2288320A4D38500105FFF /* BREvent.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2287F20A4D38500105FFF /* BREvent.c */; };
-		7CB2288420A4D38500105FFF /* BREventQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2288220A4D38500105FFF /* BREventQueue.c */; };
-		7CB2289620A4D3BB00105FFF /* BREthereumHandshake.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2288620A4D3BB00105FFF /* BREthereumHandshake.c */; };
-		7CB2289720A4D3BB00105FFF /* BREthereumNodeManager.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2288B20A4D3BB00105FFF /* BREthereumNodeManager.c */; };
-		7CB2289820A4D3BB00105FFF /* BREthereumLES.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2288C20A4D3BB00105FFF /* BREthereumLES.c */; };
-		7CB2289A20A4D3BB00105FFF /* BREthereumNodeEventHandler.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2289020A4D3BB00105FFF /* BREthereumNodeEventHandler.c */; };
-		7CB2289B20A4D3BB00105FFF /* BREthereumFrameCoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2289120A4D3BB00105FFF /* BREthereumFrameCoder.c */; };
-		7CB2289C20A4D3BB00105FFF /* BREthereumNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2289220A4D3BB00105FFF /* BREthereumNode.c */; };
-		7CB2289D20A4D3BB00105FFF /* BREthereumLESBase.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2289320A4D3BB00105FFF /* BREthereumLESBase.c */; };
-		7CB228A020A4F31500105FFF /* BREthereumBloomFilter.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB2289E20A4F31500105FFF /* BREthereumBloomFilter.c */; };
-		7CB228A320A4F33200105FFF /* BREthereumLog.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB228A220A4F33200105FFF /* BREthereumLog.c */; };
-		7CB228A620A4F34200105FFF /* BREthereumTransactionReceipt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CB228A520A4F34200105FFF /* BREthereumTransactionReceipt.c */; };
 		7CB3BCD52059B62200053687 /* UnitConversionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB3BCD42059B62200053687 /* UnitConversionTests.swift */; };
 		7CBA74E62022784D00FBBFA9 /* AssetListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA74E52022784D00FBBFA9 /* AssetListViewModel.swift */; };
 		7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CBA74E720227D1300FBBFA9 /* MenuCell.swift */; };
@@ -193,17 +156,6 @@
 		7CC7D8DA21581C41007E1B9A /* brd-web-3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7CC7D8D621581C41007E1B9A /* brd-web-3.tar */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
-		7CF1161B205C943800C03D42 /* BREthereumToken.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FA205C943500C03D42 /* BREthereumToken.c */; };
-		7CF1161C205C943800C03D42 /* BREthereumAccount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FD205C943500C03D42 /* BREthereumAccount.c */; };
-		7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF115FF205C943500C03D42 /* BREthereumLightNode.c */; };
-		7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11601205C943500C03D42 /* BREthereumGas.c */; };
-		7CF11621205C943800C03D42 /* BREthereumTransaction.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11607205C943600C03D42 /* BREthereumTransaction.c */; };
-		7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1160A205C943600C03D42 /* BREthereumAmount.c */; };
-		7CF11623205C943800C03D42 /* BREthereumEther.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF1160F205C943700C03D42 /* BREthereumEther.c */; };
-		7CF11624205C943800C03D42 /* BRUtilHex.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11610205C943700C03D42 /* BRUtilHex.c */; };
-		7CF11625205C943800C03D42 /* BREthereumNetwork.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11612205C943700C03D42 /* BREthereumNetwork.c */; };
-		7CF11626205C943800C03D42 /* BREthereumContract.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11613205C943700C03D42 /* BREthereumContract.c */; };
-		7CF11628205C943800C03D42 /* BREthereumWallet.c in Sources */ = {isa = PBXBuildFile; fileRef = 7CF11615205C943800C03D42 /* BREthereumWallet.c */; };
 		7CF913BE1FFC7DC30085CB70 /* TxMemoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */; };
 		9A39B1232202AA3400E5018B /* HomeScreenCellHighlightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A39B1222202AA3400E5018B /* HomeScreenCellHighlightView.swift */; };
 		9A39B1252202AE9E00E5018B /* MultiframeAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A39B1242202AE9E00E5018B /* MultiframeAnimation.swift */; };
@@ -381,7 +333,6 @@
 		CE124CFE1E68F57700DFA146 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFD1E68F57700DFA146 /* Async.swift */; };
 		CE124D001E69170900DFA146 /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFF1E69170900DFA146 /* SyncingView.swift */; };
 		CE1280F61EEA855C00D27649 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1280F51EEA855C00D27649 /* Date+Additions.swift */; };
-		CE1B66E620222E3F003B4692 /* BRChainParams.h in Headers */ = {isa = PBXBuildFile; fileRef = CE1B66E520222E3E003B4692 /* BRChainParams.h */; };
 		CE1D84B61EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1D84B51EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift */; };
 		CE1E5F261EF083A600BD0F72 /* StartImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E5F251EF083A600BD0F72 /* StartImportViewController.swift */; };
 		CE1E7A9A20938DFD00C86BB7 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E7A9920938DFD00C86BB7 /* MenuButton.swift */; };
@@ -574,33 +525,12 @@
 			remoteGlobalIDString = 22A9A9951DF63426000F0016;
 			remoteInfo = libbz2;
 		};
-		3C83B283206317A7001D08CE /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 755CD9D01DAA197C0075898E;
-			remoteInfo = BRCore;
-		};
 		752FB04E1DF8BF5C009086FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 752FB0411DF8BE6B009086FB;
 			remoteInfo = libsqlite3;
-		};
-		759DA0BC1DAC369C008CC49B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 755CD9D01DAA197C0075898E;
-			remoteInfo = BRCore;
-		};
-		759DA0DD1DAC86BC008CC49B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 759DA0D71DAC8668008CC49B;
-			remoteInfo = submodules;
 		};
 		75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -635,17 +565,9 @@
 				CE08B2A020F667B1009FA568 /* SwiftProtobuf.framework in Embed Frameworks */,
 				754AE0B71DFCA870007FD001 /* libbz2.framework in Embed Frameworks */,
 				754AE0B81DFCA870007FD001 /* sqlite3.framework in Embed Frameworks */,
+				7C662B0D222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		755CD9CF1DAA197C0075898E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/$(PRODUCT_NAME)";
-			dstSubfolderSpec = 16;
-			files = (
-			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		75A2A7E21DA5934400A983D8 /* Embed Watch Content */ = {
@@ -725,10 +647,6 @@
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
 		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
-		3C83B27D206317A7001D08CE /* BRCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BRCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C83B27F206317A7001D08CE /* BRCoreTests.swift */ = {isa = PBXFileReference; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = BRCoreTests.swift; sourceTree = "<group>"; };
-		3C83B281206317A7001D08CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3C83B2912063187C001D08CE /* BRCoreTests-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BRCoreTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		710B035C21F6605C007E8A2A /* BadTransactionChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BadTransactionChecker.swift; path = src/Utilities/BadTransactionChecker.swift; sourceTree = "<group>"; };
 		710B035E21F662F9007E8A2A /* BadTransactionCheckerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadTransactionCheckerTests.swift; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
@@ -765,48 +683,6 @@
 		754AE0BB1DFE8A46007FD001 /* BRCore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRCore.swift; path = src/BRCore.swift; sourceTree = "<group>"; };
 		754AE0BD1DFE8E5A007FD001 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = src/Platform/module.modulemap; sourceTree = "<group>"; };
 		75519F331DC7D20500EDF66C /* WalletManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletManager.swift; sourceTree = "<group>"; };
-		755CD3181DAA099D0075898E /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		755CD32A1DAA0A110075898E /* secp256k1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1.h; sourceTree = "<group>"; };
-		755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_ecdh.h; sourceTree = "<group>"; };
-		755CD32C1DAA0A110075898E /* secp256k1_recovery.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = secp256k1_recovery.h; sourceTree = "<group>"; };
-		755CD33A1DAA0A110075898E /* basic-config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "basic-config.h"; sourceTree = "<group>"; };
-		755CD3431DAA0A110075898E /* ecdsa_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecdsa_impl.h; sourceTree = "<group>"; };
-		755CD3441DAA0A110075898E /* eckey.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eckey.h; sourceTree = "<group>"; };
-		755CD3451DAA0A110075898E /* eckey_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = eckey_impl.h; sourceTree = "<group>"; };
-		755CD3461DAA0A110075898E /* ecmult.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult.h; sourceTree = "<group>"; };
-		755CD3471DAA0A110075898E /* ecmult_const.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult_const.h; sourceTree = "<group>"; };
-		755CD3481DAA0A110075898E /* ecmult_const_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult_const_impl.h; sourceTree = "<group>"; };
-		755CD3491DAA0A110075898E /* ecmult_gen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult_gen.h; sourceTree = "<group>"; };
-		755CD34A1DAA0A110075898E /* ecmult_gen_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult_gen_impl.h; sourceTree = "<group>"; };
-		755CD34B1DAA0A110075898E /* ecmult_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ecmult_impl.h; sourceTree = "<group>"; };
-		755CD34C1DAA0A110075898E /* field.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field.h; sourceTree = "<group>"; };
-		755CD34D1DAA0A110075898E /* field_10x26.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field_10x26.h; sourceTree = "<group>"; };
-		755CD34E1DAA0A110075898E /* field_10x26_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field_10x26_impl.h; sourceTree = "<group>"; };
-		755CD34F1DAA0A110075898E /* field_5x52.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field_5x52.h; sourceTree = "<group>"; };
-		755CD3511DAA0A110075898E /* field_5x52_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field_5x52_impl.h; sourceTree = "<group>"; };
-		755CD3531DAA0A110075898E /* field_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = field_impl.h; sourceTree = "<group>"; };
-		755CD3551DAA0A110075898E /* group.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = group.h; sourceTree = "<group>"; };
-		755CD3561DAA0A110075898E /* group_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = group_impl.h; sourceTree = "<group>"; };
-		755CD3571DAA0A110075898E /* hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
-		755CD3581DAA0A110075898E /* hash_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hash_impl.h; sourceTree = "<group>"; };
-		755CD3661DAA0A110075898E /* main_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_impl.h; sourceTree = "<group>"; };
-		755CD36A1DAA0A110075898E /* main_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main_impl.h; sourceTree = "<group>"; };
-		755CD3731DAA0A110075898E /* num.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num.h; sourceTree = "<group>"; };
-		755CD3741DAA0A110075898E /* num_gmp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num_gmp.h; sourceTree = "<group>"; };
-		755CD3751DAA0A110075898E /* num_gmp_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num_gmp_impl.h; sourceTree = "<group>"; };
-		755CD3761DAA0A110075898E /* num_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = num_impl.h; sourceTree = "<group>"; };
-		755CD3771DAA0A110075898E /* scalar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar.h; sourceTree = "<group>"; };
-		755CD3781DAA0A110075898E /* scalar_4x64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar_4x64.h; sourceTree = "<group>"; };
-		755CD3791DAA0A110075898E /* scalar_4x64_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar_4x64_impl.h; sourceTree = "<group>"; };
-		755CD37A1DAA0A110075898E /* scalar_8x32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar_8x32.h; sourceTree = "<group>"; };
-		755CD37B1DAA0A110075898E /* scalar_8x32_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar_8x32_impl.h; sourceTree = "<group>"; };
-		755CD37C1DAA0A110075898E /* scalar_impl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = scalar_impl.h; sourceTree = "<group>"; };
-		755CD37D1DAA0A110075898E /* secp256k1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = secp256k1.c; sourceTree = "<group>"; };
-		755CD3811DAA0A110075898E /* util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		755CD9D11DAA197C0075898E /* libBRCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBRCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		759B4BDC203E5A31002C68CA /* BRBCashParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBCashParams.h; sourceTree = "<group>"; };
-		759B4BDD203E5A31002C68CA /* BRBCashAddr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBCashAddr.c; sourceTree = "<group>"; };
-		759B4BDE203E5A31002C68CA /* BRBCashAddr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBCashAddr.h; sourceTree = "<group>"; };
 		75A2A7901DA5934300A983D8 /* breadwallet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = breadwallet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75A2A7931DA5934300A983D8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75A2A79A1DA5934300A983D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -820,42 +696,6 @@
 		75A2A7F21DA5935F00A983D8 /* Messages.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Messages.framework; path = System/Library/Frameworks/Messages.framework; sourceTree = SDKROOT; };
 		75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
 		75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = breadwallet.entitlements; sourceTree = "<group>"; };
-		75C468A82056E5F700113F92 /* BRBech32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBech32.c; sourceTree = "<group>"; };
-		75C468A92056E5F800113F92 /* BRBech32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBech32.h; sourceTree = "<group>"; };
-		75DC77AE1DAA05B500932D9A /* BRAddress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRAddress.c; sourceTree = "<group>"; };
-		75DC77AF1DAA05B500932D9A /* BRAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRAddress.h; sourceTree = "<group>"; };
-		75DC77B01DAA05B500932D9A /* BRArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRArray.h; sourceTree = "<group>"; };
-		75DC77B11DAA05B500932D9A /* BRBase58.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBase58.c; sourceTree = "<group>"; };
-		75DC77B21DAA05B500932D9A /* BRBase58.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBase58.h; sourceTree = "<group>"; };
-		75DC77B31DAA05B500932D9A /* BRBIP32Sequence.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBIP32Sequence.c; sourceTree = "<group>"; };
-		75DC77B41DAA05B500932D9A /* BRBIP32Sequence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBIP32Sequence.h; sourceTree = "<group>"; };
-		75DC77B51DAA05B500932D9A /* BRBIP38Key.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBIP38Key.c; sourceTree = "<group>"; };
-		75DC77B61DAA05B500932D9A /* BRBIP38Key.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBIP38Key.h; sourceTree = "<group>"; };
-		75DC77B71DAA05B500932D9A /* BRBIP39Mnemonic.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBIP39Mnemonic.c; sourceTree = "<group>"; };
-		75DC77B81DAA05B500932D9A /* BRBIP39Mnemonic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBIP39Mnemonic.h; sourceTree = "<group>"; };
-		75DC77B91DAA05B500932D9A /* BRBIP39WordsEn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBIP39WordsEn.h; sourceTree = "<group>"; };
-		75DC77BA1DAA05B500932D9A /* BRBloomFilter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRBloomFilter.c; sourceTree = "<group>"; };
-		75DC77BB1DAA05B500932D9A /* BRBloomFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRBloomFilter.h; sourceTree = "<group>"; };
-		75DC77BC1DAA05B500932D9A /* BRCrypto.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRCrypto.c; sourceTree = "<group>"; };
-		75DC77BD1DAA05B500932D9A /* BRCrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRCrypto.h; sourceTree = "<group>"; };
-		75DC77BE1DAA05B500932D9A /* BRInt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRInt.h; sourceTree = "<group>"; };
-		75DC77BF1DAA05B500932D9A /* BRKey.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRKey.c; sourceTree = "<group>"; };
-		75DC77C01DAA05B500932D9A /* BRKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKey.h; sourceTree = "<group>"; };
-		75DC77C11DAA05B500932D9A /* BRMerkleBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRMerkleBlock.c; sourceTree = "<group>"; };
-		75DC77C21DAA05B500932D9A /* BRMerkleBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRMerkleBlock.h; sourceTree = "<group>"; };
-		75DC77C31DAA05B500932D9A /* BRPaymentProtocol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRPaymentProtocol.c; sourceTree = "<group>"; };
-		75DC77C41DAA05B500932D9A /* BRPaymentProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRPaymentProtocol.h; sourceTree = "<group>"; };
-		75DC77C51DAA05B500932D9A /* BRPeer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRPeer.c; sourceTree = "<group>"; };
-		75DC77C61DAA05B500932D9A /* BRPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRPeer.h; sourceTree = "<group>"; };
-		75DC77C71DAA05B500932D9A /* BRPeerManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRPeerManager.c; sourceTree = "<group>"; };
-		75DC77C81DAA05B500932D9A /* BRPeerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRPeerManager.h; sourceTree = "<group>"; };
-		75DC77C91DAA05B500932D9A /* BRSet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRSet.c; sourceTree = "<group>"; };
-		75DC77CA1DAA05B500932D9A /* BRSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRSet.h; sourceTree = "<group>"; };
-		75DC77CB1DAA05B500932D9A /* BRTransaction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRTransaction.c; sourceTree = "<group>"; };
-		75DC77CC1DAA05B500932D9A /* BRTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRTransaction.h; sourceTree = "<group>"; };
-		75DC77CD1DAA05B500932D9A /* BRWallet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRWallet.c; sourceTree = "<group>"; };
-		75DC77CE1DAA05B500932D9A /* BRWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRWallet.h; sourceTree = "<group>"; };
-		75DC783C1DAA05B500932D9A /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
 		75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		7C0A3ACD210A0E1D006C2783 /* NotificationAuthorizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NotificationAuthorizer.swift; path = src/NotificationAuthorizer.swift; sourceTree = "<group>"; };
 		7C0F3DC32124A81100531E54 /* Backend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Backend.swift; path = src/Backend.swift; sourceTree = "<group>"; };
@@ -869,6 +709,9 @@
 		7C40DE2C20E09207000E289D /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ToggleButton.swift; path = src/Controls/ToggleButton.swift; sourceTree = "<group>"; };
 		7C424A6D20FD34F20064557E /* NotificationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationHandler.swift; path = src/NotificationHandler.swift; sourceTree = "<group>"; };
 		7C4548192187E65B0002E884 /* AnyCodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnyCodable.swift; path = src/AnyCodable.swift; sourceTree = "<group>"; };
+		7C4D64B5222B4DC700DE2C2B /* libCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C4D64CA222C511900DE2C2B /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		7C54FF9D21658669007BF3EF /* tokens.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = tokens.json; path = Resources/tokens.json; sourceTree = "<group>"; };
 		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C6628382107B8D600ABCD10 /* PigeonExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonExchange.swift; path = src/Pigeon/PigeonExchange.swift; sourceTree = "<group>"; };
@@ -880,13 +723,6 @@
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
 		7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AssetArchive.swift; path = src/Platform/AssetArchive.swift; sourceTree = "<group>"; };
 		7C6FD3F3213F205400EFF35F /* InboxMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InboxMetaData.swift; path = src/Platform/InboxMetaData.swift; sourceTree = "<group>"; };
-		7C705A0620C5E8E2008E75D2 /* BRKeyECIES.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRKeyECIES.c; sourceTree = "<group>"; };
-		7C705A0720C5E8E2008E75D2 /* BRKeyECIES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRKeyECIES.h; sourceTree = "<group>"; };
-		7C705A0920C5E935008E75D2 /* test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = test.c; sourceTree = "<group>"; };
-		7C705A0A20C5E935008E75D2 /* BREthereumAccountState.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAccountState.c; sourceTree = "<group>"; };
-		7C705A0B20C5E935008E75D2 /* BREthereumLightNodePrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLightNodePrivate.h; sourceTree = "<group>"; };
-		7C705A0C20C5E935008E75D2 /* BREthereumAccountState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAccountState.h; sourceTree = "<group>"; };
-		7C705A0D20C5E936008E75D2 /* BREthereumPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumPrivate.h; sourceTree = "<group>"; };
 		7C787AE121ED89510017EA7E /* KeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeyStore.swift; path = src/KeyStore.swift; sourceTree = "<group>"; };
 		7C787AE321ED8BB40017EA7E /* SimpleRedux.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleRedux.swift; path = src/SimpleRedux/SimpleRedux.swift; sourceTree = "<group>"; };
 		7C7F18EC1FED9A3B0030230E /* TxStatusIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusIndicator.swift; path = src/Views/TxStatusIndicator.swift; sourceTree = "<group>"; };
@@ -898,37 +734,6 @@
 		7CA238132011A97C00A4A59D /* TxDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailViewController.swift; path = src/ViewControllers/TxDetailViewController.swift; sourceTree = "<group>"; };
 		7CA3BC2F2006864C00517BF7 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Currency.swift; path = src/Models/Currency.swift; sourceTree = "<group>"; };
 		7CB2286E20A2286700105FFF /* BREthereum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BREthereum.swift; path = src/BREthereum.swift; sourceTree = "<group>"; };
-		7CB2287020A4D26200105FFF /* BREthereum.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereum.c; sourceTree = "<group>"; };
-		7CB2287220A4D2AC00105FFF /* BREthereumLightNodeAnnounce.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLightNodeAnnounce.c; sourceTree = "<group>"; };
-		7CB2287320A4D2AC00105FFF /* BREthereumBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumBlock.c; sourceTree = "<group>"; };
-		7CB2287520A4D2AC00105FFF /* BREthereumLightNodeListen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLightNodeListen.c; sourceTree = "<group>"; };
-		7CB2287620A4D2AC00105FFF /* BREthereumBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumBlock.h; sourceTree = "<group>"; };
-		7CB2287720A4D2AC00105FFF /* BREthereumBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumBase.h; sourceTree = "<group>"; };
-		7CB2287B20A4D2FD00105FFF /* BREthereumHash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumHash.c; sourceTree = "<group>"; };
-		7CB2287F20A4D38500105FFF /* BREvent.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREvent.c; sourceTree = "<group>"; };
-		7CB2288020A4D38500105FFF /* BREventQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREventQueue.h; sourceTree = "<group>"; };
-		7CB2288120A4D38500105FFF /* BREvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREvent.h; sourceTree = "<group>"; };
-		7CB2288220A4D38500105FFF /* BREventQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREventQueue.c; sourceTree = "<group>"; };
-		7CB2288620A4D3BB00105FFF /* BREthereumHandshake.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumHandshake.c; sourceTree = "<group>"; };
-		7CB2288720A4D3BB00105FFF /* BREthereumNodeEventHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNodeEventHandler.h; sourceTree = "<group>"; };
-		7CB2288920A4D3BB00105FFF /* BREthereumNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNode.h; sourceTree = "<group>"; };
-		7CB2288A20A4D3BB00105FFF /* BREthereumFrameCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumFrameCoder.h; sourceTree = "<group>"; };
-		7CB2288B20A4D3BB00105FFF /* BREthereumNodeManager.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNodeManager.c; sourceTree = "<group>"; };
-		7CB2288C20A4D3BB00105FFF /* BREthereumLES.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLES.c; sourceTree = "<group>"; };
-		7CB2288D20A4D3BB00105FFF /* BREthereumLESBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLESBase.h; sourceTree = "<group>"; };
-		7CB2288E20A4D3BB00105FFF /* BREthereumHandshake.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumHandshake.h; sourceTree = "<group>"; };
-		7CB2289020A4D3BB00105FFF /* BREthereumNodeEventHandler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNodeEventHandler.c; sourceTree = "<group>"; };
-		7CB2289120A4D3BB00105FFF /* BREthereumFrameCoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumFrameCoder.c; sourceTree = "<group>"; };
-		7CB2289220A4D3BB00105FFF /* BREthereumNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNode.c; sourceTree = "<group>"; };
-		7CB2289320A4D3BB00105FFF /* BREthereumLESBase.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLESBase.c; sourceTree = "<group>"; };
-		7CB2289420A4D3BB00105FFF /* BREthereumLES.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLES.h; sourceTree = "<group>"; };
-		7CB2289520A4D3BB00105FFF /* BREthereumNodeManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNodeManager.h; sourceTree = "<group>"; };
-		7CB2289E20A4F31500105FFF /* BREthereumBloomFilter.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumBloomFilter.c; sourceTree = "<group>"; };
-		7CB2289F20A4F31500105FFF /* BREthereumBloomFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumBloomFilter.h; sourceTree = "<group>"; };
-		7CB228A120A4F33200105FFF /* BREthereumLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLog.h; sourceTree = "<group>"; };
-		7CB228A220A4F33200105FFF /* BREthereumLog.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLog.c; sourceTree = "<group>"; };
-		7CB228A420A4F34200105FFF /* BREthereumTransactionReceipt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumTransactionReceipt.h; sourceTree = "<group>"; };
-		7CB228A520A4F34200105FFF /* BREthereumTransactionReceipt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumTransactionReceipt.c; sourceTree = "<group>"; };
 		7CB3BCD42059B62200053687 /* UnitConversionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitConversionTests.swift; sourceTree = "<group>"; };
 		7CBA74E52022784D00FBBFA9 /* AssetListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListViewModel.swift; sourceTree = "<group>"; };
 		7CBA74E720227D1300FBBFA9 /* MenuCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuCell.swift; path = src/Views/MenuCell.swift; sourceTree = "<group>"; };
@@ -948,36 +753,6 @@
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAmountCell.swift; path = src/Views/TransactionCells/TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE19FF221166B27008C55CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
-		7CF115EE205C943400C03D42 /* BREthereum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereum.h; sourceTree = "<group>"; };
-		7CF115FA205C943500C03D42 /* BREthereumToken.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumToken.c; sourceTree = "<group>"; };
-		7CF115FB205C943500C03D42 /* BRRlpCoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlpCoder.h; sourceTree = "<group>"; };
-		7CF115FC205C943500C03D42 /* BREthereumContract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumContract.h; sourceTree = "<group>"; };
-		7CF115FD205C943500C03D42 /* BREthereumAccount.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAccount.c; sourceTree = "<group>"; };
-		7CF115FE205C943500C03D42 /* BRUtilMathParse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilMathParse.c; sourceTree = "<group>"; };
-		7CF115FF205C943500C03D42 /* BREthereumLightNode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumLightNode.c; sourceTree = "<group>"; };
-		7CF11600205C943500C03D42 /* BRUtilMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilMath.c; sourceTree = "<group>"; };
-		7CF11601205C943500C03D42 /* BREthereumGas.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumGas.c; sourceTree = "<group>"; };
-		7CF11602205C943500C03D42 /* BREthereumLightNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumLightNode.h; sourceTree = "<group>"; };
-		7CF11603205C943600C03D42 /* BREthereumWallet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumWallet.h; sourceTree = "<group>"; };
-		7CF11604205C943600C03D42 /* BREthereumAmount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAmount.h; sourceTree = "<group>"; };
-		7CF11605205C943600C03D42 /* BREthereumToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumToken.h; sourceTree = "<group>"; };
-		7CF11606205C943600C03D42 /* BREthereumAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumAccount.h; sourceTree = "<group>"; };
-		7CF11607205C943600C03D42 /* BREthereumTransaction.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumTransaction.c; sourceTree = "<group>"; };
-		7CF11608205C943600C03D42 /* BREthereumNetwork.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumNetwork.h; sourceTree = "<group>"; };
-		7CF11609205C943600C03D42 /* BREthereumTransaction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumTransaction.h; sourceTree = "<group>"; };
-		7CF1160A205C943600C03D42 /* BREthereumAmount.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumAmount.c; sourceTree = "<group>"; };
-		7CF1160B205C943600C03D42 /* BRUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtil.h; sourceTree = "<group>"; };
-		7CF1160C205C943600C03D42 /* BRUtilHex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtilHex.h; sourceTree = "<group>"; };
-		7CF1160D205C943700C03D42 /* BRRlp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRRlp.h; sourceTree = "<group>"; };
-		7CF1160E205C943700C03D42 /* BRUtilMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRUtilMath.h; sourceTree = "<group>"; };
-		7CF1160F205C943700C03D42 /* BREthereumEther.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumEther.c; sourceTree = "<group>"; };
-		7CF11610205C943700C03D42 /* BRUtilHex.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRUtilHex.c; sourceTree = "<group>"; };
-		7CF11611205C943700C03D42 /* BREthereumEther.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumEther.h; sourceTree = "<group>"; };
-		7CF11612205C943700C03D42 /* BREthereumNetwork.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumNetwork.c; sourceTree = "<group>"; };
-		7CF11613205C943700C03D42 /* BREthereumContract.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumContract.c; sourceTree = "<group>"; };
-		7CF11614205C943700C03D42 /* BRRlpCoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BRRlpCoder.c; sourceTree = "<group>"; };
-		7CF11615205C943800C03D42 /* BREthereumWallet.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = BREthereumWallet.c; sourceTree = "<group>"; };
-		7CF11616205C943800C03D42 /* BREthereumGas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BREthereumGas.h; sourceTree = "<group>"; };
 		7CF913BD1FFC7DC30085CB70 /* TxMemoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxMemoCell.swift; path = src/Views/TransactionCells/TxMemoCell.swift; sourceTree = "<group>"; };
 		9A39B1222202AA3400E5018B /* HomeScreenCellHighlightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCellHighlightView.swift; path = src/Views/AnimatedIcons/HomeScreenCellHighlightView.swift; sourceTree = "<group>"; };
 		9A39B1242202AE9E00E5018B /* MultiframeAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MultiframeAnimation.swift; path = src/Views/AnimatedIcons/MultiframeAnimation.swift; sourceTree = "<group>"; };
@@ -1156,7 +931,6 @@
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
 		CE124CFF1E69170900DFA146 /* SyncingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncingView.swift; path = src/Views/SyncingView.swift; sourceTree = "<group>"; };
 		CE1280F51EEA855C00D27649 /* Date+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Date+Additions.swift"; path = "src/Extensions/Date+Additions.swift"; sourceTree = "<group>"; };
-		CE1B66E520222E3E003B4692 /* BRChainParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BRChainParams.h; sourceTree = "<group>"; };
 		CE1D84B51EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+Additions.swift"; path = "src/Extensions/UIBarButtonItem+Additions.swift"; sourceTree = "<group>"; };
 		CE1E5F251EF083A600BD0F72 /* StartImportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartImportViewController.swift; path = src/ViewControllers/Import/StartImportViewController.swift; sourceTree = "<group>"; };
 		CE1E7A9920938DFD00C86BB7 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuButton.swift; path = src/Views/MenuButton.swift; sourceTree = "<group>"; };
@@ -1368,14 +1142,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3C83B27A206317A7001D08CE /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3C83B282206317A7001D08CE /* libBRCore.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		752FB0431DF8BE6B009086FB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1384,18 +1150,12 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		755CD9CE1DAA197C0075898E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		75A2A78D1DA5934300A983D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
+				7C662B0C222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
@@ -1404,7 +1164,8 @@
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
 				752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */,
-				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
+				7C4D64CB222C511900DE2C2B /* libresolv.tbd in Frameworks */,
+				7C4D64B6222B4DC700DE2C2B /* libCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1412,6 +1173,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */,
 				CEE218BC2102719F00399231 /* SwiftProtobuf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1420,6 +1182,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C662B0F222F6E800008814C /* libCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1427,6 +1190,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7C662B10222F6E820008814C /* libCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1503,40 +1267,8 @@
 				22A9A9AA1DF64B97000F0016 /* iphone.modulemap */,
 				22A9A9AB1DF64B97000F0016 /* iphonesim.modulemap */,
 			);
-			path = libbz2;
-			sourceTree = "<group>";
-		};
-		3C83B2742063168A001D08CE /* rlp */ = {
-			isa = PBXGroup;
-			children = (
-				7CF1160D205C943700C03D42 /* BRRlp.h */,
-				7CF115FB205C943500C03D42 /* BRRlpCoder.h */,
-				7CF11614205C943700C03D42 /* BRRlpCoder.c */,
-			);
-			path = rlp;
-			sourceTree = "<group>";
-		};
-		3C83B275206316C9001D08CE /* util */ = {
-			isa = PBXGroup;
-			children = (
-				7CF1160B205C943600C03D42 /* BRUtil.h */,
-				7CF1160E205C943700C03D42 /* BRUtilMath.h */,
-				7CF11600205C943500C03D42 /* BRUtilMath.c */,
-				7CF115FE205C943500C03D42 /* BRUtilMathParse.c */,
-				7CF1160C205C943600C03D42 /* BRUtilHex.h */,
-				7CF11610205C943700C03D42 /* BRUtilHex.c */,
-			);
-			path = util;
-			sourceTree = "<group>";
-		};
-		3C83B27E206317A7001D08CE /* BRCoreTests */ = {
-			isa = PBXGroup;
-			children = (
-				3C83B2912063187C001D08CE /* BRCoreTests-Bridging-Header.h */,
-				3C83B27F206317A7001D08CE /* BRCoreTests.swift */,
-				3C83B281206317A7001D08CE /* Info.plist */,
-			);
-			path = BRCoreTests;
+			name = libbz2;
+			path = Modules/libbz2;
 			sourceTree = "<group>";
 		};
 		710B035B21F6603C007E8A2A /* Utilities */ = {
@@ -1589,106 +1321,12 @@
 			name = RecoverKey;
 			sourceTree = "<group>";
 		};
-		71A3170B229C70920088F97C /* Theme */ = {
+        71A3170B229C70920088F97C /* Theme */ = {
 			isa = PBXGroup;
 			children = (
 				71A3170C229C70C00088F97C /* Theme.swift */,
 			);
 			name = Theme;
-			sourceTree = "<group>";
-		};
-		755CD3191DAA0A110075898E /* secp256k1 */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3291DAA0A110075898E /* include */,
-				755CD3371DAA0A110075898E /* src */,
-			);
-			path = secp256k1;
-			sourceTree = "<group>";
-		};
-		755CD3291DAA0A110075898E /* include */ = {
-			isa = PBXGroup;
-			children = (
-				755CD32A1DAA0A110075898E /* secp256k1.h */,
-				755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */,
-				755CD32C1DAA0A110075898E /* secp256k1_recovery.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		755CD3371DAA0A110075898E /* src */ = {
-			isa = PBXGroup;
-			children = (
-				755CD33A1DAA0A110075898E /* basic-config.h */,
-				755CD3431DAA0A110075898E /* ecdsa_impl.h */,
-				755CD3441DAA0A110075898E /* eckey.h */,
-				755CD3451DAA0A110075898E /* eckey_impl.h */,
-				755CD3461DAA0A110075898E /* ecmult.h */,
-				755CD3471DAA0A110075898E /* ecmult_const.h */,
-				755CD3481DAA0A110075898E /* ecmult_const_impl.h */,
-				755CD3491DAA0A110075898E /* ecmult_gen.h */,
-				755CD34A1DAA0A110075898E /* ecmult_gen_impl.h */,
-				755CD34B1DAA0A110075898E /* ecmult_impl.h */,
-				755CD34C1DAA0A110075898E /* field.h */,
-				755CD34D1DAA0A110075898E /* field_10x26.h */,
-				755CD34E1DAA0A110075898E /* field_10x26_impl.h */,
-				755CD34F1DAA0A110075898E /* field_5x52.h */,
-				755CD3511DAA0A110075898E /* field_5x52_impl.h */,
-				755CD3531DAA0A110075898E /* field_impl.h */,
-				755CD3551DAA0A110075898E /* group.h */,
-				755CD3561DAA0A110075898E /* group_impl.h */,
-				755CD3571DAA0A110075898E /* hash.h */,
-				755CD3581DAA0A110075898E /* hash_impl.h */,
-				755CD3641DAA0A110075898E /* modules */,
-				755CD3731DAA0A110075898E /* num.h */,
-				755CD3741DAA0A110075898E /* num_gmp.h */,
-				755CD3751DAA0A110075898E /* num_gmp_impl.h */,
-				755CD3761DAA0A110075898E /* num_impl.h */,
-				755CD3771DAA0A110075898E /* scalar.h */,
-				755CD3781DAA0A110075898E /* scalar_4x64.h */,
-				755CD3791DAA0A110075898E /* scalar_4x64_impl.h */,
-				755CD37A1DAA0A110075898E /* scalar_8x32.h */,
-				755CD37B1DAA0A110075898E /* scalar_8x32_impl.h */,
-				755CD37C1DAA0A110075898E /* scalar_impl.h */,
-				755CD37D1DAA0A110075898E /* secp256k1.c */,
-				755CD3811DAA0A110075898E /* util.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		755CD3641DAA0A110075898E /* modules */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3651DAA0A110075898E /* ecdh */,
-				755CD3691DAA0A110075898E /* recovery */,
-			);
-			path = modules;
-			sourceTree = "<group>";
-		};
-		755CD3651DAA0A110075898E /* ecdh */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3661DAA0A110075898E /* main_impl.h */,
-			);
-			path = ecdh;
-			sourceTree = "<group>";
-		};
-		755CD3691DAA0A110075898E /* recovery */ = {
-			isa = PBXGroup;
-			children = (
-				755CD36A1DAA0A110075898E /* main_impl.h */,
-			);
-			path = recovery;
-			sourceTree = "<group>";
-		};
-		759B4BDB203E5A31002C68CA /* bcash */ = {
-			isa = PBXGroup;
-			children = (
-				759B4BDC203E5A31002C68CA /* BRBCashParams.h */,
-				759B4BDD203E5A31002C68CA /* BRBCashAddr.c */,
-				759B4BDE203E5A31002C68CA /* BRBCashAddr.h */,
-			);
-			path = bcash;
 			sourceTree = "<group>";
 		};
 		75A2A7871DA5934300A983D8 = {
@@ -1699,7 +1337,6 @@
 				75A2A7B21DA5934300A983D8 /* breadwalletUITests */,
 				75B6F52F1DA71DCC0031A93F /* Modules */,
 				CEA7E67C1F09A9D2001F8C27 /* Screenshots */,
-				3C83B27E206317A7001D08CE /* BRCoreTests */,
 				75A2A7F11DA5935F00A983D8 /* Frameworks */,
 				75A2A7911DA5934300A983D8 /* Products */,
 			);
@@ -1711,11 +1348,9 @@
 				75A2A7901DA5934300A983D8 /* breadwallet.app */,
 				75A2A7A41DA5934300A983D8 /* breadwalletTests.xctest */,
 				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
-				755CD9D11DAA197C0075898E /* libBRCore.a */,
 				22A9A9961DF63426000F0016 /* libbz2.framework */,
 				752FB04A1DF8BE6B009086FB /* sqlite3.framework */,
 				CEA7E67B1F09A9D2001F8C27 /* Screenshots.xctest */,
-				3C83B27D206317A7001D08CE /* BRCoreTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1813,9 +1448,12 @@
 		75A2A7F11DA5935F00A983D8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7CBC6B2D21751ECA00899AFB /* iAd.framework */,
+				7C4D64CA222C511900DE2C2B /* libresolv.tbd */,
+				7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */,
 				22A9A95F1DF61FD8000F0016 /* CoreLocation.framework */,
+				7CBC6B2D21751ECA00899AFB /* iAd.framework */,
 				22A9A9671DF61FF8000F0016 /* libbz2.tbd */,
+				7C4D64B5222B4DC700DE2C2B /* libCore.a */,
 				75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */,
 				75A2A7F21DA5935F00A983D8 /* Messages.framework */,
 				75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */,
@@ -1832,61 +1470,9 @@
 			isa = PBXGroup;
 			children = (
 				22A9A9971DF63426000F0016 /* libbz2 */,
-				75DC77AB1DAA05B500932D9A /* breadwallet-core */,
 				75FEFD1F1DAEE7A400203D3A /* sqlite3 */,
 			);
 			name = Modules;
-			sourceTree = "<group>";
-		};
-		75DC77AB1DAA05B500932D9A /* breadwallet-core */ = {
-			isa = PBXGroup;
-			children = (
-				759B4BDB203E5A31002C68CA /* bcash */,
-				75DC77AE1DAA05B500932D9A /* BRAddress.c */,
-				75DC77AF1DAA05B500932D9A /* BRAddress.h */,
-				75DC77B01DAA05B500932D9A /* BRArray.h */,
-				75DC77B11DAA05B500932D9A /* BRBase58.c */,
-				75DC77B21DAA05B500932D9A /* BRBase58.h */,
-				75C468A82056E5F700113F92 /* BRBech32.c */,
-				75C468A92056E5F800113F92 /* BRBech32.h */,
-				75DC77B31DAA05B500932D9A /* BRBIP32Sequence.c */,
-				75DC77B41DAA05B500932D9A /* BRBIP32Sequence.h */,
-				75DC77B51DAA05B500932D9A /* BRBIP38Key.c */,
-				75DC77B61DAA05B500932D9A /* BRBIP38Key.h */,
-				75DC77B71DAA05B500932D9A /* BRBIP39Mnemonic.c */,
-				75DC77B81DAA05B500932D9A /* BRBIP39Mnemonic.h */,
-				75DC77B91DAA05B500932D9A /* BRBIP39WordsEn.h */,
-				75DC77BA1DAA05B500932D9A /* BRBloomFilter.c */,
-				75DC77BB1DAA05B500932D9A /* BRBloomFilter.h */,
-				CE1B66E520222E3E003B4692 /* BRChainParams.h */,
-				75DC77BC1DAA05B500932D9A /* BRCrypto.c */,
-				75DC77BD1DAA05B500932D9A /* BRCrypto.h */,
-				75DC77BE1DAA05B500932D9A /* BRInt.h */,
-				75DC77BF1DAA05B500932D9A /* BRKey.c */,
-				75DC77C01DAA05B500932D9A /* BRKey.h */,
-				7C705A0620C5E8E2008E75D2 /* BRKeyECIES.c */,
-				7C705A0720C5E8E2008E75D2 /* BRKeyECIES.h */,
-				75DC77C11DAA05B500932D9A /* BRMerkleBlock.c */,
-				75DC77C21DAA05B500932D9A /* BRMerkleBlock.h */,
-				75DC77C31DAA05B500932D9A /* BRPaymentProtocol.c */,
-				75DC77C41DAA05B500932D9A /* BRPaymentProtocol.h */,
-				75DC77C51DAA05B500932D9A /* BRPeer.c */,
-				75DC77C61DAA05B500932D9A /* BRPeer.h */,
-				75DC77C71DAA05B500932D9A /* BRPeerManager.c */,
-				75DC77C81DAA05B500932D9A /* BRPeerManager.h */,
-				75DC77C91DAA05B500932D9A /* BRSet.c */,
-				75DC77CA1DAA05B500932D9A /* BRSet.h */,
-				75DC77CB1DAA05B500932D9A /* BRTransaction.c */,
-				75DC77CC1DAA05B500932D9A /* BRTransaction.h */,
-				75DC77CD1DAA05B500932D9A /* BRWallet.c */,
-				75DC77CE1DAA05B500932D9A /* BRWallet.h */,
-				7C754AAA205864D4006646A6 /* ethereum */,
-				755CD3181DAA099D0075898E /* module.modulemap */,
-				755CD3191DAA0A110075898E /* secp256k1 */,
-				75DC783C1DAA05B500932D9A /* test.c */,
-			);
-			name = "breadwallet-core";
-			path = "Modules/breadwallet-core";
 			sourceTree = "<group>";
 		};
 		75FEFD1F1DAEE7A400203D3A /* sqlite3 */ = {
@@ -1915,88 +1501,6 @@
 				7C54FF9D21658669007BF3EF /* tokens.json */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		7C754AAA205864D4006646A6 /* ethereum */ = {
-			isa = PBXGroup;
-			children = (
-				7CB2287020A4D26200105FFF /* BREthereum.c */,
-				7CF115EE205C943400C03D42 /* BREthereum.h */,
-				7CF115FD205C943500C03D42 /* BREthereumAccount.c */,
-				7CF11606205C943600C03D42 /* BREthereumAccount.h */,
-				7C705A0A20C5E935008E75D2 /* BREthereumAccountState.c */,
-				7C705A0C20C5E935008E75D2 /* BREthereumAccountState.h */,
-				7CF1160A205C943600C03D42 /* BREthereumAmount.c */,
-				7CF11604205C943600C03D42 /* BREthereumAmount.h */,
-				7CB2287720A4D2AC00105FFF /* BREthereumBase.h */,
-				7CB2287320A4D2AC00105FFF /* BREthereumBlock.c */,
-				7CB2287620A4D2AC00105FFF /* BREthereumBlock.h */,
-				7CB2289E20A4F31500105FFF /* BREthereumBloomFilter.c */,
-				7CB2289F20A4F31500105FFF /* BREthereumBloomFilter.h */,
-				7CF11613205C943700C03D42 /* BREthereumContract.c */,
-				7CF115FC205C943500C03D42 /* BREthereumContract.h */,
-				7CF1160F205C943700C03D42 /* BREthereumEther.c */,
-				7CF11611205C943700C03D42 /* BREthereumEther.h */,
-				7CF11601205C943500C03D42 /* BREthereumGas.c */,
-				7CF11616205C943800C03D42 /* BREthereumGas.h */,
-				7CB2287B20A4D2FD00105FFF /* BREthereumHash.c */,
-				7CF115FF205C943500C03D42 /* BREthereumLightNode.c */,
-				7CF11602205C943500C03D42 /* BREthereumLightNode.h */,
-				7CB2287220A4D2AC00105FFF /* BREthereumLightNodeAnnounce.c */,
-				7CB2287520A4D2AC00105FFF /* BREthereumLightNodeListen.c */,
-				7C705A0B20C5E935008E75D2 /* BREthereumLightNodePrivate.h */,
-				7CB228A220A4F33200105FFF /* BREthereumLog.c */,
-				7CB228A120A4F33200105FFF /* BREthereumLog.h */,
-				7CF11612205C943700C03D42 /* BREthereumNetwork.c */,
-				7CF11608205C943600C03D42 /* BREthereumNetwork.h */,
-				7C705A0D20C5E936008E75D2 /* BREthereumPrivate.h */,
-				7CF115FA205C943500C03D42 /* BREthereumToken.c */,
-				7CF11605205C943600C03D42 /* BREthereumToken.h */,
-				7CF11607205C943600C03D42 /* BREthereumTransaction.c */,
-				7CF11609205C943600C03D42 /* BREthereumTransaction.h */,
-				7CB228A520A4F34200105FFF /* BREthereumTransactionReceipt.c */,
-				7CB228A420A4F34200105FFF /* BREthereumTransactionReceipt.h */,
-				7CF11615205C943800C03D42 /* BREthereumWallet.c */,
-				7CF11603205C943600C03D42 /* BREthereumWallet.h */,
-				7CB2287E20A4D38500105FFF /* event */,
-				7CB2288520A4D3BB00105FFF /* les */,
-				3C83B2742063168A001D08CE /* rlp */,
-				7C705A0920C5E935008E75D2 /* test.c */,
-				3C83B275206316C9001D08CE /* util */,
-			);
-			path = ethereum;
-			sourceTree = "<group>";
-		};
-		7CB2287E20A4D38500105FFF /* event */ = {
-			isa = PBXGroup;
-			children = (
-				7CB2287F20A4D38500105FFF /* BREvent.c */,
-				7CB2288020A4D38500105FFF /* BREventQueue.h */,
-				7CB2288120A4D38500105FFF /* BREvent.h */,
-				7CB2288220A4D38500105FFF /* BREventQueue.c */,
-			);
-			path = event;
-			sourceTree = "<group>";
-		};
-		7CB2288520A4D3BB00105FFF /* les */ = {
-			isa = PBXGroup;
-			children = (
-				7CB2288620A4D3BB00105FFF /* BREthereumHandshake.c */,
-				7CB2288720A4D3BB00105FFF /* BREthereumNodeEventHandler.h */,
-				7CB2288920A4D3BB00105FFF /* BREthereumNode.h */,
-				7CB2288A20A4D3BB00105FFF /* BREthereumFrameCoder.h */,
-				7CB2288B20A4D3BB00105FFF /* BREthereumNodeManager.c */,
-				7CB2288C20A4D3BB00105FFF /* BREthereumLES.c */,
-				7CB2288D20A4D3BB00105FFF /* BREthereumLESBase.h */,
-				7CB2288E20A4D3BB00105FFF /* BREthereumHandshake.h */,
-				7CB2289020A4D3BB00105FFF /* BREthereumNodeEventHandler.c */,
-				7CB2289120A4D3BB00105FFF /* BREthereumFrameCoder.c */,
-				7CB2289220A4D3BB00105FFF /* BREthereumNode.c */,
-				7CB2289320A4D3BB00105FFF /* BREthereumLESBase.c */,
-				7CB2289420A4D3BB00105FFF /* BREthereumLES.h */,
-				7CB2289520A4D3BB00105FFF /* BREthereumNodeManager.h */,
-			);
-			path = les;
 			sourceTree = "<group>";
 		};
 		9A39B0752202A96500E5018B /* Cell Highlight View Frames */ = {
@@ -2611,7 +2115,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE1B66E620222E3F003B4692 /* BRChainParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2660,24 +2163,6 @@
 			productReference = 22A9A9961DF63426000F0016 /* libbz2.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3C83B27C206317A7001D08CE /* BRCoreTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3C83B285206317A7001D08CE /* Build configuration list for PBXNativeTarget "BRCoreTests" */;
-			buildPhases = (
-				3C83B279206317A7001D08CE /* Sources */,
-				3C83B27A206317A7001D08CE /* Frameworks */,
-				3C83B27B206317A7001D08CE /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3C83B284206317A7001D08CE /* PBXTargetDependency */,
-			);
-			name = BRCoreTests;
-			productName = BRCoreTests;
-			productReference = 3C83B27D206317A7001D08CE /* BRCoreTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		752FB0411DF8BE6B009086FB /* sqlite3 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 752FB0471DF8BE6B009086FB /* Build configuration list for PBXNativeTarget "sqlite3" */;
@@ -2696,24 +2181,6 @@
 			productReference = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		755CD9D01DAA197C0075898E /* BRCore */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 755CD9D71DAA197D0075898E /* Build configuration list for PBXNativeTarget "BRCore" */;
-			buildPhases = (
-				755CD9CD1DAA197C0075898E /* Sources */,
-				755CD9CE1DAA197C0075898E /* Frameworks */,
-				755CD9CF1DAA197C0075898E /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				759DA0DE1DAC86BC008CC49B /* PBXTargetDependency */,
-			);
-			name = BRCore;
-			productName = BRCore;
-			productReference = 755CD9D11DAA197C0075898E /* libBRCore.a */;
-			productType = "com.apple.product-type.library.static";
-		};
 		75A2A78F1DA5934300A983D8 /* breadwallet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
@@ -2731,7 +2198,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				759DA0BD1DAC369C008CC49B /* PBXTargetDependency */,
 				22A9A99C1DF63426000F0016 /* PBXTargetDependency */,
 				752FB04F1DF8BF5C009086FB /* PBXTargetDependency */,
 			);
@@ -2809,15 +2275,7 @@
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
-					3C83B27C206317A7001D08CE = {
-						CreatedOnToolsVersion = 9.2;
-						ProvisioningStyle = Automatic;
-					};
 					752FB0411DF8BE6B009086FB = {
-						ProvisioningStyle = Automatic;
-					};
-					755CD9D01DAA197C0075898E = {
-						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
 					};
 					759DA0D71DAC8668008CC49B = {
@@ -2895,8 +2353,6 @@
 				75A2A78F1DA5934300A983D8 /* breadwallet */,
 				75A2A7A31DA5934300A983D8 /* breadwalletTests */,
 				75A2A7AE1DA5934300A983D8 /* breadwalletUITests */,
-				755CD9D01DAA197C0075898E /* BRCore */,
-				3C83B27C206317A7001D08CE /* BRCoreTests */,
 				759DA0D71DAC8668008CC49B /* submodules */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				752FB0411DF8BE6B009086FB /* sqlite3 */,
@@ -2907,13 +2363,6 @@
 
 /* Begin PBXResourcesBuildPhase section */
 		22A9A9941DF63426000F0016 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3C83B27B206317A7001D08CE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3193,77 +2642,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3C83B279206317A7001D08CE /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7C705A1020C5E93B008E75D2 /* test.c in Sources */,
-				3C83B280206317A7001D08CE /* BRCoreTests.swift in Sources */,
-				3C83B28D20631837001D08CE /* test.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		752FB0421DF8BE6B009086FB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		755CD9CD1DAA197C0075898E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				7CF11625205C943800C03D42 /* BREthereumNetwork.c in Sources */,
-				7C705A0820C5E8E3008E75D2 /* BRKeyECIES.c in Sources */,
-				7CF11624205C943800C03D42 /* BRUtilHex.c in Sources */,
-				7C705A0F20C5E936008E75D2 /* BREthereumAccountState.c in Sources */,
-				755CD9E71DAA1A270075898E /* BRTransaction.c in Sources */,
-				7CB228A020A4F31500105FFF /* BREthereumBloomFilter.c in Sources */,
-				7CF11628205C943800C03D42 /* BREthereumWallet.c in Sources */,
-				755CD9E41DAA1A270075898E /* BRPeer.c in Sources */,
-				7CF11621205C943800C03D42 /* BREthereumTransaction.c in Sources */,
-				7CB2287820A4D2AC00105FFF /* BREthereumLightNodeAnnounce.c in Sources */,
-				7CB2289820A4D3BB00105FFF /* BREthereumLES.c in Sources */,
-				755CD9DD1DAA1A270075898E /* BRBIP38Key.c in Sources */,
-				7CF11626205C943800C03D42 /* BREthereumContract.c in Sources */,
-				7CB228A620A4F34200105FFF /* BREthereumTransactionReceipt.c in Sources */,
-				7CF1161B205C943800C03D42 /* BREthereumToken.c in Sources */,
-				7CB2289620A4D3BB00105FFF /* BREthereumHandshake.c in Sources */,
-				7CB2287920A4D2AC00105FFF /* BREthereumBlock.c in Sources */,
-				7CF11620205C943800C03D42 /* BREthereumGas.c in Sources */,
-				755CD9DA1DAA1A270075898E /* BRAddress.c in Sources */,
-				7CF11622205C943800C03D42 /* BREthereumAmount.c in Sources */,
-				755CD9DB1DAA1A270075898E /* BRBase58.c in Sources */,
-				7CB2287A20A4D2AC00105FFF /* BREthereumLightNodeListen.c in Sources */,
-				75C468AA2056E5F800113F92 /* BRBech32.c in Sources */,
-				3C83B27620631739001D08CE /* BRRlpCoder.c in Sources */,
-				7CB2289C20A4D3BB00105FFF /* BREthereumNode.c in Sources */,
-				3C83B27820631740001D08CE /* BRUtilMathParse.c in Sources */,
-				7CB2289720A4D3BB00105FFF /* BREthereumNodeManager.c in Sources */,
-				7CB2289B20A4D3BB00105FFF /* BREthereumFrameCoder.c in Sources */,
-				7CB2287120A4D26200105FFF /* BREthereum.c in Sources */,
-				755CD9DF1DAA1A270075898E /* BRBloomFilter.c in Sources */,
-				7CF1161C205C943800C03D42 /* BREthereumAccount.c in Sources */,
-				755CD9DE1DAA1A270075898E /* BRBIP39Mnemonic.c in Sources */,
-				755CD9E11DAA1A270075898E /* BRKey.c in Sources */,
-				7CB2288320A4D38500105FFF /* BREvent.c in Sources */,
-				755CD9E51DAA1A270075898E /* BRPeerManager.c in Sources */,
-				7CB2289A20A4D3BB00105FFF /* BREthereumNodeEventHandler.c in Sources */,
-				7CB2289D20A4D3BB00105FFF /* BREthereumLESBase.c in Sources */,
-				7CB2288420A4D38500105FFF /* BREventQueue.c in Sources */,
-				755CD9E31DAA1A270075898E /* BRPaymentProtocol.c in Sources */,
-				755CD9E01DAA1A270075898E /* BRCrypto.c in Sources */,
-				7CB228A320A4F33200105FFF /* BREthereumLog.c in Sources */,
-				755CD9E61DAA1A270075898E /* BRSet.c in Sources */,
-				755CD9E21DAA1A270075898E /* BRMerkleBlock.c in Sources */,
-				7CF1161E205C943800C03D42 /* BREthereumLightNode.c in Sources */,
-				755CD9DC1DAA1A270075898E /* BRBIP32Sequence.c in Sources */,
-				759B4BDF203E5A32002C68CA /* BRBCashAddr.c in Sources */,
-				7CB2287C20A4D2FD00105FFF /* BREthereumHash.c in Sources */,
-				3C83B27720631740001D08CE /* BRUtilMath.c in Sources */,
-				7CF11623205C943800C03D42 /* BREthereumEther.c in Sources */,
-				755CD9E81DAA1A270075898E /* BRWallet.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3610,25 +2992,10 @@
 			target = 22A9A9951DF63426000F0016 /* libbz2 */;
 			targetProxy = 22A9A99B1DF63426000F0016 /* PBXContainerItemProxy */;
 		};
-		3C83B284206317A7001D08CE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 755CD9D01DAA197C0075898E /* BRCore */;
-			targetProxy = 3C83B283206317A7001D08CE /* PBXContainerItemProxy */;
-		};
 		752FB04F1DF8BF5C009086FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 752FB0411DF8BE6B009086FB /* sqlite3 */;
 			targetProxy = 752FB04E1DF8BF5C009086FB /* PBXContainerItemProxy */;
-		};
-		759DA0BD1DAC369C008CC49B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 755CD9D01DAA197C0075898E /* BRCore */;
-			targetProxy = 759DA0BC1DAC369C008CC49B /* PBXContainerItemProxy */;
-		};
-		759DA0DE1DAC86BC008CC49B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 759DA0D71DAC8668008CC49B /* submodules */;
-			targetProxy = 759DA0DD1DAC86BC008CC49B /* PBXContainerItemProxy */;
 		};
 		75A2A7A61DA5934300A983D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3748,121 +3115,6 @@
 			};
 			name = Release;
 		};
-		3C83B286206317A7001D08CE /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		3C83B287206317A7001D08CE /* Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Testnet;
-		};
-		3C83B288206317A7001D08CE /* Screenshots */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Screenshots;
-		};
-		3C83B289206317A7001D08CE /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		3C83B28A206317A7001D08CE /* Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Testflight;
-		};
 		752FB0481DF8BE6B009086FB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3913,44 +3165,6 @@
 			};
 			name = Release;
 		};
-		755CD9D81DAA197D0075898E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		755CD9D91DAA197D0075898E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Release;
-		};
 		759DA0D81DAC8668008CC49B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3967,6 +3181,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = Debug;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4019,7 +3234,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -4032,6 +3247,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = Release;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4076,7 +3292,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
@@ -4094,12 +3310,16 @@
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDebug";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4120,12 +3340,16 @@
 					"brd-tokens-staging.tar",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4141,10 +3365,12 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4160,10 +3386,12 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4176,8 +3404,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4190,8 +3423,13 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4199,243 +3437,11 @@
 			};
 			name = Release;
 		};
-		7CDC6A4921123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_BITCODE = NO;
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A4A21123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				EXCLUDED_SOURCE_FILE_NAMES = (
-					"brd-web-3.tar",
-					"brd-tokens.tar",
-				);
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
-				);
-				INFOPLIST_FILE = breadwallet/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DTestflight -DTestnet";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A4B21123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
-				);
-				INFOPLIST_FILE = breadwalletTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A4C21123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				INFOPLIST_FILE = breadwalletUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = breadwallet;
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A4E21123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DEBUG=1",
-					"BITCOIN_TESTNET=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A4F21123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A5121123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A5221123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Modules/libbz2/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				"MODULEMAP_FILE[sdk=iphoneos*]" = "$(SRCROOT)/Modules/libbz2/iphone.modulemap";
-				"MODULEMAP_FILE[sdk=iphonesimulator*]" = "$(SRCROOT)/Modules/libbz2/iphonesim.modulemap";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.libbz2;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A5321123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "$(SRCROOT)/Modules/sqlite3/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.1;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				"MODULEMAP_FILE[sdk=iphoneos*]" = "$(SRCROOT)/Modules/sqlite3/iphone.modulemap";
-				"MODULEMAP_FILE[sdk=iphonesimulator*]" = "$(SRCROOT)/Modules/sqlite3/iphonesim.modulemap";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.sqlite3;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 3.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = "Testnet-Testflight";
-		};
-		7CDC6A5421123B40004AE68E /* Testnet-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				INFOPLIST_FILE = Screenshots/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = breadwallet;
-			};
-			name = "Testnet-Testflight";
-		};
 		7CF5933521B9B14900A49FED /* Debug-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = Release;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4487,8 +3493,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG INTERNAL";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -4505,12 +3511,16 @@
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DInternal -DDebug";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4527,10 +3537,12 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4543,56 +3555,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 4.2;
 				TEST_TARGET_NAME = breadwallet;
-			};
-			name = "Debug-Internal";
-		};
-		7CF5933A21B9B14900A49FED /* Debug-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = "Debug-Internal";
-		};
-		7CF5933B21B9B14900A49FED /* Debug-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-Internal";
 		};
@@ -4657,9 +3630,14 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4667,10 +3645,11 @@
 			};
 			name = "Debug-Internal";
 		};
-		7CF5934121B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934121B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = Release;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4715,7 +3694,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT INTERNAL";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
@@ -4723,9 +3703,9 @@
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934221B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934221B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
@@ -4737,20 +3717,24 @@
 					"brd-tokens.tar",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DTestflight -DInternal";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934321B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934321B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -4758,78 +3742,45 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934421B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934421B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934621B9B15D00A49FED /* Testflight-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = "Testflight-Internal";
-		};
-		7CF5934721B9B15D00A49FED /* Testflight-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Testflight-Internal";
-		};
-		7CF5934921B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934921B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934A21B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934A21B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -4852,9 +3803,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934B21B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934B21B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -4877,27 +3828,33 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934C21B9B15D00A49FED /* Testflight-Internal */ = {
+		7CF5934C21B9B15D00A49FED /* Release-Internal */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = "Testflight-Internal";
+			name = "Release-Internal";
 		};
-		7CF5934D21B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5934D21B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = "Release-Testnet";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -4943,7 +3900,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT TESTNET";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
@@ -4951,9 +3909,9 @@
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5934E21B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5934E21B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
@@ -4965,20 +3923,24 @@
 					"brd-tokens.tar",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DTestflight -DTestnet -DInternal";
-				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5934F21B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5934F21B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -4986,83 +3948,45 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5935021B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5935021B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.UITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5935221B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"DEBUG=1",
-					"BITCOIN_TESTNET=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = "Testnet-Testflight-Internal";
-		};
-		7CF5935321B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRCoreTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.breadwallet.BRCoreTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "BRCoreTests/BRCoreTests-Bridging-Header.h";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = "Testnet-Testflight-Internal";
-		};
-		7CF5935521B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5935521B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5935621B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5935621B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5085,9 +4009,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5935721B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5935721B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5110,31 +4034,41 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
-		7CF5935821B9C1AD00A49FED /* Testnet-Testflight-Internal */ = {
+		7CF5935821B9C1AD00A49FED /* Release-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = "Testnet-Testflight-Internal";
+			name = "Release-Testnet";
 		};
 		CEA7E6821F09A9D2001F8C27 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5147,9 +4081,14 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5157,25 +4096,31 @@
 			};
 			name = Release;
 		};
-		CEA7E6841F09A9D2001F8C27 /* Testflight */ = {
+		CEA7E6841F09A9D2001F8C27 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
 		CEA7E6881F09AC6A001F8C27 /* Screenshots */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = "Debug-Testnet";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5227,8 +4172,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SCREENSHOTS TESTNET";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -5245,12 +4190,16 @@
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDebug -DScreenshots -DTestnet";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -5267,10 +4216,12 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5283,34 +4234,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
-			};
-			name = Screenshots;
-		};
-		CEA7E6921F09AC6A001F8C27 /* Screenshots */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"BITCOIN_TESTNET=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
 			};
 			name = Screenshots;
 		};
@@ -5375,9 +4309,14 @@
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -5385,10 +4324,11 @@
 			};
 			name = Screenshots;
 		};
-		CEA7E69B1F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E69B1F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = "Debug-Testnet";
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5440,17 +4380,17 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TESTNET";
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E69C1F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E69C1F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
@@ -5458,21 +4398,25 @@
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DDebug -DTestnet";
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E69D1F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E69D1F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -5480,61 +4424,45 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E69E1F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E69E1F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E6A51F0AAA84001F8C27 /* Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"BITCOIN_TESTNET=1",
-					"BITCOIN_DEBUG=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Testnet;
-		};
-		CEA7E6A71F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E6A71F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E6A81F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E6A81F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5557,9 +4485,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E6A91F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E6A91F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5582,27 +4510,33 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEA7E6AA1F0AAA84001F8C27 /* Testnet */ = {
+		CEA7E6AA1F0AAA84001F8C27 /* Debug-Testnet */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = Screenshots/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.Screenshots;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = Testnet;
+			name = "Debug-Testnet";
 		};
-		CEE0EF541EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF541EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				BRCORE_CONFIGURATION = Release;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -5647,7 +4581,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TESTFLIGHT;
+				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 4.0;
@@ -5655,9 +4590,9 @@
 				VALIDATE_PRODUCT = YES;
 				VALID_ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF551EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF551EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
@@ -5669,20 +4604,24 @@
 					"brd-tokens.tar",
 				);
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/**",
-					"$(PROJECT_DIR)",
+					"$(SRCROOT)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
+					"$(SRCROOT)/Modules/breadwallet-core/support",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				OTHER_SWIFT_FLAGS = "-DTestflight";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF561EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF561EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -5690,55 +4629,45 @@
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Modules",
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
 				);
 				INFOPLIST_FILE = breadwalletTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/breadwallet.app/breadwallet";
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF571EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF571EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(BUILD_DIR)/$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)",
+					"$(SRCROOT)/Modules",
+				);
 				INFOPLIST_FILE = breadwalletUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwalletUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF5E1EBF8D7F0018DB36 /* Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_WARN_COMMA = NO;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				HEADER_SEARCH_PATHS = (
-					"${SRCROOT}/Modules/breadwallet-core",
-					"${SRCROOT}/Modules/breadwallet-core/secp256k1",
-				);
-				MODULEMAP_FILE = "${SRC_ROOT}/Modules/breadwallet-core/module.modulemap";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-			};
-			name = Testflight;
-		};
-		CEE0EF601EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF601EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF611EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF611EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5761,9 +4690,9 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
-		CEE0EF621EBF8D7F0018DB36 /* Testflight */ = {
+		CEE0EF621EBF8D7F0018DB36 /* Release-Testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -5786,7 +4715,7 @@
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Testflight;
+			name = "Release-Testflight";
 		};
 /* End XCBuildConfiguration section */
 
@@ -5796,29 +4725,12 @@
 			buildConfigurations = (
 				22A9A9A01DF63426000F0016 /* Debug */,
 				7CF5933E21B9B14900A49FED /* Debug-Internal */,
-				CEA7E6A81F0AAA84001F8C27 /* Testnet */,
+				CEA7E6A81F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6951F09AC6A001F8C27 /* Screenshots */,
 				22A9A9A11DF63426000F0016 /* Release */,
-				CEE0EF611EBF8D7F0018DB36 /* Testflight */,
-				7CF5934A21B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A5221123B40004AE68E /* Testnet-Testflight */,
-				7CF5935621B9C1AD00A49FED /* Testnet-Testflight-Internal */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3C83B285206317A7001D08CE /* Build configuration list for PBXNativeTarget "BRCoreTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3C83B286206317A7001D08CE /* Debug */,
-				7CF5933B21B9B14900A49FED /* Debug-Internal */,
-				3C83B287206317A7001D08CE /* Testnet */,
-				3C83B288206317A7001D08CE /* Screenshots */,
-				3C83B289206317A7001D08CE /* Release */,
-				3C83B28A206317A7001D08CE /* Testflight */,
-				7CF5934721B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4F21123B40004AE68E /* Testnet-Testflight */,
-				7CF5935321B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF611EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934A21B9B15D00A49FED /* Release-Internal */,
+				7CF5935621B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5828,29 +4740,12 @@
 			buildConfigurations = (
 				752FB0481DF8BE6B009086FB /* Debug */,
 				7CF5933F21B9B14900A49FED /* Debug-Internal */,
-				CEA7E6A91F0AAA84001F8C27 /* Testnet */,
+				CEA7E6A91F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6961F09AC6A001F8C27 /* Screenshots */,
 				752FB0491DF8BE6B009086FB /* Release */,
-				CEE0EF621EBF8D7F0018DB36 /* Testflight */,
-				7CF5934B21B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A5321123B40004AE68E /* Testnet-Testflight */,
-				7CF5935721B9C1AD00A49FED /* Testnet-Testflight-Internal */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		755CD9D71DAA197D0075898E /* Build configuration list for PBXNativeTarget "BRCore" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				755CD9D81DAA197D0075898E /* Debug */,
-				7CF5933A21B9B14900A49FED /* Debug-Internal */,
-				CEA7E6A51F0AAA84001F8C27 /* Testnet */,
-				CEA7E6921F09AC6A001F8C27 /* Screenshots */,
-				755CD9D91DAA197D0075898E /* Release */,
-				CEE0EF5E1EBF8D7F0018DB36 /* Testflight */,
-				7CF5934621B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4E21123B40004AE68E /* Testnet-Testflight */,
-				7CF5935221B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF621EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934B21B9B15D00A49FED /* Release-Internal */,
+				7CF5935721B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5860,13 +4755,12 @@
 			buildConfigurations = (
 				759DA0D81DAC8668008CC49B /* Debug */,
 				7CF5933D21B9B14900A49FED /* Debug-Internal */,
-				CEA7E6A71F0AAA84001F8C27 /* Testnet */,
+				CEA7E6A71F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6941F09AC6A001F8C27 /* Screenshots */,
 				759DA0D91DAC8668008CC49B /* Release */,
-				CEE0EF601EBF8D7F0018DB36 /* Testflight */,
-				7CF5934921B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A5121123B40004AE68E /* Testnet-Testflight */,
-				7CF5935521B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF601EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934921B9B15D00A49FED /* Release-Internal */,
+				7CF5935521B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5876,13 +4770,12 @@
 			buildConfigurations = (
 				75A2A7D91DA5934400A983D8 /* Debug */,
 				7CF5933521B9B14900A49FED /* Debug-Internal */,
-				CEA7E69B1F0AAA84001F8C27 /* Testnet */,
+				CEA7E69B1F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6881F09AC6A001F8C27 /* Screenshots */,
 				75A2A7DA1DA5934400A983D8 /* Release */,
-				CEE0EF541EBF8D7F0018DB36 /* Testflight */,
-				7CF5934121B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4921123B40004AE68E /* Testnet-Testflight */,
-				7CF5934D21B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF541EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934121B9B15D00A49FED /* Release-Internal */,
+				7CF5934D21B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5892,13 +4785,12 @@
 			buildConfigurations = (
 				75A2A7E41DA5934400A983D8 /* Debug */,
 				7CF5933621B9B14900A49FED /* Debug-Internal */,
-				CEA7E69C1F0AAA84001F8C27 /* Testnet */,
+				CEA7E69C1F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6891F09AC6A001F8C27 /* Screenshots */,
 				75A2A7E51DA5934400A983D8 /* Release */,
-				CEE0EF551EBF8D7F0018DB36 /* Testflight */,
-				7CF5934221B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4A21123B40004AE68E /* Testnet-Testflight */,
-				7CF5934E21B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF551EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934221B9B15D00A49FED /* Release-Internal */,
+				7CF5934E21B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5908,13 +4800,12 @@
 			buildConfigurations = (
 				75A2A7E71DA5934400A983D8 /* Debug */,
 				7CF5933721B9B14900A49FED /* Debug-Internal */,
-				CEA7E69D1F0AAA84001F8C27 /* Testnet */,
+				CEA7E69D1F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E68A1F09AC6A001F8C27 /* Screenshots */,
 				75A2A7E81DA5934400A983D8 /* Release */,
-				CEE0EF561EBF8D7F0018DB36 /* Testflight */,
-				7CF5934321B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4B21123B40004AE68E /* Testnet-Testflight */,
-				7CF5934F21B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF561EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934321B9B15D00A49FED /* Release-Internal */,
+				7CF5934F21B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5924,13 +4815,12 @@
 			buildConfigurations = (
 				75A2A7EA1DA5934400A983D8 /* Debug */,
 				7CF5933821B9B14900A49FED /* Debug-Internal */,
-				CEA7E69E1F0AAA84001F8C27 /* Testnet */,
+				CEA7E69E1F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E68B1F09AC6A001F8C27 /* Screenshots */,
 				75A2A7EB1DA5934400A983D8 /* Release */,
-				CEE0EF571EBF8D7F0018DB36 /* Testflight */,
-				7CF5934421B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A4C21123B40004AE68E /* Testnet-Testflight */,
-				7CF5935021B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEE0EF571EBF8D7F0018DB36 /* Release-Testflight */,
+				7CF5934421B9B15D00A49FED /* Release-Internal */,
+				7CF5935021B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -5940,13 +4830,12 @@
 			buildConfigurations = (
 				CEA7E6821F09A9D2001F8C27 /* Debug */,
 				7CF5934021B9B14900A49FED /* Debug-Internal */,
-				CEA7E6AA1F0AAA84001F8C27 /* Testnet */,
+				CEA7E6AA1F0AAA84001F8C27 /* Debug-Testnet */,
 				CEA7E6971F09AC6A001F8C27 /* Screenshots */,
 				CEA7E6831F09A9D2001F8C27 /* Release */,
-				CEA7E6841F09A9D2001F8C27 /* Testflight */,
-				7CF5934C21B9B15D00A49FED /* Testflight-Internal */,
-				7CDC6A5421123B40004AE68E /* Testnet-Testflight */,
-				7CF5935821B9C1AD00A49FED /* Testnet-Testflight-Internal */,
+				CEA7E6841F09A9D2001F8C27 /* Release-Testflight */,
+				7CF5934C21B9B15D00A49FED /* Release-Internal */,
+				7CF5935821B9C1AD00A49FED /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

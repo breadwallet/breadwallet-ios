@@ -35,7 +35,7 @@ struct ERC20Transaction: EthLikeTransaction {
    
     // MARK: - Init
     
-    init(tx: EthereumTransaction, accountAddress: String, token: ERC20Token, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init(tx: EthereumTransfer, accountAddress: String, token: ERC20Token, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.currency = token
         
         switch tx.confirmations {

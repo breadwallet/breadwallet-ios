@@ -54,20 +54,26 @@ struct C {
     static let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
     static let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
     static let txUnconfirmedHeight = Int32.max
+
+    /// Path where core library stores its persistent data
+    static var coreDataDirURL: URL {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsURL.appendingPathComponent("core-data", isDirectory: true)
+    }
     
     static let consoleLogFileName = "log.txt"
     static let previousConsoleLogFileName = "previouslog.txt"
     
     // Returns the console log file path for the current instantiation of the app.
     static var logFilePath: URL {
-        let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        return URL(fileURLWithPath: cachesDirectory).appendingPathComponent(consoleLogFileName)
+        let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        return cachesURL.appendingPathComponent(consoleLogFileName)
     }
     
     // Returns the console log file path for the previous instantiation of the app.
     static var previousLogFilePath: URL {
-        let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        return URL(fileURLWithPath: cachesDirectory).appendingPathComponent(previousConsoleLogFileName)
+        let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        return cachesURL.appendingPathComponent(previousConsoleLogFileName)
     }
     
     static let usdCurrencyCode = "USD"

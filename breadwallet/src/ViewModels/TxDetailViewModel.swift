@@ -82,8 +82,9 @@ extension TxDetailViewModel {
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx)
         transactionHash = tx.hash
         self.tx = tx
-        
-        if let tx = tx as? EthLikeTransaction {
+
+        // gas limit/price not available for incoming token transfers
+        if let tx = tx as? EthLikeTransaction, (tx.direction == .sent || tx is EthTransaction) {
             let gasFormatter = NumberFormatter()
             gasFormatter.numberStyle = .decimal
             gasFormatter.maximumFractionDigits = 0
