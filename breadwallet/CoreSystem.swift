@@ -84,10 +84,10 @@ class CoreSystem: Subscriber {
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
-            self.system = SystemBase.create(listener: self,
-                                            account: account,
-                                            path: C.coreDataDirURL.path,
-                                            query: self.backend)
+            self.system = System(listener: self,
+                                 account: account,
+                                 path: C.coreDataDirURL.path,
+                                 query: self.backend)
             self.state = .idle
         }
     }
@@ -377,17 +377,6 @@ class WalletManager {
     init(core: BRCrypto.WalletManager, system: CoreSystem) {
         self.core = core
         self.system = system
-    }
-}
-
-extension Network: Hashable {
-    public static func == (lhs: Network, rhs: Network) -> Bool {
-        return lhs.uids == rhs.uids
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(uids)
-        hasher.combine(name)
     }
 }
 

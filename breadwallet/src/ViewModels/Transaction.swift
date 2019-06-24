@@ -64,13 +64,15 @@ class Transaction {
     var amount: Amount { return Amount(coreAmount: transfer.amount, currency: currency) }
     var fee: Amount { return Amount(coreAmount: transfer.fee, currency: wallet.feeCurrency) }
     var feeBasis: FeeBasis? {
-        switch transfer.feeBasis {
-        case .bitcoin(let feePerKB):
-            //TODO:CRYPTO Core should provide an Amount instead of UInt64 satoshis
-            return .bitcoin(feePerKB: Amount(tokenString: feePerKB.description, currency: currency, unit: currency.baseUnit))
-        case .ethereum(let gasPrice, let gasLimit):
-            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: wallet.feeCurrency), gasLimit: gasLimit)
-        }
+        //TODO:CRYPTO feeBasis
+        return nil
+//        switch transfer.feeBasis {
+//        case .bitcoin(let feePerKB):
+//            //TODO:CRYPTO Core should provide an Amount instead of UInt64 satoshis
+//            return .bitcoin(feePerKB: Amount(tokenString: feePerKB.description, currency: currency, unit: currency.baseUnit))
+//        case .ethereum(let gasPrice, let gasLimit):
+//            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: wallet.feeCurrency), gasLimit: gasLimit)
+//        }
     }
 
     var created: Date? {
