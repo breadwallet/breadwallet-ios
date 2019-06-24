@@ -36,7 +36,7 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
         tableView.backgroundColor = .whiteTint
         tableView.separatorStyle = .none
 
-        let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
+        let titleLabel = UILabel(font: .customBold(size: 17.0), color: Theme.primaryText)
         let biometricsTitle = LAContext.biometricType() == .face ? S.FaceIdSpendingLimit.title : S.TouchIdSpendingLimit.title
         titleLabel.text = biometricsTitle
         titleLabel.sizeToFit()
@@ -74,6 +74,9 @@ class BiometricsSpendingLimitViewController: UITableViewController, Subscriber {
             let displayAmount = Amount(value: UInt256(limit), currency: Currencies.btc, rate: nil, minimumFractionDigits: 0)
             cell.textLabel?.text = displayAmount.combinedDescription
         }
+        
+        cell.textLabel?.textColor = Theme.primaryText
+        
         if limits[indexPath.row] == selectedLimit {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
             check.tintColor = C.defaultTintColor
