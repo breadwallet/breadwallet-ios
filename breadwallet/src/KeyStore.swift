@@ -186,14 +186,6 @@ struct KeyStore {
             }
         }
     }
-
-    static var staticNoWallet: Bool {
-        do {
-            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
-            if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
-            return true
-        } catch { return false }
-    }
 }
 
 // MARK: - WalletAuthenticator
@@ -202,7 +194,11 @@ extension KeyStore: WalletAuthenticator {
 
     /// true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
-        return KeyStore.staticNoWallet
+        do {
+            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
+            if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
+            return true
+        } catch { return false }
     }
 
     var creationTime: TimeInterval {
