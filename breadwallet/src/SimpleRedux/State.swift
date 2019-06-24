@@ -10,7 +10,6 @@ import UIKit
 import BRCore
 
 struct State {
-    let isOnboardingEnabled: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
     let showFiatAmounts: Bool
@@ -50,10 +49,6 @@ struct State {
         return availableTokens.filter { $0.isSupported }
     }
     
-    var shouldShowOnboarding: Bool {
-        return isOnboardingEnabled && KeyStore.staticNoWallet
-    }
-    
     var shouldShowBuyNotificationForDefaultCurrency: Bool {
         switch defaultCurrencyCode {
         // Currencies eligible for Coinify.
@@ -69,8 +64,7 @@ struct State {
 
 extension State {
     static var initial: State {
-        return State(   isOnboardingEnabled: true,
-                        isLoginRequired: true,
+        return State(   isLoginRequired: true,
                         rootModal: .none,
                         showFiatAmounts: UserDefaults.showFiatAmounts,
                         alert: .none,
@@ -108,8 +102,7 @@ extension State {
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
                    availableTokens: [Currency]? = nil) -> State {
-        return State(isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
-                     isLoginRequired: isLoginRequired ?? self.isLoginRequired,
+        return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
                      alert: alert ?? self.alert,
