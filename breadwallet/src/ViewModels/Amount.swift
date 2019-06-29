@@ -19,7 +19,7 @@ public struct Amount {
     var minimumFractionDigits: Int?
     var maximumFractionDigits: Int
     var negative: Bool { return core.isNegative }
-    var isZero: Bool { return core == BRCrypto.Amount.create(integer: 0, unit: core.unit) }
+    var isZero: Bool { return self == Amount.zero(currency) }
 
     // MARK: - Init
 
@@ -41,7 +41,9 @@ public struct Amount {
          maximumFractionDigits: Int? = nil,
          negative: Bool = false) {
         self.currency = amount.currency
-        self.core = negative ? amount.core.negate : amount.core
+        // make a new instance of Amount
+        self.core = BRCrypto.Amount.create(string: amount.core.string(), negative: negative, unit: amount.currency.baseUnit.core)
+            ?? BRCrypto.Amount.create(integer: 0, unit: amount.currency.baseUnit.core)
         self.rate = rate ?? amount.rate
         self.minimumFractionDigits = minimumFractionDigits ?? amount.minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits ?? amount.maximumFractionDigits
