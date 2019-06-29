@@ -36,14 +36,18 @@ struct EthTransaction: EthLikeTransaction {
     // MARK: - Init
     
     init(tx: EthereumTransfer, accountAddress: String, kvStore: BRReplicatedKVStore?, rate: Rate?) {
-        
-        switch tx.confirmations {
-        case 0:
-            status = .pending
-        case 1..<6:
-            status = .confirmed
-        default:
-            status = .complete
+
+        if tx.errorStatus.isError {
+            status = .invalid
+        } else {
+            switch tx.confirmations {
+            case 0:
+                status = .pending
+            case 1..<6:
+                status = .confirmed
+            default:
+                status = .complete
+            }
         }
         
         if status == .pending && tx.blockTimestamp == 0 {
