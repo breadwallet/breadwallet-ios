@@ -314,9 +314,12 @@ public struct EthereumTransfer: EthereumReference {
         return ewmTransferGetBlockConfirmations(self.ewm!.core, self.identifier)
     }
 
-    var error: EthereumTransferError {
+    var errorStatus: EthereumTransferError {
         let code = Int(ewmTransferStatusGetErrorType(self.ewm!.core, self.identifier))
-        let message = asUTF8String(ewmTransferStatusGetError(self.ewm!.core, self.identifier))
+        var message = ""
+        if let errorMessage = ewmTransferStatusGetError(self.ewm!.core, self.identifier) {
+            message = asUTF8String(errorMessage)
+        }
         return EthereumTransferError(code: code, message: message)
     }
 }
@@ -324,6 +327,8 @@ public struct EthereumTransfer: EthereumReference {
 public struct EthereumTransferError: Error {
     let code: Int
     let message: String
+
+    var isError: Bool { return code != -1 }
 }
 
 // MARK: - Client
