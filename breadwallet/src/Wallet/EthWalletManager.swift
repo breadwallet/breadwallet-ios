@@ -18,7 +18,7 @@ class EthWalletManager: WalletManager {
     private static let defaultGasPrice = etherCreateNumber(1, GWEI).valueInWEI
     private static let maxGasPrice = etherCreateNumber(100, GWEI).valueInWEI
     private let transactionUpdateInterval = 5.0 // seconds between transaction list UI updates
-    private let transactionSendTimeout = 10.0
+    private let transactionSendTimeout = 60.0
 
     // MARK: Types
 
@@ -404,24 +404,24 @@ class EthWalletManager: WalletManager {
         node.serialAsync {
             guard let txs = self.node.wallet(for: currency)?.transactions else { return assertionFailure("missing wallet") }
 
-                var viewModels: [Transaction]
-                if let token = currency as? ERC20Token {
-                    viewModels = txs.map { ERC20Transaction(tx: $0,
-                                                            accountAddress: accountAddress,
-                                                            token: token,
-                                                            kvStore: self.kvStore,
-                                                            rate: currency.state?.currentRate) }
-                } else {
-                    viewModels = txs.map { EthTransaction(tx: $0,
-                                                          accountAddress: accountAddress,
-                                                          kvStore: self.kvStore,
-                                                          rate: currency.state?.currentRate) }
-                }
-                viewModels.sort(by: { $0.timestamp > $1.timestamp })
+            var viewModels: [Transaction]
+            if let token = currency as? ERC20Token {
+                viewModels = txs.map { ERC20Transaction(tx: $0,
+                                                        accountAddress: accountAddress,
+                                                        token: token,
+                                                        kvStore: self.kvStore,
+                                                        rate: currency.state?.currentRate) }
+            } else {
+                viewModels = txs.map { EthTransaction(tx: $0,
+                                                      accountAddress: accountAddress,
+                                                      kvStore: self.kvStore,
+                                                      rate: currency.state?.currentRate) }
+            }
+            viewModels.sort(by: { $0.timestamp > $1.timestamp })
 
-                DispatchQueue.main.async {
-                    Store.perform(action: WalletChange(currency).setTransactions(viewModels))
-                }
+            DispatchQueue.main.async {
+                Store.perform(action: WalletChange(currency).setTransactions(viewModels))
+            }
         }
     }
 
@@ -682,7 +682,7 @@ extension EthWalletManager: EthereumClient {
                 }
 
             case .errored:
-                let error = transfer.error
+                let error = transfer.errorStatus
                 print("  ↳ pending send tx error: \(error)")
                 pendingSend.completion(.failure(.publishError(error)))
                 stopWaitingForSend()
