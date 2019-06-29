@@ -50,7 +50,7 @@ struct Currencies {
 """.utf8)
 
     static var btc: AppCurrency {
-        let btc = CoreCurrency(uids: "Bitcoin", name: "Bitcoin", code: "BTC", type: "native")
+        let btc = CoreCurrency(uids: "Bitcoin", name: "Bitcoin", code: "BTC", type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
         let BTC_SATOSHI = BRCrypto.Unit (currency: btc, uids: "BTC-SAT",  name: "Satoshi", symbol: "SAT")
         let BTC_BTC = BRCrypto.Unit (currency: btc, uids: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
@@ -62,7 +62,7 @@ struct Currencies {
     }
 
     static var eth: AppCurrency {
-        let eth = CoreCurrency(uids: "Ethereum", name: "Ethereum", code: "ETH", type: "native")
+        let eth = CoreCurrency(uids: "Ethereum", name: "Ethereum", code: "ETH", type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
         let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
         let ETH_GWEI = BRCrypto.Unit (currency: eth, uids: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
