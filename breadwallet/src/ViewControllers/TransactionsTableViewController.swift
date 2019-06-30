@@ -113,12 +113,16 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                             self.rate = $0[self.currency]?.currentRate
         })
         
-        Store.subscribe(self, name: .txMemoUpdated(""), callback: {
-            guard let trigger = $0 else { return }
+        Store.subscribe(self, name: .txMemoUpdated("")) { [weak self] trigger in
+            guard let trigger = trigger else { return }
             if case .txMemoUpdated(let txHash) = trigger {
-                self.reload(txHash: txHash)
+                self?.reload(txHash: txHash)
             }
-        })
+        }
+
+        Store.subscribe(self, name: .wipeWalletNoPrompt) { [weak self] _ in
+            self?.txUpdateTimer?.invalidate()
+        }
     }
 
     private func reload(txHash: String) {
