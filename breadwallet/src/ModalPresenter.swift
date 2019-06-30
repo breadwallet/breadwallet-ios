@@ -619,7 +619,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
             
             developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
-                self.wipeWalletNoPrompt()
+                Store.trigger(name: .wipeWalletNoPrompt)
             })
             
             if E.isDebug { // for dev/debugging use only
@@ -874,12 +874,13 @@ class ModalPresenter: Subscriber, Trackable {
                                                         cancelButtonTitle: S.Button.cancel,
                                                         isDestructiveAction: true) {
                                                             self.topViewController?.dismiss(animated: true, completion: {
-                                                                self.wipeWalletNoPrompt()
+                                                                Store.trigger(name: .wipeWalletNoPrompt)
                                                             })
         }
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
+    // do not call directly, instead use wipeWalletNoPrompt trigger so other subscribers are notified
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)

@@ -46,7 +46,7 @@ class ExchangeUpdater: Subscriber {
                 var tokenBtcDict = [String: Double]()
                 tokenBtcRates.forEach { tokenBtcDict[$0.reciprocalCode] = $0.rate }
                 let ethBtcRate = tokenBtcDict[Currencies.eth.code.lowercased()]
-                Store.state.currencies.filter({ !$0.isBitcoin }).forEach { currency in
+                tokens.forEach { currency in
                     var tokenBtcRate = tokenBtcDict[currency.code.lowercased()]
                     if tokenBtcRate == nil, let tokenEthRate = currency.defaultRate, let ethBtcRate = ethBtcRate {
                         tokenBtcRate = tokenEthRate * ethBtcRate
