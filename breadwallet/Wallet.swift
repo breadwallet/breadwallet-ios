@@ -18,24 +18,21 @@ class Wallet {
     
     let core: BRCrypto.Wallet
     let currency: Currency
-    let manager: WalletManager
+    private unowned let system: CoreSystem
 
     private var sendListener: SendListener?
 
-    var feeUnit: BRCrypto.Unit {
-        let currency = core.manager.network.currency
-        return core.manager.network.baseUnitFor(currency: currency)!
-    }
+//    var feeUnit: BRCrypto.Unit {
+//        let currency = core.manager.network.currency
+//        return core.manager.network.baseUnitFor(currency: currency)!
+//    }
 
     var feeCurrency: Currency {
-        //TODO:CRYPTO optional?
-        return manager.system.currency(forCoreCurrency: core.manager.network.currency)!
+        return system.currency(forCoreCurrency: core.manager.network.currency) ?? currency
     }
 
-    var kvStore: BRReplicatedKVStore? //TODO:CRYPTO temp hack
-
     var balance: Amount {
-        return Amount(coreAmount: core.balance, currency: self.currency)
+        return Amount(coreAmount: core.balance, currency: currency)
     }
 
     var transfers: [Transaction] {
@@ -91,10 +88,10 @@ class Wallet {
         self.sendListener = nil
     }
 
-    init(core: BRCrypto.Wallet, currency: Currency, manager: WalletManager) {
+    init(core: BRCrypto.Wallet, currency: Currency, system: CoreSystem) {
         self.core = core
         self.currency = currency
-        self.manager = manager
+        self.system = system
     }
 }
 

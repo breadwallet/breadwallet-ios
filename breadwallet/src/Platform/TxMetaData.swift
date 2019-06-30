@@ -25,7 +25,6 @@
 
 import Foundation
 import BRCore
-import BRCrypto
 
 // MARK: - Txn Metadata
 

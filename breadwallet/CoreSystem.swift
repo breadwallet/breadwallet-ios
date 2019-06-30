@@ -31,7 +31,6 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallets + Currencies
 
-    private var managers = [Network: WalletManager]()
     fileprivate var wallets = [BRCrypto.Currency: Wallet]()
 
     // Currency view models indexed by Core Currency
@@ -123,7 +122,6 @@ class CoreSystem: Subscriber {
             self.state = .uninitialized
             system.stop()
             //TODO:CRYPTO need interface to reset system, otherwise cannot create a new one in the same session
-            self.managers.removeAll()
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
@@ -142,14 +140,9 @@ class CoreSystem: Subscriber {
     // MARK: Wallet Management
 
     private func addWallet(_ coreWallet: BRCrypto.Wallet, manager: BRCrypto.WalletManager) {
-        if managers[manager.network] == nil {
-            //TODO:CRYPTO event ordering -- manager added event should have taken care of creating the manager assignment by this point but the wallet added event is received first
-            managers[manager.network] = WalletManager(core: manager, system: self)
-        }
-        guard wallets[coreWallet.currency] == nil else { return assertionFailure() }
-        guard let currency = currencies[coreWallet.currency],
-            let manager = managers[manager.network] else { return assertionFailure() }
-        let wallet = Wallet(core: coreWallet, currency: currency, manager: manager)
+        guard wallets[coreWallet.currency] == nil,
+            let currency = currencies[coreWallet.currency] else { return assertionFailure() }
+        let wallet = Wallet(core: coreWallet, currency: currency, system: self)
         wallets[coreWallet.currency] = wallet
 
         //TODO:CRYPTO need to filter System wallets with list of user-selected wallets
@@ -246,11 +239,6 @@ extension CoreSystem: SystemListener {
                 }
 
             case .managerAdded(let manager):
-                //TODO:CRYPTO event ordering
-                //assert(self.managers[manager.network] == nil)
-                if self.managers[manager.network] == nil {
-                    self.managers[manager.network] = WalletManager(core: manager, system: self)
-                }
                 manager.connect()
             }
         }
@@ -260,15 +248,6 @@ extension CoreSystem: SystemListener {
         guard isInitialized else { return }
         queue.async {
             print("[SYS] \(manager.network) manager event: \(event)")
-            guard let walletManager = self.managers[manager.network] else {
-                if case .created = event {
-                    // ignore, this is triggered by the system managerAdded event
-                } else {
-                    assertionFailure()
-                }
-                return
-            }
-
             switch event {
             case .created:
                 break
@@ -285,14 +264,14 @@ extension CoreSystem: SystemListener {
 
             case .syncStarted:
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setSyncingState(.syncing))
                     }
                 }
 
             case .syncProgress(let percentComplete):
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setProgress(progress: percentComplete, timestamp: 0))
                     }
                 }
@@ -302,7 +281,7 @@ extension CoreSystem: SystemListener {
                     print("[SYS] \(manager.network) sync error: \(error)")
                 }
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setSyncingState(error == nil ? .success : .connecting))
                     }
                 }
@@ -345,41 +324,6 @@ extension CoreSystem: SystemListener {
         queue.async {
             print("[SYS] \(network) network event: \(event)")
         }
-    }
-}
-
-/// Wrapper for BRCrypto WalletManager
-class WalletManager {
-    private let core: BRCrypto.WalletManager
-    unowned var system: CoreSystem
-
-    var primaryCurrency: Currency {
-        return system.currencies[core.primaryWallet.currency]!
-    }
-
-    var currencies: [Currency] {
-        return core.wallets.map { $0.currency }.compactMap { system.currencies[$0] }
-    }
-
-    var wallets: [Wallet] {
-        return core.wallets.compactMap { system.wallets[$0.currency] }
-    }
-
-    var primaryWallet: Wallet {
-        return system.wallets[primaryCurrency.core]!
-    }
-
-    func currency(from core: BRCrypto.Currency) -> Currency? {
-        return system.currencies[core]
-    }
-
-    var blockHeight: UInt64? {
-        return core.network.height
-    }
-
-    init(core: BRCrypto.WalletManager, system: CoreSystem) {
-        self.core = core
-        self.system = system
     }
 }
 

@@ -247,12 +247,10 @@ class AmountViewController: UIViewController, Trackable {
             amount = Amount(fiatString: output,
                             currency: currency,
                             rate: rate)
-        } else if let unit = currency.unit(forDecimals: currency.defaultUnit.decimals) {
+        } else {
             amount = Amount(tokenString: output,
                             currency: currency,
-                            unit: unit)
-        } else {
-            amount = nil
+                            unit: currency.defaultUnit)
         }
     }
 
