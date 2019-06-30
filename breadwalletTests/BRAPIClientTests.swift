@@ -17,14 +17,11 @@ class FakeAuthenticator: WalletAuthenticator {
     var userAccount: [AnyHashable: Any]? = nil
 
     init() {
-        var keyData = Data(count: 32)
-        let count = keyData.count
-        let result = keyData.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, count, $0)
-        }
-        if result != errSecSuccess {
-            fatalError("couldnt generate random data for key")
-        }
+        let count = 32
+        var randomBytes: [UInt8] = [UInt8](repeating: 0, count: count)
+        guard SecRandomCopyBytes(kSecRandomDefault, count, &randomBytes) == 0
+            else { fatalError("couldnt generate random data for key") }
+        let keyData = Data(randomBytes)
         print("base58 encoded secret key data \(keyData.base58)")
         secret = keyData.uInt256
         key = withUnsafePointer(to: &secret, { (secPtr: UnsafePointer<UInt256>) in
@@ -42,7 +39,7 @@ class FakeAuthenticator: WalletAuthenticator {
         k.compressed = 1
         let pkLen = BRKeyPrivKey(&k, nil, 0)
         var pkData = Data(count: pkLen)
-        BRKeyPrivKey(&k, pkData.withUnsafeMutableBytes({ $0 }), pkLen)
+        guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&k, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
         return String(data: pkData, encoding: .utf8)
     }
 
