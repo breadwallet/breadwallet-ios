@@ -53,7 +53,8 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
         setStyle()
         addActions()
         setupCopiedMessage()
-        
+
+        //TODO:CRYPTO this does not work since receive address is not a stored property in WalletState
         if isBTCLegacy {
             Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
                 self.setReceiveAddress()

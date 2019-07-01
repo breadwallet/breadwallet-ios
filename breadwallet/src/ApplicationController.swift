@@ -69,8 +69,7 @@ class ApplicationController: Subscriber, Trackable {
 
     private func enterOnboarding() {
         assert(keyStore.noWallet)
-        //TODO:CRYPTO no need for this to be a global action
-        Store.perform(action: ShowStartFlow())
+        startFlowController?.showStartFlow()
     }
 
     /// Prompts to unlock the wallet for initial launch, then setup the system
@@ -369,24 +368,6 @@ class ApplicationController: Subscriber, Trackable {
     
     private func setupRootViewController() {
         let navigationController = RootNavigationController()
-                
-        // If we're going to show the onboarding screen, the home screen will be created later
-        // in StartFlowPresenter.presentOnboardingFlow(). Pushing the home screen here causes
-        // the home screen to appear briefly before the onboarding screen is pushed.
-        if !Store.state.shouldShowOnboarding {
-            let homeScreen = createHomeScreen(navigationController: navigationController)
-            
-            navigationController.pushViewController(homeScreen, animated: false)
-            
-            // State restoration
-            if let currency = Store.state.currencies.first(where: { $0.code == UserDefaults.selectedCurrencyCode }),
-                let wallet = self.coreSystem.wallet(for: currency),
-                keyStore.noWallet == false {
-                let accountViewController = AccountViewController(wallet: wallet)
-                navigationController.pushViewController(accountViewController, animated: true)
-            }
-        }
-                
         window.rootViewController = navigationController
 
         startFlowController = StartFlowPresenter(keyMaster: keyStore,

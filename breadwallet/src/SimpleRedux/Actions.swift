@@ -10,18 +10,6 @@ import UIKit
 import BRCore
 
 // MARK: - Startup Modals
-struct ShowStartFlow: Action {
-    let reduce: Reducer = {
-        return $0.mutate(isStartFlowVisible: true)
-    }
-}
-
-struct HideStartFlow: Action {
-    let reduce: Reducer = { state in
-        return state.mutate(isStartFlowVisible: false, rootModal: .none)
-    }
-}
-
 struct Reset: Action {
     let reduce: Reducer = { _ in
         return State.initial.mutate(isLoginRequired: false)
@@ -120,26 +108,6 @@ struct WalletChange: Trackable {
             guard let walletState = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: walletState.mutate(balance: balance)) })
     }
-    func setTransactions(_ transactions: [Transaction]) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(transactions: transactions)) })
-    }
-    func setWalletName(_ name: String) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(name: name)) })
-    }
-    func setWalletCreationDate(_ date: Date) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(creationDate: date)) })
-    }
-    func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(isRescanning: isRescanning)) })
-    }
     
     func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
         UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
@@ -159,15 +127,6 @@ struct WalletChange: Trackable {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(fees: fees)) })
     }
-
-    func setMaxDigits(_ maxDigits: Int) -> WalletAction {
-        if self.currency.isBitcoinCompatible {
-            UserDefaults.maxDigits = maxDigits
-        }
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(maxDigits: maxDigits)) })
-    }
     
     func set(_ walletState: WalletState) -> WalletAction {
         return WalletAction(reduce: { $0.mutate(walletState: walletState)})
@@ -178,15 +137,15 @@ struct WalletChange: Trackable {
 enum CurrencyChange {
     struct Toggle: Action {
         let reduce: Reducer = {
-            UserDefaults.isBtcSwapped = !$0.isBtcSwapped
-            return $0.mutate(isBtcSwapped: !$0.isBtcSwapped)
+            UserDefaults.showFiatAmounts = !$0.showFiatAmounts
+            return $0.mutate(showFiatAmounts: !$0.showFiatAmounts)
         }
     }
 
-    struct SetIsSwapped: Action {
+    struct SetShowFiatAmounts: Action {
         let reduce: Reducer
-        init(_ isBtcSwapped: Bool) {
-            reduce = { $0.mutate(isBtcSwapped: isBtcSwapped) }
+        init(_ showFiatAmounts: Bool) {
+            reduce = { $0.mutate(showFiatAmounts: showFiatAmounts) }
         }
     }
 }
@@ -261,6 +220,21 @@ enum WalletID {
         let reduce: Reducer
         init(_ walletID: String?) {
             reduce = { $0.mutate(walletID: walletID) }
+        }
+    }
+}
+
+enum AccountChange {
+    struct SetName: Action {
+        let reduce: Reducer
+        init(_ name: String) {
+            reduce = { $0.mutate(accountName: name) }
+        }
+    }
+    struct SetCreationDate: Action {
+        let reduce: Reducer
+        init(_ date: Date) {
+            reduce = { $0.mutate(creationDate: date) }
         }
     }
 }

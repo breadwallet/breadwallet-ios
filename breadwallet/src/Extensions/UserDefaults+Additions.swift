@@ -17,8 +17,7 @@ private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
 private let hasPromptedForEmailKey = "hasPromptedForEmail"
 private let hasSubscribedToEmailUpdatesKey = "hasSubscribedToEmailUpdates"
-private let isBtcSwappedKey = "isBtcSwappedKey"
-private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
+private let showFiatAmountsKey = "isBtcSwappedKey" // legacy key name
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
@@ -156,31 +155,10 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
-    static var isBtcSwapped: Bool {
-        get { return defaults.bool(forKey: isBtcSwappedKey)
+    static var showFiatAmounts: Bool {
+        get { return defaults.bool(forKey: showFiatAmountsKey)
         }
-        set { defaults.set(newValue, forKey: isBtcSwappedKey) }
-    }
-
-    //
-    // 2 - bits
-    // 5 - mBTC
-    // 8 - BTC
-    //
-    static var maxDigits: Int {
-        get {
-            guard defaults.object(forKey: maxDigitsKey) != nil else {
-                //TODO:CRYPTO maxdigits
-                return 8//Currencies.btc.commonUnit.decimals
-            }
-            let maxDigits = defaults.integer(forKey: maxDigitsKey)
-            if maxDigits == 5 {
-                return 8 //Convert mBTC to BTC
-            } else {
-                return maxDigits
-            }
-        }
-        set { defaults.set(newValue, forKey: maxDigitsKey) }
+        set { defaults.set(newValue, forKey: showFiatAmountsKey) }
     }
 
     static var pushToken: Data? {

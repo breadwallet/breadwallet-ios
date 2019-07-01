@@ -64,19 +64,13 @@ class TxStatusCell: UITableViewCell, Subscriber {
     // MARK: -
     
     func set(txInfo: TxDetailViewModel) {
-        Store.lazySubscribe(self,
-                            selector: {
-                                guard let oldTransactions = $0[txInfo.currency]?.transactions else { return false}
-                                guard let newTransactions = $1[txInfo.currency]?.transactions else { return false}
-                                return oldTransactions != newTransactions },
-                            callback: { [weak self] state in
-                                guard let `self` = self,
-                                    let updatedTx = state[txInfo.currency]?.transactions.filter({ $0.hash == txInfo.transactionHash }).first else { return }
-                                DispatchQueue.main.async {
-                                    let updatedInfo = TxDetailViewModel(tx: updatedTx)
-                                    self.update(status: updatedInfo.status)
-                                }
-        })
+        //TODO:CRYPTO hook up refresh logic to System/Wallet tx events IOS-1162
+        func handleUpdatedTx(_ updatedTx: Transaction) {
+            DispatchQueue.main.async {
+                let updatedInfo = TxDetailViewModel(tx: updatedTx)
+                self.update(status: updatedInfo.status)
+            }
+        }
         
         update(status: txInfo.status)
     }

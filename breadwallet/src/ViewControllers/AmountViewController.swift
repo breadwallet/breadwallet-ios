@@ -21,16 +21,16 @@ class AmountViewController: UIViewController, Trackable {
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
+        if let rate = currency.state?.currentRate, Store.state.showFiatAmounts {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.defaultUnit.decimals)
+            let title = currency.unitName(forDecimals: currency.defaultUnit.decimals)
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
-                                           maxDigits: currency.state?.maxDigits ?? currency.defaultUnit.decimals,
+                                           maxDigits: currency.defaultUnit.decimals,
                                            shouldShowBiometrics: false)
         self.canEditFee = currency.isBitcoin
         super.init(nibName: nil, bundle: nil)
@@ -175,7 +175,7 @@ class AmountViewController: UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if Store.state.isBtcSwapped {
+        if Store.state.showFiatAmounts {
             if let rate = currency.state?.currentRate {
                 selectedRate = rate
             }
@@ -247,12 +247,10 @@ class AmountViewController: UIViewController, Trackable {
             amount = Amount(fiatString: output,
                             currency: currency,
                             rate: rate)
-        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.defaultUnit.decimals) {
+        } else {
             amount = Amount(tokenString: output,
                             currency: currency,
-                            unit: unit)
-        } else {
-            amount = nil
+                            unit: currency.defaultUnit)
         }
     }
 
@@ -324,11 +322,10 @@ class AmountViewController: UIViewController, Trackable {
     }
 
     private func updateCurrencyToggleTitle() {
-        guard let currencyState = currency.state else { return }
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            currencyToggle.title = currency.unitName(forDecimals: currencyState.maxDigits)
+            currencyToggle.title = currency.unitName(forDecimals: currency.defaultUnit.decimals)
         }
     }
 

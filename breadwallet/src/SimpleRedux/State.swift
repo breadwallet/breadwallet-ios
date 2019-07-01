@@ -10,17 +10,17 @@ import UIKit
 import BRCore
 
 struct State {
-    let isStartFlowVisible: Bool
-    let isOnboardingEnabled: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
-    let isBtcSwapped: Bool //move to CurrencyState
+    let showFiatAmounts: Bool
     let alert: AlertType
     let isBiometricsEnabled: Bool
     let defaultCurrencyCode: String
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
+    let accountName: String
+    let creationDate: Date
     let walletID: String?
     let wallets: [String: WalletState]
     let availableTokens: [Currency]
@@ -49,10 +49,6 @@ struct State {
         return availableTokens.filter { $0.isSupported }
     }
     
-    var shouldShowOnboarding: Bool {
-        return isOnboardingEnabled && KeyStore.staticNoWallet
-    }
-    
     var shouldShowBuyNotificationForDefaultCurrency: Bool {
         switch defaultCurrencyCode {
         // Currencies eligible for Coinify.
@@ -68,17 +64,17 @@ struct State {
 
 extension State {
     static var initial: State {
-        return State(   isStartFlowVisible: false,
-                        isOnboardingEnabled: true,
-                        isLoginRequired: true,
+        return State(   isLoginRequired: true,
                         rootModal: .none,
-                        isBtcSwapped: UserDefaults.isBtcSwapped,
+                        showFiatAmounts: UserDefaults.showFiatAmounts,
                         alert: .none,
                         isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
+                        accountName: S.AccountHeader.defaultWalletName,
+                        creationDate: Date.zeroValue(),
                         walletID: nil,
                         //TODO:CRYPTO default wallets
                         wallets: [:],
@@ -91,31 +87,32 @@ extension State {
         )
     }
     
-    func mutate(   isStartFlowVisible: Bool? = nil,
-                   isOnboardingEnabled: Bool? = nil,
+    func mutate(   isOnboardingEnabled: Bool? = nil,
                    isLoginRequired: Bool? = nil,
                    rootModal: RootModal? = nil,
-                   isBtcSwapped: Bool? = nil,
+                   showFiatAmounts: Bool? = nil,
                    alert: AlertType? = nil,
                    isBiometricsEnabled: Bool? = nil,
                    defaultCurrencyCode: String? = nil,
                    isPushNotificationsEnabled: Bool? = nil,
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
+                   accountName: String? = nil,
+                   creationDate: Date? = nil,
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
                    availableTokens: [Currency]? = nil) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
-                     isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
-                     isLoginRequired: isLoginRequired ?? self.isLoginRequired,
+        return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
-                     isBtcSwapped: isBtcSwapped ?? self.isBtcSwapped,
+                     showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
                      alert: alert ?? self.alert,
                      isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled,
                      defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode,
                      isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
+                     accountName: accountName ?? self.accountName,
+                     creationDate: creationDate ?? self.creationDate,
                      walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets,
                      availableTokens: availableTokens ?? self.availableTokens)
@@ -158,11 +155,7 @@ struct WalletState {
     let syncProgress: Double
     let syncState: SyncState
     let balance: Amount?
-    let transactions: [Transaction]
     let lastBlockTimestamp: UInt32
-    let name: String
-    let creationDate: Date
-    let isRescanning: Bool
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }
@@ -170,7 +163,6 @@ struct WalletState {
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
-    let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
     
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
@@ -180,18 +172,11 @@ struct WalletState {
                            syncProgress: 0.0,
                            syncState: .success,
                            balance: nil,
-                           transactions: [],
                            lastBlockTimestamp: 0,
-                           name: S.AccountHeader.defaultWalletName,
-                           creationDate: Date.zeroValue(),
-                           isRescanning: false,
                            legacyReceiveAddress: nil,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
-                           //TODO:CRYPTO maxdigits
-                           maxDigits: currency.defaultUnit.decimals,
-                           //maxDigits: (currency is Bitcoin) ? UserDefaults.maxDigits : currency.commonUnit.decimals,
                            connectionStatus: BRPeerStatusDisconnected)
     }
 
@@ -199,17 +184,12 @@ struct WalletState {
                     syncProgress: Double? = nil,
                     syncState: SyncState? = nil,
                     balance: Amount? = nil,
-                    transactions: [Transaction]? = nil,
                     lastBlockTimestamp: UInt32? = nil,
-                    name: String? = nil,
-                    creationDate: Date? = nil,
-                    isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
-                    maxDigits: Int? = nil,
                     connectionStatus: BRPeerStatus? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
@@ -218,16 +198,11 @@ struct WalletState {
                            syncProgress: syncProgress ?? self.syncProgress,
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
-                           transactions: transactions ?? self.transactions,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
-                           name: name ?? self.name,
-                           creationDate: creationDate ?? self.creationDate,
-                           isRescanning: isRescanning ?? self.isRescanning,
                            legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
-                           maxDigits: maxDigits ?? self.maxDigits,
                            connectionStatus: connectionStatus ?? self.connectionStatus)
     }
 }
@@ -239,14 +214,9 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
-        lhs.transactions == rhs.transactions &&
-        lhs.name == rhs.name &&
-        lhs.creationDate == rhs.creationDate &&
-        lhs.isRescanning == rhs.isRescanning &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
-        lhs.maxDigits == rhs.maxDigits &&
         lhs.connectionStatus == rhs.connectionStatus &&
         lhs.legacyReceiveAddress == rhs.legacyReceiveAddress
 }

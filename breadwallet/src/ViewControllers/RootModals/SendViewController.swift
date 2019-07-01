@@ -271,7 +271,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput):
-            let text = Store.state.isBtcSwapped ? minOutput.fiatDescription : minOutput.tokenDescription
+            let text = Store.state.showFiatAmounts ? minOutput.fiatDescription : minOutput.tokenDescription
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
             showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
             
