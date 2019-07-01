@@ -31,7 +31,6 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallets + Currencies
 
-    private var managers = [Network: WalletManager]()
     fileprivate var wallets = [BRCrypto.Currency: Wallet]()
 
     // Currency view models indexed by Core Currency
@@ -65,7 +64,7 @@ class CoreSystem: Subscriber {
                                             assertionFailure("unable to create view model for \(coreCurrency.code)")
                                             continue
             }
-            print("[SYS] \(network) network currency added: \(currency.code)")
+            print("[SYS] currency added: \(network) \(currency.code)")
             currencies[coreCurrency] = currency
             if coreCurrency == network.currency {
                 //TODO:CRYPTO fee updater to be replaced
@@ -84,10 +83,10 @@ class CoreSystem: Subscriber {
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
-            self.system = SystemBase.create(listener: self,
-                                            account: account,
-                                            path: C.coreDataDirURL.path,
-                                            query: self.backend)
+            self.system = System(listener: self,
+                                 account: account,
+                                 path: C.coreDataDirURL.path,
+                                 query: self.backend)
             self.state = .idle
         }
     }
@@ -123,7 +122,6 @@ class CoreSystem: Subscriber {
             self.state = .uninitialized
             system.stop()
             //TODO:CRYPTO need interface to reset system, otherwise cannot create a new one in the same session
-            self.managers.removeAll()
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
@@ -142,10 +140,9 @@ class CoreSystem: Subscriber {
     // MARK: Wallet Management
 
     private func addWallet(_ coreWallet: BRCrypto.Wallet, manager: BRCrypto.WalletManager) {
-        guard wallets[coreWallet.currency] == nil else { return assertionFailure() }
-        guard let currency = currencies[coreWallet.currency],
-        let manager = managers[manager.network] else { return assertionFailure() }
-        let wallet = Wallet(core: coreWallet, currency: currency, manager: manager)
+        guard wallets[coreWallet.currency] == nil,
+            let currency = currencies[coreWallet.currency] else { return assertionFailure() }
+        let wallet = Wallet(core: coreWallet, currency: currency, system: self)
         wallets[coreWallet.currency] = wallet
 
         //TODO:CRYPTO need to filter System wallets with list of user-selected wallets
@@ -237,17 +234,11 @@ extension CoreSystem: SystemListener {
                 // A network was created; create the corresponding wallet manager.
                 if network.isMainnet == !E.isTestnet {
                     self.addCurrencies(for: network)
-                    let mode = (network.currency.code == BRCrypto.Currency.codeAsBTC ||
-                        network.currency.code == BRCrypto.Currency.codeAsBCH
-                        ? WalletManagerMode.api_only
-                        : WalletManagerMode.api_only)
                     system.createWalletManager(network: network,
-                                               mode: mode)
+                                               mode: network.defaultManagerMode)
                 }
 
             case .managerAdded(let manager):
-                assert(self.managers[manager.network] == nil)
-                self.managers[manager.network] = WalletManager(core: manager, system: self)
                 manager.connect()
             }
         }
@@ -255,17 +246,8 @@ extension CoreSystem: SystemListener {
 
     func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
         guard isInitialized else { return }
-        print("[SYS] manager event: \(manager.network) \(event)")
         queue.async {
-            guard let walletManager = self.managers[manager.network] else {
-                if case .created = event {
-                    // ignore
-                } else {
-                    assertionFailure()
-                }
-                return
-            }
-
+            print("[SYS] \(manager.network) manager event: \(event)")
             switch event {
             case .created:
                 break
@@ -282,14 +264,14 @@ extension CoreSystem: SystemListener {
 
             case .syncStarted:
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setSyncingState(.syncing))
                     }
                 }
 
             case .syncProgress(let percentComplete):
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setProgress(progress: percentComplete, timestamp: 0))
                     }
                 }
@@ -299,7 +281,7 @@ extension CoreSystem: SystemListener {
                     print("[SYS] \(manager.network) sync error: \(error)")
                 }
                 DispatchQueue.main.async {
-                    walletManager.currencies.forEach {
+                    manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
                         Store.perform(action: WalletChange($0).setSyncingState(error == nil ? .success : .connecting))
                     }
                 }
@@ -313,7 +295,7 @@ extension CoreSystem: SystemListener {
     func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
         guard isInitialized else { return }
         queue.async {
-            print("[SYS] \(manager.network) \(wallet.currency.code) wallet event: \(event)")
+            print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
             switch event {
             case .created:
                 self.addWallet(wallet, manager: manager)
@@ -340,54 +322,8 @@ extension CoreSystem: SystemListener {
     func handleNetworkEvent(system: System, network: Network, event: NetworkEvent) {
         guard isInitialized else { return }
         queue.async {
-            print("[SYS] network event: \(network) \(event)")
+            print("[SYS] \(network) network event: \(event)")
         }
-    }
-}
-
-/// Wrapper for BRCrypto WalletManager
-class WalletManager {
-    private let core: BRCrypto.WalletManager
-    unowned var system: CoreSystem
-
-    var primaryCurrency: Currency {
-        return system.currencies[core.primaryWallet.currency]!
-    }
-
-    var currencies: [Currency] {
-        return core.wallets.map { $0.currency }.compactMap { system.currencies[$0] }
-    }
-
-    var wallets: [Wallet] {
-        return core.wallets.compactMap { system.wallets[$0.currency] }
-    }
-
-    var primaryWallet: Wallet {
-        return system.wallets[primaryCurrency.core]!
-    }
-
-    func currency(from core: BRCrypto.Currency) -> Currency? {
-        return system.currencies[core]
-    }
-
-    var blockHeight: UInt64? {
-        return core.network.height
-    }
-
-    init(core: BRCrypto.WalletManager, system: CoreSystem) {
-        self.core = core
-        self.system = system
-    }
-}
-
-extension Network: Hashable {
-    public static func == (lhs: Network, rhs: Network) -> Bool {
-        return lhs.uids == rhs.uids
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(uids)
-        hasher.combine(name)
     }
 }
 
@@ -414,6 +350,27 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "syncEnded(\(error ?? ""))"
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
+        }
+    }
+}
+
+extension BRCrypto.WalletManager: CustomStringConvertible {
+    public var description: String {
+        return "\(network) WM"
+    }
+}
+
+extension BRCrypto.Network {
+    var defaultManagerMode: WalletManagerMode {
+        switch currency.code {
+        case BRCrypto.Currency.codeAsBTC:
+            return .api_only
+        case BRCrypto.Currency.codeAsBCH:
+            return .p2p_only
+        case BRCrypto.Currency.codeAsETH:
+            return .api_only
+        default:
+            return .api_only
         }
     }
 }

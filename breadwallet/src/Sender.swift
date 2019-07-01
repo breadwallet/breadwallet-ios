@@ -72,15 +72,16 @@ class Sender {
     }
 
     func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
-        if wallet.currency.isBitcoinCompatible {
-            feeBasis = .bitcoin(feePerKB: fees.fee(forLevel: level ?? .regular))
-        } else if wallet.currency.isEthereumCompatible {
-            guard case .ethereum(_, let gasLimit) = feeBasis,
-                let gasPrice = BRCrypto.Amount.create(string: fees.gasPrice.string(radix: 10), unit: wallet.feeUnit) else { return assertionFailure() }
-            feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: gasLimit)
-        } else {
-            assertionFailure()
-        }
+        //TODO:CRYPTO feeBasis
+//        if wallet.currency.isBitcoinCompatible {
+//            feeBasis = .bitcoin(feePerKB: fees.fee(forLevel: level ?? .regular))
+//        } else if wallet.currency.isEthereumCompatible {
+//            guard case .ethereum(_, let gasLimit) = feeBasis,
+//                let gasPrice = BRCrypto.Amount.create(string: fees.gasPrice.string(radix: 10), unit: wallet.feeUnit) else { return assertionFailure() }
+//            feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: gasLimit)
+//        } else {
+//            assertionFailure()
+//        }
     }
 
     func reset() {
@@ -155,8 +156,6 @@ class Sender {
             guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet.core, pin: pin) else {
                 return completion(.creationError(message: ""))
             }
-            //TODO:CRYPTO wait for send events?
-            //completion(.success(hash: nil, rawTx: nil))
             self.completionHandler = completion
             self.wallet.subscribe(sendListener: self)
         }
@@ -220,20 +219,21 @@ class Sender {
     }
 
     func estimateGas(targetAddress: String, amount: Amount) {
-        guard wallet.currency.isEthereumCompatible,
-            case .ethereum(let gasPrice, _) = self.feeBasis else { return assertionFailure() }
-        gasEstimate = nil
-        let params = transactionParams(fromAddress: wallet.sourceAddress, toAddress: targetAddress, forAmount: amount)
-        Backend.apiClient.estimateGas(transaction: params, handler: { result in
-            switch result {
-            case .success(let value):
-                self.gasEstimate = GasEstimate(address: targetAddress, amount: amount, limit: value.asUInt64)
-                self.feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: value.asUInt64)
-            case .error(let error):
-                print("estimate gas error: \(error)")
-                self.gasEstimate = nil
-            }
-        })
+        //TODO:CRYPTO feeBasis
+//        guard wallet.currency.isEthereumCompatible,
+//            case .ethereum(let gasPrice, _) = self.feeBasis else { return assertionFailure() }
+//        gasEstimate = nil
+//        let params = transactionParams(fromAddress: wallet.sourceAddress, toAddress: targetAddress, forAmount: amount)
+//        Backend.apiClient.estimateGas(transaction: params, handler: { result in
+//            switch result {
+//            case .success(let value):
+//                self.gasEstimate = GasEstimate(address: targetAddress, amount: amount, limit: value.asUInt64)
+//                self.feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: value.asUInt64)
+//            case .error(let error):
+//                print("estimate gas error: \(error)")
+//                self.gasEstimate = nil
+//            }
+//        })
     }
 
     func transactionParams(fromAddress: String, toAddress: String, forAmount amount: Amount) -> TransactionParams {

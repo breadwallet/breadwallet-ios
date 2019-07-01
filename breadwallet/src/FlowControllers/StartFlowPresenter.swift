@@ -21,6 +21,12 @@ class StartFlowPresenter: Subscriber, Trackable {
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
         self.createBuyScreen = createBuyScreen
+
+        // no onboarding, make home screen visible after unlock
+        if !keyMaster.noWallet {
+            self.pushHomeScreen()
+        }
+
         addSubscriptions()
     }
 
@@ -34,20 +40,8 @@ class StartFlowPresenter: Subscriber, Trackable {
     private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)
     private var createBuyScreen: (() -> BRWebViewController)?
     private var shouldBuyCoinAfterOnboarding: Bool = false
-    
-    private var closeButton: UIButton {
-        let button = UIButton.close
-        button.tintColor = .white
-        button.tap = {
-            Store.perform(action: HideStartFlow())
-        }
-        return button
-    }
 
     private func addSubscriptions() {
-        Store.lazySubscribe(self,
-                        selector: { $0.isStartFlowVisible != $1.isStartFlowVisible },
-                        callback: { self.handleStartFlowChange(state: $0) })
         Store.lazySubscribe(self,
                         selector: { $0.isLoginRequired != $1.isLoginRequired },
                         callback: { self.handleLoginRequiredChange(state: $0)
@@ -57,13 +51,9 @@ class StartFlowPresenter: Subscriber, Trackable {
         })
     }
 
-    private func handleStartFlowChange(state: State) {
-        if state.isStartFlowVisible {
-            guardProtected(queue: DispatchQueue.main) { [weak self] in
-                self?.presentOnboardingFlow()
-            }
-        } else {
-            dismissStartFlow()
+    func showStartFlow() {
+        guardProtected(queue: DispatchQueue.main) { [weak self] in
+            self?.presentOnboardingFlow()
         }
     }
 
@@ -126,8 +116,7 @@ class StartFlowPresenter: Subscriber, Trackable {
                 // the onboarding flow is finished, the home screen will be present. If 
                 // we push it before the present() call you can briefly see the home screen
                 // before the onboarding screen is displayed -- not good.
-                let homeScreen = self.createHomeScreen(self.rootViewController)
-                self.rootViewController.pushViewController(homeScreen, animated: false)
+                self.pushHomeScreen()
             }
         }
     }
@@ -168,6 +157,11 @@ class StartFlowPresenter: Subscriber, Trackable {
                 
         self.navigationController?.pushViewController(buyScreen, animated: true)
     }
+
+    private func pushHomeScreen() {
+        let homeScreen = self.createHomeScreen(self.rootViewController)
+        self.rootViewController.pushViewController(homeScreen, animated: false)
+    }
     
     private func dismissStartFlow() {
         
@@ -200,10 +194,8 @@ class StartFlowPresenter: Subscriber, Trackable {
         pinCreationViewController.setPinSuccess = { [unowned self] pin in
             autoreleasepool {
                 guard self.keyMaster.setRandomSeedPhrase() != nil else { self.handleWalletCreationError(); return }
-                //TODO:BCH multi-currency support
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation
-                //TODO:CRYPTO wallet info
-                //Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(Date()))
+                Store.perform(action: AccountChange.SetCreationDate(Date()))
                 DispatchQueue.main.async {
                     self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: context)
                     //TODO:CRYPTO refactor
@@ -231,7 +223,7 @@ class StartFlowPresenter: Subscriber, Trackable {
                                                        keyMaster: self.keyMaster,
                                                        from: navController,
                                                        context: eventContext,
-                                                       dismissAction: HideStartFlow(),
+                                                       dismissAction: dismissStartFlow,
                                                        modalPresentation: false,
                                                        canExit: false)
     }

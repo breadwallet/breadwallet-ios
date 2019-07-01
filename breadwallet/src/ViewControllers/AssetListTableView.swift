@@ -87,8 +87,7 @@ class AssetListTableView: UITableViewController, Subscriber {
             let newState = $1
             $0.displayCurrencies.forEach { currency in
                 if oldState[currency]?.balance != newState[currency]?.balance
-                    || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
-                    || oldState[currency]?.maxDigits != newState[currency]?.maxDigits {
+                    || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate {
                     result = true
                 }
             }

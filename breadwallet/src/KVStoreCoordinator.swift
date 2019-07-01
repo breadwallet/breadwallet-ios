@@ -134,10 +134,9 @@ class KVStoreCoordinator: Subscriber {
     
     func retreiveStoredWalletInfo() {
         guard !hasRetreivedInitialWalletInfo else { return }
-        //TODO:CRYPTO refactor, what's the purpose of wallet name / creation date in Store?
         if let walletInfo = WalletInfo(kvStore: kvStore) {
-//            Store.perform(action: WalletChange(Currencies.btc).setWalletName(walletInfo.name))
-//            Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(walletInfo.creationDate))
+            Store.perform(action: AccountChange.SetName(walletInfo.name))
+            Store.perform(action: AccountChange.SetCreationDate(walletInfo.creationDate))
         } else {
             print("no wallet info found")
         }
@@ -145,19 +144,17 @@ class KVStoreCoordinator: Subscriber {
     }
 
     func listenForWalletChanges() {
-        //TODO:CRYPTO wallet info
-//        Store.subscribe(self,
-//                        selector: { $0[Currencies.btc]?.creationDate != $1[Currencies.btc]?.creationDate },
-//                            callback: {
-//                                if let existingInfo = WalletInfo(kvStore: self.kvStore) {
-//                                    Store.perform(action: WalletChange(Currencies.btc).setWalletCreationDate(existingInfo.creationDate))
-//                                } else {
-//                                    guard let btcState = $0[Currencies.btc] else { return }
-//                                    let newInfo = WalletInfo(name: btcState.name)
-//                                    newInfo.creationDate = btcState.creationDate
-//                                    self.set(newInfo)
-//                                }
-//        })
+        Store.subscribe(self,
+                        selector: { $0.creationDate != $1.creationDate },
+                        callback: { state in
+                            if let existingInfo = WalletInfo(kvStore: self.kvStore) {
+                                Store.perform(action: AccountChange.SetCreationDate(existingInfo.creationDate))
+                            } else {
+                                let newInfo = WalletInfo(name: state.accountName)
+                                newInfo.creationDate = state.creationDate
+                                self.set(newInfo)
+                            }
+        })
     }
 
     private func set(_ info: BRKVStoreObject) {
