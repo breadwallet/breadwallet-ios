@@ -16,6 +16,7 @@ public enum EventContext: String {
     case writeKey
     case rewards
     case pushNotifications
+    case inAppNotifications
     var name: String { return rawValue }
 }
 
@@ -67,6 +68,13 @@ public enum Event: String {
     case openNotification
 
     case iOSError
+    
+    // received notification
+    case receivedNotification
+
+    // tapped notification viewer CTA button
+    case notificationCTAButton
+    
     case test
     
     var name: String { return rawValue }
@@ -92,6 +100,9 @@ public enum Screen: String {
     case optInPrompt
     case systemPrompt
     case pushNotificationSettings
+    
+    // in-app notifications
+    case inAppNotification
     
     case test
 
