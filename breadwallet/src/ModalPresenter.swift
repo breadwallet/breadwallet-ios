@@ -166,6 +166,34 @@ class ModalPresenter: Subscriber, Trackable {
             })
         }
         
+        // in-app notifications
+        Store.subscribe(self, name: .showInAppNotification(nil)) { [weak self] (trigger) in
+            guard let `self` = self else { return }
+            guard let topVC = self.topViewController else { return }
+            
+            if case let .showInAppNotification(notification?)? = trigger {
+                let display: (UIImage?) -> Void = { (image) in
+                    let notificationVC = InAppNotificationViewController(notification, image: image)
+                    
+                    let navigationController = ModalNavigationController(rootViewController: notificationVC)
+                    navigationController.setClearNavbar()
+                    
+                    topVC.present(navigationController, animated: true, completion: nil)
+                }
+                
+                // Fetch the image first so that it's ready when we display the notification
+                // screen to the user.
+                if let imageUrl = notification.imageUrl, !imageUrl.isEmpty {
+                    UIImage.fetchAsync(from: imageUrl) { (image) in
+                        display(image)
+                    }
+                } else {
+                    display(nil)
+                }
+                
+            }
+        }
+        
         Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
             guard let trigger = $0 else { return }
             if case let .openPlatformUrl(url) = trigger {
