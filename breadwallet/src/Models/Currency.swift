@@ -11,6 +11,8 @@ import BRCore
 import BRCrypto
 import UIKit
 
+typealias CurrencyUnit = BRCrypto.Unit
+
 /// Combination of the Core Currency model and its metadata properties
 class Currency {
     public enum TokenType: String {
@@ -50,6 +52,10 @@ class Currency {
         } else {
             return unit.name
         }
+    }
+
+    func unitName(forDecimals decimals: UInt8) -> String {
+        return unitName(forDecimals: Int(decimals))
     }
 
     func unitName(forDecimals decimals: Int) -> String {
@@ -99,9 +105,9 @@ class Currency {
         guard core.code.caseInsensitiveCompare(metaData.code) == .orderedSame else { return nil }
         self.core = core
         self.metaData = metaData
-        self.units = Dictionary(uniqueKeysWithValues: units.lazy.map { ($0.name.lowercased(), CurrencyUnit(core: $0)) })
-        self.baseUnit = CurrencyUnit(core: baseUnit)
-        self.defaultUnit = CurrencyUnit(core: defaultUnit)
+        self.units = Dictionary(uniqueKeysWithValues: units.lazy.map { ($0.name.lowercased(), $0) })
+        self.baseUnit = baseUnit
+        self.defaultUnit = defaultUnit
     }
 }
 

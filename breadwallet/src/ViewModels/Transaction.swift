@@ -61,8 +61,9 @@ class Transaction {
     var toAddress: String { return targetAddress }
     var fromAddress: String { return sourceAddress }
 
-    var amount: Amount { return Amount(coreAmount: transfer.amount, currency: currency) }
-    var fee: Amount { return Amount(coreAmount: transfer.fee, currency: wallet.feeCurrency) }
+    var amount: Amount { return Amount(cryptoAmount: transfer.amount, currency: currency) }
+    var fee: Amount { return Amount(cryptoAmount: transfer.fee, currency: wallet.feeCurrency) }
+
     var feeBasis: FeeBasis? {
         //TODO:CRYPTO feeBasis
         return nil

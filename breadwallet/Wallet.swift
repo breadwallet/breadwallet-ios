@@ -32,7 +32,7 @@ class Wallet {
     }
 
     var balance: Amount {
-        return Amount(coreAmount: core.balance, currency: currency)
+        return Amount(cryptoAmount: core.balance, currency: currency)
     }
 
     var transfers: [Transaction] {
@@ -68,7 +68,7 @@ class Wallet {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
-        guard let transfer = core.createTransfer(target: target, amount: amount.core, feeBasis: feeBasis) else {
+        guard let transfer = core.createTransfer(target: target, amount: amount.cryptoAmount, feeBasis: feeBasis) else {
             return .failure(.invalidAmountOrFee)
         }
         return .success(transfer)
@@ -113,7 +113,7 @@ extension Wallet {
 
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
-                Store.perform(action: WalletChange(self.currency).setBalance(Amount(coreAmount: amount, currency: self.currency)))
+                Store.perform(action: WalletChange(self.currency).setBalance(Amount(cryptoAmount: amount, currency: self.currency)))
             }
         case .feeBasisUpdated:
             break
