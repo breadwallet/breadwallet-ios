@@ -9,27 +9,36 @@
 import Foundation
 import BRCrypto
 
+typealias CryptoAmount = BRCrypto.Amount
+
+/// View model for representing the BRCrypto.Amount model
+/// with extended currency, fiat conversion and formatting information
 public struct Amount {
     static let normalPrecisionDigits = 5
     static let highPrecisionDigits = 8
 
     let currency: Currency
-    let core: BRCrypto.Amount
+    let cryptoAmount: CryptoAmount
     var rate: Rate?
     var minimumFractionDigits: Int?
     var maximumFractionDigits: Int
-    var negative: Bool { return core.isNegative }
-    var isZero: Bool { return self == Amount.zero(currency) }
+    var negative: Bool { return cryptoAmount.isNegative }
+    var isZero: Bool { return self == Amount.zero(currency, rate: rate) }
 
     // MARK: - Init
 
-    init(coreAmount: BRCrypto.Amount,
+    init(cryptoAmount: CryptoAmount,
          currency: Currency,
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits) {
+        assert(currency.core == cryptoAmount.currency)
         self.currency = currency
-        self.core = coreAmount
+        // make a new instance of CryptoAmount
+        self.cryptoAmount = CryptoAmount.create(string: cryptoAmount.string(),
+                                                negative: cryptoAmount.isNegative,
+                                                unit: cryptoAmount.unit.base)
+            ?? BRCrypto.Amount.create(integer: 0, unit: cryptoAmount.unit.base)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
@@ -41,9 +50,11 @@ public struct Amount {
          maximumFractionDigits: Int? = nil,
          negative: Bool = false) {
         self.currency = amount.currency
-        // make a new instance of Amount
-        self.core = BRCrypto.Amount.create(string: amount.core.string(), negative: negative, unit: amount.currency.baseUnit.core)
-            ?? BRCrypto.Amount.create(integer: 0, unit: amount.currency.baseUnit.core)
+        // make a new instance of CryptoAmount
+        self.cryptoAmount = CryptoAmount.create(string: amount.cryptoAmount.string(),
+                                                negative: negative,
+                                                unit: amount.currency.baseUnit)
+            ?? BRCrypto.Amount.create(integer: 0, unit: amount.currency.baseUnit)
         self.rate = rate ?? amount.rate
         self.minimumFractionDigits = minimumFractionDigits ?? amount.minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits ?? amount.maximumFractionDigits
@@ -57,11 +68,11 @@ public struct Amount {
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
-        let unit = (unit ?? currency.defaultUnit).core
-        self.core = BRCrypto.Amount.create(string: tokenString.usDecimalString(fromLocale: locale),
-                                           negative: negative,
-                                           unit: unit)
-            ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit.core)
+        let unit = (unit ?? currency.defaultUnit)
+        self.cryptoAmount = CryptoAmount.create(string: tokenString.usDecimalString(fromLocale: locale),
+                                                negative: negative,
+                                                unit: unit)
+            ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
@@ -81,14 +92,16 @@ public struct Amount {
         if negative {
             decimal *= -1.0
         }
-        self.core = BRCrypto.Amount.create(double: decimal.doubleValue, unit: currency.defaultUnit.core)
+        self.cryptoAmount = BRCrypto.Amount.create(double: decimal.doubleValue, unit: currency.defaultUnit)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
     }
 
     static func zero(_ currency: Currency, rate: Rate? = nil) -> Amount {
-        return Amount(tokenString: "0", currency: currency, rate: rate)
+        return Amount(cryptoAmount: CryptoAmount.create(integer: 0, unit: currency.baseUnit),
+                      currency: currency,
+                      rate: rate)
     }
 
     // MARK: - Convenience Accessors
@@ -121,15 +134,15 @@ public struct Amount {
     
     /// Token value in specified units as formatted string without symbol (for user display)
     func tokenFormattedString(in unit: CurrencyUnit) -> String {
-        guard var formattedValue = core.string(as: unit.core, formatter: tokenFormat) else {
+        guard var formattedValue = cryptoAmount.string(as: unit, formatter: tokenFormat) else {
             assertionFailure()
             return ""
         }
         // override precision digits if the value is too small to show
         if !isZero && tokenFormat.number(from: formattedValue) == 0.0 {
             guard let formatter = tokenFormat.copy() as? NumberFormatter else { assertionFailure(); return "" }
-            formatter.maximumFractionDigits = unit.decimals
-            formattedValue = core.string(as: unit.core, formatter: formatter) ?? formattedValue
+            formatter.maximumFractionDigits = Int(unit.decimals)
+            formattedValue = cryptoAmount.string(as: unit, formatter: formatter) ?? formattedValue
         }
         return formattedValue
     }
@@ -137,9 +150,9 @@ public struct Amount {
     /// Token value in specified units as unformatted string without symbol (used API/internal use)
     func tokenUnformattedString(in unit: CurrencyUnit) -> String {
         if unit == currency.baseUnit {
-            return core.string(base: 10, preface: "")
+            return cryptoAmount.string(base: 10, preface: "")
         }
-        guard let str = core.string(as: unit.core, formatter: rawTokenFormat) else {
+        guard let str = cryptoAmount.string(as: unit, formatter: rawTokenFormat) else {
             assertionFailure(); return ""
         }
         return str
@@ -158,7 +171,7 @@ public struct Amount {
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
         format.currencySymbol = ""
-        format.maximumFractionDigits = min(currency.defaultUnit.decimals, maximumFractionDigits)
+        format.maximumFractionDigits = min(Int(currency.defaultUnit.decimals), maximumFractionDigits)
         format.minimumFractionDigits = minimumFractionDigits ?? 0
         return format
     }
@@ -222,7 +235,7 @@ public struct Amount {
     // MARK: - Private
     
     private var commonUnitString: String {
-        return core.string(as: currency.defaultUnit.core, formatter: rawTokenFormat) ?? ""
+        return cryptoAmount.string(as: currency.defaultUnit, formatter: rawTokenFormat) ?? ""
     }
     
     private var commonUnitValue: Decimal? {
@@ -232,23 +245,20 @@ public struct Amount {
 
 extension Amount: Equatable, Comparable {
     public static func == (lhs: Amount, rhs: Amount) -> Bool {
-        return lhs.core == rhs.core /*&&
-        lhs.rate == rhs.rate &&
-        lhs.maximumFractionDigits == rhs.maximumFractionDigits &&
-        lhs.minimumFractionDigits == rhs.minimumFractionDigits*/
+        return lhs.cryptoAmount == rhs.cryptoAmount
     }
 
     public static func > (lhs: Amount, rhs: Amount) -> Bool {
-        return lhs.core > rhs.core
+        return lhs.cryptoAmount > rhs.cryptoAmount
     }
 
     public static func < (lhs: Amount, rhs: Amount) -> Bool {
-        return lhs.core < rhs.core
+        return lhs.cryptoAmount < rhs.cryptoAmount
     }
 
     static func - (lhs: Amount, rhs: Amount) -> Amount {
         //TODO:CRYPTO
-        return Amount(coreAmount: (lhs.core - rhs.core) ?? lhs.core,
+        return Amount(cryptoAmount: (lhs.cryptoAmount - rhs.cryptoAmount) ?? lhs.cryptoAmount,
                       currency: lhs.currency,
                       rate: lhs.rate,
                       minimumFractionDigits: lhs.minimumFractionDigits,
@@ -257,22 +267,11 @@ extension Amount: Equatable, Comparable {
 
     static func + (lhs: Amount, rhs: Amount) -> Amount {
         //TODO:CRYPTO
-        return Amount(coreAmount: (lhs.core + rhs.core) ?? lhs.core,
+        return Amount(cryptoAmount: (lhs.cryptoAmount + rhs.cryptoAmount) ?? lhs.cryptoAmount,
                       currency: lhs.currency,
                       rate: lhs.rate,
                       minimumFractionDigits: lhs.minimumFractionDigits,
                       maximumFractionDigits: lhs.maximumFractionDigits)
-    }
-}
-
-struct CurrencyUnit: Equatable {
-    fileprivate let core: BRCrypto.Unit
-
-    var decimals: Int { return Int(core.decimals) }
-    var name: String { return core.name }
-
-    init(core: BRCrypto.Unit) {
-        self.core = core
     }
 }
 

@@ -24,13 +24,13 @@ class AmountViewController: UIViewController, Trackable {
         if let rate = currency.state?.currentRate, Store.state.showFiatAmounts {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.unitName(forDecimals: currency.defaultUnit.decimals)
+            let title = currency.defaultUnit.name
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
-                                           maxDigits: currency.defaultUnit.decimals,
+                                           maxDigits: Int(currency.defaultUnit.decimals),
                                            shouldShowBiometrics: false)
         self.canEditFee = currency.isBitcoin
         super.init(nibName: nil, bundle: nil)
@@ -325,7 +325,7 @@ class AmountViewController: UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            currencyToggle.title = currency.unitName(forDecimals: currency.defaultUnit.decimals)
+            currencyToggle.title = currency.defaultUnit.name
         }
     }
 

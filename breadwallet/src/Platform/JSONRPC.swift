@@ -72,7 +72,7 @@ public struct ListTransactionsParams: Codable {
 extension Amount: Encodable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
-        try container.encode(core.string(base: 16, preface: "0x"))
+        try container.encode(cryptoAmount.string(base: 16, preface: "0x"))
     }
 }
 

@@ -87,6 +87,7 @@ extension TxDetailViewModel {
         var feeAmount = tx.fee
         feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
         feeAmount.rate = rate
+        //TODO:CRYPTO outgoing token transfers have no fee info but return a 0 fee
         fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
 
         if case .ethereum(let gasPriceAmount, let gasLimitValue)? = tx.feeBasis {

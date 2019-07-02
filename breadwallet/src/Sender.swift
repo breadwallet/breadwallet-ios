@@ -200,7 +200,7 @@ class Sender {
     var canUseBiometrics: Bool { return false }
 
     func fee(forAmount amount: Amount) -> Amount {
-        return Amount(coreAmount: wallet.core.estimateFee(amount: amount.core, feeBasis: feeBasis), currency: wallet.feeCurrency)
+        return Amount(cryptoAmount: wallet.core.estimateFee(amount: amount.cryptoAmount, feeBasis: feeBasis), currency: wallet.feeCurrency)
     }
 
     // MARK: - Gas Estimation
