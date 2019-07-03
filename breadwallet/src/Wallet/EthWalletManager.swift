@@ -120,7 +120,8 @@ class EthWalletManager: WalletManager {
 
     init?(publicKey: BRKey) {
         let network: EthereumNetwork = (E.isTestnet || E.isRunningTests) ? .testnet : .mainnet
-        let mode = EthereumMode.brd_with_p2p_send
+        let mode = UserDefaults.debugEthereumNetworkMode ?? EthereumMode.brd_only
+        print("[EWM] starting EWM in \(mode) mode")
         node = EthereumWalletManager(client: self,
                                      network: network,
                                      mode: mode,
