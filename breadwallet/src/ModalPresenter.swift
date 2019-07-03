@@ -700,6 +700,27 @@ class ModalPresenter: Subscriber, Trackable {
                                             ewm.connect()
             }))
             
+            developerItems.append(MenuItem(title: "Ethereum Network Connection Mode",
+                                           accessoryText: { UserDefaults.debugEthereumNetworkMode?.description ?? "default" },
+                                           callback: {
+                                            let alert = UIAlertController(title: "Set Ethereum network connection mode",
+                                                                          message: "Relaunch for changes to take effect",
+                                                                          preferredStyle: .actionSheet)
+                                            for mode in EthereumMode.allCases {
+                                                alert.addAction(UIAlertAction(title: mode.description,
+                                                                              style: .default,
+                                                                              handler: { _ in
+                                                                                UserDefaults.debugEthereumNetworkMode = mode
+                                                }))
+                                            }
+                                            alert.addAction(UIAlertAction(title: "Reset to default",
+                                                                          style: .cancel,
+                                                                          handler: { _ in
+                                                                            UserDefaults.debugEthereumNetworkMode = nil
+                                            }))
+                                            menuNav.present(alert, animated: true, completion: nil)
+            }))
+            
             developerItems.append(
                 MenuItem(title: "API Host",
                          accessoryText: { Backend.apiClient.host }, callback: {
