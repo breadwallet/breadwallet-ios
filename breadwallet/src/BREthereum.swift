@@ -333,7 +333,7 @@ public struct EthereumTransferError: Error {
 
 // MARK: - Client
 
-public enum EthereumMode {
+public enum EthereumMode: Int, CustomStringConvertible, CaseIterable {
     case brd_only
     case brd_with_p2p_send
     case p2p_with_brd_sync
@@ -356,6 +356,15 @@ public enum EthereumMode {
         case .brd_with_p2p_send: return BRD_WITH_P2P_SEND
         case .p2p_with_brd_sync: return P2P_WITH_BRD_SYNC
         case .p2p_only: return P2P_ONLY
+        }
+    }
+    
+    public var description: String {
+        switch self {
+        case .brd_only: return "API only"
+        case .brd_with_p2p_send: return "API sync / P2P send"
+        case .p2p_with_brd_sync: return "P2P+API sync / P2P send"
+        case .p2p_only: return "P2P only"
         }
     }
 }

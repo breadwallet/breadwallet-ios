@@ -48,6 +48,7 @@ private let appLaunchCountKey = "appLaunchCountKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
+private let debugEthereumNetworkModeKey = "debugEthereumNetworkMode"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -74,7 +75,8 @@ extension UserDefaults {
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
-        writePaperPhraseDateKey
+        writePaperPhraseDateKey,
+        debugEthereumNetworkModeKey
     ]
     
     // Called from the Reset User Defaults menu item to allow the resetting of
@@ -542,6 +544,24 @@ extension UserDefaults {
         
         set {
             defaults.set(newValue, forKey: didTapTradeNotificationKey)
+        }
+    }
+    
+    static var debugEthereumNetworkMode: EthereumMode? {
+        get {
+            if let value = defaults.object(forKey: debugEthereumNetworkModeKey) as? Int {
+                return EthereumMode(rawValue: value)
+            } else {
+                return nil
+            }
+        }
+        
+        set {
+            if let value = newValue?.rawValue {
+                defaults.set(value, forKey: debugEthereumNetworkModeKey)
+            } else {
+                defaults.removeObject(forKey: debugEthereumNetworkModeKey)
+            }
         }
     }
 }
