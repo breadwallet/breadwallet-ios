@@ -84,6 +84,8 @@
 		71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */; };
 		71999FDD22147CD90024271F /* Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71999FDC22147CD90024271F /* Events.swift */; };
 		71A3170D229C70C00088F97C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3170C229C70C00088F97C /* Theme.swift */; };
+		71A3171022A6D55A0088F97C /* InAppNotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3170F22A6D55A0088F97C /* InAppNotificationViewController.swift */; };
+		71A3171222A6E5F10088F97C /* BRAPIClient+Messages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3171122A6E5F10088F97C /* BRAPIClient+Messages.swift */; };
 		71C44E90225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */; };
 		71C44E92225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */; };
 		71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */; };
@@ -672,6 +674,8 @@
 		71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRUserAgentHeaderGeneratorTests.swift; sourceTree = "<group>"; };
 		71999FDC22147CD90024271F /* Events.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Events.swift; path = src/Constants/Events.swift; sourceTree = "<group>"; };
 		71A3170C229C70C00088F97C /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = src/Theme/Theme.swift; sourceTree = "<group>"; };
+		71A3170F22A6D55A0088F97C /* InAppNotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InAppNotificationViewController.swift; path = src/ViewControllers/Notifications/InAppNotificationViewController.swift; sourceTree = "<group>"; };
+		71A3171122A6E5F10088F97C /* BRAPIClient+Messages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Messages.swift"; path = "src/Platform/BRAPIClient+Messages.swift"; sourceTree = "<group>"; };
 		71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConfirmRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/ConfirmRecoveryKeyViewController.swift; sourceTree = "<group>"; };
 		71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecoveryKeyCompleteViewController.swift; path = src/ViewControllers/RecoveryKey/RecoveryKeyCompleteViewController.swift; sourceTree = "<group>"; };
 		71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BaseRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/BaseRecoveryKeyViewController.swift; sourceTree = "<group>"; };
@@ -1233,6 +1237,7 @@
 				E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */,
 				71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */,
 				7C6E0D902214C9B700CA3BA5 /* AssetArchive.swift */,
+				71A3171122A6E5F10088F97C /* BRAPIClient+Messages.swift */,
 			);
 			name = Platform;
 			sourceTree = "<group>";
@@ -1327,6 +1332,108 @@
 				71A3170C229C70C00088F97C /* Theme.swift */,
 			);
 			name = Theme;
+			sourceTree = "<group>";
+		};
+		71A3170E22A6D51C0088F97C /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				71A3170F22A6D55A0088F97C /* InAppNotificationViewController.swift */,
+			);
+			name = Notifications;
+			sourceTree = "<group>";
+		};
+		755CD3191DAA0A110075898E /* secp256k1 */ = {
+			isa = PBXGroup;
+			children = (
+				755CD3291DAA0A110075898E /* include */,
+				755CD3371DAA0A110075898E /* src */,
+			);
+			path = secp256k1;
+			sourceTree = "<group>";
+		};
+		755CD3291DAA0A110075898E /* include */ = {
+			isa = PBXGroup;
+			children = (
+				755CD32A1DAA0A110075898E /* secp256k1.h */,
+				755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */,
+				755CD32C1DAA0A110075898E /* secp256k1_recovery.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		755CD3371DAA0A110075898E /* src */ = {
+			isa = PBXGroup;
+			children = (
+				755CD33A1DAA0A110075898E /* basic-config.h */,
+				755CD3431DAA0A110075898E /* ecdsa_impl.h */,
+				755CD3441DAA0A110075898E /* eckey.h */,
+				755CD3451DAA0A110075898E /* eckey_impl.h */,
+				755CD3461DAA0A110075898E /* ecmult.h */,
+				755CD3471DAA0A110075898E /* ecmult_const.h */,
+				755CD3481DAA0A110075898E /* ecmult_const_impl.h */,
+				755CD3491DAA0A110075898E /* ecmult_gen.h */,
+				755CD34A1DAA0A110075898E /* ecmult_gen_impl.h */,
+				755CD34B1DAA0A110075898E /* ecmult_impl.h */,
+				755CD34C1DAA0A110075898E /* field.h */,
+				755CD34D1DAA0A110075898E /* field_10x26.h */,
+				755CD34E1DAA0A110075898E /* field_10x26_impl.h */,
+				755CD34F1DAA0A110075898E /* field_5x52.h */,
+				755CD3511DAA0A110075898E /* field_5x52_impl.h */,
+				755CD3531DAA0A110075898E /* field_impl.h */,
+				755CD3551DAA0A110075898E /* group.h */,
+				755CD3561DAA0A110075898E /* group_impl.h */,
+				755CD3571DAA0A110075898E /* hash.h */,
+				755CD3581DAA0A110075898E /* hash_impl.h */,
+				755CD3641DAA0A110075898E /* modules */,
+				755CD3731DAA0A110075898E /* num.h */,
+				755CD3741DAA0A110075898E /* num_gmp.h */,
+				755CD3751DAA0A110075898E /* num_gmp_impl.h */,
+				755CD3761DAA0A110075898E /* num_impl.h */,
+				755CD3771DAA0A110075898E /* scalar.h */,
+				755CD3781DAA0A110075898E /* scalar_4x64.h */,
+				755CD3791DAA0A110075898E /* scalar_4x64_impl.h */,
+				755CD37A1DAA0A110075898E /* scalar_8x32.h */,
+				755CD37B1DAA0A110075898E /* scalar_8x32_impl.h */,
+				755CD37C1DAA0A110075898E /* scalar_impl.h */,
+				755CD37D1DAA0A110075898E /* secp256k1.c */,
+				755CD3811DAA0A110075898E /* util.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		755CD3641DAA0A110075898E /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				755CD3651DAA0A110075898E /* ecdh */,
+				755CD3691DAA0A110075898E /* recovery */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		755CD3651DAA0A110075898E /* ecdh */ = {
+			isa = PBXGroup;
+			children = (
+				755CD3661DAA0A110075898E /* main_impl.h */,
+			);
+			path = ecdh;
+			sourceTree = "<group>";
+		};
+		755CD3691DAA0A110075898E /* recovery */ = {
+			isa = PBXGroup;
+			children = (
+				755CD36A1DAA0A110075898E /* main_impl.h */,
+			);
+			path = recovery;
+			sourceTree = "<group>";
+		};
+		759B4BDB203E5A31002C68CA /* bcash */ = {
+			isa = PBXGroup;
+			children = (
+				759B4BDC203E5A31002C68CA /* BRBCashParams.h */,
+				759B4BDD203E5A31002C68CA /* BRBCashAddr.c */,
+				759B4BDE203E5A31002C68CA /* BRBCashAddr.h */,
+			);
+			path = bcash;
 			sourceTree = "<group>";
 		};
 		75A2A7871DA5934300A983D8 = {
@@ -1701,6 +1808,7 @@
 				713CD88822401946004657D4 /* RecoverKey */,
 				CE1E5F241EF081F300BD0F72 /* Import */,
 				E843C10F2188CBDA00F46672 /* Onboarding */,
+				71A3170E22A6D51C0088F97C /* Notifications */,
 				CEEC70841E90CCA600EF788E /* Settings */,
 				CEB909F81E5FF20A001804DC /* Recover */,
 				CEC6AA3E1DEFC85700EE5AFD /* RootModals */,
@@ -2666,6 +2774,7 @@
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
 				E843C1172188D19000F46672 /* OnboardingViewController.swift in Sources */,
 				7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */,
+				71A3171222A6E5F10088F97C /* BRAPIClient+Messages.swift in Sources */,
 				CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */,
 				CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */,
 				CE90571A1DFF18B2006BA848 /* ScanViewController.swift in Sources */,
@@ -2843,6 +2952,7 @@
 				CE3645481E7B424D0079D0CF /* WhiteNumberPad.swift in Sources */,
 				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				CE3840E81FD590BD00437C31 /* AssetListTableView.swift in Sources */,
+				71A3171022A6D55A0088F97C /* InAppNotificationViewController.swift in Sources */,
 				22A9A9591DF61945000F0016 /* Extensions.swift in Sources */,
 				22A9A94C1DF61945000F0016 /* BRGeoLocationPlugin.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
