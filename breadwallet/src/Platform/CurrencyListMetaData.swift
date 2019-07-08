@@ -76,7 +76,8 @@ class CurrencyListMetaData: BRKVStoreObject, BRCoding {
                 Currencies.bch.code,
                 Currencies.eth.code,
                 "\(C.erc20Prefix)\(Currencies.brd.address)",
-                "\(C.erc20Prefix)\(C.daiContractAddress)"]
+                "\(C.erc20Prefix)\(C.daiContractAddress)",
+                "\(C.erc20Prefix)\(C.tusdContractAddress)"]
     }
 }
 
