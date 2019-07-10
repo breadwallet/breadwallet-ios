@@ -3,7 +3,7 @@
 //  breadwalletTests
 //
 //  Created by Adrian Corscadden on 2019-03-20.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
