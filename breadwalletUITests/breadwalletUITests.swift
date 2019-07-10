@@ -3,7 +3,7 @@
 //  breadwalletUITests
 //
 //  Created by ajv on 10/5/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest

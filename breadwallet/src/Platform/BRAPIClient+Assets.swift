@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Samuel Sutch on 3/31/17.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
