@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-01-31.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit

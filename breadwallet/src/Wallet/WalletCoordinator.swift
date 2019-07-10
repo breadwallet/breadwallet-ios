@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-07.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
