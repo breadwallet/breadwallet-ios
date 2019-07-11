@@ -13,7 +13,7 @@ import UIKit
 /// Environment Flags
 struct E {
     static let isTestnet: Bool = {
-        #if Testnet
+        #if TESTNET
             return true
         #else
             return false
@@ -21,7 +21,7 @@ struct E {
     }()
     
     static let isTestFlight: Bool = {
-        #if Testflight
+        #if TESTFLIGHT
             return true
         #else
             return false
@@ -37,7 +37,7 @@ struct E {
     }()
     
     static let isDebug: Bool = {
-        #if Debug
+        #if DEBUG
             return true
         #else
             return false
@@ -45,7 +45,7 @@ struct E {
     }()
     
     static let isScreenshots: Bool = {
-        #if Screenshots
+        #if SCREENSHOTS
             return true
         #else
             return false
@@ -53,7 +53,7 @@ struct E {
     }()
     
     static let isRunningTests: Bool = {
-        #if Debug
+        #if DEBUG
             return ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
         #else
             return false

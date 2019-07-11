@@ -12,10 +12,10 @@ import BRCore
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, feeType: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency) {
+    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency) {
         self.amount = amount
         self.feeAmount = fee
-        self.feeType = feeType
+        self.displayFeeLevel = displayFeeLevel
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
         self.currency = currency
@@ -24,7 +24,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
     private let amount: Amount
     private let feeAmount: Amount
-    private let feeType: FeeLevel
+    private let displayFeeLevel: FeeLevel
     private let addressText: String
     private let isUsingBiometrics: Bool
     private let currency: Currency
@@ -157,7 +157,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         address.lineBreakMode = .byTruncatingMiddle
         
         if currency is Bitcoin {
-            switch feeType {
+            switch displayFeeLevel {
             case .regular:
                 processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
             case .economy:

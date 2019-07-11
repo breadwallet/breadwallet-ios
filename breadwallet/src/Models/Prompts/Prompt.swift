@@ -230,7 +230,7 @@ extension Prompt {
         }
     }
     
-    func didPrompt() { }
+    func didPrompt() {}
 }
 
 // Struct for basic prompts that include a Dismiss and Continue button, such as the
@@ -245,6 +245,12 @@ struct StandardPrompt: Prompt {
     
     var type: PromptType {
         return promptType
+    }
+    
+    func didPrompt() {
+        if type == .biometrics {
+            UserDefaults.hasPromptedBiometrics = true
+        }
     }
 }
 
@@ -317,11 +323,11 @@ struct StandardEmailCollectingPrompt: Prompt, EmailCollectingPrompt {
     }
     
     var confirmationImageName: String? {
-        return "Partyhat"
+        return "Email"
     }
 
     var imageName: String? {
-        return "Loudspeaker"
+        return "Email"
     }
     
     var emailList: String? {

@@ -128,6 +128,18 @@ class BTCWalletManager: WalletManager, Subscriber {
         })
     }
 
+    var isConnected: Bool {
+        return peerManager?.connectionStatus != BRPeerStatusDisconnected
+    }
+
+    func connect() {
+        peerManager?.connect()
+    }
+
+    func disconnect() {
+        peerManager?.disconnect()
+    }
+
     func resetForWipe() {
         peerManager?.clearCallbacks()
         peerManager?.disconnect()

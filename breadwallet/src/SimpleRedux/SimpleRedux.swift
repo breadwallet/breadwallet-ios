@@ -57,7 +57,7 @@ enum TriggerName {
     case scanQr
     case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(Currency, Amount, Amount, String, (Bool)->Void) // currency, amount, fee, address, callback
+    case confirmTransaction(Currency, Amount, Amount, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -79,6 +79,7 @@ enum TriggerName {
     case optInSegWit
     case openPlatformUrl(String)
     case didViewTransactions([Transaction]?)
+    case showInAppNotification(BRDMessage?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -162,6 +163,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.openPlatformUrl, .openPlatformUrl):
         return true
     case (.didViewTransactions, .didViewTransactions):
+        return true
+    case (.showInAppNotification, .showInAppNotification):
         return true
     default:
         return false
