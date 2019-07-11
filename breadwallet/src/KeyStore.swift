@@ -40,7 +40,7 @@ private struct DefaultsKey {
 /// Protocol for basic wallet authentication for login / API / public key access
 protocol WalletAuthenticator {
     var noWallet: Bool { get }
-    var creationTime: TimeInterval { get }
+    var creationTime: Date { get }
 
     var pinLoginRequired: Bool { get }
     var pinLength: Int { get }
@@ -130,9 +130,12 @@ struct KeyStore {
 
     private var account: Account? {
         guard !noWallet, !walletIsDisabled else { return nil }
+        //TODO:CRYPTO use stored serialized account to create Account for existing user
         guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic) else { return nil }
-        let account = Account.createFrom(phrase: seedPhrase, uids: UserDefaults.deviceID)
-        account?.timestamp = UInt64(Date(timeIntervalSinceReferenceDate: creationTime).timeIntervalSince1970) //TODO:CRYPTO
+        
+        let account = Account.createFrom(phrase: seedPhrase,
+                                         timestamp: creationTime,
+                                         uids: UserDefaults.deviceID)
         return account
     }
 
@@ -184,17 +187,13 @@ extension KeyStore: WalletAuthenticator {
         } catch { return false }
     }
 
-    var creationTime: TimeInterval {
+    var creationTime: Date {
         var creationTime = C.bip39CreationTime
-        do {
-            if let creationTimeData: Data = try keychainItem(key: KeychainKey.creationTime),
-                creationTimeData.count == MemoryLayout<TimeInterval>.stride {
-                creationTimeData.withUnsafeBytes { creationTime = $0.load(as: TimeInterval.self) }
-            }
-            return creationTime
-        } catch {
-            return creationTime
+        if let creationTimeData: Data = try? keychainItem(key: KeychainKey.creationTime),
+            creationTimeData.count == MemoryLayout<TimeInterval>.stride {
+            creationTimeData.withUnsafeBytes { creationTime = $0.load(as: TimeInterval.self) }
         }
+        return Date(timeIntervalSinceReferenceDate: creationTime)
     }
 
     // MARK: - Keys
@@ -732,7 +731,7 @@ extension KeyStore {
 
 struct NoAuthWalletAuthenticator: WalletAuthenticator {
     var noWallet: Bool { return true }
-    var creationTime: TimeInterval { return C.bip39CreationTime }
+    var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
     var apiAuthKey: String? { return nil }
     var userAccount: [AnyHashable: Any]?
 

@@ -45,7 +45,7 @@ class FakeAuthenticator: WalletAuthenticator {
 
     // not used
     
-    var creationTime: TimeInterval { return C.bip39CreationTime }
+    var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
 
     var masterPubKey: BRMasterPubKey? { return nil }
     var ethPubKey: BRKey? { return nil }
