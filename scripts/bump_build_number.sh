@@ -10,7 +10,7 @@ echo "and if none specified just increments the build number by 1"
 exit
 }
 
-# show usage if '-h' or  '--help' is the first argument or no argument is given
+# show usage if '-h' or  '--help' is the first argument
 case $1 in
 	"-h"|"--help") show_usage ;;
 esac

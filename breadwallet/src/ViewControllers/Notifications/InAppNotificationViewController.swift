@@ -42,7 +42,6 @@ class InAppNotificationViewController: UIViewController, Trackable {
         return .lightContent
     }
     
-    
     // MARK: - view lifecycle
     
     override func viewDidAppear(_ animated: Bool) {
