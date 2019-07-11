@@ -29,8 +29,8 @@ class WalletCreationTests: XCTestCase {
         XCTAssertTrue(keyStore.noWallet)
         guard let seed = keyStore.setRandomSeedPhrase() else { return XCTFail("Seed phrase should not be nil.") }
         XCTAssert(keyStore.isSeedPhraseValid(seed))
-        let now = Date.timeIntervalSinceReferenceDate
-        XCTAssert((now - keyStore.creationTime) < 10, "Invalid wallet creation time") // within 10s margin
+        let now = Date()
+        XCTAssert(now.timeIntervalSince(keyStore.creationTime) < 10, "Invalid wallet creation time") // within 10s margin
         XCTAssertNotNil(keyStore.masterPubKey)
         XCTAssertFalse(keyStore.noWallet)
     }
