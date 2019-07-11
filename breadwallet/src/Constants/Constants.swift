@@ -101,6 +101,9 @@ struct C {
     
     static let daiContractAddress = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
     static let daiContractCode = "DAI"
+    
+    static let tusdContractAddress = "0x0000000000085d4780B73119b644AE5ecd22b376"
+    static let tusdContractCode = "TUSD"
 }
 
 enum Words {

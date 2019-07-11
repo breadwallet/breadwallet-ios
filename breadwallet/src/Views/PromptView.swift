@@ -90,9 +90,12 @@ class PromptView: UIView {
             dismissButton.widthAnchor.constraint(equalToConstant: 24.0)
             ])
 
+        let titleLeading: CGFloat = E.isSmallScreen ? 12.0 : 20.0
+        let titleTrailing: CGFloat = E.isSmallScreen ? 8.0 : 12.0
+        
         title.constrain([
-            title.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 20.0),
-            title.trailingAnchor.constraint(equalTo: dismissButton.leadingAnchor, constant: 12.0),
+            title.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: titleLeading),
+            title.trailingAnchor.constraint(equalTo: dismissButton.leadingAnchor, constant: titleTrailing),
             title.centerYAnchor.constraint(equalTo: dismissButton.centerYAnchor)
             ])
 
