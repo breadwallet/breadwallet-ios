@@ -137,7 +137,7 @@ class CheckoutConfirmationViewController: UIViewController {
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 feeType: .regular,
+                                                 displayFeeLevel: .regular,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
@@ -166,7 +166,7 @@ class CheckoutConfirmationViewController: UIViewController {
         default:
             showErrorMessageAndDismiss(S.Send.createTransactionError)
         }
-        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError("")))
+        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError(message: "")))
         return false
     }
 
@@ -193,9 +193,7 @@ class CheckoutConfirmationViewController: UIViewController {
             case .creationError(let message):
                 self.showAlertAndDismiss(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
             case .publishFailure(let error):
-                if case .posixError(let code, let description) = error {
-                    self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
-                }
+                self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
             case .insufficientGas:
                 self.showInsufficientGasError()
             }

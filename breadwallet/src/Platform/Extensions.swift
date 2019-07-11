@@ -572,6 +572,12 @@ extension Array {
     }
 }
 
+extension Result where Success == Void {
+    static var success: Result {
+        return .success(())
+    }
+}
+
 //  Bases32 Encoding provided by:
 //  https://github.com/mattrubin/Bases
 //  Commit: 6b780caed18179a598ba574ce12e75674d6f4f1f

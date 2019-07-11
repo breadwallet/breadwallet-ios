@@ -13,9 +13,9 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     
-    private let assetHeight: CGFloat = 90.0
-    private let addWalletButtonHeight: CGFloat = 80.0
-    private let addWalletButton = UIButton.icon(image: #imageLiteral(resourceName: "add"), title: S.TokenList.addTitle)
+    private let assetHeight: CGFloat = 82.0
+    private let addWalletButtonHeight: CGFloat = 56.0
+    private let addWalletButton = UIButton()
 
     // MARK: - Init
     
@@ -30,20 +30,46 @@ class AssetListTableView: UITableViewController, Subscriber {
         tableView.register(HomeScreenHiglightableCell.self, forCellReuseIdentifier: HomeScreenCellIds.highlightableCell.rawValue)
         tableView.separatorStyle = .none
         tableView.rowHeight = assetHeight
-        
-        setupAddWalletButton()
+        tableView.contentInset = UIEdgeInsets(top: C.padding[1], left: 0, bottom: C.padding[2], right: 0)
+
         setupSubscriptions()
         reload()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupAddWalletButton()
+    }
+    
     private func setupAddWalletButton() {
-        addWalletButton.tintColor = .disabledWhiteText
-        addWalletButton.setTitleColor(.disabledWhiteText, for: .normal)
+        let topInset: CGFloat = 0
+        let leftRightInset: CGFloat = C.padding[2]
+        let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: addWalletButtonHeight))
+        
+        addWalletButton.titleLabel?.font = Theme.body1
+        
+        addWalletButton.tintColor = Theme.tertiaryBackground
+        addWalletButton.setTitleColor(Theme.tertiaryText, for: .normal)
         addWalletButton.setTitleColor(.transparentWhite, for: .highlighted)
+        addWalletButton.titleLabel?.font = Theme.body1
+        
+        addWalletButton.imageView?.contentMode = .scaleAspectFit
+        addWalletButton.setBackgroundImage(UIImage(named: "add"), for: .normal)
+        
+        addWalletButton.contentHorizontalAlignment = .center
+        addWalletButton.contentVerticalAlignment = .center
+
+        let buttonTitle = "+ " + S.TokenList.addTitle
+        addWalletButton.setTitle(buttonTitle, for: .normal)
+        addWalletButton.accessibilityLabel = E.isScreenshots ? "Add Wallet" : buttonTitle
+
         addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: addWalletButtonHeight))
-        addWalletButton.frame = CGRect(x: 0, y: 0, width: footerView.frame.width, height: addWalletButtonHeight)
-        addWalletButton.accessibilityLabel = E.isScreenshots ? "Add Wallet" : S.TokenList.addTitle
+
+        addWalletButton.frame = CGRect(x: leftRightInset, y: topInset,
+                                       width: footerView.frame.width - (2 * leftRightInset),
+                                       height: addWalletButtonHeight)
+        
         footerView.addSubview(addWalletButton)
         footerView.backgroundColor = .darkBackground
         tableView.tableFooterView = footerView
@@ -119,6 +145,10 @@ class AssetListTableView: UITableViewController, Subscriber {
         let currency = Store.state.displayCurrencies[indexPath.row]
         didSelectCurrency?(currency)
         handleCellHighlightingOnSelect(indexPath: indexPath, currency: currency)
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return assetHeight
     }
 }
 

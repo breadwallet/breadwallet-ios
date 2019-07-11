@@ -17,7 +17,7 @@ class EnterPhraseCell: UICollectionViewCell {
     }
 
     private func cellPlaceHolder(_ index: Int) -> NSAttributedString {
-        return NSAttributedString(string: "\(index + 1)", attributes: [NSAttributedString.Key.foregroundColor: UIColor.tertiaryText])
+        return NSAttributedString(string: "\(index + 1)", attributes: [NSAttributedString.Key.foregroundColor: Theme.tertiaryText])
     }
     
     func updatePlaceholder() {
@@ -75,13 +75,13 @@ class EnterPhraseCell: UICollectionViewCell {
     private let nextField = UIButton.icon(image: #imageLiteral(resourceName: "RightArrow"), accessibilityLabel: S.RecoverWallet.rightArrow)
     private let previousField = UIButton.icon(image: #imageLiteral(resourceName: "LeftArrow"), accessibilityLabel: S.RecoverWallet.leftArrow)
     private let done = UIButton(type: .system)
-    fileprivate let focusBar = UIView(color: .uiAccent)
+    fileprivate let focusBar = UIView(color: Theme.accent)
     fileprivate var hasDisplayedInvalidState = false
 
     private func setup() {
         
-        backgroundColor = .tertiaryBackground
-        contentView.backgroundColor = .tertiaryBackground
+        backgroundColor = Theme.tertiaryBackground
+        contentView.backgroundColor = Theme.tertiaryBackground
         
         contentView.layer.cornerRadius = 2.0
         contentView.layer.masksToBounds = true
@@ -121,7 +121,7 @@ class EnterPhraseCell: UICollectionViewCell {
         textField.autocorrectionType = .no
         textField.textAlignment = .center
         textField.autocapitalizationType = .none
-        textField.font = E.isSmallScreen ? .body2 : .body1
+        textField.font = E.isSmallScreen ? Theme.body2 : Theme.body1
         textField.delegate = self
         textField.addTarget(self, action: #selector(EnterPhraseCell.textChanged(textField:)), for: .editingChanged)
 
@@ -186,8 +186,6 @@ extension EnterPhraseCell: UITextFieldDelegate {
             if text.last == " " {
                 textField.text = text.replacingOccurrences(of: " ", with: "")
                 didEnterSpace?()
-            } else {
-                textField.text = textField.text?.lowercased()
             }
         }
         if hasDisplayedInvalidState {
@@ -212,11 +210,11 @@ extension EnterPhraseCell: UITextFieldDelegate {
         guard let isWordValid = isWordValid else { return }
         guard let word = textField.text else { return }
         if isWordValid(word) || word.isEmpty {
-            textField.textColor = .primaryText
-            focusBar.backgroundColor = .uiAccent
+            textField.textColor = Theme.primaryText
+            focusBar.backgroundColor = Theme.accent
         } else {
-            textField.textColor = .uiError
-            focusBar.backgroundColor = .uiError
+            textField.textColor = Theme.error
+            focusBar.backgroundColor = Theme.error
             hasDisplayedInvalidState = true
         }
     }

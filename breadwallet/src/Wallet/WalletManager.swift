@@ -35,7 +35,10 @@ protocol WalletManager: class {
     var peerManager: BRPeerManager? { get }
     var wallet: BRWallet? { get }
     var kvStore: BRReplicatedKVStore? { get set }
-    
+    var isConnected: Bool { get }
+
+    func connect()
+    func disconnect()
     func resetForWipe()
     func isOwnAddress(_ address: String) -> Bool
 }

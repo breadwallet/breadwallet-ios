@@ -30,6 +30,7 @@ struct C {
         static let logoAspectRatio: CGFloat = 125.0/417.0
         static let cutoutLogoAspectRatio: CGFloat = 342.0/553.0
         static let roundedCornerRadius: CGFloat = 6.0
+        static let homeCellCornerRadius: CGFloat = 2.0
     }
     static var defaultTintColor: UIColor = {
         return UIView().tintColor
@@ -53,20 +54,26 @@ struct C {
     static let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
     static let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
     static let txUnconfirmedHeight = Int32.max
+
+    /// Path where core library stores its persistent data
+    static var coreDataDirURL: URL {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsURL.appendingPathComponent("core-data", isDirectory: true)
+    }
     
     static let consoleLogFileName = "log.txt"
     static let previousConsoleLogFileName = "previouslog.txt"
     
     // Returns the console log file path for the current instantiation of the app.
     static var logFilePath: URL {
-        let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        return URL(fileURLWithPath: cachesDirectory).appendingPathComponent(consoleLogFileName)
+        let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        return cachesURL.appendingPathComponent(consoleLogFileName)
     }
     
     // Returns the console log file path for the previous instantiation of the app.
     static var previousLogFilePath: URL {
-        let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first!
-        return URL(fileURLWithPath: cachesDirectory).appendingPathComponent(previousConsoleLogFileName)
+        let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
+        return cachesURL.appendingPathComponent(previousConsoleLogFileName)
     }
     
     static let usdCurrencyCode = "USD"
@@ -91,6 +98,9 @@ struct C {
             return (E.isDebug || E.isTestFlight) ? "brd-web-3-staging" : "brd-web-3"
         }
     }
+    
+    static let daiContractAddress = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+    static let daiContractCode = "DAI"
 }
 
 enum Words {

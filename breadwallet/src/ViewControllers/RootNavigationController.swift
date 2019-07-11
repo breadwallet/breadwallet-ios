@@ -66,7 +66,9 @@ extension RootNavigationController: UINavigationControllerDelegate {
             navigationBar.tintColor = .navigationTint
         } else if let accountView = viewController as? AccountViewController {
             UserDefaults.selectedCurrencyCode = accountView.currency.code
-            UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+            if accountView.currency is Bitcoin {
+                UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+            }
         }
     }
     
