@@ -21,6 +21,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private var promptHiddenConstraint: NSLayoutConstraint!
     private let toolbar = UIToolbar()
     private var toolbarButtons = [UIButton]()
+    private let notificationHandler = NotificationHandler()
     
     private let buyButtonIndex = 0
     private let tradeButtonIndex = 1
@@ -78,9 +79,14 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [unowned self] in
             self.attemptShowPrompt()
-            NotificationAuthorizer().showNotificationsOptInAlert(from: self)
+            
+            if !Store.state.isLoginRequired {
+                NotificationAuthorizer().showNotificationsOptInAlert(from: self, callback: { _ in
+                    self.notificationHandler.checkForInAppNotifications()
+                })
+            }
         }
-        
+
         updateTotalAssets()
     }
     
@@ -167,6 +173,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         
         if E.isTestnet && !E.isScreenshots {
             debugLabel.text = "(Testnet)"
+            debugLabel.isHidden = false
+        } else if (E.isTestFlight || E.isDebug), let debugHost = UserDefaults.debugBackendHost {
+            debugLabel.text = "[\(debugHost)]"
             debugLabel.isHidden = false
         } else {
             debugLabel.isHidden = true
@@ -334,6 +343,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     // MARK: - Prompt
     
     private let promptDelay: TimeInterval = 0.6
+    private let inAppNotificationDelay: TimeInterval = 3.0
     
     private var currentPromptView: PromptView? {
         didSet {

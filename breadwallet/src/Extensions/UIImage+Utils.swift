@@ -75,5 +75,26 @@ extension UIImage {
             .draw(in: CGRect(origin: .zero, size: size))
         return UIGraphicsGetImageFromCurrentImageContext()
     }
+    
+    static func fetchAsync(from imageUrl: String, callback: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: imageUrl) else {
+            callback(nil)
+            return
+        }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let data = try? Data(contentsOf: url)
+            
+            if let imageData = data, let image = UIImage(data: imageData) {
+                DispatchQueue.main.async {
+                    callback(image)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    callback(nil)
+                }
+            }
+        }
+    }
 
 }

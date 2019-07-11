@@ -88,7 +88,8 @@ extension UserDefaults {
             }
         }
         
-        resetAnnouncementKeys()
+        reset(for: Announcement.hasShownKeyPrefix)
+        reset(for: NotificationHandler.hasShownInAppNotificationKeyPrefix)
         
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
@@ -99,10 +100,8 @@ extension UserDefaults {
         appLaunchesAtLastNotificationDeferral = 0
     }
     
-    static func resetAnnouncementKeys() {
-        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
-        // they have been shown yet.
-        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
+    static func reset(for keysWithPrefix: String) {
+        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(keysWithPrefix) }).forEach { (key) in
             defaults.set(false, forKey: key)
         }
     }

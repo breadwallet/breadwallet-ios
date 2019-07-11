@@ -82,7 +82,7 @@ class PromptTests: XCTestCase {
         
         
         // Verify that showing the prompt sets an appropriate flag such that it won't be shown again.
-        UserDefaults.resetAnnouncementKeys()
+        UserDefaults.reset(for: Announcement.hasShownKeyPrefix)
         XCTAssertTrue(announcement.shouldPrompt(walletAuthenticator: nil))
         announcement.didPrompt()
         XCTAssertFalse(announcement.shouldPrompt(walletAuthenticator: nil))
@@ -130,7 +130,7 @@ class PromptTests: XCTestCase {
         XCTAssertEqual(action.url, "url")
         
         // Verify that showing the prompt sets an appropriate flag such that it won't be shown again.
-        UserDefaults.resetAnnouncementKeys()
+        UserDefaults.reset(for: Announcement.hasShownKeyPrefix)
         XCTAssertTrue(announcement.shouldPrompt(walletAuthenticator: nil))
         announcement.didPrompt()
         XCTAssertFalse(announcement.shouldPrompt(walletAuthenticator: nil))
