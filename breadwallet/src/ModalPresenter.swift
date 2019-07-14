@@ -367,6 +367,8 @@ class ModalPresenter: Subscriber, Trackable {
             let kvStore = Backend.kvStore else { assertionFailure(); return nil }
 
         //TODO:CRYPTO is this necessary?
+        //I think this is still necessary for SPV mode where rescanning
+        //will still be a feature - AC
 //        guard !(currency.state?.isRescanning ?? false) else {
 //            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
 //            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
