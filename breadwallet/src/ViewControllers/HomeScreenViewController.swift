@@ -128,9 +128,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             ])
 
         debugLabel.constrain([
-            debugLabel.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor),
-            debugLabel.topAnchor.constraint(equalTo: subHeaderView.topAnchor)
-            ])
+            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
+            debugLabel.bottomAnchor.constraint(equalTo: logo.topAnchor, constant: -4.0)])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
         prompt.constrain([
