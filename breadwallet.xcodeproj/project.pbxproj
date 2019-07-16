@@ -1325,100 +1325,6 @@
 			name = Notifications;
 			sourceTree = "<group>";
 		};
-		755CD3191DAA0A110075898E /* secp256k1 */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3291DAA0A110075898E /* include */,
-				755CD3371DAA0A110075898E /* src */,
-			);
-			path = secp256k1;
-			sourceTree = "<group>";
-		};
-		755CD3291DAA0A110075898E /* include */ = {
-			isa = PBXGroup;
-			children = (
-				755CD32A1DAA0A110075898E /* secp256k1.h */,
-				755CD32B1DAA0A110075898E /* secp256k1_ecdh.h */,
-				755CD32C1DAA0A110075898E /* secp256k1_recovery.h */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		755CD3371DAA0A110075898E /* src */ = {
-			isa = PBXGroup;
-			children = (
-				755CD33A1DAA0A110075898E /* basic-config.h */,
-				755CD3431DAA0A110075898E /* ecdsa_impl.h */,
-				755CD3441DAA0A110075898E /* eckey.h */,
-				755CD3451DAA0A110075898E /* eckey_impl.h */,
-				755CD3461DAA0A110075898E /* ecmult.h */,
-				755CD3471DAA0A110075898E /* ecmult_const.h */,
-				755CD3481DAA0A110075898E /* ecmult_const_impl.h */,
-				755CD3491DAA0A110075898E /* ecmult_gen.h */,
-				755CD34A1DAA0A110075898E /* ecmult_gen_impl.h */,
-				755CD34B1DAA0A110075898E /* ecmult_impl.h */,
-				755CD34C1DAA0A110075898E /* field.h */,
-				755CD34D1DAA0A110075898E /* field_10x26.h */,
-				755CD34E1DAA0A110075898E /* field_10x26_impl.h */,
-				755CD34F1DAA0A110075898E /* field_5x52.h */,
-				755CD3511DAA0A110075898E /* field_5x52_impl.h */,
-				755CD3531DAA0A110075898E /* field_impl.h */,
-				755CD3551DAA0A110075898E /* group.h */,
-				755CD3561DAA0A110075898E /* group_impl.h */,
-				755CD3571DAA0A110075898E /* hash.h */,
-				755CD3581DAA0A110075898E /* hash_impl.h */,
-				755CD3641DAA0A110075898E /* modules */,
-				755CD3731DAA0A110075898E /* num.h */,
-				755CD3741DAA0A110075898E /* num_gmp.h */,
-				755CD3751DAA0A110075898E /* num_gmp_impl.h */,
-				755CD3761DAA0A110075898E /* num_impl.h */,
-				755CD3771DAA0A110075898E /* scalar.h */,
-				755CD3781DAA0A110075898E /* scalar_4x64.h */,
-				755CD3791DAA0A110075898E /* scalar_4x64_impl.h */,
-				755CD37A1DAA0A110075898E /* scalar_8x32.h */,
-				755CD37B1DAA0A110075898E /* scalar_8x32_impl.h */,
-				755CD37C1DAA0A110075898E /* scalar_impl.h */,
-				755CD37D1DAA0A110075898E /* secp256k1.c */,
-				755CD3811DAA0A110075898E /* util.h */,
-			);
-			path = src;
-			sourceTree = "<group>";
-		};
-		755CD3641DAA0A110075898E /* modules */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3651DAA0A110075898E /* ecdh */,
-				755CD3691DAA0A110075898E /* recovery */,
-			);
-			path = modules;
-			sourceTree = "<group>";
-		};
-		755CD3651DAA0A110075898E /* ecdh */ = {
-			isa = PBXGroup;
-			children = (
-				755CD3661DAA0A110075898E /* main_impl.h */,
-			);
-			path = ecdh;
-			sourceTree = "<group>";
-		};
-		755CD3691DAA0A110075898E /* recovery */ = {
-			isa = PBXGroup;
-			children = (
-				755CD36A1DAA0A110075898E /* main_impl.h */,
-			);
-			path = recovery;
-			sourceTree = "<group>";
-		};
-		759B4BDB203E5A31002C68CA /* bcash */ = {
-			isa = PBXGroup;
-			children = (
-				759B4BDC203E5A31002C68CA /* BRBCashParams.h */,
-				759B4BDD203E5A31002C68CA /* BRBCashAddr.c */,
-				759B4BDE203E5A31002C68CA /* BRBCashAddr.h */,
-			);
-			path = bcash;
-			sourceTree = "<group>";
-		};
 		75A2A7871DA5934300A983D8 = {
 			isa = PBXGroup;
 			children = (
@@ -3411,6 +3317,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3444,6 +3351,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3634,6 +3542,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3864,6 +3773,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4094,6 +4004,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4396,6 +4307,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4627,6 +4539,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4857,6 +4770,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
+					"$(SRCROOT)/Modules/breadwallet-core",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
