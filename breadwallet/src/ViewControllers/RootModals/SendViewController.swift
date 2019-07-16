@@ -142,7 +142,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    //TODO:CRYPTO use core fee estimator
     private func attemptEstimateGas() {
+        guard currency.isEthereumCompatible else { return }
         guard let address = addressCell.address else { return }
         guard let amount = amount else { return }
         guard !sender.hasEstimate(forAddress: address, amount: amount) else { return }
