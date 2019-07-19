@@ -72,6 +72,10 @@ extension String {
             return ""
         }
     }
+    
+    func trim(_ string: String) -> String {
+        return replacingOccurrences(of: string, with: "")
+    }
 
     func nsRange(from range: Range<Index>) -> NSRange {
         let location = utf16.distance(from: utf16.startIndex, to: range.lowerBound)
