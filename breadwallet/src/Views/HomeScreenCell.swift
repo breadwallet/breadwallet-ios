@@ -48,6 +48,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     private let fiatBalance = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
     private let tokenBalance = UILabel(font: Theme.body2, color: Theme.secondaryText)
     private let syncIndicator = SyncingIndicator(style: .home)
+    private let priceChangeView = PriceChangeView(style: .percentOnly)
     
     let container = Background()    // not private for inheritance
         
@@ -79,6 +80,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         fiatBalance.text = viewModel.fiatBalance
         fiatBalance.textColor = viewModel.currency.isSupported ? .white : .disabledWhiteText
         tokenBalance.text = viewModel.tokenBalance
+        priceChangeView.currency = viewModel.currency
         container.setNeedsDisplay()
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
@@ -118,6 +120,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         container.addSubview(fiatBalance)
         container.addSubview(tokenBalance)
         container.addSubview(syncIndicator)
+        container.addSubview(priceChangeView)
         syncIndicator.isHidden = true
     }
 
@@ -125,42 +128,42 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         let padding = Padding(increment: 5.0)
         
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0,
-                                                           left: C.padding[2],
+                                                           left: C.padding[1],
                                                            bottom: -10,
-                                                           right: -C.padding[2]))
+                                                           right: -C.padding[1]))
         iconContainer.constrain([
-            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[2]),
+            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[1]),
             iconContainer.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             iconContainer.heightAnchor.constraint(equalToConstant: 40),
-            iconContainer.widthAnchor.constraint(equalTo: iconContainer.heightAnchor)
-            ])
+            iconContainer.widthAnchor.constraint(equalTo: iconContainer.heightAnchor)])
         icon.constrain(toSuperviewEdges: .zero)
         currencyName.constrain([
-            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: C.padding[2]),
-            currencyName.topAnchor.constraint(equalTo: container.topAnchor, constant: C.padding[2])
-            ])
+            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: padding[2]),
+            currencyName.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: -2.0)])
         price.constrain([
             price.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor),
-            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor)
-            ])
+            price.topAnchor.constraint(equalTo: currencyName.bottomAnchor)])
+        priceChangeView.constrain([
+            priceChangeView.leadingAnchor.constraint(equalTo: price.trailingAnchor),
+            priceChangeView.centerYAnchor.constraint(equalTo: price.centerYAnchor),
+            priceChangeView.heightAnchor.constraint(equalToConstant: 24)])
         fiatBalance.constrain([
-            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[2]),
+            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[1]),
             fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: padding[2]),
-            fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)
-            ])
+            fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)])
         tokenBalance.constrain([
             tokenBalance.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
-            tokenBalance.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[2]),
-            tokenBalance.bottomAnchor.constraint(equalTo: price.bottomAnchor)
-            ])
+            tokenBalance.leadingAnchor.constraint(greaterThanOrEqualTo: priceChangeView.trailingAnchor, constant: C.padding[1]),
+            tokenBalance.bottomAnchor.constraint(equalTo: price.bottomAnchor)])
+        tokenBalance.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         fiatBalance.setContentCompressionResistancePriority(.required, for: .vertical)
         fiatBalance.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         syncIndicator.constrain([
             syncIndicator.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
-            syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: price.trailingAnchor, constant: C.padding[2]),
-            syncIndicator.bottomAnchor.constraint(equalTo: tokenBalance.bottomAnchor, constant: 5.0)
-            ])
+            syncIndicator.leadingAnchor.constraint(greaterThanOrEqualTo: priceChangeView.trailingAnchor, constant: C.padding[1]),
+            syncIndicator.bottomAnchor.constraint(equalTo: tokenBalance.bottomAnchor, constant: 0.0)])
+        syncIndicator.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         layoutIfNeeded()
     }
 
