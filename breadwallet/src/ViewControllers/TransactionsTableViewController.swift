@@ -30,6 +30,9 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
             tableView.reloadData()
         }
     }
+    
+    var didScrollToYOffset: ((CGFloat) -> Void)?
+    var didStopScrolling: (() -> Void)?
 
     // MARK: - Private
     private let walletManager: WalletManager
@@ -75,14 +78,16 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         tableView.separatorStyle = .none
         tableView.estimatedRowHeight = 60.0
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.backgroundColor = .whiteTint
+        tableView.contentInsetAdjustmentBehavior = .never
         
         emptyMessage.textAlignment = .center
         emptyMessage.text = S.TransactionDetails.emptyMessage
         
-        //setContentInset()
-
         setupSubscriptions()
+        
+        let header = SyncingHeaderView(currency: currency)
+        header.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 40.0)
+        tableView.tableHeaderView = header
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -179,7 +184,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                 tableView.addSubview(emptyMessage)
                 emptyMessage.constrain([
                     emptyMessage.centerXAnchor.constraint(equalTo: tableView.centerXAnchor),
-                    emptyMessage.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -0), //TODO:UI
+                    emptyMessage.topAnchor.constraint(equalTo: tableView.topAnchor, constant: E.isIPhone5 ? 50.0 : AccountHeaderView.headerViewMinHeight),
                     emptyMessage.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -C.padding[2]) ])
             }
         } else {
@@ -218,5 +223,21 @@ extension TransactionsTableViewController {
                             maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
                             isSyncing: currency.state?.syncState != .success)
         return cell
+    }
+}
+
+extension TransactionsTableViewController {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        didScrollToYOffset?(scrollView.contentOffset.y)
+    }
+    
+    override func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            didStopScrolling?()
+        }
+    }
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        didStopScrolling?()
     }
 }

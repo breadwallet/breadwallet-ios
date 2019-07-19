@@ -41,7 +41,7 @@ class InAppNotificationViewController: UIViewController, Trackable {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-    
+        
     // MARK: - view lifecycle
     
     override func viewDidAppear(_ animated: Bool) {

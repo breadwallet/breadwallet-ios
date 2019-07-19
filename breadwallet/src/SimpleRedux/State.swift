@@ -166,7 +166,8 @@ struct WalletState {
     let fees: Fees?
     let maxDigits: Int // this is bits vs bitcoin setting
     let connectionStatus: BRPeerStatus
-    
+    let priceChange: PriceChange?
+
     static func initial(_ currency: Currency, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            displayOrder: displayOrder,
@@ -184,7 +185,8 @@ struct WalletState {
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
                            maxDigits: (currency is Bitcoin) ? UserDefaults.maxDigits : currency.commonUnit.decimals,
-                           connectionStatus: BRPeerStatusDisconnected)
+                           connectionStatus: BRPeerStatusDisconnected,
+                           priceChange: nil)
     }
 
     func mutate(    displayOrder: Int? = nil,
@@ -202,7 +204,8 @@ struct WalletState {
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
                     maxDigits: Int? = nil,
-                    connectionStatus: BRPeerStatus? = nil) -> WalletState {
+                    connectionStatus: BRPeerStatus? = nil,
+                    priceChange: PriceChange? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
                            displayOrder: displayOrder ?? self.displayOrder,
@@ -220,7 +223,8 @@ struct WalletState {
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
                            maxDigits: maxDigits ?? self.maxDigits,
-                           connectionStatus: connectionStatus ?? self.connectionStatus)
+                           connectionStatus: connectionStatus ?? self.connectionStatus,
+                           priceChange: priceChange ?? self.priceChange)
     }
 }
 
