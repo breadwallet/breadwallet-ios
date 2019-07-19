@@ -69,8 +69,11 @@ echo "Image dimensions ($width x $height) - band height $band_height @ $band_pos
 # Recolor base icon for QA builds
 #
 if [[ ${bundle_id} == "com.brd.internalQA" ]]; then
-echo "Applying Internal QA icon style"
-convert "${base_tmp_normalizedFilePath}" -modulate 100,20 "${base_tmp_normalizedFilePath}"
+  echo "Applying Internal QA icon style"
+  convert "${base_tmp_normalizedFilePath}" -modulate 100,25 "${base_tmp_normalizedFilePath}"
+elif [[ ${bundle_id} == "com.brd.testnetQA" ]]; then
+  echo "Applying Testnet QA icon style"
+  convert "${base_tmp_normalizedFilePath}" -modulate 100,25,10 "${base_tmp_normalizedFilePath}"
 fi
 
 #

@@ -135,11 +135,14 @@ struct NotificationAuthorizer: Trackable {
     }
 
     // Shows an alert dialog asking the user to opt into push notifications or defer making a decision.
-    func showNotificationsOptInAlert(from viewController: UIViewController) {
+    func showNotificationsOptInAlert(from viewController: UIViewController, callback: @escaping (Bool) -> Void) {
         
         // First check if it's ok to prompt the user.
         checkShouldShowOptIn(completion: { (shouldShow) in
-            guard shouldShow else { return }
+            guard shouldShow else {
+                callback(false)
+                return
+            }
             
             self.showOptInAlert(fromViewController: viewController, completion: { (response) in
                 switch response {
@@ -148,6 +151,8 @@ struct NotificationAuthorizer: Trackable {
                 case .denied:   break
                 case .allowed:  break
                 }
+                
+                callback(true)  // 'true' => showed the opt-in alert
             })
             
         })
@@ -223,7 +228,7 @@ struct NotificationAuthorizer: Trackable {
         viewController.present(alert, animated: true, completion: nil)
     }
     
-    private func logEvent(_ screen: Screen, _ event: Event, _ attributes: [String: String]? = nil) {
+    func logEvent(_ screen: Screen, _ event: Event, _ attributes: [String: String]? = nil) {
         let eventName = makeEventName([EventContext.pushNotifications.name, screen.name, event.name])
         
         if let attr = attributes {

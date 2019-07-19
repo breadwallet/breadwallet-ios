@@ -110,10 +110,10 @@ class ModalPresenter: Subscriber, Trackable {
                 self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
-        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, "", {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, .regular, "", {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
-            if case .confirmTransaction(let currency, let amount, let fee, let address, let callback) = trigger {
-                self.confirmTransaction(currency: currency, amount: amount, fee: fee, address: address, callback: callback)
+            if case .confirmTransaction(let currency, let amount, let fee, let displayFeeLevel, let address, let callback) = trigger {
+                self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
             }
         })
         Reachability.addDidChangeCallback({ [weak self] isReachable in
@@ -164,6 +164,34 @@ class ModalPresenter: Subscriber, Trackable {
                     }
                 }
             })
+        }
+        
+        // in-app notifications
+        Store.subscribe(self, name: .showInAppNotification(nil)) { [weak self] (trigger) in
+            guard let `self` = self else { return }
+            guard let topVC = self.topViewController else { return }
+            
+            if case let .showInAppNotification(notification?)? = trigger {
+                let display: (UIImage?) -> Void = { (image) in
+                    let notificationVC = InAppNotificationViewController(notification, image: image)
+                    
+                    let navigationController = ModalNavigationController(rootViewController: notificationVC)
+                    navigationController.setClearNavbar()
+                    
+                    topVC.present(navigationController, animated: true, completion: nil)
+                }
+                
+                // Fetch the image first so that it's ready when we display the notification
+                // screen to the user.
+                if let imageUrl = notification.imageUrl, !imageUrl.isEmpty {
+                    UIImage.fetchAsync(from: imageUrl) { (image) in
+                        display(image)
+                    }
+                } else {
+                    display(nil)
+                }
+                
+            }
         }
         
         Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
@@ -505,6 +533,11 @@ class ModalPresenter: Subscriber, Trackable {
                 menuNav.dismiss(animated: true, completion: {
                     Store.trigger(name: .resetDisplayCurrencies)
                 })
+            }),
+            
+            // Notifications
+            MenuItem(title: S.Settings.notifications, callback: {
+                menuNav.pushViewController(PushNotificationsViewController(), animated: true)
             })
         ]
         
@@ -544,19 +577,19 @@ class ModalPresenter: Subscriber, Trackable {
         
         var rootItems: [MenuItem] = [
             // Scan QR Code
-            MenuItem(title: S.MenuButton.scan, icon: #imageLiteral(resourceName: "scan")) { [unowned self] in
+            MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [unowned self] in
                 self.presentLoginScan()
             },
             
             // Manage Wallets
-            MenuItem(title: S.MenuButton.manageWallets, icon: #imageLiteral(resourceName: "wallet")) {
+            MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) {
                 guard let kvStore = Backend.kvStore else { return }
                 let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
                 menuNav.pushViewController(vc, animated: true)
             },
             
             // Preferences
-            MenuItem(title: S.Settings.preferences, icon: #imageLiteral(resourceName: "prefs"), subMenu: preferencesItems, rootNav: menuNav),
+            MenuItem(title: S.Settings.preferences, icon: MenuItem.Icon.preferences, subMenu: preferencesItems, rootNav: menuNav),
             
             // Security
             MenuItem(title: S.MenuButton.security,
@@ -566,17 +599,17 @@ class ModalPresenter: Subscriber, Trackable {
                      faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
-            MenuItem(title: S.MenuButton.support, icon: #imageLiteral(resourceName: "support")) { [unowned self] in
+            MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [unowned self] in
                 self.presentFaq()
             },
                         
             // Rewards
-            MenuItem(title: S.Settings.rewards, icon: #imageLiteral(resourceName: "Star")) {
+            MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) {
                 self.presentPlatformWebViewController("/rewards")
             },
             
             // About
-            MenuItem(title: S.Settings.about, icon: #imageLiteral(resourceName: "about")) {
+            MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
             }
         ]
@@ -650,6 +683,42 @@ class ModalPresenter: Subscriber, Trackable {
                                            callback: {
                                             Backend.pigeonExchange?.resetPairedWallets()
                                             menuNav.showAlert(title: "", message: "Paired wallets reset")
+            }))
+
+            developerItems.append(MenuItem(title: "Clear Ethereum wallet data (rescan)",
+                                           callback: { [unowned self] in
+                                            guard let ewm = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
+                                            UserDefaults.hasScannedForTokenBalances = false
+                                            ewm.disconnect()
+                                            let fm = FileManager.default
+                                            let url = C.coreDataDirURL.appendingPathComponent("eth", isDirectory: true)
+                                            do {
+                                            try fm.removeItem(at: url)
+                                            } catch let error {
+                                                print("ERROR removing dir \(url.absoluteString): \(error)")
+                                            }
+                                            ewm.connect()
+            }))
+            
+            developerItems.append(MenuItem(title: "Ethereum Network Connection Mode",
+                                           accessoryText: { UserDefaults.debugEthereumNetworkMode?.description ?? "default" },
+                                           callback: {
+                                            let alert = UIAlertController(title: "Set Ethereum network connection mode",
+                                                                          message: "Relaunch for changes to take effect",
+                                                                          preferredStyle: .actionSheet)
+                                            for mode in EthereumMode.allCases {
+                                                alert.addAction(UIAlertAction(title: mode.description,
+                                                                              style: .default,
+                                                                              handler: { _ in
+                                                                                UserDefaults.debugEthereumNetworkMode = mode
+                                                }))
+                                            }
+                                            alert.addAction(UIAlertAction(title: "Reset to default",
+                                                                          style: .cancel,
+                                                                          handler: { _ in
+                                                                            UserDefaults.debugEthereumNetworkMode = nil
+                                            }))
+                                            menuNav.present(alert, animated: true, completion: nil)
             }))
             
             developerItems.append(
@@ -1063,10 +1132,10 @@ class ModalPresenter: Subscriber, Trackable {
         topViewController?.present(verify, animated: true, completion: nil)
     }
     
-    private func confirmTransaction(currency: Currency, amount: Amount, fee: Amount, address: String, callback: @escaping (Bool) -> Void) {
+    private func confirmTransaction(currency: Currency, amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, callback: @escaping (Bool) -> Void) {
         let confirm = ConfirmationViewController(amount: amount,
                                                  fee: fee,
-                                                 feeType: .regular,
+                                                 displayFeeLevel: displayFeeLevel,
                                                  address: address,
                                                  isUsingBiometrics: false,
                                                  currency: currency)

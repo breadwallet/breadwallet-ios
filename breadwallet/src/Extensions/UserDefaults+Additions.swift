@@ -28,7 +28,7 @@ private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
 private let feesKey = "feesKey"
 private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
-private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedCurrencyCodeKey"
+private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedSPVCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
 private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
@@ -48,6 +48,7 @@ private let appLaunchCountKey = "appLaunchCountKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
+private let debugEthereumNetworkModeKey = "debugEthereumNetworkMode"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -74,7 +75,8 @@ extension UserDefaults {
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
-        writePaperPhraseDateKey
+        writePaperPhraseDateKey,
+        debugEthereumNetworkModeKey
     ]
     
     // Called from the Reset User Defaults menu item to allow the resetting of
@@ -88,7 +90,8 @@ extension UserDefaults {
             }
         }
         
-        resetAnnouncementKeys()
+        reset(for: Announcement.hasShownKeyPrefix)
+        reset(for: NotificationHandler.hasShownInAppNotificationKeyPrefix)
         
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
@@ -99,10 +102,8 @@ extension UserDefaults {
         appLaunchesAtLastNotificationDeferral = 0
     }
     
-    static func resetAnnouncementKeys() {
-        // Announcement-type prompts use a specific prefix when setting booleans indicating whether
-        // they have been shown yet.
-        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(Announcement.hasShownKeyPrefix) }).forEach { (key) in
+    static func reset(for keysWithPrefix: String) {
+        defaults.dictionaryRepresentation().keys.filter({ return $0.hasPrefix(keysWithPrefix) }).forEach { (key) in
             defaults.set(false, forKey: key)
         }
     }
@@ -543,6 +544,24 @@ extension UserDefaults {
         
         set {
             defaults.set(newValue, forKey: didTapTradeNotificationKey)
+        }
+    }
+    
+    static var debugEthereumNetworkMode: EthereumMode? {
+        get {
+            if let value = defaults.object(forKey: debugEthereumNetworkModeKey) as? Int {
+                return EthereumMode(rawValue: value)
+            } else {
+                return nil
+            }
+        }
+        
+        set {
+            if let value = newValue?.rawValue {
+                defaults.set(value, forKey: debugEthereumNetworkModeKey)
+            } else {
+                defaults.removeObject(forKey: debugEthereumNetworkModeKey)
+            }
         }
     }
 }

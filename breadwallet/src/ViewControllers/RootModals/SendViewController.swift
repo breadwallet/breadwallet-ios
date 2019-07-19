@@ -54,6 +54,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
+    private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
     
     private let sender: Sender
     private let currency: Currency
@@ -75,6 +76,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return addressCell.address
         }
     }
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -115,12 +117,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         })
         Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
             guard let fees = $0[self.currency]?.fees else { return }
-            self.sender.updateFeeRates(fees, level: self.feeSelection)
-            if self.currency is Bitcoin {
-                self.amountView.canEditFee = (fees.regular != fees.economy) || self.currency.matches(Currencies.btc)
-            } else {
-                self.amountView.canEditFee = false
-            }
+            self.sender.updateFeeRates(fees, toLevel: self.feeSelection)
         })
         
         if currency.matches(Currencies.eth) || currency is ERC20Token {
@@ -180,7 +177,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             guard myself.currency is Bitcoin else { return }
             myself.feeSelection = fee
             if let fees = myself.currency.state?.fees {
-                myself.sender.updateFeeRates(fees, level: fee)
+                myself.sender.updateFeeRates(fees, toLevel: fee)
             }
             myself.amountView.updateBalanceLabel()
         }
@@ -316,13 +313,6 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let amount = amount,
             let address = address else { return }
         
-        if let gasEstimator = sender as? GasEstimator {
-            guard gasEstimator.hasFeeForAddress(address, amount: amount) else {
-                showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
-                return
-            }
-        }
-        
         let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
         let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
         
@@ -337,7 +327,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 feeType: feeSelection ?? .regular,
+                                                 displayFeeLevel: feeSelection ?? .regular,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
@@ -348,6 +338,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         confirm.transitioningDelegate = confirmTransitioningDelegate
         confirm.modalPresentationStyle = .overFullScreen
         confirm.modalPresentationCapturesStatusBarAppearance = true
+
         present(confirm, animated: true, completion: nil)
         return
     }
@@ -395,35 +386,41 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
     private func send() {
         let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
-            self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
-                self?.parent?.view.isFrameChangeBlocked = false
-                pinValidationCallback(pin)
+            guard let `self` = self else { return assertionFailure() }
+
+            self.sendingActivity.dismiss(animated: false) {
+                self.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                    self.parent?.view.isFrameChangeBlocked = false
+                    pinValidationCallback(pin)
+                    self.present(self.sendingActivity, animated: false)
+                }
             }
         }
-        
+
+        present(sendingActivity, animated: true)
         sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: nil) { [weak self] result in
             guard let `self` = self else { return }
-            switch result {
-            case .success:
-                self.dismiss(animated: true, completion: {
-                    Store.trigger(name: .showStatusBar)
-                    if self.isPresentedFromLock {
-                        Store.trigger(name: .loginFromSend)
+            self.sendingActivity.dismiss(animated: true) {
+                switch result {
+                case .success:
+                    self.dismiss(animated: true) {
+                        Store.trigger(name: .showStatusBar)
+                        if self.isPresentedFromLock {
+                            Store.trigger(name: .loginFromSend)
+                        }
+                        self.onPublishSuccess?()
                     }
-                    self.onPublishSuccess?()
-                })
-                self.saveEvent("send.success")
-            case .creationError(let message):
-                self.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
-            case .publishFailure(let error):
-                if case .posixError(let code, let description) = error {
-                    self.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
-                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
+                    self.saveEvent("send.success")
+                case .creationError(let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: message, buttonLabel: S.Button.ok)
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+                case .publishFailure(let error):
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(error.message) (\(error.code))"])
+                case .insufficientGas(let rpcErrorMessage):
+                    self.showInsufficientGasError()
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": rpcErrorMessage])
                 }
-            case .insufficientGas(let rpcErrorMessage):
-                self.showInsufficientGasError()
-                self.saveEvent("send.publishFailed", attributes: ["errorMessage": rpcErrorMessage])
             }
         }
     }

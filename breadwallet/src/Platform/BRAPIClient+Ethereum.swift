@@ -37,8 +37,9 @@ extension BRAPIClient {
         send(rpcRequest: JSONRPCRequest(method: "eth_sendRawTransaction", params: JSONRPCParams([rawTx])), handler: handler)
     }
 
-    public func getEthTxList(address: EthAddress, handler: @escaping (APIResult<[EthTxJSON]>) -> Void) {
-        let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)&sort=desc"))
+    public func getEthTxList(address: EthAddress, fromBlock: UInt64, toBlock: UInt64, handler: @escaping (APIResult<[EthTxJSON]>) -> Void) {
+        let blockParams = "&startblock=\(fromBlock)&endblock=\(toBlock)"
+        let req = URLRequest(url: url("/ethq/\(network)/query?module=account&action=txlist&address=\(address)\(blockParams)&sort=desc"))
         send(apiRequest: req, handler: handler)
     }
     
@@ -49,10 +50,14 @@ extension BRAPIClient {
         send(apiRequest: req, handler: handler)
     }
     
-    public func getTokenTransferLogs(address: EthAddress, contractAddress: String?, handler: @escaping (APIResult<[EthLogEventJSON]>) -> Void) {
+    public func getTokenTransferLogs(address: EthAddress,
+                                     contractAddress: String?,
+                                     fromBlock: UInt64,
+                                     toBlock: UInt64,
+                                     handler: @escaping (APIResult<[EthLogEventJSON]>) -> Void) {
         let accountAddress = address.paddedHexString
         let tokenAddressParam = (contractAddress != nil) ? "&address=\(contractAddress!)" : ""
-        let blockParams = "&fromBlock=0&toBlock=latest"
+        let blockParams = "&fromBlock=\(fromBlock)&toBlock=\(toBlock)"
         let topicParams = "&topic0=\(ERC20Token.transferEventSignature)&topic1=\(accountAddress)&topic1_2_opr=or&topic2=\(accountAddress)"
         let req = URLRequest(url: url("/ethq/\(network)/query?module=logs&action=getLogs\(blockParams)\(tokenAddressParam)\(topicParams)"))
         send(apiRequest: req, handler: handler)

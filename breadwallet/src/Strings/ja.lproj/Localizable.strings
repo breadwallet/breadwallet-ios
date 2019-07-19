@@ -1,5 +1,5 @@
 /* App name */
-"About.appName.android" = "ブレッド";
+"About.appName.android" = "BRD";
 /* About screen blog label */
 "About.blog" = "ブログ";
 /* About screen footer */
@@ -146,6 +146,8 @@
 "Button.no" = "いいえ";
 /* OK button label */
 "Button.ok" = "OK";
+/* Open Settings button */
+"Button.openSettings" = "設定を開く";
 /* receive button */
 "Button.receive" = "受取";
 /* Button label to open Security Settings. */
@@ -156,6 +158,8 @@
 "Button.send" = "送金する";
 /* Settings button label */
 "Button.settings" = "設定";
+/* Setup button label */
+"Button.setup" = "セットアップ";
 /* Skip button title */
 "Button.skip" = "スキップ";
 /* Settings button label */
@@ -250,6 +254,10 @@
 "FeeSelector.estimatedDeliver" = "推定送金時間: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2〜5分";
+/* Priority fee */
+"FeeSelector.priority" = "優先度";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10～30分";
 /* Regular fee */
 "FeeSelector.regular" = "レギュラー";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
@@ -368,6 +376,14 @@
 "MenuViewController.modalTitle" = "メニュー";
 /* button label */
 "MenuViewController.recoverButton" = "ウォレットを復元";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "ペーパー・キーはお客様の携帯電話でセキュリティ設定を変更した場合,ウォレットを開くために必要となります。\n\nペーパー・キーを後からセットアップしますか？";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "セットアップを続けます";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "後で行います";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "注意";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "自動モードに切り替える";
 /* Node is connected label */
@@ -458,8 +474,10 @@
 "Prompts.NoScreenLock.body.android" = "ウォレットを守るため機器の画面をロックする必要があります。「設定」 > 「セキュリティ」 > 「画面ロック」で有効にしてから続行してください。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "画面ロックが無効になっています";
-/* Warning about paper key. */
-"Prompts.PaperKey.body" = "携帯電話の紛失時や変更時に備えて、お客様の復元フレーズは必ず保管しておいてください。続けるにはここをタップしてください。";
+/* Warning about recovery key (formerly paper key). */
+"Prompts.PaperKey.body" = "携帯電話の紛失時や変更時に備えて、お客様の復元フレーズは必ず保管しておいてください。";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "携帯電話を紛失または交換した場合に備え,ペーパー・キーをセットアップします。お客様のキーは,携帯電話のセキュリティ設定を変更した場合にも必要となります。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "アクションが要求されました";
 /* Transaction rejected prompt body */
@@ -488,10 +506,14 @@
 "PushNotifications.body" = "プッシュ通知をオンにして、新機能や特別オファーについての情報を誰よりも早くに入手しよう。";
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "通知が無効になっています";
-/* Push notifications settings instructions */
-"PushNotifications.enableInstructions" = "アラートを受け取るには,設定で通知をオンにしてください";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "BRDから特別オファーやアップデートを受信するには、通知を有効にします。";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "BRDから特別オファーや最新情報を受信します。";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "通知がオフになっている可能性があります。[設定] に移動して、BRDからの通知を有効にしてください。";
 /* Push notifications toggle switch label */
-"PushNotifications.label" = "プッシュ通知";
+"PushNotifications.label" = "プッシュ通知を受信";
 /* Push notifications are off label */
 "PushNotifications.off" = "オフ";
 /* Push notifications are on label */
@@ -650,7 +672,8 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "あなたが携帯電話を紛失したり、アップグレードした場合にご自身のビットコインへアクセスできる唯一の方法です。";
-/* Paper Key button title */
+/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+ * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "復元フレーズ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "アクセス権限のないユーザーからあなたのブレッドを守ります。";
@@ -814,9 +837,11 @@
 "StartPaperPhrase.againButtonTitle" = "復元フレーズをもう一度書き留めてください";
 /* Paper key explanation text. */
 "StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\n\n単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "お客様のペーパー・キーは携帯電話の紛失,盗難,故障またはアップグレードした際にBRDを復元する唯一の方法です。\n\nペーパー・キーはお客様のデバイスでセキュリティ設定を変更した際も必要となります。\n\n紙に書き留めて保管する単語リストを表示します。";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
-/* Argument is date */
+/* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "あなたが最後に復元フレーズを書き留めたのは %1$@です";
 /* button label */
 "StartViewController.createButton" = "新しいウォレットを作成する";

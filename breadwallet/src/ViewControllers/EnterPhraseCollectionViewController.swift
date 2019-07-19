@@ -47,13 +47,13 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
     private var phrase: String {
         return (0...11).map { index in
                 guard let phraseCell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? EnterPhraseCell else { return ""}
-                return phraseCell.textField.text ?? ""
+                return phraseCell.textField.text?.lowercased() ?? ""
             }.joined(separator: " ")
     }
 
     override func viewDidLoad() {
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
-        collectionView.backgroundColor = .primaryBackground
+        collectionView.backgroundColor = Theme.primaryBackground
         collectionView?.register(EnterPhraseCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
@@ -61,7 +61,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
         // Omit the rounded border on small screens due to space constraints.
         if !E.isSmallScreen {
             collectionView.layer.cornerRadius = 8.0
-            collectionView.layer.borderColor = UIColor.secondaryBackground.cgColor
+            collectionView.layer.borderColor = Theme.secondaryBackground.cgColor
             collectionView.layer.borderWidth = 2.0
         }
         
@@ -101,7 +101,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
         }
         enterPhraseCell.isWordValid = { [weak self] word in
             guard let myself = self else { return false }
-            return myself.keyMaster.isSeedWordValid(word)
+            return myself.keyMaster.isSeedWordValid(word.lowercased())
         }
         enterPhraseCell.didEnterSpace = {
             enterPhraseCell.didTapNext?()

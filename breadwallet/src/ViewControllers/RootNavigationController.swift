@@ -35,19 +35,6 @@ class RootNavigationController: UINavigationController {
         self.addChildViewController(tempLoginView, layout: {
             tempLoginView.view.constrain(toSuperviewEdges: nil)
         })
-        guardProtected(queue: DispatchQueue.main) {
-            if self.keyMaster.noWallet {
-                self.tempLoginView.remove()
-                let tempStartView = StartViewController(didTapCreate: {}, didTapRecover: {})
-                self.addChildViewController(tempStartView, layout: {
-                    tempStartView.view.constrain(toSuperviewEdges: nil)
-                    tempStartView.view.isUserInteractionEnabled = false
-                })
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                    tempStartView.remove()
-                })
-            }
-        }
     }
     
     override func viewDidLoad() {
@@ -79,7 +66,9 @@ extension RootNavigationController: UINavigationControllerDelegate {
             navigationBar.tintColor = .navigationTint
         } else if let accountView = viewController as? AccountViewController {
             UserDefaults.selectedCurrencyCode = accountView.currency.code
-            UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+            if accountView.currency is Bitcoin {
+                UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
+            }
         }
     }
     

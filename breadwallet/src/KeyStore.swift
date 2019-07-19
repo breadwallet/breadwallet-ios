@@ -28,7 +28,9 @@ import UIKit
 import LocalAuthentication
 import BRCore
 
-#if Internal
+#if TESTNET
+private let WalletSecAttrService = "com.brd.testnetQA"
+#elseif INTERNAL
 private let WalletSecAttrService = "com.brd.internalQA"
 #else
 private let WalletSecAttrService = "org.voisine.breadwallet"
@@ -222,8 +224,8 @@ extension KeyStore: WalletAuthenticator {
     fileprivate var ethPrivKey: String? {
         return autoreleasepool {
             do {
-                if let ethKey: String? = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String??) {
-                    if ethKey != nil { return ethKey }
+                if let ethKey: String = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String?), !ethKey.isEmpty {
+                    return ethKey
                 }
                 // TODO: move to setSeedPhrase?
                 var key = BRKey()
@@ -237,7 +239,7 @@ extension KeyStore: WalletAuthenticator {
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
                 try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
@@ -253,10 +255,8 @@ extension KeyStore: WalletAuthenticator {
     var apiAuthKey: String? {
         return autoreleasepool {
             do {
-                if let apiKey: String? = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String??) {
-                    if apiKey != nil {
-                        return apiKey
-                    }
+                if let apiKey: String = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String?), !apiKey.isEmpty {
+                    return apiKey
                 }
                 var key = BRKey()
                 var seed = UInt512()
@@ -267,7 +267,7 @@ extension KeyStore: WalletAuthenticator {
                 let pkLen = BRKeyPrivKey(&key, nil, 0)
                 var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
                 pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0, pkLen) }) == pkLen else { return nil }
+                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
                 key.clean()
                 let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
                                                                        CFStringBuiltInEncodings.UTF8.rawValue) as String
@@ -584,7 +584,7 @@ extension KeyStore: KeyMaster {
             var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
             phraseData.count = phraseLen
             guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0, phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
+                BRBIP39Encode($0.baseAddress?.assumingMemoryBound(to: Int8.self), phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
             }) == phraseData.count else { return nil }
             entropy = UInt128()
             let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
