@@ -9,7 +9,9 @@
 import Foundation
 
 private enum AppGroup {
-    #if Internal
+    #if TESTNET
+    static let id = "group.com.brd.testnetQA"
+    #elseif INTERNAL
     static let id = "group.com.brd.internalQA"
     #else
     static let id = "group.org.voisine.breadwallet"

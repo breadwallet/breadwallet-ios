@@ -73,9 +73,13 @@ class SyncingHeaderView: UIView, Subscriber {
         case .connecting:
             self.date.text = S.SyncingView.connecting
         case .syncing:
-            let date = Date(timeIntervalSince1970: Double(self.lastBlockTimestamp))
-            let dateString = DateFormatter.mediumDateFormatter.string(from: date)
-            self.date.text = String(format: S.SyncingView.syncedThrough, dateString)
+            if lastBlockTimestamp == 0 {
+                self.date.text = ""
+            } else {
+                let date = Date(timeIntervalSince1970: Double(self.lastBlockTimestamp))
+                let dateString = DateFormatter.mediumDateFormatter.string(from: date)
+                self.date.text = String(format: S.SyncingView.syncedThrough, dateString)
+            }
         case .success:
             self.date.text = ""
         }

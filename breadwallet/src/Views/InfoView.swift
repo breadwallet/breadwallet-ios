@@ -37,11 +37,11 @@ class InfoView: UIView {
     }
     
     private func setUp() {
-        backgroundColor = .secondaryBackground
+        backgroundColor = Theme.secondaryBackground
         
         infoLabel.numberOfLines = 0
-        infoLabel.textColor = .secondaryText
-        infoLabel.font = .caption
+        infoLabel.textColor = Theme.secondaryText
+        infoLabel.font = Theme.caption
         
         infoImageView.contentMode = .center
 

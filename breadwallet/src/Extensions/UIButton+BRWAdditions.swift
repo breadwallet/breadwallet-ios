@@ -13,7 +13,7 @@ extension UIButton {
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setImage(image, for: .normal)
-        button.titleLabel?.font = UIFont.customMedium(size: 12.0)
+        button.titleLabel?.font = Theme.caption
         button.contentMode = .center
         button.imageView?.contentMode = .center
         if let imageSize = button.imageView?.image?.size,
@@ -108,9 +108,9 @@ extension UIBarButtonItem {
     
     static func skipBarButtonItem() -> UIBarButtonItem {
         let skip = UIBarButtonItem(title: S.Button.skip, style: .plain, target: nil, action: nil)
-        skip.tintColor = .tertiaryText
-        skip.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.body2], for: .normal)
-        skip.setTitleTextAttributes([NSAttributedString.Key.font: UIFont.body2], for: .highlighted)
+        skip.tintColor = Theme.tertiaryText
+        skip.setTitleTextAttributes([NSAttributedString.Key.font: Theme.body2], for: .normal)
+        skip.setTitleTextAttributes([NSAttributedString.Key.font: Theme.body2], for: .highlighted)
         return skip
     }
 }

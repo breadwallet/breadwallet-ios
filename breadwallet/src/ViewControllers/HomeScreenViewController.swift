@@ -13,14 +13,15 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private let walletAuthenticator: WalletAuthenticator
     private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
-    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoGradient"))
-    private let total = UILabel(font: .customBold(size: 30.0), color: .white)
-    private let totalHeader = UILabel(font: .customBody(size: 12.0), color: .white)
+    private let logo = UIImageView(image: UIImage(named: "LogoGradientSmall"))
+    private let total = UILabel(font: Theme.h1Title, color: Theme.primaryText)
+    private let totalAssetsLabel = UILabel(font: Theme.caption, color: Theme.tertiaryText)
     private let debugLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
     private let prompt = UIView()
     private var promptHiddenConstraint: NSLayoutConstraint!
     private let toolbar = UIToolbar()
     private var toolbarButtons = [UIButton]()
+    private let notificationHandler = NotificationHandler()
     
     private let buyButtonIndex = 0
     private let tradeButtonIndex = 1
@@ -72,9 +73,14 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + promptDelay) { [unowned self] in
             self.attemptShowPrompt()
-            NotificationAuthorizer().showNotificationsOptInAlert(from: self)
+            
+            if !Store.state.isLoginRequired {
+                NotificationAuthorizer().showNotificationsOptInAlert(from: self, callback: { _ in
+                    self.notificationHandler.checkForInAppNotifications()
+                })
+            }
         }
-        
+
         updateTotalAssets()
     }
     
@@ -82,16 +88,16 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     private func addSubviews() {
         view.addSubview(subHeaderView)
-        subHeaderView.addSubview(totalHeader)
-        subHeaderView.addSubview(total)
         subHeaderView.addSubview(logo)
+        subHeaderView.addSubview(totalAssetsLabel)
+        subHeaderView.addSubview(total)
         subHeaderView.addSubview(debugLabel)
         view.addSubview(prompt)
         view.addSubview(toolbar)
     }
 
     private func addConstraints() {
-        let headerHeight: CGFloat = 46.0
+        let headerHeight: CGFloat = 30.0
         let toolbarHeight: CGFloat = 74.0
 
         subHeaderView.constrain([
@@ -99,26 +105,25 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             subHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0.0),
             subHeaderView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             subHeaderView.heightAnchor.constraint(equalToConstant: headerHeight) ])
+
+        total.constrain([
+            total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
+            total.centerYAnchor.constraint(equalTo: subHeaderView.topAnchor, constant: C.padding[1])
+            ])
+
+        totalAssetsLabel.constrain([
+            totalAssetsLabel.trailingAnchor.constraint(equalTo: total.trailingAnchor),
+            totalAssetsLabel.bottomAnchor.constraint(equalTo: total.topAnchor)
+            ])
         
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
-            logo.bottomAnchor.constraint(equalTo: subHeaderView.bottomAnchor, constant: -C.padding[2]),
-            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.25),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: 230.0/772.0)
+            logo.centerYAnchor.constraint(equalTo: total.centerYAnchor)
             ])
-        
-        total.constrain([
-            total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
-            total.centerYAnchor.constraint(equalTo: logo.centerYAnchor)
-            ])
-        totalHeader.constrain([
-            totalHeader.trailingAnchor.constraint(equalTo: total.trailingAnchor),
-            totalHeader.bottomAnchor.constraint(equalTo: total.topAnchor, constant: 0.0)
-            ])
-        
+
         debugLabel.constrain([
-            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
-            debugLabel.bottomAnchor.constraint(equalTo: totalHeader.bottomAnchor)
+            debugLabel.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor),
+            debugLabel.topAnchor.constraint(equalTo: subHeaderView.topAnchor)
             ])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
@@ -132,7 +137,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addChildViewController(assetList, layout: {
             assetList.view.constrain([
                 assetList.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor, constant: C.padding[1]),
+                assetList.view.topAnchor.constraint(equalTo: prompt.bottomAnchor),
                 assetList.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 assetList.view.bottomAnchor.constraint(equalTo: toolbar.topAnchor)])
         })
@@ -154,18 +159,23 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         navigationController?.navigationBar.shadowImage = #imageLiteral(resourceName: "TransparentPixel")
         navigationController?.navigationBar.setBackgroundImage(#imageLiteral(resourceName: "TransparentPixel"), for: .default)
         
-        totalHeader.text = S.HomeScreen.totalAssets
-        totalHeader.textAlignment = .left
-        total.textAlignment = .left
+        logo.contentMode = .center
+        
+        total.textAlignment = .right
         total.text = "0"
         title = ""
         
         if E.isTestnet && !E.isScreenshots {
             debugLabel.text = "(Testnet)"
             debugLabel.isHidden = false
+        } else if (E.isTestFlight || E.isDebug), let debugHost = UserDefaults.debugBackendHost {
+            debugLabel.text = "[\(debugHost)]"
+            debugLabel.isHidden = false
         } else {
             debugLabel.isHidden = true
         }
+        
+        totalAssetsLabel.text = S.HomeScreen.totalAssets
         
         setupToolbar()
         updateTotalAssets()
@@ -233,7 +243,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addTradeNotificationIndicatorIfNeeded()
         
         toolbar.isTranslucent = false
-        toolbar.barTintColor = .secondaryBackground
+        toolbar.barTintColor = Theme.secondaryBackground
     }
     
     private func setupSubscriptions() {
@@ -297,12 +307,14 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                                 rate: rate)
             return amount.fiatValue
             }.reduce(0.0, +)
+        
         let format = NumberFormatter()
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
         format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        
         self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
     
@@ -326,6 +338,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     // MARK: - Prompt
     
     private let promptDelay: TimeInterval = 0.6
+    private let inAppNotificationDelay: TimeInterval = 3.0
     
     private var currentPromptView: PromptView? {
         didSet {
