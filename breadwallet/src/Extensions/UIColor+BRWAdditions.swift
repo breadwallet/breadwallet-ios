@@ -97,10 +97,6 @@ extension UIColor {
         return UIColor.fromHex("ECECEC")
     }
 
-    static var syncingBackground: UIColor {
-        return UIColor.fromHex("E5E5E5")
-    }
-
     static var darkLine: UIColor {
         return UIColor(red: 36.0/255.0, green: 35.0/255.0, blue: 38.0/255.0, alpha: 1.0)
     }
@@ -312,10 +308,6 @@ extension UIColor {
 
     static var rewardsViewExpandedBody: UIColor {
         return UIColor.fromHex("#441E36").withAlphaComponent(0.7)
-    }
-
-    static var transactionsViewControllerBackground: UIColor {
-        return UIColor.fromHex("#E5E5E5")
     }
 }
 

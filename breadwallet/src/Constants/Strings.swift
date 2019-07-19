@@ -352,6 +352,7 @@ enum S {
         static let connecting = NSLocalizedString("SyncingView.connecting", value:"Connecting", comment: "Syncing view connectiong state header text")
         static let syncedThrough = NSLocalizedString("SyncingView.syncedThrough", value: "Synced through %1$@", comment: "eg. Synced through <Jan 12, 2015>")
         static let failed = NSLocalizedString("SyncingView.failed", value: "Sync Failed", comment: "Sync failed label")
+        static let activity = NSLocalizedString("SyncingView.activity", value: "Activity", comment: "Activity label")
     }
 
     enum ReScan {
