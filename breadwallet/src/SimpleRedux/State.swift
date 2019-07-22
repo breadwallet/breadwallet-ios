@@ -164,7 +164,8 @@ struct WalletState {
     let currentRate: Rate?
     let fees: Fees?
     let connectionStatus: BRPeerStatus
-    
+    let priceChange: PriceChange?
+
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            wallet: wallet,
@@ -177,7 +178,8 @@ struct WalletState {
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
-                           connectionStatus: BRPeerStatusDisconnected)
+                           connectionStatus: BRPeerStatusDisconnected,
+                           priceChange: nil)
     }
 
     func mutate(    displayOrder: Int? = nil,
@@ -190,7 +192,8 @@ struct WalletState {
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
                     fees: Fees? = nil,
-                    connectionStatus: BRPeerStatus? = nil) -> WalletState {
+                    connectionStatus: BRPeerStatus? = nil,
+                    priceChange: PriceChange? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
                            wallet: self.wallet,
@@ -203,7 +206,8 @@ struct WalletState {
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
-                           connectionStatus: connectionStatus ?? self.connectionStatus)
+                           connectionStatus: connectionStatus ?? self.connectionStatus,
+                           priceChange: priceChange ?? self.priceChange)
     }
 }
 
