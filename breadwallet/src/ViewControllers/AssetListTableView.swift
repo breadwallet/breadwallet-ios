@@ -15,7 +15,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     let loadingSpinner = UIActivityIndicatorView(style: .white)
 
-    private let assetHeight: CGFloat = 82.0
+    private let assetHeight: CGFloat = 90.0
     private let addWalletButtonHeight: CGFloat = 56.0
     private let addWalletButton = UIButton()
 

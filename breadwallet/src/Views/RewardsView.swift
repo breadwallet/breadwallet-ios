@@ -19,8 +19,8 @@ class RewardsView: UIView {
         case normal
     }
 
-    static let expandedSize: CGFloat = 149
-    static let normalSize: CGFloat = 46
+    static let expandedSize: CGFloat = 149 + C.padding[4] + 4.5
+    static let normalSize: CGFloat = 46 + C.padding[4] + 4.5 //4.5 is to account for negative the iconTopConstraintNormalConstant
 
     // MARK: - Properties
 
@@ -30,8 +30,9 @@ class RewardsView: UIView {
     private let expandedBody = UILabel(font: .customBody(size: 14), color: .rewardsViewExpandedBody)
     private var iconTopConstraint: NSLayoutConstraint?
     private var indicatorView = UIImageView()
-
-    private static var iconTopConstraintNormalConstant: CGFloat = -9
+    private let topPadding = UIView(color: .whiteTint)
+    private let bottomPadding = UIView(color: .whiteTint)
+    private static var iconTopConstraintNormalConstant: CGFloat = -9.0
 
     // MARK: Computed
 
@@ -62,6 +63,7 @@ class RewardsView: UIView {
     }
 
     private func setUpSubviews() {
+        
         addSubview(icon)
         addSubview(normalTitle)
         addSubview(indicatorView)
@@ -69,25 +71,28 @@ class RewardsView: UIView {
             addSubview(expandedTitle)
             addSubview(expandedBody)
         }
+        addSubview(bottomPadding)
+        addSubview(topPadding)
     }
 
     private func setUpConstraints() {
+        topPadding.constrainTopCorners(height: C.padding[2])
         let iconWidthAndHeight: CGFloat = 65
-        iconTopConstraint = icon.topAnchor.constraint(equalTo: topAnchor, constant: state == .normal ? RewardsView.iconTopConstraintNormalConstant : 8)
+        iconTopConstraint = icon.topAnchor.constraint(equalTo: topPadding.bottomAnchor, constant: state == .normal ? RewardsView.iconTopConstraintNormalConstant : 8)
         icon.constrain([
             iconTopConstraint,
             icon.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 0),
             icon.widthAnchor.constraint(equalToConstant: iconWidthAndHeight),
             icon.heightAnchor.constraint(equalToConstant: iconWidthAndHeight)])
         normalTitle.constrain([
-            normalTitle.topAnchor.constraint(equalTo: topAnchor, constant: 13),
+            normalTitle.topAnchor.constraint(equalTo: topPadding.bottomAnchor, constant: 13),
             normalTitle.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: -10)])
         indicatorView.constrain([
-            indicatorView.topAnchor.constraint(equalTo: topAnchor, constant: 17),
+            indicatorView.topAnchor.constraint(equalTo: topPadding.bottomAnchor, constant: 17),
             indicatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -21)])
         if state == .expanded {
             expandedTitle.constrain([
-                expandedTitle.topAnchor.constraint(equalTo: topAnchor, constant: 25),
+                expandedTitle.topAnchor.constraint(equalTo: topPadding.bottomAnchor, constant: 25),
                 expandedTitle.leadingAnchor.constraint(equalTo: normalTitle.leadingAnchor, constant: 5),
                 expandedTitle.widthAnchor.constraint(equalToConstant: 199)])
             expandedBody.constrain([
@@ -95,6 +100,7 @@ class RewardsView: UIView {
                 expandedBody.leadingAnchor.constraint(equalTo: expandedTitle.leadingAnchor),
                 expandedBody.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -56)])
         }
+        bottomPadding.constrainBottomCorners(height: C.padding[2])
     }
 
     private func setUpStyle() {

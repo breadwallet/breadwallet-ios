@@ -10,24 +10,22 @@ import Foundation
 
 class ExchangeUpdater: Subscriber {
 
-    var lastUpdate = Date.distantPast
-    let requestThrottleSeconds: TimeInterval = 5.0
+    private var lastUpdate = Date.distantPast
+    private let requestThrottleSeconds: TimeInterval = 5.0
+    
+    // MARK: - Public
 
     init() {
         Store.subscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
-                        callback: { state in
-                            state.currencies.forEach { currency in
-                                guard let currentRate = state[currency]!.rates.first( where: { $0.code == state.defaultCurrencyCode }) else { return }
-                                Store.perform(action: WalletChange(currency).setExchangeRate(currentRate))
-                            }
-        })
+                        callback: { _ in
+                            self.refresh()
+                        })
     }
 
-    func refresh(completion: @escaping () -> Void) {
+    func refresh() {
         guard Date().timeIntervalSince(lastUpdate) > requestThrottleSeconds else { return }
         lastUpdate = Date()
-        
         // get btc/fiat rates
         Backend.apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
@@ -62,6 +60,14 @@ class ExchangeUpdater: Subscriber {
                         assert(false, "missing exchange rate")
                     }
                 }
+            }
+        }
+        
+        Backend.apiClient.fetchChange(currencies: Store.state.currencies) { result in
+            guard case .success(let priceChanges) = result else { return }
+            Store.state.currencies.forEach {
+                guard let change = priceChanges[$0.code.uppercased()] else { return }
+                Store.perform(action: WalletChange($0).setPriceChange(change))
             }
         }
     }

@@ -45,10 +45,8 @@ class Backend {
         return shared.pigeonExchange
     }
     
-    static func updateExchangeRates(completion: (() -> Void)? = nil) {
-        shared.exchangeUpdater?.refresh {
-            completion?()
-        }
+    static func updateExchangeRates() {
+        shared.exchangeUpdater?.refresh()
     }
 
     //TODO:CRYPTO fee updater

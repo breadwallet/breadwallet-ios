@@ -131,6 +131,13 @@ struct WalletChange: Trackable {
     func set(_ walletState: WalletState) -> WalletAction {
         return WalletAction(reduce: { $0.mutate(walletState: walletState)})
     }
+    
+    func setPriceChange(_ priceChange: PriceChange) -> WalletAction {
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(priceChange: priceChange))
+        })
+    }
 }
 
 // MARK: - Currency
