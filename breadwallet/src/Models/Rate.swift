@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct Rate {
+struct Rate: Equatable {
     let code: String
     let name: String
     let rate: Double
@@ -84,10 +84,4 @@ extension Rate {
             "reciprocalCode": reciprocalCode
         ]
     }
-}
-
-extension Rate: Equatable {}
-
-func == (lhs: Rate, rhs: Rate) -> Bool {
-    return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate && lhs.reciprocalCode == rhs.reciprocalCode
 }

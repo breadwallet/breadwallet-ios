@@ -35,6 +35,7 @@ class PriceChangeView: UIView, Subscriber {
     private var currencyNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
+        formatter.currencySymbol = Rate.symbolMap[Store.state.defaultCurrencyCode]
         return formatter
     }
     
@@ -94,15 +95,19 @@ class PriceChangeView: UIView, Subscriber {
         guard let priceChange = priceChange else { return }
         
         //Set label text
-        percentLabel.fadeToText(String(format: "%.2f%%", fabs(priceChange.changePercentage24Hrs)))
+        let percentText = String(format: "%.2f%%", fabs(priceChange.changePercentage24Hrs))
         if style == .percentAndAbsolute, let absoluteString = currencyNumberFormatter.string(from: NSNumber(value: abs(priceChange.change24Hrs))) {
-            absoluteLabel.fadeToText("(\(absoluteString))")
+            absoluteLabel.text = "(\(absoluteString))"
+            percentLabel.text = percentText
+            layoutIfNeeded()
+        } else if style == .percentOnly {
+            percentLabel.fadeToText(percentText)
         }
         
         //Fade separator and image
         self.image.transform = priceChange.changePercentage24Hrs > 0 ? .identity : CGAffineTransform(rotationAngle: .pi)
         UIView.animate(withDuration: C.animationDuration, animations: {
-            self.separator.alpha = 1.0
+            self.separator.alpha = self.style == .percentAndAbsolute ? 0.0 : 1.0
             self.image.alpha = 1.0
         })
     }
