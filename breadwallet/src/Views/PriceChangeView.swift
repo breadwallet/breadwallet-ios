@@ -61,7 +61,8 @@ class PriceChangeView: UIView, Subscriber {
         image.constrain([
             image.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: C.padding[1]),
             image.centerYAnchor.constraint(equalTo: centerYAnchor),
-            image.widthAnchor.constraint(equalTo: image.heightAnchor)])
+            image.widthAnchor.constraint(equalToConstant: 6.0),
+            image.heightAnchor.constraint(equalToConstant: 5.0)])
         percentLabel.constrain([
             percentLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             percentLabel.leadingAnchor.constraint(equalTo: image.trailingAnchor, constant: 3.0)])
