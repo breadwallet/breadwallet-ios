@@ -24,6 +24,13 @@ struct Rate: Equatable {
         }
     }
 
+    var maxFractionalDigits: Int {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = self.locale
+        return formatter.maximumFractionDigits
+    }
+    
     static var symbolMap: [String: String] = {
         var map = [String: String]()
         Locale.availableIdentifiers.forEach { identifier in
