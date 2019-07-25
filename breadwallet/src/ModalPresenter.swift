@@ -611,6 +611,11 @@ class ModalPresenter: Subscriber, Trackable {
             // About
             MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
+            },
+            
+            // ATM Finder
+            MenuItem(title: S.Settings.atmMapMenuItemTitle, subTitle: S.Settings.atmMapMenuItemSubtitle, icon: MenuItem.Icon.atmMap) {
+                self.presentPlatformWebViewController("/map")
             }
         ]
 
