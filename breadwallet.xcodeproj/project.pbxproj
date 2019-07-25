@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1AFF9E1FB7EF7C00E61908 /* BiometricsSettingsViewController.swift */; };
-		1B1AFFA11FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1AFF9F1FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift */; };
 		22122B721F0B8996000E9AB9 /* BRAPIClient+Events.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22122B711F0B8996000E9AB9 /* BRAPIClient+Events.swift */; };
 		2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2218BD761E8F55430091D5E8 /* BRAPIClient+Assets.swift */; };
 		2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */; };
@@ -499,7 +498,6 @@
 		CEEC70941E96A24F00EF788E /* DefaultCurrencyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70931E96A24F00EF788E /* DefaultCurrencyViewController.swift */; };
 		CEEC70981E96BF8800EF788E /* DefaultCurrencyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */; };
 		CEEE92F11EBA7CBA00B7AC9C /* RequestAmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */; };
-		CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */; };
 		CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */; };
 		CEF3D2DD1E8CBA790070178E /* LAContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */; };
 		CEF3E82B1DE51612007C0A9E /* GradientCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */; };
@@ -598,7 +596,6 @@
 
 /* Begin PBXFileReference section */
 		1B1AFF9E1FB7EF7C00E61908 /* BiometricsSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricsSettingsViewController.swift; sourceTree = "<group>"; };
-		1B1AFF9F1FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BiometricsSpendingLimitViewController.swift; sourceTree = "<group>"; };
 		22122B711F0B8996000E9AB9 /* BRAPIClient+Events.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BRAPIClient+Events.swift"; sourceTree = "<group>"; };
 		2218BD761E8F55430091D5E8 /* BRAPIClient+Assets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Assets.swift"; path = "src/Platform/BRAPIClient+Assets.swift"; sourceTree = "<group>"; };
 		2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AssetBundles.plist; path = Resources/AssetBundles.plist; sourceTree = "<group>"; };
@@ -1120,7 +1117,6 @@
 		CEEC70931E96A24F00EF788E /* DefaultCurrencyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = DefaultCurrencyViewController.swift; path = src/Views/DefaultCurrencyViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CEEC70971E96BF8800EF788E /* DefaultCurrencyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultCurrencyTests.swift; sourceTree = "<group>"; };
 		CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = RequestAmountViewController.swift; path = src/ViewControllers/RequestAmountViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpendingLimitTests.swift; sourceTree = "<group>"; };
 		CEF3D2DA1E8B55C80070178E /* UISlider+Gradient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UISlider+Gradient.swift"; path = "src/Extensions/UISlider+Gradient.swift"; sourceTree = "<group>"; };
 		CEF3D2DC1E8CBA790070178E /* LAContext+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "LAContext+Extensions.swift"; path = "src/Extensions/LAContext+Extensions.swift"; sourceTree = "<group>"; };
 		CEF3E82A1DE51612007C0A9E /* GradientCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GradientCircle.swift; path = src/Views/GradientCircle.swift; sourceTree = "<group>"; };
@@ -1447,7 +1443,6 @@
 				CE6DCC281E63D0280044257B /* PhraseTests.swift */,
 				CEA0470E20FD073C00F2694A /* PigeonTest.swift */,
 				7CA1C47520EC2BFA002E9E68 /* QRCodeTests.swift */,
-				CEF3D2D61E8AB9980070178E /* SpendingLimitTests.swift */,
 				CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */,
 				CEEC70871E943DC900EF788E /* TouchIdEnabledTests.swift */,
 				7CB3BCD42059B62200053687 /* UnitConversionTests.swift */,
@@ -1762,7 +1757,6 @@
 				CE8644241F2C160200033129 /* ConfirmationViewController.swift */,
 				CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */,
 				1B1AFF9E1FB7EF7C00E61908 /* BiometricsSettingsViewController.swift */,
-				1B1AFF9F1FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift */,
 				7CA238132011A97C00A4A59D /* TxDetailViewController.swift */,
 				CE65C662207B023F000C99C4 /* EditWalletsViewController.swift */,
 				CEE218DF21066BFF00399231 /* LinkWalletViewController.swift */,
@@ -2954,7 +2948,6 @@
 				713CD88A2240198A004657D4 /* RecoveryKeyIntroViewController.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
-				1B1AFFA11FB7EF7C00E61908 /* BiometricsSpendingLimitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2975,7 +2968,6 @@
 				CEC7F92A208803FA0083DF64 /* CurrencyMetaDataTests.swift in Sources */,
 				E821D4CD21C16B2E00B0907B /* BRAnalyticsEvent.swift in Sources */,
 				7CB3BCD52059B62200053687 /* UnitConversionTests.swift in Sources */,
-				CEF3D2D71E8AB9980070178E /* SpendingLimitTests.swift in Sources */,
 				22C431321DF89DDC0017CAEA /* NSDataExtensionTests.swift in Sources */,
 				710B036221F67888007E8A2A /* MockClasses.swift in Sources */,
 				CE6DCC291E63D0280044257B /* PhraseTests.swift in Sources */,

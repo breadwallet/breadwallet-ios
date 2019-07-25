@@ -72,8 +72,6 @@ class URLController: Trackable, Subscriber {
 
             if url.host == "scanqr" || url.path == "/scanqr" {
                 Store.trigger(name: .scanQr)
-            } else if url.host == "addresslist" || url.path == "/addresslist" {
-                Store.trigger(name: .copyWalletAddresses(xSuccess, xError))
             } else if url.path == "/address" {
                 if let success = xSuccess {
                     copyAddress(callback: success)

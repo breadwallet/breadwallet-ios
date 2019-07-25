@@ -33,7 +33,6 @@ enum BiometricsResult {
 }
 
 private struct DefaultsKey {
-    public static let spendLimitAmount = "SPEND_LIMIT_AMOUNT"
     public static let pinUnlockTime = "PIN_UNLOCK_TIME"
 }
 
@@ -477,16 +476,6 @@ extension KeyStore: TransactionAuthenticator {
 /*
     // MARK: Bitcoin
 
-    // TODO:SL
-    func canUseBiometrics(forTransaction tx: BRTxRef, wallet: BRWallet) -> Bool {
-        guard LAContext.canUseBiometrics else { return false }
-
-        do {
-            let spendLimit: Int64 = try keychainItem(key: KeychainKey.spendLimit) ?? 0
-            return wallet.amountSentByTx(tx) - wallet.amountReceivedFromTx(tx) + wallet.totalSent <= UInt64(spendLimit)
-        } catch { return false }
-    }
-
     func sign(transaction tx: BRTxRef, wallet: BRWallet, withPin pin: String) -> Bool {
         guard authenticate(withPin: pin) else { return false }
         return sign(transaction: tx, wallet: wallet)
@@ -680,7 +669,6 @@ extension KeyStore: KeyMaster {
             try Backend.kvStore?.rmdb()
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
-            try setKeychainItem(key: KeychainKey.spendLimit, item: nil as Int64?)
             try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.pinFailTime, item: nil as Int64?)
             try setKeychainItem(key: KeychainKey.pinFailCount, item: nil as Int64?)
@@ -775,52 +763,12 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
     }
 }
 
-// MARK: -
-
-//TODO:CRYPTO spend limit
-/*
-extension BTCWalletManager {
-    // TODO:SL
-    func updateSpendLimit() {
-        let limit = Int64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
-        if let wallet = wallet, limit > 0 {
-            do {
-                try setKeychainItem(key: KeychainKey.spendLimit,
-                                    item: Int64(wallet.totalSent) + limit)
-            } catch let error {
-                print("Update spending limit error: \(error)")
-            }
-        }
-    }
-
-    // TODO:SL
-    var spendingLimit: UInt64 {
-        get {
-            guard UserDefaults.standard.object(forKey: DefaultsKey.spendLimitAmount) != nil else {
-                return 0
-            }
-            return UInt64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
-        }
-        set {
-            guard let wallet = self.wallet else { assert(false, "No wallet!"); return }
-            do {
-                try setKeychainItem(key: KeychainKey.spendLimit, item: Int64(wallet.totalSent + newValue))
-                UserDefaults.standard.set(newValue, forKey: DefaultsKey.spendLimitAmount)
-            } catch let error {
-                print("Set spending limit error: \(error)")
-            }
-        }
-    }
-}
- */
-
 // MARK: - Keychain Support
 
 private struct KeychainKey {
     public static let mnemonic = "mnemonic"
     public static let creationTime = "creationtime"
     public static let masterPubKey = "masterpubkey"
-    public static let spendLimit = "spendlimit"
     public static let pin = "pin"
     public static let pinFailCount = "pinfailcount"
     public static let pinFailTime = "pinfailheight"

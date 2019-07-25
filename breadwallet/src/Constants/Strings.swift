@@ -263,35 +263,24 @@ enum S {
 
     enum TouchIdSettings {
         static let title = NSLocalizedString("TouchIdSettings.title", value:"Touch ID", comment: "Touch ID settings view title")
-        static let label = NSLocalizedString("TouchIdSettings.label", value:"Use your fingerprint to unlock your BRD and send money up to a set limit.", comment: "Touch Id screen label")
+        static let explanatoryText = NSLocalizedString("TouchIdSettings.explanatoryText", value: "Use Touch ID to unlock your BRD app and send money.", comment: "Explanation for Touch ID settings")
         static let switchLabel = NSLocalizedString("TouchIdSettings.switchLabel", value:"Enable Touch ID for BRD", comment: "Touch id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("TouchIdSettings.unavailableAlertTitle", value:"Touch ID Not Set Up", comment: "Touch ID unavailable alert title")
+        static let transactionsTitleText = NSLocalizedString("TouchIdSettings.transactionsTitleText", value: "Enable Touch ID to send money", comment: "Title for Touch ID transactions toggle")
         static let unavailableAlertMessage = NSLocalizedString("TouchIdSettings.unavailableAlertMessage", value:"You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
-        static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending limit: %1$@ (%2$@)", comment: "Spending Limit: b100,000 ($100)")
-        static let customizeText = NSLocalizedString("TouchIdSettings.customizeText", value: "You can customize your Touch ID spending limit from the %1$@.", comment: "You can customize your Touch ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
-        static let linkText = NSLocalizedString("TouchIdSettings.linkText", value: "Touch ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
+        static let unlockTitleText = NSLocalizedString("TouchIdSettings.unlockTitleText", value: "Enable Touch ID to unlock BRD", comment: "Touch ID unlock toggle title")
     }
     
     enum FaceIDSettings {
         static let title = NSLocalizedString("FaceIDSettings.title", value:"Face ID", comment: "Face ID settings view title")
-        static let label = NSLocalizedString("FaceIDSettings.label", value:"Use your face to unlock your BRD and send money up to a set limit.", comment: "Face Id screen label")
+        static let explanatoryText = NSLocalizedString("FaceIDSettings.explanatoryText", value: "Use Face ID to unlock your BRD app and send money.", comment: "Explanation for Face ID settings")
         static let switchLabel = NSLocalizedString("FaceIDSettings.switchLabel", value:"Enable Face ID for BRD", comment: "Face id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("FaceIDSettings.unavailableAlertTitle", value:"Face ID Not Set Up", comment: "Face ID unavailable alert title")
+        static let transactionsTitleText = NSLocalizedString("FaceIDSettings.transactionsTitleText", value: "Enable Face ID to send money", comment: "Title for Face ID transactions toggle")
         static let unavailableAlertMessage = NSLocalizedString("FaceIDSettings.unavailableAlertMessage", value:"You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.", comment: "Face ID unavailable alert message")
-        static let customizeText = NSLocalizedString("FaceIDSettings.customizeText", value: "You can customize your Face ID spending limit from the %1$@.", comment: "You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
-        static let linkText = NSLocalizedString("FaceIDSettings.linkText", value: "Face ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
-    }
-
-    enum TouchIdSpendingLimit {
-        static let title = NSLocalizedString("TouchIdSpendingLimit.title", value:"Touch ID Spending Limit", comment: "Touch Id spending limit screen title")
-        static let body = NSLocalizedString("TouchIdSpendingLimit.body", value:"You will be asked to enter your 6-digit PIN to send any transaction over your spending limit, and every 48 hours since the last time you entered your 6-digit PIN.", comment: "Touch ID spending limit screen body")
-        static let requirePasscode = NSLocalizedString("TouchIdSpendingLimit", value: "Always require passcode", comment: "Always require passcode option")
+        static let unlockTitleText = NSLocalizedString("FaceIDSettings.unlockTitleText", value: "Enable Face ID to unlock BRD", comment: "Face ID unlock toggle title")
     }
     
-    enum FaceIdSpendingLimit {
-        static let title = NSLocalizedString("FaceIDSpendingLimit.title", value:"Face ID Spending Limit", comment: "Face Id spending limit screen title")
-    }
-
     enum Settings {
         static let title = NSLocalizedString("Settings.title", value:"Menu", comment: "Settings title")
         static let wallet = NSLocalizedString("Settings.wallet", value: "Wallets", comment: "Wallet Settings section header")
@@ -302,7 +291,6 @@ enum S {
         static let currencyPageTitle = NSLocalizedString("Settings.currencyPageTitle", value: "%1$@ Settings", comment: "Bitcoin Settings page title")
         static let importTile = NSLocalizedString("Settings.importTitle", value:"Redeem Private Key", comment: "Import wallet label")
         static let notifications = NSLocalizedString("Settings.notifications", value:"Notifications", comment: "Notifications label")
-        static let touchIdLimit = NSLocalizedString("Settings.touchIdLimit", value:"Touch ID Spending Limit", comment: "Touch ID spending limit label")
         static let currency = NSLocalizedString("Settings.currency", value:"Display Currency", comment: "Default currency label")
         static let sync = NSLocalizedString("Settings.sync", value:"Sync Blockchain", comment: "Sync blockchain label")
         static let shareData = NSLocalizedString("Settings.shareData", value:"Share Anonymous Data", comment: "Share anonymous data label")
@@ -313,7 +301,6 @@ enum S {
         static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying BRD?", comment: "Are you enjoying BRD alert message body")
         static let wipe = NSLocalizedString("Settings.wipe", value: "Unlink from this device", comment: "Unlink wallet menu label.")
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "Advanced Settings", comment: "Advanced Settings title")
-        static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
         static let sendLogs = NSLocalizedString("Settings.sendLogs", value: "Send Logs", comment: "Send Logs option")
         static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
         static let viewLegacyAddress = NSLocalizedString("Settings.ViewLegacyAddress", value: "View Legacy Receive Address", comment: "")
@@ -507,9 +494,6 @@ enum S {
     }
 
     enum URLHandling {
-        static let addressListAlertTitle = NSLocalizedString("URLHandling.addressListAlertTitle", value: "Copy Wallet Addresses", comment: "Authorize to copy wallet address alert title")
-        static let addressListAlertMessage = NSLocalizedString("URLHandling.addressaddressListAlertMessage", value: "Copy wallet addresses to clipboard?", comment: "Authorize to copy wallet addresses alert message")
-        static let addressListVerifyPrompt = NSLocalizedString("URLHandling.addressList", value: "Authorize to copy wallet address to clipboard", comment: "Authorize to copy wallet address PIN view prompt.")
         static let copy = NSLocalizedString("URLHandling.copy", value: "Copy", comment: "Copy wallet addresses alert button label")
     }
 
