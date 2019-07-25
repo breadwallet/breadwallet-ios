@@ -245,7 +245,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var shouldUseBiometrics: Bool {
-        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabled
+        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabledForUnlocking
     }
 
     @objc func biometricsTapped() {

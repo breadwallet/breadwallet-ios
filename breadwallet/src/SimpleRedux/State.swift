@@ -15,6 +15,7 @@ struct State {
     let showFiatAmounts: Bool
     let alert: AlertType
     let isBiometricsEnabled: Bool
+    let isBiometricsEnabledForTransactions: Bool
     let defaultCurrencyCode: String
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
@@ -60,6 +61,10 @@ struct State {
             return false
         }
     }
+    
+    var isBiometricsEnabledForUnlocking: Bool {
+        return isBiometricsEnabled
+    }
 }
 
 extension State {
@@ -69,6 +74,7 @@ extension State {
                         showFiatAmounts: UserDefaults.showFiatAmounts,
                         alert: .none,
                         isBiometricsEnabled: UserDefaults.isBiometricsEnabled,
+                        isBiometricsEnabledForTransactions: UserDefaults.isBiometricsEnabledForTransactions,
                         defaultCurrencyCode: UserDefaults.defaultCurrencyCode,
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
@@ -93,6 +99,7 @@ extension State {
                    showFiatAmounts: Bool? = nil,
                    alert: AlertType? = nil,
                    isBiometricsEnabled: Bool? = nil,
+                   isBiometricsEnabledForTransactions: Bool? = nil,
                    defaultCurrencyCode: String? = nil,
                    isPushNotificationsEnabled: Bool? = nil,
                    isPromptingBiometrics: Bool? = nil,
@@ -107,6 +114,7 @@ extension State {
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
                      alert: alert ?? self.alert,
                      isBiometricsEnabled: isBiometricsEnabled ?? self.isBiometricsEnabled,
+                     isBiometricsEnabledForTransactions: isBiometricsEnabledForTransactions ?? self.isBiometricsEnabledForTransactions,
                      defaultCurrencyCode: defaultCurrencyCode ?? self.defaultCurrencyCode,
                      isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,

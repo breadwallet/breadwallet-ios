@@ -75,8 +75,7 @@ class ModalPresenter: Subscriber, Trackable {
             self?.presentWritePaperKey()
         })
         Store.subscribe(self, name: .promptBiometrics, callback: { [weak self] _ in
-            //TODO:CRYPTO
-            //            self?.presentBiometricsMenuItem()
+            self?.presentBiometricsMenuItem()
         })
         Store.subscribe(self, name: .promptShareData, callback: { [weak self] _ in
             self?.promptShareData()
@@ -99,12 +98,6 @@ class ModalPresenter: Subscriber, Trackable {
         })
         Store.subscribe(self, name: .scanQr, callback: { [weak self] _ in
             self?.handleScanQrURL()
-        })
-        Store.subscribe(self, name: .copyWalletAddresses(nil, nil), callback: { [weak self] in
-            guard let trigger = $0 else { return }
-            if case .copyWalletAddresses(let success, let error) = trigger {
-                self?.handleCopyAddresses(success: success, error: error)
-            }
         })
         Store.subscribe(self, name: .authenticateForPlatform("", true, {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
@@ -349,7 +342,11 @@ class ModalPresenter: Subscriber, Trackable {
             let vc = VerifyPinViewController(bodyText: bodyText,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
                                              success: success)
+            vc.didCancel = {
+                sender.reset()
+            }
             vc.transitioningDelegate = self.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
@@ -393,6 +390,7 @@ class ModalPresenter: Subscriber, Trackable {
             let vc = VerifyPinViewController(bodyText: bodyText,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
                                              success: success)
             vc.transitioningDelegate = self.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
@@ -496,17 +494,6 @@ class ModalPresenter: Subscriber, Trackable {
             viewLegacyAddress
         ]
         
-        if UserDefaults.isBiometricsEnabled {
-            let biometricSpendingLimitItem = MenuItem(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager,
-                    let rate = Currencies.btc.state?.currentRate else { return "" }
-                let amount = Amount(value: UInt256(btcWalletManager.spendingLimit), currency: Currencies.btc, rate: rate)
-                return amount.fiatDescription
-            }, callback: { [weak self] in
-                self?.pushBiometricsSpendingLimit(onNc: menuNav)
-            })
-            btcItems.insert(biometricSpendingLimitItem, at: 0)
-        }
         */
 
         let bchItems: [MenuItem] = [
@@ -580,15 +567,7 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Biometrics
             MenuItem(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle) { [unowned self] in
-                //TODO:CRYPTO spend limit
-                /*
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-                let biometricsSettings = BiometricsSettingsViewController(walletManager: btcWalletManager)
-                biometricsSettings.presentSpendingLimit = {
-                    self.pushBiometricsSpendingLimit(onNc: menuNav)
-                }
-                menuNav.pushViewController(biometricsSettings, animated: true)
- */
+                self.presentBiometricsMenuItem()
             },
             
             // Paper key
@@ -648,7 +627,7 @@ class ModalPresenter: Subscriber, Trackable {
                 Store.trigger(name: .lock)
             })
             
-            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
+            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") {
                 Store.trigger(name: .wipeWalletNoPrompt)
             })
             
@@ -855,22 +834,6 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
-    //TODO:CRYPTO spend limit
-//    private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
-//        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-//        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody,
-//                                             pinLength: Store.state.pinLength,
-//                                             walletAuthenticator: keyStore,
-//                                             success: { _ in
-//                                                let spendingLimit = BiometricsSpendingLimitViewController(walletManager: btcWalletManager)
-//                                                onNc.pushViewController(spendingLimit, animated: true)
-//        })
-//        verify.transitioningDelegate = verifyPinTransitionDelegate
-//        verify.modalPresentationStyle = .overFullScreen
-//        verify.modalPresentationCapturesStatusBarAppearance = true
-//        onNc.present(verify, animated: true, completion: nil)
-//    }
-
     private func presentWritePaperKey(fromViewController vc: UIViewController) {
         RecoveryKeyFlowController.enterRecoveryKeyFlow(pin: nil,
                                                        keyMaster: self.keyStore,
@@ -937,7 +900,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
         }
     }
-    //TODO:CRYPTO key import + biometric spend limit
+    //TODO:CRYPTO key import
     /*
     private func presentKeyImport(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
         // TODO: auto-import to both BTC and BCH wallet managers
@@ -955,20 +918,17 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     // MARK: - Prompts
+ */
+
     func presentBiometricsMenuItem() {
-        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return assertionFailure() }
-        let biometricsSettings = BiometricsSettingsViewController(walletManager: btcWalletManager)
+        let biometricsSettings = BiometricsSettingsViewController()
         biometricsSettings.addCloseNavigationItem(tintColor: .white)
         let nc = ModalNavigationController(rootViewController: biometricsSettings)
-        biometricsSettings.presentSpendingLimit = strongify(self) { myself in
-            myself.pushBiometricsSpendingLimit(onNc: nc)
-        }
-        nc.setDefaultStyle()
+        nc.setWhiteStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
         topViewController?.present(nc, animated: true, completion: nil)
     }
- */
 
     private func promptShareData() {
         let shareData = ShareDataViewController()
@@ -1087,29 +1047,7 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-
-    private func handleCopyAddresses(success: String?, error: String?) {
-        let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [unowned self] _ in
-            let verify = VerifyPinViewController(
-                bodyText: S.URLHandling.addressListVerifyPrompt,
-                pinLength: Store.state.pinLength,
-                walletAuthenticator: self.keyStore) { [weak self] _ in
-                    self?.copyAllAddressesToClipboard()
-                    Store.perform(action: Alert.Show(.addressesCopied))
-                    if let success = success, let url = URL(string: success) {
-                        UIApplication.shared.open(url)
-                    }
-            }
-            verify.transitioningDelegate = self.verifyPinTransitionDelegate
-            verify.modalPresentationStyle = .overFullScreen
-            verify.modalPresentationCapturesStatusBarAppearance = true
-            self.topViewController?.present(verify, animated: true, completion: nil)
-        }))
-        topViewController?.present(alert, animated: true, completion: nil)
-    }
-
+    
     private func authenticateForPlatform(prompt: String, allowBiometricAuth: Bool, callback: @escaping (PlatformAuthResult) -> Void) {
         if UserDefaults.isBiometricsEnabled && allowBiometricAuth {
             keyStore.authenticate(withBiometricsPrompt: prompt, completion: { result in
@@ -1133,6 +1071,7 @@ class ModalPresenter: Subscriber, Trackable {
         let verify = VerifyPinViewController(bodyText: prompt,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: keyStore,
+                                             pinAuthenticationType: .unlocking,
                                              success: { pin in
                                                 callback(.success(pin))
         })
@@ -1254,7 +1193,7 @@ class ModalPresenter: Subscriber, Trackable {
 }
 
 class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate {
-
+    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 
         guard let coordinator = navigationController.topViewController?.transitionCoordinator else { return }
@@ -1264,22 +1203,16 @@ class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate
                 //We only want to style the view controller if the
                 //pop animation wasn't cancelled
                 if !context.isCancelled {
-                    self.setStyle(navigationController: navigationController, viewController: viewController)
+                    self.setStyle(navigationController: navigationController)
                 }
             }
         } else {
-            setStyle(navigationController: navigationController, viewController: viewController)
+            setStyle(navigationController: navigationController)
         }
     }
 
-    func setStyle(navigationController: UINavigationController, viewController: UIViewController) {
+    func setStyle(navigationController: UINavigationController) {
         navigationController.isNavigationBarHidden = false
-
-        //TODO:CRYPTO spend limit
-//        if viewController is BiometricsSettingsViewController {
-//            navigationController.setWhiteStyle()
-//        } else {
-            navigationController.setDefaultStyle()
-//        }
+        navigationController.setDefaultStyle()
     }
 }
