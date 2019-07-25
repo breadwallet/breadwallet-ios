@@ -15,23 +15,52 @@ protocol ContentBoxPresenter {
     var effect: UIBlurEffect { get }
 }
 
+enum PinAuthenticationType {
+    case unlocking
+    case transactions
+    case recoveryKey
+}
+
 class VerifyPinViewController: UIViewController, ContentBoxPresenter {
 
-    init(bodyText: String, pinLength: Int, walletAuthenticator: WalletAuthenticator, success: @escaping (String) -> Void) {
+    init(bodyText: String,
+         pinLength: Int,
+         walletAuthenticator: WalletAuthenticator,
+         pinAuthenticationType: PinAuthenticationType,
+         success: @escaping (String) -> Void) {
         self.bodyText = bodyText
         self.success = success
         self.pinLength = pinLength
+        self.pinAuthenticationType = pinAuthenticationType
         self.pinView = PinView(style: .verify, length: pinLength)
         self.walletAuthenticator = walletAuthenticator
+
+        self.pinPad = PinPadViewController(style: .white,
+                                           keyboardType: .pinPad,
+                                           maxDigits: 0,
+                                           shouldShowBiometrics: VerifyPinViewController.shouldShowBiometricsOnPinPad(for: pinAuthenticationType))
+
         super.init(nibName: nil, bundle: nil)
     }
 
+    private static func shouldShowBiometricsOnPinPad(for authenticationType: PinAuthenticationType) -> Bool {
+        switch authenticationType {
+        case .transactions:
+            return Store.state.isBiometricsEnabledForTransactions
+        case .unlocking:
+            return Store.state.isBiometricsEnabledForUnlocking
+        default:
+            return false
+        }
+    }
+    
     var didCancel: (() -> Void)?
     let blurView = UIVisualEffectView()
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
+    private var pinAuthenticationType: PinAuthenticationType = .unlocking
     private let success: (String) -> Void
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: false)
+    private let pinPad: PinPadViewController
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
     private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let pinView: PinView
@@ -45,6 +74,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
         addSubviews()
         addConstraints()
         setupSubviews()
+        setUpBiometricsAuthentication()
     }
 
     private func addSubviews() {
@@ -128,6 +158,19 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
     }
 
+    private func setUpBiometricsAuthentication() {
+        if VerifyPinViewController.shouldShowBiometricsOnPinPad(for: self.pinAuthenticationType) {
+            self.pinPad.didTapBiometrics = { [weak self] in
+                guard let `self` = self else { return }
+                self.walletAuthenticator.authenticate(withBiometricsPrompt: "biometrics", completion: { (result) in
+                    if result == .success {
+                        self.success("")
+                    }
+                })
+            }
+        }
+    }
+    
     private func authenticationFailed() {
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in

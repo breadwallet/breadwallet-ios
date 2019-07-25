@@ -261,6 +261,7 @@ class RecoveryKeyFlowController {
         let pinViewController = VerifyPinViewController(bodyText: S.VerifyPin.continueBody,
                                                         pinLength: Store.state.pinLength,
                                                         walletAuthenticator: keyMaster,
+                                                        pinAuthenticationType: .recoveryKey,
                                                         success: { pin in
                                                             pinResponse(pin)
         })

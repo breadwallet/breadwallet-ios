@@ -11,114 +11,220 @@ import LocalAuthentication
 import BRCore
 
 class BiometricsSettingsViewController: UIViewController, Subscriber {
-//TODO:CRYPTO spend limit
-    /*
-    var presentSpendingLimit: (() -> Void)?
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    lazy var biometricType = LAContext.biometricType()
+        
+    var explanatoryText: String {
+        return biometricType == .touch ? S.TouchIdSettings.explanatoryText : S.FaceIDSettings.explanatoryText
+    }
+    
+    var unlockTitleText: String {
+        return biometricType == .touch ? S.TouchIdSettings.unlockTitleText : S.FaceIDSettings.unlockTitleText
+    }
+    
+    var transactionsTitleText: String {
+        return biometricType == .touch ? S.TouchIdSettings.transactionsTitleText : S.FaceIDSettings.transactionsTitleText
+    }
+    
+    var imageName: String {
+        return biometricType == .touch ? "TouchId-Large" : "FaceId-Large"
+    }
+    
+    private let imageView = UIImageView()
+    
+    private let explanationLabel = UILabel.wrapping(font: Theme.body1, color: Theme.secondaryText)
+    
+    // Toggle for enabling Touch ID or Face ID to unlock the BRD app.
+    private let unlockTitleLabel = UILabel.wrapping(font: Theme.body1, color: Theme.primaryText)
+    
+    // Toggle for enabling Touch ID or Face ID for sending money.
+    private let transactionsTitleLabel = UILabel.wrapping(font: Theme.body1, color: Theme.primaryText)
+
+    private let unlockToggle = UISwitch()
+    private let transactionsToggle = UISwitch()
+    
+    private let unlockToggleSeparator = UIView()
+    private let transactionsToggleSeparator = UIView()
+    
+    private var hasSetInitialValueForUnlockToggle = false
+    private var hasSetInitialValueForTransactions = false
+    
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
-
-    private let header = RadialGradientView(backgroundColor: .darkPurple)
-    private let illustration = LAContext.biometricType() == .face ? UIImageView(image: #imageLiteral(resourceName: "FaceId-Large")) : UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
-    private let label = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let toggle = GradientSwitch()
-    private let separator = UIView(color: .secondaryShadow)
-    private let textView = UnEditableTextView()
-    private let walletManager: BTCWalletManager
-    private var rate: Rate?
-
-    deinit {
-        Store.unsubscribe(self)
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.setWhiteStyle()
     }
-
+    
     override func viewDidLoad() {
-        Store.subscribe(self, selector: { $0[Currencies.btc]?.currentRate != $1[Currencies.btc]?.currentRate }, callback: {
-            self.rate = $0[Currencies.btc]?.currentRate
-        })
-        addSubviews()
+        super.viewDidLoad()
+        
+        [imageView,
+         explanationLabel, unlockTitleLabel, transactionsTitleLabel,
+         unlockToggle, transactionsToggle,
+         unlockToggleSeparator, transactionsToggleSeparator].forEach({ view.addSubview($0) })
+        
+        setUpAppearance()
         addConstraints()
         setData()
+        addFaqButton()
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        textView.attributedText = textViewText
+    
+    private func setUpAppearance() {
+        view.backgroundColor = Theme.primaryBackground
+        explanationLabel.textAlignment = .center
+        
+        unlockToggleSeparator.backgroundColor = Theme.tertiaryBackground
+        transactionsToggleSeparator.backgroundColor = Theme.tertiaryBackground
     }
-
-    private func addSubviews() {
-        view.addSubview(header)
-        header.addSubview(illustration)
-        view.addSubview(label)
-        view.addSubview(switchLabel)
-        view.addSubview(toggle)
-        view.addSubview(separator)
-        view.addSubview(textView)
-    }
-
+    
     private func addConstraints() {
-        header.constrainTopCorners(sidePadding: 0.0, topPadding: 0.0)
-        header.constrain([header.heightAnchor.constraint(equalToConstant: C.Sizes.largeHeaderHeight)])
-        illustration.constrain([
-            illustration.centerXAnchor.constraint(equalTo: header.centerXAnchor),
-            illustration.centerYAnchor.constraint(equalTo: header.centerYAnchor, constant: E.isIPhoneX ? C.padding[4] : C.padding[2]) ])
-        label.constrain([
-            label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
-            label.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
-            label.trailingAnchor.constraint(equalTo: header.trailingAnchor, constant: -C.padding[2]) ])
-        switchLabel.constrain([
-            switchLabel.leadingAnchor.constraint(equalTo: label.leadingAnchor),
-            switchLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: C.padding[2]) ])
-        toggle.constrain([
-            toggle.centerYAnchor.constraint(equalTo: switchLabel.centerYAnchor),
-            toggle.trailingAnchor.constraint(equalTo: label.trailingAnchor) ])
-        separator.constrain([
-            separator.leadingAnchor.constraint(equalTo: switchLabel.leadingAnchor),
-            separator.topAnchor.constraint(equalTo: toggle.bottomAnchor, constant: C.padding[1]),
-            separator.trailingAnchor.constraint(equalTo: toggle.trailingAnchor),
-            separator.heightAnchor.constraint(equalToConstant: 1.0) ])
-        textView.constrain([
-            textView.leadingAnchor.constraint(equalTo: separator.leadingAnchor),
-            textView.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[2]),
-            textView.trailingAnchor.constraint(equalTo: separator.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor )])
+        
+        let screenHeight: CGFloat = UIScreen.main.bounds.height
+        let topMarginPercent: CGFloat = 0.08
+        let imageTopMargin: CGFloat = (screenHeight * topMarginPercent)
+        let leftRightMargin: CGFloat = 40.0
+        
+        imageView.constrain([
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: imageTopMargin)
+            ])
+        
+        explanationLabel.constrain([
+            explanationLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: leftRightMargin),
+            explanationLabel.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -leftRightMargin),
+            explanationLabel.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: C.padding[2])
+            ])
+        
+        //
+        // unlock BRD toggle and associated labels
+        //
+        
+        unlockTitleLabel.constrain([
+            unlockTitleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            unlockTitleLabel.topAnchor.constraint(equalTo: explanationLabel.bottomAnchor, constant: C.padding[5])
+            ])
+        
+        unlockToggle.constrain([
+            unlockToggle.centerYAnchor.constraint(equalTo: unlockTitleLabel.centerYAnchor),
+            unlockToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2]),
+            unlockToggle.leftAnchor.constraint(greaterThanOrEqualTo: unlockTitleLabel.rightAnchor, constant: C.padding[1])
+            ])
+        
+        unlockToggleSeparator.constrain([
+            unlockToggleSeparator.topAnchor.constraint(equalTo: unlockToggle.bottomAnchor, constant: C.padding[1]),
+            unlockToggleSeparator.leftAnchor.constraint(equalTo: view.leftAnchor),
+            unlockToggleSeparator.rightAnchor.constraint(equalTo: view.rightAnchor),
+            unlockToggleSeparator.heightAnchor.constraint(equalToConstant: 1.0)
+            ])
+        
+        //
+        // send money toggle and associated labels
+        //
+
+        transactionsTitleLabel.constrain([
+            transactionsTitleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            transactionsTitleLabel.topAnchor.constraint(equalTo: unlockTitleLabel.bottomAnchor, constant: C.padding[4])
+            ])
+        
+        transactionsToggle.constrain([
+            transactionsToggle.centerYAnchor.constraint(equalTo: transactionsTitleLabel.centerYAnchor),
+            transactionsToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2]),
+            transactionsToggle.leftAnchor.constraint(greaterThanOrEqualTo: transactionsTitleLabel.rightAnchor, constant: C.padding[1])
+            ])
+        
+        transactionsToggleSeparator.constrain([
+            transactionsToggleSeparator.topAnchor.constraint(equalTo: transactionsToggle.bottomAnchor, constant: C.padding[1]),
+            transactionsToggleSeparator.leftAnchor.constraint(equalTo: view.leftAnchor),
+            transactionsToggleSeparator.rightAnchor.constraint(equalTo: view.rightAnchor),
+            transactionsToggleSeparator.heightAnchor.constraint(equalToConstant: 1.0)
+            ])
+
     }
 
     private func setData() {
+        imageView.image = UIImage(named: imageName)
+        explanationLabel.text = explanatoryText
+        unlockTitleLabel.text = unlockTitleText
+        transactionsTitleLabel.text = transactionsTitleText
         
-        view.backgroundColor = .white
-        title = LAContext.biometricType() == .face ? S.FaceIDSettings.title : S.TouchIdSettings.title
-        label.text = LAContext.biometricType() == .face ? S.FaceIDSettings.label : S.TouchIdSettings.label
-        switchLabel.text = LAContext.biometricType() == .face ? S.FaceIDSettings.switchLabel : S.TouchIdSettings.switchLabel
-        textView.isEditable = false
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0.0
-        textView.delegate = self
-        textView.attributedText = textViewText
-        textView.tintColor = .primaryButton
-        addFaqButton()
-        let hasSetToggleInitialValue = false
-        Store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
-            self.toggle.isOn = $0.isBiometricsEnabled
-            if !hasSetToggleInitialValue {
-                self.toggle.sendActions(for: .valueChanged) //This event is needed because the gradient background gets set on valueChanged events
+        // listen for changes to the default/unlock biometrics setting
+        Store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: { [weak self] in
+            guard let `self` = self else { return }
+            
+            self.unlockToggle.isOn = $0.isBiometricsEnabled
+            
+            // The transactions toggle is controlled by on/off state of the unlock toggle.
+            // That is, the transactions toggle can only be ON and enabled if the unlock toggle is ON.
+            if !$0.isBiometricsEnabled {
+                self.transactionsToggle.isEnabled = false
+                self.transactionsToggle.setOn(false, animated: true)
+            } else {
+                self.transactionsToggle.isEnabled = true
+            }
+            
+            if !self.hasSetInitialValueForUnlockToggle {
+                self.hasSetInitialValueForUnlockToggle = true
+                self.unlockToggle.sendActions(for: .valueChanged)
             }
         })
-        toggle.valueChanged = { [weak self] in
-            guard let myself = self else { return }
+
+        // listen for changes to the transactions biometrics setting
+        Store.subscribe(self, selector: { $0.isBiometricsEnabledForTransactions != $1.isBiometricsEnabledForTransactions }, callback: { [weak self] in
+            guard let `self` = self else { return }
             
-            if LAContext.canUseBiometrics {
-                Store.perform(action: Biometrics.SetIsEnabled(myself.toggle.isOn))
-                myself.textView.attributedText = myself.textViewText
-            } else {
-                myself.presentCantUseBiometricsAlert()
-                myself.toggle.isOn = false
+            self.transactionsToggle.isOn = $0.isBiometricsEnabledForTransactions
+            
+            if !self.hasSetInitialValueForTransactions {
+                self.hasSetInitialValueForTransactions = true
+                self.transactionsToggle.sendActions(for: .valueChanged)
             }
+        })
+        
+        unlockToggle.valueChanged = { [weak self] in
+            guard let `self` = self else { return }
+            self.toggleChanged(toggle: self.unlockToggle)
+        }
+        
+        transactionsToggle.valueChanged = { [weak self] in
+            guard let `self` = self else { return }
+            self.toggleChanged(toggle: self.transactionsToggle)
         }
     }
 
+    private func toggleChanged(toggle: UISwitch) {
+        if toggle == unlockToggle {
+            
+            // If the unlock toggle is off, the transactions toggle is forced to off and disabled.
+            // i.e., Only allow Touch/Face ID for sending transactions if the user has enabled Touch/Face ID
+            // for unlocking the app.
+            if !toggle.isOn {
+                Store.perform(action: Biometrics.SetIsEnabledForUnlocking(false))
+                Store.perform(action: Biometrics.SetIsEnabledForTransactions(false))
+            } else {
+                if LAContext.canUseBiometrics || E.isSimulator {
+                    
+                    LAContext.checkUserBiometricsAuthorization(callback: { (result) in
+                        if result == .success {
+                            Store.perform(action: Biometrics.SetIsEnabledForUnlocking(true))
+                        } else {
+                            self.unlockToggle.setOn(false, animated: true)
+                        }
+                    })
+                    
+                } else {
+                    self.presentCantUseBiometricsAlert()
+                    self.unlockToggle.setOn(false, animated: true)
+                }
+            }
+            
+        } else if toggle == transactionsToggle {
+            Store.perform(action: Biometrics.SetIsEnabledForTransactions(toggle.isOn))
+        }
+    }
+    
     private func addFaqButton() {
         let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         negativePadding.width = -16.0
@@ -127,35 +233,21 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
-    private var textViewText: NSAttributedString {
-        guard let rate = rate else { return NSAttributedString(string: "") }
-        let amount = Amount(value: UInt256(walletManager.spendingLimit), currency: Currencies.btc, rate: rate)
-        let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
-        let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
-        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.tokenDescription, amount.fiatDescription))\n\n\(String(format: customizeText, linkText))"
-        let attributedString = NSMutableAttributedString(string: string, attributes: [
-                NSAttributedString.Key.font: UIFont.customBody(size: 13.0),
-                NSAttributedString.Key.foregroundColor: UIColor.darkText
-            ])
-        let linkAttributes = [
-                NSAttributedString.Key.font: UIFont.customMedium(size: 13.0),
-                NSAttributedString.Key.link: NSURL(string: "http://spending-limit")!]
-
-        if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
-            let from = range.lowerBound.samePosition(in: string.utf16)!
-            let to = range.upperBound.samePosition(in: string.utf16)!
-            attributedString.addAttributes(linkAttributes, range: NSRange(location: string.utf16.distance(from: string.utf16.startIndex, to: from),
-                                                                          length: string.utf16.distance(from: from, to: to)))
-        }
-
-        return attributedString
-    }
-
     fileprivate func presentCantUseBiometricsAlert() {
         let unavailableAlertTitle = LAContext.biometricType() == .face ? S.FaceIDSettings.unavailableAlertTitle : S.TouchIdSettings.unavailableAlertTitle
         let unavailableAlertMessage = LAContext.biometricType() == .face ? S.FaceIDSettings.unavailableAlertMessage : S.TouchIdSettings.unavailableAlertMessage
-        let alert = UIAlertController(title: unavailableAlertTitle, message: unavailableAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+        
+        let alert = UIAlertController(title: unavailableAlertTitle,
+                                      message: unavailableAlertMessage,
+                                      preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+
+        alert.addAction(UIAlertAction(title: S.Button.settings, style: .default, handler: { _ in
+            guard let url = URL(string: "App-Prefs:root") else { return }
+            UIApplication.shared.open(url)
+        }))
+
         present(alert, animated: true, completion: nil)
     }
 
@@ -166,17 +258,4 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension BiometricsSettingsViewController: UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        if LAContext.canUseBiometrics {
-            guard navigationController?.presentedViewController == nil else { return false }
-            presentSpendingLimit?()
-        } else {
-            presentCantUseBiometricsAlert()
-        }
-        return false
-    }
- */
 }

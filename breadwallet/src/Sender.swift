@@ -194,10 +194,9 @@ class Sender {
         //tokenTx.createMetaData(rate: tokenRate, comment: comment)
     }
 
-    // MARK: -
-
-    //TODO:CRYPTO spend limit
-    var canUseBiometrics: Bool { return false }
+    var canUseBiometrics: Bool {
+        return UserDefaults.isBiometricsEnabledForTransactions
+    }
 
     func fee(forAmount amount: Amount) -> Amount {
         return Amount(cryptoAmount: wallet.core.estimateFee(amount: amount.cryptoAmount, feeBasis: feeBasis), currency: wallet.feeCurrency)

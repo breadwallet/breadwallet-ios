@@ -10,6 +10,7 @@ import Foundation
 
 private let defaults = UserDefaults.standard
 private let isBiometricsEnabledKey = "istouchidenabled"
+private let isBiometricsEnabledForTransactionsKey = "isbiometricsenabledtx"
 private let defaultCurrencyCodeKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
@@ -61,6 +62,7 @@ extension UserDefaults {
         [hasSubscribedToEmailUpdatesKey: false],
         [hasPromptedBiometricsKey: false],
         [isBiometricsEnabledKey: false],
+        [isBiometricsEnabledForTransactionsKey: false],
         [hasPromptedShareDataKey: false],
         [hasOptedInSegwitKey: false],
         [debugShouldAutoEnterPinKey: false],
@@ -121,6 +123,32 @@ extension UserDefaults {
         return s
     }
     
+    // Gets/sets whether the user can use biometrics for unlocking the app
+    static var isBiometricsEnabledForUnlocking: Bool {
+        get {
+            return isBiometricsEnabled
+        }
+        set {
+            isBiometricsEnabled = newValue
+        }
+    }
+    
+    // Gets/sets whether the user can send transactions by authorizing with biometrics.
+    static var isBiometricsEnabledForTransactions: Bool {
+        get {
+            guard defaults.object(forKey: isBiometricsEnabledForTransactionsKey) != nil else {
+                return false
+            }
+            return defaults.bool(forKey: isBiometricsEnabledForTransactionsKey)
+        }
+        set {
+            defaults.set(newValue, forKey: isBiometricsEnabledForTransactionsKey)
+        }
+    }
+
+    // Legacy setting for biometrics allowing unlocking the app and sending transactions up to a
+    // certain 'spending limit.' This var is wrapped by 'isBiometricsEnabledForUnlocking' and
+    // retained in the code for backward compatibility.
     static var isBiometricsEnabled: Bool {
         get {
             guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
