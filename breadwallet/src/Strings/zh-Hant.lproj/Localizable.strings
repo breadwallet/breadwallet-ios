@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "匯率";
 /* The wallet is disabled. */
 "Disabled.title" = "停用錢包";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s地址";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "要求%1$@帳戶資訊";
 /* Service capabilities description */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10-60 分鐘";
 /* Fee Selector title */
 "FeeSelector.title" = "處理速度";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "選擇圖像源";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "開啟";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "持續獲知最新資訊";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "如果您喜歡我們的應用程式，請花點時間為其評分並提供評論。";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "不用了，謝謝";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "評價 BRD";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "評價 BRD";
 /* Address copied message. */
 "Receive.copied" = "已複製至剪貼簿。";
 /* Share via email button label */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "進階";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "進階設定";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "僅在美國提供";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "加密ATM地圖";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "顯示貨幣";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "使用比特幣最安全、最有保障的方式。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "恢復錢包";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "活動";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "正在連線";
 /* The sync has failed (to complete) */

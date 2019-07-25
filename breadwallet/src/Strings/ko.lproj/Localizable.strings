@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "환율";
 /* The wallet is disabled. */
 "Disabled.title" = "월렛이 비활성화됨";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s 주소";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "%1$@ 계정 정보를 요청합니다";
 /* Service capabilities description */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10~60분";
 /* Fee Selector title */
 "FeeSelector.title" = "처리 속도";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "이미지 소스 선택";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "계속 정보를 받으세요.";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "앱이 마음에 드신다면 잠시 시간을 내어 평가를 하고 리뷰를 보내주세요.";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "아니요, 괜찮아요";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "BRD 평가하기";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "BRD 평가하기";
 /* Address copied message. */
 "Receive.copied" = "클립보드에 복사되었습니다.";
 /* Share via email button label */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "고급";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "고급 설정";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "미국에서만 사용 가능";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "암호화 ATM지도";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "통화 보기";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "비트코인을 사용하는 가장 안정되고 안전한 방법.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "지갑 복구하기";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "활동";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "연결 중";
 /* The sync has failed (to complete) */
