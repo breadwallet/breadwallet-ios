@@ -35,7 +35,7 @@
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
-"Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@breadwallet.com";
+"Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@brd.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Your BRD encrypted data was recently invalidated because your Android lock screen was disabled.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
@@ -75,9 +75,9 @@
 /* The "home" screen is the name of the top level menu for the app. */
 "Android.BCH.welcome.message" = "Any BCH in your wallet can be accessed through the home screen.";
 /* Warning about using apps that can alter the screen */
-"Android.screenAlteringMessage" = "BRD will not function properly unless screen-altering apps (such as Twilight) are disabled.";
+"Android.screenAlteringMessage" = "We've detected an app that is incompatible with BRD running on your device. For security reasons, please disable any screen altering or light filtering apps to proceed.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
-"Android.screenAlteringTitle" = "Screen-Altering App Detected";
+"Android.screenAlteringTitle" = "Screen Altering App Detected";
 /* JSON Serialization error message */
 "ApiClient.jsonError" = "JSON Serialization Error";
 /* Wallet not ready error message */
@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "Exchange Rate";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet disabled";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s Address";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "Request %1$@ account information";
 /* Service capabilities description */
@@ -221,7 +223,7 @@
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "Email Unavailable";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "Bread can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
+"ErrorMessages.loopingLockScreen.android" = "BRD can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "This device isn't configured to send messages.";
 /* Messaging unavailable alert title */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10-60 minutes";
 /* Fee Selector title */
 "FeeSelector.title" = "Processing Speed";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "Select Image Source";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Stay in the Loop";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "If you love our app, please take a moment to rate it and give us a review.";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "No Thanks";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "Rate BRD";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "Rate BRD";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */
@@ -653,7 +665,7 @@
 /* Rewards view expanded body. */
 "RewardsView.expandedBody" = "Learn how you can save on trading fees and unlock future rewards";
 /* Rewards view expanded title. */
-"RewardsView.expandedTitle" = "Introducing BRD\nRewards.";
+"RewardsView.expandedTitle" = "Introducing BRD Rewards.";
 /* Rewards view title */
 "RewardsView.normalTitle" = "Rewards";
 /* Scan bitcoin address camera flash toggle */
@@ -702,9 +714,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "Balance: %1$@";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"Bread\" > \"Permissions\"";
+"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"BRD\" > \"Permissions\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Bread is not allowed to access the camera";
+"Send.cameraUnavailabeTitle.android" = "BRD is not allowed to access the camera";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Go to Settings to allow camera access.";
 /* Camera not allowed alert title */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "Advanced";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Advanced Settings";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "Available in the USA only";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "Crypto ATM Map";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Display Currency";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "Moving money forward.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recover Wallet";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "Activity";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Connecting";
 /* The sync has failed (to complete) */
