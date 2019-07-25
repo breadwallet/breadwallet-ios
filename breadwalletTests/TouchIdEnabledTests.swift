@@ -12,7 +12,8 @@ import XCTest
 class TouchIdEnabledTests : XCTestCase {
 
     override func setUp() {
-        UserDefaults.standard.removeObject(forKey: "isbiometricsenabled")
+        UserDefaults.standard.removeObject(forKey: "istouchidenabled")
+        UserDefaults.standard.removeObject(forKey: "isbiometricsenabledtx")
     }
 
     func testUserDefaultsStorage() {
@@ -35,8 +36,14 @@ class TouchIdEnabledTests : XCTestCase {
 
     func testTouchIdAction() {
         UserDefaults.isBiometricsEnabled = true
-        Store.perform(action: Biometrics.SetIsEnabled(false))
+        Store.perform(action: Biometrics.SetIsEnabledForUnlocking(false))
         XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Actions should persist new value")
+    }
+    
+    func testTouchIdActionForSending() {
+        UserDefaults.isBiometricsEnabledForTransactions = true
+        Store.perform(action: Biometrics.SetIsEnabledForTransactions(false))
+        XCTAssertFalse(UserDefaults.isBiometricsEnabledForTransactions, "Actions should persist new value")
     }
 
 }

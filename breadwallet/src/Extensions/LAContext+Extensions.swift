@@ -9,6 +9,12 @@
 import Foundation
 import LocalAuthentication
 
+enum BiometricsAuthResult {
+    case success
+    case cancelled
+    case failed
+}
+
 extension LAContext {
 
     static var canUseBiometrics: Bool {
@@ -46,6 +52,46 @@ extension LAContext {
             assertionFailure("unknown biometry type")
             return .none
         }
+    }
+    
+    static func checkUserBiometricsAuthorization(callback: @escaping (BiometricsAuthResult) -> Void) {
+        let context = LAContext()
+        
+        _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
+        
+        let type = context.biometryType
+        
+        guard type == .faceID || type == .touchID else {
+            callback(.failed)
+            return
+        }
+
+        let policy = LAPolicy.deviceOwnerAuthenticationWithBiometrics
+        let prompt = type == .faceID ? S.FaceIDSettings.explanatoryText : S.TouchIdSettings.explanatoryText
+        
+        // Ensures that the Enter Passcode iOS fallback option is not displayed if the touch/face ID input
+        // fails, otherwise Apple expects us to present our own enter-passcode UI for the device passcode.
+        context.localizedFallbackTitle = ""
+        
+        context.evaluatePolicy(policy, localizedReason: prompt, reply: { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    callback(.success)
+                    return
+                }
+                
+                guard let error = error else {
+                    callback(.failed)
+                    return
+                }
+                
+                if error._code == Int(kLAErrorUserCancel) {
+                    callback(.cancelled)
+                } else {
+                    callback(.failed)
+                }
+            }
+        })
     }
     
     enum BiometricType {

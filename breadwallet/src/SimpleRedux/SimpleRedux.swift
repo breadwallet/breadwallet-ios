@@ -56,7 +56,6 @@ enum TriggerName {
     case automaticRescan(Currency)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
-    case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
     case confirmTransaction(Currency?, Amount?, Amount?, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
     case hideStatusBar
@@ -116,8 +115,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.receivedPaymentRequest, .receivedPaymentRequest):
         return true
     case (.scanQr, .scanQr):
-        return true
-    case (.copyWalletAddresses, .copyWalletAddresses):
         return true
     case (.authenticateForPlatform, .authenticateForPlatform):
         return true

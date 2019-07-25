@@ -191,10 +191,6 @@ class ApplicationController: Subscriber, Trackable {
         if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
             pigeonExchange.fetchInbox()
         }
-        //TODO:CRYPTO spend limit
-//        if let btcWalletManager = walletManagers[Currencies.btc.code] as? BTCWalletManager {
-//            btcWalletManager.updateSpendLimit()
-//        }
     }
 
     func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
