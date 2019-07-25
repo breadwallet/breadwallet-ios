@@ -10,6 +10,9 @@ import UIKit
 
 class MenuViewController: UITableViewController {
     
+    let standardItemHeight: CGFloat = 48.0
+    let subtitleItemHeight: CGFloat = 58.0
+    
     init(items: [MenuItem], title: String, faqButton: UIButton? = nil) {
         self.items = items
         self.faqButton = faqButton
@@ -70,6 +73,16 @@ class MenuViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        let item = items[indexPath.row]
+        
+        if let subTitle = item.subTitle, !subTitle.isEmpty {
+            return subtitleItemHeight
+        } else {
+            return standardItemHeight
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
