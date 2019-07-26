@@ -88,6 +88,9 @@ class CoreSystem: Subscriber {
                                  account: account,
                                  path: C.coreDataDirURL.path,
                                  query: self.backend)
+            self.updateCurrencyMetaData {
+                self.system?.configure()
+            }
             self.state = .idle
         }
     }
@@ -97,11 +100,8 @@ class CoreSystem: Subscriber {
         print("[SYS] connect")
         queue.async {
             guard let system = self.system else { return assertionFailure() }
-            self.updateCurrencyMetaData {
-                //TODO:CRYPTO where should this list come from?
-                system.start(networksNeeded: self.supportedNetworks)
-                self.state = .active
-            }
+            system.managers.forEach { $0.connect() }
+            self.state = .active
         }
     }
 
@@ -237,7 +237,8 @@ extension CoreSystem: SystemListener {
                 if network.isMainnet == !E.isTestnet {
                     self.addCurrencies(for: network)
                     system.createWalletManager(network: network,
-                                               mode: network.defaultManagerMode)
+                                               mode: network.defaultManagerMode,
+                                               addressScheme: system.defaultAddressScheme(network: network))
                 }
 
             case .managerAdded(let manager):
@@ -353,12 +354,6 @@ extension WalletManagerEvent: CustomStringConvertible {
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
         }
-    }
-}
-
-extension BRCrypto.WalletManager: CustomStringConvertible {
-    public var description: String {
-        return "\(network) WM"
     }
 }
 
