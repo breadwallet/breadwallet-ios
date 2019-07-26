@@ -12,6 +12,9 @@ import BRCore
 import BRCrypto
 
 class FakeAuthenticator: WalletAuthenticator {
+    
+    var apiUserAccount: [AnyHashable : Any]?
+    
     var secret: UInt256
     let key: BRKey
     var userAccount: [AnyHashable: Any]? = nil
@@ -47,9 +50,6 @@ class FakeAuthenticator: WalletAuthenticator {
     
     var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
 
-    var masterPubKey: BRMasterPubKey? { return nil }
-    var ethPubKey: BRKey? { return nil }
-
     var pinLoginRequired: Bool { return false }
     var pinLength: Int { assertionFailure(); return 0 }
 
@@ -70,11 +70,15 @@ class FakeAuthenticator: WalletAuthenticator {
         completion(.failure)
     }
 
-    func login(withPin: String) -> Account? {
+    func loadAccount() -> Result<Account, AccountError> {
+        return .failure(.noAccount)
+    }
+    
+    func createAccount(withPin: String) -> Account? {
         return nil
     }
-
-    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
+    
+    func createAccount(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
         completion(nil)
     }
 

@@ -11,6 +11,8 @@ import XCTest
 @testable import breadwallet
 @testable import BRCrypto
 
+let testWalletSecAttrService = "com.brd.testnetQA.tests"
+
 typealias CoreCurrency = BRCrypto.Currency
 typealias AppCurrency = breadwallet.Currency
 
@@ -82,7 +84,8 @@ func clearKeychain() {
                    kSecClassKey as String,
                    kSecClassIdentity as String]
     classes.forEach { className in
-        SecItemDelete([kSecClass as String: className]  as CFDictionary)
+        SecItemDelete([kSecClass as String: className,
+                       kSecAttrService: testWalletSecAttrService] as CFDictionary)
     }
 }
 
@@ -100,7 +103,7 @@ func deleteKvStoreDb() {
 }
 
 func setupNewAccount(keyStore: KeyStore, pin: String = "111111") -> Account? {
-    _ = keyStore.setRandomSeedPhrase()
-    _ = keyStore.setPin(pin)
-    return keyStore.login(withPin: pin)
+    guard keyStore.setPin(pin) else { return nil }
+    guard let (_, account) = keyStore.setRandomSeedPhrase() else { return nil }
+    return account
 }
