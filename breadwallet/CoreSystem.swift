@@ -50,7 +50,8 @@ class CoreSystem: Subscriber {
     private func addCurrencies(for network: Network) {
         for coreCurrency in network.currencies {
             guard let metaData = currencyMetaData[coreCurrency.code.lowercased()] else {
-                assertionFailure("no metadata for currency \(coreCurrency.code)")
+                //assertionFailure("no metadata for currency \(coreCurrency.code)")
+                print("[SYS] WARNING: no metadata for core currency: \(coreCurrency.code)")
                 continue
             }
             guard let units = network.unitsFor(currency: coreCurrency),
@@ -236,6 +237,10 @@ extension CoreSystem: SystemListener {
                 // A network was created; create the corresponding wallet manager.
                 if network.isMainnet == !E.isTestnet {
                     self.addCurrencies(for: network)
+                    guard self.currency(forCoreCurrency: network.currency) != nil else {
+                        print("[SYS] \(network) wallet manager not created. \(network.currency.code) not supported.")
+                        return
+                    }
                     system.createWalletManager(network: network,
                                                mode: network.defaultManagerMode,
                                                addressScheme: system.defaultAddressScheme(network: network))
@@ -357,6 +362,7 @@ extension WalletManagerEvent: CustomStringConvertible {
     }
 }
 
+//TODO:CRYPTO use use-selected mode if available
 extension BRCrypto.Network {
     var defaultManagerMode: WalletManagerMode {
         switch currency.code {
