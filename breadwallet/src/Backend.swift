@@ -78,6 +78,7 @@ class Backend {
         feeUpdater.refresh()
     }
     
+    /// Disconnect backend services and reset API auth
     static func disconnectWallet() {
         shared.feeUpdaters.forEach { $0.stop() }
         shared.feeUpdaters.removeAll()

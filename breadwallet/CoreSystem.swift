@@ -80,6 +80,7 @@ class CoreSystem: Subscriber {
 
     // create -- on launch w/ acount present and wallet unlocked
     func create(account: Account) {
+        assert(state == .uninitialized)
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
@@ -115,13 +116,12 @@ class CoreSystem: Subscriber {
     }
 
     // shutdown -- wallet unlinked / account removed
-    func shutdown() {
+    func shutdown(completion: (() -> Void)?) {
         print("[SYS] shutdown / wipe")
         queue.sync {
             guard let system = self.system else { return assertionFailure() }
             self.state = .uninitialized
             system.stop()
-            //TODO:CRYPTO need interface to reset system, otherwise cannot create a new one in the same session
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
@@ -132,6 +132,8 @@ class CoreSystem: Subscriber {
             } catch let error {
                 print("[SYS] ERROR removing dir \(url.absoluteString): \(error)")
             }
+            
+            completion?()
         }
     }
 

@@ -61,9 +61,8 @@ enum TriggerName {
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
-    case didCreateOrRecoverWallet(Account?)
     case showAlert(UIAlertController?)
-    case reinitWalletManager((()->Void)?)
+    case didWipeWallet
     case didUpgradePin
     case txMemoUpdated(String)
     case promptShareData
@@ -126,11 +125,9 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.lightWeightAlert, .lightWeightAlert):
         return true
-    case (.didCreateOrRecoverWallet, .didCreateOrRecoverWallet):
-        return true
     case (.showAlert, .showAlert):
         return true
-    case (.reinitWalletManager, .reinitWalletManager):
+    case (.didWipeWallet, .didWipeWallet):
         return true
     case (.didUpgradePin, .didUpgradePin):
         return true

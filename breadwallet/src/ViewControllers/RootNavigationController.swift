@@ -10,19 +10,8 @@ import UIKit
 
 class RootNavigationController: UINavigationController {
 
-    private let loginTransitionDelegate = LoginTransitionDelegate()
-
     init() {
         super.init(nibName: nil, bundle: nil)
-    }
-
-    func promptForLogin(keyMaster: KeyMaster, completion: @escaping LoginCompletionHandler) {
-        assert(!keyMaster.noWallet && Store.state.isLoginRequired)
-        let loginView = LoginViewController(for: .initialLaunch(loginHandler: completion), keyMaster: keyMaster)
-        loginView.transitioningDelegate = loginTransitionDelegate
-        loginView.modalPresentationStyle = .overFullScreen
-        loginView.modalPresentationCapturesStatusBarAppearance = true
-        present(loginView, animated: false)
     }
 
     override func viewDidLoad() {

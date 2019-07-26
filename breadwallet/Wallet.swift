@@ -68,7 +68,7 @@ class Wallet {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
-        guard let transfer = core.createTransfer(target: target, amount: amount.cryptoAmount, feeBasis: feeBasis) else {
+        guard let transfer = core.createTransfer(target: target, amount: amount.cryptoAmount, estimatedFeeBasis: feeBasis) else {
             return .failure(.invalidAmountOrFee)
         }
         return .success(transfer)
