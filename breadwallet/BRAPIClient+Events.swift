@@ -287,13 +287,15 @@ class EventManager {
             guard let myself = self else { return }
             let dataDirectory = AnalyticsEventListener.eventDiskDirectory
             
-            do {
-                try FileManager.default.contentsOfDirectory(atPath: dataDirectory)
-            } catch let error {
-                print("error: \(error)")
+            guard let files = try? FileManager.default.contentsOfDirectory(atPath: dataDirectory) else {
+                do {
+                    try FileManager.default.contentsOfDirectory(atPath: dataDirectory)
+                } catch let error {
+                    print("[EventManager] Unable to read event data directory: \(error.localizedDescription)")
+                }
+                return
             }
             
-            guard let files = try? FileManager.default.contentsOfDirectory(atPath: dataDirectory) else { print("Unable to read event data directory"); return }
             files.forEach { baseName in
                 // 1: read the json in
                 let fileName = NSString(string: dataDirectory).appendingPathComponent("/\(baseName)")
@@ -340,7 +342,6 @@ class EventManager {
                 }).resume()
             }
         }
-        
     }
     
     private func removeData() {

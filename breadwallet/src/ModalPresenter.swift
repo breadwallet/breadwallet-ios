@@ -692,15 +692,8 @@ class ModalPresenter: Subscriber, Trackable {
 
             developerItems.append(MenuItem(title: "Clear Core persistent storage and exit",
                                            callback: { [unowned self] in
-                                            self.system.shutdown()
-                                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                                                let url = C.coreDataDirURL
-                                                do {
-                                                    try FileManager.default.removeItem(at: url)
-                                                } catch let error {
-                                                    print("ERROR removing dir \(url.absoluteString): \(error)")
-                                                }
-                                                fatalError()
+                                            self.system.shutdown {
+                                                fatalError("forced exit")
                                             }
             }))
             
@@ -877,27 +870,18 @@ class ModalPresenter: Subscriber, Trackable {
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
-        //TODO:CRYPTO wipe
-        DispatchQueue.walletQueue.async {
-            self.system.shutdown()
-            //TODO:CRYPTO hack
-            DispatchQueue.walletQueue.asyncAfter(deadline: .now() + 2.0, execute: {
-                let success = self.keyStore.wipeWallet()
-                Backend.disconnectWallet()
-                DispatchQueue.main.async {
-                    activity.dismiss(animated: true) {
-                        if success {
-                            Store.trigger(name: .reinitWalletManager({
-                                Store.trigger(name: .resetDisplayCurrencies)
-                            }))
-                        } else {
-                            let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                            failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                            self.topViewController?.present(failure, animated: true, completion: nil)
-                        }
+        self.system.shutdown {
+            Backend.disconnectWallet()
+            let success = self.keyStore.wipeWallet()
+            DispatchQueue.main.async {
+                activity.dismiss(animated: true) {
+                    guard success else { // unexpected error writing to keychain
+                        self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
+                        return
                     }
+                    Store.trigger(name: .didWipeWallet)
                 }
-            })
+            }
         }
     }
     //TODO:CRYPTO key import

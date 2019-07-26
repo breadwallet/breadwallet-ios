@@ -128,7 +128,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             // add Date header if necessary
             mutableRequest.setValue(Date().RFC1123String(), forHTTPHeaderField: "Date")
         }
-        if let tokenData = authenticator.userAccount,
+        if let tokenData = authenticator.apiUserAccount,
             let token = tokenData["token"] as? String,
             let authKey = authKey,
             let signingData = mutableRequest.signingString.data(using: .utf8) {
@@ -272,10 +272,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                             let tok = topObj["token"] as? String,
                             let uid = topObj["userID"] as? String {
                             // success! store it in the keychain
-                            var kcData = self.authenticator.userAccount ?? [AnyHashable: Any]()
+                            var kcData = self.authenticator.apiUserAccount ?? [AnyHashable: Any]()
                             kcData["token"] = tok
                             kcData["userID"] = uid
-                            self.authenticator.userAccount = kcData
+                            self.authenticator.apiUserAccount = kcData
                         }
                     } catch let e {
                         self.log("JSON Deserialization error \(e)")
