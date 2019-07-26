@@ -458,11 +458,12 @@ class EthWalletManager: WalletManager {
         }
     }
 
-    private func stopWaitingForSend() {
+    private func stopWaitingForSend(completion: (() -> Void)? = nil) {
         DispatchQueue.main.async {
             self.pendingGasEstimate = nil
             self.pendingSend = nil
             self.sendTimeoutTimer = nil
+            completion?()
         }
     }
 }
@@ -479,7 +480,6 @@ extension EthWalletManager: EthereumClient {
         if let gasLimit = pendingGasEstimate?.gasEstimate {
             print("[EWM] using specified gas estimate for \(transfer.currency.code) transfer (\(transfer.hash)): \(gasLimit.string(decimals: 10))")
             completion(gasLimit.hexString)
-            stopWaitingForSend()
             return
         }
 
@@ -630,11 +630,16 @@ extension EthWalletManager: EthereumClient {
     func handleTransferEvent(ewm: EthereumWalletManager, wallet: EthereumWallet, transfer: EthereumTransfer, event: EthereumTransferEvent) {
         print("[EWM] \(transfer.currency.code) transfer \(transfer.hash) event: \(event)")
 
-        if let pendingGasEstimate = pendingGasEstimate, pendingGasEstimate.tx.identifier == transfer.identifier, event == .gasEstimateUpdated {
-            //print("  ↳ gas estimate updated: \(transfer.gasLimit)")
-            stopWaitingForSend()
-            pendingGasEstimate.completion(.success)
-            return
+        if event == .gasEstimateUpdated {
+            if let pendingGasEstimate = pendingGasEstimate, pendingGasEstimate.tx.identifier == transfer.identifier {
+                print("  ↳ gas estimate updated: \(transfer.gasLimit)")
+                stopWaitingForSend {
+                    pendingGasEstimate.completion(.success)
+                }
+                return
+            } else {
+                assertionFailure("unexpected gas estimation event")
+            }
         }
 
         if let pendingSend = pendingSend, transfer.hash == pendingSend.tx.hash {
