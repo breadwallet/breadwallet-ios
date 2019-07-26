@@ -12,8 +12,6 @@ import BRCrypto
 
 private let topControlHeight: CGFloat = 32.0
 
-typealias LoginCompletionHandler = ((Account) -> Void)
-
 class LoginViewController: UIViewController, Subscriber, Trackable {
 
     enum Context {
@@ -90,7 +88,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                             
                                                             updatePin.resetFromDisabledSuccess = { pin in
                                                                 if case .initialLaunch = self.context {
-                                                                    guard let account = self.keyMaster.login(withPin: pin) else { return assertionFailure() }
+                                                                    guard let account = self.keyMaster.createAccount(withPin: pin) else { return assertionFailure() }
                                                                     self.authenticationSucceded(forLoginWithAccount: account)
                                                                 } else {
                                                                     self.authenticationSucceded()
@@ -185,7 +183,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private func authenticate(withPin pin: String) {
         guard !E.isScreenshots else { return authenticationSucceded() }
         if case .initialLaunch = context {
-            guard let account = keyMaster.login(withPin: pin) else { return authenticationFailed() }
+            guard let account = keyMaster.createAccount(withPin: pin) else { return authenticationFailed() }
             authenticationSucceded(forLoginWithAccount: account)
         } else {
             guard keyMaster.authenticate(withPin: pin) else { return authenticationFailed() }
@@ -251,7 +249,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     @objc func biometricsTapped() {
         guard !isWalletDisabled else { return }
         if case .initialLaunch = context {
-            keyMaster.login(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { account in
+            keyMaster.createAccount(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { account in
                 if let account = account {
                     self.authenticationSucceded(forLoginWithAccount: account)
                 }

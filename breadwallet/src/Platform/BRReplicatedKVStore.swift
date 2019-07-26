@@ -99,7 +99,8 @@ open class BRReplicatedKVStore: NSObject {
     static var dbPath: URL {
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let path = docsUrl.appendingPathComponent("kvstore.sqlite3")
+        let filename = E.isRunningTests ? "kvstore_test.sqlite3" : "kvstore.sqlite3"
+        let path = docsUrl.appendingPathComponent(filename)
         return path
     }
     

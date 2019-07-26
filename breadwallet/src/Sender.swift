@@ -52,7 +52,6 @@ class Sender {
 
     private var comment: String?
     private var transfer: BRCrypto.Transfer?
-    private var feeBasis: BRCrypto.TransferFeeBasis
 
     private var completionHandler: SendCompletion?
     private var submitTimeoutTimer: Timer? {
@@ -68,7 +67,6 @@ class Sender {
         self.wallet = wallet
         self.authenticator = authenticator
         self.kvStore = kvStore
-        self.feeBasis = wallet.core.defaultFeeBasis
     }
 
     func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
@@ -87,7 +85,6 @@ class Sender {
     func reset() {
         transfer = nil
         comment = nil
-        feeBasis = wallet.core.defaultFeeBasis
     }
 
     // MARK: Create/Submit
@@ -135,17 +132,21 @@ class Sender {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount)
         guard case .ok = result else { return result }
-
-        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
-        case .success(let transfer):
-            self.comment = comment
-            self.transfer = transfer
-            return .ok
-        case .failure(let error) where error == .invalidAddress:
-            return .invalidAddress
-        default:
-            return .failed
-        }
+        
+        //TODO:CRYPTO IOS-1139
+        return .failed
+        //let feeBasis = wallet.core.estimateFee ...
+        
+//        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
+//        case .success(let transfer):
+//            self.comment = comment
+//            self.transfer = transfer
+//            return .ok
+//        case .failure(let error) where error == .invalidAddress:
+//            return .invalidAddress
+//        default:
+//            return .failed
+//        }
     }
 
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
@@ -199,7 +200,8 @@ class Sender {
     }
 
     func fee(forAmount amount: Amount) -> Amount {
-        return Amount(cryptoAmount: wallet.core.estimateFee(amount: amount.cryptoAmount, feeBasis: feeBasis), currency: wallet.feeCurrency)
+        //TODO:CRYPTO IOS-1139
+        return Amount.zero(wallet.feeCurrency)
     }
 
     // MARK: - Gas Estimation

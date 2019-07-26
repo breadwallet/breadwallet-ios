@@ -12,13 +12,16 @@ import LocalAuthentication
 import BRCore
 import BRCrypto
 
-#if TESTNET
-private let WalletSecAttrService = "com.brd.testnetQA"
-#elseif INTERNAL
-private let WalletSecAttrService = "com.brd.internalQA"
-#else
-private let WalletSecAttrService = "org.voisine.breadwallet"
-#endif
+private var WalletSecAttrService: String {
+    if E.isRunningTests { return "com.brd.testnetQA.tests" }
+    #if TESTNET
+    return "com.brd.testnetQA"
+    #elseif INTERNAL
+    return "com.brd.internalQA"
+    #else
+    return "org.voisine.breadwallet"
+    #endif
+}
 
 enum KeyStoreError: Error {
     case alreadyInitialized
@@ -30,6 +33,12 @@ enum BiometricsResult {
     case cancel
     case fallback
     case failure
+}
+
+enum AccountError: Error {
+    case noAccount
+    case disabled
+    case invalidSerialization
 }
 
 private struct DefaultsKey {
@@ -50,17 +59,14 @@ protocol WalletAuthenticator {
     func authenticate(withPhrase: String) -> Bool
     func authenticate(withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
 
-    func login(withPin: String) -> Account?
-    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void)
-
-    // LEGACY
-    var masterPubKey: BRMasterPubKey? { get }
-    var ethPubKey: BRKey? { get }
-    // ... LEGACY
+    func loadAccount() -> Result<Account, AccountError>
+    func createAccount(withPin: String) -> Account?
+    func createAccount(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void)
 
     var apiAuthKey: String? { get }
-    var userAccount: [AnyHashable: Any]? { get set }
+    var apiUserAccount: [AnyHashable: Any]? { get set }
 
+    //TODO:CRYPTO
     func buildBitIdKey(url: String, index: Int) -> BRKey?
 }
 
@@ -96,11 +102,11 @@ protocol KeyMaster: WalletAuthenticator {
 
     /// recovers an existing wallet using 12 word wallet recovery phrase
     /// will fail if a wallet already exists on the keychain
-    func setSeedPhrase(_ phrase: String) -> Bool
+    func setSeedPhrase(_ phrase: String) -> Account?
 
     /// creates a new wallet and returns the 12 word wallet recovery phrase
     /// will fail if a wallet already exists on the keychain
-    func setRandomSeedPhrase() -> String?
+    func setRandomSeedPhrase() -> (phrase: String, account: Account)?
 
     /// wipes the existing wallet (keys, recovery phrase) from the keychain and the KV store database.
     /// this should only be called through Store.trigger(.wipeWalletNoPrompts)
@@ -127,32 +133,16 @@ struct KeyStore {
     private var allBip39WordLists: [[NSString]] = []
     private var allBip39Words: Set<String> = []
 
-    private var account: Account? {
-        guard !noWallet, !walletIsDisabled else { return nil }
-        //TODO:CRYPTO use stored serialized account to create Account for existing user
-        guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic) else { return nil }
-        
-        let account = Account.createFrom(phrase: seedPhrase,
-                                         timestamp: creationTime,
-                                         uids: UserDefaults.deviceID)
-        return account
-    }
-
     /// Creates the singleton instance of the KeyStore and returns it
     static func create() throws -> KeyStore {
         guard KeyStore.instance == nil else {
             throw KeyStoreError.alreadyInitialized
         }
 
-        if try keychainItem(key: KeychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
+        if try keychainItem(key: KeychainKey.seed) as Data? != nil { // upgrade from old keychain accessibility scheme
+            print("[KEYSTORE] upgrading to authenticated keychain scheme")
             let seedPhrase: String? = try keychainItem(key: KeychainKey.mnemonic)
-            var seed = UInt512()
-            print("upgrading to authenticated keychain scheme")
-            BRBIP39DeriveKey(&seed, seedPhrase, nil)
-            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
-            seed = UInt512() // clear seed
             try setKeychainItem(key: KeychainKey.mnemonic, item: seedPhrase, authenticated: true)
-            try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: mpk))
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
         }
 
@@ -171,6 +161,35 @@ struct KeyStore {
             }
         }
     }
+    
+    /// Returns true if old masterPubKey record is in the keychain and removes them
+    /// to prepare for migration to stored Account
+    private func migrationNeeded() -> Bool {
+        do {
+            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil {
+                return true
+            }
+        } catch let error {
+            assertionFailure("keychain error: \(error.localizedDescription)")
+        }
+        return false
+    }
+    
+    /// Removes deprecated keys from the keychain
+    private func clearDeprecatedKeys() {
+        guard case .success = loadAccount() else { return assertionFailure() }
+        
+        do {
+            if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil {
+                try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
+            }
+            if try keychainItem(key: KeychainKey.ethPrivKey) as Data? != nil {
+                try setKeychainItem(key: KeychainKey.ethPrivKey, item: nil as Data?)
+            }
+        } catch let error {
+            assertionFailure("keychain error: \(error.localizedDescription)")
+        }
+    }
 }
 
 // MARK: - WalletAuthenticator
@@ -180,6 +199,7 @@ extension KeyStore: WalletAuthenticator {
     /// true if keychain is available and we know that no wallet exists on it
     var noWallet: Bool {
         do {
+            if try keychainItem(key: KeychainKey.systemAccount) as Data? != nil { return false }
             if try keychainItem(key: KeychainKey.masterPubKey) as Data? != nil { return false }
             if try keychainItem(key: KeychainKey.seed) as Data? != nil { return false } // check for old keychain scheme
             return true
@@ -194,56 +214,12 @@ extension KeyStore: WalletAuthenticator {
         }
         return Date(timeIntervalSinceReferenceDate: creationTime)
     }
+    
+    private var serializedAccountData: Data? {
+        return try? keychainItem(key: KeychainKey.systemAccount)
+    }
 
     // MARK: - Keys
-
-    var masterPubKey: BRMasterPubKey? {
-        do {
-            let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
-            return mpkData?.masterPubKey
-        } catch {
-            return nil
-        }
-    }
-
-    var ethPubKey: BRKey? {
-        guard ethPrivKey != nil else { return nil }
-        var key = BRKey(privKey: ethPrivKey!)
-        defer { key?.clean() }
-        key?.compressed = 0
-        guard let pubKey = key?.pubKey(), pubKey.count == 65 else { return nil }
-        return BRKey(pubKey: [UInt8](pubKey))
-    }
-
-    fileprivate var ethPrivKey: String? {
-        return autoreleasepool {
-            do {
-                if let ethKey: String = ((try? keychainItem(key: KeychainKey.ethPrivKey)) as String?), !ethKey.isEmpty {
-                    return ethKey
-                }
-                // TODO: move to setSeedPhrase?
-                var key = BRKey()
-                var seed = UInt512()
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                // BIP44 etherium path m/44H/60H/0H/0/0: https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
-                BRBIP32vPrivKeyPath(&key, &seed, MemoryLayout<UInt512>.size, 5,
-                                    getVaList([44 | BIP32_HARD, 60 | BIP32_HARD, 0 | BIP32_HARD, 0, 0]))
-                seed = UInt512() // clear seed
-                let pkLen = BRKeyPrivKey(&key, nil, 0)
-                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
-                pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
-                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
-                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
-                try setKeychainItem(key: KeychainKey.ethPrivKey, item: privKey)
-                return privKey
-            } catch let error {
-                print("ethPrivKey error: \(error)")
-                return nil
-            }
-        }
-    }
 
     /// key used for authenticated API calls
     var apiAuthKey: String? {
@@ -252,6 +228,7 @@ extension KeyStore: WalletAuthenticator {
                 if let apiKey: String = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String?), !apiKey.isEmpty {
                     return apiKey
                 }
+                //TODO:CRYPTO key generation
                 var key = BRKey()
                 var seed = UInt512()
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
@@ -274,21 +251,22 @@ extension KeyStore: WalletAuthenticator {
         }
     }
 
-    /// sensitive user information stored on the keychain
-    var userAccount: [AnyHashable: Any]? {
+    /// API access credentials
+    var apiUserAccount: [AnyHashable: Any]? {
         get {
             do {
-                return try keychainItem(key: KeychainKey.userAccount)
+                return try keychainItem(key: KeychainKey.apiUserAccount)
             } catch { return nil }
         }
 
         set (value) {
             do {
-                try setKeychainItem(key: KeychainKey.userAccount, item: value)
+                try setKeychainItem(key: KeychainKey.apiUserAccount, item: value)
             } catch { }
         }
     }
 
+    //TODO:CRYPTO BRKey
     func buildBitIdKey(url: String, index: Int) -> BRKey? {
         return autoreleasepool {
             do {
@@ -401,24 +379,19 @@ extension KeyStore: WalletAuthenticator {
             return false
         }
     }
-
-    /// true if phrase is correct
+    
+    /// returns true if phrase is correct
     func authenticate(withPhrase phrase: String) -> Bool {
-        do {
-            //TODO:CRYPTO remove mpk
-            var seed = UInt512()
-            guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
-                else { return false }
-            CFStringNormalize(nfkdPhrase, .KD)
-            BRBIP39DeriveKey(&seed, nfkdPhrase as String, nil)
-            let mpk = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
-            seed = UInt512() // clear seed
-            let mpkData: Data? = try keychainItem(key: KeychainKey.masterPubKey)
-            guard mpkData?.masterPubKey == mpk else { return false }
-            return true
-        } catch {
-            return false
-        }
+        guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
+            else { return false }
+        CFStringNormalize(nfkdPhrase, .KD)
+        guard let existingAccountData = serializedAccountData,
+            let account = Account.createFrom(phrase: nfkdPhrase as String,
+                                             timestamp: creationTime,
+                                             uids: UserDefaults.deviceID) else { return false }
+        
+        // validates the account generated from the input phrase matches the stored account (public key)
+        return account.validate(serialization: existingAccountData)
     }
 
     private func authenticationSuccess() throws {
@@ -451,17 +424,52 @@ extension KeyStore: WalletAuthenticator {
             }
         })
     }
-
-    /// authenticates with pin and returns the Account if successful, otherwise returns nil
-    func login(withPin pin: String) -> Account? {
-        return authenticate(withPin: pin) ? account : nil
+    
+    /// Creates an Account using the serialized Account data in the keychain.
+    func loadAccount() -> Result<Account, AccountError> {
+        guard !walletIsDisabled else { return .failure(.disabled) }
+        guard let accountData = serializedAccountData else {
+            if migrationNeeded() {
+                // trigger auth and creation of new Account
+                print("[KEYSTORE] migrating to serialized Account")
+                return .failure(.invalidSerialization)
+            } else {
+                return .failure(.noAccount)
+            }
+        }
+        guard let account = Account.createFrom(serialization: accountData, uids: UserDefaults.deviceID) else {
+            // serialization is outdated and must be recreated
+            print("[KEYSTORE] invalid account serialization")
+            return .failure(.invalidSerialization)
+        }
+        return .success(account)
+    }
+    
+    /// Creates a new Account using the paper key and saves it to the keychain.
+    /// This method should only be called after successful authentication.
+    private func createAccountFromSeed() -> Account? {
+        guard let seedPhrase: String = try? keychainItem(key: KeychainKey.mnemonic),
+            let account = Account.createFrom(phrase: seedPhrase,
+                                             timestamp: creationTime,
+                                             uids: UserDefaults.deviceID) else { assertionFailure(); return nil }
+        do {
+            try setKeychainItem(key: KeychainKey.systemAccount, item: account.serialize)
+            clearDeprecatedKeys()
+        } catch let error {
+            assertionFailure("keychain write error: \(error.localizedDescription)")
+            return nil
+        }
+        return account
     }
 
-    /// show biometric dialog and call completion block with the Account if successful or nil otherwise
-    func login(withBiometricsPrompt prompt: String, completion: @escaping (Account?) -> Void) {
+    func createAccount(withPin pin: String) -> Account? {
+        return authenticate(withPin: pin) ? createAccountFromSeed() : nil
+    }
+
+    func createAccount(withBiometricsPrompt prompt: String, completion: @escaping (Account?) -> Void) {
         authenticate(withBiometricsPrompt: prompt) { result in
             if result == .success {
-                completion(self.account)
+                completion(self.createAccountFromSeed())
             } else {
                 completion(nil)
             }
@@ -556,56 +564,42 @@ extension KeyStore: KeyMaster {
     }
 
     /// recover an existing wallet using 12 word wallet recovery phrase
-    /// will fail if a wallet already exists on the keychain
-    func setSeedPhrase(_ phrase: String) -> Bool {
-        guard noWallet, isSeedPhraseValid(phrase) else { return false }
+    /// will fail if a wallet seed already exists on the keychain
+    func setSeedPhrase(_ phrase: String) -> Account? {
+        guard noWallet, isSeedPhraseValid(phrase) else { return nil }
 
         do {
-            //TODO:CRYPTO remove mpk
             guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
-                else { return false }
+                else { return nil }
             CFStringNormalize(nfkdPhrase, .KD)
-            var seed = UInt512()
+            //TODO:CRYPTO is there a way to get KV-store creation time in case of wallet recovery? (this is not a new issue, pre-multichain behaved the same I believe)
+            guard let account = Account.createFrom(phrase: nfkdPhrase as String,
+                                                   timestamp: creationTime,
+                                                   uids: UserDefaults.deviceID) else { return nil }
             try setKeychainItem(key: KeychainKey.mnemonic, item: nfkdPhrase as String?, authenticated: true)
-            BRBIP39DeriveKey(&seed, nfkdPhrase as String, nil)
-            let masterPubKey = BRBIP32MasterPubKey(&seed, MemoryLayout<UInt512>.size)
-            seed = UInt512() // clear seed
-            try setKeychainItem(key: KeychainKey.masterPubKey, item: Data(masterPubKey: masterPubKey))
-            return true
-        } catch { return false }
+            try setKeychainItem(key: KeychainKey.systemAccount, item: account.serialize)
+            return account
+        } catch { return nil }
     }
 
-    /// create a new wallet and return the 12 word wallet recovery phrase
-    /// will fail if a wallet already exists on the keychain
-    func setRandomSeedPhrase() -> String? {
-        guard noWallet else { return nil }
-        guard var words = Words.rawWordList else { return nil }
-        let time = Date.timeIntervalSinceReferenceDate
-
-        // we store the wallet creation time on the keychain because keychain data persists even when app is deleted
+    /// create a new wallet and return the 12 word wallet recovery phrase and Account
+    /// will fail if a wallet seed already exists on the keychain or a PIN is not set
+    func setRandomSeedPhrase() -> (phrase: String, account: Account)? {
         do {
-            try setKeychainItem(key: KeychainKey.creationTime,
-                                item: [time].withUnsafeBufferPointer { Data(buffer: $0) })
+            guard noWallet, try keychainItem(key: KeychainKey.pin) as String? != nil else { return nil }
+            guard let words = Words.wordList else { return nil }
+            
+            // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
+            return try autoreleasepool {
+                guard let (phrase, creationDate) = Account.generatePhrase(words: words.map { $0 as String }) else { return nil }
+                guard let account = setSeedPhrase(phrase) else { return nil }
+                // we store the wallet creation time in the keychain because keychain data persists even when app is deleted
+                let creationTimeInterval = creationDate.timeIntervalSinceReferenceDate
+                try setKeychainItem(key: KeychainKey.creationTime,
+                                    item: [creationTimeInterval].withUnsafeBufferPointer { Data(buffer: $0) })
+                return (phrase, account)
+            }
         } catch { return nil }
-
-        // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
-        return autoreleasepool {
-            var entropy = UInt128()
-            let entropyRef = UnsafeMutableRawPointer(mutating: &entropy).assumingMemoryBound(to: UInt8.self)
-            guard SecRandomCopyBytes(kSecRandomDefault, MemoryLayout<UInt128>.size, entropyRef) == 0
-                else { return nil }
-            let phraseLen = BRBIP39Encode(nil, 0, &words, entropyRef, MemoryLayout<UInt128>.size)
-            var phraseData = CFDataCreateMutable(secureAllocator, phraseLen) as Data
-            phraseData.count = phraseLen
-            guard phraseData.withUnsafeMutableBytes({
-                BRBIP39Encode($0.baseAddress?.assumingMemoryBound(to: Int8.self), phraseLen, &words, entropyRef, MemoryLayout<UInt128>.size)
-            }) == phraseData.count else { return nil }
-            entropy = UInt128()
-            let phrase = CFStringCreateFromExternalRepresentation(secureAllocator, phraseData as CFData,
-                                                                  CFStringBuiltInEncodings.UTF8.rawValue) as String
-            guard setSeedPhrase(phrase) else { return nil }
-            return phrase
-        }
     }
 
     // MARK: PIN
@@ -668,6 +662,7 @@ extension KeyStore: KeyMaster {
             }
             try Backend.kvStore?.rmdb()
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            try setKeychainItem(key: KeychainKey.systemAccount, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.pinFailTime, item: nil as Int64?)
@@ -690,10 +685,9 @@ extension KeyStore: KeyMaster {
     func isSeedPhraseValid(_ phrase: String) -> Bool {
         assert(!allBip39WordLists.isEmpty)
         for wordList in allBip39WordLists {
-            var words = wordList.map({ $0.utf8String })
             guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString) else { return false }
             CFStringNormalize(nfkdPhrase, .KD)
-            if BRBIP39PhraseIsValid(&words, nfkdPhrase as String) != 0 {
+            if Account.validatePhrase(nfkdPhrase as String, words: wordList.map { $0 as String }) {
                 return true
             }
         }
@@ -718,14 +712,12 @@ extension KeyStore {
 // MARK: -
 
 struct NoAuthWalletAuthenticator: WalletAuthenticator {
+    var apiUserAccount: [AnyHashable: Any]?
+    
     var noWallet: Bool { return true }
     var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
     var apiAuthKey: String? { return nil }
     var userAccount: [AnyHashable: Any]?
-
-    //TODO:CRYPTO remove mpk
-    var masterPubKey: BRMasterPubKey? { return nil }
-    var ethPubKey: BRKey? { return nil }
 
     var pinLoginRequired: Bool { return false }
     var pinLength: Int { assertionFailure(); return 0 }
@@ -746,17 +738,23 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
         assertionFailure()
         completion(.failure)
     }
+    
+    func loadAccount() -> Result<Account, AccountError> {
+        assertionFailure()
+        return .failure(.noAccount)
+    }
 
-    func login(withPin: String) -> Account? {
+    func createAccount(withPin: String) -> Account? {
         assertionFailure()
         return nil
     }
 
-    func login(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
+    func createAccount(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
         assertionFailure()
         completion(nil)
     }
 
+    //TODO:CRYPTO BRKey
     func buildBitIdKey(url: String, index: Int) -> BRKey? {
         assertionFailure()
         return nil
@@ -768,14 +766,15 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
 private struct KeychainKey {
     public static let mnemonic = "mnemonic"
     public static let creationTime = "creationtime"
-    public static let masterPubKey = "masterpubkey"
     public static let pin = "pin"
     public static let pinFailCount = "pinfailcount"
     public static let pinFailTime = "pinfailheight"
     public static let apiAuthKey = "authprivkey"
-    public static let ethPrivKey = "ethprivkey"
-    public static let userAccount = "https://api.breadwallet.com"
+    public static let apiUserAccount = "https://api.breadwallet.com"
+    public static let systemAccount = "systemAccount"
     public static let seed = "seed" // deprecated
+    public static let masterPubKey = "masterpubkey" // deprecated
+    public static let ethPrivKey = "ethprivkey" // deprecated
 }
 
 private func keychainItem<T>(key: String) throws -> T? {
