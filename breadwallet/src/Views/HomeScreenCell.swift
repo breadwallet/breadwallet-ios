@@ -125,12 +125,11 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     }
 
     private func addConstraints() {
-        let padding = Padding(increment: 5.0)
-        
+        let containerPadding = E.isIPhone5 ? C.padding[1] : C.padding[2]
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0,
-                                                           left: C.padding[1],
+                                                           left: containerPadding,
                                                            bottom: -10,
-                                                           right: -C.padding[1]))
+                                                           right: -containerPadding))
         iconContainer.constrain([
             iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[1]),
             iconContainer.centerYAnchor.constraint(equalTo: container.centerYAnchor),
@@ -138,7 +137,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
             iconContainer.widthAnchor.constraint(equalTo: iconContainer.heightAnchor)])
         icon.constrain(toSuperviewEdges: .zero)
         currencyName.constrain([
-            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: padding[2]),
+            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: C.padding[1]),
             currencyName.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: -2.0)])
         price.constrain([
             price.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor),
@@ -149,7 +148,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
             priceChangeView.heightAnchor.constraint(equalToConstant: 24)])
         fiatBalance.constrain([
             fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[1]),
-            fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: padding[2]),
+            fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: C.padding[1]),
             fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)])
         tokenBalance.constrain([
             tokenBalance.trailingAnchor.constraint(equalTo: fiatBalance.trailingAnchor),
