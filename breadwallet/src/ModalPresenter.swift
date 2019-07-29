@@ -434,6 +434,8 @@ class ModalPresenter: Subscriber, Trackable {
                     let service = params["service"] {
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
                     Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: nil)))
+                } else {
+                    UIApplication.shared.open(url)
                 }
             case .invalid:
                 break
