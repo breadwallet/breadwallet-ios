@@ -584,8 +584,8 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) {
-                guard let kvStore = Backend.kvStore else { return }
-                let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
+                guard let assetCollection = self.system.assetCollection else { return }
+                let vc = ManageWalletsViewController(assetCollection: assetCollection)
                 menuNav.pushViewController(vc, animated: true)
             },
             

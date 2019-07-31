@@ -16,11 +16,8 @@ class CoreSystem: Subscriber {
         case idle
         case active
     }
-
-    private var supportedNetworks: [String] {
-        let variant = E.isTestnet ? "testnet" : "mainnet"
-        return ["bitcoin", "ethereum"].map { "\($0)-\(variant)" }
-    }
+    
+    var assetCollection: AssetCollection?
 
     private var system: System?
     private let backend = BlockChainDB()
@@ -36,24 +33,46 @@ class CoreSystem: Subscriber {
     // Currency view models indexed by Core Currency
     fileprivate var currencies = [BRCrypto.Currency: Currency]()
 
+    init() {
+        Store.subscribe(self, name: .didAddCurrency(nil), callback: {
+            guard let trigger = $0 else { return }
+            guard case .didAddCurrency(let currencyMetaData) = trigger, let metaData = currencyMetaData else { return }
+            self.addCurrency(metaData)
+        })
+        
+        Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
+            self.resetToDefaultCurrencies()
+        })
+    }
+    
     func currency(forCoreCurrency core: BRCrypto.Currency) -> Currency? {
         return currencies[core]
     }
 
-    // assume meta data is only additive -- delisted coins are marked unsupported but not removed
-    private var currencyMetaData = [String: CurrencyMetaData]()
-
     func wallet(for currency: Currency) -> Wallet? {
         return wallets[currency.core]
     }
+    
+    /// Gets the balance for a wallet with matching currency ID, including wallets which are not enabled, if found
+    func balance(forCurrencyWithId currencyId: String) -> Amount? {
+        guard let system = system,
+            let wallet = system.wallets.first(where: { currencyId == $0.currency.uids }),
+            let currency = currencies[wallet.currency] else { return nil }
+        return Amount(cryptoAmount: wallet.balance, currency: currency)
+    }
 
+    /// Adds all currencies supported by the Network and enabled in the asset collection.
+    /// This is triggered by the networkAdded event on launch.
     private func addCurrencies(for network: Network) {
+        guard let assetCollection = assetCollection else { return assertionFailure() }
         for coreCurrency in network.currencies {
-            guard let metaData = currencyMetaData[coreCurrency.code.lowercased()] else {
-                //assertionFailure("no metadata for currency \(coreCurrency.code)")
-                print("[SYS] WARNING: no metadata for core currency: \(coreCurrency.code)")
+            guard currencies[coreCurrency] == nil else { return assertionFailure() }
+            //TODO:CRYPTO use coreCurrency.uids for indexing once they match the uids from the backend token list
+            guard let metaData = assetCollection.allAssets[coreCurrency.code.uppercased()] else {
+                print("[SYS] unknown currency omitted: \(network) \(coreCurrency.code)")
                 continue
             }
+            
             guard let units = network.unitsFor(currency: coreCurrency),
                 let baseUnit = network.baseUnitFor(currency: coreCurrency),
                 let defaultUnit = network.defaultUnitFor(currency: coreCurrency),
@@ -72,16 +91,13 @@ class CoreSystem: Subscriber {
                 Backend.setupFeeUpdater(for: currency)
             }
         }
-        DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.SetAvailableTokens(Array(self.currencies.values)))
-        }
     }
 
     // MARK: Lifecycle
 
     // create -- on launch w/ acount present and wallet unlocked
     func create(account: Account) {
-        assert(state == .uninitialized)
+        guard let kvStore = Backend.kvStore, state == .uninitialized else { return assertionFailure() }
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
@@ -89,7 +105,8 @@ class CoreSystem: Subscriber {
                                  account: account,
                                  path: C.coreDataDirURL.path,
                                  query: self.backend)
-            self.updateCurrencyMetaData {
+            Backend.apiClient.getCurrencyMetaData { currencyMetaData in
+                self.assetCollection = AssetCollection(kvStore: kvStore, allTokens: currencyMetaData)
                 self.system?.configure()
             }
             self.state = .idle
@@ -143,20 +160,27 @@ class CoreSystem: Subscriber {
     // MARK: Wallet Management
 
     private func addWallet(_ coreWallet: BRCrypto.Wallet, manager: BRCrypto.WalletManager) {
-        guard wallets[coreWallet.currency] == nil,
-            let currency = currencies[coreWallet.currency] else { return assertionFailure() }
-        let wallet = Wallet(core: coreWallet, currency: currency, system: self)
-        wallets[coreWallet.currency] = wallet
-
-        //TODO:CRYPTO need to filter System wallets with list of user-selected wallets
-        // hack to add wallet to home screen
-        let walletState = WalletState.initial(currency, wallet: wallet, displayOrder: 0)
+        guard let assetCollection = assetCollection, wallets[coreWallet.currency] == nil else { return assertionFailure() }
+        // only add wallets that are enabled in the user's asset collection
+        guard let currency = currencies[coreWallet.currency],
+            let displayOrder = assetCollection.displayOrder(for: currency.metaData) else {
+            print("[SYS] wallet not added: \(coreWallet.currency.code)")
+            return
+        }
+        
+        let walletState = initializeWalletState(core: coreWallet, currency: currency, displayOrder: displayOrder)
         DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.AddWallets([currency.code: walletState]))
+            Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
 
             //TODO:CRYPTO optimize to avoid making a new exchange rate request for each wallet added on launch
             Backend.updateExchangeRates()
         }
+    }
+    
+    private func initializeWalletState(core: BRCrypto.Wallet, currency: Currency, displayOrder: Int) -> WalletState {
+        let wallet = Wallet(core: core, currency: currency, system: self)
+        wallets[core.currency] = wallet
+        return WalletState.initial(currency, wallet: wallet, displayOrder: displayOrder)
     }
 
     private func removeWallet(_ coreWallet: BRCrypto.Wallet) {
@@ -164,59 +188,44 @@ class CoreSystem: Subscriber {
         guard self.wallets[coreWallet.currency] != nil else { return assertionFailure() }
         self.wallets[coreWallet.currency] = nil
     }
-
-    // MARK: Currency Management
-
-    private func updateCurrencyMetaData(completion: (() -> Void)? = nil) {
-        let process: ([CurrencyMetaData]) -> Void = { tokens in
-            self.currencyMetaData = tokens.reduce(into: [String: CurrencyMetaData](), { (dict, token) in
-                dict[token.code.lowercased()] = token
-            })
-            print("[TokenList] tokens updated: \(tokens.count) tokens")
-            completion?()
+    
+    private func addCurrency(_ metaData: CurrencyMetaData) {
+        guard let coreWallet = findCoreWallet(forMetaData: metaData) else { return  }
+        guard let currency = currencies[coreWallet.currency] else { return assertionFailure() }
+        guard !Store.state.currencies.contains(currency) else { return }
+        let walletState = initializeWalletState(core: coreWallet, currency: currency, displayOrder: Store.state.displayCurrencies.count)
+        DispatchQueue.main.async {
+            Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
+            //TODO:CRYPTO optimize to avoid making a new exchange rate request for each wallet added on launch
+            Backend.updateExchangeRates()
         }
-
-        let fm = FileManager.default
-        guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
-        let cachedFilePath = documentsDir.appendingPathComponent("tokens.json").path
-
-        if let embeddedFilePath = Bundle.main.path(forResource: "tokens", ofType: "json"), !fm.fileExists(atPath: cachedFilePath) {
-            do {
-                try fm.copyItem(atPath: embeddedFilePath, toPath: cachedFilePath)
-                print("[TokenList] copied bundle tokens list to cache")
-            } catch let e {
-                print("[TokenList] unable to copy bundled \(embeddedFilePath) -> \(cachedFilePath): \(e)")
-            }
+    }
+    
+    private func resetToDefaultCurrencies() {
+        guard let assetCollection = assetCollection else { return }
+        assetCollection.resetToDefaultCollection()
+        assetCollection.saveChanges()
+        
+        var newWallets = [String: WalletState]()
+        assetCollection.enabledAssets.enumerated().forEach { i, metaData in
+            guard let coreWallet = findCoreWallet(forMetaData: metaData) else { return }
+            guard let currency = currencies[coreWallet.currency] else { return print("[SYS] Skipped adding \(metaData.code). Couldn't find core currency.")  }
+            newWallets[currency.uid] = initializeWalletState(core: coreWallet, currency: currency, displayOrder: i)
         }
-        // fetch from network and update cached copy on success or return the cached copy if fetch fails
-        Backend.apiClient.getCurrencyMetaData { result in
-            self.queue.async {
-                switch result {
-                case .success(let tokens):
-                    // update cache
-                    do {
-                        let data = try JSONEncoder().encode(tokens)
-                        try data.write(to: URL(fileURLWithPath: cachedFilePath))
-                    } catch let e {
-                        print("[TokenList] failed to write to cache: \(e.localizedDescription)")
-                    }
-                    process(tokens)
-
-                case .error(let error):
-                    print("[TokenList] error fetching tokens: \(error)")
-                    var tokens = [CurrencyMetaData]()
-                    do {
-                        print("[TokenList] using cached token list")
-                        let cachedData = try Data(contentsOf: URL(fileURLWithPath: cachedFilePath))
-                        tokens = try JSONDecoder().decode([CurrencyMetaData].self, from: cachedData)
-                    } catch let e {
-                        print("[TokenList] error reading from cache: \(e)")
-                        fatalError("unable to read token list!")
-                    }
-                    process(tokens)
-                }
-            }
+        
+        DispatchQueue.main.async {
+            Store.perform(action: ManageWallets.SetWallets(newWallets))
+            Backend.updateExchangeRates()
         }
+    }
+    
+    private func findCoreWallet(forMetaData metaData: CurrencyMetaData) -> BRCrypto.Wallet? {
+        guard let system = system else { return nil }
+        //TODO:CRYPTO - use uid instead of code here once they're in the /currencies endpoint
+        guard let wallet = system.wallets.first(where: { $0.currency.code.lowercased() == metaData.code.lowercased() }) else {
+            print("[SYS] Error couldn't find core wallet for: \(metaData.code).")
+            return nil }
+        return wallet
     }
 }
 
@@ -312,8 +321,11 @@ extension CoreSystem: SystemListener {
                 self.removeWallet(wallet)
 
             default:
-                guard let wallet = self.wallets[wallet.currency] else { return assertionFailure() }
-                wallet.handleWalletEvent(event)
+                guard let activeWallet = self.wallets[wallet.currency] else {
+                    print("[SYS] event skipped - missing wallet: \(wallet.currency.code)")
+                    return
+                }
+                activeWallet.handleWalletEvent(event)
             }
         }
     }
@@ -321,8 +333,8 @@ extension CoreSystem: SystemListener {
     func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
         guard isInitialized else { return }
         queue.async {
+            guard let wallet = self.wallets[wallet.currency] else { return }
             print("[SYS] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
-            guard let wallet = self.wallets[wallet.currency] else { return assertionFailure() }
             wallet.handleTransferEvent(event, transfer: transfer)
         }
     }
