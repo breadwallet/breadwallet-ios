@@ -19,20 +19,25 @@ class ExchangeUpdater: Subscriber {
         Store.subscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
                         callback: { _ in
-                            self.refresh()
+                            self.forceRefresh()
                         })
     }
-
+    
     func refresh() {
         guard Date().timeIntervalSince(lastUpdate) > requestThrottleSeconds else { return }
+        forceRefresh()
+    }
+
+    private func forceRefresh() {
         lastUpdate = Date()
         // get btc/fiat rates
         Backend.apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
                 let btc = Store.state.currencies.first(where: { $0.isBitcoin }),
                 case .success(let btcFiatRates) = result else { return }
-            
-            Store.perform(action: WalletChange(btc).setExchangeRates(currentRate: self.findCurrentRate(in: btcFiatRates), rates: btcFiatRates))
+            //BCH and ETH shouldn't be able to be selected as a default currency. Users who had this selected will be reverted to USD
+            let filteredRates = btcFiatRates.filter { !["BCH", "ETH"].contains($0.code) }
+            Store.perform(action: WalletChange(btc).setExchangeRates(currentRate: self.findCurrentRate(in: filteredRates), rates: filteredRates))
             
             // get token/btc rates
             let tokens = Store.state.currencies.filter { !$0.isBitcoin }

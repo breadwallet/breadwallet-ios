@@ -208,6 +208,7 @@ public struct Amount {
         if let locale = locale {
             formatter.locale = locale
         }
+        
         guard var fiatString = formatter.string(from: fiatValue as NSDecimalNumber) else { return "" }
         if let stringValue = formatter.number(from: fiatString), abs(fiatValue) > 0.0, stringValue == 0 {
             // if non-zero values show as 0, show minimum fractional value for fiat
@@ -223,10 +224,13 @@ public struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = "-\(format.positiveFormat!)"
+        
         if let rate = rate {
             format.currencySymbol = rate.currencySymbol
+            format.maximumFractionDigits = rate.maxFractionalDigits
         } else if let rate = currency.state?.currentRate {
             format.currencySymbol = rate.currencySymbol
+            format.maximumFractionDigits = rate.maxFractionalDigits
         }
         format.minimumFractionDigits = minimumFractionDigits ?? format.minimumFractionDigits
         return format

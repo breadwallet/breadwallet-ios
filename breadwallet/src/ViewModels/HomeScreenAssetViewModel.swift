@@ -1,5 +1,5 @@
 //
-//  AssetCardViewModel.swift
+//  HomeScreenAssetViewModel.swift
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-01-31.
@@ -12,10 +12,7 @@ struct HomeScreenAssetViewModel {
     let currency: Currency
     
     var exchangeRate: String {
-        guard let rate = currency.state?.currentRate else { return "" }
-        let placeholderAmount = Amount.zero(currency, rate: rate)
-        guard let rateText = placeholderAmount.localFormat.string(from: NSNumber(value: rate.rate)) else { return "" }
-        return rateText
+        return currency.state?.currentRate?.localString(forCurrency: self.currency) ?? ""
     }
     
     var fiatBalance: String {
