@@ -24,7 +24,6 @@ struct State {
     let creationDate: Date
     let walletID: String?
     let wallets: [String: WalletState]
-    let availableTokens: [Currency]
     
     subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
@@ -34,8 +33,7 @@ struct State {
     }
     
     var orderedWallets: [WalletState] {
-        //TODO:CRYPTO wallet management
-        return wallets.values.sorted(by: { $0.currency.code < $1.currency.code })//wallets.values.sorted(by: { $0.displayOrder < $1.displayOrder })
+        return wallets.values.sorted(by: { $0.displayOrder < $1.displayOrder })
     }
     
     var currencies: [Currency] {
@@ -44,10 +42,6 @@ struct State {
 
     var displayCurrencies: [Currency] {
         return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
-    }
-    
-    var supportedTokens: [Currency] {
-        return availableTokens.filter { $0.isSupported }
     }
     
     var shouldShowBuyNotificationForDefaultCurrency: Bool {
@@ -82,14 +76,7 @@ extension State {
                         accountName: S.AccountHeader.defaultWalletName,
                         creationDate: Date.zeroValue(),
                         walletID: nil,
-                        //TODO:CRYPTO default wallets
-                        wallets: [:],
-//                        wallets: [Currencies.btc.code: WalletState.initial(Currencies.btc, displayOrder: -1),
-//                                  Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
-//                                  Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
-//                                  Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1)],
-                        //availableTokens: [Currencies.brd]
-                        availableTokens: []
+                        wallets: [:]
         )
     }
     
@@ -107,8 +94,7 @@ extension State {
                    accountName: String? = nil,
                    creationDate: Date? = nil,
                    walletID: String? = nil,
-                   wallets: [String: WalletState]? = nil,
-                   availableTokens: [Currency]? = nil) -> State {
+                   wallets: [String: WalletState]? = nil) -> State {
         return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
@@ -122,8 +108,7 @@ extension State {
                      accountName: accountName ?? self.accountName,
                      creationDate: creationDate ?? self.creationDate,
                      walletID: walletID ?? self.walletID,
-                     wallets: wallets ?? self.wallets,
-                     availableTokens: availableTokens ?? self.availableTokens)
+                     wallets: wallets ?? self.wallets)
     }
     
     func mutate(walletState: WalletState) -> State {

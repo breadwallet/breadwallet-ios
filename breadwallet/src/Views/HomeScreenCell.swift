@@ -68,7 +68,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         return "CurrencyCell"
     }
     
-    func set(viewModel: AssetListViewModel) {
+    func set(viewModel: HomeScreenAssetViewModel) {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
         icon.image = viewModel.currency.imageNoBackground

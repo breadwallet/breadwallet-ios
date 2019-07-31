@@ -8,8 +8,6 @@
 
 import UIKit
 
-// swiftlint:disable cyclomatic_complexity
-
 class URLController: Trackable, Subscriber {
 
     init(walletAuthenticator: WalletAuthenticator) {

@@ -11,10 +11,15 @@ import BRCore
 import BRCrypto
 import UIKit
 
+protocol CurrencyWithIcon {
+    var code: String { get }
+    var colors: (UIColor, UIColor) { get }
+}
+
 typealias CurrencyUnit = BRCrypto.Unit
 
 /// Combination of the Core Currency model and its metadata properties
-class Currency {
+class Currency: CurrencyWithIcon {
     public enum TokenType: String {
         case native
         case erc20
@@ -23,6 +28,7 @@ class Currency {
 
     let core: BRCrypto.Currency
 
+    var uid: String { /*assert(core.uids == metaData.uid);*/ return metaData.uid } //TODO:CRYPTO
     /// Ticker code (e.g. BTC) -- assumed to be unique
     var code: String { return core.code.uppercased() }
     /// Display name (e.g. Bitcoin)
@@ -157,7 +163,7 @@ extension Currency {
 
 // MARK: - Images
 
-extension Currency {
+extension CurrencyWithIcon {
     /// Icon image with square color background
     public var imageSquareBackground: UIImage? {
         if let baseURL = AssetArchive(name: imageBundleName, apiClient: Backend.apiClient)?.extractedUrl {
@@ -166,7 +172,7 @@ extension Currency {
                 return UIImage(data: data)
             }
         }
-        return TokenImageSquareBackground(currency: self).renderedImage
+        return TokenImageSquareBackground(code: code, color: colors.0).renderedImage
     }
 
     /// Icon image with no background using template rendering mode
@@ -178,7 +184,7 @@ extension Currency {
             }
         }
         
-        return TokenImageNoBackground(currency: self).renderedImage
+        return TokenImageNoBackground(code: code, color: colors.0).renderedImage
     }
     
     private var imageBundleName: String {
@@ -188,10 +194,31 @@ extension Currency {
 
 // MARK: - Metadata Model
 
-public struct CurrencyMetaData: Codable {
+/// Model representing metadata for supported currencies
+public struct CurrencyMetaData: CurrencyWithIcon {
+    
+    let uid: String
+    var network: String {
+        //TODO:CRYPTO use backend-provided network name
+        switch code.uppercased() {
+        case Currencies.btc.code:
+            return "bitcoin" + (E.isTestnet ? "-testnet" : "-mainnet")
+        case Currencies.bch.code:
+            return "bitcoin-cash" + (E.isTestnet ? "-testnet" : "-mainnet")
+        default:
+            return "ethereum" + (E.isTestnet ? "-testnet" : "-mainnet")
+        }
+    }
+    
+    // TODO:CRYPTO - this should come from the /currencies endpoint
+    var isPreferred: Bool {
+        return ["BTC", "BCH", "ETH", "BRD"].contains(code.uppercased())
+    }
+    
     let code: String
     let isSupported: Bool
     let colors: (UIColor, UIColor)
+    let name: String
     var defaultRate: Double? { return nil } //TODO:CRYPTO
     var tokenAddress: String?
 
@@ -200,15 +227,19 @@ public struct CurrencyMetaData: Codable {
         case isSupported = "is_supported"
         case colors
         case tokenAddress = "contract_address"
-        //        case name
+        case name
         //        case type
         //        case decimals = "scale"
         //        case saleAddress = "sale_address"
         //        case defaultRate = "contract_initial_value"
     }
+}
 
+extension CurrencyMetaData: Codable {
+    
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        uid = try container.decode(String.self, forKey: .code) //TODO:CRYPTO update to use backend-provided uid matching BDB currency uids
         code = try container.decode(String.self, forKey: .code)
         var colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
@@ -220,6 +251,7 @@ public struct CurrencyMetaData: Codable {
             colors = (UIColor.black, UIColor.black)
         }
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
+        name = try container.decode(String.self, forKey: .name)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -230,39 +262,45 @@ public struct CurrencyMetaData: Codable {
         colorValues.append(colors.1.toHex)
         try container.encode(colorValues, forKey: .colors)
         try container.encode(isSupported, forKey: .isSupported)
+        try container.encode(name, forKey: .name)
     }
 }
 
 extension CurrencyMetaData: Hashable {
     public static func == (lhs: CurrencyMetaData, rhs: CurrencyMetaData) -> Bool {
-        return lhs.code == rhs.code
+        return lhs.uid == rhs.uid
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(code)
+        hasher.combine(uid)
     }
 }
 
 // MARK: -
 
-//TODO:CRYPTO remove all hard-coded currency references
+//TODO:CRYPTO remove all hard-coded currency references?
 struct Currencies {
     // swiftlint:disable type_name
     struct btc {
+        static var uid: String { return code }//E.isTestnet ? "bitcoin-testnet" : "bitcoin-mainnet" }
         static var code: String { return "BTC" }
         static var name: String { return "Bitcoin" }
     }
 
-    struct eth {
-        static var code: String { return "ETH" }
-    }
-
     struct bch {
+        static var uid: String { return code }//E.isTestnet ? "bitcash-testnet" : "bitcash-mainnet" }
         static var code: String { return "BCH" }
         static var name: String { return "Bitcoin Cash" }
     }
+    
+    struct eth {
+        static var uid: String { return code }//E.isTestnet ? "ethereum-testnet" : "ethereum-mainnet" }
+        static var code: String { return "ETH" }
+        static var name: String { return "Ethereum" }
+    }
 
     struct brd {
+        static var uid: String { return code }//E.isTestnet ? "ethereum-testnet:0x7108ca7c4718efa810457f228305c9c71390931a" : "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6" }
         static var code: String { return "BRD" }
         static var address: String { return "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6" }
     }

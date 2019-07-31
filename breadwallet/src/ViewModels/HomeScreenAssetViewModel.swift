@@ -1,5 +1,5 @@
 //
-//  AssetListViewModel.swift
+//  AssetCardViewModel.swift
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-01-31.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct AssetListViewModel {
+struct HomeScreenAssetViewModel {
     let currency: Currency
     
     var exchangeRate: String {
