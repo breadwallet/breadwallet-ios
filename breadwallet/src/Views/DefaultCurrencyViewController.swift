@@ -15,6 +15,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         //TODO:CRYPTO rates / wallet state
         self.rates = [Rate]()
         //self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
+        self.selectedCurrencyCode = Store.state.defaultCurrencyCode
         super.init(style: .plain)
     }
 
@@ -25,10 +26,10 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
             setExchangeRateLabel()
         }
     }
-    private var defaultCurrencyCode: String? = nil {
+    private var selectedCurrencyCode: String {
         didSet {
             //Grab index paths of new and old rows when the currency changes
-            let paths: [IndexPath] = rates.enumerated().filter { $0.1.code == defaultCurrencyCode || $0.1.code == oldValue } .map { IndexPath(row: $0.0, section: 0) }
+            let paths: [IndexPath] = rates.enumerated().filter { $0.1.code == selectedCurrencyCode || $0.1.code == oldValue } .map { IndexPath(row: $0.0, section: 0) }
             tableView.beginUpdates()
             tableView.reloadRows(at: paths, with: .automatic)
             tableView.endUpdates()
@@ -47,9 +48,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
 
     override func viewDidLoad() {
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
-        Store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
-            self.defaultCurrencyCode = $0.defaultCurrencyCode
-        })
+        self.selectedCurrencyCode = Store.state.defaultCurrencyCode
 
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 140.0
@@ -67,6 +66,11 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         faqButton.tintColor = .navigationTint
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         */
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        Store.perform(action: DefaultCurrency.SetDefault(selectedCurrencyCode))
     }
 
     private func setExchangeRateLabel() {
@@ -94,7 +98,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         cell.textLabel?.text = "\(rate.code) (\(rate.currencySymbol))"
         cell.textLabel?.font = UIFont.customBody(size: 14.0)
         cell.textLabel?.textColor = .white
-        if rate.code == defaultCurrencyCode {
+        if rate.code == selectedCurrencyCode {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
             check.tintColor = .navigationTint
             cell.accessoryView = check
@@ -137,7 +141,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let rate = rates[indexPath.row]
-        Store.perform(action: DefaultCurrency.SetDefault(rate.code))
+        selectedCurrencyCode = rate.code
     }
 
     required init?(coder aDecoder: NSCoder) {

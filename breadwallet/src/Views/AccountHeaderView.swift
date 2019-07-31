@@ -194,7 +194,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
                             selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
                             callback: {
                                 guard let rate = $0[self.currency]?.currentRate, !self.isScrubbing else { return }
-                                self.exchangeRateLabel.text = rate.localString
+                                self.exchangeRateLabel.text = rate.localString(forCurrency: self.currency)
         })
         setGraphViewScrubbingCallbacks()
         chartView.shouldHideChart = {
@@ -205,6 +205,9 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     
     private func setGraphViewScrubbingCallbacks() {
         chartView.scrubberDidUpdateToValues = {
+            //We can receive a scrubberDidUpdateToValues call after scrubberDidEnd
+            //so we need to guard against updating the scrubber labels
+            guard self.isScrubbing else { return }
             self.exchangeRateLabel.text = $0
             self.priceDateLabel.text = $1
         }
@@ -215,7 +218,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
                 self.priceChangeView.isHidden = false
                 self.priceDateLabel.alpha = 0.0
             })
-            self.exchangeRateLabel.text = Store.state[self.currency]?.currentRate?.localString
+            self.exchangeRateLabel.text = Store.state[self.currency]?.currentRate?.localString(forCurrency: self.currency)
         }
         
         chartView.scrubberDidBegin = {
