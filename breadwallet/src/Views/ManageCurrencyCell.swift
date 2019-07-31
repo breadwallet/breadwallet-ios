@@ -8,9 +8,22 @@
 
 import UIKit
 
-class TokenCell: SeparatorCell {
+enum EditWalletType {
+    case manage
+    case add
     
-    static let cellIdentifier = "TokenCell"
+    var addTitle: String {
+        return self == .manage ? S.TokenList.show : S.TokenList.add
+    }
+    
+    var removeTitle: String {
+        return self == .manage ? S.TokenList.hide : S.TokenList.remove
+    }
+}
+
+class ManageCurrencyCell: SeparatorCell {
+    
+    static let cellIdentifier = "ManageCurrencyCell"
     
     private let addColor = UIColor.navigationTint
     private let removeColor = UIColor.orangeButton
@@ -20,9 +33,9 @@ class TokenCell: SeparatorCell {
     private let icon = UIImageView()
     private let button = ToggleButton(normalTitle: S.TokenList.add, normalColor: .navigationTint, selectedTitle: S.TokenList.hide, selectedColor: .orangeButton)
     private var identifier: String = ""
-    private var listType: TokenListType = .add
+    private var listType: EditWalletType = .add
     private var isCurrencyHidden = false
-
+    
     var didAddIdentifier: ((String) -> Void)?
     var didRemoveIdentifier: ((String) -> Void)?
     
@@ -31,12 +44,12 @@ class TokenCell: SeparatorCell {
         setupViews()
     }
 
-    func set(currency: Currency, listType: TokenListType, isHidden: Bool) {
+    func set(currency: CurrencyMetaData, index: Int, listType: EditWalletType, isHidden: Bool) {
         header.text = currency.name
         subheader.text = currency.code
         icon.image = currency.imageSquareBackground
         self.isCurrencyHidden = isHidden
-        self.identifier = currency.tokenAddress ?? currency.code
+        self.identifier = currency.uid
         self.listType = listType
         setState()
     }
@@ -76,7 +89,6 @@ class TokenCell: SeparatorCell {
     private func setInitialData() {
         selectionStyle = .none
         icon.contentMode = .scaleAspectFill
-        setState()
     }
     
     private func setState() {
@@ -84,27 +96,25 @@ class TokenCell: SeparatorCell {
             button.setTitle(S.TokenList.add, for: .normal)
             button.setTitle(S.TokenList.remove, for: .selected)
         } else {
-            button.setTitle(S.TokenList.show, for: .normal)
-            button.setTitle(S.TokenList.hide, for: .selected)
+            button.setTitle(S.TokenList.remove, for: .normal)
+            button.setTitle(S.TokenList.remove, for: .selected)
         }
         
         button.tap = strongify(self) { myself in
-            let isRemoveButton = myself.button.isSelected
-            if isRemoveButton {
+            if self.listType == .manage {
                 myself.didRemoveIdentifier?(myself.identifier)
-            } else {
-                myself.didAddIdentifier?(myself.identifier)
+            } else if self.listType == .add {
+                let isRemoveButton = myself.button.isSelected
+                if isRemoveButton {
+                    myself.didRemoveIdentifier?(myself.identifier)
+                } else {
+                    myself.didAddIdentifier?(myself.identifier)
+                }
+                myself.button.isSelected = !isRemoveButton
             }
-            myself.button.isSelected = !isRemoveButton
         }
-        
-        button.isSelected = !isCurrencyHidden
-        
-        if listType == .manage {
-            let alpha: CGFloat = isCurrencyHidden ? 0.5 : 1.0
-            header.alpha = alpha
-            subheader.alpha = alpha
-            icon.alpha = alpha
+        if listType == .add {
+            button.isSelected = !isCurrencyHidden
         }
     }
 

@@ -79,6 +79,7 @@ enum TriggerName {
     case openPlatformUrl(String)
     case didViewTransactions([Transaction]?)
     case showInAppNotification(BRDMessage?)
+    case didAddCurrency(CurrencyMetaData?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -160,6 +161,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didViewTransactions, .didViewTransactions):
         return true
     case (.showInAppNotification, .showInAppNotification):
+        return true
+    case (.didAddCurrency, .didAddCurrency):
         return true
     default:
         return false

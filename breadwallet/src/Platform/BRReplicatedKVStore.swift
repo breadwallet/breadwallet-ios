@@ -227,7 +227,7 @@ open class BRReplicatedKVStore: NSObject {
         let (newVer, time) = try _set(key, value: value, localVer: localVer)
         if syncImmediately {
             try syncKey(key) { _ in
-                self.log("SET key synced: \(key)")
+                self.log("[KV] SET key synced: \(key)")
             }
         }
         return (newVer, time)

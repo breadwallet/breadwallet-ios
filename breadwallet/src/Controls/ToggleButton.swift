@@ -9,6 +9,9 @@
 import UIKit
 
 class ToggleButton: UIButton {
+    
+    var listType: EditWalletType = .add
+    
     init(normalTitle: String, normalColor: UIColor, selectedTitle: String, selectedColor: UIColor) {
         super.init(frame: .zero)
         self.titleLabel?.font = UIFont.customBody(size: 14.0)
@@ -16,6 +19,7 @@ class ToggleButton: UIButton {
         self.setTitle(selectedTitle, for: .selected)
         self.setTitleColor(normalColor, for: .normal)
         self.setTitleColor(selectedColor, for: .selected)
+        self.setTitleColor(selectedColor, for: .highlighted)
         self.layer.cornerRadius = 6.0
         self.layer.borderWidth = 1.0
         updateColors()
@@ -31,9 +35,21 @@ class ToggleButton: UIButton {
         }
     }
     
+    override var isHighlighted: Bool { 
+        didSet {
+            updateColors()
+        }
+    }
+    
     private func updateColors() {
-        guard let color = isSelected ? titleColor(for: .selected) : titleColor(for: .normal) else { return }
-        self.backgroundColor = color.withAlphaComponent(0.1)
-        self.layer.borderColor = color.withAlphaComponent(0.5).cgColor
+        if listType == .manage {
+            guard let color = isHighlighted ? titleColor(for: .selected) : titleColor(for: .normal) else { return }
+            self.backgroundColor = color.withAlphaComponent(0.1)
+            self.layer.borderColor = color.withAlphaComponent(0.5).cgColor
+        } else {
+            guard let color = isSelected ? titleColor(for: .selected) : titleColor(for: .normal) else { return }
+            self.backgroundColor = color.withAlphaComponent(0.1)
+            self.layer.borderColor = color.withAlphaComponent(0.5).cgColor
+        }
     }
 }

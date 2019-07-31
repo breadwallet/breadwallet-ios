@@ -58,24 +58,32 @@ enum ManageWallets {
         }
     }
     
-    struct RemoveTokenAddresses: Action {
+    struct HideWalletAtIndex: Action {
         let reduce: Reducer
-        init(_ removedTokenAddresses: [String]) {
+        init(_ index: Int) {
             reduce = {
-                let newWallets = $0.wallets.filter {
-                    guard let tokenAddress = $0.value.currency.tokenAddress else { return true }
-                    return !removedTokenAddresses.contains(tokenAddress)
-                }
+                var newWallets = $0.wallets
+                guard $0.orderedWallets.count > index else { return $0 }
+                newWallets[$0.orderedWallets[index].currency.uid] = nil
                 return $0.mutate(wallets: newWallets)
             }
         }
     }
     
-    struct SetAvailableTokens: Action {
+    struct MoveWalletFrom: Action {
         let reduce: Reducer
-        init(_ availableTokens: [Currency]) {
+        init(_ from: Int, to: Int) {
             reduce = {
-                return $0.mutate(availableTokens: availableTokens)
+                var orderedWallets = $0.orderedWallets
+                guard orderedWallets.indices.contains(to),
+                    orderedWallets.indices.contains(from) else { return $0 }
+                orderedWallets.insert(orderedWallets.remove(at: from), at: to)
+                var i = 0
+                let newWallets = orderedWallets.reduce(into: [String: WalletState](), { dict, wallet in
+                    dict[wallet.currency.uid] = wallet.mutate(displayOrder: i)
+                    i += 1
+                })
+                return $0.mutate(wallets: newWallets)
             }
         }
     }

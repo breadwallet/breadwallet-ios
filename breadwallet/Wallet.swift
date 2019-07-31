@@ -92,6 +92,12 @@ class Wallet {
         self.core = core
         self.currency = currency
         self.system = system
+        
+        //TODO:CRYPTO - this shouldn't be needed when balance is properly
+        //set in sync ended
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            Store.perform(action: WalletChange(self.currency).setBalance(self.balance))
+        }
     }
 }
 
