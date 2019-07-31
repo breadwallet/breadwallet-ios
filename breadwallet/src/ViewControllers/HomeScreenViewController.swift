@@ -40,7 +40,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private var tradeNotificationImage: UIImageView?
     
     var didSelectCurrency: ((Currency) -> Void)?
-    var didTapAddWallet: (() -> Void)?
+    var didTapManageWallets: (() -> Void)?
     var didTapBuy: (() -> Void)?
     var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
@@ -67,7 +67,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidLoad() {
         assetList.didSelectCurrency = didSelectCurrency
-        assetList.didTapAddWallet = didTapAddWallet
+        assetList.didTapAddWallet = didTapManageWallets
         addSubviews()
         addConstraints()
         setInitialData()

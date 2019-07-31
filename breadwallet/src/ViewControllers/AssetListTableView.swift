@@ -65,9 +65,9 @@ class AssetListTableView: UITableViewController, Subscriber {
         addWalletButton.contentHorizontalAlignment = .center
         addWalletButton.contentVerticalAlignment = .center
 
-        let buttonTitle = "+ " + S.TokenList.addTitle
+        let buttonTitle = S.MenuButton.manageWallets
         addWalletButton.setTitle(buttonTitle, for: .normal)
-        addWalletButton.accessibilityLabel = E.isScreenshots ? "Add Wallet" : buttonTitle
+        addWalletButton.accessibilityLabel = E.isScreenshots ? "Manage Wallets" : buttonTitle
 
         addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
 
@@ -128,7 +128,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currency = Store.state.displayCurrencies[indexPath.row]
-        let viewModel = AssetListViewModel(currency: currency)
+        let viewModel = HomeScreenAssetViewModel(currency: currency)
         
         let cellIdentifier = (shouldHighlightCell(for: currency) ? HomeScreenCellIds.highlightableCell : HomeScreenCellIds.regularCell).rawValue
         
@@ -175,8 +175,7 @@ extension AssetListTableView {
         
         loadingSpinner.constrain([
             loadingSpinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-            ])
+            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)])
         
         loadingSpinner.startAnimating()
     }

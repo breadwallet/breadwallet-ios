@@ -135,6 +135,7 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Initialize the core system with an account
     private func setupSystem(with account: Account) {
+        startBackendServices()
         coreSystem.create(account: account)
         
         //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
@@ -149,7 +150,6 @@ class ApplicationController: Subscriber, Trackable {
             launchURL = nil
         }
         
-        startBackendServices()
         connect()
     }
     
@@ -340,10 +340,12 @@ class ApplicationController: Subscriber, Trackable {
             self.modalPresenter?.presentMenu()
         }
         
-        homeScreen.didTapAddWallet = {
-            guard let kvStore = Backend.kvStore else { return }
-            let vc = EditWalletsViewController(type: .add, kvStore: kvStore)
-            navigationController.pushViewController(vc, animated: true)
+        homeScreen.didTapManageWallets = {
+            guard let assetCollection = self.coreSystem.assetCollection else { return }
+            let vc = ManageWalletsViewController(assetCollection: assetCollection)
+            let nc = UINavigationController(rootViewController: vc)
+            nc.setDarkStyle()
+            navigationController.present(nc, animated: true, completion: nil)
         }
     }
     
@@ -383,20 +385,6 @@ class ApplicationController: Subscriber, Trackable {
             self.blurView.removeFromSuperview()
         })
     }
-
-    //TODO:CRYPTO
-    /*
-    private func addTokenListChangeListener() {
-        Store.lazySubscribe(self, selector: {
-            let oldTokens = Set($0.currencies.compactMap { ($0 as? ERC20Token)?.address })
-            let newTokens = Set($1.currencies.compactMap { ($0 as? ERC20Token)?.address })
-            return oldTokens != newTokens
-        }, callback: { _ in
-            self.initTokenWallets()
-            Backend.updateExchangeRates()
-        })
-    }
-    */
 }
 
 extension ApplicationController {

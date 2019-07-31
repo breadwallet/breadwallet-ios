@@ -3,4 +3,4 @@
 filename="tokens.json"
 host="api.breadwallet.com"
 echo "Downloading ${filename} from ${host}..."
-curl --silent --show-error --output "breadwallet/Resources/${filename}" https://${host}/currencies?type=erc20
+curl --silent --show-error --output "breadwallet/Resources/${filename}" https://${host}/currencies
