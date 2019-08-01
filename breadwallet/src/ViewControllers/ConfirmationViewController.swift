@@ -156,7 +156,6 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
 
-        //TODO:CRYPTO currency-type check
         if currency.isBitcoinCompatible {
             switch displayFeeLevel {
             case .regular:
@@ -179,7 +178,6 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
 
-        //TODO:CRYPTO currency-type check
         if currency.isERC20Token {
             totalLabel.isHidden = true
             total.isHidden = true

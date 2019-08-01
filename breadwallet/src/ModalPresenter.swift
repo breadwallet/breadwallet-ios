@@ -288,7 +288,7 @@ class ModalPresenter: Subscriber, Trackable {
         case .sendForRequest(let request):
             return makeSendView(forRequest: request)
         case .receive(let currency):
-            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
+            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlScheme != nil))
         case .loginScan:
             presentLoginScan()
             return nil
@@ -319,14 +319,13 @@ class ModalPresenter: Subscriber, Trackable {
             presentPlatformWebViewController("/trade")
             return nil
         case .receiveLegacy:
-            //TODO:CRYPTO btc receive / segwit
-            return nil
-            //return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false, isBTCLegacy: true)
+            guard let btc = Currencies.btc.instance else { return nil }
+            return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
         }
     }
 
     private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
-        //TODO:CRYPTO send
+        //TODO:CRYPTO pigeon
         return nil
         /*
         guard let walletManager = walletManagers[request.currency.code] else { return nil }
@@ -458,59 +457,55 @@ class ModalPresenter: Subscriber, Trackable {
         let menuNav = UINavigationController()
         menuNav.setDarkStyle()
         
-        var enableSegwit = MenuItem(title: S.Settings.enableSegwit, callback: {
-            let segwitView = SegwitViewController()
-            menuNav.pushViewController(segwitView, animated: true)
-        })
-        enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
-        var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
-            Backend.apiClient.sendViewLegacyAddress()
-            Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
-        })
-        viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
-
-//TODO:CRYPTO currency-specific settings
-
-        var btcItems: [MenuItem] = [
-        ]/*
+        // MARK: Bitcoin Menu
+        var btcItems: [MenuItem] = []
+        if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
             // Rescan
-            MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: Currencies.btc), animated: true)
-            }),
+            btcItems.append(MenuItem(title: S.Settings.sync, callback: {
+                menuNav.pushViewController(ReScanViewController(currency: btc), animated: true)
+            }))
+            
             // Nodes
-            MenuItem(title: S.NodeSelector.title, callback: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-                let nodeSelector = NodeSelectorViewController(walletManager: btcWalletManager)
+            btcItems.append(MenuItem(title: S.NodeSelector.title, callback: {
+                let nodeSelector = NodeSelectorViewController(wallet: btcWallet)
                 menuNav.pushViewController(nodeSelector, animated: true)
-            }),
-            //TODO: universal scan -- remove
-            MenuItem(title: S.Settings.importTile, callback: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
+            }))
+            
+            btcItems.append(MenuItem(title: S.Settings.importTile, callback: {
                 menuNav.dismiss(animated: true, completion: { [unowned self] in
-                    self.presentKeyImport(walletManager: btcWalletManager)
+                    self.presentKeyImport(wallet: btcWallet)
                 })
-            }),
-            enableSegwit,
-            viewLegacyAddress
-        ]
-        
-        */
-
-        let bchItems: [MenuItem] = [
-        ]/*
-            // Rescan
-            MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: Currencies.bch), animated: true)
-            }),
-            //TODO: universal scan -- remove
-            MenuItem(title: S.Settings.importTile, callback: {
-                guard let bchWalletManager = self.walletManagers[Currencies.bch.code] as? BTCWalletManager else { return }
-                menuNav.dismiss(animated: true, completion: { [unowned self] in
-                    self.presentKeyImport(walletManager: bchWalletManager)
-                })
+            }))
+            
+            var enableSegwit = MenuItem(title: S.Settings.enableSegwit, callback: {
+                let segwitView = SegwitViewController()
+                menuNav.pushViewController(segwitView, animated: true)
             })
-        ]
-        */
+            enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
+            var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
+                Backend.apiClient.sendViewLegacyAddress()
+                Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
+            })
+            viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
+            
+            btcItems.append(enableSegwit)
+            btcItems.append(viewLegacyAddress)
+        }
+        var btcMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.btc.instance?.name ?? "Bitcoin"), subMenu: btcItems, rootNav: menuNav)
+        btcMenu.shouldShow = { return !btcItems.isEmpty }
+        
+        // MARK: Bitcoin Cash Menu
+        var bchItems: [MenuItem] = []
+        if let bch = Currencies.bch.instance {
+            // Rescan
+            bchItems.append(MenuItem(title: S.Settings.sync, callback: {
+                menuNav.pushViewController(ReScanViewController(currency: bch), animated: true)
+            }))
+        }
+        var bchMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.instance?.name ?? "Bitcoin Cash"), subMenu: bchItems, rootNav: menuNav)
+        bchMenu.shouldShow = { return !bchItems.isEmpty }
+
+        // MARK: Preferences
         let preferencesItems: [MenuItem] = [
             // Display Currency
             MenuItem(title: S.Settings.currency, accessoryText: {
@@ -522,12 +517,8 @@ class ModalPresenter: Subscriber, Trackable {
                 menuNav.pushViewController(DefaultCurrencyViewController(), animated: true)
             }),
             
-            // Bitcoin Settings
-            //TODO:CRYPTO hard-coded btc
-//            MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.btc.name), subMenu: btcItems, rootNav: menuNav),
-//
-//            // Bitcoin Cash Settings
-//            MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.name), subMenu: bchItems, rootNav: menuNav),
+            btcMenu,
+            bchMenu,
 
             // Share Anonymous Data
             MenuItem(title: S.Settings.shareData, callback: {
@@ -547,6 +538,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
         ]
         
+        // MARK: Security Settings
         let securityItems: [MenuItem] = [
             // Unlink
             MenuItem(title: S.Settings.wipe) { [unowned self] in
@@ -576,6 +568,7 @@ class ModalPresenter: Subscriber, Trackable {
             }
         ]
         
+        // MARK: Root Menu
         var rootItems: [MenuItem] = [
             // Scan QR Code
             MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [unowned self] in
@@ -816,8 +809,8 @@ class ModalPresenter: Subscriber, Trackable {
                 }
                 return
             }
-            //TODO:CRYPTO token receive address
-            let scanCurrency = currency//(currency?.isERC20Token) ? Currencies.eth : currency
+            //TODO: ERC-681 support token transfer URIs
+            let scanCurrency = currency?.wallet?.networkCurrency
             let vc = ScanViewController(forPaymentRequestForCurrency: scanCurrency, completion: { scanResult in
                 scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
@@ -884,17 +877,15 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-    //TODO:CRYPTO key import
-    /*
-    private func presentKeyImport(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
-        // TODO: auto-import to both BTC and BCH wallet managers
+    
+    private func presentKeyImport(wallet: Wallet, scanResult: QRCode? = nil) {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(walletManager: walletManager, initialQRCode: scanResult)
+        let start = StartImportViewController(wallet: wallet, initialQRCode: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: wallet.currency)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         nc.viewControllers = [start]
@@ -902,7 +893,6 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     // MARK: - Prompts
- */
 
     func presentBiometricsMenuItem() {
         let biometricsSettings = BiometricsSettingsViewController()
@@ -940,7 +930,7 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func handleFile(_ file: Data) {
-        //TODO:CRYPTO btc-specific -- what is this use case?
+        //TODO:CRYPTO payment request -- what is this use case?
         /*
         if let request = PaymentProtocolRequest(data: file) {
             if let topVC = topViewController as? ModalViewController {
@@ -997,7 +987,7 @@ class ModalPresenter: Subscriber, Trackable {
         }
         
         if let accountVC = topViewController as? AccountViewController {
-            if accountVC.currency.matches(currency) {
+            if accountVC.currency == currency {
                 completion?()
             } else {
                 accountVC.navigationController?.popToRootViewController(animated: false)
@@ -1085,14 +1075,6 @@ class ModalPresenter: Subscriber, Trackable {
             callback(false)
         }
         topViewController?.present(confirm, animated: true, completion: nil)
-    }
-
-    private func copyAllAddressesToClipboard() {
-        //TODO:CRYPTO btc recv address
-//        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-//        guard let wallet = btcWalletManager.wallet else { return } // TODO:BCH
-//        let addresses = wallet.allAddresses.filter({wallet.addressIsUsed($0)})
-//        UIPasteboard.general.string = addresses.joined(separator: "\n")
     }
 
     private var topViewController: UIViewController? {

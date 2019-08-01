@@ -31,6 +31,7 @@ class ExchangeUpdater: Subscriber {
     private func forceRefresh() {
         lastUpdate = Date()
         // get btc/fiat rates
+        
         Backend.apiClient.exchangeRates(currencyCode: Currencies.btc.code) { [weak self] result in
             guard let `self` = self,
                 let btc = Store.state.currencies.first(where: { $0.isBitcoin }),

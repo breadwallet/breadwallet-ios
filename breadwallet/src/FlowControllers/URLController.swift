@@ -70,13 +70,9 @@ class URLController: Trackable, Subscriber {
 
             if url.host == "scanqr" || url.path == "/scanqr" {
                 Store.trigger(name: .scanQr)
-            } else if url.path == "/address" {
-                if let success = xSuccess {
-                    copyAddress(callback: success)
-                }
-                //TODO:CRYPTO payment uri
-//            } else if let uri = isBitcoinUri(url: url, uri: uri) {
-//                return handlePaymentRequestUri(uri, currency: Currencies.btc)
+            } else if let uri = isBitcoinUri(url: url, uri: uri),
+                let btc = Currencies.btc.instance {
+                return handlePaymentRequestUri(uri, currency: btc)
             } else if url.host == "debug" {
                 handleDebugLink(url)
             }
@@ -124,15 +120,7 @@ class URLController: Trackable, Subscriber {
             }
             
         default:
-            guard let currency = Store.state.currencies.first(where: {
-                var result = false
-                $0.urlSchemes?.forEach {
-                    if $0 == scheme {
-                        result = true
-                    }
-                }
-                return result
-            }) else { return false }
+            guard let currency = Store.state.currencies.first(where: { $0.urlScheme == scheme }) else { return false }
             return handlePaymentRequestUri(url, currency: currency)
         }
         
@@ -147,17 +135,6 @@ class URLController: Trackable, Subscriber {
         } else {
             return nil
         }
-    }
-
-    private func copyAddress(callback: String) {
-        //TODO:CRYPTO btc receive address
-//        if let url = URL(string: callback), let address = Store.state[Currencies.btc]?.receiveAddress {
-//            let queryLength = url.query?.utf8.count ?? 0
-//            let callback = callback.appendingFormat("%@address=%@", queryLength > 0 ? "&" : "?", address)
-//            if let callbackURL = URL(string: callback) {
-//                UIApplication.shared.open(callbackURL)
-//            }
-//        }
     }
 
     private func handlePaymentRequestUri(_ uri: URL, currency: Currency) -> Bool {

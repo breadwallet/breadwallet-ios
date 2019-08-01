@@ -100,7 +100,7 @@ class Sender {
     }
 
     private func validate(address: String, amount: Amount) -> SenderValidationResult {
-        guard wallet.isValidAddress(address) else { return .invalidAddress }
+        guard wallet.currency.isValidAddress(address) else { return .invalidAddress }
         guard !wallet.isOwnAddress(address) else { return .ownAddress }
 
         //TODO:CRYPTO
@@ -112,7 +112,7 @@ class Sender {
 //            return .insufficientFunds
 //        }
 //
-//        if currency.matches(Currencies.btc) {
+//        if currency.isBitcoin {
 //            guard currency.state?.fees != nil else {
 //                return .noFees
 //            }
@@ -471,7 +471,7 @@ class BitcoinSender: SenderBase<Bitcoin, BTCWalletManager>, Sender {
             return .insufficientFunds
         }
         
-        if currency.matches(Currencies.btc) {
+        if currency.isBitcoin {
             guard currency.state?.fees != nil else {
                 return .noFees
             }

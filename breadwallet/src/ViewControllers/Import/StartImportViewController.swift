@@ -17,8 +17,6 @@ import BRCore
  *  item in the main menu. In the latter case, an initial QR code is passed to the init() method.
  */
 class StartImportViewController: UIViewController {
-//TODO:CRYPTO import keys
-    /*
     /**
      *  Initializer
      *
@@ -26,16 +24,14 @@ class StartImportViewController: UIViewController {
      *  initialQRCode - a QR code that was previously scanned, causing this import view controller to
      *                  be displayed
      */
-    init(walletManager: BTCWalletManager, initialQRCode: QRCode? = nil) {
-        self.walletManager = walletManager
-        self.currency = walletManager.currency
+    init(wallet: Wallet, initialQRCode: QRCode? = nil) {
+        self.wallet = wallet
         self.initialQRCode = initialQRCode
-        assert(walletManager.currency is Bitcoin, "Importing only supports bitcoin")
+        assert(wallet.currency.isBitcoin, "Importing only supports bitcoin")
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let walletManager: BTCWalletManager
-    private let currency: Currency
+    private let wallet: Wallet
     private let header = RadialGradientView(backgroundColor: .blue, offset: 64.0)
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "ImportIllustration"))
     private let message = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
@@ -60,11 +56,12 @@ class StartImportViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
-            DispatchQueue.walletQueue.async { [weak self] in
-                self?.walletManager.peerManager?.connect()
-            }
-        }
+        //TODO:CRYPTO import keys
+//        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
+//            DispatchQueue.walletQueue.async { [weak self] in
+//                self?.walletManager.peerManager?.connect()
+//            }
+//        }
         
         if let code = initialQRCode {
             handleScanResult(code)
@@ -194,6 +191,8 @@ class StartImportViewController: UIViewController {
     }
 
     private func checkBalance(key: BRKey) {
+        //TODO:CRYPTO import keys
+        /*
         present(balanceActivity, animated: true, completion: {
             var key = key
             guard let address = key.address(legacy: true) else {
@@ -212,9 +211,11 @@ class StartImportViewController: UIViewController {
                 self.handleData(data: data, key: key)
             })
         })
+         */
     }
 
     private func handleData(data: [[String: Any]], key: BRKey) {
+        /*
         var key = key
         guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
         guard let wallet = walletManager.wallet else { return }
@@ -254,9 +255,11 @@ class StartImportViewController: UIViewController {
             }))
             self.present(alert, animated: true, completion: nil)
         })
+         */
     }
 
     private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
+        /*
         guard let wallet = walletManager.wallet, let currency = currency as? Bitcoin else { return }
         guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
         guard walletManager.peerManager?.connectionStatus != BRPeerStatusDisconnected else { return }
@@ -283,6 +286,7 @@ class StartImportViewController: UIViewController {
                     })
                 })
         })
+         */
     }
 
     private func showSuccess() {
@@ -299,5 +303,4 @@ class StartImportViewController: UIViewController {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
- */
 }

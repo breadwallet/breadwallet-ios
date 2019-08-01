@@ -36,12 +36,11 @@ extension String {
         return emailPredicate.evaluate(with: self)
     }
     
-    var bCashAddr: String {
+    var bCashAddr: String { //TODO:CRYPTO CashAddr
         var addr = [CChar](repeating: 0, count: 55)
         BRBCashAddrEncode(&addr, self)
         let prefixedAddr = String(cString: addr)
         var cashAddr = prefixedAddr
-        //TODO:CRYPTO url schemes
         /*
         // drop "bitcoincash:" prefix
         if let prefixes = Currencies.bch.urlSchemes {

@@ -190,12 +190,12 @@ extension AssetListTableView {
     
     func shouldHighlightCell(for currency: Currency) -> Bool {
         // Currently the only currency/wallet we highlight is BRD.
-        guard currency.code == Currencies.brd.code else { return false }
+        guard currency.isBRDToken else { return false }
         return UserDefaults.shouldShowBRDCellHighlight
     }
     
     func clearShouldHighlightForCurrency(currency: Currency) {
-        guard currency.code == Currencies.brd.code else { return }
+        guard currency.isBRDToken else { return }
         UserDefaults.shouldShowBRDCellHighlight = false
     }
     
