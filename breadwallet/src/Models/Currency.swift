@@ -27,6 +27,7 @@ class Currency: CurrencyWithIcon {
     }
 
     let core: BRCrypto.Currency
+    private let network: BRCrypto.Network
 
     var uid: String { /*assert(core.uids == metaData.uid);*/ return metaData.uid } //TODO:CRYPTO
     /// Ticker code (e.g. BTC) -- assumed to be unique
@@ -35,6 +36,8 @@ class Currency: CurrencyWithIcon {
     var name: String { return core.name }
 
     var tokenType: TokenType { return TokenType(rawValue: core.type) ?? .unknown }
+    
+    // MARK: Units
 
     /// The smallest divisible unit (e.g. satoshi)
     let baseUnit: CurrencyUnit
@@ -79,37 +82,43 @@ class Currency: CurrencyWithIcon {
     var isSupported: Bool { return metaData.isSupported }
     var defaultRate: Double? { return metaData.defaultRate }
     var tokenAddress: String? { return metaData.tokenAddress }
+    
+    // MARK: URI
 
-    /// URL scheme for payment requests
-    var urlSchemes: [String]? {
-        //TODO:CRYPTO url schemes
+    var urlScheme: String? {
         if isBitcoin {
-            return ["bitcoin"]
+            return "bitcoin"
         }
         if isBitcoinCash {
-            return ["bitcoincash"]
+            return E.isTestnet ? "bchtest" : "bitcoincash"
         }
         if isEthereumCompatible {
-            return ["ethereum", "ether"]
+            return "ethereum"
         }
         return nil
     }
 
-    /// Returns a URI with the given address
+    /// Returns a transfer URI with the given address
     func addressURI(_ address: String) -> String? {
-        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
-        return "\(scheme):\(address)"
+        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        if isERC20Token, let tokenAddress = tokenAddress { // ERC-681
+            return "\(scheme):\(tokenAddress)/transfer?address=\(address)"
+        } else {
+            return "\(scheme):\(address)"
+        }
     }
 
     // MARK: Init
 
     init?(core: BRCrypto.Currency,
+          network: BRCrypto.Network,
           metaData: CurrencyMetaData,
           units: Set<BRCrypto.Unit>,
           baseUnit: BRCrypto.Unit,
           defaultUnit: BRCrypto.Unit) {
         guard core.code.caseInsensitiveCompare(metaData.code) == .orderedSame else { return nil }
         self.core = core
+        self.network = network
         self.metaData = metaData
         self.units = Dictionary(uniqueKeysWithValues: units.lazy.map { ($0.name.lowercased(), $0) })
         self.baseUnit = baseUnit
@@ -131,15 +140,9 @@ extension Currency: Hashable {
 // MARK: - Convenience Accessors
 
 extension Currency {
-    //TODO:CRYPTO move to wallet(manager)
+    
     func isValidAddress(_ address: String) -> Bool {
-        return Store.state[self]?.wallet?.isValidAddress(address) ?? false
-    }
-
-    /// Returns true if the currency ticker codes match
-    //TODO:CRYPTO replace with ==
-    func matches(_ other: Currency) -> Bool {
-        return self.code.caseInsensitiveCompare(other.code) == .orderedSame
+        return network.addressFor(address) != nil
     }
 
     /// Ticker code for support pages
@@ -151,12 +154,11 @@ extension Currency {
         }
     }
 
-    //TODO:CRYPTO placeholder
-    var isBitcoin: Bool { return code == Currencies.btc.code }
-    var isBitcoinCash: Bool { return code == Currencies.bch.code }
-    var isEthereum: Bool { return code == Currencies.eth.code }
+    var isBitcoin: Bool { return uid == Currencies.btc.uid }
+    var isBitcoinCash: Bool { return uid == Currencies.bch.uid }
+    var isEthereum: Bool { return uid == Currencies.eth.uid }
     var isERC20Token: Bool { return tokenType == .erc20 }
-    var isBRDToken: Bool { return code == Currencies.brd.code }
+    var isBRDToken: Bool { return uid == Currencies.brd.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
@@ -198,29 +200,16 @@ extension CurrencyWithIcon {
 public struct CurrencyMetaData: CurrencyWithIcon {
     
     let uid: String
-    var network: String {
-        //TODO:CRYPTO use backend-provided network name
-        switch code.uppercased() {
-        case Currencies.btc.code:
-            return "bitcoin" + (E.isTestnet ? "-testnet" : "-mainnet")
-        case Currencies.bch.code:
-            return "bitcoin-cash" + (E.isTestnet ? "-testnet" : "-mainnet")
-        default:
-            return "ethereum" + (E.isTestnet ? "-testnet" : "-mainnet")
-        }
-    }
-    
-    // TODO:CRYPTO - this should come from the /currencies endpoint
-    var isPreferred: Bool {
-        return ["BTC", "BCH", "ETH", "BRD"].contains(code.uppercased())
-    }
-    
     let code: String
     let isSupported: Bool
     let colors: (UIColor, UIColor)
     let name: String
     var defaultRate: Double? { return nil } //TODO:CRYPTO
     var tokenAddress: String?
+    
+    var isPreferred: Bool {
+        return Currencies.allCases.map { $0.uid }.contains(uid)
+    }
 
     enum CodingKeys: String, CodingKey {
         case code
@@ -239,7 +228,7 @@ extension CurrencyMetaData: Codable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        uid = try container.decode(String.self, forKey: .code) //TODO:CRYPTO update to use backend-provided uid matching BDB currency uids
+        uid = try container.decode(String.self, forKey: .code).lowercased() //TODO:CRYPTO update to use backend-provided uid matching BDB currency uids
         code = try container.decode(String.self, forKey: .code)
         var colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
@@ -276,32 +265,29 @@ extension CurrencyMetaData: Hashable {
     }
 }
 
-// MARK: -
-
-//TODO:CRYPTO remove all hard-coded currency references?
-struct Currencies {
-    // swiftlint:disable type_name
-    struct btc {
-        static var uid: String { return code }//E.isTestnet ? "bitcoin-testnet" : "bitcoin-mainnet" }
-        static var code: String { return "BTC" }
-        static var name: String { return "Bitcoin" }
-    }
-
-    struct bch {
-        static var uid: String { return code }//E.isTestnet ? "bitcash-testnet" : "bitcash-mainnet" }
-        static var code: String { return "BCH" }
-        static var name: String { return "Bitcoin Cash" }
+/// Natively supported currencies. Enum maps to ticker code.
+enum Currencies: String, CaseIterable {
+    case btc
+    case bch
+    case eth
+    case brd
+    case dai
+    case tusd
+    case xrp
+    
+    var code: String { return rawValue }
+    var uid: String {
+        switch self {
+        //TODO:CRYPTO BDB UID will become network name, e.g. "bitcoin-mainnet" -- see https://gitlab.com/breadwallet/blockchain-db/merge_requests/68
+        case .brd:
+            // return E.isMainnet ? "ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6"" : "ethereum-testnet:0x7108ca7c4718efa810457f228305c9c71390931a"
+            return rawValue
+        default:
+            return rawValue
+        }
     }
     
-    struct eth {
-        static var uid: String { return code }//E.isTestnet ? "ethereum-testnet" : "ethereum-mainnet" }
-        static var code: String { return "ETH" }
-        static var name: String { return "Ethereum" }
-    }
-
-    struct brd {
-        static var uid: String { return code }//E.isTestnet ? "ethereum-testnet:0x7108ca7c4718efa810457f228305c9c71390931a" : "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6" }
-        static var code: String { return "BRD" }
-        static var address: String { return "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6" }
-    }
+    var state: WalletState? { return Store.state.wallets[uid] }
+    var wallet: Wallet? { return state?.wallet }
+    var instance: Currency? { return state?.currency }
 }

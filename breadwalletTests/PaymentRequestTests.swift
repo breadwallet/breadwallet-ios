@@ -11,8 +11,6 @@ import XCTest
 
 class PaymentRequestTests : XCTestCase {
 
-//TODO:CRYPTO payment request
-/*
     func testEmptyString() {
         XCTAssertNil(PaymentRequest(string: "", currency: Currencies.btc))
         XCTAssertNil(PaymentRequest(string: "", currency: Currencies.bch))
@@ -32,23 +30,16 @@ class PaymentRequestTests : XCTestCase {
     }
     
     func testBasicExampleBCH() {
-        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u"
-        let request = PaymentRequest(string: uri, currency: Currencies.bch)
-        XCTAssertNotNil(request)
-        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+        //TODO:CRYPTO CashAddr
+//        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u"
+//        let request = PaymentRequest(string: uri, currency: Currencies.bch)
+//        XCTAssertNotNil(request)
+//        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
+//        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
     }
 
     func testBasicExampleETH() {
         let uri = "ethereum:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"
-        let request = PaymentRequest(string: uri, currency: Currencies.eth)
-        XCTAssertNotNil(request)
-        XCTAssertTrue(request?.toAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
-        XCTAssertTrue(request?.displayAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
-    }
-
-    func testSecondaryExampleETH() {
-        let uri = "ether:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"
         let request = PaymentRequest(string: uri, currency: Currencies.eth)
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
@@ -61,16 +52,17 @@ class PaymentRequestTests : XCTestCase {
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
         XCTAssertTrue(request?.displayAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
-        XCTAssertTrue(request?.amount?.rawValue == 120000000)
+        XCTAssertTrue(request?.amount?.tokenUnformattedString(in: Currencies.btc.baseUnit) == "120000000")
     }
     
     func testAmountInUriBCH() {
-        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u?amount=1.2"
-        let request = PaymentRequest(string: uri, currency: Currencies.bch)
-        XCTAssertNotNil(request)
-        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
-        XCTAssertTrue(request?.amount?.rawValue == 120000000)
+        //TODO:CRYPTO CashAddr
+//        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u?amount=1.2"
+//        let request = PaymentRequest(string: uri, currency: Currencies.bch)
+//        XCTAssertNotNil(request)
+//        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
+//        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+//        XCTAssertTrue(request?.amount?.tokenUnformattedString(in: Currencies.btc.baseUnit) == "120000000")
     }
 
     func testRequestMetaDataBTC() {
@@ -78,19 +70,20 @@ class PaymentRequestTests : XCTestCase {
         let request = PaymentRequest(string: uri, currency: Currencies.btc)
         XCTAssertTrue(request?.toAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
         XCTAssertTrue(request?.displayAddress == "12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu")
-        XCTAssertTrue(request?.amount?.rawValue == 120000000)
+        XCTAssertTrue(request?.amount?.tokenUnformattedString(in: Currencies.btc.baseUnit) == "120000000")
         XCTAssertTrue(request?.message == "Payment")
         XCTAssertTrue(request?.label == "Satoshi")
     }
     
     func testRequestMetaDataBCH() {
-        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u?amount=1.2&message=Payment&label=Satoshi"
-        let request = PaymentRequest(string: uri, currency: Currencies.bch)
-        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
-        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
-        XCTAssertTrue(request?.amount?.rawValue == 120000000)
-        XCTAssertTrue(request?.message == "Payment")
-        XCTAssertTrue(request?.label == "Satoshi")
+        //TODO:CRYPTO CashAddr
+//        let uri = "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u?amount=1.2&message=Payment&label=Satoshi"
+//        let request = PaymentRequest(string: uri, currency: Currencies.bch)
+//        XCTAssertTrue(request?.toAddress == "bitcoincash:qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u".bitcoinAddr)
+//        XCTAssertTrue(request?.displayAddress == "qr2g8fyjy0csdujuxcg02syrp5eaqgtn9ytlk3650u")
+//        XCTAssertTrue(request?.amount?.tokenUnformattedString(in: Currencies.btc.baseUnit) == "120000000")
+//        XCTAssertTrue(request?.message == "Payment")
+//        XCTAssertTrue(request?.label == "Satoshi")
     }
 
     func testExtraEqualSign() {
@@ -106,19 +99,19 @@ class PaymentRequestTests : XCTestCase {
     }
 
     func testPaymentProtocol() {
-        let uri = "https://www.syndicoin.co/signednoroot.paymentrequest"
-        let request = PaymentRequest(string: uri, currency: Currencies.btc)
-        XCTAssertTrue(request?.type == .remote)
-
-        let promise = expectation(description: "Fetch Request")
-        request?.fetchRemoteRequest(completion: { newRequest in
-            XCTAssertNotNil(newRequest)
-            promise.fulfill()
-        })
-
-        waitForExpectations(timeout: 5.0) { error in
-            XCTAssertNil(error)
-        }
+        //TODO:CRYPTO payment requests
+//        let uri = "https://www.syndicoin.co/signednoroot.paymentrequest"
+//        let request = PaymentRequest(string: uri, currency: Currencies.btc)
+//        XCTAssertTrue(request?.type == .remote)
+//
+//        let promise = expectation(description: "Fetch Request")
+//        request?.fetchRemoteRequest(completion: { newRequest in
+//            XCTAssertNotNil(newRequest)
+//            promise.fulfill()
+//        })
+//
+//        waitForExpectations(timeout: 5.0) { error in
+//            XCTAssertNil(error)
+//        }
     }
- */
 }

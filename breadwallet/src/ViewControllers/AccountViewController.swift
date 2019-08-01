@@ -64,7 +64,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private var shouldShowRewardsView: Bool {
-        return Currencies.brd.code == currency.code
+        return currency.isBRDToken
     }
     
     private var shouldAnimateRewardsView: Bool {

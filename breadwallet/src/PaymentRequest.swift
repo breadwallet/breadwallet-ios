@@ -9,8 +9,6 @@
 import Foundation
 import BRCore
 
-// swiftlint:disable cyclomatic_complexity
-
 enum PaymentRequestType {
     case local
     case remote
@@ -20,61 +18,59 @@ struct PaymentRequest {
 
     init?(string: String, currency: Currency) {
         self.currency = currency
-        if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
-            if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
-                url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
-
-                if let scheme = url.scheme, let currencySchemes = currency.urlSchemes, currencySchemes.contains(scheme) {
-                    let host = url.host
-                    if let host = host {
-                        //TODO:CRYPTO payment uri
-                        if currency.isBitcoinCash {
-                            // BCH CashAddr includes the bitcoincash: prefix in the address format
-                            // the payment request stores the address in legacy address format
-                            let cashAddr = "\(scheme):\(host)"
-                            toAddress = cashAddr.bitcoinAddr
-                            if toAddress.isNilOrEmpty {
-                                toAddress = host
-                                warningMessage = S.Send.legacyAddressWarning
-                            }
-                            guard currency.isValidAddress(toAddress!.bCashAddr) else { return nil }
-                        } else {
-                            guard currency.isValidAddress(host) else { return nil }
+        if let url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
+            if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil,
+                let url = NSURL(string: "\(scheme)://\(resourceSpecifier)"),
+                scheme == currency.urlScheme {
+                if let host = url.host {
+                    //TODO:CRYPTO CashAddr
+                    if currency.isBitcoinCash {
+                        // BCH CashAddr includes the bitcoincash: prefix in the address format
+                        // the payment request stores the address in legacy address format
+                        let cashAddr = "\(scheme):\(host)"
+                        toAddress = cashAddr.bitcoinAddr
+                        if toAddress.isNilOrEmpty {
                             toAddress = host
+                            warningMessage = S.Send.legacyAddressWarning
                         }
-                    }
-                    
-                    if let components = url.query?.components(separatedBy: "&") {
-                        for component in components {
-                            let pair = component.components(separatedBy: "=")
-                            if pair.count < 2 { continue }
-                            let key = pair[0]
-                            var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
-                            value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-                            
-                            switch key {
-                            case "amount":
-                                amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
-                            case "label", "memo":
-                                label = value
-                            case "message":
-                                message = value
-                            case "r":
-                                r = URL(string: value)
-                            default:
-                                print("Key not found: \(key)")
-                            }
-                        }
-                    }
-                    //Payment request must have either an r value or an address
-                    if r == nil {
-                        guard toAddress != nil else { return nil }
-                        type = .local
+                        guard currency.isValidAddress(toAddress!.bCashAddr) else { return nil }
                     } else {
-                        type = .remote
+                        guard currency.isValidAddress(host) else { return nil }
+                        toAddress = host
                     }
-                    return
                 }
+                
+                //TODO: add support for ERC-681 token transfers, amount field, amount as scientific notation
+                if let components = url.query?.components(separatedBy: "&") {
+                    for component in components {
+                        let pair = component.components(separatedBy: "=")
+                        if pair.count < 2 { continue }
+                        let key = pair[0]
+                        var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
+                        value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
+                        
+                        switch key {
+                        case "amount":
+                            amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
+                        case "label", "memo":
+                            label = value
+                        case "message":
+                            message = value
+                        case "r":
+                            r = URL(string: value)
+                        default:
+                            print("Key not found: \(key)")
+                        }
+                    }
+                }
+                //Payment request must have either an r value or an address
+                if r == nil {
+                    guard toAddress != nil else { return nil }
+                    type = .local
+                } else {
+                    type = .remote
+                }
+                return
             } else if url.scheme == "http" || url.scheme == "https" {
                 type = .remote
                 remoteRequest = url
@@ -116,9 +112,7 @@ struct PaymentRequest {
             request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
         }
 
-        //TODO:CRYPTO btc payment request
-        /*
-        if self.currency.matches(Currencies.btc) {
+        if self.currency.isBitcoin {
             request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
             //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
         } else {
@@ -131,7 +125,8 @@ struct PaymentRequest {
             guard let response = response else { return completion(nil) }
 
             if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
-                completion(PaymentRequest(data: data, currency: Currencies.btc))
+                guard let btc = Currencies.btc.instance else { return completion(nil) }
+                completion(PaymentRequest(data: data, currency: btc))
             } else if response.mimeType?.lowercased() == "application/payment-request" {
                 // TODO: XXX validate hash from response header
                 let req = PaymentRequest(json: String(data: data, encoding: .utf8) ?? "", currency: self.currency)
@@ -150,7 +145,6 @@ struct PaymentRequest {
                 completion(nil)
             }
         }.resume()
-        */
     }
 
     static func requestString(withAddress address: String, forAmount amount: Amount) -> String {
@@ -162,7 +156,7 @@ struct PaymentRequest {
     let currency: Currency
     var toAddress: String?
     var displayAddress: String? {
-        if currency.isBitcoinCash {
+        if currency.isBitcoinCash { //TODO:CRYPTO CashAddr
             return toAddress?.bCashAddr
         } else {
             return toAddress
