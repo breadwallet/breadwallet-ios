@@ -96,6 +96,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
                             }
         })
         
+        //TODO:CRYPTO sync state
         Store.subscribe(self, selector: {
             return $0[viewModel.currency]?.lastBlockTimestamp != $1[viewModel.currency]?.lastBlockTimestamp },
                         callback: { state in

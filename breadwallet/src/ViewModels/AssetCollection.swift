@@ -26,10 +26,6 @@ class AssetCollection {
             .sorted { return $0.isPreferred && !$1.isPreferred }
     }
     
-    var supportedNetworks: [String] {
-        return Array(Set(enabledAssets.map { $0.network }))
-    }
-    
     private(set) var hasUnsavedChanges: Bool = false
     
     private let kvStore: BRReplicatedKVStore
@@ -66,6 +62,7 @@ class AssetCollection {
         
         self.enabledAssets = assetIndex.enabledAssetIds.compactMap { (uid) -> CurrencyMetaData? in
             guard let metaData = allTokens[uid] else {
+                print("[KV] found unsupported token in asset index: \(uid)")
                 foundUnsupportedTokens = true
                 return nil
             }

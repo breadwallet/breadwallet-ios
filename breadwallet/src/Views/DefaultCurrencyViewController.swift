@@ -60,12 +60,9 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        //TODO:CRYPTO hardcoded btc
-        /*
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: Currencies.btc)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: nil)
         faqButton.tintColor = .navigationTint
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-        */
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -74,7 +71,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
     }
 
     private func setExchangeRateLabel() {
-        //TODO:CRYPTO hard-coded currency/unit
+        //TODO:CRYPTO remove this label
         /*
         if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
             let amount = Amount(value: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)

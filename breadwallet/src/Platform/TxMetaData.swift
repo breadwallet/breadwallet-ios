@@ -147,7 +147,7 @@ extension Transaction {
 
     var metaDataKey: String? {
         guard let sha256hash = sha256ofHash else { return nil }
-        //TODO:CRYPTO generic tokens
+        //TODO:CRYPTO_V2 generic tokens
         return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
     }
 }

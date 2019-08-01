@@ -91,9 +91,9 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
     case (.retrySync(let lhsCurrency), .retrySync(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.rescan(let lhsCurrency), .rescan(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.lock, .lock):
         return true
     case (.promptBiometrics, .promptBiometrics):
@@ -111,7 +111,7 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.openFile, .openFile):
         return true
     case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.receivedPaymentRequest, .receivedPaymentRequest):
         return true
     case (.scanQr, .scanQr):
