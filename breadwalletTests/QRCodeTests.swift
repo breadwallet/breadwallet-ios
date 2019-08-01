@@ -10,8 +10,6 @@ import XCTest
 @testable import breadwallet
 
 class QRCodeTests: XCTestCase {
-//TODO:CRYPTO url schemes
-/*
     func testPaymentRequests() {
         // invalid
         assertInvalidQRCode(fromContent: "")
@@ -34,13 +32,13 @@ class QRCodeTests: XCTestCase {
         assertPaymentRequest(fromContent: "bitcoin:bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: Currencies.btc) // bech32
 
         // BCH
-        assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
-        assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
+        //TODO:CRYPTO CashAddr
+        //assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
+        //assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
         
         // ETH
         assertPaymentRequest(fromContent: "0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
         assertPaymentRequest(fromContent: "ethereum:0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
-        assertPaymentRequest(fromContent: "ether:0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
         
         // Payment Protocol
         assertPaymentRequest(fromContent: "https://www.syndicoin.co/signednoroot.paymentrequest", currency: Currencies.btc)
@@ -61,7 +59,7 @@ class QRCodeTests: XCTestCase {
     // MARK: - Helpers
     
     private func assertPaymentRequest(fromContent content: String, currency: Currency, file: StaticString = #file, line: UInt = #line) {
-        if case QRCode.paymentRequest(let request) = QRCode(content: content) {
+        if let request = PaymentRequest(string: content, currency: currency) {
             XCTAssertEqual(request.currency.code, currency.code, file: file, line: line)
         } else {
             XCTFail("invalid payment request URI", file: file, line: line)
@@ -74,5 +72,4 @@ class QRCodeTests: XCTestCase {
             return XCTFail(file: file, line: line)
         }
     }
- */
 }

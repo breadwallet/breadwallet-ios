@@ -26,7 +26,7 @@ struct State {
     let wallets: [String: WalletState]
     
     subscript(currency: Currency) -> WalletState? {
-        guard let walletState = wallets[currency.code] else {
+        guard let walletState = wallets[currency.uid] else {
             return nil
         }
         return walletState
@@ -113,7 +113,7 @@ extension State {
     
     func mutate(walletState: WalletState) -> State {
         var wallets = self.wallets
-        wallets[walletState.currency.code] = walletState
+        wallets[walletState.currency.uid] = walletState
         return mutate(wallets: wallets)
     }
 }
@@ -148,11 +148,10 @@ struct WalletState {
     let syncProgress: Double
     let syncState: SyncState
     let balance: Amount?
-    let lastBlockTimestamp: UInt32
+    let lastBlockTimestamp: UInt32 //TODO:CRYPTO remove
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }
-    let legacyReceiveAddress: String?
     let rates: [Rate]
     let currentRate: Rate?
     let fees: Fees?
@@ -167,7 +166,6 @@ struct WalletState {
                            syncState: .success,
                            balance: nil,
                            lastBlockTimestamp: 0,
-                           legacyReceiveAddress: nil,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fees: nil,
@@ -195,7 +193,6 @@ struct WalletState {
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
-                           legacyReceiveAddress: legacyReceiveAddress ?? self.legacyReceiveAddress,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
                            fees: fees ?? self.fees,
@@ -207,15 +204,14 @@ struct WalletState {
 extension WalletState: Equatable {}
 
 func == (lhs: WalletState, rhs: WalletState) -> Bool {
-    return lhs.currency.code == rhs.currency.code &&
+    return lhs.currency == rhs.currency &&
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
         lhs.fees == rhs.fees &&
-        lhs.connectionStatus == rhs.connectionStatus &&
-        lhs.legacyReceiveAddress == rhs.legacyReceiveAddress
+        lhs.connectionStatus == rhs.connectionStatus
 }
 
 extension RootModal: Equatable {}
@@ -225,21 +221,21 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
     case (.none, .none):
         return true
     case (.send(let lhsCurrency), .send(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.sendForRequest(let lhsRequest), .sendForRequest(let rhsRequest)):
         return lhsRequest.address == rhsRequest.address
     case (.receive(let lhsCurrency), .receive(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.loginScan, .loginScan):
         return true
     case (.requestAmount(let lhsCurrency, let lhsAddress), .requestAmount(let rhsCurrency, let rhsAddress)):
-        return lhsCurrency.code == rhsCurrency.code && lhsAddress == rhsAddress
+        return lhsCurrency == rhsCurrency && lhsAddress == rhsAddress
     case (.buy(let lhsCurrency?), .buy(let rhsCurrency?)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.buy(nil), .buy(nil)):
         return true
     case (.sell(let lhsCurrency?), .sell(let rhsCurrency?)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.sell(nil), .sell(nil)):
         return true
     case (.trade, .trade):
@@ -254,5 +250,9 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
 extension Currency {
     var state: WalletState? {
         return Store.state[self]
+    }
+    
+    var wallet: Wallet? {
+        return Store.state[self]?.wallet
     }
 }

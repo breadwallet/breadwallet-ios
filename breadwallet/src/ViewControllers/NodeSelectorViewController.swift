@@ -9,8 +9,6 @@
 import UIKit
 import BRCore
 
-//TODO:CRYPTO node selection
-/*
 class NodeSelectorViewController: UIViewController, Trackable {
 
     private let titleLabel = UILabel(font: .customBold(size: 22.0), color: .white)
@@ -19,13 +17,13 @@ class NodeSelectorViewController: UIViewController, Trackable {
     private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .white)
     private let status = UILabel(font: .customBody(size: 14.0), color: .white)
     private let button: BRDButton
-    private let walletManager: BTCWalletManager
+    private let wallet: Wallet
     private var okAction: UIAlertAction?
     private var timer: Timer?
     private let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(wallet: Wallet) {
+        self.wallet = wallet
         if UserDefaults.customNodeIP == nil {
             button = BRDButton(title: S.NodeSelector.manualButton, type: .primary)
         } else {
@@ -82,8 +80,9 @@ class NodeSelectorViewController: UIViewController, Trackable {
     }
 
     @objc private func setStatusText() {
-        status.text = walletManager.peerManager?.connectionStatus.description
-        node.text = walletManager.peerManager?.downloadPeerName
+        //TODO:CRYPTO node selection
+        //status.text = walletManager.peerManager?.connectionStatus.description
+        //node.text = walletManager.peerManager?.downloadPeerName
     }
 
     private func switchToAuto() {
@@ -93,8 +92,9 @@ class NodeSelectorViewController: UIViewController, Trackable {
         UserDefaults.customNodePort = nil
         button.title = S.NodeSelector.manualButton
         DispatchQueue.walletQueue.async {
-            self.walletManager.peerManager?.setFixedPeer(address: 0, port: 0)
-            self.walletManager.peerManager?.connect()
+            //TODO:CRYPTO node selection
+            //self.walletManager.peerManager?.setFixedPeer(address: 0, port: 0)
+            //self.walletManager.peerManager?.connect()
         }
     }
 
@@ -112,9 +112,10 @@ class NodeSelectorViewController: UIViewController, Trackable {
                 if let portText = port.text {
                     UserDefaults.customNodePort = Int(portText)
                 }
-                DispatchQueue.walletQueue.async {
-                    myself.walletManager.peerManager?.connect()
-                }
+                //TODO:CRYPTO node selection
+//                DispatchQueue.walletQueue.async {
+//                    myself.walletManager.peerManager?.connect()
+//                }
                 myself.button.title = S.NodeSelector.automaticButton
             }
         })
@@ -159,4 +160,3 @@ class NodeSelectorViewController: UIViewController, Trackable {
         fatalError("init(coder:) has not been implemented")
     }
 }
-*/

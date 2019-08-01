@@ -11,12 +11,17 @@ import XCTest
 
 class AssetCollectionTests: XCTestCase {
 
-    static var testTokenData = [("BTC", "btc"),
-                                ("BCH", "bch"),
-                                ("ETH", "eth"),
-                                ("BRD", "brd"),
-                                ("EOS", "eos"),
-                                ("XRP", "xrp")]
+    // uid, code
+    static var testTokenData = [("btc", "btc"),
+                                ("bch", "bch"),
+                                ("eth", "eth"),
+                                ("brd", "brd"),
+                                ("dai", "dai"),
+                                ("tusd", "tusd"),
+                                ("xrp", "xrp"),
+                                ("eos", "eos"),
+                                ("zrx", "zrx")]
+
     
     var allTokens: [String: CurrencyMetaData] {
         return Dictionary(uniqueKeysWithValues: AssetCollectionTests.testTokenData.map { (uid, code) -> (String, CurrencyMetaData) in

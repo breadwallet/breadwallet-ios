@@ -198,7 +198,7 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
             }
             
             if let currencyRestriction = paymentRequestCurrencyRestriction {
-                guard case .paymentRequest(let request) = result, request.currency.matches(currencyRestriction) else {
+                guard case .paymentRequest(let request) = result, request.currency == currencyRestriction else {
                     guide.state = .negative
                     return
                 }

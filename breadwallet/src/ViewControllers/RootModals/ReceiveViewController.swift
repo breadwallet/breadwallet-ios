@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCrypto
 
 private let qrSize: CGFloat = 186.0
 private let smallButtonHeight: CGFloat = 32.0
@@ -55,15 +56,16 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
         setupCopiedMessage()
 
         //TODO:CRYPTO this does not work since receive address is not a stored property in WalletState
-        if isBTCLegacy {
-            Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
-                self.setReceiveAddress()
-            })
-        } else {
-            Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
-                self.setReceiveAddress()
-            })
-        }
+        // need to hook up a WalletListener
+//        if isBTCLegacy {
+//            Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
+//                self.setReceiveAddress()
+//            })
+//        } else {
+//            Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
+//                self.setReceiveAddress()
+//            })
+//        }
     }
 
     private func addSubviews() {
@@ -149,11 +151,12 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        //TODO:CRYPTO use address schemes -- how to specify legacy vs. segwit?
-        guard var addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
-        if currency.isBitcoinCash {
-            addressText = addressText.bCashAddr
-        }
+        guard let wallet = currency.wallet else { return assertionFailure() }
+        let addressText = isBTCLegacy ? wallet.receiveAddress(for: .btcLegacy) : wallet.receiveAddress
+        //TODO:CRYPTO CashAddr
+//        if currency.isBitcoinCash {
+//            addressText = addressText.bCashAddr
+//        }
         address.text = addressText
         if let uri = currency.addressURI(addressText),
             let uriData = uri.data(using: .utf8),

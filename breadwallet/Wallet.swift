@@ -27,8 +27,13 @@ class Wallet {
 //        return core.manager.network.baseUnitFor(currency: currency)!
 //    }
 
+    /// The native network currency
+    var networkCurrency: Currency? {
+        return system.currency(forCoreCurrency: core.manager.network.currency)
+    }
+    
     var feeCurrency: Currency {
-        return system.currency(forCoreCurrency: core.manager.network.currency) ?? currency
+        return networkCurrency ?? currency
     }
 
     var balance: Amount {
@@ -49,19 +54,14 @@ class Wallet {
     var receiveAddress: String {
         return core.target.description
     }
-
-    /// Address to use as source for outgoing transfers
-    var sourceAddress: String {
-        return core.source.description
-    }
-
-    func isValidAddress(_ address: String) -> Bool {
-        return Address.create(string: address, network: core.manager.network) != nil
+    
+    func receiveAddress(for scheme: AddressScheme) -> String {
+        return core.targetForScheme(scheme).description
     }
 
     func isOwnAddress(_ address: String) -> Bool {
-        //TODO:CRYPTO need BRCrypto.Wallet interface
-        return false
+        //TODO:CRYPTO need BRCrypto.Wallet interface -- this only works for single-address networks
+        return core.target == Address.create(string: address, network: core.manager.network)
     }
 
     func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> Result<Transfer, CreateTransferError> {

@@ -17,8 +17,6 @@ class CoreSystem: Subscriber {
         case active
     }
     
-    var assetCollection: AssetCollection?
-
     private var system: System?
     private let backend = BlockChainDB()
     private (set) var state: State = .uninitialized //TODO:CRYPTO is this needed, if so should it come from System?
@@ -28,7 +26,9 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallets + Currencies
 
-    fileprivate var wallets = [BRCrypto.Currency: Wallet]()
+    var assetCollection: AssetCollection?
+    
+    private var wallets = [BRCrypto.Currency: Wallet]()
 
     // Currency view models indexed by Core Currency
     fileprivate var currencies = [BRCrypto.Currency: Currency]()
@@ -43,8 +43,15 @@ class CoreSystem: Subscriber {
         Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
             self.resetToDefaultCurrencies()
         })
+
+        Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
+            guard let btc = Currencies.btc.instance,
+                let btcWalletManager = self?.wallet(for: btc)?.core.manager else { return }
+            btcWalletManager.addressScheme = .btcSegwit
+            print("[SYS] Bitcoin SegWit address scheme enabled")
+        }
     }
-    
+
     func currency(forCoreCurrency core: BRCrypto.Currency) -> Currency? {
         return currencies[core]
     }
@@ -68,7 +75,7 @@ class CoreSystem: Subscriber {
         for coreCurrency in network.currencies {
             guard currencies[coreCurrency] == nil else { return assertionFailure() }
             //TODO:CRYPTO use coreCurrency.uids for indexing once they match the uids from the backend token list
-            guard let metaData = assetCollection.allAssets[coreCurrency.code.uppercased()] else {
+            guard let metaData = assetCollection.allAssets[coreCurrency.code.lowercased()] else {
                 print("[SYS] unknown currency omitted: \(network) \(coreCurrency.code)")
                 continue
             }
@@ -77,6 +84,7 @@ class CoreSystem: Subscriber {
                 let baseUnit = network.baseUnitFor(currency: coreCurrency),
                 let defaultUnit = network.defaultUnitFor(currency: coreCurrency),
                 let currency = Currency(core: coreCurrency,
+                                        network: network,
                                         metaData: metaData,
                                         units: units,
                                         baseUnit: baseUnit,
@@ -246,13 +254,21 @@ extension CoreSystem: SystemListener {
                 // A network was created; create the corresponding wallet manager.
                 if network.isMainnet == !E.isTestnet {
                     self.addCurrencies(for: network)
-                    guard self.currency(forCoreCurrency: network.currency) != nil else {
+                    guard let currency = self.currency(forCoreCurrency: network.currency) else {
                         print("[SYS] \(network) wallet manager not created. \(network.currency.code) not supported.")
                         return
                     }
+                    
+                    var addressScheme: AddressScheme
+                    if currency.isBitcoin {
+                        addressScheme = UserDefaults.hasOptedInSegwit ? .btcSegwit : .btcLegacy
+                    } else {
+                        addressScheme = system.defaultAddressScheme(network: network)
+                    }
+                    
                     system.createWalletManager(network: network,
                                                mode: network.defaultManagerMode,
-                                               addressScheme: system.defaultAddressScheme(network: network))
+                                               addressScheme: addressScheme)
                 }
 
             case .managerAdded(let manager):
@@ -374,7 +390,7 @@ extension WalletManagerEvent: CustomStringConvertible {
     }
 }
 
-//TODO:CRYPTO use use-selected mode if available
+//TODO:CRYPTO use user-selected mode if available
 extension BRCrypto.Network {
     var defaultManagerMode: WalletManagerMode {
         switch currency.code {

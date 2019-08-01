@@ -8,6 +8,7 @@
 
 import Foundation
 import BRCore
+import BRCrypto
 
 // swiftlint:disable cyclomatic_complexity
 
@@ -258,11 +259,11 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             var response = [[String: Any]]()
             let currencies = Store.state.currencies.filter { code == nil || $0.code.lowercased() == code!.lowercased() }
             for currency in currencies {
+                guard let wallet = currency.wallet else { return BRHTTPResponse(request: req, code: 404) }
                 // prefer legacy addresses for now until platforms support segwit
-                if let address = Store.state[currency]?.legacyReceiveAddress ?? Store.state[currency]?.receiveAddress {
-                    response.append(["currency": currency.code,
-                                     "address": address])
-                }
+                let address = currency.isBitcoin ? wallet.receiveAddress(for: .btcLegacy) : wallet.receiveAddress
+                response.append(["currency": currency.code,
+                                 "address": address])
             }
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
@@ -460,10 +461,10 @@ extension BRWalletPlugin {
     func walletInfo() -> [String: Any] {
         var d = [String: Any]()
         d["no_wallet"] = walletAuthenticator.noWallet
-        guard let btcWalletState = Store.state.wallets[Currencies.btc.code] else {
+        guard let btcWalletState = Currencies.btc.state, let wallet = btcWalletState.wallet else {
             return d
         }
-        d["receive_address"] = btcWalletState.legacyReceiveAddress // TODO: use segwit address when platform adds support
+        d["receive_address"] = wallet.receiveAddress(for: .btcLegacy) // TODO: use segwit address when platform adds support
             //d["watch_only"] = TODO - add watch only
         d["btc_denomination_digits"] = btcWalletState.currency.defaultUnit.decimals
         d["local_currency_code"] = Store.state.defaultCurrencyCode
