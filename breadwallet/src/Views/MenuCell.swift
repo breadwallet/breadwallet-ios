@@ -12,6 +12,14 @@ class MenuCell: SeparatorCell {
     
     static let cellIdentifier = "MenuCell"
     
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func set(item: MenuItem) {
         textLabel?.text = item.title
         textLabel?.font = .customBody(size: 16.0)
@@ -27,6 +35,14 @@ class MenuCell: SeparatorCell {
         } else {
             accessoryView = nil
             accessoryType = .none
+        }
+        
+        if let subTitle = item.subTitle {
+            detailTextLabel?.text = subTitle
+            detailTextLabel?.font = Theme.caption
+            detailTextLabel?.textColor = Theme.secondaryText
+        } else {
+            detailTextLabel?.text = nil
         }
     }
 }

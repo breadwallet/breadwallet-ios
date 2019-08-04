@@ -444,6 +444,8 @@ class ModalPresenter: Subscriber, Trackable {
                     let service = params["service"] {
                     print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
                     Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: nil)))
+                } else {
+                    UIApplication.shared.open(url)
                 }
             case .invalid:
                 break
@@ -605,6 +607,11 @@ class ModalPresenter: Subscriber, Trackable {
             // About
             MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
+            },
+            
+            // ATM Finder
+            MenuItem(title: S.Settings.atmMapMenuItemTitle, subTitle: S.Settings.atmMapMenuItemSubtitle, icon: MenuItem.Icon.atmMap) {
+                self.presentPlatformWebViewController("/map")
             }
         ]
 
