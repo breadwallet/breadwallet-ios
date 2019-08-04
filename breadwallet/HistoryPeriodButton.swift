@@ -26,6 +26,7 @@ class HistoryPeriodButton {
         button.setTitle(historyPeriod.buttonLabel, for: .normal)
         let color = historyPeriod == HistoryPeriod.defaultPeriod ? Theme.primaryText : Theme.tertiaryText
         button.setTitleColor(color, for: .normal)
+        button.titleLabel?.font = Theme.body1
     }
     
 }
