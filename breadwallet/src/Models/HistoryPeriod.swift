@@ -24,17 +24,17 @@ enum HistoryPeriod: CaseIterable {
     var buttonLabel: String {
         switch self {
         case .day:
-            return (formatterForUnits([.day]).string(from: 60*60*24) ?? "1d").trim(" ")
+            return (formatterForUnits([.day]).string(from: 60*60*24) ?? "1d").trim(" ").toMaxLength(2)
         case .week:
-            return (formatterForUnits([.weekOfMonth]).string(from: 60*60*24*7) ?? "1w").trim(" ")
+            return (formatterForUnits([.weekOfMonth]).string(from: 60*60*24*7) ?? "1w").trim(" ").toMaxLength(2)
         case .month:
-            return (formatterForUnits([.month]).string(from: 60*60*24*31) ?? "1m").trim(" ").rtrim(["o"])
+            return (formatterForUnits([.month]).string(from: 60*60*24*31) ?? "1m").trim(" ").toMaxLength(2)
         case .months:
-            return (formatterForUnits([.month]).string(from: 60*60*24*31*3) ?? "3m").trim(" ").rtrim(["o"])
+            return (formatterForUnits([.month]).string(from: 60*60*24*31*3) ?? "3m").trim(" ").toMaxLength(2)
         case .year:
-            return (formatterForUnits([.year]).string(from: 60*60*24*31*12) ?? "1y").trim(" ")
+            return (formatterForUnits([.year]).string(from: 60*60*24*31*12) ?? "1y").trim(" ").toMaxLength(2)
         case .years:
-            return (formatterForUnits([.year]).string(from: 60*60*24*31*36) ?? "3y").trim(" ")
+            return (formatterForUnits([.year]).string(from: 60*60*24*31*36) ?? "3y").trim(" ").toMaxLength(2)
         }
     }
     
