@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "Обменный курс";
 /* The wallet is disabled. */
 "Disabled.title" = "Кошелек отключен";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s Адрес";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
 /* Service capabilities description */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10-60 минут";
 /* Fee Selector title */
 "FeeSelector.title" = "Скорость обработки";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "Выберите источник изображения";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Админ";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "Включено";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Оставайтесь в курсе событий";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "Если вам понравилось наше приложение, уделите минутку, чтобы оценить его и написать нам отзыв.";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "Нет, спасибо";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "Оцените BRD";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "Оцените BRD";
 /* Address copied message. */
 "Receive.copied" = "Скопировано в буфер обмена.";
 /* Share via email button label */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "Расширенные";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Расширенные настройки";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "Доступно только в США";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "Карта крипто-банкоматов";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Отображать валюту";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "Самый надежный и безопасный способ использования биткойна.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Восстановить кошелек";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "Активность";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Соединение";
 /* The sync has failed (to complete) */

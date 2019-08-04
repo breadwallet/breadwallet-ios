@@ -86,15 +86,9 @@ class ChartView: UIView {
         didSet {
             guard let periodValues = rawValues[historyPeriod] else { return }
             guard periodValues.count > index else { return }
-            guard let exchangeRate = currencyFormatter.string(from: NSNumber(value: periodValues[index].close)) else { return }
-            scrubberDidUpdateToValues?(exchangeRate, historyPeriod.dateFormatter.string(from: periodValues[index].time))
+            let placeHolderRate = Rate(code: Store.state.defaultCurrencyCode, name: "", rate: periodValues[index].close, reciprocalCode: "")
+            scrubberDidUpdateToValues?(placeHolderRate.localString(forCurrency: currency), historyPeriod.dateFormatter.string(from: periodValues[index].time))
         }
-    }
-    
-    private var currencyFormatter: NumberFormatter {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .currency
-        return formatter
     }
     
     init(currency: Currency) {

@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "Tasso di Cambio";
 /* The wallet is disabled. */
 "Disabled.title" = "Wallet disabilitato";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s Indirizzo";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "Richiedi informazioni per l'account %1$@";
 /* Service capabilities description */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10-60 minuti";
 /* Fee Selector title */
 "FeeSelector.title" = "Velocità di lavorazione";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "Seleziona sorgente immagine";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Amministratore";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "Acceso";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Rimani nel circuito";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "Se la nostra applicazione ti é piaciuta, ti chiediamo di dedicare un attimo per valutarla e farci avere una recensione.";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "No Grazie";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "Valutare BRD";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "Valutare BRD";
 /* Address copied message. */
 "Receive.copied" = "Copiato negli appunti.";
 /* Share via email button label */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "Avanzate";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Impostazioni avanzate";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "Disponibile solo negli Stati Uniti";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "Mappa ATM Crypto";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Visualizza valuta";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "Il modo più sicuro per usare i bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recupera portafoglio";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "Attività";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Connessione in corso";
 /* The sync has failed (to complete) */
