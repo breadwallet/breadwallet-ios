@@ -76,6 +76,12 @@ extension String {
     func trim(_ string: String) -> String {
         return replacingOccurrences(of: string, with: "")
     }
+    
+    func toMaxLength(_ length: Int) -> String {
+        guard count > length else { return self }
+        let lastIndex = index(startIndex, offsetBy: length)
+        return String(self[..<lastIndex])
+    }
 
     func nsRange(from range: Range<Index>) -> NSRange {
         let location = utf16.distance(from: utf16.startIndex, to: range.lowerBound)
