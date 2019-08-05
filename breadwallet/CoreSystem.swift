@@ -94,10 +94,6 @@ class CoreSystem: Subscriber {
             }
             print("[SYS] currency added: \(network) \(currency.code)")
             currencies[coreCurrency] = currency
-            if coreCurrency == network.currency {
-                //TODO:CRYPTO fee updater to be replaced
-                Backend.setupFeeUpdater(for: currency)
-            }
         }
     }
 

@@ -69,17 +69,8 @@ class Sender {
         self.kvStore = kvStore
     }
 
-    func updateFeeRates(_ fees: Fees, level: FeeLevel?) {
-        //TODO:CRYPTO feeBasis
-//        if wallet.currency.isBitcoinCompatible {
-//            feeBasis = .bitcoin(feePerKB: fees.fee(forLevel: level ?? .regular))
-//        } else if wallet.currency.isEthereumCompatible {
-//            guard case .ethereum(_, let gasLimit) = feeBasis,
-//                let gasPrice = BRCrypto.Amount.create(string: fees.gasPrice.string(radix: 10), unit: wallet.feeUnit) else { return assertionFailure() }
-//            feeBasis = .ethereum(gasPrice: gasPrice, gasLimit: gasLimit)
-//        } else {
-//            assertionFailure()
-//        }
+    func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis) -> Void) {
+        wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
     }
 
     func reset() {
@@ -128,25 +119,21 @@ class Sender {
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, comment: String?) -> SenderValidationResult {
+    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?) -> SenderValidationResult {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount)
         guard case .ok = result else { return result }
-        
-        //TODO:CRYPTO IOS-1139
-        return .failed
-        //let feeBasis = wallet.core.estimateFee ...
-        
-//        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
-//        case .success(let transfer):
-//            self.comment = comment
-//            self.transfer = transfer
-//            return .ok
-//        case .failure(let error) where error == .invalidAddress:
-//            return .invalidAddress
-//        default:
-//            return .failed
-//        }
+
+        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
+        case .success(let transfer):
+            self.comment = comment
+            self.transfer = transfer
+            return .ok
+        case .failure(let error) where error == .invalidAddress:
+            return .invalidAddress
+        default:
+            return .failed
+        }
     }
 
     func sendTransaction(allowBiometrics: Bool, pinVerifier: @escaping PinVerifier, abi: String? = nil, completion: @escaping SendCompletion) {
@@ -183,12 +170,18 @@ class Sender {
                              kvStore: kvStore,
                              rate: rate)
 
-        //TODO:CRYPTO feeRate should be feePerKb for BTC
+        let feeAmount: Double?
+        if let feeBasis = tx.feeBasis, case .bitcoin(let feePerKb) = feeBasis {
+            feeAmount = feePerKb.tokenValue.doubleValue
+        } else {
+            feeAmount = nil
+        }
+        
         //TODO:CRYPTO need to create two transaction metadata entries for token transfers, one for the ETH originating tx (no amount, just gas) and one for the ERC20 transfer.
         // the ETH originating tx for a ERC20 transfer should have the tokenTransfer param set as the token code and have no memo
         tx.createMetaData(rate: rate,
                           comment: comment,
-                          feeRate: nil,
+                          feeRate: feeAmount,
                           tokenTransfer: nil)
         // the ETH transaction (token transfer contract execution) is flagged as a token transfer with the token code
         //ethTx.createMetaData(rate: ethRate, tokenTransfer: currency.code)
@@ -215,8 +208,9 @@ class Sender {
     fileprivate var gasEstimate: GasEstimate?
 
     func hasEstimate(forAddress address: String, amount: Amount) -> Bool {
-        guard wallet.currency.isEthereumCompatible else { assertionFailure(); return false }
-        return gasEstimate?.address == address && gasEstimate?.amount == amount
+        return false
+        //TODO:CRYPTO
+        //return gasEstimate?.address == address && gasEstimate?.amount == amount
     }
 
     func estimateGas(targetAddress: String, amount: Amount) {
@@ -235,12 +229,6 @@ class Sender {
 //                self.gasEstimate = nil
 //            }
 //        })
-    }
-
-    func transactionParams(fromAddress: String, toAddress: String, forAmount amount: Amount) -> TransactionParams {
-        var params = TransactionParams(from: fromAddress, to: toAddress)
-        params.value = amount
-        return params
     }
 }
 

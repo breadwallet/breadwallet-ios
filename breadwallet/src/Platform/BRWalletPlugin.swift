@@ -322,14 +322,16 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             var amount = Amount(tokenString: numerator, currency: currency, unit: currency.baseUnit)
             
             // ensure priority fee set for bitcoin transactions
+            
+            //TODO:CRYPTO - force use of priority fees
             let tradeFeeLevel: FeeLevel = .priority
-            if currency.isBitcoin {
-                guard let fees = currency.state?.fees else {
-                    asyncResp.provide(400, json: ["error": "fee-error"])
-                    return asyncResp
-                }
-                sender.updateFeeRates(fees, level: tradeFeeLevel)
-            }
+//            if currency.isBitcoin {
+//                guard let fees = currency.state?.fees else {
+//                    asyncResp.provide(400, json: ["error": "fee-error"])
+//                    return asyncResp
+//                }
+//                sender.updateFeeRates(fees, level: tradeFeeLevel)
+//            }
 
             let fee = sender.fee(forAmount: amount)
             guard let balance = currency.state?.balance else {
@@ -341,12 +343,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                 // amount is close to balance and fee puts it over, subtract the fee
                 amount = balance - fee
             }
-            
-            let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
-            guard case .ok = result else {
-                asyncResp.provide(400, json: ["error": "tx-error"])
-                return asyncResp
-            }
+            //TODO:CRYPTO
+//            let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
+//            guard case .ok = result else {
+//                asyncResp.provide(400, json: ["error": "tx-error"])
+//                return asyncResp
+//            }
             
             if shouldTransmit != 0 {
                 let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in

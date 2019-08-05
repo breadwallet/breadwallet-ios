@@ -333,9 +333,3 @@ class AmountViewController: UIViewController, Trackable {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-extension Fees: Equatable {}
-
-func == (lhs: Fees, rhs: Fees) -> Bool {
-    return lhs.regular == rhs.regular && lhs.economy == rhs.economy
-}
