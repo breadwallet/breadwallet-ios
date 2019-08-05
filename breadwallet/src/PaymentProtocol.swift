@@ -147,29 +147,32 @@ class PaymentProtocolRequest {
     }
     
     init?(json: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
-        let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .formatted(formatter)
-        guard let req = try? decoder.decode(Request.self, from: json.data(using: .utf8)!) else { return nil }
-        let outputs = req.outputs.map {
-            BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
-        }
-        guard !outputs.isEmpty && outputs[0].amount > 0 && outputs[0].scriptLen > 0 else { return nil }
-        guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
-                                                   time: UInt64(req.time.timeIntervalSince1970),
-                                                   expires: UInt64(req.expires.timeIntervalSince1970),
-                                                   memo: req.memo, paymentURL: req.paymentUrl.absoluteString)
-            else { return nil }
-        details.currency = req.currency
-        details.requiredFeeRate = req.requiredFeeRate
-        details.paymentId = req.paymentId
-        mimeType = "application/payment-request"
-        guard let cPtr = BRPaymentProtocolRequestNew(1, "none", nil, 0, details.cPtr, nil, 0) else { return nil }
-        details.isManaged = false
-        self.details = details
-        self.cPtr = cPtr
-        self.isManaged = true
+        return nil //TODO:CRYPTO payment request
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+//        let decoder = JSONDecoder()
+//        decoder.dateDecodingStrategy = .formatted(formatter)
+//        guard let req = try? decoder.decode(Request.self, from: json.data(using: .utf8)!) else { return nil }
+//        let outputs = req.outputs.map {
+//            //TODO:CRYPTO CashAddr / payment request
+//            //BRTxOutput(req.currency == "BCH" ? $0.address.bitcoinAddr : $0.address, $0.amount)
+//            BRTxOutput($0.address, $0.amount)
+//        }
+//        guard !outputs.isEmpty && outputs[0].amount > 0 && outputs[0].scriptLen > 0 else { return nil }
+//        guard let details = PaymentProtocolDetails(network: req.network, outputs: outputs,
+//                                                   time: UInt64(req.time.timeIntervalSince1970),
+//                                                   expires: UInt64(req.expires.timeIntervalSince1970),
+//                                                   memo: req.memo, paymentURL: req.paymentUrl.absoluteString)
+//            else { return nil }
+//        details.currency = req.currency
+//        details.requiredFeeRate = req.requiredFeeRate
+//        details.paymentId = req.paymentId
+//        mimeType = "application/payment-request"
+//        guard let cPtr = BRPaymentProtocolRequestNew(1, "none", nil, 0, details.cPtr, nil, 0) else { return nil }
+//        details.isManaged = false
+//        self.details = details
+//        self.cPtr = cPtr
+//        self.isManaged = true
     }
     
     var bytes: [UInt8] {
@@ -302,7 +305,8 @@ class PaymentProtocolRequest {
     }
 
     var address: String {
-        return details.outputs.first!.swiftAddress
+        //TODO:CRYPTO payment request
+        return ""//details.outputs.first!.swiftAddress
     }
     
     var mimeType: String = "application/bitcoin-paymentrequest"
@@ -330,13 +334,14 @@ class PaymentProtocolPayment {
           transactions: [BRTxRef?],
           refundTo: [(address: String, amount: UInt64)],
           memo: String? = nil) {
-        var txRefs = transactions
-        guard let cPtr = BRPaymentProtocolPaymentNew(merchantData, merchantData?.count ?? 0, &txRefs, txRefs.count,
-                                                     refundTo.map { $0.amount },
-                                                     refundTo.map { BRAddress(string: $0.address) ?? BRAddress() },
-                                                     refundTo.count, memo) else { return nil }
-        self.cPtr = cPtr
-        self.isManaged = true
+        return nil //TODO:CRYPTO payment request
+//        var txRefs = transactions
+//        guard let cPtr = BRPaymentProtocolPaymentNew(merchantData, merchantData?.count ?? 0, &txRefs, txRefs.count,
+//                                                     refundTo.map { $0.amount },
+//                                                     refundTo.map { BRAddress(string: $0.address) ?? BRAddress() },
+//                                                     refundTo.count, memo) else { return nil }
+//        self.cPtr = cPtr
+//        self.isManaged = true
     }
 
     init?(data: Data) {
@@ -373,9 +378,11 @@ class PaymentProtocolPayment {
     }
     
     var json: String? {
-        let tx = transactions.compactMap { $0?.bytes?.reduce("") { $0 + String(format: "%02x", $1) } }
-        guard let data = try? JSONEncoder().encode(Payment(currency: currency, transactions: tx)) else { return nil }
-        return String(data: data, encoding: .utf8)
+        //TODO:CRYPTO payment request
+        return nil
+//        let tx = transactions.compactMap { $0?.bytes?.reduce("") { $0 + String(format: "%02x", $1) } }
+//        guard let data = try? JSONEncoder().encode(Payment(currency: currency, transactions: tx)) else { return nil }
+//        return String(data: data, encoding: .utf8)
     }
     
     deinit {

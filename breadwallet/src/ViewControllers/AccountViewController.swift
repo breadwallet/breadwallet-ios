@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 import MachO
 
 class AccountViewController: UIViewController, Subscriber, Trackable {

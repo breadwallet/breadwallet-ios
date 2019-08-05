@@ -6,50 +6,48 @@
 //  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 import Foundation
-import BRCore
+import BRCrypto
 
 struct PigeonCrypto {
 
     /// Pairing key associated with the remote entity
-    private let privateKey: BRKey
+    private let privateKey: Key
 
-    init(privateKey: BRKey) {
+    init(privateKey: Key) {
         self.privateKey = privateKey
     }
     
     /// Generates a pairing key for the identifier string and returns the DER-encoded public key
-    static func pairingKey(forIdentifier identifier: String, authKey: BRKey) -> BRKey? {
+    static func pairingKey(forIdentifier identifier: String, authKey: Key) -> Key? {
         guard let identifierData = identifier.data(using: .utf8),
             let remoteIdentifier = identifierData.sha256.hexString.hexToData else { return nil }
-
         let nonce = Array(remoteIdentifier)
-        var privKey = authKey
-        var pairingKey = BRKey()
-        BRKeyPigeonPairingKey(&privKey, &pairingKey, nonce, nonce.count)
-        return pairingKey
+        return Key.createForPigeonFrom(key: authKey, nonce: Data(nonce))
     }
 
     func decrypt(_ data: Data, nonce: Data, senderPublicKey: Data) -> Data {
-        let nonce = Array(nonce)
-        let inData = Array(data)
-        var privKey = self.privateKey
-        var pubKey = BRKey(pubKey: [UInt8](senderPublicKey))!
-        let outSize = BRKeyPigeonDecrypt(nil, nil, 0, nil, nonce, inData, inData.count)
-        var outData = [UInt8](repeating: 0, count: outSize)
-        BRKeyPigeonDecrypt(&privKey, &outData, outSize, &pubKey, nonce, inData, inData.count)
-        return Data(outData)
+        guard let pubKey = Key.createFromString(asPublic: senderPublicKey.hexString) else {
+            assertionFailure()
+            return Data()
+        }
+        let decrypter = CoreEncrypter.pigeon(privKey: privateKey,
+                                             pubKey: pubKey,
+                                             nonce12: nonce)
+        return decrypter.decrypt(data: data)
     }
 
     /// Returns (encryptedData, nonce) - the nonce is needed to be attached to the envelope
     func encrypt(_ data: Data, receiverPublicKey: Data) -> (Data, Data) {
-        let inData = Array(data)
-        let nonce = genNonce()
-        var privKey = self.privateKey
-        var pubKey = BRKey(pubKey: [UInt8](receiverPublicKey))!
-        let outSize = BRKeyPigeonEncrypt(nil, nil, 0, nil, nonce, inData, inData.count)
-        var outData = [UInt8](repeating: 0, count: outSize)
-        BRKeyPigeonEncrypt(&privKey, &outData, outSize, &pubKey, nonce, inData, data.count)
-        return (Data(outData), Data(nonce))
+        guard let pubKey = Key.createFromString(asPublic: receiverPublicKey.hexString) else {
+            assertionFailure()
+            return (Data(), Data())
+        }
+        let nonce = Data(genNonce())
+        let encrypter = CoreEncrypter.pigeon(privKey: privateKey,
+                                             pubKey: pubKey,
+                                             nonce12: nonce)
+        let outData = encrypter.encrypt(data: data)
+        return (outData, Data(nonce))
     }
 
     func sign(data: Data) -> Data {
@@ -57,8 +55,9 @@ struct PigeonCrypto {
     }
 
     func verify(data: Data, signature: Data, pubKey: Data) -> Bool {
-        guard let recoveredKey = BRKey(md: data.sha256_2.uInt256, compactSig: [UInt8](signature)) else { return false }
-        return pubKey.hexString == recoveredKey.publicKey.hexString
+        guard !signature.isEmpty else { return false }
+        guard let recoveredKey = CoreSigner.compact.recover(data32: data.sha256_2, signature: signature) else { return false }
+        return pubKey.hexString == recoveredKey.encodeAsPublic
     }
 
     private func genNonce() -> [UInt8] {

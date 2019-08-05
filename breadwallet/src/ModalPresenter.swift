@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
 
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity

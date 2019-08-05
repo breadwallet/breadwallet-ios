@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 /// View model of a transaction in list view
 struct TxListViewModel: TxViewModel {

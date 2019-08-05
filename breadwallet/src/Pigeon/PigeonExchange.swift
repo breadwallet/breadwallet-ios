@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCore
+import BRCrypto
 import UIKit
 
 // swiftlint:disable type_body_length
@@ -85,12 +85,11 @@ class PigeonExchange: Subscriber {
         }
         
         guard let pairingKey = PigeonCrypto.pairingKey(forIdentifier: pairingRequest.identifier, authKey: authKey),
-            let remotePubKey = pairingRequest.publicKey.hexToData else {
+            let remotePubKey = pairingRequest.publicKey.hexToData,
+            let localPubKey = pairingKey.encodeAsPublic.hexToData else {
                 print("[EME] invalid pairing request parameters. pairing aborted!")
                 return completionHandler(.error(message: "invalid pairing request parameters. pairing aborted!"))
         }
-        
-        let localPubKey = pairingKey.publicKey
         
         var link = MessageLink()
         link.id = localIdentifier
@@ -233,6 +232,7 @@ class PigeonExchange: Subscriber {
     private func rejectPairingRequest(_ pairingRequest: WalletPairingRequest, completionHandler: @escaping PairingCompletionHandler) {
         guard let authKey = apiClient.authKey,
             let pairingKey = PigeonCrypto.pairingKey(forIdentifier: pairingRequest.identifier, authKey: authKey),
+            let pairingPubKey = pairingKey.encodeAsPublic.hexToData,
             let remotePubKey = pairingRequest.publicKey.hexToData else {
                 return completionHandler(.error(message: "error constructing remote pub key"))
         }
@@ -241,7 +241,7 @@ class PigeonExchange: Subscriber {
         link.status = .rejected
         link.error = .userDenied
         guard let envelope = try? MessageEnvelope(to: remotePubKey,
-                                                  from: pairingKey.publicKey,
+                                                  from: pairingPubKey,
                                                   message: link,
                                                   type: .link,
                                                   service: pairingRequest.service,
@@ -547,13 +547,14 @@ class PigeonExchange: Subscriber {
     // MARK: - Ping
     
     func sendPing(remotePubKey: Data) {
-        guard let pairingKey = pairingKey(forRemotePubKey: remotePubKey) else { return }
+        guard let pairingKey = pairingKey(forRemotePubKey: remotePubKey),
+            let pairingPubKey = pairingKey.encodeAsPublic.hexToData else { return }
 
         let crypto = PigeonCrypto(privateKey: pairingKey)
 
         var ping = MessagePing()
         ping.ping = "Hello from BC"
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingPubKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
@@ -561,7 +562,7 @@ class PigeonExchange: Subscriber {
     
     private func sendPong(message: String, toPing ping: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: ping.senderPublicKey) else { return }
-        assert(pairingKey.publicKey == ping.receiverPublicKey)
+        assert(pairingKey.encodeAsPublic == ping.receiverPublicKey.hexString)
         var pong = MessagePong()
         pong.pong = message
         guard let envelope = try? MessageEnvelope(replyTo: ping, message: pong, type: .pong, crypto: PigeonCrypto(privateKey: pairingKey)) else {
@@ -629,7 +630,7 @@ class PigeonExchange: Subscriber {
         }
     }
     
-    private func pairingKey(forRemotePubKey remotePubKey: Data) -> BRKey? {
+    private func pairingKey(forRemotePubKey remotePubKey: Data) -> Key? {
         guard let pwd = PairedWalletData(remotePubKey: remotePubKey.base64EncodedString(), store: kvStore) else { return nil }
         return PigeonCrypto.pairingKey(forIdentifier: pwd.identifier, authKey: apiClient.authKey!)
     }

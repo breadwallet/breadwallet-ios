@@ -153,15 +153,16 @@ class StartImportViewController: UIViewController {
     }
 
     private func didReceiveAddress(_ address: String) {
-        if address.isValidPrivateKey {
-            if let key = BRKey(privKey: address) {
-                checkBalance(key: key)
-            }
-        } else if address.isValidBip38Key {
-            unlock(address: address, callback: { key in
-                self.checkBalance(key: key)
-            })
-        }
+        //TODO:CRYPTO import keys
+//        if address.isValidPrivateKey {
+//            if let key = BRKey(privKey: address) {
+//                checkBalance(key: key)
+//            }
+//        } else if address.isValidBip38Key {
+//            unlock(address: address, callback: { key in
+//                self.checkBalance(key: key)
+//            })
+//        }
     }
 
     private func unlock(address: String, callback: @escaping (BRKey) -> Void) {
@@ -175,12 +176,13 @@ class StartImportViewController: UIViewController {
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
             self.present(self.unlockingActivity, animated: true, completion: {
                 if let password = alert.textFields?.first?.text {
-                    if let key = BRKey(bip38Key: address, passphrase: password) {
-                        self.unlockingActivity.dismiss(animated: true, completion: {
-                            callback(key)
-                        })
-                        return
-                    }
+                    //TODO:CRYPTO import keys
+//                    if let key = BRKey(bip38Key: address, passphrase: password) {
+//                        self.unlockingActivity.dismiss(animated: true, completion: {
+//                            callback(key)
+//                        })
+//                        return
+//                    }
                 }
                 self.unlockingActivity.dismiss(animated: true, completion: {
                     self.showErrorMessage(S.Import.wrongPassword)

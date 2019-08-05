@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0

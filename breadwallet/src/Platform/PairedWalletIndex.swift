@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 
 /// Index of all EME paired wallets
 class PairedWalletIndex: BRKVStoreObject, BRCoding {

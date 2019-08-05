@@ -8,43 +8,20 @@
 
 import XCTest
 @testable import breadwallet
-import BRCore
 import BRCrypto
 
 class FakeAuthenticator: WalletAuthenticator {
     
     var apiUserAccount: [AnyHashable : Any]?
-    
-    var secret: UInt256
-    let key: BRKey
+    let apiAuthKey: Key?
     var userAccount: [AnyHashable: Any]? = nil
 
     init() {
-        let count = 32
-        var randomBytes: [UInt8] = [UInt8](repeating: 0, count: count)
-        guard SecRandomCopyBytes(kSecRandomDefault, count, &randomBytes) == 0
-            else { fatalError("couldnt generate random data for key") }
-        let keyData = Data(randomBytes)
-        print("base58 encoded secret key data \(keyData.base58)")
-        secret = keyData.uInt256
-        key = withUnsafePointer(to: &secret, { (secPtr: UnsafePointer<UInt256>) in
-            var k = BRKey()
-            k.compressed = 1
-            BRKeySetSecret(&k, secPtr, 0)
-            return k
-        })
+        let (phrase, _) = Account.generatePhrase(words: bip39Words)!
+        apiAuthKey = Key.createForBIP32ApiAuth(phrase: phrase, words: bip39Words)
     }
 
     var noWallet: Bool { return false }
-
-    var apiAuthKey: String? {
-        var k = key
-        k.compressed = 1
-        let pkLen = BRKeyPrivKey(&k, nil, 0)
-        var pkData = Data(count: pkLen)
-        guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&k, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
-        return String(data: pkData, encoding: .utf8)
-    }
 
     // not used
     
@@ -82,7 +59,7 @@ class FakeAuthenticator: WalletAuthenticator {
         completion(nil)
     }
 
-    func buildBitIdKey(url: String, index: Int) -> BRKey? {
+    func buildBitIdKey(url: String, index: Int) -> Key? {
         assertionFailure()
         return nil
     }
@@ -106,16 +83,15 @@ class BRAPIClientTests: XCTestCase {
     }
     
     func testPublicKeyEncoding() {
-        let pubKey1 = client.authKey!.publicKey.base58
-        let b = pubKey1.base58DecodedData()
-        let b2 = b.base58
-        XCTAssertEqual(pubKey1, b2) // sanity check on our base58 functions
-        let key = client.authKey!.publicKey.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> BRKey in
-            var k = BRKey()
-            BRKeySetPubKey(&k, ptr.baseAddress!.assumingMemoryBound(to: UInt8.self), client.authKey!.publicKey.count)
-            return k
+        guard let pubKey1 = client.authKey?.encodeAsPublic.hexToData?.base58 else {
+            return XCTFail()
         }
-        XCTAssertEqual(pubKey1, key.publicKey.base58) // the key decoded from our encoded key is the same
+        let b = pubKey1.base58DecodedData()
+        XCTAssertNotNil(b)
+        let b2 = b!.base58
+        XCTAssertEqual(pubKey1, b2) // sanity check on our base58 functions
+        let key = Key.createFromString(asPublic: client.authKey!.encodeAsPublic)
+        XCTAssertEqual(pubKey1, key?.encodeAsPublic.hexToData?.base58) // the key decoded from our encoded key is the same
     }
     
     func testHandshake() {
