@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
 import BRCrypto
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
@@ -77,7 +76,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     private var address: String? {
         if let protoRequest = validatedProtoRequest {
-            return currency.isBitcoinCash ? protoRequest.address.bCashAddr : protoRequest.address
+            //TODO:CRYPTO CashAddr
+            return protoRequest.address//currency.isBitcoinCash ? protoRequest.address.bCashAddr : protoRequest.address
         } else {
             return addressCell.address
         }
@@ -480,7 +480,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         } else {
-            addressCell.setContent(currency.isBitcoinCash ? address.bCashAddr : address)
+            //TODO:CRYPTO CashAddr
+            //addressCell.setContent(currency.isBitcoinCash ? address.bCashAddr : address)
+            addressCell.setContent(address)
         }
 
         memoCell.content = protoReq.details.memo

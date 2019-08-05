@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import breadwallet
-import BRCore
+import BRCrypto
 
 class BRReplicatedKVStoreTestAdapter: BRRemoteKVStoreAdaptor {
     let testCase: XCTestCase
@@ -89,13 +89,9 @@ class BRReplicatedKVStoreTestAdapter: BRRemoteKVStoreAdaptor {
 
 class BRReplicatedKVStoreTest: XCTestCase {
     var store: BRReplicatedKVStore!
-    var key: BRKey {
-        var key = BRKey()
+    var key: Key {
         let privKey = "S6c56bnXQiBjk9mqSYE7ykVQ7NzrRy"
-        _ = privKey.data(using: .utf8)?.withUnsafeBytes({ (pkPtr: UnsafeRawBufferPointer) in
-            BRKeySetPrivKey(&key, pkPtr.baseAddress!.assumingMemoryBound(to: Int8.self))
-        })
-        return key
+        return Key.createFromString(asPrivate: privKey)!
     }
     var adapter: BRReplicatedKVStoreTestAdapter!
     

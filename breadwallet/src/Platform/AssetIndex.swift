@@ -60,7 +60,6 @@ class AssetIndex: BRKVStoreObject, Codable {
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
     
-    //TODO:CRYPTO - add DAI and TUSD once Core supports them
     static var defaultCurrencyIds: [String] {
         return Currencies.allCases.map { $0.uid }
     }

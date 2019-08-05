@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 import LocalAuthentication
-import BRCore
 import BRCrypto
 
 private var WalletSecAttrService: String {
@@ -63,11 +62,10 @@ protocol WalletAuthenticator {
     func createAccount(withPin: String) -> Account?
     func createAccount(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void)
 
-    var apiAuthKey: String? { get }
+    var apiAuthKey: Key? { get }
     var apiUserAccount: [AnyHashable: Any]? { get set }
 
-    //TODO:CRYPTO
-    func buildBitIdKey(url: String, index: Int) -> BRKey?
+    func buildBitIdKey(url: String, index: Int) -> Key?
 }
 
 extension WalletAuthenticator {
@@ -222,30 +220,21 @@ extension KeyStore: WalletAuthenticator {
     // MARK: - Keys
 
     /// key used for authenticated API calls
-    var apiAuthKey: String? {
+    var apiAuthKey: Key? {
         return autoreleasepool {
             do {
-                if let apiKey: String = ((try? keychainItem(key: KeychainKey.apiAuthKey)) as String?), !apiKey.isEmpty {
+                if let apiKeyString = try keychainItem(key: KeychainKey.apiAuthKey) as String?,
+                    !apiKeyString.isEmpty,
+                    let apiKey = Key.createFromString(asPrivate: apiKeyString) {
                     return apiKey
                 }
-                //TODO:CRYPTO key generation
-                var key = BRKey()
-                var seed = UInt512()
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                BRBIP32APIAuthKey(&key, &seed, MemoryLayout<UInt512>.size)
-                seed = UInt512() // clear seed
-                let pkLen = BRKeyPrivKey(&key, nil, 0)
-                var pkData = CFDataCreateMutable(secureAllocator, pkLen) as Data
-                pkData.count = pkLen
-                guard pkData.withUnsafeMutableBytes({ BRKeyPrivKey(&key, $0.baseAddress?.assumingMemoryBound(to: Int8.self), pkLen) }) == pkLen else { return nil }
-                key.clean()
-                let privKey = CFStringCreateFromExternalRepresentation(secureAllocator, pkData as CFData,
-                                                                       CFStringBuiltInEncodings.UTF8.rawValue) as String
-                try setKeychainItem(key: KeychainKey.apiAuthKey, item: privKey)
-                return privKey
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic),
+                    let words = Words.wordList?.map({ $0 as String }),
+                    let apiKey = Key.createForBIP32ApiAuth(phrase: phrase, words: words) else { return nil }
+                try setKeychainItem(key: KeychainKey.apiAuthKey, item: apiKey.encodeAsPrivate)
+                return apiKey
             } catch let error {
-                print("apiAuthKey error: \(error)")
+                print("[KEYSTORE] apiAuthKey error: \(error)")
                 return nil
             }
         }
@@ -266,17 +255,15 @@ extension KeyStore: WalletAuthenticator {
         }
     }
 
-    //TODO:CRYPTO BRKey
-    func buildBitIdKey(url: String, index: Int) -> BRKey? {
+    func buildBitIdKey(url: String, index: Int) -> Key? {
         return autoreleasepool {
             do {
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return nil }
-                var key = BRKey()
-                var seed = UInt512()
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                BRBIP32BitIDKey(&key, &seed, MemoryLayout<UInt512>.size, UInt32(index), url)
-                seed = UInt512()
-                return key
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic),
+                    let words = Words.wordList?.map({ $0 as String }) else { return nil }
+                return Key.createForBIP32BitID(phrase: phrase,
+                                               index: index,
+                                               uri: url,
+                                               words: words)
             } catch {
                 return nil
             }
@@ -586,12 +573,12 @@ extension KeyStore: KeyMaster {
     /// will fail if a wallet seed already exists on the keychain or a PIN is not set
     func setRandomSeedPhrase() -> (phrase: String, account: Account)? {
         do {
-            guard noWallet, try keychainItem(key: KeychainKey.pin) as String? != nil else { return nil }
-            guard let words = Words.wordList else { return nil }
+            guard noWallet, try keychainItem(key: KeychainKey.pin) as String? != nil,
+                let words = Words.wordList?.map({ $0 as String }) else { return nil }
             
             // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
             return try autoreleasepool {
-                guard let (phrase, creationDate) = Account.generatePhrase(words: words.map { $0 as String }) else { return nil }
+                guard let (phrase, creationDate) = Account.generatePhrase(words: words) else { return nil }
                 guard let account = setSeedPhrase(phrase) else { return nil }
                 // we store the wallet creation time in the keychain because keychain data persists even when app is deleted
                 let creationTimeInterval = creationDate.timeIntervalSinceReferenceDate
@@ -663,7 +650,7 @@ extension KeyStore: KeyMaster {
             try Backend.kvStore?.rmdb()
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.systemAccount, item: nil as Data?)
-            try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as Data?)
+            try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as String?)
             try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.pinFailTime, item: nil as Int64?)
             try setKeychainItem(key: KeychainKey.pinFailCount, item: nil as Int64?)
@@ -716,7 +703,7 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
     
     var noWallet: Bool { return true }
     var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
-    var apiAuthKey: String? { return nil }
+    var apiAuthKey: Key? { return nil }
     var userAccount: [AnyHashable: Any]?
 
     var pinLoginRequired: Bool { return false }
@@ -754,8 +741,7 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
         completion(nil)
     }
 
-    //TODO:CRYPTO BRKey
-    func buildBitIdKey(url: String, index: Int) -> BRKey? {
+    func buildBitIdKey(url: String, index: Int) -> Key? {
         assertionFailure()
         return nil
     }

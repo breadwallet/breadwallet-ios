@@ -7,24 +7,11 @@
 //
 
 import UIKit
-import BRCore
+import BRCrypto
 
 extension String {
     func matches(regularExpression pattern: String) -> Bool {
         return range(of: pattern, options: .regularExpression) != nil
-    }
-
-    var isValidHexString: Bool {
-        return withoutHexPrefix.matches(regularExpression: "^([a-fA-F0-9][a-fA-F0-9])*$")
-    }
-
-    var isValidAddress: Bool {
-        guard lengthOfBytes(using: .utf8) > 0 else { return false }
-        return BRAddressIsValid(self) != 0
-    }
-
-    var isValidBCHAddress: Bool {
-        return bitcoinAddr.isValidAddress
     }
 
     var isValidEmailAddress: Bool {
@@ -34,33 +21,6 @@ extension String {
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         
         return emailPredicate.evaluate(with: self)
-    }
-    
-    var bCashAddr: String { //TODO:CRYPTO CashAddr
-        var addr = [CChar](repeating: 0, count: 55)
-        BRBCashAddrEncode(&addr, self)
-        let prefixedAddr = String(cString: addr)
-        var cashAddr = prefixedAddr
-        /*
-        // drop "bitcoincash:" prefix
-        if let prefixes = Currencies.bch.urlSchemes {
-            for prefix in prefixes where prefixedAddr.hasPrefix(prefix) {
-                cashAddr = String(prefixedAddr.dropFirst(prefix.count+1)) // +1 for :
-            }
-        }
-        */
-        return cashAddr
-    }
-    
-    var bitcoinAddr: String {
-        var addr = [CChar](repeating: 0, count: 36)
-        BRBCashAddrDecode(&addr, self)
-        return String(cString: addr)
-    }
-    
-    var isValidEthAddress: Bool {
-        let pattern = "^0[xX][0-9a-fA-F]{40}$"
-        return range(of: pattern, options: .regularExpression) != nil
     }
 
     var sanitized: String {
@@ -109,50 +69,54 @@ extension String {
     }
 }
 
-private let startTag = "<b>"
-private let endTag = "</b>"
+// MARK: URL/Query
 
-//Convert string with <b> tags to attributed string
 extension String {
-    var tagsRemoved: String {
-        return replacingOccurrences(of: startTag, with: "").replacingOccurrences(of: endTag, with: "")
-    }
-
-    var attributedStringForTags: NSAttributedString {
-        let output = NSMutableAttributedString()
-        let scanner = Scanner(string: self)
-        let endCount = tagsRemoved.utf8.count
-        var i = 0
-        while output.string.utf8.count < endCount || i < 50 {
-            var regular: NSString?
-            var bold: NSString?
-            scanner.scanUpTo(startTag, into: &regular)
-            scanner.scanUpTo(endTag, into: &bold)
-            if let regular = regular {
-                output.append(NSAttributedString(string: (regular as String).tagsRemoved, attributes: UIFont.regularAttributes))
-            }
-            if let bold = bold {
-                output.append(NSAttributedString(string: (bold as String).tagsRemoved, attributes: UIFont.boldAttributes))
-            }
-            i += 1
+    
+    static var urlQuoteCharacterSet: CharacterSet {
+        if let cset = (NSMutableCharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as? NSMutableCharacterSet {
+            cset.removeCharacters(in: "?=&")
+            return cset as CharacterSet
         }
-        return output
+        return NSMutableCharacterSet.urlQueryAllowed as CharacterSet
+    }
+    
+    var urlEscapedString: String {
+        return addingPercentEncoding(withAllowedCharacters: String.urlQuoteCharacterSet) ?? ""
+    }
+    
+    // TODO: use URLComponents
+    func parseQueryString() -> [String: [String]] {
+        var ret = [String: [String]]()
+        var strippedString = self
+        if String(self[..<self.index(self.startIndex, offsetBy: 1)]) == "?" {
+            strippedString = String(self[self.index(self.startIndex, offsetBy: 1)...])
+        }
+        strippedString = strippedString.replacingOccurrences(of: "+", with: " ")
+        strippedString = strippedString.removingPercentEncoding!
+        for s in strippedString.components(separatedBy: "&") {
+            let kp = s.components(separatedBy: "=")
+            if kp.count == 2 {
+                if var k = ret[kp[0]] {
+                    k.append(kp[1])
+                } else {
+                    ret[kp[0]] = [kp[1]]
+                }
+            }
+        }
+        return ret
     }
 }
 
-// MARK: - Hex String conversions
+// MARK: - Hex Conversion
+
 extension String {
+    var isValidHexString: Bool {
+        return withoutHexPrefix.matches(regularExpression: "^([a-fA-F0-9][a-fA-F0-9])*$")
+    }
+    
     var hexToData: Data? {
-        let scalars = withoutHexPrefix.unicodeScalars
-        var bytes = [UInt8](repeating: 0, count: (scalars.count + 1) >> 1)
-        for (index, scalar) in scalars.enumerated() {
-            guard var nibble = scalar.nibble else { return nil }
-            if index & 1 == 0 {
-                nibble <<= 4
-            }
-            bytes[index >> 1] |= nibble
-        }
-        return Data(bytes)
+        return CoreCoder.hex.decode(string: self.withoutHexPrefix)
     }
     
     var withoutHexPrefix: String {
@@ -194,28 +158,10 @@ extension String {
     }
 }
 
+// MARK: -
+
 extension Optional where Wrapped == String {
     var isNilOrEmpty: Bool {
         return self?.isEmpty ?? true
-    }
-}
-
-extension UnicodeScalar {
-    var nibble: UInt8? {
-        if 48 <= value && value <= 57 {
-            return UInt8(value - 48)
-        } else if 65 <= value && value <= 70 {
-            return UInt8(value - 55)
-        } else if 97 <= value && value <= 102 {
-            return UInt8(value - 87)
-        }
-        return nil
-    }
-}
-
-// UInt256 support
-extension String {
-    init(_ value: UInt256, radix: Int = 10) {
-        self = value.string(radix: radix)
     }
 }

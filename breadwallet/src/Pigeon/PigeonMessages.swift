@@ -8,7 +8,7 @@
 
 import Foundation
 import SwiftProtobuf
-import BRCore
+import BRCrypto
 
 enum PigeonMessageType: String {
     case link = "LINK"
@@ -62,8 +62,9 @@ extension MessageEnvelope {
         self.signature = crypto.sign(data: envelopeData)
     }
     
-    func verify(pairingKey: BRKey) -> Bool {
-        guard pairingKey.publicKey == receiverPublicKey else { return false }
+    func verify(pairingKey: Key) -> Bool {
+        guard pairingKey.encodeAsPublic == receiverPublicKey.hexString else { return false }
+        guard !self.signature.isEmpty else { return false }
         let crypto = PigeonCrypto(privateKey: pairingKey)
         var envelope = self
         envelope.signature = Data()

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 
 /// Metadata for an EME paired wallet
 class PairedWalletData: BRKVStoreObject, BRCoding {

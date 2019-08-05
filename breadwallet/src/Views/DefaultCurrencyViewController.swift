@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 

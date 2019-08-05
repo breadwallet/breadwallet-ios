@@ -107,6 +107,7 @@ class CoreSystem: Subscriber {
             assert(self.system == nil)
             self.system = System(listener: self,
                                  account: account,
+                                 onMainnet: !E.isTestnet,
                                  path: C.coreDataDirURL.path,
                                  query: self.backend)
             Backend.apiClient.getCurrencyMetaData { currencyMetaData in

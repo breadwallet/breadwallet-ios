@@ -15,6 +15,8 @@ import XCTest
 
 class Bip38Tests: XCTestCase {
 
+    //TODO:CRYPTO import key
+    /*
     func testEmpty() {
         let key = BRKey(bip38Key: "", passphrase: "")
         XCTAssertNil(key)
@@ -48,5 +50,6 @@ class Bip38Tests: XCTestCase {
         XCTAssertNotNil(key)
         XCTAssert(key?.privKey() == "5JLdxTtcTHcfYcmJsNVy1v2PMDx432JPoYcBTVVRHpPaxUrdtf8\0")
     }
+    */
     
 }

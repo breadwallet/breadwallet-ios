@@ -53,7 +53,7 @@ public let secureAllocator: CFAllocator = {
     context.deallocate = secureDeallocate;
     return CFAllocatorCreate(kCFAllocatorDefault, &context).takeRetainedValue()
 }()
-
+/*
 extension BRAddress: CustomStringConvertible, Hashable {
     init?(string: String) {
         self.init()
@@ -355,7 +355,7 @@ extension UnsafeMutablePointer where Pointee == BRTransaction {
         return BRTransactionEq(l, r) != 0
     }
 }
-/*
+
 protocol BRWalletListener {
     func balanceChanged(_ balance: UInt64)
     func txAdded(_ tx: BRTxRef)

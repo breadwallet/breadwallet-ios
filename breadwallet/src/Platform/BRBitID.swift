@@ -8,7 +8,7 @@
 
 import Foundation
 import Security
-import BRCore
+import BRCrypto
 
 open class BRBitID: NSObject {
     static let SCHEME = "bitid"
@@ -35,7 +35,7 @@ open class BRBitID: NSObject {
     }
     
     // sign a message with a key and return a base64 representation
-    class func signMessage(_ message: String, usingKey key: BRKey) -> String {
+    class func signMessage(_ message: String, usingKey key: Key) -> String {
         let signingData = formatMessageForBitcoinSigning(message)
         let signature = signingData.sha256_2.compactSign(key: key)
         return String(bytes: signature.base64EncodedData(options: []), encoding: String.Encoding.utf8) ?? ""
@@ -118,14 +118,15 @@ open class BRBitID: NSObject {
             let uri = "\(scheme)://\(url.host!)\(url.path)"
 
             // build a payload consisting of the signature, address and signed uri
-            guard var priv = walletAuthenticator.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
+            guard let priv = walletAuthenticator.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
                 return
             }
 
             let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
             let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
+            
             let payload: [String: String] = [
-                "address": priv.address(legacy: true) ?? "",
+                "address": "", //priv.address(legacy: true) ?? "", //TODO:CRYPTO Key does not expose BRKeyLegacyAddr
                 "signature": signature,
                 "uri": uriWithNonce
             ]
