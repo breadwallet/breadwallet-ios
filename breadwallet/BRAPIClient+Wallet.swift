@@ -28,41 +28,6 @@ extension BRAPIClient {
         })
         task.resume()
     }
-
-    func feePerKb(code: String, _ handler: @escaping (_ fees: Fees, _ error: String?) -> Void) {
-        let param = code == Currencies.bch.code ? "?currency=bch" : ""
-        let req = URLRequest(url: url("/fee-per-kb\(param)"))
-        let task = self.dataTaskWithRequest(req) { (data, _, err) -> Void in
-            var regularFeePerKb: uint_fast64_t = 0
-            var economyFeePerKb: uint_fast64_t = 0
-            var priorityFeePerKb: uint_fast64_t = 0
-            var errStr: String?
-            if err == nil {
-                do {
-                    let parsedObject: Any? = try JSONSerialization.jsonObject(
-                        with: data!, options: JSONSerialization.ReadingOptions.allowFragments)
-                    if let top = parsedObject as? NSDictionary,
-                        let regular = top["fee_per_kb"] as? NSNumber,
-                        let economy = top["fee_per_kb_economy"] as? NSNumber,
-                        let priority = top["fee_per_kb_priority"] as? NSNumber {
-                        regularFeePerKb = regular.uint64Value
-                        economyFeePerKb = economy.uint64Value
-                        priorityFeePerKb = priority.uint64Value
-                    }
-                } catch let e {
-                    self.log("fee-per-kb: error parsing json \(e)")
-                }
-                if regularFeePerKb == 0 || economyFeePerKb == 0 {
-                    errStr = "invalid json"
-                }
-            } else {
-                self.log("fee-per-kb network error: \(String(describing: err))")
-                errStr = "bad network connection"
-            }
-            handler(Fees(regular: regularFeePerKb, economy: economyFeePerKb, priority: priorityFeePerKb, timestamp: Date().timeIntervalSince1970), errStr)
-        }
-        task.resume()
-    }
     
     /// Fetches Bitcoin exchange rates in all available fiat currencies
     func exchangeRates(currencyCode code: String, isFallback: Bool = false, _ handler: @escaping (RatesResult) -> Void) {

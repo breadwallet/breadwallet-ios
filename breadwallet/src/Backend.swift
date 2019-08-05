@@ -23,8 +23,6 @@ class Backend {
     private var apiClient: BRAPIClient
     private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
-    //TODO:CRYPTO fee updater
-    private var feeUpdaters = [FeeUpdater]()
     private let userAgentFetcher = UserAgentFetcher()
     
     // MARK: - Public
@@ -48,11 +46,6 @@ class Backend {
     static func updateExchangeRates() {
         shared.exchangeUpdater?.refresh()
     }
-
-    //TODO:CRYPTO fee updater
-    static func updateFees() {
-        shared.feeUpdaters.forEach { $0.refresh() }
-    }
     
     static func sendLaunchEvent() {
         DispatchQueue.main.async { // WKWebView creation must be on main thread
@@ -67,21 +60,11 @@ class Backend {
     static func connect(authenticator: WalletAuthenticator) {
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.pigeonExchange = PigeonExchange()
-
         shared.exchangeUpdater = ExchangeUpdater()
-    }
-
-    //TODO:CRYPTO fee updater
-    static func setupFeeUpdater(for currency: Currency) {
-        let feeUpdater = FeeUpdater(currency: currency)
-        shared.feeUpdaters.append(feeUpdater)
-        feeUpdater.refresh()
     }
     
     /// Disconnect backend services and reset API auth
     static func disconnectWallet() {
-        shared.feeUpdaters.forEach { $0.stop() }
-        shared.feeUpdaters.removeAll()
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())

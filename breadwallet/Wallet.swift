@@ -22,6 +22,34 @@ class Wallet {
 
     private var sendListener: SendListener?
 
+    private var fees: [NetworkFee] {
+        return core.manager.network.fees.sorted(by: { $0.timeIntervalInMilliseconds > $1.timeIntervalInMilliseconds})
+    }
+    
+    private func feeForLevel(level: FeeLevel) -> NetworkFee {
+        assert(fees.count == 3) //TODO:CRYPTO_V2 - support a dynamic number of fee tiers when supported by BlockchainDB
+        return fees[level.rawValue]
+    }
+    
+    public func estimateFee (address: String,
+                             amount: Amount,
+                             fee: FeeLevel,
+                             completion: @escaping (TransferFeeBasis) -> Void) {
+        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+        
+        let networkFee: NetworkFee
+        if fees.count == 1 {
+            networkFee = fees.first!
+        } else {
+            networkFee = feeForLevel(level: fee)
+        }
+        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
+            guard case let .success(feeBasis) = result
+                else { return }
+            completion(feeBasis)
+        })
+    }
+    
 //    var feeUnit: BRCrypto.Unit {
 //        let currency = core.manager.network.currency
 //        return core.manager.network.baseUnitFor(currency: currency)!

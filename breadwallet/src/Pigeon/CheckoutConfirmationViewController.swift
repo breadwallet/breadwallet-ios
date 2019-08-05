@@ -149,20 +149,21 @@ class CheckoutConfirmationViewController: UIViewController {
     }
     
     private func validateTransaction() -> Bool {
-        let validationResult = sender.createTransaction(address: request.address,
-                                                        amount: request.purchaseAmount,
-                                                        comment: request.memo)
-        switch validationResult {
-        case .ok, .noExchangeRate:
-            return true
-        case .insufficientFunds:
-            showErrorMessageAndDismiss(S.Send.insufficientFunds)
-        case .insufficientGas:
-            showInsufficientGasError()
-        default:
-            showErrorMessageAndDismiss(S.Send.createTransactionError)
-        }
-        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError(message: "")))
+        //TODO:CRYPTO
+//        let validationResult = sender.createTransaction(address: request.address,
+//                                                        amount: request.purchaseAmount,
+//                                                        comment: request.memo)
+//        switch validationResult {
+//        case .ok, .noExchangeRate:
+//            return true
+//        case .insufficientFunds:
+//            showErrorMessageAndDismiss(S.Send.insufficientFunds)
+//        case .insufficientGas:
+//            showInsufficientGasError()
+//        default:
+//            showErrorMessageAndDismiss(S.Send.createTransactionError)
+//        }
+//        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError(message: "")))
         return false
     }
 

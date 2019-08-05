@@ -8,6 +8,13 @@
 
 import UIKit
 
+//TODO:CRYPTO_V2 - these should come from BlockchainDB eventually
+enum FeeLevel: Int {
+    case economy
+    case regular
+    case priority
+}
+
 class FeeSelector: UIView {
 
     init() {

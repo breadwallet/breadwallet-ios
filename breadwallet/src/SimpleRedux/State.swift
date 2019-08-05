@@ -154,7 +154,6 @@ struct WalletState {
     }
     let rates: [Rate]
     let currentRate: Rate?
-    let fees: Fees?
     let connectionStatus: BRPeerStatus
     let priceChange: PriceChange?
 
@@ -168,7 +167,6 @@ struct WalletState {
                            lastBlockTimestamp: 0,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
-                           fees: nil,
                            connectionStatus: BRPeerStatusDisconnected,
                            priceChange: nil)
     }
@@ -182,7 +180,6 @@ struct WalletState {
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
-                    fees: Fees? = nil,
                     connectionStatus: BRPeerStatus? = nil,
                     priceChange: PriceChange? = nil) -> WalletState {
 
@@ -195,7 +192,6 @@ struct WalletState {
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
-                           fees: fees ?? self.fees,
                            connectionStatus: connectionStatus ?? self.connectionStatus,
                            priceChange: priceChange ?? self.priceChange)
     }
@@ -210,7 +206,6 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.balance == rhs.balance &&
         lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate &&
-        lhs.fees == rhs.fees &&
         lhs.connectionStatus == rhs.connectionStatus
 }
 

@@ -268,7 +268,6 @@ class ApplicationController: Subscriber, Trackable {
             print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
         }
         Backend.apiClient.updateFeatureFlags()
-        Backend.updateFees()
         Backend.updateExchangeRates()
         Backend.apiClient.fetchAnnouncements()
         if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isLoginRequired {
