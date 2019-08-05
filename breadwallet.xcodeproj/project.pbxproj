@@ -124,9 +124,7 @@
 		7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C662B0F222F6E800008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C662B10222F6E820008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
-		7C67B6362056FB13006487BE /* BRAPIClient+Ethereum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */; };
-		7C67B6382056FBFA006487BE /* JSONRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6372056FBFA006487BE /* JSONRPC.swift */; };
-		7C67B63A2057180E006487BE /* JSONRPCTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6392057180E006487BE /* JSONRPCTests.swift */; };
+		7C67B6362056FB13006487BE /* BRAPIClient+Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Currencies.swift */; };
 		7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */; };
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
 		7C6ACCB61FEB345E0028ABFA /* TxStatusCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */; };
@@ -333,7 +331,6 @@
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE0F58A52111670E00ACF5F8 /* CheckoutConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */; };
 		CE12289D20D3695400EC6F81 /* MotionGradientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE12289C20D3695400EC6F81 /* MotionGradientView.swift */; };
-		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
 		CE124CFE1E68F57700DFA146 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFD1E68F57700DFA146 /* Async.swift */; };
 		CE124D001E69170900DFA146 /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFF1E69170900DFA146 /* SyncingView.swift */; };
 		CE1280F61EEA855C00D27649 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1280F51EEA855C00D27649 /* Date+Additions.swift */; };
@@ -723,9 +720,7 @@
 		7C54FF9D21658669007BF3EF /* tokens.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = tokens.json; path = Resources/tokens.json; sourceTree = "<group>"; };
 		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C6628382107B8D600ABCD10 /* PigeonExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonExchange.swift; path = src/Pigeon/PigeonExchange.swift; sourceTree = "<group>"; };
-		7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Ethereum.swift"; path = "src/Platform/BRAPIClient+Ethereum.swift"; sourceTree = "<group>"; };
-		7C67B6372056FBFA006487BE /* JSONRPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JSONRPC.swift; path = src/Platform/JSONRPC.swift; sourceTree = "<group>"; };
-		7C67B6392057180E006487BE /* JSONRPCTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRPCTests.swift; sourceTree = "<group>"; };
+		7C67B6352056FB13006487BE /* BRAPIClient+Currencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Currencies.swift"; path = "src/Platform/BRAPIClient+Currencies.swift"; sourceTree = "<group>"; };
 		7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TxDetailDataSource.swift; sourceTree = "<group>"; };
 		7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxLabelCell.swift; path = src/Views/TransactionCells/TxLabelCell.swift; sourceTree = "<group>"; };
 		7C6ACCB51FEB345E0028ABFA /* TxStatusCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxStatusCell.swift; path = src/Views/TransactionCells/TxStatusCell.swift; sourceTree = "<group>"; };
@@ -935,7 +930,6 @@
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE0FC0F91F72417500E7C626 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE12289C20D3695400EC6F81 /* MotionGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MotionGradientView.swift; path = src/Views/MotionGradientView.swift; sourceTree = "<group>"; };
-		CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeUpdater.swift; path = src/FeeUpdater.swift; sourceTree = "<group>"; };
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
 		CE124CFF1E69170900DFA146 /* SyncingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncingView.swift; path = src/Views/SyncingView.swift; sourceTree = "<group>"; };
 		CE1280F51EEA855C00D27649 /* Date+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Date+Additions.swift"; path = "src/Extensions/Date+Additions.swift"; sourceTree = "<group>"; };
@@ -1236,8 +1230,7 @@
 				22E773031EE7813000397E0E /* Bonjour.swift */,
 				222319AF1F27985A00008F20 /* BRBrowserViewController.swift */,
 				222319B11F279B3C00008F20 /* POSTBouncer.html */,
-				7C67B6352056FB13006487BE /* BRAPIClient+Ethereum.swift */,
-				7C67B6372056FBFA006487BE /* JSONRPC.swift */,
+				7C67B6352056FB13006487BE /* BRAPIClient+Currencies.swift */,
 				E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */,
 				E821D4CB21C16B2E00B0907B /* BRAnalyticsEvent.swift */,
 				71988B0721EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift */,
@@ -1396,7 +1389,6 @@
 				754AE0BB1DFE8A46007FD001 /* BRCore.swift */,
 				CE0A68201FB651DA00EF31CD /* CoreDatabase.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
-				CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */,
 				7C787AE121ED89510017EA7E /* KeyStore.swift */,
 				CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */,
 				CED82D4D1E575A5500507A9B /* main.swift */,
@@ -1928,7 +1920,6 @@
 				22C431331DF89DFE0017CAEA /* BRCoderTests.swift */,
 				22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */,
 				CE4CA7B91EE0C8D900373F11 /* BitIdTests.swift */,
-				7C67B6392057180E006487BE /* JSONRPCTests.swift */,
 				71988B0A21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift */,
 			);
 			name = Platform;
@@ -2683,7 +2674,7 @@
 			files = (
 				CE0A68211FB651DA00EF31CD /* CoreDatabase.swift in Sources */,
 				CEBF29301EF9D76F005C330A /* Environment.swift in Sources */,
-				7C67B6362056FB13006487BE /* BRAPIClient+Ethereum.swift in Sources */,
+				7C67B6362056FB13006487BE /* BRAPIClient+Currencies.swift in Sources */,
 				CEC6AA4D1DF0741100EE5AFD /* ModalDisplayable.swift in Sources */,
 				CEE0EF521EBD14B60018DB36 /* PinTransitioningDelegate.swift in Sources */,
 				CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */,
@@ -2747,7 +2738,6 @@
 				CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */,
 				CEDB0B0722D445DB00331FFC /* ChartView.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
-				CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				22A9A9511DF61945000F0016 /* TxMetaData.swift in Sources */,
@@ -2787,7 +2777,6 @@
 				CE03EC721EF193810038E3A8 /* String+Keys.swift in Sources */,
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
 				7CBD578F2107EB560042C388 /* PairedWalletData.swift in Sources */,
-				7C67B6382056FBFA006487BE /* JSONRPC.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				7C6FD3F4213F205400EFF35F /* InboxMetaData.swift in Sources */,
 				CEBF292E1EF99E55005C330A /* LightWeightAlert.swift in Sources */,
@@ -2989,7 +2978,6 @@
 				22C4312A1DF89D0A0017CAEA /* BRTarTests.swift in Sources */,
 				7138BABB223062F50059091E /* NotificationTests.swift in Sources */,
 				71249918222046EB00BEA491 /* PromptTests.swift in Sources */,
-				7C67B63A2057180E006487BE /* JSONRPCTests.swift in Sources */,
 				71988B0B21EF8D06008B8EA0 /* BRUserAgentHeaderGeneratorTests.swift in Sources */,
 				E821D4CA21C16A8300B0907B /* AnalyticsEventTests.swift in Sources */,
 				22C4312C1DF89D700017CAEA /* BRBSPatchTests.swift in Sources */,

@@ -26,7 +26,6 @@ private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
-private let feesKey = "feesKey"
 private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
 private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedSPVCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
@@ -235,23 +234,6 @@ extension UserDefaults {
     static var hasPromptedShareData: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
-    }
-
-    // TODO:BCH not used, remove?
-    static var fees: Fees? {
-        //Returns nil if feeCacheTimeout exceeded
-        get {
-            if let feeData = defaults.data(forKey: feesKey), let fees = try? JSONDecoder().decode(Fees.self, from: feeData) {
-                return (Date().timeIntervalSince1970 - fees.timestamp) <= C.feeCacheTimeout ? fees : nil
-            } else {
-                return nil
-            }
-        }
-        set {
-            if let fees = newValue, let data = try? JSONEncoder().encode(fees) {
-                defaults.set(data, forKey: feesKey)
-            }
-        }
     }
     
     static func rescanState(for currency: Currency) -> RescanState? {
