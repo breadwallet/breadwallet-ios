@@ -13,7 +13,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     
-    private let assetHeight: CGFloat = 82.0
+    private let assetHeight: CGFloat = 90.0
     private let addWalletButtonHeight: CGFloat = 56.0
     private let addWalletButton = UIButton()
 

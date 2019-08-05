@@ -210,6 +210,8 @@
 "DefaultCurrency.rateLabel" = "為替レート";
 /* The wallet is disabled. */
 "Disabled.title" = "ウォレットが無効になっています";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s住所";
 /* Service capabilities description */
 "EME.permissions.accountRequest" = "%1$@ のアカウント情報をリクエスト";
 /* Service capabilities description */
@@ -264,6 +266,8 @@
 "FeeSelector.regularTime" = "10～60分";
 /* Fee Selector title */
 "FeeSelector.title" = "処理速度";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "画像ソースを選択";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
 /* Home screen menu button to buy some bitcoin */
@@ -520,6 +524,14 @@
 "PushNotifications.on" = "オン";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "情報の輪からそのまま離れないで";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "当社のアプリをとても気に入っているなら、少しお時間をいただき評価とレビューをお願いします。";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "結構です";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "BRDを評価する";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "BRDを評価する";
 /* Address copied message. */
 "Receive.copied" = "クリップボードにコピーされました。";
 /* Share via email button label */
@@ -777,6 +789,10 @@
 "Settings.advanced" = "詳細";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "詳細設定";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "アメリカでのみ利用可能";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "暗号ATMマップ";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "表示される通貨";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -849,6 +865,8 @@
 "StartViewController.message" = "最も安全にビットコインを使う手段。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "ウォレットを復元する";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "アクティビティ";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "接続中";
 /* The sync has failed (to complete) */
