@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 
 /// Metadata for the EME inbox
 class InboxMetaData: BRKVStoreObject, BRCoding {

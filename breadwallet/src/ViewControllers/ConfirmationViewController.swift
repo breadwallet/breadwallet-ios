@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 

@@ -9,7 +9,6 @@
 import XCTest
 
 @testable import breadwallet
-@testable import BRCore
 
 class AppRatingManagerTests: XCTestCase {
 

@@ -80,13 +80,13 @@ class Sender {
 
     // MARK: Create/Submit
 
+    //TODO:CRYPTO payment request
     func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
-        //TODO:CRYPTO payment request
         return .failed
     }
 
+    //TODO:CRYPTO payment request
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult {
-        //TODO:CRYPTO payment request
         return .failed
     }
 
