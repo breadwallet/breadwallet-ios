@@ -8,7 +8,7 @@
 
 import Foundation
 import sqlite3
-import BRCore
+import BRCrypto
 
 public enum BRReplicatedKVStoreError: Error {
     case sqLiteError
@@ -78,7 +78,7 @@ private func dispatch_sync_throws(_ queue: DispatchQueue, f: () throws -> Void) 
 /// concurrency control
 open class BRReplicatedKVStore: NSObject {
     fileprivate var db: OpaquePointer? // sqlite3*
-    fileprivate(set) var key: BRKey
+    fileprivate(set) var key: Key
     fileprivate(set) var remote: BRRemoteKVStoreAdaptor
     fileprivate(set) var syncRunning = false
     fileprivate var dbQueue: DispatchQueue
@@ -104,7 +104,7 @@ open class BRReplicatedKVStore: NSObject {
         return path
     }
     
-    init(encryptionKey: BRKey, remoteAdaptor: BRRemoteKVStoreAdaptor) throws {
+    init(encryptionKey: Key, remoteAdaptor: BRRemoteKVStoreAdaptor) throws {
         key = encryptionKey
         remote = remoteAdaptor
         dbQueue = DispatchQueue(label: "com.voisine.breadwallet.kvDBQueue", attributes: [])

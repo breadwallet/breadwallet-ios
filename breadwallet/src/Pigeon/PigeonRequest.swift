@@ -14,6 +14,7 @@ enum PigeonRequestType {
     case call
 }
 
+//TODO:CRYPTO Pigeon
 protocol PigeonRequest {
     var currency: Currency { get }
     var address: String { get }

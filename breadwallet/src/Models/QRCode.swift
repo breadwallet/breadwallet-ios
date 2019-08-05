@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCrypto
 
 enum QRCode: Equatable {
     case paymentRequest(PaymentRequest)
@@ -15,7 +16,8 @@ enum QRCode: Equatable {
     case invalid
     
     init(content: String) {
-        if content.isValidPrivateKey || content.isValidBip38Key {
+        //TODO:CRYPTO import key
+        if Key.createFromString(asPrivate: content) != nil {//content.isValidPrivateKey || content.isValidBip38Key {
             self = .privateKey(content)
         } else if let url = URL(string: content), url.isDeepLink {
             self = .deepLink(url)

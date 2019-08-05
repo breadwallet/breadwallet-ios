@@ -8,7 +8,6 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
 
 class BiometricsSettingsViewController: UIViewController, Subscriber {
 

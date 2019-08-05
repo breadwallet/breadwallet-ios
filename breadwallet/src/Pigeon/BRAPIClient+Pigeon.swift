@@ -8,7 +8,6 @@
 
 import Foundation
 import SwiftProtobuf
-import BRCore
 
 struct Inbox: Codable {
     let entries: [InboxEntry]

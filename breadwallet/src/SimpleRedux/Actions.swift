@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 // MARK: - Startup Modals
 struct Reset: Action {

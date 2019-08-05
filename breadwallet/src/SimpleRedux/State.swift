@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 struct State {
     let isLoginRequired: Bool
@@ -154,7 +153,6 @@ struct WalletState {
     }
     let rates: [Rate]
     let currentRate: Rate?
-    let connectionStatus: BRPeerStatus
     let priceChange: PriceChange?
 
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
@@ -167,7 +165,6 @@ struct WalletState {
                            lastBlockTimestamp: 0,
                            rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
-                           connectionStatus: BRPeerStatusDisconnected,
                            priceChange: nil)
     }
 
@@ -180,7 +177,6 @@ struct WalletState {
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
                     rates: [Rate]? = nil,
-                    connectionStatus: BRPeerStatus? = nil,
                     priceChange: PriceChange? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
@@ -192,7 +188,6 @@ struct WalletState {
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
                            rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
-                           connectionStatus: connectionStatus ?? self.connectionStatus,
                            priceChange: priceChange ?? self.priceChange)
     }
 }
@@ -205,8 +200,7 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
         lhs.rates == rhs.rates &&
-        lhs.currentRate == rhs.currentRate &&
-        lhs.connectionStatus == rhs.connectionStatus
+        lhs.currentRate == rhs.currentRate
 }
 
 extension RootModal: Equatable {}

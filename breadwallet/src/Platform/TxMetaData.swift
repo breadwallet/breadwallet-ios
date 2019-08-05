@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 
 // MARK: - Txn Metadata
 

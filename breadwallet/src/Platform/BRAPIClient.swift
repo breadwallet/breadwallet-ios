@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCore
+import BRCrypto
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
@@ -91,16 +91,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         return UserDefaults.deviceID
     }
     
-    var authKey: BRKey? {
+    var authKey: Key? {
         if authenticator.noWallet { return nil }
-        guard let keyStr = authenticator.apiAuthKey else { return nil }
-        var key = BRKey()
-        key.compressed = 1 
-        if BRKeySetPrivKey(&key, keyStr) == 0 {
-            #if DEBUG
-                fatalError("Unable to decode private key")
-            #endif
-        }
+        let key = authenticator.apiAuthKey
+        assert(key != nil)
         return key
     }
     
@@ -224,11 +218,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }
             return
         }
-        guard let authKey = authKey else {
-            return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
-                NSLocalizedDescriptionKey: S.ApiClient.notReady]))
+        guard let authKey = authKey,
+            let authPubKey = authKey.encodeAsPublic.hexToData else {
+                return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
+                    NSLocalizedDescriptionKey: S.ApiClient.notReady]))
         }
-        let authPubKey = authKey.publicKey
         isFetchingAuth = true
         log("auth: entering group")
         authFetchGroup.enter()

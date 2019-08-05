@@ -9,6 +9,8 @@
 import Foundation
 import BRCore
 
+//TODO:CRYPTO remove
+/*
 struct SimpleUTXO {
 
     let hash: UInt256
@@ -37,3 +39,4 @@ extension Data {
         return Data(tempBytes)
     }
 }
+*/

@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 import BRCrypto
 
 // swiftlint:disable cyclomatic_complexity
@@ -21,7 +20,7 @@ enum PlatformAuthResult {
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletAuthenticator: TransactionAuthenticator
-    var tempBitIDKeys = [String: BRKey]() // this should only ever be mutated from the main thread
+    var tempBitIDKeys = [String: Key]() // this should only ever be mutated from the main thread
     private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
@@ -408,19 +407,18 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         }
     }
 
-    private func addKeyToCache(_ key: BRKey, url: String) {
+    private func addKeyToCache(_ key: Key, url: String) {
         self.tempBitIDKeys[url] = key
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(60)) {
             self.tempBitIDKeys[url] = nil
         }
     }
 
-    private func sendBitIDResponse(_ stringToSign: String, usingKey key: BRKey, request: BRHTTPRequest, asyncResp: BRHTTPResponse) {
-        var key = key
+    private func sendBitIDResponse(_ stringToSign: String, usingKey key: Key, request: BRHTTPRequest, asyncResp: BRHTTPResponse) {
         let sig = BRBitID.signMessage(stringToSign, usingKey: key)
         let json: [String: Any] = [
             "signature": sig,
-            "address": key.address(legacy: true) ?? ""
+            "address": ""//key.address(legacy: true) ?? "" //TODO:CRYPTO Key does not expose BRKeyLegacyAddr
         ]
         request.queue.async {
             asyncResp.provide(200, json: json)

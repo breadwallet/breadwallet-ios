@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
