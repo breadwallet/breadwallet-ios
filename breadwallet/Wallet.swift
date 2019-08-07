@@ -134,11 +134,11 @@ extension Wallet {
         //print("[SYS] \(currency.code) wallet event: \(event)")
         switch event {
             
-        case .transferAdded(let transfer):
+        case .transferAdded:
             break
-        case .transferChanged(let transfer):
+        case .transferChanged:
             break
-        case .transferDeleted(let transfer):
+        case .transferDeleted:
             break
         case .transferSubmitted(let transfer, let success):
             guard let sendListener = sendListener, sendListener.pendingTransfer.hash == transfer.hash else { return assertionFailure() }
@@ -149,7 +149,7 @@ extension Wallet {
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setBalance(Amount(cryptoAmount: amount, currency: self.currency)))
             }
-        case .feeBasisUpdated:
+        case .feeBasisUpdated, .feeBasisEstimated:
             break
 
         case .created, .deleted, .changed:

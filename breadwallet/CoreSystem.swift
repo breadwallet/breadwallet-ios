@@ -18,7 +18,7 @@ class CoreSystem: Subscriber {
     }
     
     private var system: System?
-    private let backend = BlockChainDB()
+    private let backend: BlockChainDB
     private (set) var state: State = .uninitialized //TODO:CRYPTO is this needed, if so should it come from System?
     private var isInitialized: Bool { return state != .uninitialized }
 
@@ -34,6 +34,12 @@ class CoreSystem: Subscriber {
     fileprivate var currencies = [BRCrypto.Currency: Currency]()
 
     init() {
+        self.backend = BlockChainDB(session: Backend.apiClient.session,
+                                    apiBaseURL: Backend.apiClient.baseUrl,
+                                    apiDataTaskFunc: { (_, request, completion) -> URLSessionDataTask in
+                                        Backend.apiClient.dataTaskWithRequest(request, authenticated: true, handler: completion)
+        })
+        
         Store.subscribe(self, name: .didAddCurrency(nil), callback: {
             guard let trigger = $0 else { return }
             guard case .didAddCurrency(let currencyMetaData) = trigger, let metaData = currencyMetaData else { return }
@@ -43,7 +49,7 @@ class CoreSystem: Subscriber {
         Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
             self.resetToDefaultCurrencies()
         })
-
+        
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
             guard let btc = Currencies.btc.instance,
                 let btcWalletManager = self?.wallet(for: btc)?.core.manager else { return }
@@ -392,7 +398,7 @@ extension BRCrypto.Network {
     var defaultManagerMode: WalletManagerMode {
         switch currency.code {
         case BRCrypto.Currency.codeAsBTC:
-            return .api_only
+            return E.isTestnet ? .api_only : .p2p_only
         case BRCrypto.Currency.codeAsBCH:
             return .p2p_only
         case BRCrypto.Currency.codeAsETH:
