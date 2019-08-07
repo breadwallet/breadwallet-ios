@@ -65,13 +65,13 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     private var authFetchGroup = DispatchGroup()
 
     // the NSURLSession on which all NSURLSessionTasks are executed
-    lazy private var session: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: self.queue)
+    lazy private(set) var session: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: self.queue)
 
     // the queue on which the NSURLSession operates
     private var queue = OperationQueue()
     
     // convenience getter for the API endpoint
-    private var baseUrl: String {
+    var baseUrl: String {
         return "\(proto)://\(host)"
     }
     
