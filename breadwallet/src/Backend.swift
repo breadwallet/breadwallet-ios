@@ -44,10 +44,8 @@ class Backend {
         return shared.pigeonExchange
     }
     
-    static func updateExchangeRates(completion: (() -> Void)? = nil) {
-        shared.exchangeUpdater?.refresh {
-            completion?()
-        }
+    static func updateExchangeRates() {
+        shared.exchangeUpdater?.refresh()
     }
 
     static func updateFees() {
@@ -67,8 +65,7 @@ class Backend {
     static func connect(authenticator: WalletAuthenticator, currencies: [Currency], walletManagers: [WalletManager]) {
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.pigeonExchange = PigeonExchange()
-        
-        shared.exchangeUpdater = ExchangeUpdater(currencies: Store.state.currencies)
+        shared.exchangeUpdater = ExchangeUpdater()
         
         var added = [String]()
         walletManagers.forEach {

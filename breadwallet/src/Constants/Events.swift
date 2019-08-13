@@ -17,6 +17,7 @@ public enum EventContext: String {
     case rewards
     case pushNotifications
     case inAppNotifications
+    case wallet
     var name: String { return rawValue }
 }
 
@@ -74,6 +75,10 @@ public enum Event: String {
 
     // tapped notification viewer CTA button
     case notificationCTAButton
+    
+    // charts
+    case axisToggle
+    case scrubbed
     
     case test
     
