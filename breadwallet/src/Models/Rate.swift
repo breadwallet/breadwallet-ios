@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-struct Rate {
+struct Rate: Equatable {
     let code: String
     let name: String
     let rate: Double
@@ -24,6 +24,13 @@ struct Rate {
         }
     }
 
+    var maxFractionalDigits: Int {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .currency
+        formatter.locale = self.locale
+        return formatter.maximumFractionDigits
+    }
+    
     static var symbolMap: [String: String] = {
         var map = [String: String]()
         Locale.availableIdentifiers.forEach { identifier in
@@ -48,11 +55,10 @@ struct Rate {
         return Locale(identifier: identifier)
     }
     
-    var localString: String {
-        let format = NumberFormatter()
-        format.numberStyle = .currency
-        format.currencySymbol = currencySymbol
-        return format.string(from: rate as NSNumber) ?? ""
+    func localString(forCurrency currency: Currency) -> String {
+        let placeholderAmount = Amount(amount: 0, currency: currency, rate: self)
+        guard let rateText = placeholderAmount.localFormat.string(from: NSNumber(value: rate)) else { return "" }
+        return rateText
     }
 
     static var empty: Rate {
@@ -84,10 +90,4 @@ extension Rate {
             "reciprocalCode": reciprocalCode
         ]
     }
-}
-
-extension Rate: Equatable {}
-
-func == (lhs: Rate, rhs: Rate) -> Bool {
-    return lhs.code == rhs.code && lhs.name == rhs.name && lhs.rate == rhs.rate && lhs.reciprocalCode == rhs.reciprocalCode
 }
