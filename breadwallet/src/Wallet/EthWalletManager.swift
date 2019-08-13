@@ -170,8 +170,12 @@ class EthWalletManager: WalletManager {
 
     func resetForWipe() {
         disconnect()
-        // TODO: delete eth data dir
         tokens.removeAll()
+        do {
+            try FileManager.default.removeItem(at: C.coreDataDirURL)
+        } catch let error {
+            print("[EWM] ERROR removing data dir: \(error)")
+        }
     }
 
     func isOwnAddress(_ address: String) -> Bool {
