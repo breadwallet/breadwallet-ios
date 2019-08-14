@@ -26,7 +26,7 @@ class CoreSystem: Subscriber {
 
     // MARK: Wallets + Currencies
 
-    var assetCollection: AssetCollection?
+    private(set) var assetCollection: AssetCollection?
     
     private var wallets = [BRCrypto.Currency: Wallet]()
 
@@ -38,16 +38,6 @@ class CoreSystem: Subscriber {
                                     apiBaseURL: Backend.apiClient.baseUrl,
                                     apiDataTaskFunc: { (_, request, completion) -> URLSessionDataTask in
                                         Backend.apiClient.dataTaskWithRequest(request, authenticated: true, handler: completion)
-        })
-        
-        Store.subscribe(self, name: .didAddCurrency(nil), callback: {
-            guard let trigger = $0 else { return }
-            guard case .didAddCurrency(let currencyMetaData) = trigger, let metaData = currencyMetaData else { return }
-            self.addCurrency(metaData)
-        })
-        
-        Store.subscribe(self, name: .resetDisplayCurrencies, callback: { _ in
-            self.resetToDefaultCurrencies()
         })
         
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
@@ -117,7 +107,9 @@ class CoreSystem: Subscriber {
                                  path: C.coreDataDirURL.path,
                                  query: self.backend)
             Backend.apiClient.getCurrencyMetaData { currencyMetaData in
-                self.assetCollection = AssetCollection(kvStore: kvStore, allTokens: currencyMetaData)
+                self.assetCollection = AssetCollection(kvStore: kvStore,
+                                                       allTokens: currencyMetaData,
+                                                       changeHandler: self.updateWalletStates)
                 self.system?.configure()
             }
             self.state = .idle
@@ -168,9 +160,10 @@ class CoreSystem: Subscriber {
 
     //TODO:CRYPTO migrate legacy persistent data
 
-    // MARK: Wallet Management
+    // MARK: Core Wallet Management
 
-    private func addWallet(_ coreWallet: BRCrypto.Wallet, manager: BRCrypto.WalletManager) {
+    /// Triggered by Core wallet created event
+    private func addWallet(_ coreWallet: BRCrypto.Wallet) {
         guard let assetCollection = assetCollection, wallets[coreWallet.currency] == nil else { return assertionFailure() }
         // only add wallets that are enabled in the user's asset collection
         guard let currency = currencies[coreWallet.currency],
@@ -182,52 +175,46 @@ class CoreSystem: Subscriber {
         let walletState = initializeWalletState(core: coreWallet, currency: currency, displayOrder: displayOrder)
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
-
-            //TODO:CRYPTO optimize to avoid making a new exchange rate request for each wallet added on launch
             Backend.updateExchangeRates()
         }
     }
     
-    private func initializeWalletState(core: BRCrypto.Wallet, currency: Currency, displayOrder: Int) -> WalletState {
-        let wallet = Wallet(core: core, currency: currency, system: self)
-        wallets[core.currency] = wallet
-        return WalletState.initial(currency, wallet: wallet, displayOrder: displayOrder)
-    }
-
+    /// Triggered by Core wallet deleted event
     private func removeWallet(_ coreWallet: BRCrypto.Wallet) {
         //TODO:CRYPTO when does this happen? can it happen without user intervention?
         guard self.wallets[coreWallet.currency] != nil else { return assertionFailure() }
         self.wallets[coreWallet.currency] = nil
+        updateWalletStates()
     }
     
-    private func addCurrency(_ metaData: CurrencyMetaData) {
-        guard let coreWallet = findCoreWallet(forMetaData: metaData) else { return  }
-        guard let currency = currencies[coreWallet.currency] else { return assertionFailure() }
-        guard !Store.state.currencies.contains(currency) else { return }
-        let walletState = initializeWalletState(core: coreWallet, currency: currency, displayOrder: Store.state.displayCurrencies.count)
-        DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
-            //TODO:CRYPTO optimize to avoid making a new exchange rate request for each wallet added on launch
-            Backend.updateExchangeRates()
-        }
-    }
+    // MARK: User Wallet Management
     
-    private func resetToDefaultCurrencies() {
+    func resetToDefaultCurrencies() {
         guard let assetCollection = assetCollection else { return }
         assetCollection.resetToDefaultCollection()
-        assetCollection.saveChanges()
-        
+        assetCollection.saveChanges() // triggers updateWalletStates
+    }
+    
+    /// Sets the wallet states to match the asset collection
+    private func updateWalletStates() {
+        guard let assetCollection = assetCollection else { return }
         var newWallets = [String: WalletState]()
         assetCollection.enabledAssets.enumerated().forEach { i, metaData in
-            guard let coreWallet = findCoreWallet(forMetaData: metaData) else { return }
-            guard let currency = currencies[coreWallet.currency] else { return print("[SYS] Skipped adding \(metaData.code). Couldn't find core currency.")  }
-            newWallets[currency.uid] = initializeWalletState(core: coreWallet, currency: currency, displayOrder: i)
+            guard let coreWallet = findCoreWallet(forMetaData: metaData),
+                let currency = currencies[coreWallet.currency] else { return print("[SYS] Skipped adding \(metaData.code). Couldn't find core currency.")  }
+            if let walletState = Store.state.wallets[currency.uid] {
+                newWallets[currency.uid] = walletState.mutate(displayOrder: i)
+            } else {
+                newWallets[currency.uid] = initializeWalletState(core: coreWallet, currency: currency, displayOrder: i)
+            }
         }
         
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.SetWallets(newWallets))
             Backend.updateExchangeRates()
         }
+        
+        updateWalletManagerConnections()
     }
     
     private func findCoreWallet(forMetaData metaData: CurrencyMetaData) -> BRCrypto.Wallet? {
@@ -237,6 +224,48 @@ class CoreSystem: Subscriber {
             print("[SYS] Error couldn't find core wallet for: \(metaData.code).")
             return nil }
         return wallet
+    }
+    
+    private func initializeWalletState(core: BRCrypto.Wallet, currency: Currency, displayOrder: Int) -> WalletState {
+        let wallet = Wallet(core: core, currency: currency, system: self)
+        wallets[core.currency] = wallet
+        return WalletState.initial(currency, wallet: wallet, displayOrder: displayOrder)
+    }
+
+    /// Connect wallet managers with any enabled wallets and disconnect those with no enabled wallets.
+    private func updateWalletManagerConnections() {
+        guard let managers = system?.managers,
+            let assetCollection = assetCollection else { return }
+        let enabledIds = Set(assetCollection.enabledAssets.map { $0.uid })
+
+        var activeManagers = [WalletManager]()
+        var inactiveManagers = [WalletManager]()
+
+        for manager in managers {
+            if Set(manager.network.currencies.map { $0.code.lowercased() }).isDisjoint(with: enabledIds) { //TODO:CRYPTO use uid
+                inactiveManagers.append(manager)
+            } else {
+                activeManagers.append(manager)
+            }
+        }
+
+        activeManagers.forEach {
+            print("[SYS] connecting \($0.network.currency.code) wallet manager")
+            $0.connect()
+        }
+
+        inactiveManagers.forEach {
+            print("[SYS] disconnecting \($0.network.currency.code) wallet manager")
+            $0.disconnect()
+        }
+    }
+
+    /// Returns true of any of the enabled assets in the asset collection are dependent on the wallet manager
+    private func isWalletManagerNeeded(_ manager: WalletManager) -> Bool {
+        guard let assetCollection = assetCollection else { assertionFailure(); return false }
+        let enabledCurrencyIds = Set(assetCollection.enabledAssets.map { $0.uid })
+        let supportedCurrencyIds = manager.network.currencies.map { $0.code.lowercased() } //TODO:CRYPTO use uid
+        return !Set(supportedCurrencyIds).isDisjoint(with: enabledCurrencyIds)
     }
 }
 
@@ -275,7 +304,9 @@ extension CoreSystem: SystemListener {
                 }
 
             case .managerAdded(let manager):
-                manager.connect()
+                if self.isWalletManagerNeeded(manager) {
+                    manager.connect()
+                }
             }
         }
     }
@@ -334,7 +365,7 @@ extension CoreSystem: SystemListener {
             print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
             switch event {
             case .created:
-                self.addWallet(wallet, manager: manager)
+                self.addWallet(wallet)
 
             case .deleted:
                 self.removeWallet(wallet)
