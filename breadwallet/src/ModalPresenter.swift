@@ -529,7 +529,7 @@ class ModalPresenter: Subscriber, Trackable {
             // Reset Wallets
             MenuItem(title: S.Settings.resetCurrencies, callback: {
                 menuNav.dismiss(animated: true, completion: {
-                    Store.trigger(name: .resetDisplayCurrencies)
+                    self.system.resetToDefaultCurrencies()
                 })
             }),
             

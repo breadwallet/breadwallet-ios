@@ -71,7 +71,6 @@ enum TriggerName {
     case didUpdateFeatureFlags
     case didFetchAnnouncements([Announcement])
     case showCurrency(Currency?)
-    case resetDisplayCurrencies
     case promptLinkWallet(WalletPairingRequest)
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
@@ -79,7 +78,6 @@ enum TriggerName {
     case openPlatformUrl(String)
     case didViewTransactions([Transaction]?)
     case showInAppNotification(BRDMessage?)
-    case didAddCurrency(CurrencyMetaData?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -146,8 +144,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.showCurrency, .showCurrency):
         return true
-    case (.resetDisplayCurrencies, .resetDisplayCurrencies):
-        return true
     case (.promptLinkWallet, .promptLinkWallet):
         return true
     case (.linkWallet, .linkWallet):
@@ -161,8 +157,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didViewTransactions, .didViewTransactions):
         return true
     case (.showInAppNotification, .showInAppNotification):
-        return true
-    case (.didAddCurrency, .didAddCurrency):
         return true
     default:
         return false
