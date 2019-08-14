@@ -44,6 +44,10 @@ class Currency: CurrencyWithIcon {
     let defaultUnit: CurrencyUnit
     /// All available units for this currency by name
     private let units: [String: CurrencyUnit]
+    
+    var defaultUnitName: String {
+        return name(forUnit: defaultUnit)
+    }
 
     /// Returns the unit associated with the number of decimals if available
     func unit(forDecimals decimals: Int) -> CurrencyUnit? {

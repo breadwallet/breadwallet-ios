@@ -23,7 +23,7 @@ class AmountViewController: UIViewController, Trackable {
         if let rate = currency.state?.currentRate, Store.state.showFiatAmounts {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.defaultUnit.name
+            let title = currency.defaultUnitName
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
@@ -324,7 +324,7 @@ class AmountViewController: UIViewController, Trackable {
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            currencyToggle.title = currency.defaultUnit.name
+            currencyToggle.title = currency.defaultUnitName
         }
     }
 
