@@ -11,6 +11,7 @@ import UIKit
 
 /// View model for the AssetCollectionIndex KV-store object and the list of all tokens
 class AssetCollection {
+    typealias AssetCollectionChangeHandler = () -> Void
     
     /// All known tokens
     let allAssets: [String: CurrencyMetaData]
@@ -29,7 +30,9 @@ class AssetCollection {
     private(set) var hasUnsavedChanges: Bool = false
     
     private let kvStore: BRReplicatedKVStore
-    var assetIndex: AssetIndex
+    private var assetIndex: AssetIndex
+    
+    private let didChangeAssets: AssetCollectionChangeHandler?
     
     // MARK: - Init
 
@@ -40,7 +43,9 @@ class AssetCollection {
     /// - Parameters:
     ///   - kvStore: the KV-store
     ///   - allTokens: dictionary of all supported tokens, indexed by UID
-    convenience init(kvStore: BRReplicatedKVStore, allTokens: [String: CurrencyMetaData]) {
+    convenience init(kvStore: BRReplicatedKVStore,
+                     allTokens: [String: CurrencyMetaData],
+                     changeHandler: AssetCollectionChangeHandler?) {
         var assetIndex = AssetIndex(kvStore: kvStore)
             ?? AssetCollection.migrateFromOldIndex(allTokens: allTokens, kvStore: kvStore)
             ?? AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
@@ -50,13 +55,20 @@ class AssetCollection {
             assetIndex = AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
         }
         
-        self.init(kvStore: kvStore, allTokens: allTokens, assetIndex: assetIndex)
+        self.init(kvStore: kvStore,
+                  allTokens: allTokens,
+                  assetIndex: assetIndex,
+                  changeHandler: changeHandler)
     }
     
-    private init(kvStore: BRReplicatedKVStore, allTokens: [String: CurrencyMetaData], assetIndex: AssetIndex) {
+    private init(kvStore: BRReplicatedKVStore,
+                 allTokens: [String: CurrencyMetaData],
+                 assetIndex: AssetIndex,
+                 changeHandler: AssetCollectionChangeHandler?) {
         self.kvStore = kvStore
         self.allAssets = allTokens
         self.assetIndex = assetIndex
+        self.didChangeAssets = changeHandler
         
         var foundUnsupportedTokens = false
         
@@ -93,7 +105,6 @@ class AssetCollection {
     func add(asset: CurrencyMetaData) {
         guard !enabledAssets.contains(asset) else { return assertionFailure() }
         enabledAssets.append(asset)
-        Store.trigger(name: .didAddCurrency(asset))
         hasUnsavedChanges = true
     }
     
@@ -105,7 +116,6 @@ class AssetCollection {
     func removeAsset(at index: Int) {
         guard enabledAssets.indices.contains(index) else { return assertionFailure() }
         enabledAssets.remove(at: index)
-        Store.perform(action: ManageWallets.HideWalletAtIndex(index))
         hasUnsavedChanges = true
     }
     
@@ -113,14 +123,13 @@ class AssetCollection {
         guard enabledAssets.indices.contains(sourceIndex),
             enabledAssets.indices.contains(destinationIndex) else { return assertionFailure() }
         enabledAssets.insert(enabledAssets.remove(at: sourceIndex), at: destinationIndex)
-        Store.perform(action: ManageWallets.MoveWalletFrom(sourceIndex, to: destinationIndex))
         hasUnsavedChanges = true
     }
     
     func resetToDefaultCollection() {
         assetIndex = AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
         revertChanges()
-        hasUnsavedChanges = false
+        hasUnsavedChanges = true
     }
     
     /// Resets the asset list to the items in the AssetIndex
@@ -129,11 +138,14 @@ class AssetCollection {
         hasUnsavedChanges = false
     }
     
-    /// Saves the asset list to the AssetIndex in the KV-store
+    /// Saves the asset list to the AssetIndex in the KV-store, and triggers callback to handle changes
     func saveChanges() {
         assetIndex.enabledAssetIds = enabledAssets.map { $0.uid }
         guard save(assetIndex, kvStore: kvStore) else { return }
-        hasUnsavedChanges = false
+        if hasUnsavedChanges {
+            didChangeAssets?()
+            hasUnsavedChanges = false
+        }
     }
     
     // MARK: - Static

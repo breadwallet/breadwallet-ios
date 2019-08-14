@@ -56,36 +56,6 @@ enum ManageWallets {
             }
         }
     }
-    
-    struct HideWalletAtIndex: Action {
-        let reduce: Reducer
-        init(_ index: Int) {
-            reduce = {
-                var newWallets = $0.wallets
-                guard $0.orderedWallets.count > index else { return $0 }
-                newWallets[$0.orderedWallets[index].currency.uid] = nil
-                return $0.mutate(wallets: newWallets)
-            }
-        }
-    }
-    
-    struct MoveWalletFrom: Action {
-        let reduce: Reducer
-        init(_ from: Int, to: Int) {
-            reduce = {
-                var orderedWallets = $0.orderedWallets
-                guard orderedWallets.indices.contains(to),
-                    orderedWallets.indices.contains(from) else { return $0 }
-                orderedWallets.insert(orderedWallets.remove(at: from), at: to)
-                var i = 0
-                let newWallets = orderedWallets.reduce(into: [String: WalletState](), { dict, wallet in
-                    dict[wallet.currency.uid] = wallet.mutate(displayOrder: i)
-                    i += 1
-                })
-                return $0.mutate(wallets: newWallets)
-            }
-        }
-    }
 }
 
 // MARK: - Wallet State

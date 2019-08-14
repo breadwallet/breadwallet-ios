@@ -59,7 +59,7 @@ class AssetCollectionTests: XCTestCase {
     }
     
     func testInitWithDefaultAssets() {
-        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens)
+        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         XCTAssert(collection.allAssets == allTokens)
         XCTAssert(collection.availableAssets == availableAssets)
     }
@@ -69,7 +69,7 @@ class AssetCollectionTests: XCTestCase {
     }
     
     func testModifyingAssetList() {
-        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens)
+        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         let asset1 = collection.availableAssets.first!
         let asset2 = collection.availableAssets.last!
         XCTAssert(collection.displayOrder(for: asset1) == nil)
@@ -101,7 +101,7 @@ class AssetCollectionTests: XCTestCase {
     }
     
     func testRevertChanges() {
-        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens)
+        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         
         XCTAssert(collection.availableAssets == availableAssets)
         
@@ -126,7 +126,7 @@ class AssetCollectionTests: XCTestCase {
     
     
     func testResetToDefault() {
-        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens)
+        let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         XCTAssert(collection.availableAssets == availableAssets)
         collection.removeAsset(at: 0)
         collection.resetToDefaultCollection()
