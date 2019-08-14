@@ -7,14 +7,12 @@
 //
 
 import Foundation
-import BRCore
 
 enum PigeonRequestType {
     case payment
     case call
 }
 
-//TODO:CRYPTO Pigeon
 protocol PigeonRequest {
     var currency: Currency { get }
     var address: String { get }
@@ -22,7 +20,7 @@ protocol PigeonRequest {
     var memo: String { get }
     var type: PigeonRequestType { get }
     var abiData: String? { get }
-    var txSize: UInt256? { get } // gas limit
+    var txSize: UInt64? { get } // gas limit
     var txFee: Amount? { get } // gas price
 }
 
@@ -57,18 +55,7 @@ extension PigeonRequest {
     }
     
     func getToken(completion: @escaping (Currency?) -> Void) {
-        //TODO:CRYPTO pigeon
-        fatalError()
-        /*
-        Backend.apiClient.getToken(withSaleAddress: address) { result in
-            guard case .success(let data) = result, let token = data.first else {
-                print("[EME] error fetching token by sale address")
-                completion(nil)
-                return
-            }
-            completion(token)
-        }
-        */
+        assertionFailure()
     }
 }
 
@@ -102,8 +89,8 @@ class MessagePaymentRequestWrapper: PigeonRequest {
         return paymentRequest.memo
     }
     
-    var txSize: UInt256? {
-        return paymentRequest.hasTransactionSize ? UInt256(string: paymentRequest.transactionSize) : UInt256(100000)
+    var txSize: UInt64? {
+        return paymentRequest.hasTransactionSize ? UInt64(paymentRequest.transactionSize) : 100000
     }
     
     var txFee: Amount? {
@@ -142,8 +129,8 @@ class MessageCallRequestWrapper: PigeonRequest {
         return callRequest.memo
     }
     
-    var txSize: UInt256? {
-        return callRequest.hasTransactionSize ? UInt256(string: callRequest.transactionSize) : UInt256(200000)
+    var txSize: UInt64? {
+        return callRequest.hasTransactionSize ? UInt64(callRequest.transactionSize) : 200000
     }
     
     var txFee: Amount? {

@@ -28,9 +28,27 @@ enum TransactionDirection: String {
 }
 
 /// Wrapper for BRCrypto TransferFeeBasis
-enum FeeBasis {
-    case bitcoin(feePerKB: Amount)
-    case ethereum(gasPrice: Amount, gasLimit: UInt64)
+struct FeeBasis {
+    private let core: TransferFeeBasis
+    
+    let currency: Currency
+    var amount: Amount {
+        return Amount(cryptoAmount: core.fee, currency: currency)
+    }
+    var unit: CurrencyUnit {
+        return core.unit
+    }
+    var pricePerCostFactor: Amount {
+        return Amount(cryptoAmount: core.pricePerCostFactor, currency: currency)
+    }
+    var costFactor: Double {
+        return core.costFactor
+    }
+    
+    init(core: TransferFeeBasis, currency: Currency) {
+        self.core = core
+        self.currency = currency
+    }
 }
 
 // MARK: -
@@ -64,15 +82,9 @@ class Transaction {
     var fee: Amount { return Amount(cryptoAmount: transfer.fee, currency: wallet.feeCurrency) }
 
     var feeBasis: FeeBasis? {
-        //TODO:CRYPTO feeBasis
-        return nil
-//        switch transfer.feeBasis {
-//        case .bitcoin(let feePerKB):
-//            //TODO:CRYPTO Core should provide an Amount instead of UInt64 satoshis
-//            return .bitcoin(feePerKB: Amount(tokenString: feePerKB.description, currency: currency, unit: currency.baseUnit))
-//        case .ethereum(let gasPrice, let gasLimit):
-//            return .ethereum(gasPrice: Amount(coreAmount: gasPrice, currency: wallet.feeCurrency), gasLimit: gasLimit)
-//        }
+        guard let core = (transfer.confirmedFeeBasis ?? transfer.estimatedFeeBasis) else { return nil }
+        return FeeBasis(core: core,
+                        currency: wallet.feeCurrency)
     }
 
     var created: Date? {

@@ -86,17 +86,18 @@ extension TxDetailViewModel {
         var feeAmount = tx.fee
         feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
         feeAmount.rate = rate
-        //TODO:CRYPTO outgoing token transfers have no fee info but return a 0 fee
         fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
 
-        if case .ethereum(let gasPriceAmount, let gasLimitValue)? = tx.feeBasis {
+        //TODO:CRYPTO incoming token transfers have a feeBasis with 0 values
+        if let feeBasis = tx.feeBasis,
+            (currency.isEthereum || (currency.isEthereumCompatible && tx.direction == .sent)) {
             let gasFormatter = NumberFormatter()
             gasFormatter.numberStyle = .decimal
             gasFormatter.maximumFractionDigits = 0
-            self.gasLimit = gasFormatter.string(from: gasLimitValue as NSNumber)
+            self.gasLimit = gasFormatter.string(from: feeBasis.costFactor as NSNumber)
 
-            let gasUnit = currency.unit(named: "gwei") ?? currency.defaultUnit
-            gasPrice = gasPriceAmount.tokenDescription(in: gasUnit)
+            let gasUnit = feeBasis.pricePerCostFactor.currency.unit(named: "gwei") ?? currency.defaultUnit
+            gasPrice = feeBasis.pricePerCostFactor.tokenDescription(in: gasUnit)
         }
 
         // for outgoing txns for native tokens show the total amount sent including fee
@@ -135,7 +136,6 @@ extension TxDetailViewModel {
                                     name: currentRate.name,
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
-            //TODO:CRYPTO sent amounts negative?
             let currentAmount = Amount(amount: tx.amount,
                                        rate: currentRate).description
             let originalAmount = Amount(amount: tx.amount,
