@@ -373,7 +373,6 @@ class ModalPresenter: Subscriber, Trackable {
 
         let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
         let sendVC = SendViewController(sender: sender,
-                                        currency: currency,
                                         initialRequest: currentRequest)
         currentRequest = nil
 

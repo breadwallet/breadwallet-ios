@@ -231,21 +231,13 @@ class Store {
     func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         let key = subscriber.hashValue
         let subscription = Subscription(selector: selector, callback: callback)
-        if subscriptions[key] != nil {
-            subscriptions[key]?.append(subscription)
-        } else {
-            subscriptions[key] = [subscription]
-        }
+        subscriptions[key, default: []].append(subscription)
     }
 
     func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping (TriggerName?) -> Void) {
         let key = subscriber.hashValue
         let trigger = Trigger(name: name, callback: callback)
-        if triggers[key] != nil {
-            triggers[key]?.append(trigger)
-        } else {
-            triggers[key] = [trigger]
-        }
+        triggers[key, default: []].append(trigger)
     }
 
     func unsubscribe(_ subscriber: Subscriber) {

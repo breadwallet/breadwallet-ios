@@ -106,11 +106,7 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
 //            self.size = BRTransactionSize(&rawTx)
 //        }
 
-//        if transaction is EthTransaction {
-            self.tokenTransfer = tokenTransfer ?? ""
-//        } else {
-//            self.tokenTransfer = ""
-//        }
+        self.tokenTransfer = tokenTransfer ?? ""
     }
     
     override func getData() -> Data? {

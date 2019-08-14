@@ -195,8 +195,7 @@ public struct Amount {
     var fiatValue: Decimal {
         guard let rate = rate ?? currency.state?.currentRate,
             let value = commonUnitValue else { return 0.0 }
-        let tokenAmount = value * (negative ? -1.0 : 1.0)
-        return tokenAmount * Decimal(rate.rate)
+        return value * Decimal(rate.rate)
     }
     
     var fiatDescription: String {
