@@ -15,12 +15,11 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-// TODO: refactor
 // swiftlint:disable type_body_length
-
 class SendViewController: UIViewController, Subscriber, ModalPresentable, Trackable {
 
     // MARK: - Public
+    
     var presentScan: PresentScan?
     var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
     var onPublishSuccess: (() -> Void)?
@@ -28,7 +27,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     var isPresentedFromLock = false
 
-    init(sender: Sender, currency: Currency, initialRequest: PaymentRequest? = nil) {
+    init(sender: Sender, initialRequest: PaymentRequest? = nil) {
+        let currency = sender.wallet.currency
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
@@ -42,6 +42,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
 
     // MARK: - Private
+    
     deinit {
         Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
@@ -71,7 +72,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var balance: Amount
     private var amount: Amount? {
         didSet {
-            attemptUpdateFees()
+            updateFees()
         }
     }
     private var address: String? {
@@ -86,7 +87,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var currentFeeBasis: TransferFeeBasis?
 
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(addressCell)
         view.addSubview(memoCell)
@@ -139,15 +142,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             guard let `self` = self else { return }
             guard let text = text else { return }
             guard self.currency.isValidAddress(text) else { return }
-            self.attemptUpdateFees()
+            self.updateFees()
         }
-    }
-    
-    private func attemptUpdateFees() {
-        guard let address = addressCell.address else { return }
-        guard let amount = amount else { return }
-        guard !sender.hasEstimate(forAddress: address, amount: amount) else { return }
-        updateFees()
     }
 
     // MARK: - Actions
@@ -208,7 +204,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         let feeColor: UIColor = .grayTextTint
 
         if let amount = amount, !amount.isZero, let feeBasis = currentFeeBasis {
-            var feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: currency)
+            var feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: sender.wallet.feeCurrency)
             feeAmount.rate = rate
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
@@ -319,9 +315,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let amount = amount,
             let address = address,
             let feeBasis = currentFeeBasis else { return }
-        
-        let fee = Amount(cryptoAmount: feeBasis.fee, currency: currency)
+
         let feeCurrency = sender.wallet.feeCurrency
+        let fee = Amount(cryptoAmount: feeBasis.fee, currency: feeCurrency)
         
         let displyAmount = Amount(amount: amount,
                                   rate: amountView.selectedRate,
@@ -403,9 +399,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
 
         present(sendingActivity, animated: true)
-        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: nil) { [weak self] result in
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
             guard let `self` = self else { return }
             self.sendingActivity.dismiss(animated: true) {
+                defer { self.sender.reset() }
                 switch result {
                 case .success:
                     self.dismiss(animated: true) {
@@ -487,7 +484,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         memoCell.content = protoReq.details.memo
         
-        //TODO:CRYPTO
+        //TODO:CRYPTO protocol request
 //        if requestAmount.isZero {
 //            if let amount = amount {
 //                guard case .ok = sender.createTransaction(address: address, amount: amount, comment: nil) else {
@@ -514,28 +511,35 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     /// Insufficient gas for ERC20 token transfer
     private func showInsufficientGasError() {
-        guard let amount = self.amount else { return assertionFailure() }
-        let feeAmount = self.sender.fee(forAmount: amount)
+        guard let feeAmount = self.currentFeeBasis?.fee else { return assertionFailure() }
+        
         let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
-        //TODO:CRYPTO show specific wallet
-//        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-//            Store.trigger(name: .showCurrency(Currencies.eth))
-//        }))
+        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+            Store.trigger(name: .showCurrency(self.sender.wallet.feeCurrency))
+        }))
         alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: - Keyboard Notifications
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Keyboard Notifications
+
+extension SendViewController {
+    
     @objc private func keyboardWillShow(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
-
+    
     @objc private func keyboardWillHide(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
-
+    
     //TODO - maybe put this in ModalPresentable?
     private func copyKeyboardChangeAnimation(notification: Notification) {
         guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
@@ -544,11 +548,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             parentView.frame = parentView.frame.offsetBy(dx: 0, dy: info.deltaY)
         }, completion: nil)
     }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
+
+// MARK: - ModalDisplayable
 
 extension SendViewController: ModalDisplayable {
     var faqArticleId: String? {

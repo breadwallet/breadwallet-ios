@@ -9,6 +9,8 @@
 import Foundation
 import BRCrypto
 
+typealias WalletEventCallback = (WalletEvent) -> Void
+
 /// Wrapper for BRCrypto Wallet
 class Wallet {
     enum CreateTransferError: Error {
@@ -20,7 +22,23 @@ class Wallet {
     let currency: Currency
     private unowned let system: CoreSystem
 
-    private var sendListener: SendListener?
+    // MARK: - Network
+
+    /// The native network currency
+    var networkCurrency: Currency? {
+        return system.currency(forCoreCurrency: core.manager.network.currency)
+    }
+
+    var networkPrimaryWallet: Wallet? {
+        guard let networkCurrency = networkCurrency else { return nil }
+        return system.wallet(for: networkCurrency)
+    }
+
+    // MARK: - Fees
+
+    var feeCurrency: Currency {
+        return networkCurrency ?? currency
+    }
 
     private var fees: [NetworkFee] {
         return core.manager.network.fees.sorted(by: { $0.timeIntervalInMilliseconds > $1.timeIntervalInMilliseconds})
@@ -44,25 +62,12 @@ class Wallet {
             networkFee = feeForLevel(level: fee)
         }
         core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
-            guard case let .success(feeBasis) = result
-                else { return }
+            guard case let .success(feeBasis) = result else { return }
             completion(feeBasis)
         })
     }
-    
-//    var feeUnit: BRCrypto.Unit {
-//        let currency = core.manager.network.currency
-//        return core.manager.network.baseUnitFor(currency: currency)!
-//    }
 
-    /// The native network currency
-    var networkCurrency: Currency? {
-        return system.currency(forCoreCurrency: core.manager.network.currency)
-    }
-    
-    var feeCurrency: Currency {
-        return networkCurrency ?? currency
-    }
+    // MARK: - State
 
     var balance: Amount {
         return Amount(cryptoAmount: core.balance, currency: currency)
@@ -78,6 +83,8 @@ class Wallet {
             .sorted(by: { $0.timestamp > $1.timestamp })
     }
 
+    // MARK: Addresses
+
     /// Address to use as target for incoming transfers
     var receiveAddress: String {
         return core.target.description
@@ -91,6 +98,8 @@ class Wallet {
         //TODO:CRYPTO need BRCrypto.Wallet interface -- this only works for single-address networks
         return core.target == Address.create(string: address, network: core.manager.network)
     }
+
+    // MARK: Sending
 
     func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> Result<Transfer, CreateTransferError> {
         guard let target = Address.create(string: address, network: core.manager.network) else {
@@ -106,15 +115,25 @@ class Wallet {
         core.manager.submit(transfer: transfer, paperKey: seedPhrase)
     }
 
-    func subscribe(sendListener: SendListener) {
-        assert(self.sendListener == nil)
-        self.sendListener = sendListener
+    // MARK: Event Subscriptions
+
+    private var subscriptions: [Int: [WalletEventCallback]] = [:]
+
+    func subscribe(_ subscriber: Subscriber, callback: @escaping WalletEventCallback) {
+        subscriptions[subscriber.hashValue, default: []].append(callback)
     }
 
-    func unsubscribe(sendListener: SendListener) {
-        guard let pendingTx = self.sendListener?.pendingTransfer, pendingTx.hash == sendListener.pendingTransfer.hash else { return assertionFailure() }
-        self.sendListener = nil
+    func unsubscribe(_ subscriber: Subscriber) {
+        subscriptions.removeValue(forKey: subscriber.hashValue)
     }
+
+    private func publishEvent(_ event: WalletEvent) {
+        subscriptions
+            .flatMap { $0.value }
+            .forEach { $0(event) }
+    }
+
+    // MARK: Init
 
     init(core: BRCrypto.Wallet, currency: Currency, system: CoreSystem) {
         self.core = core
@@ -129,6 +148,8 @@ class Wallet {
     }
 }
 
+// MARK: - Events
+
 extension Wallet {
     func handleWalletEvent(_ event: WalletEvent) {
         //print("[SYS] \(currency.code) wallet event: \(event)")
@@ -140,10 +161,9 @@ extension Wallet {
             break
         case .transferDeleted:
             break
-        case .transferSubmitted(let transfer, let success):
-            guard let sendListener = sendListener, sendListener.pendingTransfer.hash == transfer.hash else { return assertionFailure() }
-            sendListener.transferSubmitted(success: success)
-            unsubscribe(sendListener: sendListener)
+        case .transferSubmitted:
+            assertionFailure("this is working now, remove the hack in handleTransferEvent")
+            break
 
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
@@ -155,16 +175,15 @@ extension Wallet {
         case .created, .deleted, .changed:
             break
         }
+
+        publishEvent(event)
     }
 
     func handleTransferEvent(_ event: TransferEvent, transfer: BRCrypto.Transfer) {
         //print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
-        //TODO:CRYPTO should use wallet transferSubmitted event but it never arrives
-        if case .changed(let old, let new) = event,
-            case .signed = old, case .submitted = new {
-            guard let sendListener = sendListener, sendListener.pendingTransfer.hash == transfer.hash else { return assertionFailure() }
-            sendListener.transferSubmitted(success: true) // must assume true?
-            unsubscribe(sendListener: sendListener)
+        if case .changed(_, let new) = event, case .submitted = new {
+            //TODO:CRYPTO workaround needed because transferSubmitted is never received
+            publishEvent(.transferSubmitted(transfer: transfer, success: true))
         }
     }
 }

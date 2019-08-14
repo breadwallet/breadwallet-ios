@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import BRCore
 
 public enum APIResult<ResultType: Codable> {
     case success(ResultType)

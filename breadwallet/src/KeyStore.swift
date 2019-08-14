@@ -76,14 +76,11 @@ extension WalletAuthenticator {
 
 /// Protocol for signing transactions
 protocol TransactionAuthenticator: WalletAuthenticator {
-    //TODO:CRYPTO sending
-//    func canUseBiometrics(forTransaction tx: BRTxRef, wallet: BRWallet) -> Bool
-//    func canUseBiometrics(forTransaction tx: EthereumTransaction, wallet: EthereumWallet) -> Bool
-//    func sign(transaction: BRTxRef, wallet: BRWallet, withPin: String) -> Bool
-//    func sign(transaction: BRTxRef, wallet: BRWallet, withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void)
-//    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withPin: String) -> Bool
-//    func sign(transaction: EthereumTransaction, wallet: EthereumWallet, withBiometricsPrompt: String, completion: (BiometricsResult) -> Void) // TODO
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, pin: String) -> Bool //TODO:CRYPTO hack
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, withPin: String) -> Bool
+    func signAndSubmit(transfer: BRCrypto.Transfer,
+                       wallet: BRCrypto.Wallet,
+                       withBiometricsPrompt: String,
+                       completion: @escaping (BiometricsResult) -> Void)
 }
 
 /// Protocol for setting and changing the seed and PIN in the keychain
@@ -467,64 +464,28 @@ extension KeyStore: WalletAuthenticator {
 // MARK: - TransactionAuthenticator
 
 extension KeyStore: TransactionAuthenticator {
-//TODO:CRYPTO
-/*
-    // MARK: Bitcoin
 
-    func sign(transaction tx: BRTxRef, wallet: BRWallet, withPin pin: String) -> Bool {
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, withPin pin: String) -> Bool {
         guard authenticate(withPin: pin) else { return false }
-        return sign(transaction: tx, wallet: wallet)
+        return signAndSubmit(transfer: transfer, wallet: wallet)
     }
-
-    func sign(transaction tx: BRTxRef, wallet: BRWallet, withBiometricsPrompt biometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
-        guard canUseBiometrics(forTransaction: tx, wallet: wallet) else {
+    
+    func signAndSubmit(transfer: BRCrypto.Transfer,
+                       wallet: BRCrypto.Wallet,
+                       withBiometricsPrompt biometricsPrompt: String,
+                       completion: @escaping (BiometricsResult) -> Void) {
+        guard UserDefaults.isBiometricsEnabledForTransactions else {
             return completion(.failure)
         }
         Store.perform(action: BiometricsActions.SetIsPrompting(true))
         authenticate(withBiometricsPrompt: biometricsPrompt) { result in
             Store.perform(action: BiometricsActions.SetIsPrompting(false))
             guard result == .success else { return completion(result) }
-            completion(self.sign(transaction: tx, wallet: wallet) ? .success : .failure)
-        }
-
-    }
-
-    // MARK: Ethereum
-
-    func canUseBiometrics(forTransaction tx: EthereumTransaction, wallet: EthereumWallet) -> Bool {
-        // TODO:SL
-        assertionFailure("not supported")
-        return false
-    }
-
-    func sign(transaction tx: EthereumTransaction, wallet: EthereumWallet, withPin pin: String) -> Bool {
-        guard authenticate(withPin: pin) else { return false }
-        guard ethPrivKey != nil, var privKey = BRKey(privKey: ethPrivKey!) else { return false }
-        privKey.compressed = 0
-        defer { privKey.clean() }
-        wallet.sign(transaction: tx, privateKey: privKey)
-        return true
-    }
-
-    func sign(transaction tx: EthereumTransaction, wallet: EthereumWallet, withBiometricsPrompt biometricsPrompt: String, completion: (BiometricsResult) -> Void) {
-        // TODO:SL
-        assertionFailure("not supported")
-    }
-
-    private func sign(transaction tx: BRTxRef, wallet: BRWallet) -> Bool {
-        return autoreleasepool {
-            do {
-                var seed = UInt512()
-                defer { seed = UInt512() }
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
-                BRBIP39DeriveKey(&seed, phrase, nil)
-                return wallet.signTransaction(tx, seed: &seed)
-            } catch { return false }
+            completion(self.signAndSubmit(transfer: transfer, wallet: wallet) ? .success : .failure)
         }
     }
- */
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, pin: String) -> Bool {
-        guard authenticate(withPin: pin) else { return false }
+    
+    private func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet) -> Bool {
         return autoreleasepool {
             do {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }

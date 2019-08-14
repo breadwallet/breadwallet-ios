@@ -371,11 +371,7 @@ extension CoreSystem: SystemListener {
                 self.removeWallet(wallet)
 
             default:
-                guard let activeWallet = self.wallets[wallet.currency] else {
-                    print("[SYS] event skipped - missing wallet: \(wallet.currency.code)")
-                    return
-                }
-                activeWallet.handleWalletEvent(event)
+                self.wallets[wallet.currency]?.handleWalletEvent(event)
             }
         }
     }
