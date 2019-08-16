@@ -92,7 +92,7 @@ extension UserDefaults {
         
         reset(for: Announcement.hasShownKeyPrefix)
         reset(for: NotificationHandler.hasShownInAppNotificationKeyPrefix)
-        
+
         for resettableObject in resettableObjects {
             defaults.removeObject(forKey: resettableObject)
         }
