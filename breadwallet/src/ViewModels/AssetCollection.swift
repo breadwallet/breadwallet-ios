@@ -46,13 +46,14 @@ class AssetCollection {
     convenience init(kvStore: BRReplicatedKVStore,
                      allTokens: [String: CurrencyMetaData],
                      changeHandler: AssetCollectionChangeHandler?) {
-        var assetIndex = AssetIndex(kvStore: kvStore)
+        let assetIndex = AssetIndex(kvStore: kvStore)
             ?? AssetCollection.migrateFromOldIndex(allTokens: allTokens, kvStore: kvStore)
             ?? AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
         
         if assetIndex.enabledAssetIds.isEmpty {
             print("[KV] asset index is empty. creating new index.")
-            assetIndex = AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
+            assetIndex.resetToDefault()
+            _ = AssetCollection.save(assetIndex, kvStore: kvStore)
         }
         
         self.init(kvStore: kvStore,
@@ -81,7 +82,7 @@ class AssetCollection {
             return metaData
         }
         
-        print("[KV] asset index initialized. enabled assets: \(enabledAssets.map { $0.code }.joined(separator: ", "))")
+        print("[KV] asset index (ver: \(assetIndex.version)) initialized. enabled assets: \(enabledAssets.map { $0.code }.joined(separator: ", "))")
         
         if foundUnsupportedTokens {
             // remove unsupported token entries from the KV store
@@ -127,7 +128,8 @@ class AssetCollection {
     }
     
     func resetToDefaultCollection() {
-        assetIndex = AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
+        print("[KV] resetting asset index")
+        assetIndex.resetToDefault()
         revertChanges()
         hasUnsavedChanges = true
     }
@@ -141,8 +143,7 @@ class AssetCollection {
     /// Saves the asset list to the AssetIndex in the KV-store, and triggers callback to handle changes
     func saveChanges() {
         assetIndex.enabledAssetIds = enabledAssets.map { $0.uid }
-        guard save(assetIndex, kvStore: kvStore) else { return }
-        if hasUnsavedChanges {
+        if hasUnsavedChanges && save() {
             didChangeAssets?()
             hasUnsavedChanges = false
         }
@@ -195,20 +196,18 @@ class AssetCollection {
         return newAssetIndex
     }
 
-    private func save(_ index: AssetIndex, kvStore: BRReplicatedKVStore) -> Bool {
+    private func save() -> Bool {
         do {
-            _ = try kvStore.set(index)
+            _ = try kvStore.set(assetIndex)
             try kvStore.syncKey(AssetIndex.key, completionHandler: { _ in
-                
-                //We need to create a new AssetIndex here for each save so that the
-                //version gets incremented
-                if let newAssetIndex = AssetIndex(kvStore: kvStore) {
+                // saving increments the version number, reload to get latest
+                if let newAssetIndex = AssetIndex(kvStore: self.kvStore) {
                     self.assetIndex = newAssetIndex
                 }
             })
             return true
         } catch let error {
-            print("[KV] error setting wallet info: \(error)")
+            print("[KV] error setting asset index: \(error)")
             return false
         }
     }
@@ -219,7 +218,7 @@ class AssetCollection {
             try kvStore.syncKey(AssetIndex.key, completionHandler: {_ in })
             return true
         } catch let error {
-            print("[KV] error setting wallet info: \(error)")
+            print("[KV] error setting asset index: \(error)")
             return false
         }
     }
