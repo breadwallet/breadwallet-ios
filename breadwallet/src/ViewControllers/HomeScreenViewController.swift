@@ -239,9 +239,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             }
         }
 
-        addBuyNotificationIndicatorIfNeeded()
-        addTradeNotificationIndicatorIfNeeded()
-        
         toolbar.isTranslucent = false
         toolbar.barTintColor = Theme.secondaryBackground
     }
@@ -274,30 +271,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 self.currentPromptView = nil
             }
         })
+    }
         
-        Store.subscribe(self, name: .didUpdateFeatureFlags, callback: { [unowned self] _ in
-            self.addBuyNotificationIndicatorIfNeeded()
-            self.addTradeNotificationIndicatorIfNeeded()
-        })
-    }
-    
-    private func addBuyNotificationIndicatorIfNeeded() {
-        guard let buy = buyButton else { return }
-        guard BRAPIClient.featureEnabled(.buyNotification) else { return }
-        guard Store.state.shouldShowBuyNotificationForDefaultCurrency else { return }
-        
-        _ = addNotificationIndicatorToButton(button: buy)
-    }
-    
-    private func addTradeNotificationIndicatorIfNeeded() {
-        guard let trade = tradeButton else { return }
-        guard !UserDefaults.didTapTradeNotification else { return }
-        guard BRAPIClient.featureEnabled(.tradeNotification) else { return }
-        if let image = addNotificationIndicatorToButton(button: trade) {
-            tradeNotificationImage = image
-        }
-    }
-    
     private func updateTotalAssets() {
         let fiatTotal: Decimal = Store.state.displayCurrencies.map {
             guard let balance = Store.state[$0]?.balance,
