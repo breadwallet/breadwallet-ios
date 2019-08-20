@@ -18,14 +18,14 @@ class MultiframeAnimation: UIView {
     /// - Parameter count: The number of image frames to be used in this animation, used to retrieve each image's file name.
     /// - Parameter fileType: The file type or extension of each image frame.
     /// - Parameter completion: An opportunity to execute code when all animation frames have been prepared.
-    func setUpAnimationFrames(fileName: String, count: Int, fileType: String, completion: ((_ animationFrames: [UIImage]) -> Void)? = nil) {
+    func setUpAnimationFrames(fileName: String, count: Int, repeatFirstFrameCount: Int, fileType: String, completion: ((_ animationFrames: [UIImage]) -> Void)? = nil) {
 
         var images = [UIImage]()
 
         /// Call the instantiation logic on a background thread to prevent disrupting the user experience.
         DispatchQueue.global(qos: .background).async {
 
-            for number in 1..<count {
+            for number in 1...count {
                 let name = "\(fileName)\(number)"
                 guard
                     let location = Bundle.main.path(forResource: name, ofType: "\(fileType)"),
@@ -40,6 +40,12 @@ class MultiframeAnimation: UIView {
                 guard let renderedImage = UIGraphicsGetImageFromCurrentImageContext() else { return }
                 UIGraphicsEndImageContext()
                 images.append(renderedImage)
+                
+                if number == 1 {
+                    for _ in 0..<repeatFirstFrameCount {
+                        images.append(renderedImage)
+                    }
+                }
             }
 
             DispatchQueue.main.async {
