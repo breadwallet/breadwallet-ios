@@ -44,9 +44,9 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     private let iconContainer = UIView(color: .transparentIconBackground)
     private let icon = UIImageView()
     private let currencyName = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
-    private let price = UILabel(font: Theme.body2, color: Theme.secondaryText)
+    private let price = UILabel(font: Theme.body3, color: Theme.secondaryText)
     private let fiatBalance = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
-    private let tokenBalance = UILabel(font: Theme.body2, color: Theme.secondaryText)
+    private let tokenBalance = UILabel(font: Theme.body3, color: Theme.secondaryText)
     private let syncIndicator = SyncingIndicator(style: .home)
     private let priceChangeView = PriceChangeView(style: .percentOnly)
     
@@ -128,17 +128,17 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         let containerPadding = E.isIPhone5 ? C.padding[1] : C.padding[2]
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0,
                                                            left: containerPadding,
-                                                           bottom: -10,
+                                                           bottom: -C.padding[1],
                                                            right: -containerPadding))
         iconContainer.constrain([
-            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: C.padding[1]),
+            iconContainer.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: containerPadding),
             iconContainer.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             iconContainer.heightAnchor.constraint(equalToConstant: 40),
             iconContainer.widthAnchor.constraint(equalTo: iconContainer.heightAnchor)])
         icon.constrain(toSuperviewEdges: .zero)
         currencyName.constrain([
-            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: C.padding[1]),
-            currencyName.topAnchor.constraint(equalTo: iconContainer.topAnchor, constant: -2.0)])
+            currencyName.leadingAnchor.constraint(equalTo: iconContainer.trailingAnchor, constant: containerPadding),
+            currencyName.bottomAnchor.constraint(equalTo: icon.centerYAnchor, constant: 0.0)])
         price.constrain([
             price.leadingAnchor.constraint(equalTo: currencyName.leadingAnchor),
             price.topAnchor.constraint(equalTo: currencyName.bottomAnchor)])
@@ -147,7 +147,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
             priceChangeView.centerYAnchor.constraint(equalTo: price.centerYAnchor),
             priceChangeView.heightAnchor.constraint(equalToConstant: 24)])
         fiatBalance.constrain([
-            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -C.padding[1]),
+            fiatBalance.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -containerPadding),
             fiatBalance.leadingAnchor.constraint(greaterThanOrEqualTo: currencyName.trailingAnchor, constant: C.padding[1]),
             fiatBalance.topAnchor.constraint(equalTo: currencyName.topAnchor)])
         tokenBalance.constrain([
