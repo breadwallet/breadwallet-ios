@@ -12,8 +12,37 @@ import Foundation
  * An individual experiment.
  */
 struct Experiment: Decodable {
+    
+    enum Keys: String, CodingKey {
+        case name
+        case active
+        case meta
+    }
+    
     var name: String?
     var active: Bool = false
+    var meta: Decodable?
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: Keys.self)
+        do {
+            name = try container.decodeIfPresent(String.self, forKey: .name)
+            active = try container.decodeIfPresent(Bool.self, forKey: .active) ?? false
+            if let meta = try container.decodeIfPresent(BrowserExperimentMetaData.self, forKey: .meta) {
+                self.meta = meta
+            }
+        } catch {   // missing element
+        }
+    }
+
+}
+
+/**
+ *  Meta data specific to an experiment that launches a browser.
+ */
+struct BrowserExperimentMetaData: Decodable {
+    var url: String?
+    var closeOn: String?
 }
 
 /**
