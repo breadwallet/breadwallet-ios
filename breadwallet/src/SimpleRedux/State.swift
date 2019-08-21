@@ -133,11 +133,11 @@ extension State {
 
 extension State {
     
-    public func isExperimentEnabled(_ experimentName: ExperimentName) -> Bool {
-        guard let set = experiments, let experiment = set.first(where: { $0.name == experimentName.rawValue }) else { return false }
-        return experiment.active
+    public func experimentWithName(_ experimentName: ExperimentName) -> Experiment? {
+        guard let set = experiments, let exp = set.first(where: { $0.name == experimentName.rawValue }) else { return nil }
+        return exp
     }
-
+    
 }
 
 // MARK: -
