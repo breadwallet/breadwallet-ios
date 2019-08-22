@@ -32,9 +32,8 @@ class QRCodeTests: XCTestCase {
         assertPaymentRequest(fromContent: "bitcoin:bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: Currencies.btc) // bech32
 
         // BCH
-        //TODO:CRYPTO CashAddr
-        //assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
-        //assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
+        assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
+        assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
         
         // ETH
         assertPaymentRequest(fromContent: "0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
