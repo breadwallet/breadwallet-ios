@@ -23,6 +23,14 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private var toolbarButtons = [UIButton]()
     private let notificationHandler = NotificationHandler()
     
+    private var shouldShowBuyAndSell: Bool {
+        return (Store.state.experimentWithName(.buyAndSell)?.active ?? false) && (Store.state.defaultCurrencyCode == C.usdCurrencyCode)
+    }
+    
+    private var buyButtonTitle: String {
+        return shouldShowBuyAndSell ? S.HomeScreen.buyAndSell : S.HomeScreen.buy
+    }
+    
     private let buyButtonIndex = 0
     private let tradeButtonIndex = 1
     private let menuButtonIndex = 2
@@ -204,7 +212,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func setupToolbar() {
-        let buttons = [(S.HomeScreen.buy, #imageLiteral(resourceName: "buy"), #selector(buy)),
+        let buttons = [(buyButtonTitle, #imageLiteral(resourceName: "buy"), #selector(buy)),
                        (S.HomeScreen.trade, #imageLiteral(resourceName: "trade"), #selector(trade)),
                        (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
                         let button = UIButton.vertical(title: title, image: image)
@@ -271,6 +279,14 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 self.currentPromptView = nil
             }
         })
+        
+        Store.subscribe(self, selector: {
+            return ($0.experiments ?? nil) != ($1.experiments ?? nil)
+        }, callback: { _ in
+            // Do a full reload of the toolbar so it's laid out correctly with updated button titles.
+            self.setupToolbar()
+            self.saveEvent("experiment.buySellMenuButton", attributes: ["show": self.shouldShowBuyAndSell ? "true" : "false"])
+        })
     }
         
     private func updateTotalAssets() {
@@ -296,7 +312,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     // MARK: Actions
     
     @objc private func buy() {
-        saveEvent("currency.didTapBuyBitcoin", attributes: [:])
+        saveEvent("currency.didTapBuyBitcoin", attributes: [ "buyAndSell": shouldShowBuyAndSell ? "true" : "false" ])
         didTapBuy?()
     }
     
