@@ -59,7 +59,7 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
   # Working directory clean
 	source ${script_dir}/bump_build_number.sh "$1" "$2"
 	source ${script_dir}/download_bundles.sh
-	source ${script_dir}/download_tokenlist.sh
+	source ${script_dir}/download_currencylist.sh
 	echo
 	echo "Making $scheme version ${mainBundleShortVersionString} build ${mainBundleVersion} ..."
   echo
