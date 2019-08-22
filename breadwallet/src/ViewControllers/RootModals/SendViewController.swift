@@ -77,8 +77,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     private var address: String? {
         if let protoRequest = validatedProtoRequest {
-            //TODO:CRYPTO CashAddr
-            return protoRequest.address//currency.isBitcoinCash ? protoRequest.address.bCashAddr : protoRequest.address
+            return protoRequest.address
         } else {
             return addressCell.address
         }
@@ -477,8 +476,6 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         if let name = protoReq.commonName {
             addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
         } else {
-            //TODO:CRYPTO CashAddr
-            //addressCell.setContent(currency.isBitcoinCash ? address.bCashAddr : address)
             addressCell.setContent(address)
         }
 

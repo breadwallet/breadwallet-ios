@@ -120,8 +120,7 @@ extension String {
     }
     
     var withoutHexPrefix: String {
-        guard self.hasPrefix("0x") else { return self }
-        return String(self.dropFirst(2))
+        return self.removing(prefix: "0x")
     }
     
     var withHexPrefix: String {
@@ -155,6 +154,11 @@ extension String {
     /// Hex string with 0-padding removed down to 20-bytes
     var unpaddedHexString: String {
         return self.withoutHexPrefix.leftTrim(toLength: 40).withHexPrefix
+    }
+    
+    func removing(prefix: String) -> String {
+        guard self.hasPrefix(prefix) else { return self }
+        return String(self.dropFirst(prefix.count))
     }
 }
 

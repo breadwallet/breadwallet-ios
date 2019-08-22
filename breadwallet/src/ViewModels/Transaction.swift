@@ -72,8 +72,8 @@ class Transaction {
         return blockNumber ?? 0
     }
 
-    var targetAddress: String { return transfer.target?.description ?? "" }
-    var sourceAddress: String { return transfer.source?.description ?? "" }
+    var targetAddress: String { return transfer.target?.sanitizedDescription ?? "" }
+    var sourceAddress: String { return transfer.source?.sanitizedDescription ?? "" }
     //TODO:CRYPTO legacy support
     var toAddress: String { return targetAddress }
     var fromAddress: String { return sourceAddress }

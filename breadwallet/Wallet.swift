@@ -87,11 +87,11 @@ class Wallet {
 
     /// Address to use as target for incoming transfers
     var receiveAddress: String {
-        return core.target.description
+        return core.target.sanitizedDescription
     }
     
     func receiveAddress(for scheme: AddressScheme) -> String {
-        return core.targetForScheme(scheme).description
+        return core.targetForScheme(scheme).sanitizedDescription
     }
 
     func isOwnAddress(_ address: String) -> Bool {
