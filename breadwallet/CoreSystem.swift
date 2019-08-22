@@ -421,7 +421,7 @@ extension WalletManagerEvent: CustomStringConvertible {
 }
 
 //TODO:CRYPTO use user-selected mode if available
-extension BRCrypto.Network {
+extension Network {
     var defaultManagerMode: WalletManagerMode {
         switch currency.code {
         case BRCrypto.Currency.codeAsBTC:
@@ -433,6 +433,14 @@ extension BRCrypto.Network {
         default:
             return .api_only
         }
+    }
+}
+
+extension Address {
+    var sanitizedDescription: String {
+        return description
+            .removing(prefix: "bitcoincash:")
+            .removing(prefix: "bchtest:")
     }
 }
 
