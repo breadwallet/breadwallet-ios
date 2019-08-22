@@ -23,21 +23,8 @@ struct PaymentRequest {
                 let url = NSURL(string: "\(scheme)://\(resourceSpecifier)"),
                 scheme == currency.urlScheme {
                 if let host = url.host {
-                    //TODO:CRYPTO CashAddr
-//                    if currency.isBitcoinCash {
-//                        // BCH CashAddr includes the bitcoincash: prefix in the address format
-//                        // the payment request stores the address in legacy address format
-//                        let cashAddr = "\(scheme):\(host)"
-//                        toAddress = cashAddr.bitcoinAddr
-//                        if toAddress.isNilOrEmpty {
-//                            toAddress = host
-//                            warningMessage = S.Send.legacyAddressWarning
-//                        }
-//                        guard currency.isValidAddress(toAddress!.bCashAddr) else { return nil }
-//                    } else {
-                        guard currency.isValidAddress(host) else { return nil }
-                        toAddress = host
-//                    }
+                    guard currency.isValidAddress(host) else { return nil }
+                    toAddress = host
                 }
                 
                 //TODO: add support for ERC-681 token transfers, amount field, amount as scientific notation
@@ -80,12 +67,7 @@ struct PaymentRequest {
         
         // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
         if currency.isValidAddress(string) {
-            //TODO:CRYPTO CashAddr
-//            if currency.isBitcoinCash {
-//                toAddress = string.bitcoinAddr
-//            } else {
-                toAddress = string
-//            }
+            toAddress = string
             type = .local
             return
         }
@@ -155,15 +137,8 @@ struct PaymentRequest {
     }
 
     let currency: Currency
-    var toAddress: String?
-    var displayAddress: String? {
-        //TODO:CRYPTO CashAddr
-//        if currency.isBitcoinCash {
-//            return toAddress?.bCashAddr
-//        } else {
-            return toAddress
-//        }
-    }
+    var toAddress: String? //TODO:CRYPTO store as Address
+    var displayAddress: String? { return toAddress } //TODO:CRYPTO cleanup
     let type: PaymentRequestType
     var amount: Amount?
     var label: String?
