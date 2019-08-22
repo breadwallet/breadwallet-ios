@@ -45,12 +45,19 @@ struct BrowserExperimentMetaData: Decodable {
     var closeOn: String?
 }
 
+extension Experiment: Equatable {
+    static func == (lhs: Experiment, rhs: Experiment) -> Bool {
+        return lhs.name == rhs.name
+    }
+}
+
 /**
  *  Valid experiment names. This should be updated when experiments are added or removed
  *  from the server.
  */
 public enum ExperimentName: String {
     case atmFinder = "map"
+    case buyAndSell = "buy-sell-menu-button"
 }
 
 /**
@@ -75,7 +82,7 @@ extension BRAPIClient {
                 }
                 
                 _ = Store.perform(action: UpdateExperiments(experiments))
-
+                
             } else {
                 self.log("error fetching experiments: \(String(describing: err))")
             }
