@@ -133,6 +133,40 @@ class AssetCollectionTests: XCTestCase {
         XCTAssert(collection.enabledAssets.map { $0.uid } == AssetIndex.defaultCurrencyIds)
     }
     
+    func testGetCurrencyMetaData() {
+        let e = expectation(description: "Should receive currency metadata")
+        clearCurrenciesCache()
+        
+        //1st fetch without cache
+        client?.getCurrencyMetaData(completion: { metadata in
+            let tokens = metadata.values.filter { ($0.tokenAddress != nil) && !$0.tokenAddress!.isEmpty }
+            let tokensByAddress = Dictionary(uniqueKeysWithValues: tokens.map { ($0.tokenAddress!, $0) })
+            XCTAssert(metadata.count > 0)
+            XCTAssert(tokens.count > 0)
+            XCTAssert(tokensByAddress.count > 0)
+            
+            //2nd fetch should hit cache
+            self.client?.getCurrencyMetaData(completion: { metadata in
+                let tokens = metadata.values.filter { ($0.tokenAddress != nil) && !$0.tokenAddress!.isEmpty }
+                let tokensByAddress = Dictionary(uniqueKeysWithValues: tokens.map { ($0.tokenAddress!, $0) })
+                XCTAssert(metadata.count > 0)
+                XCTAssert(tokens.count > 0)
+                XCTAssert(tokensByAddress.count > 0)
+                e.fulfill()
+            })
+        })
+        waitForExpectations(timeout: 1.0, handler: nil)
+    }
+    
+    private func clearCurrenciesCache() {
+        let fm = FileManager.default
+        guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
+        let currenciesPath = documentsDir.appendingPathComponent("currencies.json").path
+        if fm.fileExists(atPath: currenciesPath) {
+            try? fm.removeItem(atPath: currenciesPath)
+        }
+    }
+    
 }
 
 extension CurrencyMetaData {

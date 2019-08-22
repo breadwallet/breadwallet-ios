@@ -244,6 +244,7 @@ extension CurrencyMetaData: Codable {
         }
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
         name = try container.decode(String.self, forKey: .name)
+        tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -255,6 +256,7 @@ extension CurrencyMetaData: Codable {
         try container.encode(colorValues, forKey: .colors)
         try container.encode(isSupported, forKey: .isSupported)
         try container.encode(name, forKey: .name)
+        try container.encode(tokenAddress, forKey: .tokenAddress)
     }
 }
 
