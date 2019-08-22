@@ -115,7 +115,7 @@
 		7C45481A2187E65B0002E884 /* AnyCodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C4548192187E65B0002E884 /* AnyCodable.swift */; };
 		7C4D64B6222B4DC700DE2C2B /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C4D64CB222C511900DE2C2B /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64CA222C511900DE2C2B /* libresolv.tbd */; };
-		7C54FF9E2165866A007BF3EF /* tokens.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* tokens.json */; };
+		7C54FF9E2165866A007BF3EF /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* currencies.json */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C6628392107B8D600ABCD10 /* PigeonExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6628382107B8D600ABCD10 /* PigeonExchange.swift */; };
 		7C662B0C222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */; };
@@ -714,7 +714,7 @@
 		7C4D64B5222B4DC700DE2C2B /* libCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C4D64CA222C511900DE2C2B /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
-		7C54FF9D21658669007BF3EF /* tokens.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = tokens.json; path = Resources/tokens.json; sourceTree = "<group>"; };
+		7C54FF9D21658669007BF3EF /* currencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = currencies.json; path = Resources/currencies.json; sourceTree = "<group>"; };
 		7C5AC8A5203B93D3001B221E /* TxListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxListCell.swift; path = src/Views/TransactionCells/TxListCell.swift; sourceTree = "<group>"; };
 		7C6628382107B8D600ABCD10 /* PigeonExchange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonExchange.swift; path = src/Pigeon/PigeonExchange.swift; sourceTree = "<group>"; };
 		7C67B6352056FB13006487BE /* BRAPIClient+Currencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Currencies.swift"; path = "src/Platform/BRAPIClient+Currencies.swift"; sourceTree = "<group>"; };
@@ -1516,7 +1516,7 @@
 				7CC7D8D621581C41007E1B9A /* brd-web-3.tar */,
 				7C98B0A3215A99C7007C85EB /* brd-tokens-staging.tar */,
 				7C98B0A4215A99C8007C85EB /* brd-web-3-staging.tar */,
-				7C54FF9D21658669007BF3EF /* tokens.json */,
+				7C54FF9D21658669007BF3EF /* currencies.json */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -2416,7 +2416,7 @@
 				9AE800FB21FFF81F00D5058C /* rewardsIcon-32.gif in Resources */,
 				9A926F6A22034B3800CC2263 /* CellHighlight-77.png in Resources */,
 				9A926F8022034B3800CC2263 /* CellHighlight-19.png in Resources */,
-				7C54FF9E2165866A007BF3EF /* tokens.json in Resources */,
+				7C54FF9E2165866A007BF3EF /* currencies.json in Resources */,
 				9A926F9522034B3800CC2263 /* CellHighlight-3.png in Resources */,
 				9A926F6822034B3800CC2263 /* CellHighlight-53.png in Resources */,
 				9A926F6622034B3800CC2263 /* CellHighlight-78.png in Resources */,
