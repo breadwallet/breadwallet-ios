@@ -26,7 +26,7 @@ extension BRAPIClient {
         
         let fm = FileManager.default
         guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
-        let cachedFilePath = documentsDir.appendingPathComponent("tokens.json").path
+        let cachedFilePath = documentsDir.appendingPathComponent("currencies.json").path
         
         // If cache isn't expired, use cached data and return before the network call
         if !isCacheExpired(path: cachedFilePath, timeout: C.secondsInMinute*60) && processCurrenciesCache(path: cachedFilePath, completion: completion) {
@@ -53,6 +53,8 @@ extension BRAPIClient {
                 assert(result, "failed to get currency list from backend or cache")
             }
         })
+        
+        cleanupOldTokensFile()
     }
     
     private func send<ResultType>(request: URLRequest, handler: @escaping (APIResult<ResultType>) -> Void) {
@@ -73,6 +75,17 @@ extension BRAPIClient {
                 handler(APIResult<ResultType>.error(jsonError))
             }
         }).resume()
+    }
+    
+    private func cleanupOldTokensFile() {
+        DispatchQueue.global(qos: .utility).async {
+            let fm = FileManager.default
+            guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
+            let oldTokensFile = documentsDir.appendingPathComponent("tokens.json").path
+            if fm.fileExists(atPath: oldTokensFile) {
+                try? fm.removeItem(atPath: oldTokensFile)
+            }
+        }
     }
 }
 
@@ -104,7 +117,7 @@ private func processCurrenciesCache(path: String, completion: ([String: Currency
 
 // Copies currencies embedded in bundle if cached file doesn't exist
 private func copyEmbeddedCurrencies(path: String, fileManager fm: FileManager) {
-    if let embeddedFilePath = Bundle.main.path(forResource: "tokens", ofType: "json"), !fm.fileExists(atPath: path) {
+    if let embeddedFilePath = Bundle.main.path(forResource: "currencies", ofType: "json"), !fm.fileExists(atPath: path) {
         do {
             try fm.copyItem(atPath: embeddedFilePath, toPath: path)
             print("[CurrencyList] copied bundle tokens list to cache")

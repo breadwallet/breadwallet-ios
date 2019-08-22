@@ -165,13 +165,13 @@ class AssetCollection {
         guard let oldIndex = LegacyAssetIndex(kvStore: kvStore) else { return nil }
         print("[KV] migrating to new asset index")
         
-        let tokens = allTokens.values.filter { $0.tokenAddress != nil }
-        let tokensByAddress = Dictionary(uniqueKeysWithValues: tokens.map { ($0.tokenAddress!, $0) })
+        let tokens = allTokens.values.filter { $0.tokenAddress != nil && !$0.tokenAddress!.isEmpty }
+        let tokensByAddress = Dictionary(uniqueKeysWithValues: tokens.map { ($0.tokenAddress!.lowercased(), $0) })
         
         func migrate(oldKey: String) -> String? {
             if oldKey.hasPrefix(C.erc20Prefix) {
                 let address = String(oldKey.dropFirst(C.erc20Prefix.count))
-                return tokensByAddress[address]?.uid
+                return tokensByAddress[address.lowercased()]?.uid
             } else {
                 var newKey: String?
                 switch oldKey.lowercased() {
