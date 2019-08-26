@@ -61,4 +61,11 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(Amount(fiatString: ".0001", currency: Currencies.btc, rate: rate)?.tokenUnformattedString(in: Currencies.btc.baseUnit), "10")
         XCTAssertEqual(Amount(fiatString: "100001.9999", currency: Currencies.btc, rate: rate)?.tokenUnformattedString(in: Currencies.btc.baseUnit), "10000199990")
     }
+    
+    func testEthAmountWithBaseUnits() {
+        let rate = Rate(code: "USD", name: "USD", rate: 200.0, reciprocalCode: "ETH")
+        let a = Amount(tokenString: "123000000000000000000", currency: Currencies.eth, unit: Currencies.eth.baseUnit, rate: rate)
+        XCTAssertNotNil(a)
+        XCTAssertEqual("wei123,000,000,000,000,000,000", a.cryptoAmount.description)
+    }
 }
