@@ -52,7 +52,7 @@ class Wallet {
     public func estimateFee (address: String,
                              amount: Amount,
                              fee: FeeLevel,
-                             completion: @escaping (TransferFeeBasis) -> Void) {
+                             completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
         
         let networkFee: NetworkFee
@@ -62,7 +62,10 @@ class Wallet {
             networkFee = feeForLevel(level: fee)
         }
         core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
-            guard case let .success(feeBasis) = result else { return }
+            guard case let .success(feeBasis) = result else {
+                completion(nil)
+                return
+            }
             completion(feeBasis)
         })
     }

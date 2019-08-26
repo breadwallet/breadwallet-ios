@@ -302,11 +302,6 @@ extension String {
         sanitized = sanitized.replacingOccurrences(of: inputFormat.currencyDecimalSeparator, with: expectedFormat.decimalSeparator)
         sanitized = sanitized.replacingOccurrences(of: inputFormat.decimalSeparator, with: expectedFormat.decimalSeparator)
 
-        // createUInt256ParseDecimal does not accept integers
-        if !sanitized.contains(expectedFormat.decimalSeparator) {
-            sanitized += expectedFormat.decimalSeparator
-        }
-
         return sanitized
     }
 }
