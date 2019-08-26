@@ -272,6 +272,8 @@
 "HomeScreen.admin" = "管理";
 /* Home screen menu button to buy some bitcoin */
 "HomeScreen.buy" = "購入する";
+/* home screen toolbar 'Buy & Sell' button */
+"HomeScreen.buyAndSell" = "売買";
 /* Menu button on the home screen toolbar */
 "HomeScreen.menu" = "メニュー";
 /* This section lists the users wallets */
@@ -687,6 +689,8 @@
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "復元フレーズ";
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle.android" = "復元フレーズ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "アクセス権限のないユーザーからあなたのブレッドを守ります。";
 /* PIN button title */
