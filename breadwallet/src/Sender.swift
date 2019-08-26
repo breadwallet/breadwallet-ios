@@ -80,7 +80,7 @@ class Sender: Subscriber {
 
     // MARK: Create
 
-    func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis) -> Void) {
+    func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis?) -> Void) {
         wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
     }
 

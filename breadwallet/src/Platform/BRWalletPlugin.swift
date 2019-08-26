@@ -20,8 +20,6 @@ enum PlatformAuthResult {
 class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     var sockets = [String: BRWebSocket]()
     let walletAuthenticator: TransactionAuthenticator
-    var tempBitIDKeys = [String: Key]() // this should only ever be mutated from the main thread
-    private var tempBitIDResponses = [String: Int]()
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
@@ -48,81 +46,6 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: request, code: 200, json: self.walletInfo())
         }
         
-        // POST /_wallet/sign_bitid
-        //
-        // Sign a message using the user's BitID private key. Calling this WILL trigger authentication
-        //
-        // Request body: application/json
-        //      {
-        //          "prompt_string": "Sign in to My Service", // shown to the user in the authentication prompt
-        //          "string_to_sign": "https://bitid.org/bitid?x=2783408723", // the string to sign
-        //          "bitid_url": "https://bitid.org/bitid", // the bitid url for deriving the private key
-        //          "bitid_index": "0" // the bitid index as a string (just pass "0")
-        //      }
-        //
-        // Response body: application/json
-        //      {
-        //          "signature": "oibwaeofbawoefb" // base64-encoded signature
-        //      }
-        router.post("/_wallet/sign_bitid") { (request, _) -> BRHTTPResponse in
-            guard let cts = request.headers["content-type"], cts.count == 1 && cts[0] == "application/json" else {
-                return BRHTTPResponse(request: request, code: 400)
-            }
-            guard !self.isPresentingAuth else {
-                return BRHTTPResponse(request: request, code: 423)
-            }
-
-            guard let data = request.body(),
-                      let j = try? JSONSerialization.jsonObject(with: data, options: []),
-                      let json = j as? [String: String],
-                      let stringToSign = json["string_to_sign"],
-                      let bitidUrlString = json["bitid_url"],
-                      let bitidUrl = URL(string: bitidUrlString),
-                      let bii = json["bitid_index"],
-                      let bitidIndex = Int(bii) else {
-                return BRHTTPResponse(request: request, code: 400)
-            }
-            if let response = self.tempBitIDResponses[stringToSign] {
-                return BRHTTPResponse(request: request, code: response)
-            }
-            let asyncResp = BRHTTPResponse(async: request)
-            DispatchQueue.main.sync {
-                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
-                    let url = bitidUrl.host ?? bitidUrl.absoluteString
-                    if let key = self.tempBitIDKeys[url] {
-                        self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
-                    } else {
-                        let prompt = bitidUrl.host ?? bitidUrl.description
-                        self.isPresentingAuth = true
-                        if UserDefaults.isBiometricsEnabled {
-                            asyncResp.provide(200, json: ["error": "proxy-shutdown"])
-                        }
-                        Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in
-                            guard let `self` = self else { request.queue.async { asyncResp.provide(500) }; return }
-                            self.isPresentingAuth = false
-                            switch result {
-                            case .success:
-                                if let key = self.walletAuthenticator.buildBitIdKey(url: url, index: bitidIndex) {
-                                    self.addKeyToCache(key, url: url)
-                                    self.sendBitIDResponse(stringToSign, usingKey: key, request: request, asyncResp: asyncResp)
-                                } else {
-                                    self.tempBitIDResponses[stringToSign] = 401
-                                    request.queue.async { asyncResp.provide(401) }
-                                }
-                            case .cancelled:
-                                self.tempBitIDResponses[stringToSign] = 403
-                                request.queue.async { asyncResp.provide(403) }
-                            case .failed:
-                                self.tempBitIDResponses[stringToSign] = 401
-                                request.queue.async { asyncResp.provide(401) }
-                            }
-                        }))
-                    }
-                }
-            }
-            return asyncResp
-        }
-
         // POST /_wallet/authenticate
         //
         // Calling this WILL trigger authentication
@@ -318,112 +241,87 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             let sender = Sender(wallet: wallet, authenticator: self.walletAuthenticator, kvStore: kvStore)
 
             // assume the numerator is in currency's base units
-            var amount = Amount(tokenString: numerator, currency: currency, unit: currency.baseUnit)
+            let amount = Amount(tokenString: numerator, currency: currency, unit: currency.baseUnit)
             
-            // ensure priority fee set for bitcoin transactions
-            
-            //TODO:CRYPTO - force use of priority fees
+            // estimateFee() will only use .priority if multiple fee levels are available (e.g. for BTC)
             let tradeFeeLevel: FeeLevel = .priority
-//            if currency.isBitcoin {
-//                guard let fees = currency.state?.fees else {
-//                    asyncResp.provide(400, json: ["error": "fee-error"])
-//                    return asyncResp
-//                }
-//                sender.updateFeeRates(fees, level: tradeFeeLevel)
-//            }
-
-            let fee = sender.fee(forAmount: amount)
-            guard let balance = currency.state?.balance else {
-                    asyncResp.provide(500, json: ["error": "fee-error"])
-                    return asyncResp
-            }
-
-            if !(currency.isERC20Token) && (amount <= balance) && (amount + fee) > balance {
-                // amount is close to balance and fee puts it over, subtract the fee
-                amount = balance - fee
-            }
-            //TODO:CRYPTO
-//            let result = sender.createTransaction(address: toAddress, amount: amount, comment: comment)
-//            guard case .ok = result else {
-//                asyncResp.provide(400, json: ["error": "tx-error"])
-//                return asyncResp
-//            }
             
-            if shouldTransmit != 0 {
-                let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
-                    let prompt = S.VerifyPin.authorize
-                    self?.isPresentingAuth = true
-                    Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
-                        self?.isPresentingAuth = false
-                        switch result {
-                        case .success(let pin?):
-                            pinValidationCallback(pin)
-                        case .cancelled:
-                            request.queue.async { asyncResp.provide(403) }
-                        default:
-                            request.queue.async { asyncResp.provide(401) }
+            // Fee estimation is asynchronous, so wrap the estimation related processing in a synchronous
+            // block. This ensures that we don't set the response value and return `asyncResp` until
+            // all transaction processing has completed.
+            DispatchQueue.main.sync {
+                CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
+
+                    wallet.estimateFee(address: toAddress, amount: amount, fee: tradeFeeLevel, completion: { (feeBasis) in
+                        guard let transferFeeBasis = feeBasis else {
+                            request.queue.async { asyncResp.provide(500, json: ["error": "fee-error"]) }
+                            return
                         }
-                    }))
-                }
-                
-                let fee = sender.fee(forAmount: amount)
-                //let feeCurrency = sender.wallet.feeCurrency
-                let confirmAmount = Amount(amount: amount,
-                                           rate: nil, //currency.state?.currentRate,
-                                           maximumFractionDigits: Amount.highPrecisionDigits)
-                let feeAmount = Amount(amount: fee,
-                                       rate: nil, //feeCurrency.state?.currentRate,
-                                       maximumFractionDigits: Amount.highPrecisionDigits)
-                
-                DispatchQueue.main.sync {
-                    CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
-                        self.isPresentingAuth = true
-                        Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, tradeFeeLevel, toAddress, { (confirmed) in
-                            self.isPresentingAuth = false
-                            guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
-                            
-                            sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier) { result in
-                                switch result {
-                                case .success(let hash, let rawTx):
-                                    guard let hash = hash, let rawTx = rawTx else { return request.queue.async { asyncResp.provide(500) } }
-                                    request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
-                                                                                        "transaction": rawTx.withHexPrefix,
-                                                                                        "transmitted": true]) }
-                                default:
-                                    request.queue.async { asyncResp.provide(500) }
-                                }
+                        
+                        let result = sender.createTransaction(address: toAddress, amount: amount, feeBasis: transferFeeBasis, comment: comment)
+                        guard case .ok = result else {
+                            request.queue.async { asyncResp.provide(500, json: ["error": "tx-error"]) }
+                            return
+                        }
+                        
+                        if shouldTransmit != 0 {
+                            let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+                                let prompt = S.VerifyPin.authorize
+                                self?.isPresentingAuth = true
+                                Store.trigger(name: .authenticateForPlatform(prompt, false, { [weak self] result in
+                                    self?.isPresentingAuth = false
+                                    switch result {
+                                    case .success(let pin?):
+                                        pinValidationCallback(pin)
+                                    case .cancelled:
+                                        request.queue.async { asyncResp.provide(403) }
+                                    default:
+                                        request.queue.async { asyncResp.provide(401) }
+                                    }
+                                }))
                             }
-                        }))
-                    }
+                            
+                            let feeCurrency = sender.wallet.feeCurrency
+                            let confirmAmount = Amount(amount: amount,
+                                                       rate: nil,
+                                                       maximumFractionDigits: Amount.highPrecisionDigits)
+                            let feeAmount = Amount(cryptoAmount: transferFeeBasis.fee,
+                                                   currency: feeCurrency,
+                                                   rate: nil,
+                                                   minimumFractionDigits: nil,
+                                                   maximumFractionDigits: Amount.highPrecisionDigits)
+                            
+                            self.isPresentingAuth = true
+                            Store.trigger(name: .confirmTransaction(currency, confirmAmount, feeAmount, tradeFeeLevel, toAddress, { (confirmed) in
+                                self.isPresentingAuth = false
+                                guard confirmed else { return request.queue.async { asyncResp.provide(403) } }
+                                
+                                sender.sendTransaction(allowBiometrics: false, pinVerifier: pinVerifier) { result in
+                                    switch result {
+                                    case .success(let hash, _):
+                                        guard let hash = hash else { return request.queue.async { asyncResp.provide(500) } }
+                                        request.queue.async { asyncResp.provide(200, json: ["hash": hash.withHexPrefix,
+                                                                                            "transaction": "",
+                                                                                            "transmitted": true]) }
+                                    default:
+                                        request.queue.async { asyncResp.provide(500) }
+                                    }
+                                }
+                            }))
+                            
+                        } else {
+                            request.queue.async { asyncResp.provide(501) }
+                        }
+                        
+                    })  // wallet.estimateFee()
                 }
-            } else {
-                asyncResp.provide(501)
-                // TODO: sign tx without sending, get tx data / hash
-                //                asyncResp.provide(200, json: ["hash": "",
-                //                                              "transaction": "",
-                //                                              "transmitted": false])
             }
+            
+            // return the response to the post()
             return asyncResp
-        }
-    }
-
-    private func addKeyToCache(_ key: Key, url: String) {
-        self.tempBitIDKeys[url] = key
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(60)) {
-            self.tempBitIDKeys[url] = nil
-        }
-    }
-
-    private func sendBitIDResponse(_ stringToSign: String, usingKey key: Key, request: BRHTTPRequest, asyncResp: BRHTTPResponse) {
-        let sig = BRBitID.signMessage(stringToSign, usingKey: key)
-        let json: [String: Any] = [
-            "signature": sig,
-            "address": ""//key.address(legacy: true) ?? "" //TODO:CRYPTO Key does not expose BRKeyLegacyAddr
-        ]
-        request.queue.async {
-            asyncResp.provide(200, json: json)
-        }
-    }
+            
+        } // router.post() {}
+    } // hook()
     
     // MARK: - socket handlers
     func sendWalletInfo(_ socket: BRWebSocket) {

@@ -148,6 +148,11 @@ class CheckoutConfirmationViewController: UIViewController {
                            amount: request.purchaseAmount,
                            tier: .priority) { feeBasis in
             
+            guard let feeBasis = feeBasis else {
+                completion(false)
+                return
+            }
+                            
             let validationResult = self.sender.createTransaction(address: self.request.address,
                                                                  amount: self.request.purchaseAmount,
                                                                  feeBasis: feeBasis,
