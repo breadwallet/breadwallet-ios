@@ -196,6 +196,7 @@ class ApplicationController: Subscriber, Trackable {
         }
         connect()
         updateAssetBundles()
+        coreSystem.updateFees()
     }
 
     func didEnterBackground() {
