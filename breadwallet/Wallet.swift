@@ -188,6 +188,10 @@ extension Wallet {
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
             publishEvent(.transferSubmitted(transfer: transfer, success: true))
         }
+        if case .changed(_, let new) = event, case .failed(let reason) = new {
+            //TODO:CRYPTO workaround needed because transferSubmitted is never received
+            publishEvent(.transferSubmitted(transfer: transfer, success: false))
+        }
     }
 }
 

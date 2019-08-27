@@ -637,6 +637,15 @@ class ModalPresenter: Subscriber, Trackable {
                                                 _ = UserDefaults.toggleAutoEnterPIN()
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
+
+                if E.isSimulator {
+                    developerItems.append(MenuItem(title: "Copy Simulator Documents Dir Path",
+                                                   callback: {
+                                                    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path
+                                                    UIPasteboard.general.string = documentsPath
+                                                    Store.trigger(name: .lightWeightAlert(S.Receive.copied))
+                    }))
+                }
             }
             
             // For test wallets, suppresses the paper key prompt on the home screen.

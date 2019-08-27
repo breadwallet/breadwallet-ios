@@ -10,17 +10,9 @@ import Foundation
 import BRCrypto
 
 class CoreSystem: Subscriber {
-
-    enum State {
-        case uninitialized
-        case idle
-        case active
-    }
     
     private var system: System?
     private let backend: BlockChainDB
-    private (set) var state: State = .uninitialized //TODO:CRYPTO is this needed, if so should it come from System?
-    private var isInitialized: Bool { return state != .uninitialized }
 
     private let queue = DispatchQueue(label: "com.brd.CoreSystem")
 
@@ -97,7 +89,7 @@ class CoreSystem: Subscriber {
 
     // create -- on launch w/ acount present and wallet unlocked
     func create(account: Account) {
-        guard let kvStore = Backend.kvStore, state == .uninitialized else { return assertionFailure() }
+        guard let kvStore = Backend.kvStore else { return assertionFailure() }
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
@@ -112,7 +104,6 @@ class CoreSystem: Subscriber {
                                                        changeHandler: self.updateWalletStates)
                 self.system?.configure()
             }
-            self.state = .idle
         }
     }
 
@@ -122,7 +113,6 @@ class CoreSystem: Subscriber {
         queue.async {
             guard let system = self.system else { return assertionFailure() }
             system.managers.forEach { $0.connect() }
-            self.state = .active
         }
     }
 
@@ -132,7 +122,6 @@ class CoreSystem: Subscriber {
         queue.async {
             guard let system = self.system else { return assertionFailure() }
             system.stop()
-            self.state = .idle
         }
     }
 
@@ -141,7 +130,6 @@ class CoreSystem: Subscriber {
         print("[SYS] shutdown / wipe")
         queue.sync {
             guard let system = self.system else { return assertionFailure() }
-            self.state = .uninitialized
             system.stop()
             self.wallets.removeAll()
             self.currencies.removeAll()
@@ -158,7 +146,43 @@ class CoreSystem: Subscriber {
         }
     }
 
-    //TODO:CRYPTO migrate legacy persistent data
+    /// Migrates the old sqlite persistent storage data to Core, if present.
+    /// After successful migration the sqlite database is deleted.
+    private func migrateLegacyDatabase(network: Network) {
+        guard let system = system,
+            let currency = currency(forCoreCurrency: network.currency),
+            (currency.isBitcoin || currency.isBitcoinCash) else { return assertionFailure() }
+        let fm = FileManager.default
+        let filename = currency.isBitcoin ? "BreadWallet.sqlite" : "BreadWallet-bch.sqlite"
+        let docsUrl = try? fm.url(for: .documentDirectory,
+                                  in: .userDomainMask,
+                                  appropriateFor: nil,
+                                  create: false)
+        guard let dbPath = docsUrl?.appendingPathComponent(filename).path,
+            fm.fileExists(atPath: dbPath) else { return }
+        
+        do {
+            let db = CoreDatabase()
+            try db.openDatabase(path: dbPath)
+            defer { db.close() }
+            
+            let txBlobs = db.loadTransactions()
+            let blockBlobs = db.loadBlocks()
+            let peerBlobs = db.loadPeers()
+            
+            print("[SYS] migrating \(network.currency.code) database: \(txBlobs.count) txns / \(blockBlobs.count) blocks / \(peerBlobs.count) peers")
+            
+            try system.migrateStorage(network: network,
+                                      transactionBlobs: txBlobs,
+                                      blockBlobs: blockBlobs,
+                                      peerBlobs: peerBlobs)
+            print("[SYS] \(network.currency.code) database migrated")
+        } catch let error {
+            print("[SYS] database migration failed: \(error)")
+        }
+        // delete the old database to avoid future migration attempts
+        try? fm.removeItem(atPath: dbPath)
+    }
 
     // MARK: Core Wallet Management
 
@@ -272,23 +296,24 @@ class CoreSystem: Subscriber {
 extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
-        guard isInitialized else { return }
         queue.async {
             print("[SYS] system event: \(event)")
             switch event {
             case .created:
-                DispatchQueue.main.async {
-                    //TODO:CRYPTO hack to clear all wallets and show only the System wallets
-                    Store.perform(action: ManageWallets.SetWallets([:]))
-                }
+                break
 
             case .networkAdded(let network):
                 // A network was created; create the corresponding wallet manager.
                 if network.isMainnet == !E.isTestnet {
+                    print("[SYS] init \(network.isMainnet ? "mainnet" : "testnet") network: \(network)")
                     self.addCurrencies(for: network)
                     guard let currency = self.currency(forCoreCurrency: network.currency) else {
                         print("[SYS] \(network) wallet manager not created. \(network.currency.code) not supported.")
                         return
+                    }
+                    
+                    if system.migrateRequired(network: network) {
+                        self.migrateLegacyDatabase(network: network)
                     }
                     
                     var addressScheme: AddressScheme
@@ -312,7 +337,6 @@ extension CoreSystem: SystemListener {
     }
 
     func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
-        guard isInitialized else { return }
         queue.async {
             print("[SYS] \(manager.network) manager event: \(event)")
             switch event {
@@ -339,7 +363,7 @@ extension CoreSystem: SystemListener {
             case .syncProgress(let percentComplete):
                 DispatchQueue.main.async {
                     manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
-                        Store.perform(action: WalletChange($0).setProgress(progress: percentComplete, timestamp: 0))
+                        Store.perform(action: WalletChange($0).setProgress(progress: percentComplete/100.0, timestamp: 0))
                     }
                 }
 
@@ -360,7 +384,6 @@ extension CoreSystem: SystemListener {
     }
 
     func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
-        guard isInitialized else { return }
         queue.async {
             print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
             switch event {
@@ -377,7 +400,6 @@ extension CoreSystem: SystemListener {
     }
 
     func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
-        guard isInitialized else { return }
         queue.async {
             guard let wallet = self.wallets[wallet.currency] else { return }
             print("[SYS] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
@@ -386,7 +408,6 @@ extension CoreSystem: SystemListener {
     }
 
     func handleNetworkEvent(system: System, network: Network, event: NetworkEvent) {
-        guard isInitialized else { return }
         queue.async {
             print("[SYS] \(network) network event: \(event)")
         }
