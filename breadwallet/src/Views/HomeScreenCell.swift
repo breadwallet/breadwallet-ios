@@ -96,9 +96,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
                             }
         })
         
-        //TODO:CRYPTO sync state
-        Store.subscribe(self, selector: {
-            return $0[viewModel.currency]?.lastBlockTimestamp != $1[viewModel.currency]?.lastBlockTimestamp },
+        Store.subscribe(self, selector: { $0[viewModel.currency]?.syncProgress != $1[viewModel.currency]?.syncProgress },
                         callback: { state in
                             if let progress = state[viewModel.currency]?.syncProgress {
                                 self.syncIndicator.progress = CGFloat(progress)
