@@ -127,6 +127,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         })
         
         addAddressChangeListener()
+        sender.updateNetworkFees()
     }
 
     override func viewDidAppear(_ animated: Bool) {
