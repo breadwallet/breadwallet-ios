@@ -169,7 +169,7 @@ func clearKeychain() {
 func deleteKvStoreDb() {
     let fm = FileManager.default
     let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let url = docsUrl.appendingPathComponent("kvstore.sqlite3")
+    let url = docsUrl.appendingPathComponent("kvstore_test.sqlite3")
     if fm.fileExists(atPath: url.path) {
         do {
             try fm.removeItem(at: url)
