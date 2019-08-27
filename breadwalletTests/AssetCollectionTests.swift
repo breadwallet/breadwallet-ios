@@ -155,7 +155,7 @@ class AssetCollectionTests: XCTestCase {
                 e.fulfill()
             })
         })
-        waitForExpectations(timeout: 1.0, handler: nil)
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
     
     private func clearCurrenciesCache() {
