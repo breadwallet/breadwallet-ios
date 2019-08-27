@@ -145,6 +145,17 @@ class CoreSystem: Subscriber {
             completion?()
         }
     }
+    
+    func updateFees() {
+        system?.updateNetworkFees { result in
+            switch result {
+            case .success(let networks):
+                print("[SYS] Fees: updated fees for \(networks.map { $0.name })")
+            case .failure(let error):
+                print("[SYS] Fees: failed to update with error: \(error)")
+            }
+        }
+    }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
     /// After successful migration the sqlite database is deleted.

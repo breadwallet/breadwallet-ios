@@ -77,16 +77,15 @@ class Sender: Subscriber {
         transfer = nil
         comment = nil
     }
+    
+    func updateNetworkFees() {
+        wallet.updateNetworkFees()
+    }
 
     // MARK: Create
 
     func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis?) -> Void) {
         wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
-    }
-
-    func fee(forAmount amount: Amount) -> Amount {
-        //TODO:CRYPTO IOS-1133 fee estimation for platform
-        return Amount.zero(wallet.feeCurrency)
     }
 
     private func validate(address: String, amount: Amount) -> SenderValidationResult {

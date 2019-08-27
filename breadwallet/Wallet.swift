@@ -69,6 +69,10 @@ class Wallet {
             completion(feeBasis)
         })
     }
+    
+    func updateNetworkFees() {
+        system.updateFees()
+    }
 
     // MARK: - State
 
