@@ -374,7 +374,8 @@ extension CoreSystem: SystemListener {
             case .syncProgress(let percentComplete):
                 DispatchQueue.main.async {
                     manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
-                        Store.perform(action: WalletChange($0).setProgress(progress: percentComplete/100.0, timestamp: 0))
+                        //TODO:CRYPTO - add timestamp
+                        //Store.perform(action: WalletChange($0).setProgress(progress: percentComplete/100.0, timestamp: 0))
                     }
                 }
 

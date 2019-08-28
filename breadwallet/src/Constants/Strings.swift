@@ -549,8 +549,11 @@ enum S {
             static let notValid = NSLocalizedString("Import.Error.notValid", value: "Not a valid private key", comment: "Not a valid private key error message")
             static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet.", comment: "Duplicate key error message")
             static let empty = NSLocalizedString("Import.Error.empty", value: "This private key is empty.", comment: "empty private key error message")
-            static let highFees = NSLocalizedString("Import.Error.highFees", value: "Transaction fees would cost more than the funds available on this private key.", comment: "High fees error message")
-            static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "Import signing error message")
+            static let failedSubmit = NSLocalizedString("Import.Error.failedSubmit", value: "Failed to submit transaction.", comment: "Failed to submit transaction error message")
+            static let unsupportedCurrency = NSLocalizedString("Import.Error.unsupportedCurrency", value: "Unsupported Currency", comment: "Unsupported currencye error message")
+            static let sweepError = NSLocalizedString("Import.Error.sweepError", value: "Unable to sweep wallet", comment: "Unable to sweep wallet error message")
+            static let serviceError = NSLocalizedString("Import.Error.serviceError", value: "Service Error", comment: "Service error error message")
+            static let serviceUnavailable = NSLocalizedString("Import.Error.serviceUnavailable", value: "Service Unavailable", comment: "Service Unavailable error message")
         }
     }
 

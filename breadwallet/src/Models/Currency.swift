@@ -34,7 +34,11 @@ class Currency: CurrencyWithIcon {
     /// Display name (e.g. Bitcoin)
     var name: String { return core.name }
 
-    var tokenType: TokenType { return TokenType(rawValue: core.type) ?? .unknown }
+    var tokenType: TokenType {
+        //TODO:CYRPTO - remove lowercased() compare
+        guard let type = TokenType(rawValue: core.type.lowercased()) else { assertionFailure("unknown token type"); return .unknown }
+        return type
+    }
     
     // MARK: Units
 

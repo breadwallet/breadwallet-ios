@@ -16,8 +16,7 @@ enum QRCode: Equatable {
     case invalid
     
     init(content: String) {
-        //TODO:CRYPTO import key
-        if Key.createFromString(asPrivate: content) != nil {//content.isValidPrivateKey || content.isValidBip38Key {
+        if (Key.createFromString(asPrivate: content) != nil) || Key.isProtected(asPrivate: content) {
             self = .privateKey(content)
         } else if let url = URL(string: content), url.isDeepLink {
             self = .deepLink(url)
