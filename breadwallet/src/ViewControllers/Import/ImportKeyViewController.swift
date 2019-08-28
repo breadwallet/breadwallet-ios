@@ -8,6 +8,7 @@
 
 import UIKit
 import BRCore
+import BRCrypto
 
 /**
  *  Screen that allows the user to scan a QR code corresponding to a private key.
@@ -16,7 +17,7 @@ import BRCore
  *  preferences or in response to the user scanning a private key using the Scan QR Code
  *  item in the main menu. In the latter case, an initial QR code is passed to the init() method.
  */
-class StartImportViewController: UIViewController {
+class ImportKeyViewController: UIViewController, Subscriber {
     /**
      *  Initializer
      *
@@ -27,7 +28,7 @@ class StartImportViewController: UIViewController {
     init(wallet: Wallet, initialQRCode: QRCode? = nil) {
         self.wallet = wallet
         self.initialQRCode = initialQRCode
-        assert(wallet.currency.isBitcoin, "Importing only supports bitcoin")
+        assert(wallet.currency.isBitcoin || wallet.currency.isBitcoinCash, "Importing only supports btc or bch")
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,6 +46,9 @@ class StartImportViewController: UIViewController {
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
     
     // Previously scanned QR code passed to init()
+    //
+    // Not used at the moment. When the universal scanner
+    // supports scanning private keys, the value will be here
     private var initialQRCode: QRCode?
 
     override func viewDidLoad() {
@@ -56,13 +60,6 @@ class StartImportViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        //TODO:CRYPTO import keys
-//        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
-//            DispatchQueue.walletQueue.async { [weak self] in
-//                self?.walletManager.peerManager?.connect()
-//            }
-//        }
-        
         if let code = initialQRCode {
             handleScanResult(code)
             
@@ -72,6 +69,10 @@ class StartImportViewController: UIViewController {
             // is dismissed.
             initialQRCode = nil
         }
+    }
+    
+    deinit {
+        wallet.unsubscribe(self)
     }
     
     private func addSubviews() {
@@ -153,19 +154,110 @@ class StartImportViewController: UIViewController {
     }
 
     private func didReceiveAddress(_ address: String) {
-        //TODO:CRYPTO import keys
-//        if address.isValidPrivateKey {
-//            if let key = BRKey(privKey: address) {
-//                checkBalance(key: key)
-//            }
-//        } else if address.isValidBip38Key {
-//            unlock(address: address, callback: { key in
-//                self.checkBalance(key: key)
-//            })
-//        }
+        guard !Key.isProtected(asPrivate: address) else {
+            return unlock(address: address) { self.createTransaction(withPrivKey: $0) }
+        }
+        
+        guard let key = Key.createFromString(asPrivate: address) else {
+            showErrorMessage(S.Import.Error.notValid)
+            return
+        }
+
+        createTransaction(withPrivKey: key)
+        
+    }
+    
+    private func createTransaction(withPrivKey key: Key) {
+        present(balanceActivity, animated: true, completion: nil)
+        wallet.createSweeper(forKey: key) { result in
+            self.balanceActivity.dismiss(animated: true) {
+                switch result {
+                case .success(let sweeper):
+                    self.importFrom(sweeper)
+                case .failure(let error):
+                    self.handleError(error)
+                }
+            }
+        }
+    }
+    
+    private func importFrom(_ sweeper: WalletSweeper) {
+        guard let balance = sweeper.balance else { return self.showErrorMessage(S.Import.Error.empty) }
+        let balanceAmount = Amount(cryptoAmount: balance, currency: wallet.currency)
+        guard !balanceAmount.isZero else { return self.showErrorMessage(S.Import.Error.empty) }
+        sweeper.estimate(fee: wallet.feeForLevel(level: .regular)) { result in
+            switch result {
+            case .success(let feeBasis):
+                self.confirmImport(fromSweeper: sweeper, fee: feeBasis)
+            case .failure(let error):
+                self.handleEstimateFeeError(error)
+            }
+        }
+    }
+    
+    private func confirmImport(fromSweeper sweeper: WalletSweeper, fee: TransferFeeBasis) {
+        let balanceAmount = Amount(cryptoAmount: sweeper.balance!, currency: wallet.currency)
+        let feeAmount = Amount(cryptoAmount: fee.fee, currency: wallet.currency)
+        let message = String(format: S.Import.confirm, balanceAmount.description, feeAmount.description)
+        let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: S.Import.importButton, style: .default, handler: { _ in
+            self.present(self.importingActivity, animated: true)
+            self.submit(sweeper: sweeper, fee: fee)
+        }))
+        present(alert, animated: true)
+    }
+    
+    private func submit(sweeper: WalletSweeper, fee: TransferFeeBasis) {
+        guard let transfer = sweeper.submit(estimatedFeeBasis: fee) else {
+            importingActivity.dismiss(animated: true)
+            return showErrorMessage(S.Alerts.sendFailure)
+        }
+        wallet.subscribe(self) { event in
+            guard case .transferSubmitted(let eventTransfer, let success) = event,
+                eventTransfer.hash == transfer.hash else { return }
+            DispatchQueue.main.async {
+                self.importingActivity.dismiss(animated: true) {
+                    guard success else { return self.showErrorMessage(S.Import.Error.failedSubmit) }
+                    self.showSuccess()
+                }
+            }
+        }
+    }
+    
+    private func handleError(_ error: WalletSweeperError) {
+        switch error {
+        case .unsupportedCurrency:
+            showErrorMessage(S.Import.Error.unsupportedCurrency)
+        case .invalidKey:
+            showErrorMessage(S.Send.invalidAddressTitle)
+        case .invalidSourceWallet:
+            showErrorMessage(S.Send.invalidAddressTitle)
+        case .insufficientFunds:
+            showErrorMessage(S.Send.insufficientFunds)
+        case .unableToSweep:
+            showErrorMessage(S.Import.Error.sweepError)
+        case .noTransfersFound:
+            showErrorMessage(S.Import.Error.empty)
+        case .unexpectedError:
+            showErrorMessage(S.Alert.somethingWentWrong)
+        case .queryError(let error):
+            showErrorMessage(error.localizedDescription)
+        }
+    }
+    
+    private func handleEstimateFeeError(_ error: BRCrypto.Wallet.FeeEstimationError) {
+        switch error {
+        case .InsufficientFunds:
+            showErrorMessage(S.Send.insufficientFunds)
+        case .ServiceError:
+            showErrorMessage(S.Import.Error.serviceError)
+        case .ServiceUnavailable:
+            showErrorMessage(S.Import.Error.serviceUnavailable)
+        }
     }
 
-    private func unlock(address: String, callback: @escaping (BRKey) -> Void) {
+    private func unlock(address: String, callback: @escaping (Key) -> Void) {
         let alert = UIAlertController(title: S.Import.title, message: S.Import.password, preferredStyle: .alert)
         alert.addTextField(configurationHandler: { textField in
             textField.placeholder = S.Import.passwordPlaceholder
@@ -174,127 +266,30 @@ class StartImportViewController: UIViewController {
         })
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: { _ in
-            self.present(self.unlockingActivity, animated: true, completion: {
-                if let password = alert.textFields?.first?.text {
-                    //TODO:CRYPTO import keys
-//                    if let key = BRKey(bip38Key: address, passphrase: password) {
-//                        self.unlockingActivity.dismiss(animated: true, completion: {
-//                            callback(key)
-//                        })
-//                        return
-//                    }
-                }
+            self.unlock(alert: alert, address: address, callback: callback)
+        }))
+        present(alert, animated: true)
+    }
+    
+    private func unlock(alert: UIAlertController, address: String, callback: @escaping (Key) -> Void) {
+        present(self.unlockingActivity, animated: true, completion: {
+            guard let password = alert.textFields?.first?.text,
+                let key = Key.createFromString(asPrivate: address, withPassphrase: password) else {
                 self.unlockingActivity.dismiss(animated: true, completion: {
                     self.showErrorMessage(S.Import.wrongPassword)
                 })
-            })
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-
-    private func checkBalance(key: BRKey) {
-        //TODO:CRYPTO import keys
-        /*
-        present(balanceActivity, animated: true, completion: {
-            var key = key
-            guard let address = key.address(legacy: true) else {
-                self.balanceActivity.dismiss(animated: true) {
-                    self.showErrorMessage(S.Import.Error.notValid)
-                }
                 return
             }
-            Backend.apiClient.fetchUTXOS(address: address, currency: self.currency, completion: { data in
-                guard let data = data else {
-                    self.balanceActivity.dismiss(animated: true) {
-                        self.showErrorMessage(S.Alert.timedOut)
-                    }
-                    return
-                }
-                self.handleData(data: data, key: key)
+            self.unlockingActivity.dismiss(animated: true, completion: {
+                callback(key)
             })
         })
-         */
-    }
-
-    private func handleData(data: [[String: Any]], key: BRKey) {
-        /*
-        var key = key
-        guard let tx = UnsafeMutablePointer<BRTransaction>() else { return }
-        guard let wallet = walletManager.wallet else { return }
-        guard let address = key.address() else { return }
-        //TODO:CRYPTO access fees from WalletController
-        let fees = Fees(regular: 0, economy: 0, timestamp: 0)
-        //guard let fees = Currencies.btc.state?.fees else { return }
-        guard !wallet.containsAddress(address) else {
-            return showErrorMessage(S.Import.Error.duplicate)
-        }
-        let outputs = data.compactMap { SimpleUTXO(json: $0) }
-        let balance = outputs.map { $0.satoshis }.reduce(0, +)
-        outputs.forEach { output in
-            tx.addInput(txHash: output.hash, index: output.index, amount: output.satoshis, script: output.script)
-        }
-
-        let pubKeyLength = key.pubKey()?.count ?? 0
-        walletManager.wallet?.feePerKb = fees.regular
-        let fee = wallet.feeForTxSize(tx.size + 34 + (pubKeyLength - 34)*tx.inputs.count)
-        balanceActivity.dismiss(animated: true, completion: {
-            guard !outputs.isEmpty && balance > 0 else {
-                return self.showErrorMessage(S.Import.Error.empty)
-            }
-            guard fee + wallet.minOutputAmount <= balance else {
-                return self.showErrorMessage(S.Import.Error.highFees)
-            }
-            guard let rate = self.currency.state?.currentRate else { return }
-            let balanceAmount = Amount(value: UInt256(balance), currency: self.currency, rate: rate)
-            let feeAmount = Amount(value: UInt256(fee), currency: self.currency, rate: rate)
-            let balanceText = Store.state.showFiatAmounts ? balanceAmount.fiatDescription : balanceAmount.tokenDescription
-            let feeText = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
-            let message = String(format: S.Import.confirm, balanceText, feeText)
-            let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-            alert.addAction(UIAlertAction(title: S.Import.importButton, style: .default, handler: { _ in
-                self.publish(tx: tx, balance: balance, fee: fee, key: key)
-            }))
-            self.present(alert, animated: true, completion: nil)
-        })
-         */
-    }
-
-    private func publish(tx: UnsafeMutablePointer<BRTransaction>, balance: UInt64, fee: UInt64, key: BRKey) {
-        /*
-        guard let wallet = walletManager.wallet, let currency = currency as? Bitcoin else { return }
-        guard let script = BRAddress(string: wallet.receiveAddress)?.scriptPubKey else { return }
-        guard walletManager.peerManager?.connectionStatus != BRPeerStatusDisconnected else { return }
-        present(importingActivity, animated: true, completion: {
-            tx.addOutput(amount: balance - fee, script: script)
-            var keys = [key]
-            _ = tx.sign(forkId: currency.forkId, keys: &keys)
-                guard tx.isSigned else {
-                    self.importingActivity.dismiss(animated: true, completion: {
-                        self.showErrorMessage(S.Import.Error.signing)
-                    })
-                    return
-                }
-                self.walletManager.peerManager?.publishTx(tx, completion: { [weak self] _, error in
-                    guard let myself = self else { return }
-                    myself.importingActivity.dismiss(animated: true, completion: {
-                        DispatchQueue.main.async {
-                            if let error = error {
-                                myself.showErrorMessage(error.localizedDescription)
-                                return
-                            }
-                            myself.showSuccess()
-                        }
-                    })
-                })
-        })
-         */
     }
 
     private func showSuccess() {
         Store.perform(action: Alert.Show(.sweepSuccess(callback: { [weak self] in
             guard let myself = self else { return }
-            myself.dismiss(animated: true, completion: nil)
+            myself.dismiss(animated: true)
         })))
     }
 
