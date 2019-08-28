@@ -501,6 +501,13 @@ class ModalPresenter: Subscriber, Trackable {
             bchItems.append(MenuItem(title: S.Settings.sync, callback: {
                 menuNav.pushViewController(ReScanViewController(currency: bch), animated: true)
             }))
+            //TODO:CRYPTO_V2 - add bch importing once blockchaindb supports it
+//            bchItems.append(MenuItem(title: S.Settings.importTile, callback: {
+//                menuNav.dismiss(animated: true, completion: { [unowned self] in
+//                    self.presentKeyImport(wallet: bchWallet)
+//                })
+//            }))
+            
         }
         var bchMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.instance?.name ?? "Bitcoin Cash"), subMenu: bchItems, rootNav: menuNav)
         bchMenu.shouldShow = { return !bchItems.isEmpty }
@@ -896,7 +903,7 @@ class ModalPresenter: Subscriber, Trackable {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(wallet: wallet, initialQRCode: scanResult)
+        let start = ImportKeyViewController(wallet: wallet, initialQRCode: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: wallet.currency)

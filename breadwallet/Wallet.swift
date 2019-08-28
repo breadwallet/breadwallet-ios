@@ -44,7 +44,7 @@ class Wallet {
         return core.manager.network.fees.sorted(by: { $0.timeIntervalInMilliseconds > $1.timeIntervalInMilliseconds})
     }
     
-    private func feeForLevel(level: FeeLevel) -> NetworkFee {
+    func feeForLevel(level: FeeLevel) -> NetworkFee {
         assert(fees.count == 3) //TODO:CRYPTO_V2 - support a dynamic number of fee tiers when supported by BlockchainDB
         return fees[level.rawValue]
     }
@@ -120,6 +120,10 @@ class Wallet {
 
     func submitTransfer(_ transfer: Transfer, seedPhrase: String) {
         core.manager.submit(transfer: transfer, paperKey: seedPhrase)
+    }
+    
+    public func createSweeper(forKey key: Key, completion: @escaping (Result<WalletSweeper, WalletSweeperError>) -> Void ) {
+        core.manager.createSweeper(wallet: core, key: key, completion: completion)
     }
 
     // MARK: Event Subscriptions
