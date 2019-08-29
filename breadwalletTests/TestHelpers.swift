@@ -76,7 +76,7 @@ struct Currencies {
         let associations = Network.Association (baseUnit: BTC_SATOSHI,
                                                 defaultUnit: BTC_BTC,
                                                 units: Set (arrayLiteral: BTC_SATOSHI, BTC_BTC))
-        let fee = NetworkFee (timeInternalInMilliseconds: 30 * 1000,
+        let fee = NetworkFee (timeIntervalInMilliseconds: 30 * 1000,
                               pricePerCostFactor: BRCrypto.Amount.create(integer: 1000, unit: BTC_SATOSHI))
         let network = Network (uids: "bitcoin-mainnet",
                                name: "bitcoin-name",
@@ -101,7 +101,7 @@ struct Currencies {
         let associations = Network.Association (baseUnit: BCH_SATOSHI,
                                                 defaultUnit: BCH_BCH,
                                                 units: Set (arrayLiteral: BCH_SATOSHI, BCH_BCH))
-        let fee = NetworkFee (timeInternalInMilliseconds: 30 * 1000,
+        let fee = NetworkFee (timeIntervalInMilliseconds: 30 * 1000,
                               pricePerCostFactor: BRCrypto.Amount.create(integer: 1000, unit: BCH_SATOSHI))
         let network = Network (uids: "bitcoin-cash-mainnet",
                                name: "bitcoin-cash-name",
@@ -135,7 +135,7 @@ struct Currencies {
         let BRD_associations = Network.Association (baseUnit: brd_brdi,
                                                     defaultUnit: brd_brd,
                                                     units: Set (arrayLiteral: brd_brdi, brd_brd))
-        let fee = NetworkFee (timeInternalInMilliseconds: 1000,
+        let fee = NetworkFee (timeIntervalInMilliseconds: 1000,
                               pricePerCostFactor: Amount.create(double: 2.0, unit: ETH_GWEI))
         
         let network = Network (uids: "ethereum-mainnet",

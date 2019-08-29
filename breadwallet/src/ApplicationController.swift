@@ -135,22 +135,25 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Initialize the core system with an account
     private func setupSystem(with account: Account) {
-        startBackendServices()
-        coreSystem.create(account: account)
-        
-        //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
-        modalPresenter = ModalPresenter(keyStore: keyStore,
-                                        system: coreSystem,
-                                        window: window)
-        
-        // deep link handling
-        urlController = URLController(walletAuthenticator: keyStore)
-        if let url = launchURL {
-            _ = urlController?.handleUrl(url)
-            launchURL = nil
+        authenticateWithBackend { jwt in
+            guard let jwt = jwt else { return assertionFailure() }
+            self.startBackendServices()
+            self.coreSystem.create(account: account, authToken: jwt)
+            
+            //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
+            self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
+                                                 system: self.coreSystem,
+                                                 window: self.window)
+            
+            // deep link handling
+            self.urlController = URLController(walletAuthenticator: self.keyStore)
+            if let url = self.launchURL {
+                _ = self.urlController?.handleUrl(url)
+                self.launchURL = nil
+            }
+            
+            self.connect()
         }
-        
-        connect()
     }
     
     /// background init of assets / animations
@@ -260,6 +263,21 @@ class ApplicationController: Subscriber, Trackable {
         Backend.apiClient.analytics?.onWalletReady()
         if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isPushNotificationsEnabled {
             pigeonExchange.startPolling()
+        }
+    }
+
+    private func authenticateWithBackend(completion: @escaping (String?) -> Void) {
+        //TODO:CRYPTO optimize for new/recovered wallets by pre-fetching auth token during pin entry
+        let bdbAuthClient = AuthenticationClient(baseURL: URL(string: "https://\(C.bdbHost)")!, urlSession: URLSession.shared)
+        keyStore.authenticateWithBlockchainDB(client: bdbAuthClient) { result in
+            switch result {
+            case .success(let jwt):
+                assert(!jwt.isExpired)
+                completion(jwt.token)
+            case .failure(let error):
+                print("[BDB] authentication failure: \(error)")
+                assertionFailure()
+            }
         }
     }
     
