@@ -132,7 +132,7 @@ struct WalletState {
     let currency: Currency
     let wallet: Wallet?
     let displayOrder: Int // -1 for hidden
-    let syncProgress: Double
+    let syncProgress: Float
     let syncState: SyncState
     let balance: Amount?
     let lastBlockTimestamp: UInt32 //TODO:CRYPTO remove
@@ -157,7 +157,7 @@ struct WalletState {
     }
 
     func mutate(    displayOrder: Int? = nil,
-                    syncProgress: Double? = nil,
+                    syncProgress: Float? = nil,
                     syncState: SyncState? = nil,
                     balance: Amount? = nil,
                     lastBlockTimestamp: UInt32? = nil,
