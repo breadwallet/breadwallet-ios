@@ -9,7 +9,7 @@
 import UIKit
 import LocalAuthentication
 
-class BiometricsSettingsViewController: UIViewController, Subscriber {
+class BiometricsSettingsViewController: UIViewController, Subscriber, Trackable {
 
     lazy var biometricType = LAContext.biometricType()
         
@@ -48,7 +48,10 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
     private var hasSetInitialValueForUnlockToggle = false
     private var hasSetInitialValueForTransactions = false
     
-    init() {
+    private var walletAuthenticator: WalletAuthenticator
+    
+    init(_ walletAuthenticator: WalletAuthenticator) {
+        self.walletAuthenticator = walletAuthenticator
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -149,47 +152,22 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
         unlockTitleLabel.text = unlockTitleText
         transactionsTitleLabel.text = transactionsTitleText
         
-        // listen for changes to the default/unlock biometrics setting
-        Store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: { [weak self] in
-            guard let `self` = self else { return }
-            
-            self.unlockToggle.isOn = $0.isBiometricsEnabled
-            
-            // The transactions toggle is controlled by on/off state of the unlock toggle.
-            // That is, the transactions toggle can only be ON and enabled if the unlock toggle is ON.
-            if !$0.isBiometricsEnabled {
-                self.transactionsToggle.isEnabled = false
-                self.transactionsToggle.setOn(false, animated: true)
-            } else {
-                self.transactionsToggle.isEnabled = true
-            }
-            
-            if !self.hasSetInitialValueForUnlockToggle {
-                self.hasSetInitialValueForUnlockToggle = true
-                self.unlockToggle.sendActions(for: .valueChanged)
-            }
-        })
-
-        // listen for changes to the transactions biometrics setting
-        Store.subscribe(self, selector: { $0.isBiometricsEnabledForTransactions != $1.isBiometricsEnabledForTransactions }, callback: { [weak self] in
-            guard let `self` = self else { return }
-            
-            self.transactionsToggle.isOn = $0.isBiometricsEnabledForTransactions
-            
-            if !self.hasSetInitialValueForTransactions {
-                self.hasSetInitialValueForTransactions = true
-                self.transactionsToggle.sendActions(for: .valueChanged)
-            }
-        })
+        unlockToggle.isOn = walletAuthenticator.isBiometricsEnabledForUnlocking
+        transactionsToggle.isOn = walletAuthenticator.isBiometricsEnabledForTransactions
+        transactionsToggle.isEnabled = unlockToggle.isOn
         
         unlockToggle.valueChanged = { [weak self] in
             guard let `self` = self else { return }
             self.toggleChanged(toggle: self.unlockToggle)
+            self.saveEvent("event.enableBiometrics",
+                           attributes: ["isEnabled": "\(self.unlockToggle.isOn)", "type": "unlock"])
         }
         
         transactionsToggle.valueChanged = { [weak self] in
             guard let `self` = self else { return }
             self.toggleChanged(toggle: self.transactionsToggle)
+            self.saveEvent("event.enableBiometrics",
+                           attributes: ["isEnabled": "\(self.transactionsToggle.isOn)", "type": "sending"])
         }
     }
 
@@ -200,14 +178,16 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
             // i.e., Only allow Touch/Face ID for sending transactions if the user has enabled Touch/Face ID
             // for unlocking the app.
             if !toggle.isOn {
-                Store.perform(action: Biometrics.SetIsEnabledForUnlocking(false))
-                Store.perform(action: Biometrics.SetIsEnabledForTransactions(false))
+                self.walletAuthenticator.isBiometricsEnabledForUnlocking = false
+                self.walletAuthenticator.isBiometricsEnabledForTransactions = false
+                
+                self.transactionsToggle.setOn(false, animated: true)
             } else {
                 if LAContext.canUseBiometrics || E.isSimulator {
                     
                     LAContext.checkUserBiometricsAuthorization(callback: { (result) in
                         if result == .success {
-                            Store.perform(action: Biometrics.SetIsEnabledForUnlocking(true))
+                            self.walletAuthenticator.isBiometricsEnabledForUnlocking = true
                         } else {
                             self.unlockToggle.setOn(false, animated: true)
                         }
@@ -219,8 +199,10 @@ class BiometricsSettingsViewController: UIViewController, Subscriber {
                 }
             }
             
+            self.transactionsToggle.isEnabled = self.unlockToggle.isOn
+            
         } else if toggle == transactionsToggle {
-            Store.perform(action: Biometrics.SetIsEnabledForTransactions(toggle.isOn))
+            self.walletAuthenticator.isBiometricsEnabledForTransactions = toggle.isOn
         }
     }
     
