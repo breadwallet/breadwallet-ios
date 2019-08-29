@@ -179,6 +179,15 @@ public extension Data {
         return CoreCoder.base58.encode(data: self)
     }
 
+    // https://tools.ietf.org/html/rfc4648#section-5
+    var base64url: String {
+        var result = self.base64EncodedString()
+        result = result.replacingOccurrences(of: "+", with: "-")
+        result = result.replacingOccurrences(of: "/", with: "_")
+        result = result.replacingOccurrences(of: "=", with: "")
+        return result
+    }
+
     var sha1: Data {
         return CoreHasher.sha1.hash(data: self)
     }
@@ -220,7 +229,7 @@ public extension Data {
     
     // MARK: Sign / Encrypt
 
-    /// Returns the signature by signing `self` with `key`
+    /// Returns the signature by signing `self` with `key`, using secp256k1_ecdsa_sign_recoverable
     func compactSign(key: Key) -> Data {
         return CoreSigner.compact.sign(data32: self, using: key)
     }
@@ -340,6 +349,17 @@ public extension Date {
     func RFC1123String() -> String? {
         return Date.RFC1123DateFormatter().string(from: self)
     }
+}
+
+extension DateFormatter {
+    static let iso8601Full: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }
 
 // MARK: -

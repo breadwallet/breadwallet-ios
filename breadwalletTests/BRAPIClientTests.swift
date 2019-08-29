@@ -10,79 +10,25 @@ import XCTest
 @testable import breadwallet
 import BRCrypto
 
-class FakeAuthenticator: WalletAuthenticator {
-    
-    var isBiometricsEnabledForUnlocking: Bool = false
-    var isBiometricsEnabledForTransactions: Bool = false
-    
-    var apiUserAccount: [AnyHashable : Any]?
-    let apiAuthKey: Key?
-    var userAccount: [AnyHashable: Any]? = nil
-
-    init() {
-        let (phrase, _) = Account.generatePhrase(words: bip39Words)!
-        apiAuthKey = Key.createForBIP32ApiAuth(phrase: phrase, words: bip39Words)
-    }
-
-    var noWallet: Bool { return false }
-
-    // not used
-    
-    var creationTime: Date { return Date(timeIntervalSinceReferenceDate: C.bip39CreationTime) }
-
-    var pinLoginRequired: Bool { return false }
-    var pinLength: Int { assertionFailure(); return 0 }
-
-    var walletDisabledUntil: TimeInterval { return TimeInterval() }
-
-    func authenticate(withPin: String) -> Bool {
-        assertionFailure()
-        return false
-    }
-
-    func authenticate(withPhrase: String) -> Bool {
-        assertionFailure()
-        return false
-    }
-
-    func authenticate(withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
-        assertionFailure()
-        completion(.failure)
-    }
-
-    func loadAccount() -> Result<Account, AccountError> {
-        return .failure(.noAccount)
-    }
-    
-    func createAccount(withPin: String) -> Account? {
-        return nil
-    }
-    
-    func createAccount(withBiometricsPrompt: String, completion: @escaping (Account?) -> Void) {
-        completion(nil)
-    }
-
-    func buildBitIdKey(url: String, index: Int) -> Key? {
-        assertionFailure()
-        return nil
-    }
-}
-
 // This test will test against the live API at api.breadwallet.com
 class BRAPIClientTests: XCTestCase {
-    var authenticator: WalletAuthenticator!
+    var authenticator: WalletAuthenticator { return keyStore as WalletAuthenticator }
     var client: BRAPIClient!
+    private var keyStore: KeyStore!
     
     override func setUp() {
         super.setUp()
-        authenticator = FakeAuthenticator() // each test will get its own account
+        clearKeychain()
+        keyStore = try! KeyStore.create()
+        _ = setupNewAccount(keyStore: keyStore) // each test will get its own account
         client = BRAPIClient(authenticator: authenticator)
     }
     
     override func tearDown() {
         super.tearDown()
-        authenticator = nil
         client = nil
+        clearKeychain()
+        keyStore.destroy()
     }
     
     func testPublicKeyEncoding() {
@@ -105,6 +51,39 @@ class BRAPIClientTests: XCTestCase {
             XCTAssertEqual(resp?.statusCode, 200)
             exp.fulfill()
         }.resume()
+        waitForExpectations(timeout: 30, handler: nil)
+    }
+    
+    func testBlockchainDBAuthentication() {
+        let baseUrl = "https://api.blockset.com"
+        let authClient = AuthenticationClient(baseURL: URL(string: baseUrl)!,
+                                              urlSession: URLSession.shared)
+
+        //let deviceId = UUID().uuidString
+        let exp = expectation(description: "auth")
+
+        authenticator.authenticateWithBlockchainDB(client: authClient) { result in
+            switch result {
+            case .success(let jwt):
+                XCTAssertFalse(jwt.isExpired)
+                let token = jwt.token
+                // test authenticated request
+                var req = URLRequest(url: URL(string: "\(baseUrl)/blockchains")!)
+                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                req.setValue("application/json", forHTTPHeaderField: "Accept")
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                URLSession.shared.dataTask(with: req) { (data, response, error) in
+                    XCTAssertNil(error)
+                    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode ?? 0, 200)
+                    print("response: \(data != nil ? String(data: data!, encoding: .utf8)! : "none")")
+                    exp.fulfill()
+                    }.resume()
+            case .failure(let error):
+                XCTFail("BDB authentication error: \(error)")
+                exp.fulfill()
+            }
+        }
+
         waitForExpectations(timeout: 30, handler: nil)
     }
 }

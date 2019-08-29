@@ -54,8 +54,9 @@ class AssetCollectionTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        clearKeychain()
+        try! client?.kv?.rmdb()
         keyStore.destroy()
+        clearKeychain()
     }
     
     func testInitWithDefaultAssets() {
@@ -65,7 +66,7 @@ class AssetCollectionTests: XCTestCase {
     }
     
     func testMigrationFromOldIndex() {
-        //TODO
+        //TODO:CRYPTO
     }
     
     func testModifyingAssetList() {
