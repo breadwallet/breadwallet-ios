@@ -105,7 +105,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         func joinPath(_ k: String...) -> URL {
             return URL(string: ([baseUrl] + k).joined(separator: ""))!
         }
-        
+
         if let args = args {
             return joinPath(path + "?" + args.map({
                 "\($0.0.urlEscapedString)=\($0.1.urlEscapedString)"

@@ -12,7 +12,6 @@ import BRCrypto
 class CoreSystem: Subscriber {
     
     private var system: System?
-    private let backend: BlockChainDB
 
     private let queue = DispatchQueue(label: "com.brd.CoreSystem")
 
@@ -26,12 +25,6 @@ class CoreSystem: Subscriber {
     fileprivate var currencies = [BRCrypto.Currency: Currency]()
 
     init() {
-        self.backend = BlockChainDB(session: Backend.apiClient.session,
-                                    apiBaseURL: Backend.apiClient.baseUrl,
-                                    apiDataTaskFunc: { (_, request, completion) -> URLSessionDataTask in
-                                        Backend.apiClient.dataTaskWithRequest(request, authenticated: true, handler: completion)
-        })
-        
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
             guard let btc = Currencies.btc.instance,
                 let btcWalletManager = self?.wallet(for: btc)?.core.manager else { return }
@@ -88,16 +81,31 @@ class CoreSystem: Subscriber {
     // MARK: Lifecycle
 
     // create -- on launch w/ acount present and wallet unlocked
-    func create(account: Account) {
+    func create(account: Account, authToken: String) {
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
         print("[SYS] create")
         queue.async {
             assert(self.system == nil)
+            
+            //TODO:CRYPTO cleanup
+            let backend = BlockChainDB(session: URLSession.shared,
+                                       bdbBaseURL: "https://\(C.bdbHost)",
+                                       bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
+                    var req = request
+                    req.authorize(withToken: authToken)
+                    //TODO:CRYPTO does not handle 401, other headers, redirects
+                    return session.dataTask(with: req, completionHandler: completion)
+            },
+                                       apiBaseURL: "https://\(C.backendHost)",
+                                       apiDataTaskFunc: { (_, req, completion) -> URLSessionDataTask in
+                    return Backend.apiClient.dataTaskWithRequest(req, authenticated: true, retryCount: 0, handler: completion)
+            })
+            
             self.system = System(listener: self,
                                  account: account,
                                  onMainnet: !E.isTestnet,
                                  path: C.coreDataDirURL.path,
-                                 query: self.backend)
+                                 query: backend)
             Backend.apiClient.getCurrencyMetaData { currencyMetaData in
                 self.assetCollection = AssetCollection(kvStore: kvStore,
                                                        allTokens: currencyMetaData,
