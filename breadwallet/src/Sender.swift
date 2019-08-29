@@ -46,7 +46,7 @@ class Sender: Subscriber {
     let wallet: Wallet
     private let kvStore: BRReplicatedKVStore
     private let authenticator: TransactionAuthenticator
-
+    
     private var comment: String?
     private var transfer: BRCrypto.Transfer?
 
@@ -62,7 +62,7 @@ class Sender: Subscriber {
     }
 
     var canUseBiometrics: Bool {
-        return UserDefaults.isBiometricsEnabledForTransactions
+        return authenticator.isBiometricsEnabledForTransactions
     }
 
     // MARK: Init

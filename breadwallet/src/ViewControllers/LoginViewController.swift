@@ -62,6 +62,10 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var isResetting = false
     private let context: Context
 
+    var isBiometricsEnabledForUnlocking: Bool {
+        return self.keyMaster.isBiometricsEnabledForUnlocking
+    }
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -243,7 +247,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var shouldUseBiometrics: Bool {
-        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabledForUnlocking
+        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && isBiometricsEnabledForUnlocking
     }
 
     @objc func biometricsTapped() {

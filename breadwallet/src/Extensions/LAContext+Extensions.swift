@@ -55,6 +55,12 @@ extension LAContext {
     }
     
     static func checkUserBiometricsAuthorization(callback: @escaping (BiometricsAuthResult) -> Void) {
+        
+        if E.isSimulator {
+            callback(.success)
+            return
+        }
+        
         let context = LAContext()
         
         _ = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)

@@ -11,6 +11,8 @@ import UIKit
 import LocalAuthentication
 import BRCrypto
 
+// swiftlint:disable unused_setter_value
+
 private var WalletSecAttrService: String {
     if E.isRunningTests { return "com.brd.testnetQA.tests" }
     #if TESTNET
@@ -53,6 +55,9 @@ protocol WalletAuthenticator {
     var pinLength: Int { get }
     var walletDisabledUntil: TimeInterval { get }
     var walletIsDisabled: Bool { get }
+
+    var isBiometricsEnabledForUnlocking: Bool { get set }
+    var isBiometricsEnabledForTransactions: Bool { get set }
 
     func authenticate(withPin: String) -> Bool
     func authenticate(withPhrase: String) -> Bool
@@ -213,6 +218,60 @@ extension KeyStore: WalletAuthenticator {
     private var serializedAccountData: Data? {
         return try? keychainItem(key: KeychainKey.systemAccount)
     }
+    
+    // MARK: biometrics authentication
+    
+    /// Returns whether the user can unlock the BRD app with biometrics (Touch ID or Face ID) rather than
+    /// requiring PIN entry.
+    var isBiometricsEnabledForUnlocking: Bool {
+        get {
+            var enabled = false
+            
+            do {
+                if let value: Int64 = try keychainItem(key: KeychainKey.biometricsUnlocking) {
+                    enabled = (value == Int64(1))
+                } else {
+                    // One-time migration check for the legacy setting since there was no value in the keystore.
+                    if UserDefaults.isBiometricsEnabled {
+                        UserDefaults.deprecateLegacyBiometricsSetting()
+                        try setKeychainItem(key: KeychainKey.biometricsUnlocking, item: Int64(1))
+                        enabled = true
+                    } else {
+                        try setKeychainItem(key: KeychainKey.biometricsUnlocking, item: Int64(0))
+                    }
+                }
+            } catch {}
+            
+            return enabled
+        }
+        
+        set {
+            do {
+                try setKeychainItem(key: KeychainKey.biometricsUnlocking, item: newValue ? Int64(1) : Int64(0))
+            } catch {}
+        }
+    }
+    
+    /// Returns whether the user can authorize transactions with biometrics (Touch ID or Face ID) rather
+    /// than requiring PIN entry.
+    var isBiometricsEnabledForTransactions: Bool {
+        get {
+            var enabled = false
+            
+            do {
+                let value: Int64 = try keychainItem(key: KeychainKey.biometricsTransactions) ?? Int64(0)
+                enabled = (value == Int64(1))
+            } catch {}
+            
+            return enabled
+        }
+        
+        set {
+            do {
+                try setKeychainItem(key: KeychainKey.biometricsTransactions, item: newValue ? Int64(1) : Int64(0))
+            } catch {}
+        }
+    }
 
     // MARK: - Keys
 
@@ -266,7 +325,7 @@ extension KeyStore: WalletAuthenticator {
             }
         }
     }
-
+    
     // MARK: - Login
 
     /// Login with pin should be required if the pin hasn't been used within a week
@@ -474,7 +533,7 @@ extension KeyStore: TransactionAuthenticator {
                        wallet: BRCrypto.Wallet,
                        withBiometricsPrompt biometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void) {
-        guard UserDefaults.isBiometricsEnabledForTransactions else {
+        guard self.isBiometricsEnabledForTransactions else {
             return completion(.failure)
         }
         Store.perform(action: BiometricsActions.SetIsPrompting(true))
@@ -660,6 +719,7 @@ extension KeyStore {
 // MARK: -
 
 struct NoAuthWalletAuthenticator: WalletAuthenticator {
+    
     var apiUserAccount: [AnyHashable: Any]?
     
     var noWallet: Bool { return true }
@@ -667,6 +727,9 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
     var apiAuthKey: Key? { return nil }
     var userAccount: [AnyHashable: Any]?
 
+    var isBiometricsEnabledForUnlocking: Bool = false
+    var isBiometricsEnabledForTransactions: Bool = false
+    
     var pinLoginRequired: Bool { return false }
     var pinLength: Int { assertionFailure(); return 0 }
 
@@ -711,6 +774,8 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
 // MARK: - Keychain Support
 
 private struct KeychainKey {
+    public static let biometricsUnlocking = "biometricsUnlocking"
+    public static let biometricsTransactions = "biometricsTransactions"
     public static let mnemonic = "mnemonic"
     public static let creationTime = "creationtime"
     public static let pin = "pin"
