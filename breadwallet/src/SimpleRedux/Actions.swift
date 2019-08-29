@@ -70,7 +70,7 @@ struct WalletChange: Trackable {
         self.currency = currency
     }
     
-    func setProgress(progress: Double, timestamp: UInt32) -> WalletAction {
+    func setProgress(progress: Float, timestamp: UInt32) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
