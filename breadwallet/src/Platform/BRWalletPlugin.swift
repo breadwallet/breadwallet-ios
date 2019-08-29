@@ -86,7 +86,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                         asyncResp.provide(200, json: ["authenticated": true])
                     } else {
                         self.isPresentingAuth = true
-                        if UserDefaults.isBiometricsEnabled {
+                        if self.walletAuthenticator.isBiometricsEnabledForUnlocking {
                             asyncResp.provide(200, json: ["error": "proxy-shutdown"])
                         }
                         Store.trigger(name: .authenticateForPlatform(prompt, true, { [weak self] result in

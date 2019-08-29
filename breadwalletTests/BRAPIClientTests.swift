@@ -12,6 +12,9 @@ import BRCrypto
 
 class FakeAuthenticator: WalletAuthenticator {
     
+    var isBiometricsEnabledForUnlocking: Bool = false
+    var isBiometricsEnabledForTransactions: Bool = false
+    
     var apiUserAccount: [AnyHashable : Any]?
     let apiAuthKey: Key?
     var userAccount: [AnyHashable: Any]? = nil

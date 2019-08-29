@@ -144,27 +144,6 @@ enum Alert {
     }
 }
 
-enum Biometrics {
-    
-    struct SetIsEnabledForUnlocking: Action, Trackable {
-        let reduce: Reducer
-        init(_ isBiometricsEnabled: Bool) {
-            UserDefaults.isBiometricsEnabled = isBiometricsEnabled
-            reduce = { $0.mutate(isBiometricsEnabled: isBiometricsEnabled) }
-            saveEvent("event.enableBiometrics", attributes: ["isEnabled": "\(isBiometricsEnabled)", "type": "unlock"])
-        }
-    }
-    
-    struct SetIsEnabledForTransactions: Action, Trackable {
-        let reduce: Reducer
-        init(_ isBiometricsEnabledForTransactions: Bool) {
-            UserDefaults.isBiometricsEnabledForTransactions = isBiometricsEnabledForTransactions
-            reduce = { $0.mutate(isBiometricsEnabledForTransactions: isBiometricsEnabledForTransactions) }
-            saveEvent("event.enableBiometrics", attributes: ["isEnabled": "\(isBiometricsEnabledForTransactions)", "type": "sending"])
-        }
-    }
-}
-
 enum DefaultCurrency {
     struct SetDefault: Action, Trackable {
         let reduce: Reducer

@@ -48,7 +48,7 @@ class ModalPresenter: Subscriber, Trackable {
     private let wipeNavigationDelegate: StartNavigationDelegate
 
     private let system: CoreSystem //TODO:CRYPTO hack
-
+    
     private func addSubscriptions() {
 
         Store.lazySubscribe(self,
@@ -916,7 +916,7 @@ class ModalPresenter: Subscriber, Trackable {
     // MARK: - Prompts
 
     func presentBiometricsMenuItem() {
-        let biometricsSettings = BiometricsSettingsViewController()
+        let biometricsSettings = BiometricsSettingsViewController(self.keyStore)
         biometricsSettings.addCloseNavigationItem(tintColor: .white)
         let nc = ModalNavigationController(rootViewController: biometricsSettings)
         nc.setWhiteStyle()
@@ -1042,9 +1042,9 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-    
+
     private func authenticateForPlatform(prompt: String, allowBiometricAuth: Bool, callback: @escaping (PlatformAuthResult) -> Void) {
-        if UserDefaults.isBiometricsEnabled && allowBiometricAuth {
+        if allowBiometricAuth && keyStore.isBiometricsEnabledForUnlocking {
             keyStore.authenticate(withBiometricsPrompt: prompt, completion: { result in
                 switch result {
                 case .success:
