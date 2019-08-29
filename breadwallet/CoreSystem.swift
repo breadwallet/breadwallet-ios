@@ -371,11 +371,11 @@ extension CoreSystem: SystemListener {
                     }
                 }
 
-            case .syncProgress(let percentComplete):
+            case .syncProgress(let timestamp, let percentComplete):
                 DispatchQueue.main.async {
                     manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
-                        //TODO:CRYPTO - add timestamp
-                        //Store.perform(action: WalletChange($0).setProgress(progress: percentComplete/100.0, timestamp: 0))
+                        let seconds = UInt32(timestamp?.timeIntervalSince1970 ?? 0)
+                        Store.perform(action: WalletChange($0).setProgress(progress: percentComplete, timestamp: seconds))
                     }
                 }
 
