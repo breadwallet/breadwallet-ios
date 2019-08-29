@@ -174,7 +174,6 @@ extension Wallet {
             break
         case .transferSubmitted:
             assertionFailure("this is working now, remove the hack in handleTransferEvent")
-            break
 
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
@@ -196,7 +195,7 @@ extension Wallet {
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
             publishEvent(.transferSubmitted(transfer: transfer, success: true))
         }
-        if case .changed(_, let new) = event, case .failed(let reason) = new {
+        if case .changed(_, let new) = event, case .failed(_) = new {
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
             publishEvent(.transferSubmitted(transfer: transfer, success: false))
         }
