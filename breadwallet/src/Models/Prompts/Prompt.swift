@@ -215,7 +215,9 @@ extension Prompt {
     func shouldPrompt(walletAuthenticator: WalletAuthenticator?) -> Bool {
         switch type {
         case .biometrics:
-            return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
+            guard !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics else { return false }
+            guard let authenticator = walletAuthenticator, !authenticator .isBiometricsEnabledForUnlocking else { return false }
+            return true
         case .paperKey:
             return UserDefaults.walletRequiresBackup && !UserDefaults.debugShouldSuppressPaperKeyPrompt
         case .upgradePin:

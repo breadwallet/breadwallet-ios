@@ -34,21 +34,23 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
         self.pinAuthenticationType = pinAuthenticationType
         self.pinView = PinView(style: .verify, length: pinLength)
         self.walletAuthenticator = walletAuthenticator
-
+        
+        let showBiometrics = VerifyPinViewController.shouldShowBiometricsOnPinPad(for: pinAuthenticationType, authenticator: walletAuthenticator)
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .pinPad,
                                            maxDigits: 0,
-                                           shouldShowBiometrics: VerifyPinViewController.shouldShowBiometricsOnPinPad(for: pinAuthenticationType))
-
+                                           shouldShowBiometrics: showBiometrics)
+        
         super.init(nibName: nil, bundle: nil)
     }
-
-    private static func shouldShowBiometricsOnPinPad(for authenticationType: PinAuthenticationType) -> Bool {
+    
+    private static func shouldShowBiometricsOnPinPad(for authenticationType: PinAuthenticationType,
+                                                     authenticator: WalletAuthenticator) -> Bool {
         switch authenticationType {
         case .transactions:
-            return Store.state.isBiometricsEnabledForTransactions
+            return authenticator.isBiometricsEnabledForTransactions
         case .unlocking:
-            return Store.state.isBiometricsEnabledForUnlocking
+            return authenticator.isBiometricsEnabledForUnlocking
         default:
             return false
         }
@@ -69,7 +71,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
     private let bodyText: String
     private let pinLength: Int
     private let walletAuthenticator: WalletAuthenticator
-
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -159,7 +161,7 @@ class VerifyPinViewController: UIViewController, ContentBoxPresenter {
     }
 
     private func setUpBiometricsAuthentication() {
-        if VerifyPinViewController.shouldShowBiometricsOnPinPad(for: self.pinAuthenticationType) {
+        if VerifyPinViewController.shouldShowBiometricsOnPinPad(for: self.pinAuthenticationType, authenticator: self.walletAuthenticator) {
             self.pinPad.didTapBiometrics = { [weak self] in
                 guard let `self` = self else { return }
                 self.walletAuthenticator.authenticate(withBiometricsPrompt: "biometrics", completion: { (result) in

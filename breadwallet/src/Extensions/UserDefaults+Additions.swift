@@ -122,42 +122,18 @@ extension UserDefaults {
         return s
     }
     
-    // Gets/sets whether the user can use biometrics for unlocking the app
-    static var isBiometricsEnabledForUnlocking: Bool {
-        get {
-            return isBiometricsEnabled
+    // Legacy setting for biometrics allowing unlocking the app. This is checked when migrating from
+    // UserDefaults to KeyStore for storing the biometrics authorization.
+    static var isBiometricsEnabled: Bool {
+        guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
+            return false
         }
-        set {
-            isBiometricsEnabled = newValue
-        }
+        return defaults.bool(forKey: isBiometricsEnabledKey)
     }
     
-    // Gets/sets whether the user can send transactions by authorizing with biometrics.
-    static var isBiometricsEnabledForTransactions: Bool {
-        get {
-            guard defaults.object(forKey: isBiometricsEnabledForTransactionsKey) != nil else {
-                return false
-            }
-            return defaults.bool(forKey: isBiometricsEnabledForTransactionsKey)
-        }
-        set {
-            defaults.set(newValue, forKey: isBiometricsEnabledForTransactionsKey)
-        }
-    }
-
-    // Legacy setting for biometrics allowing unlocking the app and sending transactions up to a
-    // certain 'spending limit.' This var is wrapped by 'isBiometricsEnabledForUnlocking' and
-    // retained in the code for backward compatibility.
-    static var isBiometricsEnabled: Bool {
-        get {
-            guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
-                return false
-            }
-            return defaults.bool(forKey: isBiometricsEnabledKey)
-        }
-        set { 
-            defaults.set(newValue, forKey: isBiometricsEnabledKey)
-        }
+    // Deprecates legacy biometrics setting after migrating the settings to KeyStore.
+    static func deprecateLegacyBiometricsSetting() {
+        defaults.set(nil, forKey: isBiometricsEnabledKey)
     }
 
     static var defaultCurrencyCode: String {
