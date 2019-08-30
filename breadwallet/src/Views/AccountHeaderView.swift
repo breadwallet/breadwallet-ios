@@ -172,8 +172,12 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
 
         modeLabel.isHidden = true
 
-        if E.isTestnet && !E.isScreenshots {
-            modeLabel.text = "(Testnet)"
+        if (E.isDebug || E.isTestFlight) && !E.isScreenshots {
+            var modeName = ""
+            if let mode = currency.wallet?.core.manager.mode {
+                modeName = "\(mode)"
+            }
+            modeLabel.text = "\(modeName) \(E.isTestnet ? "(Testnet)" : "")"
             modeLabel.isHidden = false
         }
 

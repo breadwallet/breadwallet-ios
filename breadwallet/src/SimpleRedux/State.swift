@@ -17,8 +17,6 @@ struct State {
     let isPushNotificationsEnabled: Bool
     let isPromptingBiometrics: Bool
     let pinLength: Int
-    let accountName: String
-    let creationDate: Date
     let walletID: String?
     let wallets: [String: WalletState]
     
@@ -64,8 +62,6 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
-                        accountName: S.AccountHeader.defaultWalletName,
-                        creationDate: Date.zeroValue(),
                         walletID: nil,
                         wallets: [:]
         )
@@ -80,8 +76,6 @@ extension State {
                    isPushNotificationsEnabled: Bool? = nil,
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
-                   accountName: String? = nil,
-                   creationDate: Date? = nil,
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil) -> State {
         return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
@@ -92,8 +86,6 @@ extension State {
                      isPushNotificationsEnabled: isPushNotificationsEnabled ?? self.isPushNotificationsEnabled,
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
-                     accountName: accountName ?? self.accountName,
-                     creationDate: creationDate ?? self.creationDate,
                      walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets)
     }
@@ -130,7 +122,7 @@ enum SyncState {
 
 struct WalletState {
     let currency: Currency
-    let wallet: Wallet?
+    weak var wallet: Wallet?
     let displayOrder: Int // -1 for hidden
     let syncProgress: Float
     let syncState: SyncState

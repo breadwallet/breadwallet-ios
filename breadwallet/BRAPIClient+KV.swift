@@ -12,17 +12,11 @@ private var kvKey: UInt8 = 0
 
 extension BRAPIClient {
     var kv: BRReplicatedKVStore? {
-        return lazyAssociatedObject(self, key: &kvKey) {
-            var kv: BRReplicatedKVStore?
-            if let key = self.authKey {
-                kv = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: self))
-            }
-            return kv
-        }
+        return Backend.kvStore
     }
 }
 
-private class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
+class KVStoreAdaptor: BRRemoteKVStoreAdaptor {
     let client: BRAPIClient
     
     init(client: BRAPIClient) {

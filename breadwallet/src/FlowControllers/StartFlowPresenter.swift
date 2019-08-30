@@ -148,17 +148,33 @@ class StartFlowPresenter: Subscriber, Trackable {
         self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
     }
 
-    private func pushPinCreationViewForRecoveredWallet(account: Account) {
+    private func pushPinCreationViewForRecoveredWallet(recoveredAccount: Account) {
+        var account = recoveredAccount
+        let group = DispatchGroup()
+
+        group.enter()
+        keyMaster.fetchCreationDate(for: account) { updatedAccount in
+            account = updatedAccount
+            group.leave()
+        }
+
+        group.enter()
+        let activity = BRActivityViewController(message: "")
         let pinCreationView = UpdatePinViewController(keyMaster: self.keyMaster,
                                                       type: .creationNoPhrase,
                                                       showsBackButton: false)
         pinCreationView.setPinSuccess = { _ in
-            DispatchQueue.main.async {
-                self.onboardingCompletionHandler?(account)
-                self.dismissStartFlow()
-            }
+            group.leave()
+            pinCreationView.present(activity, animated: true)
+
         }
         self.navigationController?.pushViewController(pinCreationView, animated: true)
+
+        group.notify(queue: DispatchQueue.main) {
+            activity.dismiss(animated: true)
+            self.onboardingCompletionHandler?(account)
+            self.dismissStartFlow()
+        }
     }
     
     // MARK: Create Wallet
@@ -166,14 +182,13 @@ class StartFlowPresenter: Subscriber, Trackable {
     private func enterCreateWalletFlow() {
         let pinCreationViewController = UpdatePinViewController(keyMaster: keyMaster,
                                                                 type: .creationNoPhrase,
-                                                                showsBackButton: true,
+                                                                showsBackButton: false,
                                                                 phrase: nil,
                                                                 eventContext: .onboarding)
         pinCreationViewController.setPinSuccess = { [unowned self] pin in
             autoreleasepool {
                 guard let (_, account) = self.keyMaster.setRandomSeedPhrase() else { self.handleWalletCreationError(); return }
                 UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation //TODO:CRYPTO no longer used
-                Store.perform(action: AccountChange.SetCreationDate(self.keyMaster.creationTime)) //TODO:CRYPTO is this needed?
                 DispatchQueue.main.async {
                     self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: .onboarding)
                     self.onboardingCompletionHandler?(account)

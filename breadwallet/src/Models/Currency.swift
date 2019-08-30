@@ -26,7 +26,7 @@ class Currency: CurrencyWithIcon {
     }
 
     let core: BRCrypto.Currency
-    private let network: BRCrypto.Network
+    let network: BRCrypto.Network
 
     var uid: String { /*assert(core.uids == metaData.uid);*/ return metaData.uid } //TODO:CRYPTO
     /// Ticker code (e.g. BTC) -- assumed to be unique
