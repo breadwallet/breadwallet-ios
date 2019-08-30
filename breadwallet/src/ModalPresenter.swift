@@ -460,6 +460,18 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Bitcoin Menu
         var btcItems: [MenuItem] = []
         if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
+            // Connection
+            btcItems.append(MenuItem(title: S.WalletConnectionSettings.title) {
+                guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
+                    return assertionFailure()
+                }
+                let connectionSettings = WalletConnectionSettings(system: self.system,
+                                                                  kvStore: kv,
+                                                                  walletInfo: walletInfo)
+                let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings)
+                menuNav.pushViewController(connectionSettingsVC, animated: true)
+            })
+
             // Rescan
             btcItems.append(MenuItem(title: S.Settings.sync, callback: {
                 menuNav.pushViewController(ReScanViewController(currency: btc), animated: true)
@@ -884,9 +896,10 @@ class ModalPresenter: Subscriber, Trackable {
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
+        Store.perform(action: Reset())
         self.system.shutdown {
-            Backend.disconnectWallet()
             let success = self.keyStore.wipeWallet()
+            Backend.disconnectWallet()
             DispatchQueue.main.async {
                 activity.dismiss(animated: true) {
                     guard success else { // unexpected error writing to keychain

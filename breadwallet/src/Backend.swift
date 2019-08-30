@@ -21,8 +21,10 @@ class Backend {
     // MARK: - Private
     
     private var apiClient: BRAPIClient
+    private var kvStore: BRReplicatedKVStore?
     private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
+    private var eventManager: EventManager?
     private let userAgentFetcher = UserAgentFetcher()
     
     // MARK: - Public
@@ -36,11 +38,15 @@ class Backend {
     }
     
     static var kvStore: BRReplicatedKVStore? {
-        return shared.apiClient.kv
+        return shared.kvStore
     }
     
     static var pigeonExchange: PigeonExchange? {
         return shared.pigeonExchange
+    }
+
+    static var eventManager: EventManager? {
+        return shared.eventManager
     }
     
     static func updateExchangeRates() {
@@ -58,15 +64,21 @@ class Backend {
     // MARK: Setup
     
     static func connect(authenticator: WalletAuthenticator) {
+        guard let key = authenticator.apiAuthKey else { return assertionFailure() }
         shared.apiClient = BRAPIClient(authenticator: authenticator)
+        shared.kvStore = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: shared.apiClient))
         shared.pigeonExchange = PigeonExchange()
         shared.exchangeUpdater = ExchangeUpdater()
+        shared.eventManager = EventManager(adaptor: shared.apiClient)
     }
     
     /// Disconnect backend services and reset API auth
     static func disconnectWallet() {
+        URLCache.shared.removeAllCachedResponses()
+        shared.eventManager = nil
         shared.exchangeUpdater = nil
         shared.pigeonExchange = nil
+        shared.kvStore = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())
     }
 }
