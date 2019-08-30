@@ -49,7 +49,8 @@ class AssetCollectionTests: XCTestCase {
         deleteKvStoreDb()
         keyStore = try! KeyStore.create()
         _ = setupNewAccount(keyStore: keyStore)
-        client = BRAPIClient(authenticator: keyStore)
+        Backend.connect(authenticator: keyStore)
+        client = Backend.apiClient
     }
     
     override func tearDown() {

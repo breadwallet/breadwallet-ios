@@ -119,6 +119,8 @@ protocol KeyMaster: WalletAuthenticator {
     /// will fail if a wallet already exists on the keychain
     func setRandomSeedPhrase() -> (phrase: String, account: Account)?
 
+    func fetchCreationDate(for recoveredAccount: Account, completion: @escaping (Account) -> Void)
+
     /// wipes the existing wallet (keys, recovery phrase) from the keychain and the KV store database.
     /// this should only be called through Store.trigger(.wipeWalletNoPrompts)
     func wipeWallet() -> Bool
@@ -718,7 +720,6 @@ extension KeyStore: KeyMaster {
             guard let nfkdPhrase = CFStringCreateMutableCopy(secureAllocator, 0, phrase as CFString)
                 else { return nil }
             CFStringNormalize(nfkdPhrase, .KD)
-            //TODO:CRYPTO is there a way to get KV-store creation time in case of wallet recovery? (this is not a new issue, pre-multichain behaved the same I believe)
             guard let account = Account.createFrom(phrase: nfkdPhrase as String,
                                                    timestamp: creationTime,
                                                    uids: UserDefaults.deviceID) else { return nil }
@@ -746,6 +747,42 @@ extension KeyStore: KeyMaster {
                 return (phrase, account)
             }
         } catch { return nil }
+    }
+
+    /// connects to the backend with the recovered account to fetch the original creation date from the KV-store.
+    /// if found, a new Account is created with the given seed phrase and retrieved creation date.
+    /// otherwise the original Account is returned.
+    func fetchCreationDate(for recoveredAccount: Account, completion: @escaping (Account) -> Void) {
+        assert(!Backend.isConnected)
+        do {
+            guard try keychainItem(key: KeychainKey.pin) as String? == nil else { preconditionFailure() }
+            Backend.connect(authenticator: self)
+            guard let kv = Backend.kvStore else { return completion(recoveredAccount) }
+
+            try kv.syncKey(WalletInfo.key) { error in
+                guard error == nil, let walletInfo = WalletInfo(kvStore: kv) else {
+                    print("[KEY] account timestamp not found in KV-store")
+                    return completion(recoveredAccount)
+                }
+                guard walletInfo.creationDate > recoveredAccount.timestamp else {
+                    print("[KEY] account timestamp in KV-store is invalid: \(walletInfo.creationDate)")
+                    return completion(recoveredAccount)
+                }
+                do {
+                    guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic),
+                        let newAccount = Account.createFrom(phrase: phrase,
+                                                            timestamp: walletInfo.creationDate,
+                                                            uids: UserDefaults.deviceID) else { return completion(recoveredAccount) }
+
+                    print("[KEY] restored account timestamp from KV-store: \(walletInfo.creationDate)")
+                    try setKeychainItem(key: KeychainKey.systemAccount, item: newAccount.serialize)
+                    let creationTimeInterval = walletInfo.creationDate.timeIntervalSinceReferenceDate
+                    try setKeychainItem(key: KeychainKey.creationTime,
+                                        item: [creationTimeInterval].withUnsafeBufferPointer { Data(buffer: $0) })
+                    completion(newAccount)
+                } catch { return completion(recoveredAccount) }
+            }
+        } catch { return completion(recoveredAccount) }
     }
 
     // MARK: PIN
@@ -806,6 +843,7 @@ extension KeyStore: KeyMaster {
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
             }
+            assert(Backend.kvStore != nil || E.isRunningTests)
             try Backend.kvStore?.rmdb()
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.systemAccount, item: nil as Data?)

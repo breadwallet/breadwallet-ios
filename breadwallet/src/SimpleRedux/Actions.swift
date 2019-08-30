@@ -190,18 +190,3 @@ enum WalletID {
         }
     }
 }
-
-enum AccountChange {
-    struct SetName: Action {
-        let reduce: Reducer
-        init(_ name: String) {
-            reduce = { $0.mutate(accountName: name) }
-        }
-    }
-    struct SetCreationDate: Action {
-        let reduce: Reducer
-        init(_ date: Date) {
-            reduce = { $0.mutate(creationDate: date) }
-        }
-    }
-}

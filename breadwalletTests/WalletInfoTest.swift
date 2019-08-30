@@ -7,8 +7,8 @@
 //
 
 import XCTest
+import BRCrypto
 @testable import breadwallet
-@testable import BRCrypto
 
 class WalletInfoTest : XCTestCase {
 
@@ -21,11 +21,13 @@ class WalletInfoTest : XCTestCase {
         deleteKvStoreDb()
         keyStore = try! KeyStore.create()
         _ = setupNewAccount(keyStore: keyStore)
-        client = BRAPIClient(authenticator: keyStore)
+        Backend.connect(authenticator: keyStore)
+        client = Backend.apiClient
     }
 
     override func tearDown() {
         super.tearDown()
+        Backend.disconnectWallet()
         clearKeychain()
         keyStore.destroy()
     }
@@ -34,16 +36,23 @@ class WalletInfoTest : XCTestCase {
         // 1. Create new wallet info
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletName = "New Wallet"
-        let _ = try? kv.set(WalletInfo(name: walletName))
+        let creationDate = Date()
+        let connectionModes = [Currencies.btc.uid: WalletManagerMode.p2p_only.serialization,
+                               Currencies.eth.uid: WalletManagerMode.api_only.serialization]
+        let walletInfo = WalletInfo(name: walletName)
+        walletInfo.creationDate = creationDate
+        walletInfo.connectionModes = connectionModes
+        let _ = try? kv.set(walletInfo)
         let exp = expectation(description: "sync all")
 
         // 2. Sync new wallet info to server
         kv.syncAllKeys { error in
 
             // 3. Delete Kv Store and simulate restore wallet
-            self.client = nil
+            Backend.disconnectWallet()
             deleteKvStoreDb()
-            self.client = BRAPIClient(authenticator: self.keyStore)
+            Backend.connect(authenticator: self.keyStore)
+            self.client = Backend.apiClient
             guard let newKv = self.client?.kv else { XCTFail("KV store should exist"); return }
 
             // 4. Fetch wallet info from remote
@@ -51,7 +60,9 @@ class WalletInfoTest : XCTestCase {
                 XCTAssertNil(error, "Sync Error should be nil")
                 // 5. Verify fetched wallet info
                 if let info = WalletInfo(kvStore: newKv){
-                    XCTAssert(info.name == walletName, "Wallet name should match")
+                    XCTAssertEqual(info.name, walletName)
+                    XCTAssertEqual(info.creationDate.timeIntervalSinceReferenceDate, creationDate.timeIntervalSinceReferenceDate)
+                    XCTAssertEqual(info.connectionModes, connectionModes)
                 } else {
                     XCTFail("Wallet info should exist")
                 }

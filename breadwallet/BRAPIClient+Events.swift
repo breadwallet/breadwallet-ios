@@ -102,9 +102,7 @@ extension BRAPIClient {
     
     // This is accessed by the ApplicationController once there is a valid wallet.
     var eventManager: EventManager? {
-        return lazyAssociatedObject(self, key: &emKey) {
-            return EventManager(adaptor: self)
-        }
+        return Backend.eventManager
     }
     
     func saveEvent(_ eventName: String) {
