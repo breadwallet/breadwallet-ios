@@ -260,7 +260,6 @@ extension Amount: Equatable, Comparable {
     }
 
     static func - (lhs: Amount, rhs: Amount) -> Amount {
-        //TODO:CRYPTO
         return Amount(cryptoAmount: (lhs.cryptoAmount - rhs.cryptoAmount) ?? lhs.cryptoAmount,
                       currency: lhs.currency,
                       rate: lhs.rate,
@@ -269,7 +268,6 @@ extension Amount: Equatable, Comparable {
     }
 
     static func + (lhs: Amount, rhs: Amount) -> Amount {
-        //TODO:CRYPTO
         return Amount(cryptoAmount: (lhs.cryptoAmount + rhs.cryptoAmount) ?? lhs.cryptoAmount,
                       currency: lhs.currency,
                       rate: lhs.rate,

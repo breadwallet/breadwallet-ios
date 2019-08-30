@@ -72,7 +72,9 @@ class SyncingHeaderView: UIView, Subscriber {
                             self.syncState = syncState
         })
         
-        Store.subscribe(self, selector: { $0[self.currency]?.syncProgress != $1[self.currency]?.syncProgress },
+        Store.subscribe(self, selector: { $0[self.currency]?.syncProgress != $1[self.currency]?.syncProgress ||
+            $0[self.currency]?.lastBlockTimestamp != $1[self.currency]?.lastBlockTimestamp
+        },
                         callback: {
                             self.lastBlockTimestamp = $0[self.currency]?.lastBlockTimestamp ?? 0
                             if let progress = $0[self.currency]?.syncProgress {
