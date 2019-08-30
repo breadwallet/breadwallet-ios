@@ -28,14 +28,14 @@ class Currency: CurrencyWithIcon {
     let core: BRCrypto.Currency
     let network: BRCrypto.Network
 
-    var uid: String { /*assert(core.uids == metaData.uid);*/ return metaData.uid } //TODO:CRYPTO
-    /// Ticker code (e.g. BTC) -- assumed to be unique
+    /// Unique identifier from BlockchainDB
+    var uid: String { assert(core.uids == metaData.uid); return metaData.uid }
+    /// Ticker code (e.g. BTC)
     var code: String { return core.code.uppercased() }
     /// Display name (e.g. Bitcoin)
-    var name: String { return core.name }
+    var name: String { return metaData.name }
 
     var tokenType: TokenType {
-        //TODO:CYRPTO - remove lowercased() compare
         guard let type = TokenType(rawValue: core.type.lowercased()) else { assertionFailure("unknown token type"); return .unknown }
         return type
     }
@@ -87,7 +87,6 @@ class Currency: CurrencyWithIcon {
     var colors: (UIColor, UIColor) { return metaData.colors }
     /// False if a token has been delisted, true otherwise
     var isSupported: Bool { return metaData.isSupported }
-    var defaultRate: Double? { return metaData.defaultRate }
     var tokenAddress: String? { return metaData.tokenAddress }
     
     // MARK: URI
@@ -211,7 +210,6 @@ public struct CurrencyMetaData: CurrencyWithIcon {
     let isSupported: Bool
     let colors: (UIColor, UIColor)
     let name: String
-    var defaultRate: Double? { return nil } //TODO:CRYPTO
     var tokenAddress: String?
     
     var isPreferred: Bool {
@@ -219,15 +217,12 @@ public struct CurrencyMetaData: CurrencyWithIcon {
     }
 
     enum CodingKeys: String, CodingKey {
+        case uid = "currency_id"
         case code
         case isSupported = "is_supported"
         case colors
         case tokenAddress = "contract_address"
         case name
-        //        case type
-        //        case decimals = "scale"
-        //        case saleAddress = "sale_address"
-        //        case defaultRate = "contract_initial_value"
     }
 }
 
@@ -235,7 +230,14 @@ extension CurrencyMetaData: Codable {
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        uid = try container.decode(String.self, forKey: .code).lowercased() //TODO:CRYPTO update to use backend-provided uid matching BDB currency uids
+        //TODO:CRYPTO temp hack until testnet support to added /currencies endpoint (BAK-318)
+        var uid = try container.decode(String.self, forKey: .uid)
+        if E.isTestnet {
+            uid = uid.replacingOccurrences(of: "mainnet", with: "testnet")
+            uid = uid.replacingOccurrences(of: "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6", with: "0x7108ca7c4718efa810457f228305c9c71390931a") // BRD token
+            uid = uid.replacingOccurrences(of: "ethereum-testnet", with: "ethereum-ropsten")
+        }
+        self.uid = uid //try container.decode(String.self, forKey: .uid)
         code = try container.decode(String.self, forKey: .code)
         var colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
@@ -282,17 +284,22 @@ enum Currencies: String, CaseIterable {
     case brd
     case dai
     case tusd
-    case xrp
     
     var code: String { return rawValue }
     var uid: String {
         switch self {
-        //TODO:CRYPTO BDB UID will become network name, e.g. "bitcoin-mainnet" -- see https://gitlab.com/breadwallet/blockchain-db/merge_requests/68
+        case .btc:
+            return "bitcoin-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+        case .bch:
+            return "bitcoincash-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+        case .eth:
+            return "ethereum-\(E.isTestnet ? "ropsten" : "mainnet"):__native__"
         case .brd:
-            // return E.isMainnet ? "ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6"" : "ethereum-testnet:0x7108ca7c4718efa810457f228305c9c71390931a"
-            return rawValue
-        default:
-            return rawValue
+            return "ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6"
+        case .dai:
+            return "ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+        case .tusd:
+            return "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
         }
     }
     

@@ -42,9 +42,9 @@ class WalletConnectionSettingsTests: XCTestCase {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletInfo = WalletInfo(name: "Test") // empty WalletInfo with no saved modes
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
-        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [Currencies.btc: .p2p_only,
-                                                                      Currencies.bch: .p2p_only,
-                                                                      Currencies.eth: .api_only]
+        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .p2p_only,
+                                                                      TestCurrencies.bch: .p2p_only,
+                                                                      TestCurrencies.eth: .api_only]
 
         expectedDefaultModes.forEach { (currency, expectedMode) in
             XCTAssertEqual(WalletConnectionSettings.defaultMode(for: currency), expectedMode)
@@ -56,33 +56,33 @@ class WalletConnectionSettingsTests: XCTestCase {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletInfo = WalletInfo(name: "Test")
         // init with non-default modes
-        let connectionModes = [Currencies.btc.uid: WalletManagerMode.api_only,
-                               Currencies.eth.uid: WalletManagerMode.api_with_p2p_submit]
+        let connectionModes = [TestCurrencies.btc.uid: WalletManagerMode.api_only,
+                               TestCurrencies.eth.uid: WalletManagerMode.api_with_p2p_submit]
         walletInfo.connectionModes = connectionModes.mapValues { $0.serialization }
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
 
         // verify stored modes are returned
-        XCTAssertEqual(settings.mode(for: Currencies.btc), connectionModes[Currencies.btc.uid])
-        XCTAssertEqual(settings.mode(for: Currencies.eth), connectionModes[Currencies.eth.uid])
+        XCTAssertEqual(settings.mode(for: TestCurrencies.btc), connectionModes[TestCurrencies.btc.uid])
+        XCTAssertEqual(settings.mode(for: TestCurrencies.eth), connectionModes[TestCurrencies.eth.uid])
 
         // verify default is returned for currency with no set mode
-        XCTAssertEqual(settings.mode(for: Currencies.bch), WalletConnectionSettings.defaultMode(for: Currencies.bch))
+        XCTAssertEqual(settings.mode(for: TestCurrencies.bch), WalletConnectionSettings.defaultMode(for: TestCurrencies.bch))
     }
 
     func testChangingModes() {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletInfo = WalletInfo(name: "Test")
         // init with non-default modes
-        let connectionModes = [Currencies.btc.uid: WalletManagerMode.p2p_only,
-                               Currencies.eth.uid: WalletManagerMode.api_only]
+        let connectionModes = [TestCurrencies.btc.uid: WalletManagerMode.p2p_only,
+                               TestCurrencies.eth.uid: WalletManagerMode.api_only]
         walletInfo.connectionModes = connectionModes.mapValues { $0.serialization }
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
 
-        settings.set(mode: .api_only, for: Currencies.btc)
-        settings.set(mode: .api_with_p2p_submit, for: Currencies.eth)
+        settings.set(mode: .api_only, for: TestCurrencies.btc)
+        settings.set(mode: .api_with_p2p_submit, for: TestCurrencies.eth)
 
-        XCTAssertEqual(settings.mode(for: Currencies.btc), WalletManagerMode.api_only)
-        XCTAssertEqual(settings.mode(for: Currencies.eth), WalletManagerMode.api_with_p2p_submit)
+        XCTAssertEqual(settings.mode(for: TestCurrencies.btc), WalletManagerMode.api_only)
+        XCTAssertEqual(settings.mode(for: TestCurrencies.eth), WalletManagerMode.api_with_p2p_submit)
     }
 
 }

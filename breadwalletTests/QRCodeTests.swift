@@ -22,25 +22,25 @@ class QRCodeTests: XCTestCase {
         assertInvalidQRCode(fromContent: "ethereum:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v") // bch
         
         // BTC
-        assertPaymentRequest(fromContent: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", currency: Currencies.btc) // P2PKH
-        assertPaymentRequest(fromContent: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", currency: Currencies.btc) // SegWit
-        assertPaymentRequest(fromContent: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: Currencies.btc) // bech32
-        assertPaymentRequest(fromContent: "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment&label=Satoshi", currency: Currencies.btc)
+        assertPaymentRequest(fromContent: "1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", currency: TestCurrencies.btc) // P2PKH
+        assertPaymentRequest(fromContent: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", currency: TestCurrencies.btc) // SegWit
+        assertPaymentRequest(fromContent: "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: TestCurrencies.btc) // bech32
+        assertPaymentRequest(fromContent: "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2&message=Payment&label=Satoshi", currency: TestCurrencies.btc)
         
-        assertPaymentRequest(fromContent: "bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", currency: Currencies.btc) // P2PKH
-        assertPaymentRequest(fromContent: "bitcoin:3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", currency: Currencies.btc) // SegWit
-        assertPaymentRequest(fromContent: "bitcoin:bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: Currencies.btc) // bech32
+        assertPaymentRequest(fromContent: "bitcoin:1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2", currency: TestCurrencies.btc) // P2PKH
+        assertPaymentRequest(fromContent: "bitcoin:3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", currency: TestCurrencies.btc) // SegWit
+        assertPaymentRequest(fromContent: "bitcoin:bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq", currency: TestCurrencies.btc) // bech32
 
         // BCH
-        assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
-        assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: Currencies.bch)
+        assertPaymentRequest(fromContent: "bitcoincash:qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: TestCurrencies.bch)
+        assertPaymentRequest(fromContent: "qp0k6fs6q2hzmpyps3vtwmpx80j9w0r0acmp8l6e9v", currency: TestCurrencies.bch)
         
         // ETH
-        assertPaymentRequest(fromContent: "0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
-        assertPaymentRequest(fromContent: "ethereum:0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: Currencies.eth)
+        assertPaymentRequest(fromContent: "0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: TestCurrencies.eth)
+        assertPaymentRequest(fromContent: "ethereum:0xC2D7CF95645D33006175B78989035C7c9061d3F9", currency: TestCurrencies.eth)
         
         // Payment Protocol
-        assertPaymentRequest(fromContent: "https://www.syndicoin.co/signednoroot.paymentrequest", currency: Currencies.btc)
+        assertPaymentRequest(fromContent: "https://www.syndicoin.co/signednoroot.paymentrequest", currency: TestCurrencies.btc)
     }
     
     func testPrivateKeys() {

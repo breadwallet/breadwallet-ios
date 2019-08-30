@@ -49,12 +49,8 @@ class ExchangeUpdater: Subscriber {
                 // calculate token/fiat rates
                 var tokenBtcDict = [String: Double]()
                 tokenBtcRates.forEach { tokenBtcDict[$0.reciprocalCode] = $0.rate }
-                let ethBtcRate = tokenBtcDict[Currencies.eth.code.lowercased()]
                 tokens.forEach { currency in
-                    var tokenBtcRate = tokenBtcDict[currency.code.lowercased()]
-                    if tokenBtcRate == nil, let tokenEthRate = currency.defaultRate, let ethBtcRate = ethBtcRate {
-                        tokenBtcRate = tokenEthRate * ethBtcRate
-                    }
+                    let tokenBtcRate = tokenBtcDict[currency.code.lowercased()]
                     if let tokenBtcRate = tokenBtcRate {
                         let fiatRates: [Rate] = btcFiatRates.map { btcFiatRate in
                             let tokenFiatRate = btcFiatRate.rate * tokenBtcRate

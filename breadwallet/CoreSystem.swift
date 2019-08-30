@@ -70,9 +70,8 @@ class CoreSystem: Subscriber {
         guard let assetCollection = assetCollection else { return assertionFailure() }
         for coreCurrency in network.currencies {
             guard currencies[coreCurrency] == nil else { return assertionFailure() }
-            //TODO:CRYPTO use coreCurrency.uids for indexing once they match the uids from the backend token list
-            guard let metaData = assetCollection.allAssets[coreCurrency.code.lowercased()] else {
-                print("[SYS] unknown currency omitted: \(network) \(coreCurrency.code)")
+            guard let metaData = assetCollection.allAssets[coreCurrency.uids] else {
+                print("[SYS] unknown currency omitted: \(network.currency.code) / \(coreCurrency.uids)")
                 continue
             }
             
@@ -233,6 +232,7 @@ class CoreSystem: Subscriber {
         let walletState = initializeWalletState(core: coreWallet, currency: currency, displayOrder: displayOrder)
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
+            Store.perform(action: WalletChange(currency).setSyncingState(.connecting))
             Backend.updateExchangeRates()
         }
     }
@@ -284,8 +284,7 @@ class CoreSystem: Subscriber {
     
     private func findCoreWallet(forMetaData metaData: CurrencyMetaData) -> BRCrypto.Wallet? {
         guard let system = system else { return nil }
-        //TODO:CRYPTO - use uid instead of code here once they're in the /currencies endpoint
-        guard let wallet = system.wallets.first(where: { $0.currency.code.lowercased() == metaData.code.lowercased() }) else {
+        guard let wallet = system.wallets.first(where: { $0.currency.uids == metaData.uid }) else {
             print("[SYS] Error couldn't find core wallet for: \(metaData.code).")
             return nil }
         return wallet
@@ -307,7 +306,7 @@ class CoreSystem: Subscriber {
         var inactiveManagers = [WalletManager]()
 
         for manager in managers {
-            if Set(manager.network.currencies.map { $0.code.lowercased() }).isDisjoint(with: enabledIds) { //TODO:CRYPTO use uid
+            if Set(manager.network.currencies.map { $0.uids }).isDisjoint(with: enabledIds) {
                 inactiveManagers.append(manager)
             } else {
                 activeManagers.append(manager)
@@ -329,7 +328,7 @@ class CoreSystem: Subscriber {
     private func isWalletManagerNeeded(_ manager: WalletManager) -> Bool {
         guard let assetCollection = assetCollection else { assertionFailure(); return false }
         let enabledCurrencyIds = Set(assetCollection.enabledAssets.map { $0.uid })
-        let supportedCurrencyIds = manager.network.currencies.map { $0.code.lowercased() } //TODO:CRYPTO use uid
+        let supportedCurrencyIds = manager.network.currencies.map { $0.uids }
         return !Set(supportedCurrencyIds).isDisjoint(with: enabledCurrencyIds)
     }
 }
@@ -349,7 +348,7 @@ extension CoreSystem: SystemListener {
                     print("[SYS] init \(network.isMainnet ? "mainnet" : "testnet") network: \(network)")
                     self.addCurrencies(for: network)
                     guard let currency = self.currency(forCoreCurrency: network.currency) else {
-                        print("[SYS] \(network) wallet manager not created. \(network.currency.code) not supported.")
+                        print("[SYS] \(network) wallet manager not created. \(network.currency.uids) not supported.")
                         return
                     }
                     
