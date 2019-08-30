@@ -127,7 +127,7 @@ struct WalletState {
     let syncProgress: Float
     let syncState: SyncState
     let balance: Amount?
-    let lastBlockTimestamp: UInt32 //TODO:CRYPTO remove
+    let lastBlockTimestamp: UInt32
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }

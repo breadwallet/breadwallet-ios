@@ -363,7 +363,6 @@ class ApplicationController: Subscriber, Trackable {
         homeScreen.didSelectCurrency = { [unowned self] currency in
             guard let wallet = self.coreSystem.wallet(for: currency) else { return }
             
-            //TODO:CRYPTO need a new way of checking for BRD
             if currency.isBRDToken, UserDefaults.shouldShowBRDRewardsAnimation {
                 let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
                 self.saveEvent(name, attributes: ["currency": currency.code])

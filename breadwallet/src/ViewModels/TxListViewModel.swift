@@ -45,7 +45,6 @@ struct TxListViewModel: TxViewModel {
         var amount = tx.amount
 
         if tokenTransferCode != nil {
-            //TODO:CRYPTO originating tx
             // this is the originating tx of a token transfer, so the amount is 0 but we want to show the fee
             amount = tx.fee
         }

@@ -90,6 +90,10 @@ class AssetCollection {
             assetIndex.enabledAssetIds.removeAll { allTokens[$0] == nil }
             _ = AssetCollection.save(assetIndex, kvStore: kvStore)
         }
+
+        if assetIndex.enabledAssetIds.isEmpty {
+            resetToDefaultCollection()
+        }
     }
     
     // MARK: - Public
@@ -175,11 +179,11 @@ class AssetCollection {
             } else {
                 var newKey: String?
                 switch oldKey.lowercased() {
-                case "btc":
+                case Currencies.btc.code.lowercased():
                     newKey = Currencies.btc.uid
-                case "bch":
+                case Currencies.bch.code.lowercased():
                     newKey = Currencies.bch.uid
-                case "eth":
+                case Currencies.eth.code.lowercased():
                     newKey = Currencies.eth.uid
                 default:
                     break

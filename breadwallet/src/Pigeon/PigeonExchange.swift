@@ -518,17 +518,11 @@ class PigeonExchange: Subscriber {
 
         let requestWrapper = MessageCallRequestWrapper(callRequest: request, currency: currency)
         requestWrapper.getToken { [unowned self] token in
-            var amountToReceive = ""
+            let amountToReceive = ""
             var tokenCode = ""
             if let token = token {
                 self.addTokenWallet(token: token)
                 tokenCode = token.code
-                if let rate = token.defaultRate {
-                    // exchange rate is in the currency's common units
-                    let formatter = Amount.zero(token).tokenFormat
-                    let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
-                    amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
-                }
             }
             self.apiClient.sendCheckoutEvent(status: response.status.rawValue,
                                              identifier: requestEnvelope.identifier,

@@ -12,15 +12,15 @@ import XCTest
 class AssetCollectionTests: XCTestCase {
 
     // uid, code
-    static var testTokenData = [("btc", "btc"),
-                                ("bch", "bch"),
-                                ("eth", "eth"),
-                                ("brd", "brd"),
-                                ("dai", "dai"),
-                                ("tusd", "tusd"),
-                                ("xrp", "xrp"),
-                                ("eos", "eos"),
-                                ("zrx", "zrx")]
+    static var testTokenData = [("bitcoin-mainnet:__native__", "btc"),
+                                ("bitcoincash-mainnet:__native__", "bch"),
+                                ("ethereum-mainnet:__native__", "eth"),
+                                ("ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6", "brd"),
+                                ("ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359", "dai"),
+                                ("ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376", "tusd"),
+                                ("ripple-mainnet:__native__", "xrp"),
+                                ("ethereum-mainnet:0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0", "eos"),
+                                ("ethereum-mainnet:0xE41d2489571d322189246DaFA5ebDe1F4699F498", "zrx")]
 
     
     var allTokens: [String: CurrencyMetaData] {
@@ -62,8 +62,8 @@ class AssetCollectionTests: XCTestCase {
     
     func testInitWithDefaultAssets() {
         let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
-        XCTAssert(collection.allAssets == allTokens)
-        XCTAssert(collection.availableAssets == availableAssets)
+        XCTAssertEqual(collection.allAssets, allTokens)
+        XCTAssertEqual(Set(collection.availableAssets), Set(availableAssets))
     }
     
     func testMigrationFromOldIndex() {
@@ -74,7 +74,7 @@ class AssetCollectionTests: XCTestCase {
         let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         let asset1 = collection.availableAssets.first!
         let asset2 = collection.availableAssets.last!
-        XCTAssert(collection.displayOrder(for: asset1) == nil)
+        XCTAssertNil(collection.displayOrder(for: asset1))
         
         // add
         collection.add(asset: asset1)
@@ -105,7 +105,7 @@ class AssetCollectionTests: XCTestCase {
     func testRevertChanges() {
         let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
         
-        XCTAssert(collection.availableAssets == availableAssets)
+        XCTAssertEqual(Set(collection.availableAssets), Set(availableAssets))
         
         var numAdded = 0
         
@@ -123,16 +123,16 @@ class AssetCollectionTests: XCTestCase {
         
         collection.revertChanges()
         
-        XCTAssert(collection.availableAssets == availableAssets)
+        XCTAssertEqual(Set(collection.availableAssets), Set(availableAssets))
     }
     
     
     func testResetToDefault() {
         let collection = AssetCollection(kvStore: kvStore, allTokens: allTokens, changeHandler: nil)
-        XCTAssert(collection.availableAssets == availableAssets)
+        XCTAssertEqual(Set(collection.availableAssets), Set(availableAssets))
         collection.removeAsset(at: 0)
         collection.resetToDefaultCollection()
-        XCTAssert(collection.enabledAssets.map { $0.uid } == AssetIndex.defaultCurrencyIds)
+        XCTAssertEqual(collection.enabledAssets.map { $0.uid }, AssetIndex.defaultCurrencyIds)
     }
     
     func testGetCurrencyMetaData() {
