@@ -47,8 +47,7 @@ class QRCodeTests: XCTestCase {
         let wif = "5JqvntwHyQrAKDpgF9as6Dm9NaG1HBHwAhkabw6LHwzSpCriYWG"
         let bip38 = "6PRSLTTE9u953i5Tx3vQEMtwy4d8VBrZ7BwPn6tWhWadgviU3w9XvHR6er"
         guard case QRCode.privateKey(let wifKey) = QRCode(content: wif), wifKey == wif else { return XCTFail() }
-        //TODO:CRYPTO key import
-        //guard case QRCode.privateKey(let bip38Key) = QRCode(content: bip38), bip38Key == bip38 else { return XCTFail() }
+        guard case QRCode.privateKey(let bip38Key) = QRCode(content: bip38), bip38Key == bip38 else { return XCTFail() }
     }
     
     func testPairingRequests() {

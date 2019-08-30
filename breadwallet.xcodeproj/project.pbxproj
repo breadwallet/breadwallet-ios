@@ -323,7 +323,6 @@
 		9AE8011521FFF81F00D5058C /* rewardsIcon-64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */; };
 		9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF721FE64E200D5058C /* RewardsView.swift */; };
 		9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */; };
-		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE08B2A020F667B1009FA568 /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C377EBF20F64ECE00E8CF1C /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -922,7 +921,6 @@
 		9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "rewardsIcon-64.gif"; path = "src/Views/AnimatedIcons/Rewards Icon Frames/rewardsIcon-64.gif"; sourceTree = "<group>"; };
 		9AE8FFF721FE64E200D5058C /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsView.swift; path = src/Views/RewardsView.swift; sourceTree = "<group>"; };
 		9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsIconView.swift; path = src/Views/AnimatedIcons/RewardsIconView.swift; sourceTree = "<group>"; };
-		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Pigeon.swift"; path = "src/Pigeon/BRAPIClient+Pigeon.swift"; sourceTree = "<group>"; };
@@ -1950,7 +1948,6 @@
 				7CA1C47320EC25B9002E9E68 /* QRCode.swift */,
 				CEE65DEF1E39056F0002994D /* Rate.swift */,
 				3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */,
-				CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */,
 				CE5393AF22D7CC98000303B3 /* HistoryPeriod.swift */,
 				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
 			);
@@ -2741,7 +2738,6 @@
 				22A9A9491DF61945000F0016 /* BRBSPatch.swift in Sources */,
 				CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */,
 				CEA362681E00EE320061FC0E /* CameraGuideView.swift in Sources */,
-				CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */,
 				CEDB0B0722D445DB00331FFC /* ChartView.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
