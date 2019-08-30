@@ -47,7 +47,7 @@ class ModalPresenter: Subscriber, Trackable {
     private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
-    private let system: CoreSystem //TODO:CRYPTO hack
+    private let system: CoreSystem
     
     private func addSubscriptions() {
 

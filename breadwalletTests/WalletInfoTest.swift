@@ -37,8 +37,8 @@ class WalletInfoTest : XCTestCase {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletName = "New Wallet"
         let creationDate = Date()
-        let connectionModes = [Currencies.btc.uid: WalletManagerMode.p2p_only.serialization,
-                               Currencies.eth.uid: WalletManagerMode.api_only.serialization]
+        let connectionModes = [TestCurrencies.btc.uid: WalletManagerMode.p2p_only.serialization,
+                               TestCurrencies.eth.uid: WalletManagerMode.api_only.serialization]
         let walletInfo = WalletInfo(name: walletName)
         walletInfo.creationDate = creationDate
         walletInfo.connectionModes = connectionModes
