@@ -40,6 +40,21 @@ class CoreSystem: Subscriber {
     func wallet(for currency: Currency) -> Wallet? {
         return wallets[currency.core]
     }
+
+    private func connectionMode(for currency: Currency) -> WalletConnectionMode {
+        assert(currency.tokenType == .native)
+        guard let kv = Backend.kvStore,
+            let walletInfo = WalletInfo(kvStore: kv) else {
+                assertionFailure()
+                return WalletConnectionSettings.defaultMode(for: currency)
+        }
+        let settings = WalletConnectionSettings(system: self, kvStore: kv, walletInfo: walletInfo)
+        return settings.mode(for: currency)
+    }
+
+    func isModeSupported(_ mode: WalletConnectionMode, for network: Network) -> Bool {
+        return system?.supportsMode(network: network, mode) ?? false
+    }
     
     /// Gets the balance for a wallet with matching currency ID, including wallets which are not enabled, if found
     func balance(forCurrencyWithId currencyId: String) -> Amount? {
@@ -83,7 +98,7 @@ class CoreSystem: Subscriber {
     // create -- on launch w/ acount present and wallet unlocked
     func create(account: Account, authToken: String) {
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
-        print("[SYS] create")
+        print("[SYS] create | account timestamp: \(account.timestamp)")
         queue.async {
             assert(self.system == nil)
             
@@ -136,7 +151,7 @@ class CoreSystem: Subscriber {
     // shutdown -- wallet unlinked / account removed
     func shutdown(completion: (() -> Void)?) {
         print("[SYS] shutdown / wipe")
-        queue.sync {
+        queue.async {
             guard let system = self.system else { return assertionFailure() }
             system.stop()
             self.wallets.removeAll()
@@ -231,6 +246,13 @@ class CoreSystem: Subscriber {
     }
     
     // MARK: User Wallet Management
+
+    func setConnectionMode(_ mode: WalletConnectionMode, forWalletManager wm: WalletManager) {
+        guard let system = system, system.supportsMode(network: wm.network, mode) else { return assertionFailure() }
+        wm.disconnect()
+        wm.mode = mode
+        wm.connect()
+    }
     
     func resetToDefaultCurrencies() {
         guard let assetCollection = assetCollection else { return }
@@ -323,7 +345,7 @@ extension CoreSystem: SystemListener {
 
             case .networkAdded(let network):
                 // A network was created; create the corresponding wallet manager.
-                if network.isMainnet == !E.isTestnet {
+                if network.isMainnet == !E.isTestnet && !E.isRunningTests {
                     print("[SYS] init \(network.isMainnet ? "mainnet" : "testnet") network: \(network)")
                     self.addCurrencies(for: network)
                     guard let currency = self.currency(forCoreCurrency: network.currency) else {
@@ -341,9 +363,14 @@ extension CoreSystem: SystemListener {
                     } else {
                         addressScheme = system.defaultAddressScheme(network: network)
                     }
-                    
+
+                    var mode = self.connectionMode(for: currency)
+                    if !system.supportsMode(network: network, mode) {
+                        assertionFailure("invalid wallet manager mode \(mode) for \(network.currency.code)")
+                        mode = system.defaultMode(network: network)
+                    }
                     system.createWalletManager(network: network,
-                                               mode: network.defaultManagerMode,
+                                               mode: mode,
                                                addressScheme: addressScheme)
                 }
 
@@ -457,22 +484,6 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "syncEnded(\(error ?? ""))"
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
-        }
-    }
-}
-
-//TODO:CRYPTO use user-selected mode if available
-extension Network {
-    var defaultManagerMode: WalletManagerMode {
-        switch currency.code {
-        case BRCrypto.Currency.codeAsBTC:
-            return E.isTestnet ? .api_only : .p2p_only
-        case BRCrypto.Currency.codeAsBCH:
-            return .p2p_only
-        case BRCrypto.Currency.codeAsETH:
-            return .api_only
-        default:
-            return .api_only
         }
     }
 }

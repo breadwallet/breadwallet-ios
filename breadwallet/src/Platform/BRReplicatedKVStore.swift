@@ -118,7 +118,9 @@ open class BRReplicatedKVStore: NSObject {
     open func rmdb() throws {
         try dispatch_sync_throws(dbQueue) {
             try self.checkErr(sqlite3_close(self.db), s: "rmdb - close")
-            try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            if FileManager.default.fileExists(atPath: BRReplicatedKVStore.dbPath.path) {
+                try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            }
             self.db = nil
         }
     }

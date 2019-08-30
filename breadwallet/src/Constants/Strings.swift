@@ -365,6 +365,12 @@ enum S {
         static let toggleLabel = NSLocalizedString("ShareData.toggleLabel", value:"Share Anonymous Data?", comment: "Share data switch label.")
     }
 
+    enum WalletConnectionSettings {
+        static let title = NSLocalizedString("WalletConnectionSettings.title", value:"Connection Mode", comment: "Face ID settings view title")
+        static let explanatoryText = NSLocalizedString("WalletConnectionSettings.explanatoryText", value: "Sync your Bitcoin wallet instantly.\nPowered by BlockchainDB.", comment: "Explanation for wallet connection setting")
+        static let switchLabel = NSLocalizedString("WalletConnectionSettings.switchLabel", value:"Instant Sync (experimental)", comment: "Connection mode switch label.")
+    }
+
     enum ConfirmPaperPhrase {
         static let word = NSLocalizedString("ConfirmPaperPhrase.word", value:"Word #%1$@", comment: "Word label eg. Word #1, Word #2")
         static let label = NSLocalizedString("ConfirmPaperPhrase.label", value:"To make sure everything was written down correctly, please enter the following words from your paper key.", comment: "Confirm paper phrase view label.")

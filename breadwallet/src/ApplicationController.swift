@@ -138,6 +138,7 @@ class ApplicationController: Subscriber, Trackable {
         authenticateWithBackend { jwt in
             guard let jwt = jwt else { return assertionFailure() }
             self.startBackendServices()
+            self.setWalletInfo(account: account)
             self.coreSystem.create(account: account, authToken: jwt)
             
             //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
@@ -151,8 +152,21 @@ class ApplicationController: Subscriber, Trackable {
                 _ = self.urlController?.handleUrl(url)
                 self.launchURL = nil
             }
-            
-            self.connect()
+
+            // WalletInfo contains the connection mode options and is needed before connecting the System
+            if let kv = Backend.kvStore, WalletInfo(kvStore: kv) == nil {
+                print("[KV] syncing WalletInfo")
+                do {
+                    try kv.syncKey(WalletInfo.key) { _ in
+                        self.connect()
+                    }
+                } catch let error {
+                    print("[KV] error syncing WalletInfo: \(error.localizedDescription)")
+                    self.connect()
+                }
+            } else {
+                self.connect()
+            }
         }
     }
     
@@ -261,9 +275,15 @@ class ApplicationController: Subscriber, Trackable {
         Backend.connect(authenticator: keyStore as WalletAuthenticator)
         Backend.sendLaunchEvent()
         Backend.apiClient.analytics?.onWalletReady()
-        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isPushNotificationsEnabled {
-            pigeonExchange.startPolling()
-        }
+    }
+
+    /// Initialize WalletInfo in KV-store. Needed prior to creating the System.
+    private func setWalletInfo(account: Account) {
+        guard let kvStore = Backend.kvStore, WalletInfo(kvStore: kvStore) == nil else { return }
+        print("[KV] created new WalletInfo")
+        let walletInfo = WalletInfo(name: S.AccountHeader.defaultWalletName)
+        walletInfo.creationDate = account.timestamp
+        _ = try? kvStore.set(walletInfo)
     }
 
     private func authenticateWithBackend(completion: @escaping (String?) -> Void) {
@@ -283,15 +303,22 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Fetch updates from backend services.
     private func fetchBackendUpdates() {
-        Backend.kvStore?.syncAllKeys { error in
-            print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
+        DispatchQueue.global(qos: .utility).async {
+            Backend.kvStore?.syncAllKeys { error in
+                print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
+                if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
+                    if !Store.state.isLoginRequired {
+                        pigeonExchange.fetchInbox()
+                    }
+                    if !Store.state.isPushNotificationsEnabled {
+                        pigeonExchange.startPolling()
+                    }
+                }
+            }
         }
         Backend.apiClient.updateFeatureFlags()
         Backend.updateExchangeRates()
         Backend.apiClient.fetchAnnouncements()
-        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isLoginRequired {
-            pigeonExchange.fetchInbox()
-        }
     }
     
     private func updateAssetBundles() {
