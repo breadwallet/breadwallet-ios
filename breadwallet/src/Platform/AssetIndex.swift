@@ -35,7 +35,7 @@ class AssetIndex: BRKVStoreObject, Codable {
         var bytes: [UInt8]
         do {
             (ver, date, del, bytes) = try kvStore.get(AssetIndex.key)
-            print("[KV] loading asset index...")
+            print("[KV] loading asset index ver:\(ver)...")
         } catch let e {
             print("[KV] unable to load asset index: \(e)")
             return nil

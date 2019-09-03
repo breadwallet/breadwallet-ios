@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// View model for the AssetCollectionIndex KV-store object and the list of all tokens
-class AssetCollection {
+class AssetCollection: Subscriber {
     typealias AssetCollectionChangeHandler = () -> Void
     
     /// All known tokens
@@ -49,27 +49,32 @@ class AssetCollection {
         let assetIndex = AssetIndex(kvStore: kvStore)
             ?? AssetCollection.migrateFromOldIndex(allTokens: allTokens, kvStore: kvStore)
             ?? AssetCollection.setupInitialAssetCollection(kvStore: kvStore)
+
+        var saveRequired = false
         
         if assetIndex.enabledAssetIds.isEmpty {
             print("[KV] asset index is empty. creating new index.")
             assetIndex.resetToDefault()
-            _ = AssetCollection.save(assetIndex, kvStore: kvStore)
+            saveRequired = true
         }
         
         self.init(kvStore: kvStore,
                   allTokens: allTokens,
                   assetIndex: assetIndex,
-                  changeHandler: changeHandler)
+                  changeHandler: changeHandler,
+                  saveRequired: saveRequired)
     }
     
     private init(kvStore: BRReplicatedKVStore,
                  allTokens: [String: CurrencyMetaData],
                  assetIndex: AssetIndex,
-                 changeHandler: AssetCollectionChangeHandler?) {
+                 changeHandler: AssetCollectionChangeHandler?,
+                 saveRequired: Bool) {
         self.kvStore = kvStore
         self.allAssets = allTokens
         self.assetIndex = assetIndex
         self.didChangeAssets = changeHandler
+        self.hasUnsavedChanges = saveRequired
         
         var foundUnsupportedTokens = false
         
@@ -88,12 +93,29 @@ class AssetCollection {
             // remove unsupported token entries from the KV store
             print("[KV] removing unsupported tokens from asset index")
             assetIndex.enabledAssetIds.removeAll { allTokens[$0] == nil }
-            _ = AssetCollection.save(assetIndex, kvStore: kvStore)
+            hasUnsavedChanges = true
         }
 
         if assetIndex.enabledAssetIds.isEmpty {
             resetToDefaultCollection()
         }
+        if hasUnsavedChanges {
+            _ = save()
+        }
+        
+        Store.subscribe(self, name: .didSyncKVStore) { _ in
+            if let newAssetIndex = AssetIndex(kvStore: self.kvStore), newAssetIndex.version > self.assetIndex.version {
+                assert(self.hasUnsavedChanges == false)
+                print("[KV] asset index reloaded")
+                self.assetIndex = newAssetIndex
+                self.revertChanges()
+                self.didChangeAssets?()
+            }
+        }
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
     }
     
     // MARK: - Public
@@ -158,7 +180,6 @@ class AssetCollection {
     private static func setupInitialAssetCollection(kvStore: BRReplicatedKVStore) -> AssetIndex {
         print("[KV] creating new asset index")
         let newAssetIndex = AssetIndex() // sets the default currencies/networks
-        _ = save(newAssetIndex, kvStore: kvStore)
         return newAssetIndex
     }
 
@@ -195,31 +216,15 @@ class AssetCollection {
         
         let newAssetIndex = AssetIndex()
         newAssetIndex.enabledAssetIds = oldIndex.enabledCurrencies.compactMap { migrate(oldKey: $0) }
-        _ = AssetCollection.save(newAssetIndex, kvStore: kvStore)
         
         return newAssetIndex
     }
 
     private func save() -> Bool {
         do {
-            _ = try kvStore.set(assetIndex)
-            try kvStore.syncKey(AssetIndex.key, completionHandler: { _ in
-                // saving increments the version number, reload to get latest
-                if let newAssetIndex = AssetIndex(kvStore: self.kvStore) {
-                    self.assetIndex = newAssetIndex
-                }
-            })
-            return true
-        } catch let error {
-            print("[KV] error setting asset index: \(error)")
-            return false
-        }
-    }
-    
-    private static func save(_ index: AssetIndex, kvStore: BRReplicatedKVStore) -> Bool {
-        do {
-            _ = try kvStore.set(index)
-            try kvStore.syncKey(AssetIndex.key, completionHandler: {_ in })
+            guard let newAssetIndex = try kvStore.set(assetIndex) as? AssetIndex else { assertionFailure(); return false }
+            self.assetIndex = newAssetIndex
+            hasUnsavedChanges = false
             return true
         } catch let error {
             print("[KV] error setting asset index: \(error)")

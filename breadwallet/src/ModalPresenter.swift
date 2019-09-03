@@ -656,15 +656,6 @@ class ModalPresenter: Subscriber, Trackable {
                                                 _ = UserDefaults.toggleAutoEnterPIN()
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
-
-                if E.isSimulator {
-                    developerItems.append(MenuItem(title: "Copy Simulator Documents Dir Path",
-                                                   callback: {
-                                                    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.path
-                                                    UIPasteboard.general.string = documentsPath
-                                                    Store.trigger(name: .lightWeightAlert(S.Receive.copied))
-                    }))
-                }
             }
             
             // For test wallets, suppresses the paper key prompt on the home screen.
@@ -693,7 +684,8 @@ class ModalPresenter: Subscriber, Trackable {
             // Shows a preview of the paper key.
             if let paperKey = self.keyStore.seedPhrase(pin: "111111") {
                 let words = paperKey.components(separatedBy: " ")
-                let preview = "\(words[0]) \(words[1])..."
+                let timestamp = (try? self.keyStore.loadAccount().map { $0.timestamp }.get()) ?? Date.zeroValue()
+                let preview = "\(words[0]) \(words[1])... (\(DateFormatter.mediumDateFormatter.string(from: timestamp))"
                 developerItems.append(MenuItem(title: "Paper key preview",
                                                accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" },
                                                callback: {

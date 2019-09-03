@@ -234,7 +234,7 @@ extension CurrencyMetaData: Codable {
         var uid = try container.decode(String.self, forKey: .uid)
         if E.isTestnet {
             uid = uid.replacingOccurrences(of: "mainnet", with: "testnet")
-            uid = uid.replacingOccurrences(of: "0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6", with: "0x7108ca7c4718efa810457f228305c9c71390931a") // BRD token
+            uid = uid.replacingOccurrences(of: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6", with: "0x7108ca7c4718efa810457f228305c9c71390931a") // BRD token
             uid = uid.replacingOccurrences(of: "ethereum-testnet", with: "ethereum-ropsten")
         }
         self.uid = uid //try container.decode(String.self, forKey: .uid)
@@ -295,7 +295,7 @@ enum Currencies: String, CaseIterable {
         case .eth:
             return "ethereum-\(E.isTestnet ? "ropsten" : "mainnet"):__native__"
         case .brd:
-            return "ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6"
+            return "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
         case .dai:
             return "ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
         case .tusd:

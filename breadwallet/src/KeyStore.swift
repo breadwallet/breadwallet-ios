@@ -739,11 +739,11 @@ extension KeyStore: KeyMaster {
             // wrapping in an autorelease pool ensures sensitive memory is wiped and released immediately
             return try autoreleasepool {
                 guard let (phrase, creationDate) = Account.generatePhrase(words: words) else { return nil }
-                guard let account = setSeedPhrase(phrase) else { return nil }
-                // we store the wallet creation time in the keychain because keychain data persists even when app is deleted
+                // we store the wallet creation time in the keychain because keychain data persists even when app is deleted. this must be set before the account is created.
                 let creationTimeInterval = creationDate.timeIntervalSinceReferenceDate
                 try setKeychainItem(key: KeychainKey.creationTime,
                                     item: [creationTimeInterval].withUnsafeBufferPointer { Data(buffer: $0) })
+                guard let account = setSeedPhrase(phrase) else { return nil }
                 return (phrase, account)
             }
         } catch { return nil }
@@ -803,7 +803,7 @@ extension KeyStore: KeyMaster {
     /// returns false if a pin is already set
     func setPin(_ newPin: String) -> Bool {
         do {
-            guard try keychainItem(key: KeychainKey.pin) as String? == nil else { return false }
+            guard try keychainItem(key: KeychainKey.pin) as String? == nil else { assert(E.isRunningTests); return false }
 
             DispatchQueue.main.async {
                 Store.perform(action: PinLength.Set(newPin.utf8.count))
@@ -811,7 +811,8 @@ extension KeyStore: KeyMaster {
             try setKeychainItem(key: KeychainKey.pin, item: newPin)
             try authenticationSuccess()
             return true
-        } catch {
+        } catch let error {
+            print("[KEY] error setting pin: \(error.localizedDescription) ")
             return false
         }
     }

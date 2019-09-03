@@ -531,8 +531,8 @@ open class BRReplicatedKVStore: NSObject {
         }
         syncRunning = true
         let myCompletionHandler: (_ e: BRReplicatedKVStoreError?) -> Void = { e in
-            completionHandler(e)
             self.syncRunning = false
+            completionHandler(e)
         }
         if let remoteVersion = remoteVersion, let remoteTime = remoteTime {
             try _syncKey(key, remoteVer: remoteVersion, remoteTime: remoteTime,

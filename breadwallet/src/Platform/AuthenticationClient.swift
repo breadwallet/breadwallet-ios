@@ -95,6 +95,9 @@ struct AuthenticationClient {
     }
     
     private func send<T: Decodable>(request: URLRequest, completion: @escaping (Result<T, APIRequestError>) -> Void) {
+        if let method = request.httpMethod, let url = request.url?.absoluteString {
+            print("[AUTH] \(method) \(url)")
+        }
         urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 return completion(.failure(.requestError(error)))
