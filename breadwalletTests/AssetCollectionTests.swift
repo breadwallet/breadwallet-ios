@@ -15,7 +15,7 @@ class AssetCollectionTests: XCTestCase {
     static var testTokenData = [("bitcoin-mainnet:__native__", "btc"),
                                 ("bitcoincash-mainnet:__native__", "bch"),
                                 ("ethereum-mainnet:__native__", "eth"),
-                                ("ethereum-mainnet:0x558Ec3152e2Eb2174905CD19aeA4e34A23De9ad6", "brd"),
+                                ("ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6", "brd"),
                                 ("ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359", "dai"),
                                 ("ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376", "tusd"),
                                 ("ripple-mainnet:__native__", "xrp"),

@@ -29,12 +29,12 @@ class WalletConnectionSettings {
 
     static func defaultMode(for currency: Currency) -> WalletConnectionMode {
         assert(currency.tokenType == .native)
-        switch currency.core.code { //TODO:CRYPTO uids
-        case BRCrypto.Currency.codeAsBTC:
+        switch currency.uid {
+        case Currencies.btc.uid:
             return .p2p_only
-        case BRCrypto.Currency.codeAsBCH:
+        case Currencies.bch.uid:
             return .p2p_only
-        case BRCrypto.Currency.codeAsETH:
+        case Currencies.eth.uid:
             return .api_only
         default:
             assertionFailure()
@@ -70,13 +70,8 @@ class WalletConnectionSettings {
 
     private func save() {
         do {
-            _ = try kvStore.set(walletInfo)
-            try kvStore.syncKey(WalletInfo.key, completionHandler: { _ in
-                // saving increments the version number, reload to get latest
-                if let newWalletInfo = WalletInfo(kvStore: self.kvStore) {
-                    self.walletInfo = newWalletInfo
-                }
-            })
+            guard let newWalletInfo = try kvStore.set(walletInfo) as? WalletInfo else { return assertionFailure() }
+            self.walletInfo = newWalletInfo
         } catch let error {
             print("[KV] error setting wallet info: \(error)")
         }

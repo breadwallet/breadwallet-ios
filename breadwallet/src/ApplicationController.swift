@@ -43,6 +43,7 @@ class ApplicationController: Subscriber, Trackable {
     private var urlController: URLController?
     private let notificationHandler = NotificationHandler()
     private var appRatingManager = AppRatingManager()
+    private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
 
     private var isReachable = true {
         didSet {
@@ -217,14 +218,17 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     func didEnterBackground() {
+        beginBackgroundTask()
         disconnect()
         //Save the backgrounding time if the user is logged in
         if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
         }
-        //TODO: use background request
+
         Backend.kvStore?.syncAllKeys { error in
             print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
+            Store.trigger(name: .didSyncKVStore)
+            self.endBackgroundTask()
         }
     }
     
@@ -263,6 +267,20 @@ class ApplicationController: Subscriber, Trackable {
     func didBecomeActive() {
         removeBlurEffect()
         checkForNotificationSettingsChange(appActive: true)
+    }
+
+    // MARK: Background Task Support
+
+    private func beginBackgroundTask() {
+        guard backgroundTaskID == .invalid else { return assertionFailure() }
+        UIApplication.shared.beginBackgroundTask {
+            self.endBackgroundTask()
+        }
+    }
+
+    private func endBackgroundTask() {
+        UIApplication.shared.endBackgroundTask(self.backgroundTaskID)
+        self.backgroundTaskID = .invalid
     }
     
     // MARK: Services/Assets
@@ -306,6 +324,7 @@ class ApplicationController: Subscriber, Trackable {
         DispatchQueue.global(qos: .utility).async {
             Backend.kvStore?.syncAllKeys { error in
                 print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
+                Store.trigger(name: .didSyncKVStore)
                 if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
                     if !Store.state.isLoginRequired {
                         pigeonExchange.fetchInbox()
