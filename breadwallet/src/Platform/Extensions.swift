@@ -178,6 +178,10 @@ public extension Data {
     var base58: String {
         return CoreCoder.base58.encode(data: self)
     }
+    
+    var base32: String {
+        return Base32.encode(self)
+    }
 
     // https://tools.ietf.org/html/rfc4648#section-5
     var base64url: String {
