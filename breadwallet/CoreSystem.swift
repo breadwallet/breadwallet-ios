@@ -169,12 +169,15 @@ class CoreSystem: Subscriber {
     }
     
     func updateFees() {
-        system?.updateNetworkFees { result in
-            switch result {
-            case .success(let networks):
-                print("[SYS] Fees: updated fees for \(networks.map { $0.name })")
-            case .failure(let error):
-                print("[SYS] Fees: failed to update with error: \(error)")
+        queue.async {
+            guard let system = self.system else { return assertionFailure() }
+            system.updateNetworkFees { result in
+                switch result {
+                case .success(let networks):
+                    print("[SYS] Fees: updated fees for \(networks.map { $0.name })")
+                case .failure(let error):
+                    print("[SYS] Fees: failed to update with error: \(error)")
+                }
             }
         }
     }
@@ -248,10 +251,12 @@ class CoreSystem: Subscriber {
     // MARK: User Wallet Management
 
     func setConnectionMode(_ mode: WalletConnectionMode, forWalletManager wm: WalletManager) {
-        guard let system = system, system.supportsMode(network: wm.network, mode) else { return assertionFailure() }
-        wm.disconnect()
-        wm.mode = mode
-        wm.connect()
+        guard let system = self.system, system.supportsMode(network: wm.network, mode) else { return assertionFailure() }
+        queue.async {
+            wm.disconnect()
+            wm.mode = mode
+            wm.connect()
+        }
     }
     
     func resetToDefaultCurrencies() {
