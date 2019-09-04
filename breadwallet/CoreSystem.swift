@@ -236,7 +236,15 @@ class CoreSystem: Subscriber {
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets([currency.uid: walletState]))
             Store.perform(action: WalletChange(currency).setSyncingState(.connecting))
-            Backend.updateExchangeRates()
+
+            let addedWallets = Store.state.currencies.compactMap({ $0.wallet }).count
+            let enabledWallets = assetCollection.enabledAssets.count
+            // If the count of added wallets matches the number of enabled wallets, we know the system
+            // init has finished and we can safely update the exchange rates.
+            // TODO:CRYPTO (this is still a temporary workaround, the core init event would be more reliable, CORE-531)
+            if  addedWallets == enabledWallets {
+                Backend.updateExchangeRates()
+            }
         }
     }
     

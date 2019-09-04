@@ -11,9 +11,7 @@ import UIKit
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
     init() {
-        //TODO:CRYPTO rates / wallet state
-        self.rates = [Rate]()
-        //self.rates = Currencies.btc.state?.rates.filter { $0.code != Currencies.btc.code } ?? [Rate]()
+        self.rates = Currencies.btc.state?.rates ?? [Rate]()
         self.selectedCurrencyCode = Store.state.defaultCurrencyCode
         super.init(style: .plain)
     }
@@ -22,7 +20,6 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
     private var rates: [Rate] = [] {
         didSet {
             tableView.reloadData()
-            setExchangeRateLabel()
         }
     }
     private var selectedCurrencyCode: String {
@@ -32,14 +29,8 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
             tableView.beginUpdates()
             tableView.reloadRows(at: paths, with: .automatic)
             tableView.endUpdates()
-
-            setExchangeRateLabel()
         }
     }
-
-    private let bitcoinLabel = UILabel(font: .customBold(size: 14.0), color: .white)
-    private let rateLabel = UILabel(font: .customBody(size: 16.0), color: .white)
-    private var header: UIView?
 
     deinit {
         Store.unsubscribe(self)
@@ -49,10 +40,8 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         self.selectedCurrencyCode = Store.state.defaultCurrencyCode
 
-        tableView.sectionHeaderHeight = UITableView.automaticDimension
-        tableView.estimatedSectionHeaderHeight = 140.0
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .darkBackground
+        tableView.backgroundColor = Theme.primaryBackground
 
         let titleLabel = UILabel(font: .customBold(size: 17.0), color: .white)
         titleLabel.text = S.Settings.currency
@@ -64,20 +53,20 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Scroll to the selected display currency.
+        if let index = self.rates.firstIndex(where: {
+            return $0.code.lowercased() == self.selectedCurrencyCode.lowercased()
+        }) {
+            tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
+        }
+    }
+    
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         Store.perform(action: DefaultCurrency.SetDefault(selectedCurrencyCode))
-    }
-
-    private func setExchangeRateLabel() {
-        //TODO:CRYPTO remove this label
-        /*
-        if let currentRate = rates.filter({ $0.code == defaultCurrencyCode }).first {
-            let amount = Amount(value: UInt256(C.satoshis), currency: Currencies.btc, rate: currentRate)
-            rateLabel.textColor = .white
-            rateLabel.text = "\(amount.tokenDescription) = \(amount.fiatDescription(forLocale: currentRate.locale))"
-        }
-         */
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -104,35 +93,6 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         cell.contentView.backgroundColor = .darkBackground
         cell.backgroundColor = .darkBackground
         return cell
-    }
-
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let header = self.header { return header }
-
-        let header = UIView(color: .darkBackground)
-        let rateLabelTitle = UILabel(font: .customBold(size: 14.0), color: .white)
-
-        header.addSubview(rateLabelTitle)
-        header.addSubview(rateLabel)
-        header.addSubview(bitcoinLabel)
-
-        rateLabelTitle.constrain([
-            rateLabelTitle.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
-            rateLabelTitle.topAnchor.constraint(equalTo: header.topAnchor, constant: C.padding[1])])
-        rateLabel.constrain([
-            rateLabel.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
-            rateLabel.topAnchor.constraint(equalTo: rateLabelTitle.bottomAnchor) ])
-
-        bitcoinLabel.constrain([
-            bitcoinLabel.leadingAnchor.constraint(equalTo: rateLabelTitle.leadingAnchor),
-            bitcoinLabel.topAnchor.constraint(equalTo: rateLabel.bottomAnchor, constant: C.padding[2]),
-            bitcoinLabel.bottomAnchor.constraint(equalTo: header.bottomAnchor, constant: -C.padding[2])])
-
-        bitcoinLabel.text = S.DefaultCurrency.bitcoinLabel
-        rateLabelTitle.text = S.DefaultCurrency.rateLabel
-
-        self.header = header
-        return header
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
