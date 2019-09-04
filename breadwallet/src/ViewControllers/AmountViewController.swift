@@ -63,6 +63,12 @@ class AmountViewController: UIViewController, Trackable {
             togglePinPad()
         }
     }
+    
+    var isEditable: Bool = true {
+        didSet {
+            tapView.isUserInteractionEnabled = isEditable
+        }
+    }
 
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
