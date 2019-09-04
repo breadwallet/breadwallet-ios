@@ -20,10 +20,10 @@ class SupportCenterContainer: UIViewController {
                                       mountPoint: mountPoint,
                                       walletAuthenticator: walletAuthenticator)
         super.init(nibName: nil, bundle: nil)
-        loadWebView()
     }
 
     private var webView: BRWebViewController
+    
     let blur = UIVisualEffectView()
 
     override func viewDidLoad() {
@@ -38,13 +38,13 @@ class SupportCenterContainer: UIViewController {
         addTopCorners()
     }
 
-    func loadWebView() {
+    func preload() {
         webView.stopServer()
         webView.bundleName = C.webBundle // reset in case of developer override
         webView.startServer()
         webView.preload()
     }
-
+    
     private func addTopCorners() {
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()
