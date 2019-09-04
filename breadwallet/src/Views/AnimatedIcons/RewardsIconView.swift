@@ -57,8 +57,11 @@ class RewardsIconView: MultiframeAnimation, AnimatableIcon {
     // MARK: - Convenience Methods
 
     static func prepareAnimationFrames() {
-        RewardsIconView().setUpAnimationFrames(fileName: "rewardsIcon-", count: 70, fileType: "gif") { animationFrames in
-            RewardsIconView.preparedAnimationFrames = animationFrames
+        RewardsIconView().setUpAnimationFrames(fileName: "rewardsIcon-",
+                                               count: 70,
+                                               repeatFirstFrameCount: 0,
+                                               fileType: "gif") { animationFrames in
+                                                RewardsIconView.preparedAnimationFrames = animationFrames
         }
     }
 

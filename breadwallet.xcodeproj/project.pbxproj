@@ -14,7 +14,6 @@
 		2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */; };
 		222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222319AF1F27985A00008F20 /* BRBrowserViewController.swift */; };
 		222319B21F279B3C00008F20 /* POSTBouncer.html in Resources */ = {isa = PBXBuildFile; fileRef = 222319B11F279B3C00008F20 /* POSTBouncer.html */; };
-		2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228734C1E916F7C0044BA15 /* BRAPIClient+Features.swift */; };
 		2228734F1E916FC30044BA15 /* BRAPIClient+Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */; };
 		222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */; };
 		222C42521E904C5000078EB5 /* AssociatedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C42511E904C5000078EB5 /* AssociatedObject.swift */; };
@@ -94,6 +93,7 @@
 		71C44E90225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */; };
 		71C44E92225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */; };
 		71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */; };
+		71CB0C23230479CE00C904B5 /* BRAPIClient+Experiments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71CB0C22230479CE00C904B5 /* BRAPIClient+Experiments.swift */; };
 		7528D2981ECF655500925DBC /* PaymentProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7528D2971ECF655500925DBC /* PaymentProtocol.swift */; };
 		752FB04C1DF8BEEC009086FB /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */; };
 		752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */; };
@@ -612,7 +612,6 @@
 		2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AssetBundles.plist; path = Resources/AssetBundles.plist; sourceTree = "<group>"; };
 		222319AF1F27985A00008F20 /* BRBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRBrowserViewController.swift; path = src/Platform/BRBrowserViewController.swift; sourceTree = "<group>"; };
 		222319B11F279B3C00008F20 /* POSTBouncer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = POSTBouncer.html; path = src/Platform/POSTBouncer.html; sourceTree = "<group>"; };
-		2228734C1E916F7C0044BA15 /* BRAPIClient+Features.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BRAPIClient+Features.swift"; sourceTree = "<group>"; };
 		2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BRAPIClient+Wallet.swift"; sourceTree = "<group>"; };
 		222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BRAPIClient+KV.swift"; sourceTree = "<group>"; };
 		222C42511E904C5000078EB5 /* AssociatedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssociatedObject.swift; sourceTree = "<group>"; };
@@ -694,6 +693,7 @@
 		71C44E8F225D135E00EF4459 /* ConfirmRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ConfirmRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/ConfirmRecoveryKeyViewController.swift; sourceTree = "<group>"; };
 		71C44E91225F95B100EF4459 /* RecoveryKeyCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RecoveryKeyCompleteViewController.swift; path = src/ViewControllers/RecoveryKey/RecoveryKeyCompleteViewController.swift; sourceTree = "<group>"; };
 		71C44E932264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BaseRecoveryKeyViewController.swift; path = src/ViewControllers/RecoveryKey/BaseRecoveryKeyViewController.swift; sourceTree = "<group>"; };
+		71CB0C22230479CE00C904B5 /* BRAPIClient+Experiments.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BRAPIClient+Experiments.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		752FB03C1DF8BE4B009086FB /* iphone.modulemap */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.module-map"; path = iphone.modulemap; sourceTree = "<group>"; };
@@ -1224,6 +1224,7 @@
 		22A9A9311DF61930000F0016 /* Platform */ = {
 			isa = PBXGroup;
 			children = (
+				71CB0C22230479CE00C904B5 /* BRAPIClient+Experiments.swift */,
 				7117305A220CE7B8001931B3 /* BRAPIClient+Announcements.swift */,
 				CE65C668207D4180000C99C4 /* KVStore Objects */,
 				CE4CA7BB1EE3649100373F11 /* BRActivityView.swift */,
@@ -1233,7 +1234,6 @@
 				2218BD761E8F55430091D5E8 /* BRAPIClient+Assets.swift */,
 				222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */,
 				CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */,
-				2228734C1E916F7C0044BA15 /* BRAPIClient+Features.swift */,
 				2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */,
 				22122B711F0B8996000E9AB9 /* BRAPIClient+Events.swift */,
 				3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */,
@@ -1294,7 +1294,7 @@
 				22A9A9AB1DF64B97000F0016 /* iphonesim.modulemap */,
 			);
 			name = libbz2;
-			path = Modules/libbz2;			
+			path = Modules/libbz2;
 			sourceTree = "<group>";
 		};
 		3A93890422A303040081FCF9 /* Charts */ = {
@@ -2745,7 +2745,6 @@
 				7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */,
 				CE124CFE1E68F57700DFA146 /* Async.swift in Sources */,
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
-				2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */,
@@ -2857,6 +2856,7 @@
 				CE65C66A207D41BB000C99C4 /* CurrencyListMetaData.swift in Sources */,
 				CE4CA7BC1EE3649100373F11 /* BRActivityView.swift in Sources */,
 				E89C0613216D79550012CE0D /* BRAPIClient+EmailSubscription.swift in Sources */,
+				71CB0C23230479CE00C904B5 /* BRAPIClient+Experiments.swift in Sources */,
 				7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */,
 				3A36328F2253E53E0043EBA4 /* BRAPIClient+History.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
