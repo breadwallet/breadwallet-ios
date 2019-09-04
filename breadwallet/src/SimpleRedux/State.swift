@@ -24,6 +24,7 @@ struct State {
     let walletID: String?
     let wallets: [String: WalletState]
     let availableTokens: [ERC20Token]
+    var experiments: [Experiment]?
     
     subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.code] else {
@@ -83,7 +84,8 @@ extension State {
                                   Currencies.bch.code: WalletState.initial(Currencies.bch, displayOrder: -1),
                                   Currencies.eth.code: WalletState.initial(Currencies.eth, displayOrder: -1),
                                   Currencies.brd.code: WalletState.initial(Currencies.brd, displayOrder: -1)],
-                        availableTokens: [Currencies.brd]
+                        availableTokens: [Currencies.brd],
+                        experiments: nil
         )
     }
     
@@ -100,7 +102,8 @@ extension State {
                    pinLength: Int? = nil,
                    walletID: String? = nil,
                    wallets: [String: WalletState]? = nil,
-                   availableTokens: [ERC20Token]? = nil) -> State {
+                   availableTokens: [ERC20Token]? = nil,
+                   experiments: [Experiment]? = nil) -> State {
         return State(isStartFlowVisible: isStartFlowVisible ?? self.isStartFlowVisible,
                      isOnboardingEnabled: isOnboardingEnabled ?? self.isOnboardingEnabled,
                      isLoginRequired: isLoginRequired ?? self.isLoginRequired,
@@ -114,7 +117,9 @@ extension State {
                      pinLength: pinLength ?? self.pinLength,
                      walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets,
-                     availableTokens: availableTokens ?? self.availableTokens)
+                     availableTokens: availableTokens ?? self.availableTokens,
+                     experiments: experiments ?? self.experiments
+        )
     }
     
     func mutate(walletState: WalletState) -> State {
@@ -122,6 +127,17 @@ extension State {
         wallets[walletState.currency.code] = walletState
         return mutate(wallets: wallets)
     }
+}
+
+// MARK: - Experiments
+
+extension State {
+    
+    public func experimentWithName(_ experimentName: ExperimentName) -> Experiment? {
+        guard let set = experiments, let exp = set.first(where: { $0.name == experimentName.rawValue }) else { return nil }
+        return exp
+    }
+    
 }
 
 // MARK: -

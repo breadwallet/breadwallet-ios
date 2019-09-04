@@ -50,9 +50,9 @@ class HomeScreenCellHighlightView: MultiframeAnimation, AnimatableIcon {
         
         // These animation frames make a shimmer animation.
         // We could look into doing this programmatically here: https://www.yudiz.com/facebook-shimmer-animation-swift-4/.
-        setUpAnimationFrames(fileName: "CellHighlight-", count: 86, fileType: "png") { [unowned self] animationFrames in
+        setUpAnimationFrames(fileName: "CellHighlight-", count: 86, repeatFirstFrameCount: 43, fileType: "png") { [unowned self] animationFrames in
             self.imageView.animationImages = animationFrames
-            self.imageView.animationDuration = 1
+            self.imageView.animationDuration = 2.0
             self.imageView.animationRepeatCount = 0
             
             if self.shouldAnimate {
