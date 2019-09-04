@@ -68,7 +68,6 @@ enum TriggerName {
     case promptShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
-    case didUpdateFeatureFlags
     case didFetchAnnouncements([Announcement])
     case showCurrency(Currency?)
     case promptLinkWallet(WalletPairingRequest)
@@ -138,8 +137,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didWritePaperKey, .didWritePaperKey):
         return true
     case (.wipeWalletNoPrompt, .wipeWalletNoPrompt):
-        return true
-    case (.didUpdateFeatureFlags, .didUpdateFeatureFlags):
         return true
     case (.didFetchAnnouncements, .didFetchAnnouncements):
         return true

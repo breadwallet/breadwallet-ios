@@ -21,8 +21,8 @@ class PriceChangeView: UIView, Subscriber {
         }
     }
     
-    private let percentLabel = UILabel(font: .customBody(size: 14.0))
-    private let absoluteLabel = UILabel(font: .customBody(size: 14.0))
+    private let percentLabel = UILabel(font: Theme.body3)
+    private let absoluteLabel = UILabel(font: Theme.body3)
     private let image = UIImageView(image: UIImage(named: "PriceArrow"))
     private let separator = UIView(color: UIColor.white.withAlphaComponent(0.6))
     
@@ -55,12 +55,12 @@ class PriceChangeView: UIView, Subscriber {
     
     private func setupConstraints() {
         separator.constrain([
-            separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[1]),
+            separator.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Padding.half),
             separator.topAnchor.constraint(equalTo: topAnchor, constant: 4.0),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4.0),
             separator.widthAnchor.constraint(equalToConstant: 1.0)])
         image.constrain([
-            image.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: C.padding[1]),
+            image.leadingAnchor.constraint(equalTo: separator.trailingAnchor, constant: Padding.half),
             image.centerYAnchor.constraint(equalTo: centerYAnchor),
             image.widthAnchor.constraint(equalToConstant: 6.0),
             image.heightAnchor.constraint(equalToConstant: 5.0)])

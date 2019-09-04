@@ -88,7 +88,7 @@ class ApplicationController: Subscriber, Trackable {
         window.makeKeyAndVisible()
         initializeAssets()
 
-        // Start collecting analytics events. Once we have a wallet, startDataFetchers() will
+        // Start collecting analytics events. Once we have a wallet, startBackendServices() will
         // notify `Backend.apiClient.analytics` so that it can upload events to the server.
         Backend.apiClient.analytics?.startCollectingEvents()
 
@@ -335,7 +335,7 @@ class ApplicationController: Subscriber, Trackable {
                 }
             }
         }
-        Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.updateExperiments()
         Backend.updateExchangeRates()
         Backend.apiClient.fetchAnnouncements()
     }

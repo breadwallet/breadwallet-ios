@@ -124,6 +124,10 @@ class Theme: BRDTheme {
         return font(.body2, .body)
     }
     
+    static var body3: UIFont {
+        return font(.medium, .body2, .body)
+    }
+    
     static var caption: UIFont {
         return font(.caption, .caption1)
     }

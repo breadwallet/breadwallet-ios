@@ -272,6 +272,8 @@
 "HomeScreen.admin" = "Admin";
 /* Home screen menu button to buy some bitcoin */
 "HomeScreen.buy" = "Buy";
+/* home screen toolbar 'Buy & Sell' button */
+"HomeScreen.buyAndSell" = "Buy & Sell";
 /* Menu button on the home screen toolbar */
 "HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
@@ -687,6 +689,8 @@
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Recovery Key";
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle.android" = "Paper Key";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protects your BRD from unauthorized users.";
 /* PIN button title */

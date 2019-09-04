@@ -27,6 +27,15 @@ struct LoginSuccess: Action {
     }
 }
 
+struct UpdateExperiments: Action {
+    let reduce: Reducer
+    init(_ experiments: [Experiment]) {
+        reduce = {
+            return $0.mutate(experiments: experiments)
+        }
+    }
+}
+
 // MARK: - Root Modals
 struct RootModalActions {
     struct Present: Action {

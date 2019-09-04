@@ -16,6 +16,10 @@ struct Padding {
     subscript(multiplier: Int) -> CGFloat {
         return CGFloat(multiplier) * increment
     }
+    
+    static var half: CGFloat {
+        return C.padding[1]/2.0
+    }
 }
 
 // swiftlint:disable type_name
