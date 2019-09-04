@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController: UITableViewController {
+class MenuViewController: UITableViewController, Subscriber {
     
     let standardItemHeight: CGFloat = 48.0
     let subtitleItemHeight: CGFloat = 58.0
@@ -20,6 +20,10 @@ class MenuViewController: UITableViewController {
         self.title = title
     }
 
+    deinit {
+        Store.unsubscribe(self)
+    }
+    
     private let items: [MenuItem]
     private var visibleItems: [MenuItem] {
         return items.filter { $0.shouldShow() }
@@ -47,6 +51,10 @@ class MenuViewController: UITableViewController {
             button.tintColor = .navigationTint
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         }
+        
+        Store.lazySubscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: { _ in
+            self.reloadMenu()
+        })
     }
 
     override func viewWillAppear(_ animated: Bool) {

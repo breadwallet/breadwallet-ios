@@ -104,14 +104,14 @@ class ApplicationController: Subscriber, Trackable {
                             selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
                             callback: { _ in self.didUnlockWallet() }
         )
-
+        
         if keyStore.noWallet {
             enterOnboarding()
         } else {
             unlockExistingAccount()
         }
     }
-    
+        
     private func enterOnboarding() {
         guardProtected(queue: DispatchQueue.main) {
             guard let startFlowController = self.startFlowController, self.keyStore.noWallet else { return assertionFailure() }
@@ -335,6 +335,7 @@ class ApplicationController: Subscriber, Trackable {
                 }
             }
         }
+
         Backend.apiClient.updateExperiments()
         Backend.updateExchangeRates()
         Backend.apiClient.fetchAnnouncements()
