@@ -43,13 +43,17 @@ typealias PinVerifier = (@escaping (String) -> Void) -> Void
 typealias SendCompletion = (SendResult) -> Void
 
 class Sender: Subscriber {
+    
     let wallet: Wallet
     private let kvStore: BRReplicatedKVStore
     private let authenticator: TransactionAuthenticator
     
     private var comment: String?
     private var transfer: BRCrypto.Transfer?
-
+    private var protocolRequest: PaymentProtocolRequest?
+    
+    var displayPaymentProtocolResponse: ((String) -> Void)?
+    
     private var submitTimeoutTimer: Timer? {
         willSet {
             submitTimeoutTimer?.invalidate()
@@ -76,6 +80,7 @@ class Sender: Subscriber {
     func reset() {
         transfer = nil
         comment = nil
+        protocolRequest = nil
     }
     
     func updateNetworkFees() {
@@ -135,15 +140,38 @@ class Sender: Subscriber {
     }
 
     // MARK: Create Payment Request
-
-    //TODO:CRYPTO payment request
-    func validate(paymentRequest req: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
-        return .failed
+    private func validate(protocolRequest protoReq: PaymentProtocolRequest, ignoreUsedAddress: Bool, ignoreIdentityNotCertified: Bool) -> SenderValidationResult {
+        if !protoReq.isSecure && !ignoreIdentityNotCertified {
+            return .identityNotCertified("")
+        }
+        guard let address = protoReq.primaryTarget?.description else {
+            return .invalidAddress
+        }
+        guard let amount = protoReq.totalAmount else {
+            return .invalidRequest("No Amount Specified")
+        }
+        return validate(address: address, amount: Amount(cryptoAmount: amount, currency: wallet.currency))
     }
 
-    //TODO:CRYPTO payment request
-    func createTransaction(forPaymentProtocol: PaymentProtocolRequest) -> SenderValidationResult {
-        return .failed
+    func createTransaction(protocolRequest protoReq: PaymentProtocolRequest,
+                           ignoreUsedAddress: Bool,
+                           ignoreIdentityNotCertified: Bool,
+                           feeBasis: TransferFeeBasis,
+                           comment: String?) -> SenderValidationResult {
+        assert(transfer == nil)
+        let result = validate(protocolRequest: protoReq, ignoreUsedAddress: ignoreUsedAddress, ignoreIdentityNotCertified: ignoreIdentityNotCertified)
+        guard case .ok = result else { return result }
+        switch wallet.createTransfer(forProtocolRequest: protoReq, feeBasis: feeBasis) {
+        case .success(let transfer):
+            self.comment = comment
+            self.transfer = transfer
+            self.protocolRequest = protoReq
+            return .ok
+        case .failure(let error) where error == .invalidAddress:
+            return .invalidAddress
+        default:
+            return .failed
+        }
     }
 
     // MARK: Submit
@@ -190,6 +218,11 @@ class Sender: Subscriber {
             DispatchQueue.main.async {
                 self.stopWaitingForSubmission()
                 self.setMetaData(originatingTransfer: originatingTx)
+                if let protoReq = self.protocolRequest {
+                    PaymentRequest.postProtocolPayment(protocolRequest: protoReq, transfer: transfer) {
+                        self.displayPaymentProtocolResponse?($0)
+                    }
+                }
                 //TODO:CRYPTO raw tx is only needed by platform, but currently unused
                 completion(.success(hash: transfer.hash?.description, rawTx: nil))
             }

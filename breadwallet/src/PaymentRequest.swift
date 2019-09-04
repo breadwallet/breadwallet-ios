@@ -7,15 +7,39 @@
 //
 
 import Foundation
-import BRCore
+import BRCrypto
 
 enum PaymentRequestType {
     case local
     case remote
 }
 
+extension PaymentProtocolRequest {
+    var displayText: String? {
+        if let name = commonName {
+            return isSecure ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
+        } else {
+            return primaryTarget?.description
+        }
+    }
+}
+
 struct PaymentRequest {
 
+    static let jsonHeader = "application/payment-request"
+    static let bip70header = "application/bitcoin-paymentrequest"
+    
+    let currency: Currency
+    var toAddress: String? //TODO:CRYPTO store as Address
+    var displayAddress: String? { return toAddress } //TODO:CRYPTO cleanup
+    let type: PaymentRequestType
+    var amount: Amount?
+    var label: String?
+    var message: String?
+    var remoteRequest: URL?
+    var paymentProtocolRequest: PaymentProtocolRequest?
+    var r: URL?
+    
     init?(string: String, currency: Currency) {
         self.currency = currency
         if let url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
@@ -60,7 +84,7 @@ struct PaymentRequest {
                 return
             } else if url.scheme == "http" || url.scheme == "https" {
                 type = .remote
-                remoteRequest = url
+                remoteRequest = url as URL
                 return
             }
         }
@@ -76,30 +100,29 @@ struct PaymentRequest {
     }
 
     init?(data: Data, currency: Currency) {
+        guard let coreWallet = currency.wallet?.core else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest(data: data)
+        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBip70: data)
         type = .local
     }
 
-    init?(json: String, currency: Currency) {
+    init?(jsonData: Data, currency: Currency) {
+        guard let coreWallet = currency.wallet?.core else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest(json: json)
+        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBitPay: jsonData)
         type = .local
     }
 
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
-        let request: NSMutableURLRequest
-        if let url = r {
-            request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
-        } else {
-            request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
-        }
+        let url = r ?? remoteRequest!
+        let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10.0)
 
         if self.currency.isBitcoin {
-            request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
-            //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
+            request.setValue(PaymentRequest.bip70header, forHTTPHeaderField: "Accept")
+            //TODO: use this header once json supports isSecure and commonName
+            //request.setValue(PaymentRequest.jsonHeader, forHTTPHeaderField: "Accept")
         } else {
-            request.setValue("application/payment-request", forHTTPHeaderField: "Accept")
+            request.setValue(PaymentRequest.jsonHeader, forHTTPHeaderField: "Accept")
         }
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
@@ -107,13 +130,11 @@ struct PaymentRequest {
             guard let data = data else { return completion(nil) }
             guard let response = response else { return completion(nil) }
 
-            if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
+            if response.mimeType?.lowercased() == PaymentRequest.bip70header {
                 guard let btc = Currencies.btc.instance else { return completion(nil) }
                 completion(PaymentRequest(data: data, currency: btc))
-            } else if response.mimeType?.lowercased() == "application/payment-request" {
-                // TODO: XXX validate hash from response header
-                let req = PaymentRequest(json: String(data: data, encoding: .utf8) ?? "", currency: self.currency)
-                // TODO: XXX populate the certified common name from the https response
+            } else if response.mimeType?.lowercased() == PaymentRequest.jsonHeader {
+                let req = PaymentRequest(jsonData: data, currency: self.currency)
                 completion(req)
             } else if response.mimeType?.lowercased() == "text/uri-list" {
                 for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
@@ -135,16 +156,30 @@ struct PaymentRequest {
         guard let uri = amount.currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(amountString)"
     }
-
-    let currency: Currency
-    var toAddress: String? //TODO:CRYPTO store as Address
-    var displayAddress: String? { return toAddress } //TODO:CRYPTO cleanup
-    let type: PaymentRequestType
-    var amount: Amount?
-    var label: String?
-    var message: String?
-    var remoteRequest: NSURL?
-    var paymentProtocolRequest: PaymentProtocolRequest?
-    var r: URL?
-    var warningMessage: String? //Displayed to the user before the send view fields are populated
+    
+    static func postProtocolPayment(protocolRequest protoReq: PaymentProtocolRequest, transfer: Transfer, callback: @escaping (String) -> Void) {
+        let payment = protoReq.createPayment(transfer: transfer)
+        guard let url = protoReq.paymentURL else { return }
+        let request = NSMutableURLRequest(url: URL(string: url)!, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 20.0)
+        request.httpMethod = "POST"
+        request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
+        request.httpBody = payment?.encode()
+        print("[PAY] Sending PaymentProtocolPayment to: \(url)")
+        URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
+            guard error == nil else { print("[PAY] error: \(error!)"); return }
+            guard let data = data, let _ = response as? HTTPURLResponse else { print("[PAY] no data or response"); return }
+            var memo: String? = nil
+            if let ack = PaymentProtocolPaymentACK.create(forBip70: data) {
+                memo = ack.memo
+            } else if let ack = PaymentProtocolPaymentACK.create(forBitPay: data) {
+                memo = ack.memo
+            }
+            if let memo = memo {
+                DispatchQueue.main.async {
+                    callback(memo)
+                }
+            }
+            }.resume()
+    }
 }
