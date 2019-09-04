@@ -13,6 +13,18 @@ enum FeeLevel: Int {
     case economy
     case regular
     case priority
+    
+    //Time in millis
+    var preferredTime: Int {
+        switch self {
+        case .economy:
+            return Int(C.secondsInMinute) * 60 * 10 * 1000 //10 hrs
+        case .regular:
+            return Int(C.secondsInMinute) * 60 * 1000 //60 mins
+        case .priority:
+            return 0
+        }
+    }
 }
 
 class FeeSelector: UIView {
