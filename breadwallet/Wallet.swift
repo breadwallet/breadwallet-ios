@@ -12,6 +12,10 @@ import BRCrypto
 typealias WalletEventCallback = (WalletEvent) -> Void
 typealias CreateTransferResult = Result<Transfer, Wallet.CreateTransferError>
 
+extension NetworkFee {
+    var time: Int { return Int(timeIntervalInMilliseconds) }
+}
+
 /// Wrapper for BRCrypto Wallet
 class Wallet {
     enum CreateTransferError: Error {
@@ -46,8 +50,12 @@ class Wallet {
     }
     
     func feeForLevel(level: FeeLevel) -> NetworkFee {
-        //assert(fees.count == 3) //TODO:CRYPTO_V2 - support a dynamic number of fee tiers when supported by BlockchainDB
-        return fees[level.rawValue]
+        //Find nearest NetworkFee for FeeLevel
+        let target = level.preferredTime
+        guard let result = fees.enumerated().min(by: { abs($0.1.time - target) < abs($1.1.time - target) }) else {
+            return fees.first!
+        }
+        return result.element
     }
     
     public func estimateFee (address: String,
