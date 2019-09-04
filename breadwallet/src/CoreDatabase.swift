@@ -1,5 +1,5 @@
 //
-//  Database.swift
+//  CoreDatabase.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-11-10.
@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import sqlite3
+import SQLite3
 import BRCrypto
 
 enum CoreDatabaseError: Error {

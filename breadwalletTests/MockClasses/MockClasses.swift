@@ -10,7 +10,6 @@ import Foundation
 import UIKit
 
 @testable import breadwallet
-@testable import BRCore
 
 //TODO:CRYPTO needs refactor
 /*
