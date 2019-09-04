@@ -43,7 +43,7 @@ class ChartView: UIView {
         
         let columnYPoint = { (graphPoint: Int) -> CGFloat in
             let y = CGFloat(graphPoint) / CGFloat(maxValue) * height
-            return height - y // Flip the graph
+            return !y.isNaN ? height - y : 0 // maxValue could be 0, so we need to guard against NaN
         }
         
         coordinates = [CGPoint]()
