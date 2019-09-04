@@ -58,8 +58,11 @@ class RewardsIconView: MultiframeAnimation, AnimatableIcon {
 
     static func prepareAnimationFrames() {
         guard UserDefaults.shouldShowBRDRewardsAnimation else { return }
-        RewardsIconView().setUpAnimationFrames(fileName: "rewardsIcon-", count: 70, fileType: "gif") { animationFrames in
-            RewardsIconView.preparedAnimationFrames = animationFrames
+        RewardsIconView().setUpAnimationFrames(fileName: "rewardsIcon-",
+                                               count: 70,
+                                               repeatFirstFrameCount: 0,
+                                               fileType: "gif") { animationFrames in
+                                                RewardsIconView.preparedAnimationFrames = animationFrames
         }
     }
 

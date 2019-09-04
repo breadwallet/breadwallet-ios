@@ -272,6 +272,8 @@
 "HomeScreen.admin" = "관리";
 /* Home screen menu button to buy some bitcoin */
 "HomeScreen.buy" = "사다";
+/* home screen toolbar 'Buy & Sell' button */
+"HomeScreen.buyAndSell" = "구매 및 판매";
 /* Menu button on the home screen toolbar */
 "HomeScreen.menu" = "메뉴";
 /* This section lists the users wallets */
@@ -687,6 +689,8 @@
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "페이퍼 키";
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle.android" = "페이퍼 키";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "허가받지 않은 사용자로부터 브레드를 보호하세요.";
 /* PIN button title */

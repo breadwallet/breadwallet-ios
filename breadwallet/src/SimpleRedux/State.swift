@@ -19,6 +19,7 @@ struct State {
     let pinLength: Int
     let walletID: String?
     let wallets: [String: WalletState]
+    var experiments: [Experiment]?
     
     subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.uid] else {
@@ -63,7 +64,8 @@ extension State {
                         isPromptingBiometrics: false,
                         pinLength: 6,
                         walletID: nil,
-                        wallets: [:]
+                        wallets: [:],
+                        experiments: nil
         )
     }
     
@@ -77,7 +79,8 @@ extension State {
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    walletID: String? = nil,
-                   wallets: [String: WalletState]? = nil) -> State {
+                   wallets: [String: WalletState]? = nil,
+                   experiments: [Experiment]? = nil) -> State {
         return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
@@ -87,14 +90,26 @@ extension State {
                      isPromptingBiometrics: isPromptingBiometrics ?? self.isPromptingBiometrics,
                      pinLength: pinLength ?? self.pinLength,
                      walletID: walletID ?? self.walletID,
-                     wallets: wallets ?? self.wallets)
+                     wallets: wallets ?? self.wallets,
+                     experiments: experiments ?? self.experiments)
     }
-    
+
     func mutate(walletState: WalletState) -> State {
         var wallets = self.wallets
         wallets[walletState.currency.uid] = walletState
         return mutate(wallets: wallets)
     }
+}
+
+// MARK: - Experiments
+
+extension State {
+    
+    public func experimentWithName(_ experimentName: ExperimentName) -> Experiment? {
+        guard let set = experiments, let exp = set.first(where: { $0.name == experimentName.rawValue }) else { return nil }
+        return exp
+    }
+    
 }
 
 // MARK: -

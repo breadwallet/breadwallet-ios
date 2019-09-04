@@ -22,6 +22,8 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
     var didCallLoadRequest = false
     var closeOnURL: URL?
     var onClose: (() -> Void)?
+    var showsBottomToolbar = true
+    var statusBarStyle: UIStatusBarStyle = .default
     
     let webView = WKWebView()
     let toolbarContainerView = UIView()
@@ -51,6 +53,10 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
         }
     }
     
+    open override var preferredStatusBarStyle: UIStatusBarStyle {
+        return statusBarStyle
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -65,26 +71,30 @@ private class BRBrowserViewControllerInternal: UIViewController, WKNavigationDel
             ])
 
         // toolbar view
-        view.addSubview(toolbarContainerView)
-        toolbarContainerView.constrain([
-            toolbarContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            toolbarContainerView.heightAnchor.constraint(equalToConstant: 44.0),
-            toolbarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            toolbarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-            ])
-        
-        toolbarView.isTranslucent = true
-        toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, refreshButtonItem]
-        toolbarContainerView.addSubview(toolbarView)
-        toolbarView.constrain(toSuperviewEdges: nil)
+        if showsBottomToolbar {
+            view.addSubview(toolbarContainerView)
+            toolbarContainerView.constrain([
+                toolbarContainerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                toolbarContainerView.heightAnchor.constraint(equalToConstant: 44.0),
+                toolbarContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                toolbarContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+                ])
+            
+            toolbarView.isTranslucent = true
+            toolbarView.items = [backButtonItem, forwardButtonItem, flexibleSpace, refreshButtonItem]
+            toolbarContainerView.addSubview(toolbarView)
+            toolbarView.constrain(toSuperviewEdges: nil)
+        }
         
         // webview
         webView.navigationDelegate = self
         view.addSubview(webView)
 
+        let webViewAnchor = showsBottomToolbar ? toolbarContainerView.topAnchor : view.safeAreaLayoutGuide.bottomAnchor
+        
         webView.constrain([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            webView.bottomAnchor.constraint(equalTo: toolbarContainerView.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: webViewAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
             ])
@@ -300,12 +310,23 @@ open class BRBrowserViewController: UINavigationController {
             browser.closeOnURL = URL(string: newValue)
         }
     }
-    
+    var showsBottomToolbar: Bool = true {
+        didSet {
+            browser.showsBottomToolbar = self.showsBottomToolbar
+        }
+    }
+    var statusBarStyle: UIStatusBarStyle = .default {
+        didSet {
+            browser.statusBarStyle = statusBarStyle
+        }
+    }
+
     fileprivate let browser = BRBrowserViewControllerInternal()
     
     init() {
         super.init(navigationBarClass: UINavigationBar.self, toolbarClass: UIToolbar.self)
         browser.onClose = { self.done(nil) }
+        
         self.viewControllers = [browser]
         browser.navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .done, target: self, action: #selector(BRBrowserViewController.done))
