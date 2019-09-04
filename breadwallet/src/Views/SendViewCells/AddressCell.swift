@@ -35,6 +35,11 @@ class AddressCell: UIView {
             gr.isEnabled = isEditable
         }
     }
+    
+    func hideActionButtons() {
+        paste.isHidden = true
+        scan.isHidden = true
+    }
 
     let textField = UITextField()
     let paste = BRDButton(title: S.Send.pasteLabel, type: .tertiary)

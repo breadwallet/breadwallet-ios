@@ -10,6 +10,7 @@ import Foundation
 import BRCrypto
 
 typealias WalletEventCallback = (WalletEvent) -> Void
+typealias CreateTransferResult = Result<Transfer, Wallet.CreateTransferError>
 
 /// Wrapper for BRCrypto Wallet
 class Wallet {
@@ -45,7 +46,7 @@ class Wallet {
     }
     
     func feeForLevel(level: FeeLevel) -> NetworkFee {
-        assert(fees.count == 3) //TODO:CRYPTO_V2 - support a dynamic number of fee tiers when supported by BlockchainDB
+        //assert(fees.count == 3) //TODO:CRYPTO_V2 - support a dynamic number of fee tiers when supported by BlockchainDB
         return fees[level.rawValue]
     }
     
@@ -108,11 +109,21 @@ class Wallet {
 
     // MARK: Sending
 
-    func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> Result<Transfer, CreateTransferError> {
+    func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> CreateTransferResult {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
         guard let transfer = core.createTransfer(target: target, amount: amount.cryptoAmount, estimatedFeeBasis: feeBasis) else {
+            return .failure(.invalidAmountOrFee)
+        }
+        return .success(transfer)
+    }
+    
+    func createTransfer(forProtocolRequest protoReq: PaymentProtocolRequest, feeBasis: TransferFeeBasis) -> CreateTransferResult {
+        guard protoReq.primaryTarget != nil else {
+            return .failure(.invalidAddress)
+        }
+        guard let transfer = protoReq.createTransfer(estimatedFeeBasis: feeBasis) else {
             return .failure(.invalidAmountOrFee)
         }
         return .success(transfer)
