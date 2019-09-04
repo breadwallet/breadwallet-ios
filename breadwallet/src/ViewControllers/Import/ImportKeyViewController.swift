@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import BRCore
 import BRCrypto
 
 /**
@@ -46,9 +45,6 @@ class ImportKeyViewController: UIViewController, Subscriber {
     private let unlockingActivity = BRActivityViewController(message: S.Import.unlockingActivity)
     
     // Previously scanned QR code passed to init()
-    //
-    // Not used at the moment. When the universal scanner
-    // supports scanning private keys, the value will be here
     private var initialQRCode: QRCode?
 
     override func viewDidLoad() {
