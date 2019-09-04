@@ -258,7 +258,7 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     func preloadSupportCenter() {
-        supportCenter.loadWebView() // pre-load contents for faster access
+        supportCenter.preload() // pre-load contents for faster access
     }
 
     func presentFaq(articleId: String? = nil, currency: Currency? = nil) {
