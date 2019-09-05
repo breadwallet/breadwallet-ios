@@ -20,16 +20,14 @@ class ModalPresenter: Subscriber, Trackable {
         return SupportCenterContainer(walletAuthenticator: keyStore)
     }()
     
-    init(keyStore: KeyStore, system: CoreSystem, window: UIWindow) {
+    init(keyStore: KeyStore, system: CoreSystem, window: UIWindow, alertPresenter: AlertPresenter?) {
         self.system = system
         self.window = window
+        self.alertPresenter = alertPresenter
         self.keyStore = keyStore
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         addSubscriptions()
-        if !Reachability.isReachable {
-            showNotReachable()
-        }
     }
     
     deinit {
@@ -38,13 +36,12 @@ class ModalPresenter: Subscriber, Trackable {
 
     // MARK: - Private
     private let window: UIWindow
-    private let alertHeight: CGFloat = 260.0
+    private let alertPresenter: AlertPresenter?
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private var currentRequest: PaymentRequest?
-    private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
     private let system: CoreSystem
@@ -54,10 +51,6 @@ class ModalPresenter: Subscriber, Trackable {
         Store.lazySubscribe(self,
                             selector: { $0.rootModal != $1.rootModal},
                             callback: { [weak self] in self?.presentModal($0.rootModal) })
-        
-        Store.lazySubscribe(self,
-                            selector: { $0.alert != $1.alert && $1.alert != .none },
-                            callback: { [weak self] in self?.handleAlertChange($0.alert) })
         
         Store.subscribe(self, name: .presentFaq("", nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
@@ -110,25 +103,10 @@ class ModalPresenter: Subscriber, Trackable {
                 self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
             }
         })
-        Reachability.addDidChangeCallback({ [weak self] isReachable in
-            if isReachable {
-                self?.hideNotReachable()
-            } else {
-                self?.showNotReachable()
-            }
-        })
         Store.subscribe(self, name: .lightWeightAlert(""), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case let .lightWeightAlert(message) = trigger {
                 self?.showLightWeightAlert(message: message)
-            }
-        })
-        Store.subscribe(self, name: .showAlert(nil), callback: { [weak self] in
-            guard let trigger = $0 else { return }
-            if case let .showAlert(alert) = trigger {
-                if let alert = alert {
-                    self?.topViewController?.present(alert, animated: true, completion: nil)
-                }
             }
         })
         Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
@@ -209,52 +187,6 @@ class ModalPresenter: Subscriber, Trackable {
             Store.perform(action: RootModalActions.Present(modal: .none))
             Store.trigger(name: .hideStatusBar)
         }
-    }
-
-    private func handleAlertChange(_ type: AlertType) {
-        guard type != .none else { return }
-        presentAlert(type, completion: {
-            Store.perform(action: Alert.Hide())
-        })
-    }
-
-    private func presentAlert(_ type: AlertType, completion: @escaping () -> Void) {
-        let alertView = AlertView(type: type)
-        let window = UIApplication.shared.keyWindow!
-        let size = window.bounds.size
-        window.addSubview(alertView)
-
-        let topConstraint = alertView.constraint(.top, toView: window, constant: size.height)
-        alertView.constrain([
-            alertView.constraint(.width, constant: size.width),
-            alertView.constraint(.height, constant: alertHeight + 25.0),
-            alertView.constraint(.leading, toView: window, constant: nil),
-            topConstraint ])
-        window.layoutIfNeeded()
-
-        UIView.spring(0.6, animations: {
-            topConstraint?.constant = size.height - self.alertHeight
-            window.layoutIfNeeded()
-        }, completion: { _ in
-            alertView.animate()
-            UIView.spring(0.6, delay: 2.0, animations: {
-                topConstraint?.constant = size.height
-                window.layoutIfNeeded()
-            }, completion: { _ in
-                //TODO - Make these callbacks generic
-                if case .paperKeySet(let callback) = type {
-                    callback()
-                }
-                if case .pinSet(let callback) = type {
-                    callback()
-                }
-                if case .sweepSuccess(let callback) = type {
-                    callback()
-                }
-                completion()
-                alertView.removeFromSuperview()
-            })
-        })
     }
 
     func preloadSupportCenter() {
@@ -351,6 +283,7 @@ class ModalPresenter: Subscriber, Trackable {
             checkoutVC?.present(vc, animated: true, completion: nil)
         }
         checkoutVC.onPublishSuccess = { [weak self] in
+         // TODO: see AlertPresenter.presentAlert()
             self?.presentAlert(.sendSuccess, completion: {})
         }
         return checkoutVC
@@ -396,7 +329,7 @@ class ModalPresenter: Subscriber, Trackable {
             root?.present(vc, animated: true, completion: nil)
         }
         sendVC.onPublishSuccess = { [weak self] in
-            self?.presentAlert(.sendSuccess, completion: {})
+            self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
         }
         return root
     }
@@ -1132,40 +1065,6 @@ class ModalPresenter: Subscriber, Trackable {
             viewController = viewController?.presentedViewController
         }
         return viewController
-    }
-
-    private func showNotReachable() {
-        guard notReachableAlert == nil else { return }
-        let alert = InAppAlert(message: S.Alert.noInternet, image: #imageLiteral(resourceName: "BrokenCloud"))
-        notReachableAlert = alert
-        let window = UIApplication.shared.keyWindow!
-        let size = window.bounds.size
-        window.addSubview(alert)
-        let bottomConstraint = alert.bottomAnchor.constraint(equalTo: window.topAnchor, constant: 0.0)
-        alert.constrain([
-            alert.constraint(.width, constant: size.width),
-            alert.constraint(.height, constant: InAppAlert.height),
-            alert.constraint(.leading, toView: window, constant: nil),
-            bottomConstraint ])
-        window.layoutIfNeeded()
-        alert.bottomConstraint = bottomConstraint
-        alert.hide = {
-            self.hideNotReachable()
-        }
-        UIView.spring(C.animationDuration, animations: {
-            alert.bottomConstraint?.constant = InAppAlert.height
-            window.layoutIfNeeded()
-        }, completion: {_ in})
-    }
-
-    private func hideNotReachable() {
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            self.notReachableAlert?.bottomConstraint?.constant = 0.0
-            self.notReachableAlert?.superview?.layoutIfNeeded()
-        }, completion: { _ in
-            self.notReachableAlert?.removeFromSuperview()
-            self.notReachableAlert = nil
-        })
     }
 
     private func showLightWeightAlert(message: String) {
