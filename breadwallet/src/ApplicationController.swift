@@ -296,7 +296,7 @@ class ApplicationController: Subscriber, Trackable {
         Backend.updateExchangeRates()
         Backend.updateFees()
         Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.updateExperiments()
         if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired, !Store.state.isLoginRequired {
             pigeonExchange.fetchInbox()
         }
@@ -530,7 +530,7 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     private func startDataFetchers() {
-        Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.updateExperiments()
         Backend.apiClient.fetchAnnouncements()
         initKVStoreCoordinator()
         Backend.updateFees()
@@ -553,7 +553,7 @@ class ApplicationController: Subscriber, Trackable {
         Backend.updateExchangeRates()
         Backend.updateFees()
         Backend.kvStore?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        Backend.apiClient.updateFeatureFlags()
+        Backend.apiClient.updateExperiments()
     }
 
     /// Handles new wallet creation or recovery

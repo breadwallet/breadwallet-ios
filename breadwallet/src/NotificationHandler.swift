@@ -36,6 +36,11 @@ class NotificationHandler: NSObject, UNUserNotificationCenterDelegate, Trackable
         
         saveEvent(context: .pushNotifications, screen: .none, event: .openNotification, attributes: eventAttributes ?? [:], callback: nil)
 
+        // Log an event for the push notification campaign if applicable.
+        if let messageInfo = json["mp"] as? [String: Any], let campaignId = messageInfo["c"] as? Int {
+            saveEvent("$app_open", attributes: ["campaign_id": String(campaignId)])
+        }
+
         // inbox is always fetched after unlock
         completionHandler()
     }

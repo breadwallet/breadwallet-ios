@@ -50,10 +50,6 @@ class AccountFooterView: UIView, Subscriber, Trackable {
         separator.constrainTopCorners(height: 0.5)
         
         setupToolbarButtons()
-        
-        Store.subscribe(self, name: .didUpdateFeatureFlags) { [weak self] _ in
-            self?.setupToolbarButtons()
-        }
     }
     
     private func setupToolbarButtons() {

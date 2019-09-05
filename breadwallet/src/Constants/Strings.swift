@@ -317,6 +317,8 @@ enum S {
         static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
         static let viewLegacyAddress = NSLocalizedString("Settings.ViewLegacyAddress", value: "View Legacy Receive Address", comment: "")
         static let enableSegwit = NSLocalizedString("Settings.EnableSegwit", value: "Enable Segwit", comment: "")
+        static let atmMapMenuItemTitle = NSLocalizedString("Settings.atmMapMenuItemTitle", value: "Crypto ATM Map", comment: "ATM map menu item title")
+        static let atmMapMenuItemSubtitle = NSLocalizedString("Settings.atmMapMenuItemSubtitle", value: "Available in the USA only", comment: "ATM map menu item title explaining that it's a feature only available in the USA")
     }
 
     enum About {
@@ -416,6 +418,7 @@ enum S {
         static let portfolio = NSLocalizedString("HomeScreen.portfolio", value: "Wallets", comment: "Section header")
         static let admin = NSLocalizedString("HomeScreen.admin", value: "Admin", comment: "Section header")
         static let buy = NSLocalizedString("HomeScreen.buy", value: "Buy", comment: "home screen toolbar button")
+        static let buyAndSell = NSLocalizedString("HomeScreen.buyAndSell", value: "Buy & Sell", comment: "home screen Buy & Sell button")
         static let trade = NSLocalizedString("HomeScreen.trade", value: "Trade", comment: "home screen toolbar button")
         static let menu = NSLocalizedString("Button.menu", value: "Menu", comment: "home screen toolbar button")
     }
