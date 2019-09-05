@@ -21,12 +21,6 @@ enum TransactionStatus {
     case invalid
 }
 
-enum TransactionDirection: String {
-    case sent = "Sent"
-    case received = "Received"
-    case moved = "Moved"
-}
-
 /// Wrapper for BRCrypto TransferFeeBasis
 struct FeeBasis {
     private let core: TransferFeeBasis
@@ -94,7 +88,6 @@ class Transaction {
             return nil
         }
     }
-    //TODO:CRYPTO legacy
     var timestamp: TimeInterval {
         if let timestamp = transfer.confirmation?.timestamp {
             return TimeInterval(timestamp)
@@ -105,16 +98,15 @@ class Transaction {
 
     var hash: String { return transfer.hash?.description ?? "" }
 
-    //TODO:CRYPTO refactor
     var status: TransactionStatus {
         switch transfer.state {
         case .created, .signed, .submitted, .pending:
             return .pending
         case .included:
-            switch confirmations {
+            switch Int(confirmations) {
             case 0:
                 return .pending
-            case 1..<6: //TODO:CRYPTO BlockchainDB will provide these values
+            case 1..<currency.confirmationsUntilFinal:
                 return .confirmed
             default:
                 return .complete
@@ -124,13 +116,8 @@ class Transaction {
         }
     }
 
-    //TODO:CRYPTO refactor -- this wrapper is not needed
-    var direction: TransactionDirection {
-        switch transfer.direction {
-        case .sent: return .sent
-        case .received: return .received
-        case .recovered: return .moved
-        }
+    var direction: TransferDirection {
+        return transfer.direction
     }
 
     // MARK: Init
@@ -145,7 +132,7 @@ class Transaction {
             // incoming transactions only get metadata when they are recently confirmed to ensure
             // a relatively recent exchange rate is applied
             if let rate = rate,
-                confirmations < 6 && direction == .received {
+                status != .complete && direction == .received {
                 metaDataContainer!.createMetaData(tx: self, rate: rate)
             }
         }

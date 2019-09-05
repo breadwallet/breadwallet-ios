@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import BRCrypto
 
 /// Representation of a transaction
 protocol TxViewModel {
@@ -15,7 +16,7 @@ protocol TxViewModel {
     var blockHeight: String { get }
     var longTimestamp: String { get }
     var status: TransactionStatus { get }
-    var direction: TransactionDirection { get }
+    var direction: TransferDirection { get }
     var displayAddress: String { get }
     var comment: String? { get }
     var tokenTransferCode: String? { get }
@@ -26,7 +27,7 @@ extension TxViewModel {
 
     var currency: Currency { return tx.currency }
     var status: TransactionStatus { return tx.status }
-    var direction: TransactionDirection { return tx.direction }
+    var direction: TransferDirection { return tx.direction }
     var comment: String? { return tx.comment }
     
     // BTC does not have "from" address, only "sent to" or "received at"
