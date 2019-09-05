@@ -18,11 +18,9 @@ class CoreSystem: Subscriber {
     // MARK: Wallets + Currencies
 
     private(set) var assetCollection: AssetCollection?
-    
     private var wallets = [BRCrypto.Currency: Wallet]()
-
     // Currency view models indexed by Core Currency
-    fileprivate var currencies = [BRCrypto.Currency: Currency]()
+    private var currencies = [BRCrypto.Currency: Currency]()
 
     init() {
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
