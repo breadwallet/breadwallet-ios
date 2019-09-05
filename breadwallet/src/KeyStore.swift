@@ -12,8 +12,6 @@ import LocalAuthentication
 import BRCrypto
 import CloudKit
 
-// swiftlint:disable unused_setter_value
-
 private var WalletSecAttrService: String {
     if E.isRunningTests { return "com.brd.testnetQA.tests" }
     #if TESTNET
