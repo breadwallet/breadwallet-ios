@@ -118,7 +118,6 @@ extension UserDefaults {
         }
         let s = UUID().uuidString
         defaults.set(s, forKey: deviceIdKey)
-        print("new device id \(s)")
         return s
     }
     

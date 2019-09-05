@@ -849,6 +849,7 @@ extension KeyStore: KeyMaster {
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.systemAccount, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as String?)
+            try setKeychainItem(key: KeychainKey.apiUserAccount, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbClientToken, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbAuthUser, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbAuthToken, item: nil as String?)
@@ -860,6 +861,7 @@ extension KeyStore: KeyMaster {
             try setKeychainItem(key: KeychainKey.ethPrivKey, item: nil as String?)
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
+            print("[KEYSTORE] wiped")
             return true
         } catch let error {
             print("[KEYSTORE] wipe wallet error: \(error)")

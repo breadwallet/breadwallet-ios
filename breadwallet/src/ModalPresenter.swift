@@ -908,18 +908,18 @@ class ModalPresenter: Subscriber, Trackable {
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
+        let success = keyStore.wipeWallet()
+        guard success else { // unexpected error writing to keychain
+            activity.dismiss(animated: true)
+            self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
+            return
+        }
+        Backend.disconnectWallet()
         Store.perform(action: Reset())
         self.system.shutdown {
-            let success = self.keyStore.wipeWallet()
-            Backend.disconnectWallet()
             DispatchQueue.main.async {
-                activity.dismiss(animated: true) {
-                    guard success else { // unexpected error writing to keychain
-                        self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
-                        return
-                    }
-                    Store.trigger(name: .didWipeWallet)
-                }
+                activity.dismiss(animated: true)
+                Store.trigger(name: .didWipeWallet)
             }
         }
     }
