@@ -20,6 +20,7 @@ class ApplicationController: Subscriber, Trackable {
     let window = UIWindow()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
+    private var alertPresenter: AlertPresenter?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
 
     var rootNavigationController: RootNavigationController? {
@@ -87,6 +88,8 @@ class ApplicationController: Subscriber, Trackable {
         setupRootViewController()
         window.makeKeyAndVisible()
         initializeAssets()
+        
+        alertPresenter = AlertPresenter(window: self.window)
 
         // Start collecting analytics events. Once we have a wallet, startBackendServices() will
         // notify `Backend.apiClient.analytics` so that it can upload events to the server.
@@ -145,7 +148,8 @@ class ApplicationController: Subscriber, Trackable {
             //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
             self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
                                                  system: self.coreSystem,
-                                                 window: self.window)
+                                                 window: self.window,
+                                                 alertPresenter: self.alertPresenter)
             
             // deep link handling
             self.urlController = URLController(walletAuthenticator: self.keyStore)
