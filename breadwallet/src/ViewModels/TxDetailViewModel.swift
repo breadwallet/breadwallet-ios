@@ -29,7 +29,7 @@ struct TxDetailViewModel: TxViewModel {
     var title: String {
         guard status != .invalid else { return S.TransactionDetails.titleFailed }
         switch direction {
-        case .moved:
+        case .recovered:
             return S.TransactionDetails.titleInternal
         case .received:
             return status == .complete ? S.TransactionDetails.titleReceived : S.TransactionDetails.titleReceiving
