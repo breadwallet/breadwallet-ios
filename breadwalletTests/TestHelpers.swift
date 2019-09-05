@@ -87,7 +87,8 @@ struct TestCurrencies {
                                currency: btc,
                                height: 100000,
                                associations: [btc:associations],
-                               fees: [fee])
+                               fees: [fee],
+                               confirmationsUntilFinal: 6)
         return AppCurrency(core: btc,
                            network: network,
                            metaData: metaData,
@@ -112,7 +113,8 @@ struct TestCurrencies {
                                currency: bch,
                                height: 100000,
                                associations: [bch:associations],
-                               fees: [fee])
+                               fees: [fee],
+                               confirmationsUntilFinal: 6)
         return AppCurrency(core: bch,
                            network: network,
                            metaData: metaData,
@@ -147,7 +149,8 @@ struct TestCurrencies {
                                currency: eth,
                                height: 100000,
                                associations: [eth:ETH_associations, brd:BRD_associations],
-                               fees: [fee])
+                               fees: [fee],
+                               confirmationsUntilFinal: 3)
         return AppCurrency(core: eth,
                            network: network,
                            metaData: metaData,

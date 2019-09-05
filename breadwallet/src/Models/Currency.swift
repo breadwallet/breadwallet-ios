@@ -35,6 +35,12 @@ class Currency: CurrencyWithIcon {
     /// Display name (e.g. Bitcoin)
     var name: String { return metaData.name }
 
+    // Number of confirmations needed until a transaction is considered complete
+    // eg. For bitcoin, a txn is considered complete when it has 6 confirmations
+    var confirmationsUntilFinal: Int {
+        return Int(network.confirmationsUntilFinal)
+    }
+    
     var tokenType: TokenType {
         guard let type = TokenType(rawValue: core.type.lowercased()) else { assertionFailure("unknown token type"); return .unknown }
         return type
