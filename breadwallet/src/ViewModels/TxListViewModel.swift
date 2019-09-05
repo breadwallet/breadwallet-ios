@@ -26,7 +26,7 @@ struct TxListViewModel: TxViewModel {
             var address = tx.toAddress
             var format: String
             switch tx.direction {
-            case .sent, .moved:
+            case .sent, .recovered:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
                 //TODO:CRYPTO via/from
