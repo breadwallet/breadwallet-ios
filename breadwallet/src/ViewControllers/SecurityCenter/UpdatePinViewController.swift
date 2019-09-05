@@ -278,14 +278,13 @@ class UpdatePinViewController: UIViewController, Subscriber {
                         })
                     })))
                 } else {
-                    //TODO:CRYPTO this would normally trigger ModalPresenter's `handleAlertChange`
-                    // but the ModalPresenter isn't created yet
-                    //Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                    Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
+                        guard let `self` = self else { return }
                         self.setPinSuccess?(newPin)
                         if self.type != .creationNoPhrase {
                             self.parent?.dismiss(animated: true, completion: nil)
                         }
-                    //})))
+                    })))
                 }
 
             } else {
