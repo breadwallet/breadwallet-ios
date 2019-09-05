@@ -153,9 +153,11 @@ class StartFlowPresenter: Subscriber, Trackable {
         let group = DispatchGroup()
 
         group.enter()
-        keyMaster.fetchCreationDate(for: account) { updatedAccount in
-            account = updatedAccount
-            group.leave()
+        DispatchQueue.global(qos: .userInitiated).async {
+            self.keyMaster.fetchCreationDate(for: account) { updatedAccount in
+                account = updatedAccount
+                group.leave()
+            }
         }
 
         group.enter()
@@ -164,16 +166,16 @@ class StartFlowPresenter: Subscriber, Trackable {
                                                       type: .creationNoPhrase,
                                                       showsBackButton: false)
         pinCreationView.setPinSuccess = { _ in
-            group.leave()
             pinCreationView.present(activity, animated: true)
-
+            group.leave()
         }
-        self.navigationController?.pushViewController(pinCreationView, animated: true)
+        navigationController?.pushViewController(pinCreationView, animated: true)
 
         group.notify(queue: DispatchQueue.main) {
-            activity.dismiss(animated: true)
             self.onboardingCompletionHandler?(account)
-            self.dismissStartFlow()
+            activity.dismiss(animated: true) {
+                self.dismissStartFlow()
+            }
         }
     }
     
@@ -220,6 +222,7 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func dismissStartFlow() {
+        guard let navigationController = navigationController else { preconditionFailure() }
         saveEvent(context: .onboarding, event: .complete)
         
         // Onboarding is finished.
@@ -228,7 +231,7 @@ class StartFlowPresenter: Subscriber, Trackable {
         if self.shouldBuyCoinAfterOnboarding {
             self.presentPostOnboardingBuyScreen()
         } else {
-            navigationController?.dismiss(animated: true) { [unowned self] in
+            navigationController.dismiss(animated: true) { [unowned self] in
                 self.navigationController = nil
             }
         }
