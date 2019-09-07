@@ -155,7 +155,7 @@
 /* Click this button to sell an asset */
 "Button.sell" = "Verkaufen";
 /* send button */
-"Button.send" = "senden";
+"Button.send" = "Senden";
 /* Settings button label */
 "Button.settings" = "Einstellungen";
 /* Setup button label */
@@ -579,19 +579,19 @@
 /* Title displayed when the user starts the process of entering a recovery key */
 "RecoveryKeyFlow.enterRecoveryKey" = "Wiederherstellungsschlüssel eingeben";
 /* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Bitte geben Sie Ihren Wiederherstellungsschlüssel ein, um die Verbindung dieses Geldbeutels mit Ihrem Gerät aufzuheben.";
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Bitte geben Sie Ihren Wiederherstellungsschlüssel ein, um die Verbindung dieses Wallets mit Ihrem Gerät aufzuheben.";
 /* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Möchten Sie Ihren Wiederherstellungsschlüssel wirklich später einstellen?";
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Möchten Sie Ihren Wiederherstellungsschlüssel wirklich später notieren?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Später einstellen";
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Später notieren";
 /* Button text for the 'Generate Recovery Key' button */
 "RecoveryKeyFlow.generateKeyButton" = "Wiederherstellungsschlüssel erstellen";
 /* Subtext for the recovery key landing page. */
-"RecoveryKeyFlow.generateKeyExplanation" = "Dieser Schlüssel wird benötigt, damit Sie Ihr Geld zurückerlangen können, falls Sie Ihr Telefon heraufstufen oder verlieren.";
+"RecoveryKeyFlow.generateKeyExplanation" = "Dieser Schlüssel wird benötigt, damit Sie Ihr Geld zurückerlangen können, falls Sie Ihr Telefon wechseln oder verlieren.";
 /* Default title for the recovery key landing page */
 "RecoveryKeyFlow.generateKeyTitle" = "Erstellen Sie Ihren privaten Wiederherstellungsschlüssel";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
-"RecoveryKeyFlow.goToWalletButtonTitle" = "Zum Geldbeutel gehen";
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Zum Wallet gehen";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "So funktioniert es - Schritt %1$@";
 /* Error text displayed when the user enters an incorrect recovery key */
@@ -599,17 +599,17 @@
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Achten Sie auf Sicherheit";
 /* Informs the user that the recovery is only required for recovering a wallet. */
-"RecoveryKeyFlow.keyUseHint" = "Ihr Schlüssel wird nur für die Wiederherstellung benötigt und nicht für den täglichen Zugriff auf Ihren Geldbeutel.";
+"RecoveryKeyFlow.keyUseHint" = "Ihr Schlüssel wird nur für die Wiederherstellung benötigt und nicht für den täglichen Zugriff auf Ihr Wallet.";
 /* Reminds the user not to take screenshots or email the recovery key words */
 "RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Erstellen Sie aus Sicherheitsgründen keine Screenshots von diesen Wörtern und versenden Sie sie nicht per E-Mail";
 /* Recommends that the user avoids capturing the paper key with a screenshot */
 "RecoveryKeyFlow.noScreenshotsRecommendation" = "Notieren Sie Ihren Schlüssel auf einem Stück Papier und bestätigen Sie. Von Screenshots ist aus Sicherheitsgründen abzusehen.";
 /* Title displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWallet" = "Stellen Sie Ihren Geldbeutel wieder her.";
+"RecoveryKeyFlow.recoveryYourWallet" = "Stellen Sie Ihr Wallet wieder her.";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Bitte geben Sie den Wiederherstellungsschlüssel des Geldbeutels ein, den Sie wiederherstellen möchten.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Bitte geben Sie den Wiederherstellungsschlüssel des Wallets ein, das Sie wiederherstellen möchten.";
 /* Title for recovery key intro page */
-"RecoveryKeyFlow.relaxBuyTrade" = "Entspannen Sie sich, kaufen Sie und handeln Sie";
+"RecoveryKeyFlow.relaxBuyTrade" = "Entspannen Sie sich, kaufen und handeln Sie";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Vergessen Sie nicht, diese Wörter zu notieren. Gehen Sie gegebenenfalls noch einmal zurück.";
 /* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
@@ -617,17 +617,17 @@
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Kaufen und handeln Sie in dem Wissen, dass Ihr Geld durch höchste Sicherheit und Privatsphäre, die es in der Branche gibt, geschützt sind.";
 /* Recommends that the user stores the recovery key in a secure location */
-"RecoveryKeyFlow.storeSecurelyRecommendation" = "Bewahren Sie Ihren Schlüssel an einem sicheren Ort auf. Dies ist der einzige Weg, um Ihren Geldbeutel wiederherzustellen: BRD verfügt über keine Kopie.";
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Bewahren Sie Ihren Schlüssel an einem sicheren Ort auf. Dies ist der einzige Weg, um Ihr Wallet wiederherzustellen: BRD verfügt über keine Kopie.";
 /* Title for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successHeading" = "Herzlichen Glückwunsch! Sie haben das Setup für den Wiederherstellungsschlüssel abgeschlossen.";
 /* Subtitle for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successSubheading" = "Sie sind zum Anlegen, Handeln und Erwerben von Kryptowährung aus Ihrem BRD-Geldbeutel vorbereitet.";
+"RecoveryKeyFlow.successSubheading" = "Sie sind zum Anlegen, Handeln und Erwerben von Kryptowährung aus Ihrem BRD-Wallet vorbereitet.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
-"RecoveryKeyFlow.unlinkWallet" = "Heben Sie die Verbindung Ihres Geldbeutels mit diesem Gerät auf.";
+"RecoveryKeyFlow.unlinkWallet" = "Heben Sie die Verbindung Ihres Wallets mit diesem Gerät auf.";
 /* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
-"RecoveryKeyFlow.unlinkWalletSubtext" = "Beginnen Sie einen neuen Geldbeutel, indem Sie die Verbindung Ihres Geräts mit dem aktuell eingestellten Geldbeutel aufheben.";
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Beginnen Sie einen neuen Wallet, indem Sie die Verbindung Ihres Geräts mit dem aktuell eingestellten Wallet aufheben.";
 /* Warning displayed when the user starts the process of unlinking a wallet */
-"RecoveryKeyFlow.unlinkWalletWarning" = "Geldbeutel muss wiederhergestellt werden, um den Zugriff zurückzuerlangen.";
+"RecoveryKeyFlow.unlinkWalletWarning" = "Wallet muss wiederhergestellt werden, um den Zugriff zurückzuerlangen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Notieren Sie Ihren Schlüssel";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -999,7 +999,7 @@
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Confirmations";
 /* Empty transaction list message. */
-"TransactionDetails.emptyMessage" = "Hier werden deine Transaktionen angezeigt.";
+"TransactionDetails.emptyMessage" = "Hier werden Ihre Transaktionen angezeigt.";
 /* e.g. the users balance after the transaction was compeleted */
 "TransactionDetails.endingBalanceHeader" = "Endguthaben";
 /* Exchange rate section header */
