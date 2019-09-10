@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-10-11.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -98,6 +98,7 @@ class SegwitViewController: UIViewController {
     private func didContinue() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
+        UserDefaults.hasOptedInSegwit = true
         Store.trigger(name: .optInSegWit)
         Backend.apiClient.sendEnableSegwit()
         UIView.spring(0.6, animations: {

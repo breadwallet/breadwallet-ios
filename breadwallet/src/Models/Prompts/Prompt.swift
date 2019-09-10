@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-04.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -95,7 +95,7 @@ enum PromptType: Int {
     }
 
     // This is the trigger that happens when the prompt is tapped
-    func trigger(currency: Currency) -> TriggerName? {
+    var trigger: TriggerName? {
         switch self {
         case .biometrics: return .promptBiometrics
         case .paperKey: return .promptPaperKey
@@ -156,7 +156,7 @@ protocol Prompt {
     /**
      *  The trigger that should be invoked when this prompt is tapped.
      */
-    func trigger(for currency: Currency) -> TriggerName?
+    var trigger: TriggerName? { get }
     
     /**
      *  Returns whether this prompt should be presented to the user.
@@ -207,15 +207,17 @@ extension Prompt {
         return nil
     }
     
-    func trigger(for currency: Currency) -> TriggerName? {
-        return type.trigger(currency: currency)
+    var trigger: TriggerName? {
+        return type.trigger
     }
     
     // default implementation based on the type of prompt
     func shouldPrompt(walletAuthenticator: WalletAuthenticator?) -> Bool {
         switch type {
         case .biometrics:
-            return !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics && !UserDefaults.isBiometricsEnabled
+            guard !UserDefaults.hasPromptedBiometrics && LAContext.canUseBiometrics else { return false }
+            guard let authenticator = walletAuthenticator, !authenticator .isBiometricsEnabledForUnlocking else { return false }
+            return true
         case .paperKey:
             return UserDefaults.walletRequiresBackup && !UserDefaults.debugShouldSuppressPaperKeyPrompt
         case .upgradePin:

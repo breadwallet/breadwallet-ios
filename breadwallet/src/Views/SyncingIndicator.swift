@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-02-16.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -86,9 +86,15 @@ class SyncingIndicator: UIView {
         }
 
         let nf = NumberFormatter()
+        
         nf.numberStyle = .percent
         nf.maximumFractionDigits = 0
-        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progress))) {
+        
+        // Progress comes up from Core as a value between 0 and 100, but the formatter will treat it as a value
+        // from 0 - 1, so divide by 100 here.
+        let progressPercent = (progress / 100.0)
+        
+        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progressPercent))) {
             label.text = "\(text) \(percent)"
         } else {
             label.text = text

@@ -3,39 +3,61 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-15.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
+import BRCrypto
 
-struct Amount {
+typealias CryptoAmount = BRCrypto.Amount
+
+/// View model for representing the BRCrypto.Amount model
+/// with extended currency, fiat conversion and formatting information
+public struct Amount {
     static let normalPrecisionDigits = 5
     static let highPrecisionDigits = 8
-    
-    let amount: UInt256
+
     let currency: Currency
-    let rate: Rate?
-    let minimumFractionDigits: Int?
-    let maximumFractionDigits: Int
-    let negative: Bool
-    
-    var rawValue: UInt256 { return amount }
-    
+    let cryptoAmount: CryptoAmount
+    var rate: Rate?
+    var minimumFractionDigits: Int?
+    var maximumFractionDigits: Int
+    var negative: Bool { return cryptoAmount.isNegative }
+    var isZero: Bool { return self == Amount.zero(currency, rate: rate) }
+
     // MARK: - Init
-    
-    init(amount: UInt256,
+
+    init(cryptoAmount: CryptoAmount,
          currency: Currency,
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
-         maximumFractionDigits: Int = Amount.normalPrecisionDigits,
-         negative: Bool = false) {
-        self.amount = amount
+         maximumFractionDigits: Int = Amount.normalPrecisionDigits) {
+        assert(currency.core == cryptoAmount.currency)
         self.currency = currency
+        // make a new instance of CryptoAmount
+        self.cryptoAmount = CryptoAmount.create(string: cryptoAmount.string(),
+                                                negative: cryptoAmount.isNegative,
+                                                unit: cryptoAmount.unit.base)
+            ?? BRCrypto.Amount.create(integer: 0, unit: cryptoAmount.unit.base)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
-        self.negative = negative
+    }
+
+    init(amount: Amount,
+         rate: Rate? = nil,
+         minimumFractionDigits: Int? = nil,
+         maximumFractionDigits: Int? = nil,
+         negative: Bool = false) {
+        self.currency = amount.currency
+        // make a new instance of CryptoAmount
+        self.cryptoAmount = CryptoAmount.create(string: amount.cryptoAmount.string(),
+                                                negative: negative,
+                                                unit: amount.currency.baseUnit)
+            ?? BRCrypto.Amount.create(integer: 0, unit: amount.currency.baseUnit)
+        self.rate = rate ?? amount.rate
+        self.minimumFractionDigits = minimumFractionDigits ?? amount.minimumFractionDigits
+        self.maximumFractionDigits = maximumFractionDigits ?? amount.maximumFractionDigits
     }
     
     init(tokenString: String,
@@ -46,13 +68,15 @@ struct Amount {
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits,
          negative: Bool = false) {
-        let decimals = unit?.decimals ?? currency.commonUnit.decimals
-        self.amount = UInt256(string: tokenString.usDecimalString(fromLocale: locale), decimals: decimals)
+        let unit = (unit ?? currency.defaultUnit)
+        self.cryptoAmount = CryptoAmount.create(string: tokenString.usDecimalString(fromLocale: locale),
+                                                negative: negative,
+                                                unit: unit)
+            ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
-        self.negative = negative
     }
     
     init?(fiatString: String,
@@ -61,28 +85,25 @@ struct Amount {
           minimumFractionDigits: Int? = nil,
           maximumFractionDigits: Int = Amount.normalPrecisionDigits,
           negative: Bool = false) {
-        let formatter = NumberFormatter()
-        formatter.maximumFractionDigits = currency.commonUnit.decimals
-        formatter.minimumFractionDigits = 1
-        formatter.minimumIntegerDigits = 1
-        formatter.generatesDecimalNumbers = true
-        formatter.usesGroupingSeparator = false
-        formatter.locale = Locale(identifier: "en_US")
-        guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue,
-            let commonUnitString = formatter.string(from: (fiatAmount / Decimal(rate.rate)) as NSDecimalNumber) else { return nil }
-        
-        self.amount = UInt256(string: commonUnitString, decimals: currency.commonUnit.decimals)
         self.currency = currency
+        //TODO:CRYPTO use BRCrypto CurrencyPair for conversion
+        guard let fiatAmount = NumberFormatter().number(from: fiatString)?.decimalValue else { return nil }
+        var decimal = fiatAmount / Decimal(rate.rate)
+        if negative {
+            decimal *= -1.0
+        }
+        self.cryptoAmount = BRCrypto.Amount.create(double: decimal.doubleValue, unit: currency.defaultUnit)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
-        self.negative = negative
     }
-    
-    static var empty: Amount {
-        return Amount(amount: UInt256(0), currency: Currencies.btc)
+
+    static func zero(_ currency: Currency, rate: Rate? = nil) -> Amount {
+        return Amount(cryptoAmount: CryptoAmount.create(integer: 0, unit: currency.baseUnit),
+                      currency: currency,
+                      rate: rate)
     }
-    
+
     // MARK: - Convenience Accessors
     
     var description: String {
@@ -90,48 +111,56 @@ struct Amount {
     }
 
     var combinedDescription: String {
-        return Store.state.isBtcSwapped ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
+        return Store.state.showFiatAmounts ? "\(fiatDescription) (\(tokenDescription))" : "\(tokenDescription) (\(fiatDescription))"
     }
     
     // MARK: Token
     
     /// Token value in default units as Decimal number
-    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the raw value and precision loss is acceptable.
+    /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the base unit value and precision loss is acceptable.
     var tokenValue: Decimal {
-        return (Decimal(string: amount.string(decimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)) ?? 0.0) * (negative ? -1.0 : 1.0)
+        return Decimal(string: tokenUnformattedString(in: currency.defaultUnit)) ?? Decimal.zero
     }
     
     /// Token value in default units as formatted string with currency ticker symbol suffix
     var tokenDescription: String {
-        let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
-        return tokenDescription(inUnit: unit)
+        return tokenDescription(in: currency.defaultUnit)
     }
-    
+
     /// Token value in default units as formatted string without symbol
-    var tokenFormattedValue: String {
-        let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) ?? currency.commonUnit
-        return tokenFormattedValue(inUnit: unit)
+    var tokenFormattedString: String {
+        return tokenFormattedString(in: currency.defaultUnit)
     }
     
-    /// Token value in specified units as formatted string without symbol
-    func tokenFormattedValue(inUnit unit: CurrencyUnit) -> String {
-        var value = Decimal(string: amount.string(decimals: unit.decimals)) ?? 0.0
-        if negative {
-            value *= -1.0
+    /// Token value in specified units as formatted string without symbol (for user display)
+    func tokenFormattedString(in unit: CurrencyUnit) -> String {
+        guard var formattedValue = cryptoAmount.string(as: unit, formatter: tokenFormat) else {
+            assertionFailure()
+            return ""
         }
-        guard var formattedValue = tokenFormat.string(from: value as NSDecimalNumber) else { return "" }
-        if amount > UInt256(0) && Double(formattedValue) == 0.0 {
-            // small value requires more precision to be displayed
-            guard let formatter = tokenFormat.copy() as? NumberFormatter else { return "" }
-            formatter.maximumFractionDigits = unit.decimals
-            formattedValue = formatter.string(from: value as NSDecimalNumber) ?? formattedValue
+        // override precision digits if the value is too small to show
+        if !isZero && tokenFormat.number(from: formattedValue) == 0.0 {
+            guard let formatter = tokenFormat.copy() as? NumberFormatter else { assertionFailure(); return "" }
+            formatter.maximumFractionDigits = Int(unit.decimals)
+            formattedValue = cryptoAmount.string(as: unit, formatter: formatter) ?? formattedValue
         }
         return formattedValue
     }
+
+    /// Token value in specified units as unformatted string without symbol (used API/internal use)
+    func tokenUnformattedString(in unit: CurrencyUnit) -> String {
+        if unit == currency.baseUnit {
+            return cryptoAmount.string(base: 10, preface: "")
+        }
+        guard let str = cryptoAmount.string(as: unit, formatter: rawTokenFormat) else {
+            assertionFailure(); return ""
+        }
+        return str
+    }
     
     /// Token value in specified units as formatted string with currency ticker symbol suffix
-    func tokenDescription(inUnit unit: CurrencyUnit) -> String {
-        return "\(tokenFormattedValue(inUnit: unit)) \(currency.name(forUnit: unit))"
+    func tokenDescription(in unit: CurrencyUnit) -> String {
+        return "\(tokenFormattedString(in: unit)) \(currency.name(forUnit: unit))"
     }
     
     var tokenFormat: NumberFormatter {
@@ -142,8 +171,22 @@ struct Amount {
         format.negativeFormat = "-\(format.positiveFormat!)"
         format.currencyCode = currency.code
         format.currencySymbol = ""
-        format.maximumFractionDigits = min(currency.state?.maxDigits ?? currency.commonUnit.decimals, maximumFractionDigits)
+        format.maximumFractionDigits = min(Int(currency.defaultUnit.decimals), maximumFractionDigits)
         format.minimumFractionDigits = minimumFractionDigits ?? 0
+        return format
+    }
+
+    /// formatter for raw value with maximum precision and no symbols or separators
+    private var rawTokenFormat: NumberFormatter {
+        let format = NumberFormatter()
+        format.isLenient = true
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = true
+        format.usesGroupingSeparator = false
+        format.currencyCode = ""
+        format.currencySymbol = ""
+        format.maximumFractionDigits = 99
+        format.minimumFractionDigits = 0
         return format
     }
 
@@ -152,8 +195,7 @@ struct Amount {
     var fiatValue: Decimal {
         guard let rate = rate ?? currency.state?.currentRate,
             let value = commonUnitValue else { return 0.0 }
-        let tokenAmount = value * (negative ? -1.0 : 1.0)
-        return tokenAmount * Decimal(rate.rate)
+        return value * Decimal(rate.rate)
     }
     
     var fiatDescription: String {
@@ -196,10 +238,68 @@ struct Amount {
     // MARK: - Private
     
     private var commonUnitString: String {
-        return amount.string(decimals: currency.commonUnit.decimals)
+        return cryptoAmount.string(as: currency.defaultUnit, formatter: rawTokenFormat) ?? ""
     }
     
     private var commonUnitValue: Decimal? {
         return Decimal(string: commonUnitString)
+    }
+}
+
+extension Amount: Equatable, Comparable {
+    public static func == (lhs: Amount, rhs: Amount) -> Bool {
+        return lhs.cryptoAmount == rhs.cryptoAmount
+    }
+
+    public static func > (lhs: Amount, rhs: Amount) -> Bool {
+        return lhs.cryptoAmount > rhs.cryptoAmount
+    }
+
+    public static func < (lhs: Amount, rhs: Amount) -> Bool {
+        return lhs.cryptoAmount < rhs.cryptoAmount
+    }
+
+    static func - (lhs: Amount, rhs: Amount) -> Amount {
+        return Amount(cryptoAmount: (lhs.cryptoAmount - rhs.cryptoAmount) ?? lhs.cryptoAmount,
+                      currency: lhs.currency,
+                      rate: lhs.rate,
+                      minimumFractionDigits: lhs.minimumFractionDigits,
+                      maximumFractionDigits: lhs.maximumFractionDigits)
+    }
+
+    static func + (lhs: Amount, rhs: Amount) -> Amount {
+        return Amount(cryptoAmount: (lhs.cryptoAmount + rhs.cryptoAmount) ?? lhs.cryptoAmount,
+                      currency: lhs.currency,
+                      rate: lhs.rate,
+                      minimumFractionDigits: lhs.minimumFractionDigits,
+                      maximumFractionDigits: lhs.maximumFractionDigits)
+    }
+}
+
+extension Decimal {
+    var doubleValue: Double {
+        return NSDecimalNumber(decimal: self).doubleValue
+    }
+}
+
+extension String {
+    func usDecimalString(fromLocale inputLocale: Locale) -> String {
+        let expectedFormat = NumberFormatter()
+        expectedFormat.numberStyle = .decimal
+        expectedFormat.locale = Locale(identifier: "en_US")
+
+        // createUInt256ParseDecimal expects en_us formatted string
+        let inputFormat = NumberFormatter()
+        inputFormat.locale = inputLocale
+
+        // remove grouping separators
+        var sanitized = self.replacingOccurrences(of: inputFormat.currencyGroupingSeparator, with: "")
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.groupingSeparator, with: "")
+
+        // replace decimal separators
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.currencyDecimalSeparator, with: expectedFormat.decimalSeparator)
+        sanitized = sanitized.replacingOccurrences(of: inputFormat.decimalSeparator, with: expectedFormat.decimalSeparator)
+
+        return sanitized
     }
 }

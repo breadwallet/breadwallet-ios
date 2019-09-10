@@ -3,10 +3,11 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-21.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
+import BRCrypto
 
 // swiftlint:disable legacy_hashing
 
@@ -55,23 +56,20 @@ enum TriggerName {
     case automaticRescan(Currency)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
-    case copyWalletAddresses(String?, String?)
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(Currency, Amount, Amount, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
+    case confirmTransaction(Currency?, Amount?, Amount?, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
-    case didCreateOrRecoverWallet
     case showAlert(UIAlertController?)
-    case reinitWalletManager((()->Void)?)
+    case didWipeWallet
     case didUpgradePin
     case txMemoUpdated(String)
     case promptShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
     case didFetchAnnouncements([Announcement])
-    case showCurrency(Currency)
-    case resetDisplayCurrencies
+    case showCurrency(Currency?)
     case promptLinkWallet(WalletPairingRequest)
     case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
@@ -79,6 +77,7 @@ enum TriggerName {
     case openPlatformUrl(String)
     case didViewTransactions([Transaction]?)
     case showInAppNotification(BRDMessage?)
+    case didSyncKVStore
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -90,9 +89,9 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
     case (.retrySync(let lhsCurrency), .retrySync(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.rescan(let lhsCurrency), .rescan(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.lock, .lock):
         return true
     case (.promptBiometrics, .promptBiometrics):
@@ -110,12 +109,10 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.openFile, .openFile):
         return true
     case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
-        return lhsCurrency.code == rhsCurrency.code
+        return lhsCurrency == rhsCurrency
     case (.receivedPaymentRequest, .receivedPaymentRequest):
         return true
     case (.scanQr, .scanQr):
-        return true
-    case (.copyWalletAddresses, .copyWalletAddresses):
         return true
     case (.authenticateForPlatform, .authenticateForPlatform):
         return true
@@ -127,11 +124,9 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.lightWeightAlert, .lightWeightAlert):
         return true
-    case (.didCreateOrRecoverWallet, .didCreateOrRecoverWallet):
-        return true
     case (.showAlert, .showAlert):
         return true
-    case (.reinitWalletManager, .reinitWalletManager):
+    case (.didWipeWallet, .didWipeWallet):
         return true
     case (.didUpgradePin, .didUpgradePin):
         return true
@@ -147,8 +142,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.showCurrency, .showCurrency):
         return true
-    case (.resetDisplayCurrencies, .resetDisplayCurrencies):
-        return true
     case (.promptLinkWallet, .promptLinkWallet):
         return true
     case (.linkWallet, .linkWallet):
@@ -162,6 +155,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didViewTransactions, .didViewTransactions):
         return true
     case (.showInAppNotification, .showInAppNotification):
+        return true
+    case (.didSyncKVStore, .didSyncKVStore):
         return true
     default:
         return false
@@ -236,21 +231,13 @@ class Store {
     func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
         let key = subscriber.hashValue
         let subscription = Subscription(selector: selector, callback: callback)
-        if subscriptions[key] != nil {
-            subscriptions[key]?.append(subscription)
-        } else {
-            subscriptions[key] = [subscription]
-        }
+        subscriptions[key, default: []].append(subscription)
     }
 
     func subscribe(_ subscriber: Subscriber, name: TriggerName, callback: @escaping (TriggerName?) -> Void) {
         let key = subscriber.hashValue
         let trigger = Trigger(name: name, callback: callback)
-        if triggers[key] != nil {
-            triggers[key]?.append(trigger)
-        } else {
-            triggers[key] = [trigger]
-        }
+        triggers[key, default: []].append(trigger)
     }
 
     func unsubscribe(_ subscriber: Subscriber) {

@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-19.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 private let currencyHeight: CGFloat = 80.0
 private let feeHeight: CGFloat = 130.0
@@ -21,18 +20,18 @@ class AmountViewController: UIViewController, Trackable {
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
-        if let rate = currency.state?.currentRate, Store.state.isBtcSwapped {
+        if let rate = currency.state?.currentRate, Store.state.showFiatAmounts {
             self.currencyToggle = BRDButton(title: "\(rate.code) (\(rate.currencySymbol))", type: .tertiary)
         } else {
-            let title = currency.unitName(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals)
+            let title = currency.defaultUnitName
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
         self.feeSelector = FeeSelector()
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
-                                           maxDigits: currency.state?.maxDigits ?? currency.commonUnit.decimals,
+                                           maxDigits: Int(currency.defaultUnit.decimals),
                                            shouldShowBiometrics: false)
-        self.canEditFee = currency.matches(Currencies.btc)
+        self.canEditFee = currency.isBitcoin
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -62,6 +61,12 @@ class AmountViewController: UIViewController, Trackable {
     func expandPinPad() {
         if pinPadHeight?.constant == 0.0 {
             togglePinPad()
+        }
+    }
+    
+    var isEditable: Bool = true {
+        didSet {
+            tapView.isUserInteractionEnabled = isEditable
         }
     }
 
@@ -175,7 +180,7 @@ class AmountViewController: UIViewController, Trackable {
         amountLabel.text = ""
         placeholder.text = S.Send.amountLabel
         bottomBorder.isHidden = true
-        if Store.state.isBtcSwapped {
+        if Store.state.showFiatAmounts {
             if let rate = currency.state?.currentRate {
                 selectedRate = rate
             }
@@ -247,23 +252,19 @@ class AmountViewController: UIViewController, Trackable {
             amount = Amount(fiatString: output,
                             currency: currency,
                             rate: rate)
-        } else if let unit = currency.unit(forDecimals: currency.state?.maxDigits ?? currency.commonUnit.decimals) {
+        } else {
             amount = Amount(tokenString: output,
                             currency: currency,
-                            unit: unit,
-                            rate: selectedRate)
-        } else {
-            amount = nil
+                            unit: currency.defaultUnit)
         }
     }
 
     private func updateAmountLabel() {
         guard let amount = amount else { amountLabel.text = ""; return }
-        let displayAmount = Amount(amount: amount.rawValue,
-                                   currency: currency,
+        let displayAmount = Amount(amount: amount,
                                    rate: selectedRate,
                                    minimumFractionDigits: minimumFractionDigits)
-        var output = (selectedRate == nil) ? displayAmount.tokenFormattedValue : displayAmount.fiatDescription
+        var output = (selectedRate == nil) ? displayAmount.tokenFormattedString : displayAmount.fiatDescription
         if hasTrailingDecimal {
             output = output.appending(NumberFormatter().currencyDecimalSeparator)
         }
@@ -305,7 +306,7 @@ class AmountViewController: UIViewController, Trackable {
     }
 
     private func updateBalanceAndFeeLabels() {
-        if let amount = amount, amount.rawValue > UInt256(0) {
+        if let amount = amount, !amount.isZero {
             balanceLabel.isHidden = false
         } else {
             balanceLabel.isHidden = cursor.isHidden
@@ -326,21 +327,14 @@ class AmountViewController: UIViewController, Trackable {
     }
 
     private func updateCurrencyToggleTitle() {
-        guard let currencyState = currency.state else { return }
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
         } else {
-            currencyToggle.title = currency.unitName(forDecimals: currencyState.maxDigits)
+            currencyToggle.title = currency.defaultUnitName
         }
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension Fees: Equatable {}
-
-func == (lhs: Fees, rhs: Fees) -> Bool {
-    return lhs.regular == rhs.regular && lhs.economy == rhs.economy
 }

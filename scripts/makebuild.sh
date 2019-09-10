@@ -11,12 +11,14 @@ commit_changes() {
 
 	git add .
 	git status
-	read -n 1 -p "Tag and commit changes for build ${version}? [Y/n]" response
-  if [[ $response == "y" || $response == "Y" || $response == "" ]]; then
-    git commit -m "build ${version}"
+	read -n 1 -p "Tag, commit and push changes for build ${version}? [Y/n]" response
+  	if [[ $response == "y" || $response == "Y" || $response == "" ]]; then
+    	git commit -m "build ${version}"
 		git tag ${tag}
+		git push origin ${tag}
+		git push
 		echo
-		echo "Changes committed."
+		echo "Changes committed & pushed."
 		git show --summary
 	else
 		echo
@@ -59,7 +61,7 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
   # Working directory clean
 	source ${script_dir}/bump_build_number.sh "$1" "$2"
 	source ${script_dir}/download_bundles.sh
-	source ${script_dir}/download_tokenlist.sh
+	source ${script_dir}/download_currencylist.sh
 	echo
 	echo "Making $scheme version ${mainBundleShortVersionString} build ${mainBundleVersion} ..."
   echo

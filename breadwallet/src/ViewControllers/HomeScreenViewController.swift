@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-11-27.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -48,10 +48,16 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     private var tradeNotificationImage: UIImageView?
     
     var didSelectCurrency: ((Currency) -> Void)?
-    var didTapAddWallet: (() -> Void)?
+    var didTapManageWallets: (() -> Void)?
     var didTapBuy: (() -> Void)?
     var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
+    
+    var okToShowPrompts: Bool {
+        // On the initial display we need to load the walletes in the asset list table view first.
+        // There's already a lot going on, so don't show the home-screen prompts right away.
+        return !Store.state.displayCurrencies.isEmpty
+    }
 
     // MARK: -
     
@@ -69,7 +75,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidLoad() {
         assetList.didSelectCurrency = didSelectCurrency
-        assetList.didTapAddWallet = didTapAddWallet
+        assetList.didTapAddWallet = didTapManageWallets
         addSubviews()
         addConstraints()
         setInitialData()
@@ -130,9 +136,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             ])
 
         debugLabel.constrain([
-            debugLabel.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor),
-            debugLabel.topAnchor.constraint(equalTo: subHeaderView.topAnchor)
-            ])
+            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
+            debugLabel.bottomAnchor.constraint(equalTo: logo.topAnchor, constant: -4.0)])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
         prompt.constrain([
@@ -294,7 +299,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             guard let balance = Store.state[$0]?.balance,
                 let rate = Store.state[$0]?.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
-                                currency: $0,
                                 rate: rate)
             return amount.fiatValue
             }.reduce(0.0, +)
@@ -304,7 +308,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        format.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         
         self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
     }
@@ -369,9 +373,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func attemptShowPrompt() {
-        guard currentPromptView == nil else {
-            return
-        }
+        guard okToShowPrompts else { return }
+        guard currentPromptView == nil else { return }
         
         if let nextPrompt = PromptFactory.nextPrompt(walletAuthenticator: walletAuthenticator) {
             self.saveEvent("prompt.\(nextPrompt.name).displayed")
@@ -392,7 +395,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
                 prompt.continueButton.tap = { [unowned self] in
                     // TODO:BCH move out of home screen
                     
-                    if let trigger = nextPrompt.trigger(for: Currencies.btc) {
+                    if let trigger = nextPrompt.trigger {
                         Store.trigger(name: trigger)
                     }
                     self.saveEvent("prompt.\(nextPrompt.name).trigger")

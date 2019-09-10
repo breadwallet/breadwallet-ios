@@ -3,91 +3,95 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-03-26.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
-
-// swiftlint:disable cyclomatic_complexity
+import BRCrypto
 
 enum PaymentRequestType {
     case local
     case remote
 }
 
+extension PaymentProtocolRequest {
+    var displayText: String? {
+        if let name = commonName {
+            return isSecure ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized
+        } else {
+            return primaryTarget?.description
+        }
+    }
+}
+
 struct PaymentRequest {
 
+    static let jsonHeader = "application/payment-request"
+    static let bip70header = "application/bitcoin-paymentrequest"
+    
+    let currency: Currency
+    var toAddress: String? //TODO:CRYPTO store as Address
+    var displayAddress: String? { return toAddress } //TODO:CRYPTO cleanup
+    let type: PaymentRequestType
+    var amount: Amount?
+    var label: String?
+    var message: String?
+    var remoteRequest: URL?
+    var paymentProtocolRequest: PaymentProtocolRequest?
+    var r: URL?
+    
     init?(string: String, currency: Currency) {
         self.currency = currency
-        if var url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
-            if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil {
-                url = NSURL(string: "\(scheme)://\(resourceSpecifier)")!
-
-                if let scheme = url.scheme, let currencySchemes = currency.urlSchemes, currencySchemes.contains(scheme) {
-                    let host = url.host
-                    if let host = host {
-                        if currency.matches(Currencies.bch) {
-                            // BCH CashAddr includes the bitcoincash: prefix in the address format
-                            // the payment request stores the address in legacy address format
-                            let cashAddr = "\(scheme):\(host)"
-                            toAddress = cashAddr.bitcoinAddr
-                            if toAddress.isNilOrEmpty {
-                                toAddress = host
-                                warningMessage = S.Send.legacyAddressWarning
-                            }
-                            guard currency.isValidAddress(toAddress!.bCashAddr) else { return nil }
-                        } else {
-                            guard currency.isValidAddress(host) else { return nil }
-                            toAddress = host
-                        }
-                    }
-                    
-                    if let components = url.query?.components(separatedBy: "&") {
-                        for component in components {
-                            let pair = component.components(separatedBy: "=")
-                            if pair.count < 2 { continue }
-                            let key = pair[0]
-                            var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
-                            value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-                            
-                            switch key {
-                            case "amount":
-                                amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
-                            case "label", "memo":
-                                label = value
-                            case "message":
-                                message = value
-                            case "r":
-                                r = URL(string: value)
-                            default:
-                                print("Key not found: \(key)")
-                            }
-                        }
-                    }
-                    //Payment request must have either an r value or an address
-                    if r == nil {
-                        guard toAddress != nil else { return nil }
-                        type = .local
-                    } else {
-                        type = .remote
-                    }
-                    return
+        if let url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
+            if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil,
+                let url = NSURL(string: "\(scheme)://\(resourceSpecifier)"),
+                scheme == currency.urlScheme {
+                if let host = url.host {
+                    guard currency.isValidAddress(host) else { return nil }
+                    toAddress = host
                 }
+                
+                //TODO: add support for ERC-681 token transfers, amount field, amount as scientific notation
+                if let components = url.query?.components(separatedBy: "&") {
+                    for component in components {
+                        let pair = component.components(separatedBy: "=")
+                        if pair.count < 2 { continue }
+                        let key = pair[0]
+                        var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
+                        value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
+                        
+                        switch key {
+                        case "amount":
+                            amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
+                        case "label", "memo":
+                            label = value
+                        case "message":
+                            message = value
+                        case "r":
+                            r = URL(string: value)
+                        default:
+                            print("Key not found: \(key)")
+                        }
+                    }
+                }
+                //Payment request must have either an r value or an address
+                if r == nil {
+                    guard toAddress != nil else { return nil }
+                    type = .local
+                } else {
+                    type = .remote
+                }
+                return
             } else if url.scheme == "http" || url.scheme == "https" {
                 type = .remote
-                remoteRequest = url
+                remoteRequest = url as URL
                 return
             }
         }
         
         // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
         if currency.isValidAddress(string) {
-            if currency.matches(Currencies.bch) {
-                toAddress = string.bitcoinAddr
-            } else {
-                toAddress = string
-            }
+            toAddress = string
             type = .local
             return
         }
@@ -96,30 +100,29 @@ struct PaymentRequest {
     }
 
     init?(data: Data, currency: Currency) {
+        guard let coreWallet = currency.wallet?.core else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest(data: data)
+        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBip70: data)
         type = .local
     }
 
-    init?(json: String, currency: Currency) {
+    init?(jsonData: Data, currency: Currency) {
+        guard let coreWallet = currency.wallet?.core else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest(json: json)
+        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBitPay: jsonData)
         type = .local
     }
 
     func fetchRemoteRequest(completion: @escaping (PaymentRequest?) -> Void) {
-        let request: NSMutableURLRequest
-        if let url = r {
-            request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0)
+        let url = r ?? remoteRequest!
+        let request = NSMutableURLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10.0)
+
+        if self.currency.isBitcoin {
+            request.setValue(PaymentRequest.bip70header, forHTTPHeaderField: "Accept")
+            //TODO: use this header once json supports isSecure and commonName
+            //request.setValue(PaymentRequest.jsonHeader, forHTTPHeaderField: "Accept")
         } else {
-            request = NSMutableURLRequest(url: remoteRequest! as URL, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 5.0) //TODO - fix !
-        }
-        
-        if self.currency.matches(Currencies.btc) {
-            request.setValue("application/bitcoin-paymentrequest", forHTTPHeaderField: "Accept")
-            //request.addValue("application/payment-request", forHTTPHeaderField: "Accept") // this breaks bitpay :(
-        } else {
-            request.setValue("application/payment-request", forHTTPHeaderField: "Accept")
+            request.setValue(PaymentRequest.jsonHeader, forHTTPHeaderField: "Accept")
         }
 
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
@@ -127,12 +130,11 @@ struct PaymentRequest {
             guard let data = data else { return completion(nil) }
             guard let response = response else { return completion(nil) }
 
-            if response.mimeType?.lowercased() == "application/bitcoin-paymentrequest" {
-                completion(PaymentRequest(data: data, currency: Currencies.btc))
-            } else if response.mimeType?.lowercased() == "application/payment-request" {
-                // TODO: XXX validate hash from response header
-                let req = PaymentRequest(json: String(data: data, encoding: .utf8) ?? "", currency: self.currency)
-                // TODO: XXX populate the certified common name from the https response
+            if response.mimeType?.lowercased() == PaymentRequest.bip70header {
+                guard let btc = Currencies.btc.instance else { return completion(nil) }
+                completion(PaymentRequest(data: data, currency: btc))
+            } else if response.mimeType?.lowercased() == PaymentRequest.jsonHeader {
+                let req = PaymentRequest(jsonData: data, currency: self.currency)
                 completion(req)
             } else if response.mimeType?.lowercased() == "text/uri-list" {
                 for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
@@ -149,27 +151,35 @@ struct PaymentRequest {
         }.resume()
     }
 
-    static func requestString(withAddress address: String, forAmount amount: UInt256, currency: Currency) -> String {
-        let amountString = amount.string(decimals: currency.commonUnit.decimals)
-        guard let uri = currency.addressURI(address) else { return "" }
+    static func requestString(withAddress address: String, forAmount amount: Amount) -> String {
+        let amountString = amount.tokenUnformattedString(in: amount.currency.defaultUnit)
+        guard let uri = amount.currency.addressURI(address) else { return "" }
         return "\(uri)?amount=\(amountString)"
     }
-
-    let currency: Currency
-    var toAddress: String?
-    var displayAddress: String? {
-        if currency.matches(Currencies.bch) {
-            return toAddress?.bCashAddr
-        } else {
-            return toAddress
-        }
+    
+    static func postProtocolPayment(protocolRequest protoReq: PaymentProtocolRequest, transfer: Transfer, callback: @escaping (String) -> Void) {
+        let payment = protoReq.createPayment(transfer: transfer)
+        guard let url = protoReq.paymentURL else { return }
+        let request = NSMutableURLRequest(url: URL(string: url)!, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 20.0)
+        request.httpMethod = "POST"
+        request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
+        request.httpBody = payment?.encode()
+        print("[PAY] Sending PaymentProtocolPayment to: \(url)")
+        URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
+            guard error == nil else { print("[PAY] error: \(error!)"); return }
+            guard let data = data, let _ = response as? HTTPURLResponse else { print("[PAY] no data or response"); return }
+            var memo: String? = nil
+            if let ack = PaymentProtocolPaymentACK.create(forBip70: data) {
+                memo = ack.memo
+            } else if let ack = PaymentProtocolPaymentACK.create(forBitPay: data) {
+                memo = ack.memo
+            }
+            if let memo = memo {
+                DispatchQueue.main.async {
+                    callback(memo)
+                }
+            }
+            }.resume()
     }
-    let type: PaymentRequestType
-    var amount: Amount?
-    var label: String?
-    var message: String?
-    var remoteRequest: NSURL?
-    var paymentProtocolRequest: PaymentProtocolRequest?
-    var r: URL?
-    var warningMessage: String? //Displayed to the user before the send view fields are populated
 }

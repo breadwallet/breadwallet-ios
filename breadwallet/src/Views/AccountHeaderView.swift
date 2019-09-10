@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0
@@ -64,31 +63,13 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     private var isScrubbing = false
     var setHostContentOffset: ((CGFloat) -> Void)?
     
-    var isWatchOnly: Bool = false {
-        didSet {
-            if E.isTestnet || isWatchOnly {
-                if E.isTestnet && isWatchOnly {
-                    modeLabel.text = "(Testnet - Watch Only)"
-                } else if E.isTestnet {
-                    modeLabel.text = "(Testnet)"
-                } else if isWatchOnly {
-                    modeLabel.text = "(Watch Only)"
-                }
-                modeLabel.isHidden = false
-            }
-            if E.isScreenshots {
-                modeLabel.isHidden = true
-            }
-        }
-    }
-    
     // MARK: Init
     
     init(currency: Currency) {
         self.currency = currency
         self.balanceCell = BalanceCell(currency: currency)
         self.chartView = ChartView(currency: currency)
-        if let token = currency as? ERC20Token, token.isSupported == false {
+        if currency.isSupported == false {
             self.delistedTokenView = DelistedTokenView(currency: currency)
         }
         super.init(frame: CGRect())
@@ -190,7 +171,16 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         exchangeRateLabel.textAlignment = .center
 
         modeLabel.isHidden = true
-        
+
+        if (E.isDebug || E.isTestFlight) && !E.isScreenshots {
+            var modeName = ""
+            if let mode = currency.wallet?.core.manager.mode {
+                modeName = "\(mode)"
+            }
+            modeLabel.text = "\(modeName) \(E.isTestnet ? "(Testnet)" : "")"
+            modeLabel.isHidden = false
+        }
+
         priceChangeView.currency = currency
         priceDateLabel.textColor = Theme.tertiaryText
         priceDateLabel.textAlignment = .center

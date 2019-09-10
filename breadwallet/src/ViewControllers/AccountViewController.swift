@@ -3,32 +3,24 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 import MachO
 
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
-    let currency: Currency
+    var currency: Currency { return wallet.currency }
     
-    init(currency: Currency, walletManager: WalletManager) {
-        self.walletManager = walletManager
-        self.currency = currency
-        self.headerView = AccountHeaderView(currency: currency)
-        self.footerView = AccountFooterView(currency: currency)
+    init(wallet: Wallet) {
+        self.wallet = wallet
+        self.headerView = AccountHeaderView(currency: wallet.currency)
+        self.footerView = AccountFooterView(currency: wallet.currency)
         self.searchHeaderview = SearchHeaderView()
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(currency: currency, walletManager: walletManager, didSelectTransaction: didSelectTransaction)
-
-        if let btcWalletManager = walletManager as? BTCWalletManager {
-            headerView.isWatchOnly = btcWalletManager.isWatchOnly
-        } else {
-            headerView.isWatchOnly = false
-        }
+        self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: didSelectTransaction)
 
         footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
         footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
@@ -37,7 +29,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
 
     // MARK: - Private
-    private let walletManager: WalletManager
+    private let wallet: Wallet
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private var footerHeightConstraint: NSLayoutConstraint?
@@ -71,7 +63,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private var shouldShowRewardsView: Bool {
-        return Currencies.brd.code == currency.code
+        return currency.isBRDToken
     }
     
     private var shouldAnimateRewardsView: Bool {
@@ -80,6 +72,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //TODO:CRYPTO move this to home screen
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
         if !E.isSimulator {
             var s = stat()
@@ -123,12 +116,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
-            DispatchQueue.walletQueue.async { [weak self] in
-                self?.walletManager.peerManager?.connect()
-            }
-        }
         
         if shouldAnimateRewardsView {
             expandRewardsView()
@@ -226,6 +213,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     private func showJailbreakWarnings(isJailbroken: Bool) {
         guard isJailbroken else { return }
+        //TODO:CRYPTO
+        /*
         let totalSent = walletManager.wallet?.totalSent ?? 0
         let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
         let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
@@ -238,6 +227,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             }))
         }
         present(alert, animated: true, completion: nil)
+        */
     }
     
     private func showSearchHeaderView() {

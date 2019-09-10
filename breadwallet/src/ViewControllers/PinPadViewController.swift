@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-15.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -30,8 +30,13 @@ class PinPadViewController: UICollectionViewController {
             case .delete:
                 return forStyle == .clear ? #imageLiteral(resourceName: "CutoutDelete") : #imageLiteral(resourceName: "Delete")
             case .biometrics:
-                //accessibility: LAContext.biometricType() == .face ? S.UnlockScreen.faceIdText : S.UnlockScreen.touchIdText
-                return LAContext.biometricType() == .face ? #imageLiteral(resourceName: "CutoutFaceId").withRenderingMode(.alwaysTemplate) : #imageLiteral(resourceName: "TouchIDCutout").withRenderingMode(.alwaysTemplate)
+                switch forStyle {
+                case .clear:
+                    return LAContext.biometricType() == .face ? #imageLiteral(resourceName: "CutoutFaceId").withRenderingMode(.alwaysTemplate) : #imageLiteral(resourceName: "TouchIDCutout").withRenderingMode(.alwaysTemplate)
+                case .white:
+                    return LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId").withRenderingMode(.alwaysTemplate) : #imageLiteral(resourceName: "TouchId").withRenderingMode(.alwaysTemplate)
+                }
+                
             }
         }
     }
