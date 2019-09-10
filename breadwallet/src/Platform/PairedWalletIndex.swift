@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-07-24.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
 
 /// Index of all EME paired wallets
 class PairedWalletIndex: BRKVStoreObject, BRCoding {

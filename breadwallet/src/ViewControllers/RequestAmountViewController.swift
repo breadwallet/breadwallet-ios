@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-03.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -121,7 +121,7 @@ class RequestAmountViewController: UIViewController {
 
     private func setQrCode() {
         guard let amount = amount else { return }
-        let request = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
+        let request = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount)
 
         if let uriData = request.data(using: .utf8),
             let qrImage = UIImage.qrCode(data: uriData) {
@@ -139,7 +139,7 @@ class RequestAmountViewController: UIViewController {
 
     @objc private func shareTapped() {
         guard let amount = amount else { return showErrorMessage(S.RequestAnAmount.noAmount) }
-        let text = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount.rawValue, currency: currency)
+        let text = PaymentRequest.requestString(withAddress: receiveAddress, forAmount: amount)
         if let image = qrCode.image {
             shareAddress?(text, image)
         }

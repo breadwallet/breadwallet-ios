@@ -3,28 +3,11 @@
 //  BreadWallet
 //
 //  Created by Samuel Sutch on 11/4/15.
-//  Copyright (c) 2016 breadwallet LLC
+//  Copyright (c) 2016-2019 Breadwinner AG. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 import Foundation
-import BRCore
+import BRCrypto
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
@@ -82,13 +65,13 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     private var authFetchGroup = DispatchGroup()
 
     // the NSURLSession on which all NSURLSessionTasks are executed
-    lazy private var session: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: self.queue)
+    lazy private(set) var session: URLSession = URLSession(configuration: .default, delegate: self, delegateQueue: self.queue)
 
     // the queue on which the NSURLSession operates
     private var queue = OperationQueue()
     
     // convenience getter for the API endpoint
-    private var baseUrl: String {
+    var baseUrl: String {
         return "\(proto)://\(host)"
     }
     
@@ -105,19 +88,13 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     }
     
     var deviceId: String {
-        return UserDefaults.standard.deviceID
+        return UserDefaults.deviceID
     }
     
-    var authKey: BRKey? {
+    var authKey: Key? {
         if authenticator.noWallet { return nil }
-        guard let keyStr = authenticator.apiAuthKey else { return nil }
-        var key = BRKey()
-        key.compressed = 1 
-        if BRKeySetPrivKey(&key, keyStr) == 0 {
-            #if DEBUG
-                fatalError("Unable to decode private key")
-            #endif
-        }
+        let key = authenticator.apiAuthKey
+        assert(key != nil)
         return key
     }
     
@@ -128,7 +105,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         func joinPath(_ k: String...) -> URL {
             return URL(string: ([baseUrl] + k).joined(separator: ""))!
         }
-        
+
         if let args = args {
             return joinPath(path + "?" + args.map({
                 "\($0.0.urlEscapedString)=\($0.1.urlEscapedString)"
@@ -145,7 +122,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             // add Date header if necessary
             mutableRequest.setValue(Date().RFC1123String(), forHTTPHeaderField: "Date")
         }
-        if let tokenData = authenticator.userAccount,
+        if let tokenData = authenticator.apiUserAccount,
             let token = tokenData["token"] as? String,
             let authKey = authKey,
             let signingData = mutableRequest.signingString.data(using: .utf8) {
@@ -241,11 +218,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             }
             return
         }
-        guard let authKey = authKey else {
-            return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
-                NSLocalizedDescriptionKey: S.ApiClient.notReady]))
+        guard let authKey = authKey,
+            let authPubKey = authKey.encodeAsPublic.hexToData else {
+                return handler(NSError(domain: BRAPIClientErrorDomain, code: 500, userInfo: [
+                    NSLocalizedDescriptionKey: S.ApiClient.notReady]))
         }
-        let authPubKey = authKey.publicKey
         isFetchingAuth = true
         log("auth: entering group")
         authFetchGroup.enter()
@@ -289,10 +266,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
                             let tok = topObj["token"] as? String,
                             let uid = topObj["userID"] as? String {
                             // success! store it in the keychain
-                            var kcData = self.authenticator.userAccount ?? [AnyHashable: Any]()
+                            var kcData = self.authenticator.apiUserAccount ?? [AnyHashable: Any]()
                             kcData["token"] = tok
                             kcData["userID"] = uid
-                            self.authenticator.userAccount = kcData
+                            self.authenticator.apiUserAccount = kcData
                         }
                     } catch let e {
                         self.log("JSON Deserialization error \(e)")

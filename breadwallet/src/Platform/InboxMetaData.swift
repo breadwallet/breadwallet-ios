@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-09-04.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
 
 /// Metadata for the EME inbox
 class InboxMetaData: BRKVStoreObject, BRCoding {

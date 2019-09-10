@@ -3,15 +3,16 @@
 //  breadwalletTests
 //
 //  Created by Ray Vander Veen on 2019-01-21.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
 @testable import breadwallet
-@testable import BRCore
 
+//TODO:CRYPTO needs refactor
+/*
 class MockTransaction: Transaction {
     var currency: Currency
     
@@ -88,6 +89,7 @@ class MockCurrencyUnit: CurrencyUnit {
         
     }
 }
+*/
 
 class MockTrackable: Trackable {
     

@@ -3,12 +3,11 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-25.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
 import LocalAuthentication
-import BRCore
 
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
@@ -17,21 +16,18 @@ class ModalPresenter: Subscriber, Trackable {
 
     // MARK: - Public
     let keyStore: KeyStore
-    var walletManagers: [String: WalletManager]
     lazy var supportCenter: SupportCenterContainer = {
-        return SupportCenterContainer(walletAuthenticator: keyStore, walletManagers: self.walletManagers)
+        return SupportCenterContainer(walletAuthenticator: keyStore)
     }()
     
-    init(keyStore: KeyStore, walletManagers: [String: WalletManager], window: UIWindow) {
+    init(keyStore: KeyStore, system: CoreSystem, window: UIWindow, alertPresenter: AlertPresenter?) {
+        self.system = system
         self.window = window
-        self.walletManagers = walletManagers
+        self.alertPresenter = alertPresenter
         self.keyStore = keyStore
         self.modalTransitionDelegate = ModalTransitionDelegate(type: .regular)
         self.wipeNavigationDelegate = StartNavigationDelegate()
         addSubscriptions()
-        if !Reachability.isReachable {
-            showNotReachable()
-        }
     }
     
     deinit {
@@ -40,24 +36,21 @@ class ModalPresenter: Subscriber, Trackable {
 
     // MARK: - Private
     private let window: UIWindow
-    private let alertHeight: CGFloat = 260.0
+    private let alertPresenter: AlertPresenter?
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
     private let verifyPinTransitionDelegate = PinTransitioningDelegate()
     private var currentRequest: PaymentRequest?
-    private var notReachableAlert: InAppAlert?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
+    private let system: CoreSystem
+    
     private func addSubscriptions() {
 
         Store.lazySubscribe(self,
-                        selector: { $0.rootModal != $1.rootModal},
-                        callback: { [weak self] in self?.presentModal($0.rootModal) })
-        
-        Store.lazySubscribe(self,
-                        selector: { $0.alert != $1.alert && $1.alert != .none },
-                        callback: { [weak self] in self?.handleAlertChange($0.alert) })
+                            selector: { $0.rootModal != $1.rootModal},
+                            callback: { [weak self] in self?.presentModal($0.rootModal) })
         
         Store.subscribe(self, name: .presentFaq("", nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
@@ -98,29 +91,16 @@ class ModalPresenter: Subscriber, Trackable {
         Store.subscribe(self, name: .scanQr, callback: { [weak self] _ in
             self?.handleScanQrURL()
         })
-        Store.subscribe(self, name: .copyWalletAddresses(nil, nil), callback: { [weak self] in
-            guard let trigger = $0 else { return }
-            if case .copyWalletAddresses(let success, let error) = trigger {
-                self?.handleCopyAddresses(success: success, error: error)
-            }
-        })
         Store.subscribe(self, name: .authenticateForPlatform("", true, {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
             if case .authenticateForPlatform(let prompt, let allowBiometricAuth, let callback) = trigger {
                 self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
-        Store.subscribe(self, name: .confirmTransaction(Currencies.btc, Amount.empty, Amount.empty, .regular, "", {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .confirmTransaction(nil, nil, nil, .regular, "", {_ in}), callback: { [unowned self] in
             guard let trigger = $0 else { return }
-            if case .confirmTransaction(let currency, let amount, let fee, let displayFeeLevel, let address, let callback) = trigger {
+            if case .confirmTransaction(let currency?, let amount?, let fee?, let displayFeeLevel, let address, let callback) = trigger {
                 self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
-            }
-        })
-        Reachability.addDidChangeCallback({ [weak self] isReachable in
-            if isReachable {
-                self?.hideNotReachable()
-            } else {
-                self?.showNotReachable()
             }
         })
         Store.subscribe(self, name: .lightWeightAlert(""), callback: { [weak self] in
@@ -129,20 +109,12 @@ class ModalPresenter: Subscriber, Trackable {
                 self?.showLightWeightAlert(message: message)
             }
         })
-        Store.subscribe(self, name: .showAlert(nil), callback: { [weak self] in
-            guard let trigger = $0 else { return }
-            if case let .showAlert(alert) = trigger {
-                if let alert = alert {
-                    self?.topViewController?.present(alert, animated: true, completion: nil)
-                }
-            }
-        })
         Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
             self?.wipeWalletNoPrompt()
         })
-        Store.subscribe(self, name: .showCurrency(Currencies.btc), callback: { [unowned self] in
+        Store.subscribe(self, name: .showCurrency(nil), callback: { [unowned self] in
             guard let trigger = $0 else { return }
-            if case .showCurrency(let currency) = trigger {
+            if case .showCurrency(let currency?) = trigger {
                 self.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
@@ -217,54 +189,8 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
-    private func handleAlertChange(_ type: AlertType) {
-        guard type != .none else { return }
-        presentAlert(type, completion: {
-            Store.perform(action: Alert.Hide())
-        })
-    }
-
-    private func presentAlert(_ type: AlertType, completion: @escaping () -> Void) {
-        let alertView = AlertView(type: type)
-        let window = UIApplication.shared.keyWindow!
-        let size = window.bounds.size
-        window.addSubview(alertView)
-
-        let topConstraint = alertView.constraint(.top, toView: window, constant: size.height)
-        alertView.constrain([
-            alertView.constraint(.width, constant: size.width),
-            alertView.constraint(.height, constant: alertHeight + 25.0),
-            alertView.constraint(.leading, toView: window, constant: nil),
-            topConstraint ])
-        window.layoutIfNeeded()
-
-        UIView.spring(0.6, animations: {
-            topConstraint?.constant = size.height - self.alertHeight
-            window.layoutIfNeeded()
-        }, completion: { _ in
-            alertView.animate()
-            UIView.spring(0.6, delay: 2.0, animations: {
-                topConstraint?.constant = size.height
-                window.layoutIfNeeded()
-            }, completion: { _ in
-                //TODO - Make these callbacks generic
-                if case .paperKeySet(let callback) = type {
-                    callback()
-                }
-                if case .pinSet(let callback) = type {
-                    callback()
-                }
-                if case .sweepSuccess(let callback) = type {
-                    callback()
-                }
-                completion()
-                alertView.removeFromSuperview()
-            })
-        })
-    }
-
     func preloadSupportCenter() {
-        supportCenter.loadWebView() // pre-load contents for faster access
+        supportCenter.preload() // pre-load contents for faster access
     }
 
     func presentFaq(articleId: String? = nil, currency: Currency? = nil) {
@@ -275,7 +201,7 @@ class ModalPresenter: Subscriber, Trackable {
         if let articleId = articleId {
             url = "/support/article?slug=\(articleId)"
             if let currency = currency {
-                url += "&currency=\(currency.supportCurrencyCode)"
+                url += "&currency=\(currency.supportCode)"
             }
         } else {
             url = "/support?"
@@ -293,12 +219,10 @@ class ModalPresenter: Subscriber, Trackable {
         case .sendForRequest(let request):
             return makeSendView(forRequest: request)
         case .receive(let currency):
-            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes != nil))
+            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlScheme != nil))
         case .loginScan:
             presentLoginScan()
             return nil
-        case .loginAddress:
-            return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false)
         case .requestAmount(let currency, let address):
             let requestVc = RequestAmountViewController(currency: currency, receiveAddress: address)
             
@@ -326,11 +250,15 @@ class ModalPresenter: Subscriber, Trackable {
             presentPlatformWebViewController("/trade")
             return nil
         case .receiveLegacy:
-            return makeReceiveView(currency: Currencies.btc, isRequestAmountVisible: false, isBTCLegacy: true)
+            guard let btc = Currencies.btc.instance else { return nil }
+            return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
         }
     }
 
     private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
+        //TODO:CRYPTO pigeon
+        return nil
+        /*
         guard let walletManager = walletManagers[request.currency.code] else { return nil }
         guard let kvStore = Backend.kvStore else { return nil }
         guard let sender = request.currency.createSender(authenticator: keyStore, walletManager: walletManager, kvStore: kvStore) else { return nil }
@@ -344,30 +272,40 @@ class ModalPresenter: Subscriber, Trackable {
             let vc = VerifyPinViewController(bodyText: bodyText,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
                                              success: success)
+            vc.didCancel = {
+                sender.reset()
+            }
             vc.transitioningDelegate = self.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
             checkoutVC?.present(vc, animated: true, completion: nil)
         }
         checkoutVC.onPublishSuccess = { [weak self] in
+         // TODO: see AlertPresenter.presentAlert()
             self?.presentAlert(.sendSuccess, completion: {})
         }
         return checkoutVC
+         */
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {
-        guard !(currency.state?.isRescanning ?? false) else {
-            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-            topViewController?.present(alert, animated: true, completion: nil)
-            return nil
-        }
-        guard let walletManager = walletManagers[currency.code] else { return nil }
-        guard let kvStore = Backend.kvStore else { return nil }
-        guard let sender = currency.createSender(authenticator: keyStore, walletManager: walletManager, kvStore: kvStore) else { return nil }
+        guard let wallet = system.wallet(for: currency),
+            let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+
+        //TODO:CRYPTO is this necessary?
+        //I think this is still necessary for SPV mode where rescanning
+        //will still be a feature - AC
+//        guard !(currency.state?.isRescanning ?? false) else {
+//            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+//            topViewController?.present(alert, animated: true, completion: nil)
+//            return nil
+//        }
+
+        let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
         let sendVC = SendViewController(sender: sender,
-                                        currency: currency,
                                         initialRequest: currentRequest)
         currentRequest = nil
 
@@ -382,6 +320,7 @@ class ModalPresenter: Subscriber, Trackable {
             let vc = VerifyPinViewController(bodyText: bodyText,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
                                              success: success)
             vc.transitioningDelegate = self.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
@@ -390,7 +329,7 @@ class ModalPresenter: Subscriber, Trackable {
             root?.present(vc, animated: true, completion: nil)
         }
         sendVC.onPublishSuccess = { [weak self] in
-            self?.presentAlert(.sendSuccess, completion: {})
+            self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
         }
         return root
     }
@@ -423,10 +362,12 @@ class ModalPresenter: Subscriber, Trackable {
                 top.present(alert, animated: true, completion: nil)
                 
             case .privateKey:
-                if let walletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager {
-                    self.presentKeyImport(walletManager: walletManager, scanResult: scanResult)
-                }
-                
+                //TODO:CRYPTO scan private key
+                break
+//                if let walletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager {
+//                    self.presentKeyImport(walletManager: walletManager, scanResult: scanResult)
+//                }
+
             case .deepLink(let url):
                 if let params = url.queryParameters,
                     let pubKey = params["publicKey"],
@@ -449,65 +390,74 @@ class ModalPresenter: Subscriber, Trackable {
         let menuNav = UINavigationController()
         menuNav.setDarkStyle()
         
-        var enableSegwit = MenuItem(title: S.Settings.enableSegwit, callback: {
-            let segwitView = SegwitViewController()
-            menuNav.pushViewController(segwitView, animated: true)
-        })
-        enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
-        var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
-            Backend.apiClient.sendViewLegacyAddress()
-            Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
-        })
-        viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
-        
-        var btcItems: [MenuItem] = [
+        // MARK: Bitcoin Menu
+        var btcItems: [MenuItem] = []
+        if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
+            // Connection
+            btcItems.append(MenuItem(title: S.WalletConnectionSettings.title) {
+                guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
+                    return assertionFailure()
+                }
+                let connectionSettings = WalletConnectionSettings(system: self.system,
+                                                                  kvStore: kv,
+                                                                  walletInfo: walletInfo)
+                let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings)
+                menuNav.pushViewController(connectionSettingsVC, animated: true)
+            })
+
             // Rescan
-            MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: Currencies.btc), animated: true)
-            }),
+            btcItems.append(MenuItem(title: S.Settings.sync, callback: {
+                menuNav.pushViewController(ReScanViewController(currency: btc), animated: true)
+            }))
+            
             // Nodes
-            MenuItem(title: S.NodeSelector.title, callback: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-                let nodeSelector = NodeSelectorViewController(walletManager: btcWalletManager)
+            btcItems.append(MenuItem(title: S.NodeSelector.title, callback: {
+                let nodeSelector = NodeSelectorViewController(wallet: btcWallet)
                 menuNav.pushViewController(nodeSelector, animated: true)
-            }),
-            //TODO: universal scan -- remove
-            MenuItem(title: S.Settings.importTile, callback: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
+            }))
+            
+            btcItems.append(MenuItem(title: S.Settings.importTile, callback: {
                 menuNav.dismiss(animated: true, completion: { [unowned self] in
-                    self.presentKeyImport(walletManager: btcWalletManager)
+                    self.presentKeyImport(wallet: btcWallet)
                 })
-            }),
-            enableSegwit,
-            viewLegacyAddress
-        ]
-        
-        if UserDefaults.isBiometricsEnabled {
-            let biometricSpendingLimitItem = MenuItem(title: LAContext.biometricType() == .face ? S.Settings.faceIdLimit : S.Settings.touchIdLimit, accessoryText: {
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager,
-                    let rate = Currencies.btc.state?.currentRate else { return "" }
-                let amount = Amount(amount: UInt256(btcWalletManager.spendingLimit), currency: Currencies.btc, rate: rate)
-                return amount.fiatDescription
-            }, callback: { [weak self] in
-                self?.pushBiometricsSpendingLimit(onNc: menuNav)
+            }))
+            
+            var enableSegwit = MenuItem(title: S.Settings.enableSegwit, callback: {
+                let segwitView = SegwitViewController()
+                menuNav.pushViewController(segwitView, animated: true)
             })
-            btcItems.insert(biometricSpendingLimitItem, at: 0)
+            enableSegwit.shouldShow = { return !UserDefaults.hasOptedInSegwit }
+            var viewLegacyAddress = MenuItem(title: S.Settings.viewLegacyAddress, callback: {
+                Backend.apiClient.sendViewLegacyAddress()
+                Store.perform(action: RootModalActions.Present(modal: .receiveLegacy))
+            })
+            viewLegacyAddress.shouldShow = { return UserDefaults.hasOptedInSegwit }
+            
+            btcItems.append(enableSegwit)
+            btcItems.append(viewLegacyAddress)
         }
+        var btcMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.btc.instance?.name ?? "Bitcoin"), subMenu: btcItems, rootNav: menuNav)
+        btcMenu.shouldShow = { return !btcItems.isEmpty }
         
-        let bchItems: [MenuItem] = [
+        // MARK: Bitcoin Cash Menu
+        var bchItems: [MenuItem] = []
+        if let bch = Currencies.bch.instance {
             // Rescan
-            MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: Currencies.bch), animated: true)
-            }),
-            //TODO: universal scan -- remove
-            MenuItem(title: S.Settings.importTile, callback: {
-                guard let bchWalletManager = self.walletManagers[Currencies.bch.code] as? BTCWalletManager else { return }
-                menuNav.dismiss(animated: true, completion: { [unowned self] in
-                    self.presentKeyImport(walletManager: bchWalletManager)
-                })
-            })
-        ]
-        
+            bchItems.append(MenuItem(title: S.Settings.sync, callback: {
+                menuNav.pushViewController(ReScanViewController(currency: bch), animated: true)
+            }))
+            //TODO:CRYPTO_V2 - add bch importing once blockchaindb supports it
+//            bchItems.append(MenuItem(title: S.Settings.importTile, callback: {
+//                menuNav.dismiss(animated: true, completion: { [unowned self] in
+//                    self.presentKeyImport(wallet: bchWallet)
+//                })
+//            }))
+            
+        }
+        var bchMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.instance?.name ?? "Bitcoin Cash"), subMenu: bchItems, rootNav: menuNav)
+        bchMenu.shouldShow = { return !bchItems.isEmpty }
+
+        // MARK: Preferences
         let preferencesItems: [MenuItem] = [
             // Display Currency
             MenuItem(title: S.Settings.currency, accessoryText: {
@@ -519,12 +469,9 @@ class ModalPresenter: Subscriber, Trackable {
                 menuNav.pushViewController(DefaultCurrencyViewController(), animated: true)
             }),
             
-            // Bitcoin Settings
-            MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.btc.name), subMenu: btcItems, rootNav: menuNav),
-            
-            // Bitcoin Cash Settings
-            MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.name), subMenu: bchItems, rootNav: menuNav),
-            
+            btcMenu,
+            bchMenu,
+
             // Share Anonymous Data
             MenuItem(title: S.Settings.shareData, callback: {
                 menuNav.pushViewController(ShareDataViewController(), animated: true)
@@ -533,7 +480,7 @@ class ModalPresenter: Subscriber, Trackable {
             // Reset Wallets
             MenuItem(title: S.Settings.resetCurrencies, callback: {
                 menuNav.dismiss(animated: true, completion: {
-                    Store.trigger(name: .resetDisplayCurrencies)
+                    self.system.resetToDefaultCurrencies()
                 })
             }),
             
@@ -543,6 +490,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
         ]
         
+        // MARK: Security Settings
         let securityItems: [MenuItem] = [
             // Unlink
             MenuItem(title: S.Settings.wipe) { [unowned self] in
@@ -563,12 +511,7 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Biometrics
             MenuItem(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle) { [unowned self] in
-                guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-                let biometricsSettings = BiometricsSettingsViewController(walletManager: btcWalletManager)
-                biometricsSettings.presentSpendingLimit = {
-                    self.pushBiometricsSpendingLimit(onNc: menuNav)
-                }
-                menuNav.pushViewController(biometricsSettings, animated: true)
+                self.presentBiometricsMenuItem()
             },
             
             // Paper key
@@ -577,6 +520,7 @@ class ModalPresenter: Subscriber, Trackable {
             }
         ]
         
+        // MARK: Root Menu
         var rootItems: [MenuItem] = [
             // Scan QR Code
             MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [unowned self] in
@@ -585,8 +529,8 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) {
-                guard let kvStore = Backend.kvStore else { return }
-                let vc = EditWalletsViewController(type: .manage, kvStore: kvStore)
+                guard let assetCollection = self.system.assetCollection else { return }
+                let vc = ManageWalletsViewController(assetCollection: assetCollection)
                 menuNav.pushViewController(vc, animated: true)
             },
             
@@ -648,9 +592,13 @@ class ModalPresenter: Subscriber, Trackable {
             developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
                 self.showEmailLogsModal()
             })
+
+            developerItems.append(MenuItem(title: "Lock Wallet") {
+                Store.trigger(name: .lock)
+            })
             
-            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") { [unowned self] in
-                self.wipeWalletNoPrompt()
+            developerItems.append(MenuItem(title: "Unlink Wallet (no prompt)") {
+                Store.trigger(name: .wipeWalletNoPrompt)
             })
             
             if E.isDebug { // for dev/debugging use only
@@ -689,7 +637,8 @@ class ModalPresenter: Subscriber, Trackable {
             // Shows a preview of the paper key.
             if let paperKey = self.keyStore.seedPhrase(pin: "111111") {
                 let words = paperKey.components(separatedBy: " ")
-                let preview = "\(words[0]) \(words[1])..."
+                let timestamp = (try? self.keyStore.loadAccount().map { $0.timestamp }.get()) ?? Date.zeroValue()
+                let preview = "\(words[0]) \(words[1])... (\(DateFormatter.mediumDateFormatter.string(from: timestamp))"
                 developerItems.append(MenuItem(title: "Paper key preview",
                                                accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" },
                                                callback: {
@@ -712,40 +661,11 @@ class ModalPresenter: Subscriber, Trackable {
                                             menuNav.showAlert(title: "", message: "Paired wallets reset")
             }))
 
-            developerItems.append(MenuItem(title: "Clear Ethereum wallet data (rescan)",
+            developerItems.append(MenuItem(title: "Clear Core persistent storage and exit",
                                            callback: { [unowned self] in
-                                            guard let ewm = self.walletManagers[Currencies.eth.code] as? EthWalletManager else { return }
-                                            UserDefaults.hasScannedForTokenBalances = false
-                                            ewm.disconnect()
-                                            let fm = FileManager.default
-                                            let url = C.coreDataDirURL.appendingPathComponent("eth", isDirectory: true)
-                                            do {
-                                            try fm.removeItem(at: url)
-                                            } catch let error {
-                                                print("ERROR removing dir \(url.absoluteString): \(error)")
+                                            self.system.shutdown {
+                                                fatalError("forced exit")
                                             }
-                                            ewm.connect()
-            }))
-            
-            developerItems.append(MenuItem(title: "Ethereum Network Connection Mode",
-                                           accessoryText: { UserDefaults.debugEthereumNetworkMode?.description ?? "default" },
-                                           callback: {
-                                            let alert = UIAlertController(title: "Set Ethereum network connection mode",
-                                                                          message: "Relaunch for changes to take effect",
-                                                                          preferredStyle: .actionSheet)
-                                            for mode in EthereumMode.allCases {
-                                                alert.addAction(UIAlertAction(title: mode.description,
-                                                                              style: .default,
-                                                                              handler: { _ in
-                                                                                UserDefaults.debugEthereumNetworkMode = mode
-                                                }))
-                                            }
-                                            alert.addAction(UIAlertAction(title: "Reset to default",
-                                                                          style: .cancel,
-                                                                          handler: { _ in
-                                                                            UserDefaults.debugEthereumNetworkMode = nil
-                                            }))
-                                            menuNav.present(alert, animated: true, completion: nil)
             }))
             
             developerItems.append(
@@ -867,7 +787,8 @@ class ModalPresenter: Subscriber, Trackable {
                 }
                 return
             }
-            let scanCurrency = (currency is ERC20Token) ? Currencies.eth : currency
+            //TODO: ERC-681 support token transfer URIs
+            let scanCurrency = currency?.wallet?.networkCurrency
             let vc = ScanViewController(forPaymentRequestForCurrency: scanCurrency, completion: { scanResult in
                 scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
@@ -877,21 +798,6 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
-    private func pushBiometricsSpendingLimit(onNc: UINavigationController) {
-        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-        let verify = VerifyPinViewController(bodyText: S.VerifyPin.continueBody,
-                                             pinLength: Store.state.pinLength,
-                                             walletAuthenticator: keyStore,
-                                             success: { _ in
-                                                let spendingLimit = BiometricsSpendingLimitViewController(walletManager: btcWalletManager)
-                                                onNc.pushViewController(spendingLimit, animated: true)
-        })
-        verify.transitioningDelegate = verifyPinTransitionDelegate
-        verify.modalPresentationStyle = .overFullScreen
-        verify.modalPresentationCapturesStatusBarAppearance = true
-        onNc.present(verify, animated: true, completion: nil)
-    }
-    
     private func presentWritePaperKey(fromViewController vc: UIViewController) {
         RecoveryKeyFlowController.enterRecoveryKeyFlow(pin: nil,
                                                        keyMaster: self.keyStore,
@@ -903,8 +809,7 @@ class ModalPresenter: Subscriber, Trackable {
     private func presentPlatformWebViewController(_ mountPoint: String) {
         let vc = BRWebViewController(bundleName: C.webBundle,
                                      mountPoint: mountPoint,
-                                     walletAuthenticator: keyStore,
-                                     walletManagers: walletManagers)
+                                     walletAuthenticator: keyStore)
         vc.startServer()
         vc.preload()
         vc.modalPresentationStyle = .overFullScreen
@@ -926,48 +831,40 @@ class ModalPresenter: Subscriber, Trackable {
                                                         cancelButtonTitle: S.Button.cancel,
                                                         isDestructiveAction: true) {
                                                             self.topViewController?.dismiss(animated: true, completion: {
-                                                                self.wipeWalletNoPrompt()
+                                                                Store.trigger(name: .wipeWalletNoPrompt)
                                                             })
         }
         topViewController?.present(alert, animated: true, completion: nil)
     }
 
+    // do not call directly, instead use wipeWalletNoPrompt trigger so other subscribers are notified
     private func wipeWalletNoPrompt() {
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
-        DispatchQueue.walletQueue.async {
-            self.walletManagers.values.forEach({
-                $0.resetForWipe()
-            })
-            DispatchQueue.walletQueue.asyncAfter(deadline: .now() + 2.0, execute: {
-                let success = self.keyStore.wipeWallet()
-                Backend.disconnectWallet()
-                DispatchQueue.main.async {
-                    activity.dismiss(animated: true) {
-                        if success {
-                            Store.trigger(name: .reinitWalletManager({
-                                Store.trigger(name: .resetDisplayCurrencies)
-                            }))
-                        } else {
-                            let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                            failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                            self.topViewController?.present(failure, animated: true, completion: nil)
-                        }
-                    }
-                }
-            })
+        let success = keyStore.wipeWallet()
+        guard success else { // unexpected error writing to keychain
+            activity.dismiss(animated: true)
+            self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
+            return
+        }
+        Backend.disconnectWallet()
+        Store.perform(action: Reset())
+        self.system.shutdown {
+            DispatchQueue.main.async {
+                activity.dismiss(animated: true)
+                Store.trigger(name: .didWipeWallet)
+            }
         }
     }
     
-    private func presentKeyImport(walletManager: BTCWalletManager, scanResult: QRCode? = nil) {
-        // TODO: auto-import to both BTC and BCH wallet managers
+    private func presentKeyImport(wallet: Wallet, scanResult: QRCode? = nil) {
         let nc = ModalNavigationController()
         nc.setClearNavbar()
         nc.setWhiteStyle()
-        let start = StartImportViewController(walletManager: walletManager, initialQRCode: scanResult)
+        let start = ImportKeyViewController(wallet: wallet, initialQRCode: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: walletManager.currency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: wallet.currency)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         nc.viewControllers = [start]
@@ -975,15 +872,12 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     // MARK: - Prompts
+
     func presentBiometricsMenuItem() {
-        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return assertionFailure() }
-        let biometricsSettings = BiometricsSettingsViewController(walletManager: btcWalletManager)
+        let biometricsSettings = BiometricsSettingsViewController(self.keyStore)
         biometricsSettings.addCloseNavigationItem(tintColor: .white)
         let nc = ModalNavigationController(rootViewController: biometricsSettings)
-        biometricsSettings.presentSpendingLimit = strongify(self) { myself in
-            myself.pushBiometricsSpendingLimit(onNc: nc)
-        }
-        nc.setDefaultStyle()
+        nc.setWhiteStyle()
         nc.isNavigationBarHidden = true
         nc.delegate = securityCenterNavigationDelegate
         topViewController?.present(nc, animated: true, completion: nil)
@@ -1015,6 +909,8 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func handleFile(_ file: Data) {
+        //TODO:CRYPTO payment request -- what is this use case?
+        /*
         if let request = PaymentProtocolRequest(data: file) {
             if let topVC = topViewController as? ModalViewController {
                 let attemptConfirmRequest: () -> Bool = {
@@ -1047,6 +943,7 @@ class ModalPresenter: Subscriber, Trackable {
             alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
             topViewController?.present(alert, animated: true, completion: nil)
         }
+ */
     }
 
     private func handlePaymentRequest(request: PaymentRequest) {
@@ -1062,14 +959,14 @@ class ModalPresenter: Subscriber, Trackable {
         let pushAccountView = {
             guard let nc = self.topViewController?.navigationController as? RootNavigationController,
                 nc.viewControllers.count == 1 else { return }
-            guard let walletManager = self.walletManagers[currency.code] else { return }
-            let accountViewController = AccountViewController(currency: currency, walletManager: walletManager)
+            guard let wallet = self.system.wallet(for: currency) else { return }
+            let accountViewController = AccountViewController(wallet: wallet)
             nc.pushViewController(accountViewController, animated: animated)
             completion?()
         }
         
         if let accountVC = topViewController as? AccountViewController {
-            if accountVC.currency.matches(currency) {
+            if accountVC.currency == currency {
                 completion?()
             } else {
                 accountVC.navigationController?.popToRootViewController(animated: false)
@@ -1104,30 +1001,8 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
-    private func handleCopyAddresses(success: String?, error: String?) {
-        let alert = UIAlertController(title: S.URLHandling.addressListAlertTitle, message: S.URLHandling.addressListAlertMessage, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: S.URLHandling.copy, style: .default, handler: { [unowned self] _ in
-            let verify = VerifyPinViewController(
-                bodyText: S.URLHandling.addressListVerifyPrompt,
-                pinLength: Store.state.pinLength,
-                walletAuthenticator: self.keyStore) { [weak self] _ in
-                    self?.copyAllAddressesToClipboard()
-                    Store.perform(action: Alert.Show(.addressesCopied))
-                    if let success = success, let url = URL(string: success) {
-                        UIApplication.shared.open(url)
-                    }
-            }
-            verify.transitioningDelegate = self.verifyPinTransitionDelegate
-            verify.modalPresentationStyle = .overFullScreen
-            verify.modalPresentationCapturesStatusBarAppearance = true
-            self.topViewController?.present(verify, animated: true, completion: nil)
-        }))
-        topViewController?.present(alert, animated: true, completion: nil)
-    }
-
     private func authenticateForPlatform(prompt: String, allowBiometricAuth: Bool, callback: @escaping (PlatformAuthResult) -> Void) {
-        if UserDefaults.isBiometricsEnabled && allowBiometricAuth {
+        if allowBiometricAuth && keyStore.isBiometricsEnabledForUnlocking {
             keyStore.authenticate(withBiometricsPrompt: prompt, completion: { result in
                 switch result {
                 case .success:
@@ -1149,6 +1024,7 @@ class ModalPresenter: Subscriber, Trackable {
         let verify = VerifyPinViewController(bodyText: prompt,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: keyStore,
+                                             pinAuthenticationType: .unlocking,
                                              success: { pin in
                                                 callback(.success(pin))
         })
@@ -1180,13 +1056,6 @@ class ModalPresenter: Subscriber, Trackable {
         topViewController?.present(confirm, animated: true, completion: nil)
     }
 
-    private func copyAllAddressesToClipboard() {
-        guard let btcWalletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager else { return }
-        guard let wallet = btcWalletManager.wallet else { return } // TODO:BCH
-        let addresses = wallet.allAddresses.filter({wallet.addressIsUsed($0)})
-        UIPasteboard.general.string = addresses.joined(separator: "\n")
-    }
-
     private var topViewController: UIViewController? {
         var viewController = window.rootViewController
         if let nc = viewController as? UINavigationController {
@@ -1196,40 +1065,6 @@ class ModalPresenter: Subscriber, Trackable {
             viewController = viewController?.presentedViewController
         }
         return viewController
-    }
-
-    private func showNotReachable() {
-        guard notReachableAlert == nil else { return }
-        let alert = InAppAlert(message: S.Alert.noInternet, image: #imageLiteral(resourceName: "BrokenCloud"))
-        notReachableAlert = alert
-        let window = UIApplication.shared.keyWindow!
-        let size = window.bounds.size
-        window.addSubview(alert)
-        let bottomConstraint = alert.bottomAnchor.constraint(equalTo: window.topAnchor, constant: 0.0)
-        alert.constrain([
-            alert.constraint(.width, constant: size.width),
-            alert.constraint(.height, constant: InAppAlert.height),
-            alert.constraint(.leading, toView: window, constant: nil),
-            bottomConstraint ])
-        window.layoutIfNeeded()
-        alert.bottomConstraint = bottomConstraint
-        alert.hide = {
-            self.hideNotReachable()
-        }
-        UIView.spring(C.animationDuration, animations: {
-            alert.bottomConstraint?.constant = InAppAlert.height
-            window.layoutIfNeeded()
-        }, completion: {_ in})
-    }
-
-    private func hideNotReachable() {
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            self.notReachableAlert?.bottomConstraint?.constant = 0.0
-            self.notReachableAlert?.superview?.layoutIfNeeded()
-        }, completion: { _ in
-            self.notReachableAlert?.removeFromSuperview()
-            self.notReachableAlert = nil
-        })
     }
 
     private func showLightWeightAlert(message: String) {
@@ -1269,7 +1104,7 @@ class ModalPresenter: Subscriber, Trackable {
 }
 
 class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate {
-
+    
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
 
         guard let coordinator = navigationController.topViewController?.transitionCoordinator else { return }
@@ -1279,21 +1114,16 @@ class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate
                 //We only want to style the view controller if the
                 //pop animation wasn't cancelled
                 if !context.isCancelled {
-                    self.setStyle(navigationController: navigationController, viewController: viewController)
+                    self.setStyle(navigationController: navigationController)
                 }
             }
         } else {
-            setStyle(navigationController: navigationController, viewController: viewController)
+            setStyle(navigationController: navigationController)
         }
     }
 
-    func setStyle(navigationController: UINavigationController, viewController: UIViewController) {
+    func setStyle(navigationController: UINavigationController) {
         navigationController.isNavigationBarHidden = false
-
-        if viewController is BiometricsSettingsViewController {
-            navigationController.setWhiteStyle()
-        } else {
-            navigationController.setDefaultStyle()
-        }
+        navigationController.setDefaultStyle()
     }
 }

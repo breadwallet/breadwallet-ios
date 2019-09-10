@@ -3,12 +3,14 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-07.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
+//TODO:CRYPTO rescan
+/*
 /// Coordinates the sync state of all wallet managers to
 /// display the activity indicator and control backtround tasks
 class WalletCoordinator: Subscriber, Trackable {
@@ -145,7 +147,7 @@ class WalletCoordinator: Subscriber, Trackable {
             UserDefaults.setLastSyncedBlockHeight(height: peerManager.lastBlockHeight, for: currency)
         }
     }
-    
+
     private func syncStateDidChange(state: State) {
         let allWalletsFinishedSyncing = state.wallets.values.filter { $0.syncState == .success}.count == state.wallets.values.count
         if allWalletsFinishedSyncing {
@@ -204,6 +206,7 @@ class WalletCoordinator: Subscriber, Trackable {
         Store.unsubscribe(self)
     }
 }
+*/
 
 /// Rescan state of a currency - stored in UserDefaults
 struct RescanState: Codable {

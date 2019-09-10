@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-11-28.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -68,7 +68,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         return "CurrencyCell"
     }
     
-    func set(viewModel: AssetListViewModel) {
+    func set(viewModel: HomeScreenAssetViewModel) {
         accessibilityIdentifier = viewModel.currency.name
         container.currency = viewModel.currency
         icon.image = viewModel.currency.imageNoBackground
@@ -96,8 +96,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
                             }
         })
         
-        Store.subscribe(self, selector: {
-            return $0[viewModel.currency]?.lastBlockTimestamp != $1[viewModel.currency]?.lastBlockTimestamp },
+        Store.subscribe(self, selector: { $0[viewModel.currency]?.syncProgress != $1[viewModel.currency]?.syncProgress },
                         callback: { state in
                             if let progress = state[viewModel.currency]?.syncProgress {
                                 self.syncIndicator.progress = CGFloat(progress)

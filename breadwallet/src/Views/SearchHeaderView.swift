@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-02.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -54,9 +54,7 @@ enum SearchFilterType {
                         return true
                     }
                 }
-                //BTC transactions don't have a fromAddress, so just look
-                //for fromAddresses for eth like transactions
-                if let ethLikeTxn = transaction as? EthLikeTransaction, ethLikeTxn.fromAddress.lowercased().contains(loweredText) {
+                if transaction.fromAddress.lowercased().contains(loweredText) {
                     return true
                 }
                 return false

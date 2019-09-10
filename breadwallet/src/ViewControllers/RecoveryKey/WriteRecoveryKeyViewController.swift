@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-03-22.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -93,7 +93,7 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
     private var pagingViewContainer: UIView = UIView()
 
     private var mode: EnterRecoveryKeyMode = .generateKey
-    private var dismissAction: Action?
+    private var dismissAction: (() -> Void)?
     private var exitCallback: WriteRecoveryKeyExitHandler?
     
     private var shouldShowDoneButton: Bool {
@@ -110,7 +110,7 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
          pin: String,
          mode: EnterRecoveryKeyMode,
          eventContext: EventContext,
-         dismissAction: Action?,
+         dismissAction: (() -> Void)?,
          exitCallback: WriteRecoveryKeyExitHandler?) {
         
         self.keyMaster = keyMaster
@@ -157,8 +157,8 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
     }
     
     private func exitWithoutPrompting() {
-        if let action = self.dismissAction {
-            Store.perform(action: action)
+        if let dismissAction = self.dismissAction {
+            dismissAction()
         } else if let exitCallback = self.exitCallback {
             exitCallback(.abort)
         } else if let navController = self.navigationController {

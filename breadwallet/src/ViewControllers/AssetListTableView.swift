@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-12-04.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -13,6 +13,8 @@ class AssetListTableView: UITableViewController, Subscriber {
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapAddWallet: (() -> Void)?
     
+    let loadingSpinner = UIActivityIndicatorView(style: .white)
+
     private let assetHeight: CGFloat = 80.0 // rowHeight of 72 plus 8 padding
     private let addWalletButtonHeight: CGFloat = 56.0
     private let addWalletButton = UIButton()
@@ -22,7 +24,15 @@ class AssetListTableView: UITableViewController, Subscriber {
     init() {
         super.init(style: .plain)
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setupAddWalletButton()
+        if Store.state.displayCurrencies.isEmpty {
+            showLoadingState(true)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.backgroundColor = .darkBackground
@@ -34,11 +44,6 @@ class AssetListTableView: UITableViewController, Subscriber {
 
         setupSubscriptions()
         reload()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setupAddWalletButton()
     }
     
     private func setupAddWalletButton() {
@@ -60,9 +65,9 @@ class AssetListTableView: UITableViewController, Subscriber {
         addWalletButton.contentHorizontalAlignment = .center
         addWalletButton.contentVerticalAlignment = .center
 
-        let buttonTitle = "+ " + S.TokenList.addTitle
+        let buttonTitle = S.MenuButton.manageWallets
         addWalletButton.setTitle(buttonTitle, for: .normal)
-        addWalletButton.accessibilityLabel = E.isScreenshots ? "Add Wallet" : buttonTitle
+        addWalletButton.accessibilityLabel = E.isScreenshots ? "Manage Wallets" : buttonTitle
 
         addWalletButton.addTarget(self, action: #selector(addWallet), for: .touchUpInside)
 
@@ -82,20 +87,19 @@ class AssetListTableView: UITableViewController, Subscriber {
             let newState = $1
             $0.displayCurrencies.forEach { currency in
                 if oldState[currency]?.balance != newState[currency]?.balance
-                    || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
-                    || oldState[currency]?.maxDigits != newState[currency]?.maxDigits {
+                    || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate {
                     result = true
                 }
             }
             return result
         }, callback: { _ in
-            self.tableView.reloadData()
+            self.reload()
         })
         
         Store.lazySubscribe(self, selector: {
             $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
         }, callback: { _ in
-            self.tableView.reloadData()
+            self.reload()
         })
     }
     
@@ -105,6 +109,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     func reload() {
         tableView.reloadData()
+        showLoadingState(false)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -123,7 +128,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let currency = Store.state.displayCurrencies[indexPath.row]
-        let viewModel = AssetListViewModel(currency: currency)
+        let viewModel = HomeScreenAssetViewModel(currency: currency)
         
         let cellIdentifier = (shouldHighlightCell(for: currency) ? HomeScreenCellIds.highlightableCell : HomeScreenCellIds.regularCell).rawValue
         
@@ -152,17 +157,45 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
 }
 
+// loading state management
+extension AssetListTableView {
+    
+    func showLoadingState(_ show: Bool) {
+        showLoadingIndicator(show)
+        showAddWalletsButton(!show)
+    }
+    
+    func showLoadingIndicator(_ show: Bool) {
+        guard show else {
+            loadingSpinner.removeFromSuperview()
+            return
+        }
+        
+        view.addSubview(loadingSpinner)
+        
+        loadingSpinner.constrain([
+            loadingSpinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingSpinner.centerYAnchor.constraint(equalTo: view.centerYAnchor)])
+        
+        loadingSpinner.startAnimating()
+    }
+    
+    func showAddWalletsButton(_ show: Bool) {
+        addWalletButton.isHidden = !show
+    }
+}
+
 // cell highlighting
 extension AssetListTableView {
     
     func shouldHighlightCell(for currency: Currency) -> Bool {
         // Currently the only currency/wallet we highlight is BRD.
-        guard currency.code == Currencies.brd.code else { return false }
+        guard currency.isBRDToken else { return false }
         return UserDefaults.shouldShowBRDCellHighlight
     }
     
     func clearShouldHighlightForCurrency(currency: Currency) {
-        guard currency.code == Currencies.brd.code else { return }
+        guard currency.isBRDToken else { return }
         UserDefaults.shouldShowBRDCellHighlight = false
     }
     

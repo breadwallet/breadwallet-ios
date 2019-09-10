@@ -3,10 +3,29 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-07-20.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
+
+//TODO:CRYPTO_V2 - these should come from BlockchainDB eventually
+enum FeeLevel: Int {
+    case economy
+    case regular
+    case priority
+    
+    //Time in millis
+    var preferredTime: Int {
+        switch self {
+        case .economy:
+            return Int(C.secondsInMinute) * 60 * 10 * 1000 //10 hrs
+        case .regular:
+            return Int(C.secondsInMinute) * 60 * 1000 //60 mins
+        case .priority:
+            return 0
+        }
+    }
+}
 
 class FeeSelector: UIView {
 

@@ -3,40 +3,63 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-04-04.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
 @testable import breadwallet
 
+//
+// Tests enabling/disabling of biometrics authentication settings.
+//
 class TouchIdEnabledTests : XCTestCase {
 
+    private var keyStore: KeyStore!
+    
     override func setUp() {
-        UserDefaults.standard.removeObject(forKey: "isbiometricsenabled")
+        super.setUp()
+        clearKeychain()
+        keyStore = try! KeyStore.create()
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        clearKeychain()
+        keyStore.destroy()
     }
 
-    func testUserDefaultsStorage() {
-        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Default value is false")
-        UserDefaults.isBiometricsEnabled = true
-        XCTAssertTrue(UserDefaults.isBiometricsEnabled, "Should be true after being set to true")
-        UserDefaults.isBiometricsEnabled = false
-        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Should be false after being set to false")
+    func testSetGet() {
+        // initial state
+        XCTAssertFalse(self.keyStore.isBiometricsEnabledForUnlocking)
+        XCTAssertFalse(self.keyStore.isBiometricsEnabledForTransactions)
+        
+        // set to true
+        self.keyStore.isBiometricsEnabledForUnlocking = true
+        XCTAssertTrue(self.keyStore.isBiometricsEnabledForUnlocking)
+        
+        self.keyStore.isBiometricsEnabledForTransactions = true
+        XCTAssertTrue(self.keyStore.isBiometricsEnabledForTransactions)
+        
+        // set to false
+        self.keyStore.isBiometricsEnabledForUnlocking = false
+        XCTAssertFalse(self.keyStore.isBiometricsEnabledForUnlocking)
+        
+        self.keyStore.isBiometricsEnabledForTransactions = false
+        XCTAssertFalse(self.keyStore.isBiometricsEnabledForTransactions)
     }
-
-    func testInitialState() {
-        UserDefaults.isBiometricsEnabled = true
-        let state = State.initial
-        XCTAssertTrue(state.isBiometricsEnabled, "Initial state should be same as stored value")
-
-        UserDefaults.isBiometricsEnabled = false
-        let state2 = State.initial
-        XCTAssertFalse(state2.isBiometricsEnabled, "Initial state should be same as stored value")
+    
+    // Tests the upgrade from storing biometrics authentication settings in UserDefaults to
+    // storing them in the KeyStore.
+    func testUpgradePath() {
+    
+        // If the UserDefaults setting for unlocking the device is true, this setting
+        // should migrate to the KeyStore.
+        UserDefaults.standard.set(true, forKey: "istouchidenabled")
+        
+        // Test the migration.
+        XCTAssertTrue(self.keyStore.isBiometricsEnabledForUnlocking)
+        
+        // Verify that the legacy UserDefaults setting is disabled now so that it's a one-time upgrade path check.
+        XCTAssertFalse(UserDefaults.isBiometricsEnabled)
     }
-
-    func testTouchIdAction() {
-        UserDefaults.isBiometricsEnabled = true
-        Store.perform(action: Biometrics.SetIsEnabled(false))
-        XCTAssertFalse(UserDefaults.isBiometricsEnabled, "Actions should persist new value")
-    }
-
 }

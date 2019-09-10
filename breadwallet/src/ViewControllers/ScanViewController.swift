@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-12.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -198,7 +198,7 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
             }
             
             if let currencyRestriction = paymentRequestCurrencyRestriction {
-                guard case .paymentRequest(let request) = result, request.currency.matches(currencyRestriction) else {
+                guard case .paymentRequest(let request) = result, request.currency == currencyRestriction else {
                     guide.state = .negative
                     return
                 }

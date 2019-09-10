@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-06-01.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
@@ -18,7 +18,7 @@ class BitIdTests : XCTestCase {
         clearKeychain()
         keyStore = try! KeyStore.create()
         guard keyStore.noWallet else { XCTFail("Wallet should not exist"); return }
-        guard keyStore.setSeedPhrase("famous gesture ladder armor must taste afraid search stove panda grab deer") else { XCTFail("Setting seed should work"); return  }
+        guard keyStore.setSeedPhrase("famous gesture ladder armor must taste afraid search stove panda grab deer") != nil else { XCTFail("Setting seed should work"); return  }
     }
 
     override func tearDown() {
