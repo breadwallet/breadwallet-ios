@@ -26,7 +26,7 @@ class PriceChangeView: UIView, Subscriber {
     private let image = UIImageView(image: UIImage(named: "PriceArrow"))
     private let separator = UIView(color: UIColor.white.withAlphaComponent(0.6))
     
-    private var priceChange: PriceChange? {
+    private var priceInfo: FiatPriceInfo? {
         didSet {
             handlePriceChange()
         }
@@ -92,7 +92,7 @@ class PriceChangeView: UIView, Subscriber {
     }
     
     private func handlePriceChange() {
-        guard let priceChange = priceChange else { return }
+        guard let priceChange = priceInfo else { return }
         
         //Set label text
         let percentText = String(format: "%.2f%%", fabs(priceChange.changePercentage24Hrs))
@@ -114,8 +114,8 @@ class PriceChangeView: UIView, Subscriber {
     
     private func subscribeToPriceChange() {
         guard let currency = currency else { return }
-        Store.subscribe(self, selector: { $0[currency]?.priceChange != $1[currency]?.priceChange }, callback: {
-            self.priceChange = $0[currency]?.priceChange
+        Store.subscribe(self, selector: { $0[currency]?.fiatPriceInfo != $1[currency]?.fiatPriceInfo }, callback: {
+            self.priceInfo = $0[currency]?.fiatPriceInfo
         })
     }
     

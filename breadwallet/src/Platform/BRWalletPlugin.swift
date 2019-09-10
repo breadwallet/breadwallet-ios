@@ -386,15 +386,8 @@ extension BRWalletPlugin {
             d["balance"] = ["currency": currency.code,
                             "numerator": numerator,
                             "denominator": denomiator]
-        
-            var rate: Rate?
-            if let code = fiatCode {
-                rate = currency.state?.rates.filter({ $0.code == code }).first
-            } else {
-                rate = currency.state?.currentRate
-            }
-            
-            if let rate = rate {
+                    
+            if let rate = currency.state?.currentRate {
                 let amount = Amount(amount: balance, rate: currency.state?.currentRate)
                 let decimals = amount.localFormat.maximumFractionDigits
                 let denominatorValue = (pow(10, decimals) as NSDecimalNumber).doubleValue

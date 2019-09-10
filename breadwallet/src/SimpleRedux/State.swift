@@ -146,9 +146,8 @@ struct WalletState {
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }
-    let rates: [Rate]
     let currentRate: Rate?
-    let priceChange: PriceChange?
+    let fiatPriceInfo: FiatPriceInfo?
 
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
@@ -158,9 +157,8 @@ struct WalletState {
                            syncState: .success,
                            balance: nil,
                            lastBlockTimestamp: 0,
-                           rates: [],
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
-                           priceChange: nil)
+                           fiatPriceInfo: nil)
     }
 
     func mutate(    displayOrder: Int? = nil,
@@ -171,8 +169,7 @@ struct WalletState {
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
-                    rates: [Rate]? = nil,
-                    priceChange: PriceChange? = nil) -> WalletState {
+                    fiatPriceInfo: FiatPriceInfo? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
                            wallet: self.wallet,
@@ -181,9 +178,8 @@ struct WalletState {
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
-                           rates: rates ?? self.rates,
                            currentRate: currentRate ?? self.currentRate,
-                           priceChange: priceChange ?? self.priceChange)
+                           fiatPriceInfo: fiatPriceInfo ?? self.fiatPriceInfo)
     }
 }
 
@@ -194,7 +190,6 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
-        lhs.rates == rhs.rates &&
         lhs.currentRate == rhs.currentRate
 }
 
