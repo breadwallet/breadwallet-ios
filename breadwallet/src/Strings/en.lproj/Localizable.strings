@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "Fingerprint not recognized. Please try again.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "You can customize your Face ID spending limit from the %1$@.";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Use Face ID to unlock your BRD app and send money.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Use your face to unlock your BRD and send money up to a set limit.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "Enable Face ID for BRD";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Enable Face ID to send money";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID Not Set Up";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Enable Face ID to unlock BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Face ID Spending Limit";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "You have not enabled fingerprint authentication on this device. Go to Settings -> Security to set up fingerprint authentication.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Fingerprint Authentication Not Enabled";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Use Touch ID to unlock your BRD app and send money.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Use your fingerprint to unlock your BRD and send money up to a set limit.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Fingerprint Authentication";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Enable Touch ID to send money";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID Not Set Up";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Enable Touch ID to unlock BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Always require passcode";
 /* Touch ID spending limit screen body */
