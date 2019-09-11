@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "Fingeravtryck ej bekräftat. Försök igen.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Du kan anpassa din utgiftsgräns för Face ID från %1$@.";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Använd Face ID för att låsa upp din BRD-app och skicka pengar.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Använd ditt ansikte för att låsa upp din BRD och skicka pengar upp till en satt gräns.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "Aktivera Face ID för BRD";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Aktivera Face ID för att skicka pengar";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Du har inte satt upp Face ID på den här enheten. Gå till Inställningar->Face ID & Lösenord för att sätta upp det nu.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID har inte satts upp";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Aktivera Face ID för att låsa upp BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Utgiftsgräns för Face ID";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "Du har inte aktiverat fingeravtrycksautentisering på den här enheten. Gå till Inställningar > Säkerhet för att konfigurera fingeravtrycksautentisering.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Fingeravtrycksautentisering har inte aktiverats";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Använd Touch ID för att låsa upp din BRD-app och skicka pengar.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Använd ditt fingeravtryck för att låsa upp BRD och skicka pengar upp till en inställd gräns.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Fingeravtrycksautentisering";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Aktivera Touch ID för att skicka pengar";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Du har inte ställt in Touch ID på denna enhet. Gå till Inställningar->Touch ID & Lösenkod för att ställa in det nu.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID är inte inställt";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Aktivera Touch ID för att låsa upp BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Kräver alltid lösenord";
 /* Touch ID spending limit screen body */
