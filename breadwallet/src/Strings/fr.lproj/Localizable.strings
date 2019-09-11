@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "L'empreinte digitale n'a pas été reconnue. Veuillez réessayer.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Vous pouvez personnaliser votre limite de dépense Face ID à partir de %1$@.";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Utilisez Face ID pour déverrouiller votre application BRD et envoyer de l'argent.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Utilisez votre visage pour déverrouiller votre BRD et envoyer de l'argent jusqu'à une limite définie.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "Activer Face ID pour BRD";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Activez Face ID pour envoyer de l'argent";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Vous n'avez pas configuré votre Face ID sur cet appareil. Allez dans Paramètres -> Face ID & code d'accès pour le configurer maintenant.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID non configuré";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Activez Face ID pour déverrouiller BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Limite de dépenses Face ID";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "Vous n'avez pas activé l'identification par empreinte digitale sur cet appareil. Allez dans « Paramètres », puis dans « Sécurité », pour configurer l'identification par empreinte digitale";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "L'identification par empreinte digitale n'est pas activée";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Utilisez Touch ID pour déverrouiller votre application BRD et envoyer de l'argent.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Utilisez votre empreinte digitale pour débloquer votre BRD et envoyer de l'argent jusqu'à une limite définie.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Identification par empreinte digitale";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Activez Touch ID pour envoyer de l'argent";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Vous n'avez pas configuré Touch ID sur cet appareil. Accédez à Paramètres -> Touch ID et mot de passe pour le configurer maintenant.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID non configuré";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Activez Touch ID pour déverrouiller BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Toujours demander un code d'accès";
 /* Touch ID spending limit screen body */

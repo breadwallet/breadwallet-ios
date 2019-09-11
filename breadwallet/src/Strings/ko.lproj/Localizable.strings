@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "지문 인식되지 않음. 다시 시도해 주세요.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "%1$@에서 페이스 ID 지출 한도를 사용자 설정할 수 있습니다.";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "페이스 아이디로 BRD 앱을 잠금 해제하고 송금하세요.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "얼굴을 사용하여 브레드의 잠금을 해제하고 설정 한도까지 돈을 보내세요.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "브레드에 페이스 ID 사용하기";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "페이스 ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "페이스 아이디로 송금";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "이 장치에 페이스 ID를 설정하지 않았습니다. 설정 -> 페이스 ID 및 패스코드로 가서 지금 설정하세요.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "페이스 ID가 설정되지 않음";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "페이스 아이디로 BRD 잠금 해제";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "페이스 ID 지출 한도";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "귀하께서는 이 장치에 지문 본인확인 기능을 켜지 않으셨습니다. 설정 -> 보안으로 가셔서 지문 본인확인을 설정하세요.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "지문 본인확인이 켜지지 않음";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "터치 아이디로 BRD 앱을 잠금 해제하고 송금하세요.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "지문을 사용하여 브레드의 보안을 해제하고 설정된 금액으로 송금할 수 있습니다.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "터치 ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "지문 본인확인";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "터치 아이디로 송금";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "이 기기에서 Touch ID가 설정되어 있지 않습니다. 지금 설정 -> Touch ID 및 암호로 이동하여 설정해 주세요.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID가 설정되지 않음";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "터치 아이디로 BRD 잠금 해제";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "항상 비밀번호 요구";
 /* Touch ID spending limit screen body */
