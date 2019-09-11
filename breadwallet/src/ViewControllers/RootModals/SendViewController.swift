@@ -418,7 +418,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private func handleRequest(_ request: PaymentRequest) {
         switch request.type {
         case .local:
-            addressCell.setContent(request.displayAddress)
+            addressCell.setContent(request.toAddress?.description)
             addressCell.isEditable = true
             if let amount = request.amount {
                 amountView.forceUpdateAmount(amount: amount)
