@@ -30,8 +30,7 @@ struct PaymentRequest {
     static let bip70header = "application/bitcoin-paymentrequest"
     
     let currency: Currency
-    var toAddress: String? //TODO:CRYPTO store as Address
-    var displayAddress: String? { return toAddress } //TODO:CRYPTO cleanup
+    var toAddress: Address?
     let type: PaymentRequestType
     var amount: Amount?
     var label: String?
@@ -47,8 +46,8 @@ struct PaymentRequest {
                 let url = NSURL(string: "\(scheme)://\(resourceSpecifier)"),
                 scheme == currency.urlScheme {
                 if let host = url.host {
-                    guard currency.isValidAddress(host) else { return nil }
-                    toAddress = host
+                    guard let address = Address.create(string: host, network: currency.network) else { return nil }
+                    toAddress = address
                 }
                 
                 //TODO: add support for ERC-681 token transfers, amount field, amount as scientific notation
@@ -89,9 +88,8 @@ struct PaymentRequest {
             }
         }
         
-        // core internally uses bitcoin address format but PaymentRequest will only accept the currency-specific address format
-        if currency.isValidAddress(string) {
-            toAddress = string
+        if let address = Address.create(string: string, network: currency.network) {
+            toAddress = address
             type = .local
             return
         }
