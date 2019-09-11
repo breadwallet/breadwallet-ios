@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "未识别出指纹。请再试一次。";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "您可以在 %1$@ 自定义面部识别支出限额。";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "使用 Face ID 指纹解锁您的 BRD 应用并支付。";
 /* Face Id screen label */
 "FaceIDSettings.label" = "使用面部识别解锁 BRD，在设置的限额内汇款。";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "为 BRD 启用面部识别";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "面部识别";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "启用 Face ID 人脸支付";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "您在本设备上还未设置面部识别。立刻前往设置>面部识别与密码进行设置。";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "未设置面部识别";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "启用 Face ID 人脸解锁 BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "面部识别支出限额";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "您尚未在此设备上启用指纹认证。前往“设置” ->“安全”来设置指纹认证。";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "指纹认证未启用";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "使用 Touch ID 指纹解锁您的 BRD 应用并支付。";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "请用指纹解锁 BRD 并在设定限额下汇钱。";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "触摸 ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "指纹认证";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "启用 Touch ID 指纹支付";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "您尚未在本设备上设置触摸 ID。现在前往设置 -> 触摸 ID和密码进行设置。";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "触摸 ID 未设置";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "启用 Touch ID 指纹解锁BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "始终需要密码";
 /* Touch ID spending limit screen body */

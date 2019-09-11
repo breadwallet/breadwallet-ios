@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "Vingerafdruk niet herkend. Probeer het alstublieft opnieuw.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Je kunt de bestedingslimiet van je Face-ID aanpassen vanuit het %1$@.";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Gebruik Face ID om uw BRD-app te ontgrendelen en geld te verzenden.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Gebruik uw gezicht om uw BRD te ontgrendelen en verstuur geld tot een vastgestelde limiet.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "Face-ID voor BRD inschakelen";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face-ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Schakel Face ID in om geld te verzenden";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Je hebt op dit apparaat geen Face-ID ingesteld. Ga naar Instellingen->Face-ID en Wachtwoord om dit nu in te stellen.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face-ID niet ingesteld";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Schakel Face ID in om BRD te ontgrendelen";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Bestedingslimiet Face-ID";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "U heeft authenticatie met vingerafdruk niet ingesteld op dit apparaat. Ga naar Instellingen -> Beveiliging om dit in te stellen.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Authenticatie met vingerafdruk niet ingesteld";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Gebruik Touch ID om uw BRD-app te ontgrendelen en geld te verzenden.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Gebruik je vingerafdruk om je BRD te ontgrendelen en geld tot een ingestelde limiet te versturen.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Authenticatie met vingerafdruk";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Schakel Touch ID in om geld te verzenden";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Je hebt je Touch ID niet ingesteld op dit apparaat. Ga naar Instellingen -> Touch ID & Wachtwoord om het nu in te stellen.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID Niet Ingesteld";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Schakel Touch ID in om BRD te ontgrendelen";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Vraag altijd naar wachtwoord";
 /* Touch ID spending limit screen body */
