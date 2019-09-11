@@ -13,7 +13,6 @@
 		2218BD791E8F6CBA0091D5E8 /* AssetBundles.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */; };
 		222319B01F27985A00008F20 /* BRBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222319AF1F27985A00008F20 /* BRBrowserViewController.swift */; };
 		222319B21F279B3C00008F20 /* POSTBouncer.html in Resources */ = {isa = PBXBuildFile; fileRef = 222319B11F279B3C00008F20 /* POSTBouncer.html */; };
-		2228734F1E916FC30044BA15 /* BRAPIClient+Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */; };
 		222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */; };
 		223DB2191DF691260076A151 /* BRSocketHelpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 223DB2171DF691260076A151 /* BRSocketHelpers.c */; };
 		223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -61,6 +60,7 @@
 		3A93890A22A303800081FCF9 /* CubicCurveAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A93890822A3037F0081FCF9 /* CubicCurveAlgorithm.swift */; };
 		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
 		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
+		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
 		710B036421F8C208007E8A2A /* AppRatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036321F8C208007E8A2A /* AppRatingManager.swift */; };
 		711730572204FDFB001931B3 /* HomeScreenHiglightableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 711730562204FDFB001931B3 /* HomeScreenHiglightableCell.swift */; };
@@ -588,7 +588,6 @@
 		2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AssetBundles.plist; path = Resources/AssetBundles.plist; sourceTree = "<group>"; };
 		222319AF1F27985A00008F20 /* BRBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BRBrowserViewController.swift; path = src/Platform/BRBrowserViewController.swift; sourceTree = "<group>"; };
 		222319B11F279B3C00008F20 /* POSTBouncer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = POSTBouncer.html; path = src/Platform/POSTBouncer.html; sourceTree = "<group>"; };
-		2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Wallet.swift"; path = "src/Platform/BRAPIClient+Wallet.swift"; sourceTree = "<group>"; };
 		222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+KV.swift"; path = "src/Platform/BRAPIClient+KV.swift"; sourceTree = "<group>"; };
 		223DB2171DF691260076A151 /* BRSocketHelpers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = BRSocketHelpers.c; path = src/Platform/BRSocketHelpers.c; sourceTree = "<group>"; };
 		223DB2181DF691260076A151 /* BRSocketHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BRSocketHelpers.h; path = src/Platform/BRSocketHelpers.h; sourceTree = "<group>"; };
@@ -640,6 +639,7 @@
 		3A93890822A3037F0081FCF9 /* CubicCurveAlgorithm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CubicCurveAlgorithm.swift; path = src/Views/Charts/CubicCurveAlgorithm.swift; sourceTree = "<group>"; };
 		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
 		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
+		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		710B036321F8C208007E8A2A /* AppRatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRatingManager.swift; path = src/Utilities/AppRatingManager.swift; sourceTree = "<group>"; };
 		711730562204FDFB001931B3 /* HomeScreenHiglightableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenHiglightableCell.swift; path = src/Views/HomeScreenHiglightableCell.swift; sourceTree = "<group>"; };
@@ -1200,7 +1200,6 @@
 				222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */,
 				71A3171122A6E5F10088F97C /* BRAPIClient+Messages.swift */,
 				CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */,
-				2228734E1E916FC30044BA15 /* BRAPIClient+Wallet.swift */,
 				22A9A9341DF61945000F0016 /* BRBitID.swift */,
 				222319AF1F27985A00008F20 /* BRBrowserViewController.swift */,
 				22A9A9351DF61945000F0016 /* BRBSPatch.swift */,
@@ -1490,6 +1489,7 @@
 		7C377EBC20F64C1200E8CF1C /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				71014F7B2327E49400DA1373 /* fiatcurrencies.json */,
 				E837FCFB219D1BBC00F59D99 /* onboarding-videos */,
 				CE473D7B1F042F1E00C0ACFD /* coinflip.aiff */,
 				2218BD781E8F6CBA0091D5E8 /* AssetBundles.plist */,
@@ -2468,6 +2468,7 @@
 				9A926F8E22034B3800CC2263 /* CellHighlight-84.png in Resources */,
 				9AE800EF21FFF81F00D5058C /* rewardsIcon-68.gif in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
+				71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */,
 				9AE800EC21FFF81F00D5058C /* rewardsIcon-3.gif in Resources */,
 				9AE8011521FFF81F00D5058C /* rewardsIcon-64.gif in Resources */,
 				9A926F4422034B3700CC2263 /* CellHighlight-29.png in Resources */,
@@ -2655,7 +2656,6 @@
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
 				9A39B1252202AE9E00E5018B /* MultiframeAnimation.swift in Sources */,
 				CE5F21DB1E4A93A500C47B8E /* LoginTransitionDelegate.swift in Sources */,
-				2228734F1E916FC30044BA15 /* BRAPIClient+Wallet.swift in Sources */,
 				71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
 				7117305B220CE7B8001931B3 /* BRAPIClient+Announcements.swift in Sources */,

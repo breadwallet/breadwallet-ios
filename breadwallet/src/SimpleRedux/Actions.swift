@@ -95,13 +95,6 @@ struct WalletChange: Trackable {
             return $0.mutate(walletState: walletState.mutate(balance: balance)) })
     }
     
-    func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
-        UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(currentRate: currentRate, rates: rates)) })
-    }
-    
     func setExchangeRate(_ currentRate: Rate) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
@@ -112,10 +105,10 @@ struct WalletChange: Trackable {
         return WalletAction(reduce: { $0.mutate(walletState: walletState)})
     }
     
-    func setPriceChange(_ priceChange: PriceChange) -> WalletAction {
+    func setFiatPriceInfo(_ priceInfo: FiatPriceInfo) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(priceChange: priceChange))
+            return $0.mutate(walletState: state.mutate(fiatPriceInfo: priceInfo))
         })
     }
 }
