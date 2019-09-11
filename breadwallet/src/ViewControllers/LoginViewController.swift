@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 import BRCrypto
+import MachO
 
 private let topControlHeight: CGFloat = 32.0
 
@@ -38,6 +39,9 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     deinit {
         Store.unsubscribe(self)
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     // MARK: - Private
@@ -61,7 +65,8 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
     private let context: Context
-
+    private var notificationObservers = [String: NSObjectProtocol]()
+    
     var isBiometricsEnabledForUnlocking: Bool {
         return self.keyMaster.isBiometricsEnabledForUnlocking
     }
@@ -116,6 +121,24 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         }
         if !isResetting {
             lockIfNeeded()
+        }
+        
+        // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
+        if !E.isSimulator {
+            var s = stat()
+            var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
+            for i in 0..<_dyld_image_count() {
+                guard !isJailbroken else { break }
+                // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
+                if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
+                    isJailbroken = true
+                }
+            }
+            notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
+                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
+                    self.showJailbreakWarnings(isJailbroken: isJailbroken)
+            }
+            showJailbreakWarnings(isJailbroken: isJailbroken)
         }
     }
 
@@ -312,6 +335,19 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var isWalletDisabled: Bool {
         let now = Date().timeIntervalSince1970
         return keyMaster.walletDisabledUntil > now
+    }
+    
+    private func showJailbreakWarnings(isJailbroken: Bool) {
+        guard isJailbroken else { return }
+        let alert = UIAlertController(title: S.JailbreakWarnings.title, message: S.JailbreakWarnings.messageWithBalance, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: { _ in
+            self.saveEvent(self.makeEventName([EventContext.jailbreak.name, Event.ignore.name]))
+        }))
+        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.close, style: .default, handler: { _ in
+            self.saveEvent(self.makeEventName([EventContext.jailbreak.name, Event.close.name]))
+            exit(0)
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

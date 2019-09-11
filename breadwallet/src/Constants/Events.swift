@@ -18,6 +18,7 @@ public enum EventContext: String {
     case pushNotifications
     case inAppNotifications
     case wallet
+    case jailbreak
     var name: String { return rawValue }
 }
 
@@ -81,6 +82,10 @@ public enum Event: String {
     case scrubbed
     
     case test
+    
+    //jailbreak actions
+    case ignore
+    case close
     
     var name: String { return rawValue }
 }
