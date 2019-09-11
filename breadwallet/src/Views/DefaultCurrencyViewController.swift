@@ -11,32 +11,34 @@ import UIKit
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
     init() {
-        self.rates = Currencies.btc.state?.rates ?? [Rate]()
         self.selectedCurrencyCode = Store.state.defaultCurrencyCode
         super.init(style: .plain)
     }
 
     private let cellIdentifier = "CellIdentifier"
-    private var rates: [Rate] = [] {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+    private let fiatCurrencies = FiatCurrency.availableCurrencies
+    
     private var selectedCurrencyCode: String {
         didSet {
-            //Grab index paths of new and old rows when the currency changes
-            let paths: [IndexPath] = rates.enumerated().filter { $0.1.code == selectedCurrencyCode || $0.1.code == oldValue } .map { IndexPath(row: $0.0, section: 0) }
+            // Grab index paths of new and old rows when the currency changes
+            let filtered = fiatCurrencies.enumerated().filter({ $0.1.code == selectedCurrencyCode || $0.1.code == oldValue })
+            let paths: [IndexPath] = filtered.map({ IndexPath(row: $0.0, section: 0 )})
+            
             tableView.beginUpdates()
             tableView.reloadRows(at: paths, with: .automatic)
             tableView.endUpdates()
+            
+            Store.perform(action: DefaultCurrency.SetDefault(selectedCurrencyCode))
         }
     }
 
     deinit {
         Store.unsubscribe(self)
     }
-
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         self.selectedCurrencyCode = Store.state.defaultCurrencyCode
 
@@ -57,33 +59,32 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         super.viewDidAppear(animated)
         
         // Scroll to the selected display currency.
-        if let index = self.rates.firstIndex(where: {
+        if let index = self.fiatCurrencies.firstIndex(where: {
             return $0.code.lowercased() == self.selectedCurrencyCode.lowercased()
         }) {
             tableView.scrollToRow(at: IndexPath(row: index, section: 0), at: .middle, animated: true)
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        Store.perform(action: DefaultCurrency.SetDefault(selectedCurrencyCode))
-    }
-
     override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return rates.count
+        return fiatCurrencies.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-        let rate = rates[indexPath.row]
-        cell.textLabel?.text = "\(rate.code) (\(rate.currencySymbol))"
+
+        let currency = fiatCurrencies[indexPath.row]
+        let code = currency.code
+
+        cell.textLabel?.text = "\(currency.code) (\(Rate.symbolMap[code] ?? currency.code))"
         cell.textLabel?.font = UIFont.customBody(size: 14.0)
         cell.textLabel?.textColor = .white
-        if rate.code == selectedCurrencyCode {
+
+        if currency.code == selectedCurrencyCode {
             let check = UIImageView(image: #imageLiteral(resourceName: "CircleCheck").withRenderingMode(.alwaysTemplate))
             check.tintColor = .navigationTint
             cell.accessoryView = check
@@ -96,8 +97,8 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let rate = rates[indexPath.row]
-        selectedCurrencyCode = rate.code
+        let currency = fiatCurrencies[indexPath.row]
+        selectedCurrencyCode = currency.code
     }
 
     required init?(coder aDecoder: NSCoder) {

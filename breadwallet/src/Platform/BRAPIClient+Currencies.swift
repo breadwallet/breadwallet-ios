@@ -17,6 +17,31 @@ public struct HTTPError: Error {
     let code: Int
 }
 
+struct FiatCurrency: Decodable {
+    var name: String
+    var code: String
+    
+    static var availableCurrencies: [FiatCurrency] = {
+        guard let path = Bundle.main.path(forResource: "fiatcurrencies", ofType: "json") else {
+            print("unable to locate currencies file")
+            return []
+        }
+        
+        var currencies: [FiatCurrency]?
+        
+        do {
+            let data = try Data(contentsOf: URL(fileURLWithPath: path))
+            let decoder = JSONDecoder()
+            currencies = try decoder.decode([FiatCurrency].self, from: data)
+        } catch let e {
+            print("error parsing fiat currency data: \(e)")
+        }
+        
+        return currencies ?? []
+    }()
+
+}
+
 extension BRAPIClient {
     
     // MARK: Currency List

@@ -8,8 +8,8 @@
 
 import Foundation
 
-enum PriceChangeResult {
-    case success([String: PriceChange])
+enum FiatPriceInfoResult {
+    case success([String: FiatPriceInfo])
     case error(String)
 }
 
@@ -31,10 +31,9 @@ enum PriceHistoryResult {
 
 extension BRAPIClient {
     
-    // Fetches 24hr price change history for each currency versus
-    // the user's current display currency
-    // -includes fiat and percent change info eg. +13% ($100)
-    func fetchChange(currencies: [Currency], _ handler: @escaping (PriceChangeResult) -> Void) {
+    // Fetches price information relative to the user's default fiat currency for the given crypto currencies,
+    // including the 24-hour price change, the current fiat price, and fiat percent change, e.g., +13% ($100)
+    func fetchPriceInfo(currencies: [Currency], _ handler: @escaping (FiatPriceInfoResult) -> Void) {
         
         // fsyms param (comma-separated ticker symbols) max length is 300 characters
         // requests are batched to ensure the length is not exceeded
@@ -42,8 +41,8 @@ extension BRAPIClient {
         let chunks = currencies.chunked(by: chunkSize)
         let currentCode = Store.state.defaultCurrencyCode
         
-        var combinedResults: [String: PriceChange] = [:]
-        var errorResult: PriceChangeResult?
+        var combinedResults: [String: FiatPriceInfo] = [:]
+        var errorResult: FiatPriceInfoResult?
         
         let group = DispatchGroup()
         for chunk in chunks {
@@ -68,8 +67,11 @@ extension BRAPIClient {
                     }
                     codes.forEach {
                         guard let change = prices[$0]?[currentCode]?["CHANGE24HOUR"] as? Double,
-                            let percentChange = prices[$0]?[currentCode]?["CHANGEPCT24HOUR"] as? Double else { return }
-                        combinedResults[$0] = PriceChange(changePercentage24Hrs: percentChange, change24Hrs: change)
+                            let percentChange = prices[$0]?[currentCode]?["CHANGEPCT24HOUR"] as? Double,
+                            let price = prices[$0]?[currentCode]?["PRICE"] as? Double else { return }
+                        combinedResults[$0] = FiatPriceInfo(changePercentage24Hrs: percentChange,
+                                                          change24Hrs: change,
+                                                          price: price)
                     }
                     group.leave()
                 } catch let e {
