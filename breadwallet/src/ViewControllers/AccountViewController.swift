@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MachO
 
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
@@ -47,7 +46,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             }
         }
     }
-    private var notificationObservers = [String: NSObjectProtocol]()
     private var tableViewTopConstraint: NSLayoutConstraint?
     private var headerContainerSearchHeight: NSLayoutConstraint?
     private var rewardsViewHeightConstraint: NSLayoutConstraint?
@@ -72,25 +70,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //TODO:CRYPTO move this to home screen
-        // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
-        if !E.isSimulator {
-            var s = stat()
-            var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
-            for i in 0..<_dyld_image_count() {
-                guard !isJailbroken else { break }
-                // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
-                if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
-                    isJailbroken = true
-                }
-            }
-            notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
-                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-                self.showJailbreakWarnings(isJailbroken: isJailbroken)
-            }
-            showJailbreakWarnings(isJailbroken: isJailbroken)
-        }
-        
         setupNavigationBar()
         addSubviews()
         addConstraints()
@@ -210,25 +189,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         transactionDetails.modalPresentationCapturesStatusBarAppearance = true
         present(transactionDetails, animated: true, completion: nil)
     }
-
-    private func showJailbreakWarnings(isJailbroken: Bool) {
-        guard isJailbroken else { return }
-        //TODO:CRYPTO
-        /*
-        let totalSent = walletManager.wallet?.totalSent ?? 0
-        let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
-        let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: nil))
-        if totalSent > 0 {
-            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.wipe, style: .default, handler: nil)) //TODO - implement wipe
-        } else {
-            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.close, style: .default, handler: { _ in
-                exit(0)
-            }))
-        }
-        present(alert, animated: true, completion: nil)
-        */
-    }
     
     private func showSearchHeaderView() {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
@@ -343,12 +303,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .slide
-    }
-
-    deinit {
-        notificationObservers.values.forEach { observer in
-            NotificationCenter.default.removeObserver(observer)
-        }
     }
 
     required init?(coder aDecoder: NSCoder) {
