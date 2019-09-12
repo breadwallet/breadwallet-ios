@@ -143,6 +143,7 @@ struct WalletState {
     let syncState: SyncState
     let balance: Amount?
     let lastBlockTimestamp: UInt32
+    let isRescanning: Bool
     var receiveAddress: String? {
         return wallet?.receiveAddress
     }
@@ -157,6 +158,7 @@ struct WalletState {
                            syncState: .success,
                            balance: nil,
                            lastBlockTimestamp: 0,
+                           isRescanning: false,
                            currentRate: UserDefaults.currentRate(forCode: currency.code),
                            fiatPriceInfo: nil)
     }
@@ -166,6 +168,7 @@ struct WalletState {
                     syncState: SyncState? = nil,
                     balance: Amount? = nil,
                     lastBlockTimestamp: UInt32? = nil,
+                    isRescanning: Bool? = nil,
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
@@ -178,6 +181,7 @@ struct WalletState {
                            syncState: syncState ?? self.syncState,
                            balance: balance ?? self.balance,
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
+                           isRescanning: isRescanning ?? self.isRescanning,
                            currentRate: currentRate ?? self.currentRate,
                            fiatPriceInfo: fiatPriceInfo ?? self.fiatPriceInfo)
     }
@@ -187,9 +191,12 @@ extension WalletState: Equatable {}
 
 func == (lhs: WalletState, rhs: WalletState) -> Bool {
     return lhs.currency == rhs.currency &&
+        lhs.wallet?.currency == rhs.wallet?.currency &&
         lhs.syncProgress == rhs.syncProgress &&
         lhs.syncState == rhs.syncState &&
         lhs.balance == rhs.balance &&
+        lhs.lastBlockTimestamp == rhs.lastBlockTimestamp &&
+        lhs.isRescanning == rhs.isRescanning &&
         lhs.currentRate == rhs.currentRate
 }
 

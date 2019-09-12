@@ -61,7 +61,6 @@ struct TxDetailViewModel: TxViewModel {
         if direction == .sent {
             return S.TransactionDetails.addressToHeader
         } else {
-            //TODO:CRYPTO via/from
             if tx.currency.isBitcoinCompatible {
                 return S.TransactionDetails.addressViaHeader
             } else {

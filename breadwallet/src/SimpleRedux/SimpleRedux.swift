@@ -42,8 +42,6 @@ struct Trigger {
 enum TriggerName {
     case presentFaq(String, Currency?)
     case registerForPushNotificationToken
-    case retrySync(Currency)
-    case rescan(Currency)
     case lock
     case promptBiometrics
     case promptEmail
@@ -53,7 +51,6 @@ enum TriggerName {
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
-    case automaticRescan(Currency)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
     case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
@@ -88,10 +85,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.registerForPushNotificationToken, .registerForPushNotificationToken):
         return true
-    case (.retrySync(let lhsCurrency), .retrySync(let rhsCurrency)):
-        return lhsCurrency == rhsCurrency
-    case (.rescan(let lhsCurrency), .rescan(let rhsCurrency)):
-        return lhsCurrency == rhsCurrency
     case (.lock, .lock):
         return true
     case (.promptBiometrics, .promptBiometrics):
@@ -108,8 +101,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.openFile, .openFile):
         return true
-    case (.automaticRescan(let lhsCurrency), .automaticRescan(let rhsCurrency)):
-        return lhsCurrency == rhsCurrency
     case (.receivedPaymentRequest, .receivedPaymentRequest):
         return true
     case (.scanQr, .scanQr):
