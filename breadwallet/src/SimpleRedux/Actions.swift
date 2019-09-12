@@ -84,11 +84,19 @@ struct WalletChange: Trackable {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
     }
+
     func setSyncingState(_ syncState: SyncState) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncState: syncState)) })
     }
+
+    func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(isRescanning: isRescanning)) })
+    }
+
     func setBalance(_ balance: Amount) -> WalletAction {
         return WalletAction(reduce: {
             guard let walletState = $0[self.currency] else { return $0 }
