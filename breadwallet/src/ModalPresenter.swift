@@ -293,16 +293,12 @@ class ModalPresenter: Subscriber, Trackable {
     private func makeSendView(currency: Currency) -> UIViewController? {
         guard let wallet = system.wallet(for: currency),
             let kvStore = Backend.kvStore else { assertionFailure(); return nil }
-
-        //TODO:CRYPTO is this necessary?
-        //I think this is still necessary for SPV mode where rescanning
-        //will still be a feature - AC
-//        guard !(currency.state?.isRescanning ?? false) else {
-//            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
-//            topViewController?.present(alert, animated: true, completion: nil)
-//            return nil
-//        }
+        guard !(currency.state?.isRescanning ?? false) else {
+            let alert = UIAlertController(title: S.Alert.error, message: S.Send.isRescanning, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: S.Button.ok, style: .cancel, handler: nil))
+            topViewController?.present(alert, animated: true, completion: nil)
+            return nil
+        }
 
         let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
         let sendVC = SendViewController(sender: sender,
@@ -406,9 +402,11 @@ class ModalPresenter: Subscriber, Trackable {
             })
 
             // Rescan
-            btcItems.append(MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: btc), animated: true)
-            }))
+            if btcWallet.core.manager.mode == .p2p_only {
+                btcItems.append(MenuItem(title: S.Settings.sync, callback: {
+                    menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
+                }))
+            }
             
             // Nodes
             btcItems.append(MenuItem(title: S.NodeSelector.title, callback: {
@@ -441,11 +439,13 @@ class ModalPresenter: Subscriber, Trackable {
         
         // MARK: Bitcoin Cash Menu
         var bchItems: [MenuItem] = []
-        if let bch = Currencies.bch.instance {
-            // Rescan
-            bchItems.append(MenuItem(title: S.Settings.sync, callback: {
-                menuNav.pushViewController(ReScanViewController(currency: bch), animated: true)
-            }))
+        if let bch = Currencies.bch.instance, let bchWallet = bch.wallet {
+            if bchWallet.core.manager.mode == .p2p_only {
+                // Rescan
+                bchItems.append(MenuItem(title: S.Settings.sync, callback: {
+                    menuNav.pushViewController(ReScanViewController(system: self.system, wallet: bchWallet), animated: true)
+                }))
+            }
             //TODO:CRYPTO_V2 - add bch importing once blockchaindb supports it
 //            bchItems.append(MenuItem(title: S.Settings.importTile, callback: {
 //                menuNav.dismiss(animated: true, completion: { [unowned self] in
@@ -456,6 +456,19 @@ class ModalPresenter: Subscriber, Trackable {
         }
         var bchMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.instance?.name ?? "Bitcoin Cash"), subMenu: bchItems, rootNav: menuNav)
         bchMenu.shouldShow = { return !bchItems.isEmpty }
+        
+        // MARK: Ethereum Menu
+        var ethItems: [MenuItem] = []
+        if let eth = Currencies.eth.instance, let ethWallet = eth.wallet {
+            if ethWallet.core.manager.mode == .p2p_only {
+                // Rescan
+                ethItems.append(MenuItem(title: S.Settings.sync, callback: {
+                    menuNav.pushViewController(ReScanViewController(system: self.system, wallet: ethWallet), animated: true)
+                }))
+            }
+        }
+        var ethMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.eth.instance?.name ?? "Ethereum"), subMenu: ethItems, rootNav: menuNav)
+        ethMenu.shouldShow = { return !ethItems.isEmpty }
 
         // MARK: Preferences
         let preferencesItems: [MenuItem] = [
@@ -471,6 +484,7 @@ class ModalPresenter: Subscriber, Trackable {
             
             btcMenu,
             bchMenu,
+            ethMenu,
 
             // Share Anonymous Data
             MenuItem(title: S.Settings.shareData, callback: {
@@ -814,14 +828,6 @@ class ModalPresenter: Subscriber, Trackable {
         vc.preload()
         vc.modalPresentationStyle = .overFullScreen
         self.topViewController?.present(vc, animated: true, completion: nil)
-    }
-
-    private func presentRescan(currency: Currency) {
-        let vc = ReScanViewController(currency: currency)
-        let nc = UINavigationController(rootViewController: vc)
-        nc.setClearNavbar()
-        vc.addCloseNavigationItem()
-        topViewController?.present(nc, animated: true, completion: nil)
     }
 
     private func wipeWallet() {

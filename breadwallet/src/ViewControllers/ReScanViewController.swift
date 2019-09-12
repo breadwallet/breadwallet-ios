@@ -10,13 +10,15 @@ import UIKit
 
 class ReScanViewController: UIViewController, Subscriber {
 
-    init(currency: Currency) {
-        self.currency = currency
-        self.faq = .buildFaqButton(articleId: ArticleIds.reScan, currency: currency)
+    init(system: CoreSystem, wallet: Wallet) {
+        self.system = system
+        self.wallet = wallet
+        self.faq = .buildFaqButton(articleId: ArticleIds.reScan, currency: wallet.currency)
         super.init(nibName: nil, bundle: nil)
     }
 
-    private let currency: Currency
+    private let system: CoreSystem
+    private let wallet: Wallet
     private let header = UILabel(font: .customBold(size: 26.0), color: .white)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = BRDButton(title: S.ReScan.buttonTitle, type: .primary)
@@ -32,12 +34,15 @@ class ReScanViewController: UIViewController, Subscriber {
         addConstraints()
         setInitialData()
         
-        // need to be connected to p2p network and synced up before rescan can be initated
-        Store.trigger(name: .retrySync(self.currency))
-        Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
+        Store.subscribe(self, selector: { $0[self.wallet.currency]?.syncState != $1[self.wallet.currency]?.syncState },
                         callback: { state in
-                            guard let syncState = state[self.currency]?.syncState else { return }
+                            guard let syncState = state[self.wallet.currency]?.syncState else { return }
                             self.button.isEnabled = syncState == .success
+                            if syncState == .syncing {
+                                self.button.title = S.SyncingView.syncing
+                            } else {
+                                self.button.title = S.ReScan.buttonTitle
+                            }
         })
     }
 
@@ -88,7 +93,7 @@ class ReScanViewController: UIViewController, Subscriber {
         let alert = UIAlertController(title: S.ReScan.alertTitle, message: S.ReScan.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
-            Store.trigger(name: .rescan(self.currency))
+            RescanCoordinator.initiateRescan(system: self.system, wallet: self.wallet)
             self.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)
