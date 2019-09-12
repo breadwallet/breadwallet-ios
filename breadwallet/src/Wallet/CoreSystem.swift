@@ -179,6 +179,18 @@ class CoreSystem: Subscriber {
             }
         }
     }
+    
+    func rescan(walletManager: WalletManager, toDepth depth: WalletManagerSyncDepth) {
+        queue.async {
+            walletManager.connect()
+            walletManager.syncToDepth(depth: depth)
+            DispatchQueue.main.async {
+                walletManager.network.currencies
+                    .compactMap { self.currencies[$0] }
+                    .forEach { Store.perform(action: WalletChange($0).setIsRescanning(true)) }
+            }
+        }
+    }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
     /// After successful migration the sqlite database is deleted.
@@ -450,6 +462,7 @@ extension CoreSystem: SystemListener {
                 }
                 DispatchQueue.main.async {
                     manager.network.currencies.compactMap { self.currencies[$0] }.forEach {
+                        Store.perform(action: WalletChange($0).setIsRescanning(false))
                         Store.perform(action: WalletChange($0).setSyncingState(error == nil ? .success : .connecting))
                     }
                 }
