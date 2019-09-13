@@ -18,7 +18,7 @@ struct State {
     let isPromptingBiometrics: Bool
     let pinLength: Int
     let walletID: String?
-    let wallets: [String: WalletState]
+    let wallets: [CurrencyId: WalletState]
     var experiments: [Experiment]?
     
     subscript(currency: Currency) -> WalletState? {
@@ -79,7 +79,7 @@ extension State {
                    isPromptingBiometrics: Bool? = nil,
                    pinLength: Int? = nil,
                    walletID: String? = nil,
-                   wallets: [String: WalletState]? = nil,
+                   wallets: [CurrencyId: WalletState]? = nil,
                    experiments: [Experiment]? = nil) -> State {
         return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
@@ -163,7 +163,8 @@ struct WalletState {
                            fiatPriceInfo: nil)
     }
 
-    func mutate(    displayOrder: Int? = nil,
+    func mutate(    wallet: Wallet? = nil,
+                    displayOrder: Int? = nil,
                     syncProgress: Float? = nil,
                     syncState: SyncState? = nil,
                     balance: Amount? = nil,
@@ -175,7 +176,7 @@ struct WalletState {
                     fiatPriceInfo: FiatPriceInfo? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
-                           wallet: self.wallet,
+                           wallet: wallet ?? self.wallet,
                            displayOrder: displayOrder ?? self.displayOrder,
                            syncProgress: syncProgress ?? self.syncProgress,
                            syncState: syncState ?? self.syncState,

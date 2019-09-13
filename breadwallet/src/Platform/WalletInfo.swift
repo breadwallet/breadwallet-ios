@@ -15,7 +15,7 @@ class WalletInfo: BRKVStoreObject, Codable {
     var name = ""
     var creationDate = Date.zeroValue()
     /// mapping of network native currency codes to WalletManagerMode
-    var connectionModes = [String: UInt8]()
+    var connectionModes = [CurrencyId: UInt8]()
 
     enum CodingKeys: String, CodingKey {
         case classVersion
@@ -62,7 +62,7 @@ class WalletInfo: BRKVStoreObject, Codable {
         classVersion = try container.decode(Int.self, forKey: .classVersion)
         name = try container.decode(String.self, forKey: .name)
         creationDate = try container.decode(Date.self, forKey: .creationDate)
-        connectionModes = try container.decode([String: UInt8].self, forKey: .connectionModes)
+        connectionModes = try container.decode([CurrencyId: UInt8].self, forKey: .connectionModes)
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 }

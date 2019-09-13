@@ -47,14 +47,15 @@ extension BRAPIClient {
     // MARK: Currency List
     
     /// Get the list of supported currencies and their metadata from the backend or local cache
-    func getCurrencyMetaData(completion: @escaping ([String: CurrencyMetaData]) -> Void) {
+    func getCurrencyMetaData(completion: @escaping ([CurrencyId: CurrencyMetaData]) -> Void) {
         
         let fm = FileManager.default
         guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
         let cachedFilePath = documentsDir.appendingPathComponent("currencies.json").path
         
         // If cache isn't expired, use cached data and return before the network call
-        if !isCacheExpired(path: cachedFilePath, timeout: C.secondsInMinute*60) && processCurrenciesCache(path: cachedFilePath, completion: completion) {
+        if !isCacheExpired(path: cachedFilePath, timeout: C.secondsInMinute*60) &&
+            processCurrenciesCache(path: cachedFilePath, completion: completion) {
             return
         }
         
@@ -117,8 +118,8 @@ extension BRAPIClient {
 // MARK: - File Manager Helpers
 
 // Converts an array of CurrencyMetaData to a dictionary keyed on uid
-private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([String: CurrencyMetaData]) -> Void) {
-    let currencyMetaData = currencies.reduce(into: [String: CurrencyMetaData](), { (dict, token) in
+private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([CurrencyId: CurrencyMetaData]) -> Void) {
+    let currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
         dict[token.uid] = token
     })
     print("[CurrencyList] tokens updated: \(currencies.count) tokens")
@@ -126,18 +127,20 @@ private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([S
 }
 
 // Loads and processes cached currencies
-private func processCurrenciesCache(path: String, completion: ([String: CurrencyMetaData]) -> Void) -> Bool {
-    var currencies = [CurrencyMetaData]()
+private func processCurrenciesCache(path: String, completion: ([CurrencyId: CurrencyMetaData]) -> Void) -> Bool {
+    guard FileManager.default.fileExists(atPath: path) else { return false }
     do {
         print("[CurrencyList] using cached token list")
         let cachedData = try Data(contentsOf: URL(fileURLWithPath: path))
-        currencies = try JSONDecoder().decode([CurrencyMetaData].self, from: cachedData)
+        let currencies = try JSONDecoder().decode([CurrencyMetaData].self, from: cachedData)
+        processCurrencies(currencies, completion: completion)
+        return true
     } catch let e {
         print("[CurrencyList] error reading from cache: \(e)")
+        // remove the invalid cached data
+        try? FileManager.default.removeItem(at: URL(fileURLWithPath: path))
         return false
     }
-    processCurrencies(currencies, completion: completion)
-    return true
 }
 
 // Copies currencies embedded in bundle if cached file doesn't exist

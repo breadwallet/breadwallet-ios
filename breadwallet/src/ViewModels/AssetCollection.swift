@@ -14,7 +14,7 @@ class AssetCollection: Subscriber {
     typealias AssetCollectionChangeHandler = () -> Void
     
     /// All known tokens
-    let allAssets: [String: CurrencyMetaData]
+    let allAssets: [CurrencyId: CurrencyMetaData]
     
     private(set) var enabledAssets: [CurrencyMetaData] // maps to AssetIndex list
     
@@ -44,7 +44,7 @@ class AssetCollection: Subscriber {
     ///   - kvStore: the KV-store
     ///   - allTokens: dictionary of all supported tokens, indexed by UID
     convenience init(kvStore: BRReplicatedKVStore,
-                     allTokens: [String: CurrencyMetaData],
+                     allTokens: [CurrencyId: CurrencyMetaData],
                      changeHandler: AssetCollectionChangeHandler?) {
         let assetIndex = AssetIndex(kvStore: kvStore)
             ?? AssetCollection.migrateFromOldIndex(allTokens: allTokens, kvStore: kvStore)
@@ -66,7 +66,7 @@ class AssetCollection: Subscriber {
     }
     
     private init(kvStore: BRReplicatedKVStore,
-                 allTokens: [String: CurrencyMetaData],
+                 allTokens: [CurrencyId: CurrencyMetaData],
                  assetIndex: AssetIndex,
                  changeHandler: AssetCollectionChangeHandler?,
                  saveRequired: Bool) {
@@ -119,6 +119,10 @@ class AssetCollection: Subscriber {
     }
     
     // MARK: - Public
+
+    func isEnabled(_ currencyId: CurrencyId) -> Bool {
+        return enabledAssets.contains { $0.uid == currencyId }
+    }
     
     func displayOrder(for asset: CurrencyMetaData) -> Int? {
         return enabledAssets.firstIndex(of: asset)
@@ -186,19 +190,19 @@ class AssetCollection: Subscriber {
     /// Migrates from the old CurrencyListMetaData KVStore object to the new AssetCollectionIndex object
     ///
     /// - Returns: true if migration was successful, false otherwise
-    private static func migrateFromOldIndex(allTokens: [String: CurrencyMetaData], kvStore: BRReplicatedKVStore) -> AssetIndex? {
+    private static func migrateFromOldIndex(allTokens: [CurrencyId: CurrencyMetaData], kvStore: BRReplicatedKVStore) -> AssetIndex? {
         guard let oldIndex = LegacyAssetIndex(kvStore: kvStore) else { return nil }
         print("[KV] migrating to new asset index")
         
         let tokens = allTokens.values.filter { $0.tokenAddress != nil && !$0.tokenAddress!.isEmpty }
         let tokensByAddress = Dictionary(uniqueKeysWithValues: tokens.map { ($0.tokenAddress!.lowercased(), $0) })
         
-        func migrate(oldKey: String) -> String? {
+        func migrate(oldKey: String) -> CurrencyId? {
             if oldKey.hasPrefix(C.erc20Prefix) {
                 let address = String(oldKey.dropFirst(C.erc20Prefix.count))
                 return tokensByAddress[address.lowercased()]?.uid
             } else {
-                var newKey: String?
+                var newKey: CurrencyId?
                 switch oldKey.lowercased() {
                 case Currencies.btc.code.lowercased():
                     newKey = Currencies.btc.uid

@@ -72,7 +72,7 @@ struct TestCurrencies {
 """.utf8)
 
     static var btc: AppCurrency {
-        let btc = CoreCurrency(uids: Currencies.btc.uid, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
+        let btc = CoreCurrency(uids: Currencies.btc.uid.rawValue, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
         let BTC_SATOSHI = BRCrypto.Unit (currency: btc, uids: "BTC-SAT",  name: "Satoshi", symbol: "SAT")
         let BTC_BTC = BRCrypto.Unit (currency: btc, uids: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
@@ -98,7 +98,7 @@ struct TestCurrencies {
     }
     
     static var bch: AppCurrency {
-        let bch = CoreCurrency(uids: Currencies.bch.uid, name: "Bitcoin Cash", code: Currencies.bch.code, type: "native", issuer: nil)
+        let bch = CoreCurrency(uids: Currencies.bch.uid.rawValue, name: "Bitcoin Cash", code: Currencies.bch.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: bchMetaData)
         let BCH_SATOSHI = BRCrypto.Unit (currency: bch, uids: "BCH-SAT",  name: "Satoshi", symbol: "SAT")
         let BCH_BCH = BRCrypto.Unit (currency: bch, uids: "BCH-BTC",  name: "Bitcoin Cash", symbol: "BCH", base: BCH_SATOSHI, decimals: 8)
@@ -124,7 +124,7 @@ struct TestCurrencies {
     }
 
     static var eth: AppCurrency {
-        let eth = CoreCurrency(uids: Currencies.eth.uid, name: "Ethereum", code: Currencies.eth.code, type: "native", issuer: nil)
+        let eth = CoreCurrency(uids: Currencies.eth.uid.rawValue, name: "Ethereum", code: Currencies.eth.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
         let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
         let ETH_GWEI = BRCrypto.Unit (currency: eth, uids: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
@@ -132,7 +132,7 @@ struct TestCurrencies {
         let ETH_associations = Network.Association (baseUnit: ETH_WEI,
                                                     defaultUnit: ETH_ETHER,
                                                     units: Set (arrayLiteral: ETH_WEI, ETH_GWEI, ETH_ETHER))
-        let brd = Currency (uids: Currencies.brd.uid, name: "BRD Token", code: Currencies.brd.code, type: "erc20", issuer: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
+        let brd = CoreCurrency (uids: Currencies.brd.uid.rawValue, name: "BRD Token", code: Currencies.brd.code, type: "erc20", issuer: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
         
         let brd_brdi = BRCrypto.Unit (currency: brd, uids: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
         let brd_brd  = BRCrypto.Unit (currency: brd, uids: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)

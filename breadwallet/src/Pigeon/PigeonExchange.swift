@@ -399,8 +399,9 @@ class PigeonExchange: Subscriber {
         }
         
         let currencyCode = accountRequest.scope.uppercased()
+        let currencyId = CurrencyId(rawValue: currencyCode) //TODO:CRYPTO_V2 code to uid
         var response = MessageAccountResponse()
-        if let receiveAddress = Store.state.wallets[currencyCode]?.receiveAddress {
+        if let receiveAddress = Store.state.wallets[currencyId]?.receiveAddress {
             response.scope = accountRequest.scope
             response.address = receiveAddress
             response.status = .accepted
@@ -524,11 +525,12 @@ class PigeonExchange: Subscriber {
                 self.addTokenWallet(token: token)
                 tokenCode = token.code
             }
+            let currencyId = CurrencyId(rawValue: request.scope) //TODO:CRYPTO_V2 code to uid
             self.apiClient.sendCheckoutEvent(status: response.status.rawValue,
                                              identifier: requestEnvelope.identifier,
                                              service: requestEnvelope.service,
                                              fromCurrency: request.scope,
-                                             fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
+                                             fromAddress: Store.state.wallets[currencyId]?.receiveAddress ?? "",
                                              fromAmount: requestWrapper.purchaseAmount.tokenUnformattedString(in: requestWrapper.currency.defaultUnit),
                                              toCurrency: tokenCode,
                                              toAmount: amountToReceive,
