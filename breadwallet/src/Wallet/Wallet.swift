@@ -31,12 +31,11 @@ class Wallet {
 
     /// The native network currency
     var networkCurrency: Currency? {
-        return system.currency(forCoreCurrency: core.manager.network.currency)
+        return system.currencies[core.manager.network.currency.uid]
     }
 
     var networkPrimaryWallet: Wallet? {
-        guard let networkCurrency = networkCurrency else { return nil }
-        return system.wallet(for: networkCurrency)
+        return system.wallets[core.manager.network.currency.uid]
     }
 
     // MARK: - Fees
@@ -169,12 +168,6 @@ class Wallet {
         self.core = core
         self.currency = currency
         self.system = system
-        
-        //TODO:CRYPTO - this shouldn't be needed when balance is properly
-        //set in sync ended
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            Store.perform(action: WalletChange(self.currency).setBalance(self.balance))
-        }
     }
 }
 

@@ -139,13 +139,12 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Initialize the core system with an account
     private func setupSystem(with account: Account) {
+        self.startBackendServices()
+        self.setWalletInfo(account: account)
         authenticateWithBackend { jwt in
             guard let jwt = jwt else { return assertionFailure() }
-            self.startBackendServices()
-            self.setWalletInfo(account: account)
             self.coreSystem.create(account: account, authToken: jwt)
-            
-            //TODO:CRYPTO need modal presenter for some things during onboarding -- break it up?
+
             self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
                                                  system: self.coreSystem,
                                                  window: self.window,
@@ -158,20 +157,7 @@ class ApplicationController: Subscriber, Trackable {
                 self.launchURL = nil
             }
 
-            // WalletInfo contains the connection mode options and is needed before connecting the System
-            if let kv = Backend.kvStore, WalletInfo(kvStore: kv) == nil {
-                print("[KV] syncing WalletInfo")
-                do {
-                    try kv.syncKey(WalletInfo.key) { _ in
-                        self.connect()
-                    }
-                } catch let error {
-                    print("[KV] error syncing WalletInfo: \(error.localizedDescription)")
-                    self.connect()
-                }
-            } else {
-                self.connect()
-            }
+            self.connect()
         }
     }
     
