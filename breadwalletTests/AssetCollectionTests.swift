@@ -21,14 +21,15 @@ class AssetCollectionTests: XCTestCase {
                                 ("ripple-mainnet:__native__", "xrp"),
                                 ("ethereum-mainnet:0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0", "eos"),
                                 ("ethereum-mainnet:0xE41d2489571d322189246DaFA5ebDe1F4699F498", "zrx")]
+        .map { (CurrencyId(rawValue: $0.0), $0.1) }
 
     
-    var allTokens: [String: CurrencyMetaData] {
-        return Dictionary(uniqueKeysWithValues: AssetCollectionTests.testTokenData.map { (uid, code) -> (String, CurrencyMetaData) in
+    var allTokens: [CurrencyId: CurrencyMetaData] {
+        return Dictionary(uniqueKeysWithValues: AssetCollectionTests.testTokenData.map { (uid, code) -> (CurrencyId, CurrencyMetaData) in
             return (uid, CurrencyMetaData(uid: uid, code: code))
         })
     }
-    var defaultAssets: [CurrencyMetaData] = AssetIndex.defaultCurrencyIds.map { CurrencyMetaData(uid: $0, code: $0) }
+    var defaultAssets: [CurrencyMetaData] = AssetIndex.defaultCurrencyIds.map { CurrencyMetaData(uid: $0, code: $0.rawValue) }
     var availableAssets: [CurrencyMetaData] {
         return AssetCollectionTests.testTokenData
             .filter { !AssetIndex.defaultCurrencyIds.contains($0.0) }
@@ -172,12 +173,13 @@ class AssetCollectionTests: XCTestCase {
 }
 
 extension CurrencyMetaData {
-    init(uid: String, code: String, tokenAddress: String? = nil) {
+    init(uid: CurrencyId, code: String, tokenAddress: String? = nil) {
         self.init(uid: uid,
                   code: code,
                   isSupported: true,
                   colors: (UIColor.black, UIColor.black),
                   name: "test currency",
-                  tokenAddress: tokenAddress)
+                  tokenAddress: tokenAddress,
+                  decimals: 0)
     }
 }

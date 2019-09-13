@@ -16,6 +16,7 @@ protocol CurrencyWithIcon {
 }
 
 typealias CurrencyUnit = BRCrypto.Unit
+typealias CurrencyId = Identifier<Currency>
 
 /// Combination of the Core Currency model and its metadata properties
 class Currency: CurrencyWithIcon {
@@ -29,7 +30,7 @@ class Currency: CurrencyWithIcon {
     let network: BRCrypto.Network
 
     /// Unique identifier from BlockchainDB
-    var uid: String { assert(core.uids == metaData.uid); return metaData.uid }
+    var uid: CurrencyId { assert(core.uid == metaData.uid); return metaData.uid }
     /// Ticker code (e.g. BTC)
     var code: String { return core.code.uppercased() }
     /// Display name (e.g. Bitcoin)
@@ -211,15 +212,21 @@ extension CurrencyWithIcon {
 /// Model representing metadata for supported currencies
 public struct CurrencyMetaData: CurrencyWithIcon {
     
-    let uid: String
+    let uid: CurrencyId
     let code: String
     let isSupported: Bool
     let colors: (UIColor, UIColor)
     let name: String
     var tokenAddress: String?
+    var decimals: UInt8
     
     var isPreferred: Bool {
         return Currencies.allCases.map { $0.uid }.contains(uid)
+    }
+
+    /// token type string in format expected by System.asBlockChainDBModelCurrency
+    var type: String {
+        return uid.rawValue.contains("__native__") ? "NATIVE" : "ERC20"
     }
 
     enum CodingKeys: String, CodingKey {
@@ -229,6 +236,7 @@ public struct CurrencyMetaData: CurrencyWithIcon {
         case colors
         case tokenAddress = "contract_address"
         case name
+        case decimals = "scale"
     }
 }
 
@@ -243,7 +251,7 @@ extension CurrencyMetaData: Codable {
             uid = uid.replacingOccurrences(of: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6", with: "0x7108ca7c4718efa810457f228305c9c71390931a") // BRD token
             uid = uid.replacingOccurrences(of: "ethereum-testnet", with: "ethereum-ropsten")
         }
-        self.uid = uid //try container.decode(String.self, forKey: .uid)
+        self.uid = CurrencyId(rawValue: uid) //try container.decode(CurrencyId.self, forKey: .uid)
         code = try container.decode(String.self, forKey: .code)
         var colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
@@ -257,10 +265,12 @@ extension CurrencyMetaData: Codable {
         isSupported = try container.decode(Bool.self, forKey: .isSupported)
         name = try container.decode(String.self, forKey: .name)
         tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
+        decimals = try container.decode(UInt8.self, forKey: .decimals)
     }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(uid, forKey: .uid)
         try container.encode(code, forKey: .code)
         var colorValues = [String]()
         colorValues.append(colors.0.toHex)
@@ -269,6 +279,7 @@ extension CurrencyMetaData: Codable {
         try container.encode(isSupported, forKey: .isSupported)
         try container.encode(name, forKey: .name)
         try container.encode(tokenAddress, forKey: .tokenAddress)
+        try container.encode(decimals, forKey: .decimals)
     }
 }
 
@@ -292,24 +303,30 @@ enum Currencies: String, CaseIterable {
     case tusd
     
     var code: String { return rawValue }
-    var uid: String {
+    var uid: CurrencyId {
+        var uids = ""
         switch self {
         case .btc:
-            return "bitcoin-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+            uids = "bitcoin-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
         case .bch:
-            return "bitcoincash-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+            uids = "bitcoincash-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
         case .eth:
-            return "ethereum-\(E.isTestnet ? "ropsten" : "mainnet"):__native__"
+            uids = "ethereum-\(E.isTestnet ? "ropsten" : "mainnet"):__native__"
         case .brd:
-            return "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
+            uids = "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
         case .dai:
-            return "ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
+            uids = "ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
         case .tusd:
-            return "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
+            uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
         }
+        return CurrencyId(rawValue: uids)
     }
     
     var state: WalletState? { return Store.state.wallets[uid] }
     var wallet: Wallet? { return state?.wallet }
     var instance: Currency? { return state?.currency }
+}
+
+extension BRCrypto.Currency {
+    var uid: CurrencyId { return CurrencyId(rawValue: uids) }
 }

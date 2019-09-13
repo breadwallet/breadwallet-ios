@@ -155,6 +155,7 @@
 		7CC7D8DA21581C41007E1B9A /* brd-web-3.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7CC7D8D621581C41007E1B9A /* brd-web-3.tar */; };
 		7CCD9F6C1FEC1FA300175E64 /* TxAmountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */; };
 		7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */; };
+		7CEA35D5232A9D1200FB58C4 /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEA35D4232A9D1200FB58C4 /* Identifier.swift */; };
 		7CF2B050228F4528004AA905 /* StringExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2B04F228F4528004AA905 /* StringExtensionTests.swift */; };
 		7CF2B052228F478A004AA905 /* DataExtensionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF2B051228F478A004AA905 /* DataExtensionTests.swift */; };
 		7CF5319D231EE01300E61F12 /* Base32.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CF5319C231EE01300E61F12 /* Base32.swift */; };
@@ -745,6 +746,7 @@
 		7CCD9F6B1FEC1FA300175E64 /* TxAmountCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TxAmountCell.swift; path = src/Views/TransactionCells/TxAmountCell.swift; sourceTree = "<group>"; };
 		7CE19FF221166B27008C55CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		7CE940E51FEB8A5F005A2B53 /* TxDetailRowCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxDetailRowCell.swift; path = src/Views/TransactionCells/TxDetailRowCell.swift; sourceTree = "<group>"; };
+		7CEA35D4232A9D1200FB58C4 /* Identifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Identifier.swift; path = src/Models/Identifier.swift; sourceTree = "<group>"; };
 		7CF2B04F228F4528004AA905 /* StringExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensionTests.swift; sourceTree = "<group>"; };
 		7CF2B051228F478A004AA905 /* DataExtensionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtensionTests.swift; sourceTree = "<group>"; };
 		7CF5319C231EE01300E61F12 /* Base32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Base32.swift; path = src/Utilities/Base32.swift; sourceTree = "<group>"; };
@@ -1923,6 +1925,7 @@
 				3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */,
 				CE5393AF22D7CC98000303B3 /* HistoryPeriod.swift */,
 				CE20C8FF1DBBFFDD00C8397A /* SimpleRedux */,
+				7CEA35D4232A9D1200FB58C4 /* Identifier.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -2703,6 +2706,7 @@
 				CEC6AA3D1DEE687000EE5AFD /* RadialGradientView.swift in Sources */,
 				CEEC70921E95DA4400EF788E /* GradientSwitch.swift in Sources */,
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
+				7CEA35D5232A9D1200FB58C4 /* Identifier.swift in Sources */,
 				CEE20C2F1EA3E5820086F724 /* BlinkingView.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
 				CEF7D94622CE6AC000939D19 /* HistoryPeriodButton.swift in Sources */,
