@@ -55,7 +55,7 @@ class ManageWalletsViewController: UITableViewController {
         assetCollection.saveChanges()
     }
     
-    private func removeCurrency(_ identifier: String) {
+    private func removeCurrency(_ identifier: CurrencyId) {
         guard let index = displayData.firstIndex(where: { $0.uid == identifier }) else { return }
         //TODO:CRYPTO prevent removing a native currency when you have its tokens added
         tableView.beginUpdates()

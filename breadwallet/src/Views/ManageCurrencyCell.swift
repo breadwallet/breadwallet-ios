@@ -32,12 +32,12 @@ class ManageCurrencyCell: SeparatorCell {
     private let subheader = UILabel(font: .customBody(size: 14.0), color: UIColor.transparentWhiteText)
     private let icon = UIImageView()
     private let button = ToggleButton(normalTitle: S.TokenList.add, normalColor: .navigationTint, selectedTitle: S.TokenList.hide, selectedColor: .orangeButton)
-    private var identifier: String = ""
+    private var identifier: CurrencyId = ""
     private var listType: EditWalletType = .add
     private var isCurrencyHidden = false
     
-    var didAddIdentifier: ((String) -> Void)?
-    var didRemoveIdentifier: ((String) -> Void)?
+    var didAddIdentifier: ((CurrencyId) -> Void)?
+    var didRemoveIdentifier: ((CurrencyId) -> Void)?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

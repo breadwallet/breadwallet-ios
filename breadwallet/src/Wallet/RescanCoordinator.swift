@@ -40,7 +40,7 @@ struct RescanCoordinator: Trackable {
                                     to: RescanState(startTime: Date(), depth: depth))
 
         print("[\(currency.code)] initiating rescan from \(depth)")
-        system.rescan(walletManager: manager, toDepth: depth)
+        system.rescan(walletManager: manager, fromDepth: depth)
     }
 }
 

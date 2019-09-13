@@ -50,7 +50,7 @@ enum ManageWallets {
 
     struct SetWallets: Action {
         let reduce: Reducer
-        init(_ newWallets: [String: WalletState]) {
+        init(_ newWallets: [CurrencyId: WalletState]) {
             reduce = {
                 return $0.mutate(wallets: newWallets)
             }
@@ -59,7 +59,7 @@ enum ManageWallets {
 
     struct AddWallets: Action {
         let reduce: Reducer
-        init(_ newWallets: [String: WalletState]) {
+        init(_ newWallets: [CurrencyId: WalletState]) {
             reduce = {
                 return $0.mutate(wallets: $0.wallets.merging(newWallets) { (x, _) in x })
             }
@@ -109,15 +109,22 @@ struct WalletChange: Trackable {
             return $0.mutate(walletState: state.mutate(currentRate: currentRate)) })
     }
     
-    func set(_ walletState: WalletState) -> WalletAction {
-        return WalletAction(reduce: { $0.mutate(walletState: walletState)})
-    }
-    
     func setFiatPriceInfo(_ priceInfo: FiatPriceInfo) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(fiatPriceInfo: priceInfo))
         })
+    }
+
+    func setWallet(_ wallet: Wallet) -> WalletAction {
+        return WalletAction(reduce: {
+            guard let state = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: state.mutate(wallet: wallet))
+        })
+    }
+
+    func set(_ walletState: WalletState) -> WalletAction {
+        return WalletAction(reduce: { $0.mutate(walletState: walletState)})
     }
 }
 

@@ -14,7 +14,7 @@ class AssetIndex: BRKVStoreObject, Codable {
     static let key = "asset-index"
     
     var classVersion = 2
-    var enabledAssetIds = [String]()
+    var enabledAssetIds = [CurrencyId]()
     
     enum CodingKeys: String, CodingKey {
         case classVersion
@@ -56,7 +56,7 @@ class AssetIndex: BRKVStoreObject, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         classVersion = try container.decode(Int.self, forKey: .classVersion)
-        enabledAssetIds = try container.decode([String].self, forKey: .enabledAssetIds)
+        enabledAssetIds = try container.decode([CurrencyId].self, forKey: .enabledAssetIds)
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
     
@@ -64,7 +64,7 @@ class AssetIndex: BRKVStoreObject, Codable {
         enabledAssetIds = AssetIndex.defaultCurrencyIds
     }
     
-    static var defaultCurrencyIds: [String] {
+    static var defaultCurrencyIds: [CurrencyId] {
         return Currencies.allCases.map { $0.uid }
     }
 }

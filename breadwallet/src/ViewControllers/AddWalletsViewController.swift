@@ -16,7 +16,7 @@ class AddWalletsViewController: UITableViewController {
     private var displayData = [CurrencyMetaData]()
     private var allAssets = [CurrencyMetaData]()
     private var addedCurrencyIndices = [Int]()
-    private var addedCurrencyIdentifiers = [String]()
+    private var addedCurrencyIdentifiers = [CurrencyId]()
     private let searchBar = UISearchBar()
     
     init(assetCollection: AssetCollection) {
@@ -52,13 +52,13 @@ class AddWalletsViewController: UITableViewController {
         title = S.TokenList.addTitle
     }
     
-    private func addCurrency(_ identifier: String) {
+    private func addCurrency(_ identifier: CurrencyId) {
         guard let index = allAssets.firstIndex(where: {$0.uid == identifier }) else { return assertionFailure() }
         addedCurrencyIndices.append(index)
         addedCurrencyIdentifiers.append(identifier)
     }
     
-    private func removeCurrency(_ identifier: String) {
+    private func removeCurrency(_ identifier: CurrencyId) {
         guard let index = allAssets.firstIndex(where: {$0.uid == identifier }) else { return assertionFailure() }
         addedCurrencyIndices.removeAll(where: { $0 == index })
         addedCurrencyIdentifiers.removeAll(where: { $0 == identifier })
