@@ -12,7 +12,7 @@ import BRCrypto
 class CoreSystem: Subscriber {
     
     private var system: System?
-    private let queue = DispatchQueue(label: "com.brd.CoreSystem")
+    private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
 
     // MARK: Wallets + Currencies
 
@@ -30,10 +30,13 @@ class CoreSystem: Subscriber {
 
     init() {
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
-            guard let btc = Currencies.btc.instance,
-                let btcWalletManager = self?.wallet(for: btc)?.core.manager else { return }
-            btcWalletManager.addressScheme = .btcSegwit
-            print("[SYS] Bitcoin SegWit address scheme enabled")
+            guard let `self` = self else { return }
+            self.queue.async {
+                guard let btc = Currencies.btc.instance,
+                    let btcWalletManager = self.wallet(for: btc)?.manager else { return }
+                btcWalletManager.addressScheme = .btcSegwit
+                print("[SYS] Bitcoin SegWit address scheme enabled")
+            }
         }
 
         Reachability.addDidChangeCallback { [weak self] isReachable in
@@ -59,7 +62,11 @@ class CoreSystem: Subscriber {
         },
             apiBaseURL: "https://\(C.backendHost)",
             apiDataTaskFunc: { (_, req, completion) -> URLSessionDataTask in
-                return Backend.apiClient.dataTaskWithRequest(req, authenticated: true, retryCount: 0, handler: completion)
+                return Backend.apiClient.dataTaskWithRequest(req,
+                                                             authenticated: true,
+                                                             retryCount: 0,
+                                                             responseQueue: self.queue,
+                                                             handler: completion)
         })
 
         self.system = System(listener: self,
@@ -336,15 +343,18 @@ class CoreSystem: Subscriber {
         }
     }
 
-    private func connectionMode(for currency: Currency) -> WalletConnectionMode {
-        assert(currency.tokenType == .native)
+    func connectionMode(for currency: Currency) -> WalletConnectionMode {
+        guard let networkCurrency = currency.tokenType == .native ? currency : currencies[currency.network.currency.uid] else {
+            assertionFailure()
+            return .api_only
+        }
         guard let kv = Backend.kvStore,
             let walletInfo = WalletInfo(kvStore: kv) else {
                 assertionFailure()
-                return WalletConnectionSettings.defaultMode(for: currency)
+                return WalletConnectionSettings.defaultMode(for: networkCurrency)
         }
         let settings = WalletConnectionSettings(system: self, kvStore: kv, walletInfo: walletInfo)
-        return settings.mode(for: currency)
+        return settings.mode(for: networkCurrency)
     }
 
     // MARK: - AssetCollection / WalletState Management

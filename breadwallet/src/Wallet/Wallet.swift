@@ -23,11 +23,15 @@ class Wallet {
         case invalidAmountOrFee
     }
     
-    let core: BRCrypto.Wallet
     let currency: Currency
+    private let core: BRCrypto.Wallet
     private unowned let system: CoreSystem
 
     // MARK: - Network
+    
+    var manager: WalletManager {
+        return core.manager
+    }
 
     /// The native network currency
     var networkCurrency: Currency? {
@@ -36,6 +40,10 @@ class Wallet {
 
     var networkPrimaryWallet: Wallet? {
         return system.wallets[core.manager.network.currency.uid]
+    }
+    
+    var connectionMode: WalletConnectionMode {
+        return system.connectionMode(for: currency)
     }
 
     // MARK: - Fees
@@ -140,8 +148,16 @@ class Wallet {
         core.manager.submit(transfer: transfer, paperKey: seedPhrase)
     }
     
-    public func createSweeper(forKey key: Key, completion: @escaping (Result<WalletSweeper, WalletSweeperError>) -> Void ) {
+    func createSweeper(forKey key: Key, completion: @escaping (Result<WalletSweeper, WalletSweeperError>) -> Void ) {
         core.manager.createSweeper(wallet: core, key: key, completion: completion)
+    }
+    
+    func createPaymentProtocolRequest(forBip70 data: Data) -> PaymentProtocolRequest? {
+        return PaymentProtocolRequest.create(wallet: core, forBip70: data)
+    }
+    
+    func createPaymentProtocolRequest(forBitPay jsonData: Data) -> PaymentProtocolRequest? {
+        return PaymentProtocolRequest.create(wallet: core, forBitPay: jsonData)
     }
 
     // MARK: Event Subscriptions

@@ -402,7 +402,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
 
             // Rescan
-            if btcWallet.core.manager.mode == .p2p_only {
+            if system.connectionMode(for: btc) == .p2p_only {
                 btcItems.append(MenuItem(title: S.Settings.sync, callback: {
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
                 }))
@@ -440,7 +440,7 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Bitcoin Cash Menu
         var bchItems: [MenuItem] = []
         if let bch = Currencies.bch.instance, let bchWallet = bch.wallet {
-            if bchWallet.core.manager.mode == .p2p_only {
+            if system.connectionMode(for: bch) == .p2p_only {
                 // Rescan
                 bchItems.append(MenuItem(title: S.Settings.sync, callback: {
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: bchWallet), animated: true)
@@ -460,7 +460,7 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Ethereum Menu
         var ethItems: [MenuItem] = []
         if let eth = Currencies.eth.instance, let ethWallet = eth.wallet {
-            if ethWallet.core.manager.mode == .p2p_only {
+            if system.connectionMode(for: eth) == .p2p_only {
                 // Rescan
                 ethItems.append(MenuItem(title: S.Settings.sync, callback: {
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: ethWallet), animated: true)
