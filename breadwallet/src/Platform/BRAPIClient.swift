@@ -39,6 +39,7 @@ public protocol BRAPIAdaptor {
     func dataTaskWithRequest(_ request: URLRequest,
                              authenticated: Bool,
                              retryCount: Int,
+                             responseQueue: DispatchQueue,
                              handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask
     
     func url(_ path: String, args: [String: String]?) -> URL
@@ -77,6 +78,10 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     
     init(authenticator: WalletAuthenticator) {
         self.authenticator = authenticator
+        super.init()
+        if !self.authenticator.noWallet {
+            getToken { _ in } // pre-fetch token
+        }
     }
     
     // prints whatever you give it if logEnabled is true
@@ -148,6 +153,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
     public func dataTaskWithRequest(_ request: URLRequest,
                                     authenticated: Bool = false,
                                     retryCount: Int = 0,
+                                    responseQueue: DispatchQueue = DispatchQueue.main,
                                     handler: @escaping URLSessionTaskHandler) -> URLSessionDataTask {
         let start = Date()
         var logLine = ""
@@ -161,48 +167,52 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
             actualRequest = signRequest(actualRequest)
         }
         return session.dataTask(with: actualRequest, completionHandler: { (data, resp, err) -> Void in
-            DispatchQueue.main.async {
-                let end = Date()
-                let dur = Int(end.timeIntervalSince(start) * 1000)
-                if let httpResp = resp as? HTTPURLResponse {
-                    var errStr = ""
-                    if httpResp.statusCode >= 400 {
-                        if let data = data, let s = String(data: data, encoding: .utf8) {
-                            errStr = s
-                        }
+            let end = Date()
+            let dur = Int(end.timeIntervalSince(start) * 1000)
+            if let httpResp = resp as? HTTPURLResponse {
+                var errStr = ""
+                if httpResp.statusCode >= 400 {
+                    if let data = data, let s = String(data: data, encoding: .utf8) {
+                        errStr = s
                     }
-                    
-                    self.log("\(logLine) -> status=\(httpResp.statusCode) duration=\(dur)ms errStr=\(errStr)")
-                    
-                    if authenticated && httpResp.isBreadChallenge {
-                        self.log("\(logLine) got authentication challenge from API - will attempt to get token")
-                        self.getToken { err in
-                            if err != nil && retryCount < 1 { // retry once
-                                self.log("\(logLine) error retrieving token: \(String(describing: err)) - will retry")
-                                DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 1)) {
-                                    self.dataTaskWithRequest(
-                                        request, authenticated: authenticated,
-                                        retryCount: retryCount + 1, handler: handler
-                                    ).resume()
-                                }
-                            } else if err != nil && retryCount > 0 { // fail if we already retried
-                                self.log("\(logLine) error retrieving token: \(String(describing: err)) - will no longer retry")
-                                handler(nil, nil, err)
-                            } else if retryCount < 1 { // no error, so attempt the request again
-                                self.log("\(logLine) retrieved token, so retrying the original request")
+                }
+                
+                self.log("\(logLine) -> status=\(httpResp.statusCode) duration=\(dur)ms errStr=\(errStr)")
+                
+                if authenticated && httpResp.isBreadChallenge {
+                    self.log("\(logLine) got authentication challenge from API - will attempt to get token")
+                    self.getToken { err in
+                        if err != nil && retryCount < 1 { // retry once
+                            self.log("\(logLine) error retrieving token: \(String(describing: err)) - will retry")
+                            responseQueue.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 1)) {
                                 self.dataTaskWithRequest(
                                     request, authenticated: authenticated,
-                                    retryCount: retryCount + 1, handler: handler).resume()
-                            } else {
-                                self.log("\(logLine) retried token multiple times, will not retry again")
+                                    retryCount: retryCount + 1, handler: handler
+                                    ).resume()
+                            }
+                        } else if err != nil && retryCount > 0 { // fail if we already retried
+                            self.log("\(logLine) error retrieving token: \(String(describing: err)) - will no longer retry")
+                            handler(nil, nil, err)
+                        } else if retryCount < 1 { // no error, so attempt the request again
+                            self.log("\(logLine) retrieved token, so retrying the original request")
+                            self.dataTaskWithRequest(
+                                request, authenticated: authenticated,
+                                retryCount: retryCount + 1, handler: handler).resume()
+                        } else {
+                            self.log("\(logLine) retried token multiple times, will not retry again")
+                            responseQueue.async {
                                 handler(data, httpResp, err)
                             }
                         }
-                    } else {
-                        handler(data, httpResp, err as NSError?)
                     }
                 } else {
-                    self.log("\(logLine) encountered connection error \(String(describing: err))")
+                    responseQueue.async {
+                        handler(data, httpResp, err as NSError?)
+                    }
+                }
+            } else {
+                self.log("\(logLine) encountered connection error \(String(describing: err))")
+                responseQueue.async {
                     handler(data, nil, err as NSError?)
                 }
             }
