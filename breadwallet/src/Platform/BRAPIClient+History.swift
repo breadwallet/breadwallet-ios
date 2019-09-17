@@ -44,6 +44,7 @@ extension BRAPIClient {
         var combinedResults: [String: FiatPriceInfo] = [:]
         var errorResult: FiatPriceInfoResult?
         
+        let queue = DispatchQueue.global(qos: .utility)
         let group = DispatchGroup()
         for chunk in chunks {
             group.enter()
@@ -54,7 +55,7 @@ extension BRAPIClient {
                 return group.leave()
             }
             let request = URLRequest(url: URL(string: "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=\(codeList)&tsyms=\(currentCode.uppercased())")!)
-            dataTaskWithRequest(request, handler: { data, _, error in
+            dataTaskWithRequest(request, responseQueue: queue, handler: { data, _, error in
                 guard error == nil, let data = data else {
                     errorResult = .error(error?.localizedDescription ?? "unknown error")
                     return group.leave()

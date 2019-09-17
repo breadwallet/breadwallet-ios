@@ -63,7 +63,7 @@ class WalletConnectionSettings {
         assert(currency.isBitcoin || currency.isEthereum) //TODO:CRYPTO_V2
         guard system.isModeSupported(mode, for: currency.network) || E.isRunningTests else { return assertionFailure() }
         walletInfo.connectionModes[currency.uid] = mode.serialization
-        guard let wm = currency.wallet?.core.manager else { return assert(E.isRunningTests) }
+        guard let wm = currency.wallet?.manager else { return assert(E.isRunningTests) }
         system.setConnectionMode(mode, forWalletManager: wm)
         save()
     }
@@ -87,7 +87,7 @@ class WalletConnectionSettings {
     }
 
     private func sanitize(currency: Currency) {
-        if let wm = currency.wallet?.core.manager,
+        if let wm = currency.wallet?.manager,
             let modeValue = walletInfo.connectionModes[currency.uid],
             let mode = WalletConnectionMode(serialization: modeValue),
             !system.isModeSupported(mode, for: wm.network) {
