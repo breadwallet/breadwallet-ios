@@ -9,7 +9,7 @@
 import Foundation
 import BRCrypto
 
-class CoreSystem: Subscriber {
+class CoreSystem: Subscriber, Trackable {
     
     private var system: System?
     private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
@@ -524,21 +524,39 @@ extension CoreSystem: SystemListener {
             DispatchQueue.main.async {
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {
                     let seconds = UInt32(timestamp?.timeIntervalSince1970 ?? 0)
-                    Store.perform(action: WalletChange($0).setProgress(progress: percentComplete, timestamp: seconds))
+                    let progress = Float(percentComplete / 100.0)
+                    Store.perform(action: WalletChange($0).setProgress(progress: progress, timestamp: seconds))
                 }
             }
 
-        case .syncEnded(let error):
-            if let error = error {
-                print("[SYS] \(manager.network) sync error: \(error)")
-            }
+        case .syncEnded(let reason):
             DispatchQueue.main.async {
+                var syncState: SyncState
+                var isComplete: Bool = false
+                
+                switch reason {
+                case .complete, .unknown:
+                    syncState = .success
+                    isComplete = true
+                        
+                case .requested: // disconnect/background
+                    syncState = .connecting
+                    
+                case .posix(let errno, let message):
+                    let messagePayload = "\(message ?? "") (\(errno))"
+                    print("[SYS] \(manager.network) sync error: \(messagePayload)")
+                    self.saveEvent("event.syncErrorMessage", attributes: ["network": manager.network.currency.code, "message": messagePayload])
+                    syncState = .failed
+                }
+                
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {
-                    Store.perform(action: WalletChange($0).setIsRescanning(false))
-                    Store.perform(action: WalletChange($0).setSyncingState(error == nil ? .success : .connecting))
-                    if let balance = self.wallets[$0.uid]?.balance {
-                        Store.perform(action: WalletChange($0).setBalance(balance))
+                    if isComplete {
+                        Store.perform(action: WalletChange($0).setIsRescanning(false))
+                        if let balance = self.wallets[$0.uid]?.balance {
+                            Store.perform(action: WalletChange($0).setBalance(balance))
+                        }
                     }
+                    Store.perform(action: WalletChange($0).setSyncingState(syncState))
                 }
             }
 
@@ -602,8 +620,8 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "syncStarted"
         case .syncProgress(let percentComplete):
             return "syncProgress(\(percentComplete))"
-        case .syncEnded(let error):
-            return "syncEnded(\(error ?? ""))"
+        case .syncEnded(let reason):
+            return "syncEnded(\(reason))"
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
         }
