@@ -169,10 +169,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         backgroundView.backgroundColor = Theme.primaryBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
         topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
-                                                            constant: topControlHeight
-                                                                + (E.isIPhoneX
-                                                                    ? C.padding[9] + 35.0
-                                                                    : C.padding[9] + 20.0))
+                                                            constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin)
         logoBackground.constrain([
             topControlTop,
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
