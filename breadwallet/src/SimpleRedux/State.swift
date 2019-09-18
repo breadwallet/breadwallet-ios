@@ -131,6 +131,7 @@ enum SyncState {
     case syncing
     case connecting
     case success
+    case failed
 }
 
 // MARK: -

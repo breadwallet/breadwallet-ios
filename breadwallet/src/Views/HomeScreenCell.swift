@@ -87,9 +87,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
                             guard let syncState = state[viewModel.currency]?.syncState else { return }
                             self.syncIndicator.syncState = syncState
                             switch syncState {
-                            case .connecting:
-                                self.isSyncIndicatorVisible = true
-                            case .syncing:
+                            case .connecting, .failed, .syncing:
                                 self.isSyncIndicatorVisible = true
                             case .success:
                                 self.isSyncIndicatorVisible = false
@@ -99,7 +97,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncProgress != $1[viewModel.currency]?.syncProgress },
                         callback: { state in
                             if let progress = state[viewModel.currency]?.syncProgress {
-                                self.syncIndicator.progress = CGFloat(progress)
+                                self.syncIndicator.progress = progress
                             }
         })
     }
