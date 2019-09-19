@@ -31,9 +31,9 @@ class AppRatingManagerTests: XCTestCase {
         
         XCTAssertFalse(mgr.haveSufficientLaunchesToShowPrompt)
         
-        let launchCount = mgr.minimumLaunchCountForRating
+        let launchCount = mgr.ratingLaunchCountCycle
         
-        for _ in 1...launchCount { mgr.bumpLaunchCount() }
+        for _ in 1...launchCount { UserDefaults.appLaunchCount = UserDefaults.appLaunchCount + 1 }
         
         XCTAssertTrue(mgr.haveSufficientLaunchesToShowPrompt)
     }
