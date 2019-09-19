@@ -44,6 +44,7 @@ private let debugBackendHostKey = "debugBackendHostKey"
 private let debugWebBundleNameKey = "debugWebBundleNameKey"
 private let platformDebugURLKey = "platformDebugURLKey"
 private let appLaunchCountKey = "appLaunchCountKey"
+private let appLaunchCountAtLastRatingPromptKey = "appLaunchCountAtLastRatingPromptKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
@@ -342,6 +343,13 @@ extension UserDefaults {
         get { return defaults.integer(forKey: appLaunchCountKey ) }
         set { defaults.set(newValue, forKey: appLaunchCountKey )}
     }
+    
+    // The app launch count the last time the ratings prompt was shown.
+    static var appLaunchCountAtLastRatingPrompt: Int {
+        get { return UserDefaults.standard.integer(forKey: appLaunchCountAtLastRatingPromptKey ) }
+        set { UserDefaults.standard.set(newValue, forKey: appLaunchCountAtLastRatingPromptKey )}
+    }
+
 }
 
 // MARK: - State Restoration

@@ -18,18 +18,17 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
     static public let recentTransactionThreshold: TimeInterval = (24*60*60)
 
     // Make sure the user has freshly opened the app at least this many times before we trigger a rating prompt.
-    public let minimumLaunchCountForRating: Int = 10
+    public let ratingLaunchCountCycle: Int = 10
 
     private let ratingPromptAnalyticsEvent = "prompt.review.displayed"
     private let ratingPromptReasonViewedTransactions = "viewedTransactions"
     
     var haveSufficientLaunchesToShowPrompt: Bool {
-        return launchCount >= minimumLaunchCountForRating
+        return launchCount >= ratingLaunchCountCycle
     }
     
-    var launchCount: Int {
-        return UserDefaults.appLaunchCount
-    }
+    var launchCount: Int { return UserDefaults.appLaunchCount }
+    var launchCountAtLastPrompt: Int { return UserDefaults.appLaunchCountAtLastRatingPrompt }
     
     func shouldTriggerPrompt(transactions: [Transaction]) -> Bool {
         // This trigger can be fired when the PIN screen is still in the foreground and we don't want that.
@@ -37,7 +36,8 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
         // the wallet.
         guard !Store.state.isLoginRequired else { return false }
 
-        guard launchCount >= minimumLaunchCountForRating else { return false }
+        // Make sure we've had enough launches since the last time we asked the user to rate the app.
+        guard (launchCount - launchCountAtLastPrompt) > ratingLaunchCountCycle else { return false }
         
         let now = Date().timeIntervalSince1970
         let txAgeThreshold = AppRatingManager.recentTransactionThreshold
@@ -61,15 +61,14 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
     
     private func triggerRatingsPrompt(reason: String) {
         SKStoreReviewController.requestReview()
-        
         saveEvent(ratingPromptAnalyticsEvent, attributes: [ "reason": reason])
         
-        // Reset the launch count so we don't try to trigger it again too soon.
-        setLaunchCount(0)
+        // Store the current app launch count so we can make sure we don't prompt again until
+        // a sufficient number of subsequent app launches.
+        UserDefaults.appLaunchCountAtLastRatingPrompt = UserDefaults.appLaunchCount
     }
     
     public func start() {
-        bumpLaunchCount()
         
         Store.subscribe(self, name: .didViewTransactions(nil), callback: { (trigger) in
             
@@ -91,14 +90,5 @@ class AppRatingManager: NSObject, Subscriber, Trackable {
                 }
             }
         })
-    }
-    
-    // This is called by the ApplicationController when the app takes the foreground.
-    func bumpLaunchCount() {
-        setLaunchCount(launchCount + 1)
-    }
-    
-    func setLaunchCount(_ count: Int) {
-        UserDefaults.appLaunchCount = count
     }
 }

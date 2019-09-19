@@ -108,7 +108,7 @@ class CoreSystem: Subscriber, Trackable {
     func disconnect() {
         queue.async {
             print("[SYS] disconnect")
-            guard let system = self.system else { return assertionFailure() }
+            guard let system = self.system else { return }
             system.stop()
         }
     }

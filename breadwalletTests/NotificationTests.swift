@@ -35,6 +35,10 @@ class NotificationTests: XCTestCase {
         })
         waitForExpectations(timeout: 1.0, handler: nil)
         
+        // Showing the prompt requires an app launch count of at least two so that we don't
+        // spam the user with too many messages and prompts when a wallet is first created.
+        UserDefaults.appLaunchCount = 2
+
         // test logged-in case
         Store.perform(action: LoginSuccess())
         e = expectation(description: "should show if logged in")
