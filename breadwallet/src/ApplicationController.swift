@@ -17,6 +17,8 @@ class ApplicationController: Subscriber, Trackable {
 
     fileprivate var application: UIApplication?
 
+    static let initialLaunchCount = 0
+    
     let window = UIWindow()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
@@ -36,7 +38,7 @@ class ApplicationController: Subscriber, Trackable {
         }
         return homeScreen
     }
-
+    
     private let coreSystem = CoreSystem()
     private var keyStore: KeyStore!
 
@@ -80,6 +82,11 @@ class ApplicationController: Subscriber, Trackable {
         Reachability.addDidChangeCallback({ isReachable in
             self.isReachable = isReachable
         })
+    }
+    
+    private func bumpLaunchCount() {
+        guard !keyStore.noWallet else { return }
+        UserDefaults.appLaunchCount = (UserDefaults.appLaunchCount + 1)
     }
     
     private func setup() {
@@ -197,7 +204,7 @@ class ApplicationController: Subscriber, Trackable {
     
     func willEnterForeground() {
         guard !keyStore.noWallet else { return }
-        appRatingManager.bumpLaunchCount()
+        bumpLaunchCount()
         Backend.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())

@@ -102,7 +102,7 @@ struct NotificationAuthorizer: Trackable {
         
         // Don't show the opt-in prompt if we haven't had sufficent app launches since there
         // is already a lot going on when the user first creates or restores a wallet.
-        guard UserDefaults.appLaunchCount > 1 else {
+        guard UserDefaults.appLaunchCount > ApplicationController.initialLaunchCount else {
             completion(false)
             return
         }
