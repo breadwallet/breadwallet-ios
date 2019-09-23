@@ -390,7 +390,7 @@ class ModalPresenter: Subscriber, Trackable {
         var btcItems: [MenuItem] = []
         if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
             // Connection
-            btcItems.append(MenuItem(title: S.WalletConnectionSettings.title) {
+            btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) {
                 guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
                     return assertionFailure()
                 }
