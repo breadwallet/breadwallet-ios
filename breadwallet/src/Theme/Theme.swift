@@ -120,6 +120,10 @@ class Theme: BRDTheme {
         return font(.bold, .body1, .body)
     }
     
+    static var h3Accent: UIFont {
+        return font(.bold, .h3Title, .body)
+    }
+    
     static var body2: UIFont {
         return font(.body2, .body)
     }
