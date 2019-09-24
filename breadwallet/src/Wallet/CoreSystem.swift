@@ -186,14 +186,14 @@ class CoreSystem: Subscriber, Trackable {
                                             assertionFailure("unable to create view model for \(coreCurrency.code)")
                                             continue
             }
-            print("[SYS] currency added: \(network) \(currency.code)")
             currencies[coreCurrency.uid] = currency
         }
+        print("[SYS] \(network) currencies: \(network.currencies.map { $0.code }.joined(separator: ","))")
     }
 
     /// Creates a wallet manager for the network. Wallets are added asynchronously by Core for all network currencies.
     private func setupWalletManager(for network: Network) {
-        guard let system = system else { return assertionFailure() }
+        guard let system = system, let assetCollection = assetCollection else { return assertionFailure() }
         guard let currency = currencies[network.currency.uid] else {
             print("[SYS] \(network) wallet manager not created. \(network.currency.uid) not supported.")
             return
@@ -202,6 +202,9 @@ class CoreSystem: Subscriber, Trackable {
         if system.migrateRequired(network: network) {
             self.migrateLegacyDatabase(network: network)
         }
+        
+        // networks tokens for which wallets are needed
+        let requiredTokens = network.currencies.filter { assetCollection.isEnabled($0.uid) }
 
         var addressScheme: AddressScheme
         if currency.isBitcoin {
@@ -215,9 +218,11 @@ class CoreSystem: Subscriber, Trackable {
             assertionFailure("invalid wallet manager mode \(mode) for \(network.currency.code)")
             mode = system.defaultMode(network: network)
         }
+        print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
         system.createWalletManager(network: network,
                                    mode: mode,
-                                   addressScheme: addressScheme)
+                                   addressScheme: addressScheme,
+                                   currencies: requiredTokens)
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
@@ -284,6 +289,22 @@ class CoreSystem: Subscriber, Trackable {
         guard wallets[coreWallet.currency.uid] != nil else { return assertionFailure() }
         wallets[coreWallet.currency.uid] = nil
         updateWalletStates()
+    }
+    
+    /// Requests the wallet managers to create wallets for all enabled currencies.
+    /// Wallet creation is asynchronous and triggers a wallet `created` event.
+    private func requestCoreWalletCreation() {
+        guard let managers = system?.managers,
+            let assetCollection = assetCollection else { return }
+        
+        managers.forEach { manager in
+            let added = manager.network.currencies
+                .filter { assetCollection.isEnabled($0.uid) && wallets[$0.uid] == nil }
+                .filter { manager.registerWalletFor(currency: $0) == nil } // nil returned if wallet will be created
+            if !added.isEmpty {
+                print("[SYS] creating wallets for \(added.map { $0.code }.joined(separator: ","))")
+            }
+        }
     }
 
     /// Reset the active wallets to match the asset collection by adding/removing wallets
@@ -365,19 +386,18 @@ class CoreSystem: Subscriber, Trackable {
         assetCollection.saveChanges() // triggers updateWalletStates
     }
 
-    /// Adds a WalletState for every enabled currency, for initial launch prior to Wallet creation.
+    /// Adds placeholder WalletStates for all enabled currencies which do not have a Wallet yet.
     private func addPlaceholderWalletStates() {
-        print("[SYS] adding placeholders - \(Date())")
         guard let assetCollection = assetCollection else { return assertionFailure() }
         let placeholderStates: [CurrencyId: WalletState] = Dictionary(uniqueKeysWithValues:
             assetCollection.enabledAssets
+                .filter { self.wallets[$0.uid] == nil }
                 .compactMap { self.currencies[$0.uid] }
                 .enumerated()
                 .map { displayOrder, currency in
                     (currency.uid, WalletState.initial(currency, displayOrder: displayOrder).mutate(syncState: .connecting))
         })
         DispatchQueue.main.async {
-            assert(Store.state.wallets.isEmpty)
             Store.perform(action: ManageWallets.AddWallets(placeholderStates))
         }
     }
@@ -387,9 +407,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let displayOrder = assetCollection?.displayOrder(for: wallet.currency.metaData) else { return assertionFailure("wallet not enabled") }
         // reading+writing Store.state must be on main thread
         DispatchQueue.main.async {
-            let walletState = self.initializeWalletState(for: wallet, displayOrder: displayOrder)
-                .mutate(syncState: .connecting,
-                        balance: wallet.balance)
+            let walletState = self.walletState(for: wallet, displayOrder: displayOrder)
             Store.perform(action: WalletChange(wallet.currency).set(walletState))
         }
     }
@@ -398,10 +416,11 @@ class CoreSystem: Subscriber, Trackable {
     private func updateWalletStates() {
         guard let assetCollection = assetCollection else { return }
         print("[SYS] updating wallets")
-
+        
+        addPlaceholderWalletStates()
         updateActiveWallets()
         updateWalletManagerConnections()
-
+        
         // reading+writing Store.state must be on main thread
         DispatchQueue.main.async {
             let walletStates: [CurrencyId: WalletState] = Dictionary(uniqueKeysWithValues:
@@ -409,28 +428,26 @@ class CoreSystem: Subscriber, Trackable {
                     .compactMap { self.wallets[$0.uid] }
                     .enumerated()
                     .map { displayOrder, wallet in
-                        if let walletState = Store.state.wallets[wallet.currency.uid] {
-                            assert(walletState.wallet != nil)
-                            return (wallet.currency.uid, walletState.mutate(displayOrder: displayOrder))
-                        } else {
-                            return (wallet.currency.uid, self.initializeWalletState(for: wallet, displayOrder: displayOrder))
-                        }
+                        (wallet.currency.uid, self.walletState(for: wallet, displayOrder: displayOrder))
             })
             Store.perform(action: ManageWallets.SetWallets(walletStates))
             Backend.updateExchangeRates()
         }
+        
+        requestCoreWalletCreation()
     }
     
     private func coreWallet(_ currencyId: CurrencyId) -> BRCrypto.Wallet? {
         return system?.wallets.first(where: { $0.currency.uid == currencyId })
     }
     
-    private func initializeWalletState(for wallet: Wallet, displayOrder: Int) -> WalletState {
+    private func walletState(for wallet: Wallet, displayOrder: Int) -> WalletState {
         assert(Thread.isMainThread)
-        if let placeholder = Store.state.wallets[wallet.currency.uid], placeholder.wallet == nil {
-            return placeholder.mutate(wallet: wallet, balance: wallet.balance)
+        if let existing = Store.state.wallets[wallet.currency.uid] {
+            return existing.mutate(wallet: wallet, displayOrder: displayOrder, syncState: .success, balance: wallet.balance)
         } else {
-            return WalletState.initial(wallet.currency, wallet: wallet, displayOrder: displayOrder).mutate(balance: wallet.balance)
+            return WalletState.initial(wallet.currency, wallet: wallet, displayOrder: displayOrder)
+                .mutate(syncState: .success, balance: wallet.balance)
         }
     }
 
@@ -471,7 +488,7 @@ class CoreSystem: Subscriber, Trackable {
 extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
-        print("[SYS] system event: \(event)")
+        //print("[SYS] system event: \(event)")
         switch event {
         case .created:
             break
@@ -498,7 +515,7 @@ extension CoreSystem: SystemListener {
     }
 
     func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
-        print("[SYS] \(manager.network) manager event: \(event)")
+        //print("[SYS] \(manager.network) manager event: \(event)")
         switch event {
         case .created:
             break
@@ -566,7 +583,7 @@ extension CoreSystem: SystemListener {
     }
 
     func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
-        print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+        //print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
         switch event {
         case .created:
             if let wallet = addWallet(wallet) {
@@ -590,7 +607,7 @@ extension CoreSystem: SystemListener {
 
     func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
         guard let wallet = self.wallets[wallet.currency.uid] else { return }
-        print("[SYS] \(manager.network) \(wallet.currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
+        print("[SYS] \(manager.network) transfer \(event): \(wallet.currency.code) \(transfer.hash?.description.truncateMiddle() ?? "")")
         wallet.handleTransferEvent(event, transfer: transfer)
     }
 

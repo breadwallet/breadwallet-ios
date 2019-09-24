@@ -206,7 +206,6 @@ extension Wallet {
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setBalance(Amount(cryptoAmount: amount, currency: self.currency)))
-                //TODO:CRYPTO this shouldn't be needed but syncStarted/syncEnded not being receiving prior to initial balance update, so without this it remains in connecting state for too long
                 Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
             }
         case .feeBasisUpdated, .feeBasisEstimated:
