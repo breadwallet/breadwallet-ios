@@ -839,6 +839,7 @@ extension KeyStore: KeyMaster {
     /// Using the trigger will ensure the correct UI gets displayed
     func wipeWallet() -> Bool {
         do {
+            print("[KEYSTORE] wiping")
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
             }
