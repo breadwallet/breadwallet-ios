@@ -52,7 +52,8 @@ class MenuViewController: UITableViewController, Subscriber {
             navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
         }
         
-        Store.lazySubscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: { _ in
+        Store.lazySubscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: { [weak self] _ in
+            guard let `self` = self else { return }
             self.reloadMenu()
         })
     }
