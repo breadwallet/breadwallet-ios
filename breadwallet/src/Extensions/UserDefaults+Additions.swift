@@ -191,10 +191,18 @@ extension UserDefaults {
         defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
     }
 
-    static var customNodeIP: Int? {
+    static var customNodeIP: String? {
         get {
             guard defaults.object(forKey: customNodeIPKey) != nil else { return nil }
-            return defaults.integer(forKey: customNodeIPKey)
+            // migrate IPs stored as integer to string format
+            if var numericAddress = defaults.object(forKey: customNodeIPKey) as? Int32,
+                let buf = addr2ascii(AF_INET, &numericAddress, Int32(MemoryLayout<in_addr_t>.size), nil) {
+                    let addressString = String(cString: buf)
+                    defaults.set(addressString, forKey: customNodeIPKey)
+                    return addressString
+            } else {
+                return defaults.string(forKey: customNodeIPKey)
+            }
         }
         set { defaults.set(newValue, forKey: customNodeIPKey) }
     }
