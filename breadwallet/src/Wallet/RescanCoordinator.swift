@@ -17,7 +17,7 @@ struct RescanCoordinator: Trackable {
     
     static func initiateRescan(system: CoreSystem, wallet: Wallet) {
         guard let primaryWallet = wallet.networkPrimaryWallet else { return assertionFailure() }
-        let manager = primaryWallet.core.manager
+        let manager = primaryWallet.manager
         let currency = primaryWallet.currency
         
         // Rescans go deeper each time they are initiated within a 24-hour period.

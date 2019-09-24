@@ -365,9 +365,14 @@ enum S {
     }
 
     enum WalletConnectionSettings {
-        static let title = NSLocalizedString("WalletConnectionSettings.title", value:"Connection Mode", comment: "Face ID settings view title")
-        static let explanatoryText = NSLocalizedString("WalletConnectionSettings.explanatoryText", value: "Sync your Bitcoin wallet instantly.\nPowered by BlockchainDB.", comment: "Explanation for wallet connection setting")
-        static let switchLabel = NSLocalizedString("WalletConnectionSettings.switchLabel", value:"Instant Sync (experimental)", comment: "Connection mode switch label.")
+        static let menuTitle = NSLocalizedString("WalletConnectionSettings.menuTitle", value:"Connection Mode", comment: "Wallet connection settings menu item title.")
+        static let viewTitle = NSLocalizedString("WalletConnectionSettings.viewTitle", value:"Fast Sync", comment: "Wallet connection settings view title")
+        static let header = NSLocalizedString("WalletConnectionSettings.header", value:"Fast Sync (pilot)", comment: "Wallet connection settings view title")
+        static let explanatoryText = NSLocalizedString("WalletConnectionSettings.explanatoryText", value: "Make syncing your bitcoin wallet practically instant. Learn more about how it works here.", comment: "Explanation for wallet connection setting")
+        static let link = NSLocalizedString("WalletConnectionSettings.link", value: "here", comment: "Link text in explanatoryText")
+        static let footerTitle = NSLocalizedString("WalletConnectionSettings.footerTitle", value:"Powered by", comment: "Connection mode switch label.")
+        static let confirmation = NSLocalizedString("WalletConnectionSettings.confirmation", value:"Are you sure you want to turn off Fast Sync?", comment: "Turn off fast sync confirmation question")
+        static let turnOff = NSLocalizedString("WalletConnectionSettings.turnOff", value:"Turn Off", comment: "Turn off fast sync button label")
     }
 
     enum ConfirmPaperPhrase {
@@ -614,6 +619,7 @@ enum S {
     enum NodeSelector {
         static let manualButton = NSLocalizedString("NodeSelector.manualButton", value: "Switch to Manual Mode", comment: "Switch to manual mode button label")
         static let automaticButton = NSLocalizedString("NodeSelector.automaticButton", value: "Switch to Automatic Mode", comment: "Switch to automatic mode button label")
+        static let automaticLabel = NSLocalizedString("NodeSelector.automaticLabel", value: "Automatic", comment: "Automatic mode label")
         static let title = NSLocalizedString("NodeSelector.title", value: "Bitcoin Nodes", comment: "Node Selector view title")
         static let nodeLabel = NSLocalizedString("NodeSelector.nodeLabel", value: "Current Primary Node", comment: "Node address label")
         static let statusLabel = NSLocalizedString("NodeSelector.statusLabel", value: "Node Connection Status", comment: "Node status label")

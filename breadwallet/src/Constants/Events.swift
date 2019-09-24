@@ -19,6 +19,7 @@ public enum EventContext: String {
     case inAppNotifications
     case wallet
     case jailbreak
+    case fastSync
     var name: String { return rawValue }
 }
 
@@ -86,6 +87,10 @@ public enum Event: String {
     //jailbreak actions
     case ignore
     case close
+    
+    // fastSync
+    case enable
+    case disable
     
     var name: String { return rawValue }
 }

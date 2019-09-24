@@ -26,6 +26,8 @@ class StartFlowPresenter: Subscriber, Trackable {
     private var shouldBuyCoinAfterOnboarding: Bool = false
     private var onboardingCompletionHandler: LoginCompletionHandler?
     
+    private let startupScreen = StartupScreen()
+    
     // MARK: - Public
 
     init(keyMaster: KeyMaster,
@@ -37,13 +39,29 @@ class StartFlowPresenter: Subscriber, Trackable {
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
         self.createBuyScreen = createBuyScreen
-
+        
         // no onboarding, make home screen visible after unlock
         if !keyMaster.noWallet {
             self.pushHomeScreen()
+            
+            if Store.state.isLoginRequired {
+                self.pushStartupScreen()
+            }
         }
 
         addSubscriptions()
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
+    }
+    
+    private func pushStartupScreen() {
+        rootViewController.pushViewController(self.startupScreen, animated: false)
+    }
+    
+    private func popStartupScreen() {
+        rootViewController.popViewController(animated: false)
     }
     
     /// Onboarding
@@ -266,12 +284,19 @@ class StartFlowPresenter: Subscriber, Trackable {
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true
         loginViewController = loginView
+        
         if let modal = rootViewController.presentedViewController {
-            modal.dismiss(animated: false, completion: {
-                self.rootViewController.present(loginView, animated: false)
+            modal.dismiss(animated: false, completion: { [weak self] in
+                guard let `self` = self else { return }
+                self.rootViewController.present(loginView, animated: false, completion: {
+                    self.popStartupScreen()
+                })
             })
         } else {
-            rootViewController.present(loginView, animated: false)
+            rootViewController.present(loginView, animated: false, completion: { [weak self] in
+                guard let `self` = self else { return }
+                self.popStartupScreen()
+            })
         }
     }
 
@@ -279,5 +304,49 @@ class StartFlowPresenter: Subscriber, Trackable {
         loginViewController?.dismiss(animated: true, completion: { [weak self] in
             self?.loginViewController = nil
         })
+    }
+}
+
+// This is displayed over the home screen before the login screen is pushed.
+private class StartupScreen: UIViewController {
+    
+    private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
+    private var logoBackground = MotionGradientView()
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = Theme.primaryBackground
+        logo.tintColor = Theme.primaryBackground
+        
+        logoBackground.addSubview(logo)
+        view.addSubview(logoBackground)
+        
+        logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
+                                            constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin)
+        
+        logoBackground.constrain([
+            logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
+                                                constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin),
+            logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor,
+                                                   multiplier: logo.image!.size.height/logo.image!.size.width),
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor,
+                                                  multiplier: 0.45) ])
+        
+        logo.constrain(toSuperviewEdges: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.isNavigationBarHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.isNavigationBarHidden = false
     }
 }

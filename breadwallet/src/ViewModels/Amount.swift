@@ -32,7 +32,7 @@ public struct Amount {
          rate: Rate? = nil,
          minimumFractionDigits: Int? = nil,
          maximumFractionDigits: Int = Amount.normalPrecisionDigits) {
-        assert(currency.core == cryptoAmount.currency)
+        assert(currency.uid == cryptoAmount.currency.uid)
         self.currency = currency
         // make a new instance of CryptoAmount
         self.cryptoAmount = CryptoAmount.create(string: cryptoAmount.string(),

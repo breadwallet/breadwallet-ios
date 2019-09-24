@@ -78,7 +78,7 @@ class SyncingHeaderView: UIView, Subscriber {
                         callback: {
                             self.lastBlockTimestamp = $0[self.currency]?.lastBlockTimestamp ?? 0
                             if let progress = $0[self.currency]?.syncProgress {
-                                self.syncIndicator.progress = CGFloat(progress)
+                                self.syncIndicator.progress = progress
                             }
         })
     }
@@ -103,6 +103,10 @@ class SyncingHeaderView: UIView, Subscriber {
             date.text = S.SyncingView.activity
             lineLoadingView.isHidden = true
             syncIndicator.isHidden = true
+        case .failed:
+            date.text = ""
+            lineLoadingView.isHidden = true
+            syncIndicator.isHidden = false
         }
     }
 

@@ -90,9 +90,9 @@ extension WalletAuthenticator {
 
 /// Protocol for signing transactions
 protocol TransactionAuthenticator: WalletAuthenticator {
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, withPin: String) -> Bool
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin: String) -> Bool
     func signAndSubmit(transfer: BRCrypto.Transfer,
-                       wallet: BRCrypto.Wallet,
+                       wallet: Wallet,
                        withBiometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void)
 }
@@ -598,9 +598,9 @@ extension KeyStore: WalletAuthenticator {
                 if success { return completion(.success) }
                 guard let error = error else { return completion(.failure) }
                 if error._code == Int(kLAErrorUserCancel) {
-                    return completion (.cancel)
+                    return completion(.cancel)
                 } else if error._code == Int(kLAErrorUserFallback) {
-                    return completion (.fallback)
+                    return completion(.fallback)
                 }
                 completion(.failure)
             }
@@ -663,13 +663,13 @@ extension KeyStore: WalletAuthenticator {
 
 extension KeyStore: TransactionAuthenticator {
 
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet, withPin pin: String) -> Bool {
+    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin pin: String) -> Bool {
         guard authenticate(withPin: pin) else { return false }
         return signAndSubmit(transfer: transfer, wallet: wallet)
     }
     
     func signAndSubmit(transfer: BRCrypto.Transfer,
-                       wallet: BRCrypto.Wallet,
+                       wallet: Wallet,
                        withBiometricsPrompt biometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void) {
         guard self.isBiometricsEnabledForTransactions else {
@@ -683,7 +683,7 @@ extension KeyStore: TransactionAuthenticator {
         }
     }
     
-    private func signAndSubmit(transfer: BRCrypto.Transfer, wallet: BRCrypto.Wallet) -> Bool {
+    private func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet) -> Bool {
         return autoreleasepool {
             do {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
@@ -839,6 +839,7 @@ extension KeyStore: KeyMaster {
     /// Using the trigger will ensure the correct UI gets displayed
     func wipeWallet() -> Bool {
         do {
+            print("[KEYSTORE] wiping")
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
             }

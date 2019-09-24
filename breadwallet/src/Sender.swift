@@ -190,7 +190,7 @@ class Sender: Subscriber {
                                          completion: @escaping SendCompletion) {
         // this block requires a strong reference to self to ensure the Sender is not deallocated before completion
         pinVerifier { pin in
-            guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet.core, withPin: pin) else {
+            guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: pin) else {
                 return completion(.creationError(message: S.Send.Error.authenticationError))
             }
             self.waitForSubmission(of: transfer, completion: completion)
@@ -200,7 +200,7 @@ class Sender: Subscriber {
     private func sendWithBiometricVerification(transfer: Transfer, completion: @escaping SendCompletion) {
         let biometricsPrompt = S.VerifyPin.touchIdMessage
         self.authenticator.signAndSubmit(transfer: transfer,
-                                         wallet: self.wallet.core,
+                                         wallet: self.wallet,
                                          withBiometricsPrompt: biometricsPrompt) { result in
             switch result {
             case .success:

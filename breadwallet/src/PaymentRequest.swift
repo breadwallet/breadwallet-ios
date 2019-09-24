@@ -26,8 +26,12 @@ extension PaymentProtocolRequest {
 
 struct PaymentRequest {
 
+    // MARK: HTTP Headers
     static let jsonHeader = "application/payment-request"
     static let bip70header = "application/bitcoin-paymentrequest"
+    static let bitPayPartnerKey = "BP_PARTNER"
+    static let bitPayPartnerValue = "brd"
+    static let bitPayPartnerVersionKey = "BP_PARTNER_VERSION"
     
     let currency: Currency
     var toAddress: Address?
@@ -98,16 +102,16 @@ struct PaymentRequest {
     }
 
     init?(data: Data, currency: Currency) {
-        guard let coreWallet = currency.wallet?.core else { return nil }
+        guard let wallet = currency.wallet else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBip70: data)
+        self.paymentProtocolRequest = wallet.createPaymentProtocolRequest(forBip70: data)
         type = .local
     }
 
     init?(jsonData: Data, currency: Currency) {
-        guard let coreWallet = currency.wallet?.core else { return nil }
+        guard let wallet = currency.wallet else { return nil }
         self.currency = currency
-        self.paymentProtocolRequest = PaymentProtocolRequest.create(wallet: coreWallet, forBitPay: jsonData)
+        self.paymentProtocolRequest = wallet.createPaymentProtocolRequest(forBitPay: jsonData)
         type = .local
     }
 
@@ -122,7 +126,7 @@ struct PaymentRequest {
         } else {
             request.setValue(PaymentRequest.jsonHeader, forHTTPHeaderField: "Accept")
         }
-
+        addBitpayPartnerHeaders(request: request)
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { return completion(nil) }
             guard let data = data else { return completion(nil) }
@@ -162,12 +166,13 @@ struct PaymentRequest {
         request.httpMethod = "POST"
         request.setValue("application/bitcoin-payment", forHTTPHeaderField: "Content-Type")
         request.addValue("application/bitcoin-paymentack", forHTTPHeaderField: "Accept")
+        addBitpayPartnerHeaders(request: request)
         request.httpBody = payment?.encode()
         print("[PAY] Sending PaymentProtocolPayment to: \(url)")
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             guard error == nil else { print("[PAY] error: \(error!)"); return }
-            guard let data = data, let _ = response as? HTTPURLResponse else { print("[PAY] no data or response"); return }
-            var memo: String? = nil
+            guard let data = data, response != nil else { print("[PAY] no data or response"); return }
+            var memo: String?
             if let ack = PaymentProtocolPaymentACK.create(forBip70: data) {
                 memo = ack.memo
             } else if let ack = PaymentProtocolPaymentACK.create(forBitPay: data) {
@@ -180,4 +185,11 @@ struct PaymentRequest {
             }
             }.resume()
     }
+}
+
+private func addBitpayPartnerHeaders(request: NSMutableURLRequest) {
+    // ["BP_PARTNER": "brd", "BP_PARTNER_VERSION": "4.0"]
+    request.setValue(PaymentRequest.bitPayPartnerValue, forHTTPHeaderField: PaymentRequest.bitPayPartnerKey)
+    let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0"
+    request.setValue(version, forHTTPHeaderField: PaymentRequest.bitPayPartnerVersionKey)
 }

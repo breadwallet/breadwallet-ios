@@ -17,6 +17,8 @@ class ApplicationController: Subscriber, Trackable {
 
     fileprivate var application: UIApplication?
 
+    static let initialLaunchCount = 0
+    
     let window = UIWindow()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
@@ -36,7 +38,7 @@ class ApplicationController: Subscriber, Trackable {
         }
         return homeScreen
     }
-
+        
     private let coreSystem = CoreSystem()
     private var keyStore: KeyStore!
 
@@ -82,6 +84,11 @@ class ApplicationController: Subscriber, Trackable {
         })
     }
     
+    private func bumpLaunchCount() {
+        guard !keyStore.noWallet else { return }
+        UserDefaults.appLaunchCount = (UserDefaults.appLaunchCount + 1)
+    }
+    
     private func setup() {
         setupDefaults()
         setupAppearance()
@@ -97,8 +104,12 @@ class ApplicationController: Subscriber, Trackable {
 
         appRatingManager.start()
 
-        Store.subscribe(self, name: .didWipeWallet) { _ in
+        Store.subscribe(self, name: .didWipeWallet) { [unowned self] _ in
             Store.perform(action: Reset())
+            
+            self.modalPresenter = nil
+            self.rootNavigationController?.viewControllers = []
+            
             self.setupRootViewController()
             self.enterOnboarding()
         }
@@ -118,7 +129,7 @@ class ApplicationController: Subscriber, Trackable {
     private func enterOnboarding() {
         guardProtected(queue: DispatchQueue.main) {
             guard let startFlowController = self.startFlowController, self.keyStore.noWallet else { return assertionFailure() }
-            startFlowController.startOnboarding { account in
+            startFlowController.startOnboarding { [unowned self] account in
                 self.setupSystem(with: account)
                 Store.perform(action: LoginSuccess())
             }
@@ -131,7 +142,7 @@ class ApplicationController: Subscriber, Trackable {
         guardProtected(queue: DispatchQueue.main) {
             guard let startFlowController = self.startFlowController, !self.keyStore.noWallet else { return assertionFailure() }
             
-            startFlowController.startLogin { account in
+            startFlowController.startLogin { [unowned self] account in
                 self.setupSystem(with: account)
             }
         }
@@ -197,7 +208,7 @@ class ApplicationController: Subscriber, Trackable {
     
     func willEnterForeground() {
         guard !keyStore.noWallet else { return }
-        appRatingManager.bumpLaunchCount()
+        bumpLaunchCount()
         Backend.sendLaunchEvent()
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
@@ -332,8 +343,7 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func updateAssetBundles() {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let `self` = self else { return }
+        DispatchQueue.global(qos: .utility).async { [unowned self] in
             Backend.apiClient.updateBundles { errors in
                 for (n, e) in errors {
                     print("Bundle \(n) ran update. err: \(String(describing: e))")
@@ -390,13 +400,13 @@ class ApplicationController: Subscriber, Trackable {
             Store.perform(action: RootModalActions.Present(modal: .trade))
         }
         
-        homeScreen.didTapMenu = {
+        homeScreen.didTapMenu = { [unowned self] in
             self.modalPresenter?.presentMenu()
         }
         
-        homeScreen.didTapManageWallets = {
+        homeScreen.didTapManageWallets = { [unowned self] in
             guard let assetCollection = self.coreSystem.assetCollection else { return }
-            let vc = ManageWalletsViewController(assetCollection: assetCollection)
+            let vc = ManageWalletsViewController(assetCollection: assetCollection, coreSystem: self.coreSystem)
             let nc = UINavigationController(rootViewController: vc)
             nc.setDarkStyle()
             navigationController.present(nc, animated: true, completion: nil)

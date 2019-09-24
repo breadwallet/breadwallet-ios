@@ -26,7 +26,7 @@ class Currency: CurrencyWithIcon {
         case unknown
     }
 
-    let core: BRCrypto.Currency
+    private let core: BRCrypto.Currency
     let network: BRCrypto.Network
 
     /// Unique identifier from BlockchainDB
