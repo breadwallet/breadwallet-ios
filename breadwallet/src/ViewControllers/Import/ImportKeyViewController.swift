@@ -194,7 +194,9 @@ class ImportKeyViewController: UIViewController, Subscriber {
     private func confirmImport(fromSweeper sweeper: WalletSweeper, fee: TransferFeeBasis) {
         let balanceAmount = Amount(cryptoAmount: sweeper.balance!, currency: wallet.currency)
         let feeAmount = Amount(cryptoAmount: fee.fee, currency: wallet.currency)
-        let message = String(format: S.Import.confirm, balanceAmount.description, feeAmount.description)
+        let balanceText = "\(balanceAmount.fiatDescription) (\(balanceAmount.description))"
+        let feeText = "\(feeAmount.fiatDescription)"
+        let message = String(format: S.Import.confirm, balanceText, feeText)
         let alert = UIAlertController(title: S.Import.title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: S.Import.importButton, style: .default, handler: { _ in

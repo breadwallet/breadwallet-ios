@@ -100,6 +100,13 @@ struct NotificationAuthorizer: Trackable {
             return
         }
         
+        // Don't show the opt-in prompt if we haven't had sufficent app launches since there
+        // is already a lot going on when the user first creates or restores a wallet.
+        guard UserDefaults.appLaunchCount > ApplicationController.initialLaunchCount else {
+            completion(false)
+            return
+        }
+        
         // First check if the user has already granted or denied push notifications.
         UNUserNotificationCenter.current().getNotificationSettings(completionHandler: { settings in
 

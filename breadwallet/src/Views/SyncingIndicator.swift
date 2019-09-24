@@ -20,7 +20,7 @@ class SyncingIndicator: UIView {
     private let style: SyncingIndicatorStyle
     private let label = UILabel()
 
-    var progress: CGFloat = 0.0 {
+    var progress: Float = 0.0 {
         didSet {
             updateTextLabel()
         }
@@ -42,6 +42,8 @@ class SyncingIndicator: UIView {
                 setNeedsLayout()
             case .success:
                 self.text = ""
+            case .failed:
+                self.text = S.SyncingView.failed
             }
         }
     }
@@ -86,15 +88,10 @@ class SyncingIndicator: UIView {
         }
 
         let nf = NumberFormatter()
-        
         nf.numberStyle = .percent
         nf.maximumFractionDigits = 0
         
-        // Progress comes up from Core as a value between 0 and 100, but the formatter will treat it as a value
-        // from 0 - 1, so divide by 100 here.
-        let progressPercent = (progress / 100.0)
-        
-        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progressPercent))) {
+        if syncState == .syncing, let percent = nf.string(from: NSNumber(value: progress)) {
             label.text = "\(text) \(percent)"
         } else {
             label.text = text

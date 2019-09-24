@@ -15,10 +15,12 @@ private let addWalletButtonHeight: CGFloat = 72.0
 class ManageWalletsViewController: UITableViewController {
     
     private let assetCollection: AssetCollection
+    private let coreSystem: CoreSystem
     private var displayData = [CurrencyMetaData]()
     
-    init(assetCollection: AssetCollection) {
+    init(assetCollection: AssetCollection, coreSystem: CoreSystem) {
         self.assetCollection = assetCollection
+        self.coreSystem = coreSystem
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -57,12 +59,13 @@ class ManageWalletsViewController: UITableViewController {
     
     private func removeCurrency(_ identifier: CurrencyId) {
         guard let index = displayData.firstIndex(where: { $0.uid == identifier }) else { return }
-        //TODO:CRYPTO prevent removing a native currency when you have its tokens added
-        tableView.beginUpdates()
-        tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
         displayData.remove(at: index)
         assetCollection.removeAsset(at: index)
-        tableView.endUpdates()
+        tableView.performBatchUpdates({
+            tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .left)
+        }, completion: { [unowned self] _ in
+            self.tableView.reloadData() // to update isRemovable
+        })
     }
     
     private func setupAddButton() {
@@ -101,7 +104,7 @@ class ManageWalletsViewController: UITableViewController {
     }
     
     @objc private func pushAddWallets() {
-        let vc = AddWalletsViewController(assetCollection: assetCollection)
+        let vc = AddWalletsViewController(assetCollection: assetCollection, coreSystem: coreSystem)
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -121,7 +124,14 @@ extension ManageWalletsViewController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ManageCurrencyCell.cellIdentifier, for: indexPath) as? ManageCurrencyCell else {
             return UITableViewCell()
         }
-        cell.set(currency: displayData[indexPath.row], index: indexPath.row, listType: .manage, isHidden: false)
+        let metaData = displayData[indexPath.row]
+        // cannot remove a native currency if its tokens are enabled, or remove the last currency
+        let currencyIsRemovable = !coreSystem.isWalletRequired(for: metaData.uid) && assetCollection.enabledAssets.count > 1
+        cell.set(currency: metaData,
+                 balance: nil,
+                 listType: .manage,
+                 isHidden: false,
+                 isRemovable: currencyIsRemovable)
         cell.didRemoveIdentifier = { [unowned self] identifier in
             self.removeCurrency(identifier)
         }

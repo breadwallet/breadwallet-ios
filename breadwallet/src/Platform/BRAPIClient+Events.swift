@@ -310,7 +310,7 @@ class EventManager {
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = body
                 
-                myself.adaptor.dataTaskWithRequest(request, authenticated: true, retryCount: 0, handler: { (data, resp, err) in
+                myself.adaptor.dataTaskWithRequest(request, authenticated: true, retryCount: 0, responseQueue: DispatchQueue.main, handler: { (data, resp, err) in
                     if let resp = resp {
                         if resp.statusCode != 200 {
                             if let data = data {

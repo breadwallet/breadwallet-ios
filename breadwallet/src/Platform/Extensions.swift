@@ -260,8 +260,8 @@ public extension Data {
         guard key.hasSecret else { throw BRReplicatedKVStoreError.invalidKey }
         let data = [UInt8](self)
         guard data.count > 12 else { throw BRReplicatedKVStoreError.malformedData }
-        let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
-        let inData = Array(data[data.startIndex.advanced(by: 12)...(data.endIndex-1)])
+        let nonce = Array(data[data.startIndex..<data.startIndex.advanced(by: 12)])
+        let inData = Array(data[data.startIndex.advanced(by: 12)..<data.endIndex])
         let decrypter = CoreEncrypter.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
         return decrypter.decrypt(data: Data(inData))
     }

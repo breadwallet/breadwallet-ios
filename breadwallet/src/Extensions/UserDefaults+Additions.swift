@@ -44,6 +44,7 @@ private let debugBackendHostKey = "debugBackendHostKey"
 private let debugWebBundleNameKey = "debugWebBundleNameKey"
 private let platformDebugURLKey = "platformDebugURLKey"
 private let appLaunchCountKey = "appLaunchCountKey"
+private let appLaunchCountAtLastRatingPromptKey = "appLaunchCountAtLastRatingPromptKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
@@ -190,10 +191,18 @@ extension UserDefaults {
         defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
     }
 
-    static var customNodeIP: Int? {
+    static var customNodeIP: String? {
         get {
             guard defaults.object(forKey: customNodeIPKey) != nil else { return nil }
-            return defaults.integer(forKey: customNodeIPKey)
+            // migrate IPs stored as integer to string format
+            if var numericAddress = defaults.object(forKey: customNodeIPKey) as? Int32,
+                let buf = addr2ascii(AF_INET, &numericAddress, Int32(MemoryLayout<in_addr_t>.size), nil) {
+                    let addressString = String(cString: buf)
+                    defaults.set(addressString, forKey: customNodeIPKey)
+                    return addressString
+            } else {
+                return defaults.string(forKey: customNodeIPKey)
+            }
         }
         set { defaults.set(newValue, forKey: customNodeIPKey) }
     }
@@ -342,6 +351,13 @@ extension UserDefaults {
         get { return defaults.integer(forKey: appLaunchCountKey ) }
         set { defaults.set(newValue, forKey: appLaunchCountKey )}
     }
+    
+    // The app launch count the last time the ratings prompt was shown.
+    static var appLaunchCountAtLastRatingPrompt: Int {
+        get { return UserDefaults.standard.integer(forKey: appLaunchCountAtLastRatingPromptKey ) }
+        set { UserDefaults.standard.set(newValue, forKey: appLaunchCountAtLastRatingPromptKey )}
+    }
+
 }
 
 // MARK: - State Restoration

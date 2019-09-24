@@ -66,6 +66,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
+    deinit {
+        Store.unsubscribe(self)
+    }
+    
     func reload() {
         setInitialData()
         setupSubscriptions()
@@ -393,8 +397,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             
             if !prompt.shouldHandleTap {
                 prompt.continueButton.tap = { [unowned self] in
-                    // TODO:BCH move out of home screen
-                    
                     if let trigger = nextPrompt.trigger {
                         Store.trigger(name: trigger)
                     }

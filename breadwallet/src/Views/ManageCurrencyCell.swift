@@ -31,10 +31,12 @@ class ManageCurrencyCell: SeparatorCell {
     private let header = UILabel(font: .customBold(size: 18.0), color: UIColor.white)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: UIColor.transparentWhiteText)
     private let icon = UIImageView()
+    private let balanceLabel = UILabel(font: Theme.body3, color: Theme.secondaryText)
     private let button = ToggleButton(normalTitle: S.TokenList.add, normalColor: .navigationTint, selectedTitle: S.TokenList.hide, selectedColor: .orangeButton)
     private var identifier: CurrencyId = ""
     private var listType: EditWalletType = .add
     private var isCurrencyHidden = false
+    private var isCurrencyRemovable = true
     
     var didAddIdentifier: ((CurrencyId) -> Void)?
     var didRemoveIdentifier: ((CurrencyId) -> Void)?
@@ -44,11 +46,17 @@ class ManageCurrencyCell: SeparatorCell {
         setupViews()
     }
 
-    func set(currency: CurrencyMetaData, index: Int, listType: EditWalletType, isHidden: Bool) {
+    func set(currency: CurrencyMetaData, balance: Amount?, listType: EditWalletType, isHidden: Bool, isRemovable: Bool) {
         header.text = currency.name
         subheader.text = currency.code
         icon.image = currency.imageSquareBackground
+        if let balance = balance, !balance.isZero {
+            balanceLabel.text = balance.tokenDescription
+        } else {
+            balanceLabel.text = ""
+        }
         self.isCurrencyHidden = isHidden
+        self.isCurrencyRemovable = isRemovable
         self.identifier = currency.uid
         self.listType = listType
         setState()
@@ -64,6 +72,7 @@ class ManageCurrencyCell: SeparatorCell {
         contentView.addSubview(header)
         contentView.addSubview(subheader)
         contentView.addSubview(icon)
+        contentView.addSubview(balanceLabel)
         contentView.addSubview(button)
     }
 
@@ -84,6 +93,10 @@ class ManageCurrencyCell: SeparatorCell {
             button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             button.heightAnchor.constraint(equalToConstant: 36.0),
             button.widthAnchor.constraint(equalToConstant: 70.0)])
+        balanceLabel.constrain([
+            balanceLabel.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -C.padding[1]),
+            balanceLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+            ])
     }
 
     private func setInitialData() {
@@ -115,6 +128,8 @@ class ManageCurrencyCell: SeparatorCell {
         }
         if listType == .add {
             button.isSelected = !isCurrencyHidden
+        } else {
+            button.isEnabled = isCurrencyRemovable
         }
     }
 
