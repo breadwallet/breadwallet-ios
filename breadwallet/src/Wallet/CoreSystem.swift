@@ -69,6 +69,8 @@ class CoreSystem: Subscriber, Trackable {
                                                              handler: completion)
         })
 
+        try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
+        
         self.system = System(listener: self,
                              account: account,
                              onMainnet: !E.isTestnet,

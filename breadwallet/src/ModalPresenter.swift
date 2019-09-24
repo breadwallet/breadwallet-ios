@@ -33,10 +33,10 @@ class ModalPresenter: Subscriber, Trackable {
     deinit {
         Store.unsubscribe(self)
     }
-
+    
     // MARK: - Private
     private let window: UIWindow
-    private let alertPresenter: AlertPresenter?
+    private var alertPresenter: AlertPresenter?
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
@@ -44,6 +44,8 @@ class ModalPresenter: Subscriber, Trackable {
     private var currentRequest: PaymentRequest?
     private let wipeNavigationDelegate: StartNavigationDelegate
 
+    private var menuNavController: UINavigationController?
+    
     private let system: CoreSystem
     
     private func addSubscriptions() {
@@ -91,16 +93,16 @@ class ModalPresenter: Subscriber, Trackable {
         Store.subscribe(self, name: .scanQr, callback: { [weak self] _ in
             self?.handleScanQrURL()
         })
-        Store.subscribe(self, name: .authenticateForPlatform("", true, {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .authenticateForPlatform("", true, {_ in}), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .authenticateForPlatform(let prompt, let allowBiometricAuth, let callback) = trigger {
-                self.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
+                self?.authenticateForPlatform(prompt: prompt, allowBiometricAuth: allowBiometricAuth, callback: callback)
             }
         })
-        Store.subscribe(self, name: .confirmTransaction(nil, nil, nil, .regular, "", {_ in}), callback: { [unowned self] in
+        Store.subscribe(self, name: .confirmTransaction(nil, nil, nil, .regular, "", {_ in}), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .confirmTransaction(let currency?, let amount?, let fee?, let displayFeeLevel, let address, let callback) = trigger {
-                self.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
+                self?.confirmTransaction(currency: currency, amount: amount, fee: fee, displayFeeLevel: displayFeeLevel, address: address, callback: callback)
             }
         })
         Store.subscribe(self, name: .lightWeightAlert(""), callback: { [weak self] in
@@ -112,15 +114,15 @@ class ModalPresenter: Subscriber, Trackable {
         Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
             self?.wipeWalletNoPrompt()
         })
-        Store.subscribe(self, name: .showCurrency(nil), callback: { [unowned self] in
+        Store.subscribe(self, name: .showCurrency(nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .showCurrency(let currency?) = trigger {
-                self.showAccountView(currency: currency, animated: true, completion: nil)
+                self?.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
-        Store.subscribe(self, name: .promptLinkWallet(WalletPairingRequest.empty)) { [unowned self] in
+        Store.subscribe(self, name: .promptLinkWallet(WalletPairingRequest.empty)) { [weak self] in
             guard case .promptLinkWallet(let pairingRequest)? = $0 else { return }
-            self.linkWallet(pairingRequest: pairingRequest)
+            self?.linkWallet(pairingRequest: pairingRequest)
         }
         
         // Push Notifications Permission Request
@@ -166,10 +168,10 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
         
-        Store.subscribe(self, name: .openPlatformUrl("")) { [unowned self] in
+        Store.subscribe(self, name: .openPlatformUrl("")) { [weak self] in
             guard let trigger = $0 else { return }
             if case let .openPlatformUrl(url) = trigger {
-                self.presentPlatformWebViewController(url)
+                self?.presentPlatformWebViewController(url)
             }
         }
     }
@@ -189,6 +191,10 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
+    func shutDown() {
+        Store.unsubscribe(self)
+    }
+    
     func preloadSupportCenter() {
         supportCenter.preload() // pre-load contents for faster access
     }
@@ -379,10 +385,17 @@ class ModalPresenter: Subscriber, Trackable {
             }
         }
     }
-        
+    
+    func cleanUpMenu() {
+        if let menu = menuNavController {
+            menu.setViewControllers([], animated: false)
+            menu.dismiss(animated: false, completion: nil)
+            self.menuNavController = nil
+        }
+    }
+    
     // MARK: Settings
     func presentMenu() {
-        guard let top = topViewController else { return }
         let menuNav = UINavigationController()
         menuNav.setDarkStyle()
         
@@ -390,7 +403,8 @@ class ModalPresenter: Subscriber, Trackable {
         var btcItems: [MenuItem] = []
         if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
             // Connection
-            btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) {
+            btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) { [weak self] in
+                guard let `self` = self else { return }
                 guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
                     return assertionFailure()
                 }
@@ -404,7 +418,7 @@ class ModalPresenter: Subscriber, Trackable {
             })
             
             // Rescan
-            var rescan = MenuItem(title: S.Settings.sync, callback: {
+            var rescan = MenuItem(title: S.Settings.sync, callback: { [unowned self] in
                 menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
             })
             rescan.shouldShow = { [unowned self] in
@@ -423,7 +437,8 @@ class ModalPresenter: Subscriber, Trackable {
             btcItems.append(nodeSelection)
             
             btcItems.append(MenuItem(title: S.Settings.importTile, callback: {
-                menuNav.dismiss(animated: true, completion: { [unowned self] in
+                menuNav.dismiss(animated: true, completion: { [weak self] in
+                    guard let `self` = self else { return }
                     self.presentKeyImport(wallet: btcWallet)
                 })
             }))
@@ -450,7 +465,8 @@ class ModalPresenter: Subscriber, Trackable {
         if let bch = Currencies.bch.instance, let bchWallet = bch.wallet {
             if system.connectionMode(for: bch) == .p2p_only {
                 // Rescan
-                bchItems.append(MenuItem(title: S.Settings.sync, callback: {
+                bchItems.append(MenuItem(title: S.Settings.sync, callback: { [weak self] in
+                    guard let `self` = self else { return }
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: bchWallet), animated: true)
                 }))
             }
@@ -470,7 +486,8 @@ class ModalPresenter: Subscriber, Trackable {
         if let eth = Currencies.eth.instance, let ethWallet = eth.wallet {
             if system.connectionMode(for: eth) == .p2p_only {
                 // Rescan
-                ethItems.append(MenuItem(title: S.Settings.sync, callback: {
+                ethItems.append(MenuItem(title: S.Settings.sync, callback: { [weak self] in
+                    guard let `self` = self else { return }
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: ethWallet), animated: true)
                 }))
             }
@@ -500,7 +517,8 @@ class ModalPresenter: Subscriber, Trackable {
             }),
             
             // Reset Wallets
-            MenuItem(title: S.Settings.resetCurrencies, callback: {
+            MenuItem(title: S.Settings.resetCurrencies, callback: { [weak self] in
+                guard let `self` = self else { return }
                 menuNav.dismiss(animated: true, completion: {
                     self.system.resetToDefaultCurrencies()
                 })
@@ -515,29 +533,34 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Security Settings
         let securityItems: [MenuItem] = [
             // Unlink
-            MenuItem(title: S.Settings.wipe) { [unowned self] in
+            MenuItem(title: S.Settings.wipe) { [weak self] in
+                guard let `self` = self else { return }
                 guard let vc = self.topViewController else { return }
 
                 RecoveryKeyFlowController.enterUnlinkWalletFlow(from: vc,
                                                                 keyMaster: self.keyStore,
-                                                                phraseEntryReason: .validateForWipingWallet({
+                                                                phraseEntryReason: .validateForWipingWallet({ [weak self] in
+                                                                    guard let `self` = self else { return }
                                                                     self.wipeWallet()
                                                                 }))
             },
             
             // Update PIN
-            MenuItem(title: S.UpdatePin.updateTitle) { [unowned self] in
+            MenuItem(title: S.UpdatePin.updateTitle) { [weak self] in
+                guard let `self` = self else { return }
                 let updatePin = UpdatePinViewController(keyMaster: self.keyStore, type: .update)
                 menuNav.pushViewController(updatePin, animated: true)
             },
             
             // Biometrics
-            MenuItem(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle) { [unowned self] in
+            MenuItem(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle) { [weak self] in
+                guard let `self` = self else { return }
                 self.presentBiometricsMenuItem()
             },
             
             // Paper key
-            MenuItem(title: S.SecurityCenter.Cells.paperKeyTitle) { [unowned self] in
+            MenuItem(title: S.SecurityCenter.Cells.paperKeyTitle) { [weak self] in
+                guard let `self` = self else { return }
                 self.presentWritePaperKey(fromViewController: menuNav)
             }
         ]
@@ -545,12 +568,14 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Root Menu
         var rootItems: [MenuItem] = [
             // Scan QR Code
-            MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [unowned self] in
+            MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [weak self] in
+                guard let `self` = self else { return }
                 self.presentLoginScan()
             },
             
             // Manage Wallets
-            MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) {
+            MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) { [weak self] in
+                guard let `self` = self else { return }
                 guard let assetCollection = self.system.assetCollection else { return }
                 let vc = ManageWalletsViewController(assetCollection: assetCollection)
                 menuNav.pushViewController(vc, animated: true)
@@ -567,12 +592,14 @@ class ModalPresenter: Subscriber, Trackable {
                      faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
             
             // Support
-            MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [unowned self] in
+            MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [weak self] in
+                guard let `self` = self else { return }
                 self.presentFaq()
             },
                         
             // Rewards
-            MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) {
+            MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) { [weak self] in
+                guard let `self` = self else { return }
                 self.presentPlatformWebViewController("/rewards")
             },
             
@@ -588,7 +615,11 @@ class ModalPresenter: Subscriber, Trackable {
             let url = meta.url, !url.isEmpty,
             let URL = URL(string: url) {
             
-            rootItems.append(MenuItem(title: S.Settings.atmMapMenuItemTitle, subTitle: S.Settings.atmMapMenuItemSubtitle, icon: MenuItem.Icon.atmMap) {
+            rootItems.append(MenuItem(title: S.Settings.atmMapMenuItemTitle,
+                                      subTitle: S.Settings.atmMapMenuItemSubtitle,
+                                      icon: MenuItem.Icon.atmMap) { [weak self] in
+                guard let `self` = self else { return }
+                
                 let browser = BRBrowserViewController()
                 
                 browser.isNavigationBarHidden = true
@@ -611,7 +642,8 @@ class ModalPresenter: Subscriber, Trackable {
         if E.isSimulator || E.isDebug || E.isTestFlight {
             var developerItems = [MenuItem]()
             
-            developerItems.append(MenuItem(title: S.Settings.sendLogs) { [unowned self] in
+            developerItems.append(MenuItem(title: S.Settings.sendLogs) { [weak self] in
+                guard let `self` = self else { return }
                 self.showEmailLogsModal()
             })
 
@@ -684,7 +716,8 @@ class ModalPresenter: Subscriber, Trackable {
             }))
 
             developerItems.append(MenuItem(title: "Clear Core persistent storage and exit",
-                                           callback: { [unowned self] in
+                                           callback: { [weak self] in
+                                            guard let `self` = self else { return }
                                             self.system.shutdown {
                                                 fatalError("forced exit")
                                             }
@@ -792,12 +825,20 @@ class ModalPresenter: Subscriber, Trackable {
 
             rootItems.append(MenuItem(title: "Developer Options", icon: nil, subMenu: developerItems, rootNav: menuNav, faqButton: nil))
         }
-        
+                
         let rootMenu = MenuViewController(items: rootItems,
                                           title: S.Settings.title)
         rootMenu.addCloseNavigationItem(side: .right)
         menuNav.viewControllers = [rootMenu]
-        top.present(menuNav, animated: true, completion: nil)
+        
+        self.menuNavController = menuNav
+        
+        self.topViewController?.present(menuNav, animated: true, completion: nil)
+    }
+    
+    func addressOf<T: AnyObject>(_ o: T) -> String {
+        let addr = unsafeBitCast(o, to: Int.self)
+        return String(format: "%p", addr)
     }
     
     private func presentScan(parent: UIViewController, currency: Currency?) -> PresentScan {
@@ -853,6 +894,8 @@ class ModalPresenter: Subscriber, Trackable {
 
     // do not call directly, instead use wipeWalletNoPrompt trigger so other subscribers are notified
     private func wipeWalletNoPrompt() {
+        self.alertPresenter = nil
+        
         let activity = BRActivityViewController(message: S.WipeWallet.wiping)
         self.topViewController?.present(activity, animated: true, completion: nil)
         let success = keyStore.wipeWallet()
@@ -861,11 +904,17 @@ class ModalPresenter: Subscriber, Trackable {
             self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
             return
         }
-        Backend.disconnectWallet()
         Store.perform(action: Reset())
         self.system.shutdown {
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let `self` = self else { return }
+                
+                Backend.disconnectWallet()
+                
                 activity.dismiss(animated: true)
+                
+                self.cleanUpMenu()
+                
                 Store.trigger(name: .didWipeWallet)
             }
         }

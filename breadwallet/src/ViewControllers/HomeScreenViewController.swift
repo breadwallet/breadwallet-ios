@@ -66,6 +66,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
+    deinit {
+        Store.unsubscribe(self)
+    }
+    
     func reload() {
         setInitialData()
         setupSubscriptions()
