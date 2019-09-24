@@ -26,7 +26,6 @@ class StartFlowPresenter: Subscriber, Trackable {
     private var shouldBuyCoinAfterOnboarding: Bool = false
     private var onboardingCompletionHandler: LoginCompletionHandler?
     
-    private let homeScreen: HomeScreenViewController
     private let startupScreen = StartupScreen()
     
     // MARK: - Public
@@ -40,8 +39,6 @@ class StartFlowPresenter: Subscriber, Trackable {
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
         self.createBuyScreen = createBuyScreen
-
-        self.homeScreen = createHomeScreen(rootViewController)
         
         // no onboarding, make home screen visible after unlock
         if !keyMaster.noWallet {
@@ -53,6 +50,10 @@ class StartFlowPresenter: Subscriber, Trackable {
         }
 
         addSubscriptions()
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
     }
     
     private func pushStartupScreen() {
