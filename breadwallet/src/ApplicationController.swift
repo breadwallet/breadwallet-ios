@@ -406,7 +406,7 @@ class ApplicationController: Subscriber, Trackable {
         
         homeScreen.didTapManageWallets = { [unowned self] in
             guard let assetCollection = self.coreSystem.assetCollection else { return }
-            let vc = ManageWalletsViewController(assetCollection: assetCollection)
+            let vc = ManageWalletsViewController(assetCollection: assetCollection, coreSystem: self.coreSystem)
             let nc = UINavigationController(rootViewController: vc)
             nc.setDarkStyle()
             navigationController.present(nc, animated: true, completion: nil)

@@ -13,21 +13,31 @@ import UIKit
 class AddWalletsViewController: UITableViewController {
     
     private let assetCollection: AssetCollection
+    private let coreSystem: CoreSystem
     private var displayData = [CurrencyMetaData]()
     private var allAssets = [CurrencyMetaData]()
     private var addedCurrencyIndices = [Int]()
     private var addedCurrencyIdentifiers = [CurrencyId]()
     private let searchBar = UISearchBar()
     
-    init(assetCollection: AssetCollection) {
+    init(assetCollection: AssetCollection, coreSystem: CoreSystem) {
         self.assetCollection = assetCollection
+        self.coreSystem = coreSystem
         super.init(nibName: nil, bundle: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        displayData = assetCollection.availableAssets
         allAssets = assetCollection.availableAssets
+            .sorted {
+                if let balance = coreSystem.walletBalance(currencyId: $0.uid),
+                    !balance.isZero,
+                    coreSystem.walletBalance(currencyId: $1.uid) == nil {
+                    return true
+                }
+                return false
+        }
+        displayData = allAssets
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -36,6 +46,14 @@ class AddWalletsViewController: UITableViewController {
     }
     
     private func reconcileChanges() {
+        // add eth when adding tokens
+        let currenciesToAdd = addedCurrencyIndices.map { allAssets[$0] }
+        if let eth = allAssets.first(where: { $0.uid == Currencies.eth.uid }),
+            !currenciesToAdd.filter({ $0.tokenAddress != nil }).isEmpty, // tokens are being added
+            !assetCollection.enabledAssets.contains(eth), // eth not already added
+            !currenciesToAdd.contains(eth) { // eth not being explicitly added
+            self.assetCollection.add(asset: eth)
+        }
         addedCurrencyIndices.forEach {
             self.assetCollection.add(asset: allAssets[$0])
         }
@@ -97,8 +115,13 @@ extension AddWalletsViewController {
         }
         
         let currency = displayData[indexPath.row]
+        let balance = coreSystem.walletBalance(currencyId: currency.uid)
         let isHidden = !addedCurrencyIdentifiers.contains(currency.uid)
-        cell.set(currency: currency, index: indexPath.row, listType: .add, isHidden: isHidden)
+        cell.set(currency: currency,
+                 balance: balance,
+                 listType: .add,
+                 isHidden: isHidden,
+                 isRemovable: true)
         cell.didAddIdentifier = { [unowned self] identifier in
             self.addCurrency(identifier)
         }
