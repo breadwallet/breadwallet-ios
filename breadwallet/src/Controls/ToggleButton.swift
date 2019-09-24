@@ -20,6 +20,7 @@ class ToggleButton: UIButton {
         self.setTitleColor(normalColor, for: .normal)
         self.setTitleColor(selectedColor, for: .selected)
         self.setTitleColor(selectedColor, for: .highlighted)
+        self.setTitleColor(normalColor.withAlphaComponent(0.4), for: .disabled)
         self.layer.cornerRadius = 6.0
         self.layer.borderWidth = 1.0
         updateColors()
