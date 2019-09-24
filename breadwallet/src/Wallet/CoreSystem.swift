@@ -100,7 +100,7 @@ class CoreSystem: Subscriber, Trackable {
             guard let system = self.system else { return assertionFailure() }
             system.managers
                 .filter { self.isWalletManagerNeeded($0) }
-                .forEach { $0.connect() }
+                .forEach { $0.connect(using: $0.customPeer) }
         }
     }
 
@@ -152,7 +152,7 @@ class CoreSystem: Subscriber, Trackable {
     /// Re-sync blockchain from specified depth
     func rescan(walletManager: WalletManager, fromDepth depth: WalletManagerSyncDepth) {
         queue.async {
-            walletManager.connect()
+            walletManager.connect(using: walletManager.customPeer)
             walletManager.syncToDepth(depth: depth)
             DispatchQueue.main.async {
                 walletManager.network.currencies
@@ -319,7 +319,7 @@ class CoreSystem: Subscriber, Trackable {
 
         activeManagers.forEach {
             print("[SYS] connecting \($0.network.currency.code) wallet manager")
-            $0.connect()
+            $0.connect(using: $0.customPeer)
         }
 
         inactiveManagers.forEach {
@@ -339,7 +339,7 @@ class CoreSystem: Subscriber, Trackable {
         queue.async {
             wm.disconnect()
             wm.mode = mode
-            wm.connect()
+            wm.connect(using: wm.customPeer)
         }
     }
 
@@ -492,7 +492,7 @@ extension CoreSystem: SystemListener {
 
         case .managerAdded(let manager):
             if self.isWalletManagerNeeded(manager) {
-                manager.connect()
+                manager.connect(using: manager.customPeer)
             }
         }
     }
@@ -600,6 +600,15 @@ extension CoreSystem: SystemListener {
 }
 
 // MARK: - Extensions
+
+extension WalletManager {
+    var customPeer: NetworkPeer? {
+        guard network.currency.uid == Currencies.btc.uid,
+            let address = UserDefaults.customNodeIP else { return nil }
+        let port = UInt16(UserDefaults.customNodePort ?? C.standardPort)
+        return network.createPeer(address: address, port: port, publicKey: nil)
+    }
+}
 
 extension WalletManagerEvent: CustomStringConvertible {
     public var description: String {

@@ -18,6 +18,7 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
     private var currency: Currency {
         return Currencies.btc.instance!
     }
+    private let modeChangeCallback: (WalletConnectionMode) -> Void
 
     // views
     private let animatedBlockSetLogo = AnimatedBlockSetLogo()
@@ -31,8 +32,10 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
     
     // MARK: - Lifecycle
 
-    init(walletConnectionSettings: WalletConnectionSettings) {
+    init(walletConnectionSettings: WalletConnectionSettings,
+         modeChangeCallback: @escaping (WalletConnectionMode) -> Void) {
         self.walletConnectionSettings = walletConnectionSettings
+        self.modeChangeCallback = modeChangeCallback
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -154,6 +157,7 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
         UINotificationFeedbackGenerator().notificationOccurred(.success)
         animatedBlockSetLogo.isOn.toggle()
         saveEvent(makeToggleEvent())
+        self.modeChangeCallback(newMode)
     }
     
     private func confirmToggle() {

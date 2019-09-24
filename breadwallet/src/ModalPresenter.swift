@@ -397,22 +397,30 @@ class ModalPresenter: Subscriber, Trackable {
                 let connectionSettings = WalletConnectionSettings(system: self.system,
                                                                   kvStore: kv,
                                                                   walletInfo: walletInfo)
-                let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings)
+                let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings) { _ in
+                    (menuNav.viewControllers.compactMap { $0 as? MenuViewController }).last?.reloadMenu()
+                }
                 menuNav.pushViewController(connectionSettingsVC, animated: true)
             })
-
+            
             // Rescan
-            if system.connectionMode(for: btc) == .p2p_only {
-                btcItems.append(MenuItem(title: S.Settings.sync, callback: {
-                    menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
-                }))
+            var rescan = MenuItem(title: S.Settings.sync, callback: {
+                menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
+            })
+            rescan.shouldShow = { [unowned self] in
+                self.system.connectionMode(for: btc) == .p2p_only
             }
+            btcItems.append(rescan)
             
             // Nodes
-            btcItems.append(MenuItem(title: S.NodeSelector.title, callback: {
+            var nodeSelection = MenuItem(title: S.NodeSelector.title, callback: {
                 let nodeSelector = NodeSelectorViewController(wallet: btcWallet)
                 menuNav.pushViewController(nodeSelector, animated: true)
-            }))
+            })
+            nodeSelection.shouldShow = { [unowned self] in
+                self.system.connectionMode(for: btc) == .p2p_only
+            }
+            btcItems.append(nodeSelection)
             
             btcItems.append(MenuItem(title: S.Settings.importTile, callback: {
                 menuNav.dismiss(animated: true, completion: { [unowned self] in
