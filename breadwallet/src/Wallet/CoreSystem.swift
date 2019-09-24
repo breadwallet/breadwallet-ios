@@ -9,6 +9,7 @@
 import Foundation
 import BRCrypto
 
+// swiftlint:disable type_body_length
 class CoreSystem: Subscriber, Trackable {
     
     private var system: System?
@@ -386,6 +387,27 @@ class CoreSystem: Subscriber, Trackable {
         guard let assetCollection = assetCollection else { return }
         assetCollection.resetToDefaultCollection()
         assetCollection.saveChanges() // triggers updateWalletStates
+    }
+    
+    /// Returns true if a wallet for a network native currency is required as a dependency for other active wallets.
+    func isWalletRequired(for currencyId: CurrencyId) -> Bool {
+        guard let assetCollection = assetCollection,
+            let currency = currencies[currencyId],
+            currency.tokenType == .native else { return false }
+        return !assetCollection.enabledAssets
+            .compactMap { self.currencies[$0.uid] }
+            .filter { $0.uid != currency.uid && $0.network == currency.network }
+            .isEmpty
+    }
+    
+    func walletBalance(currencyId: CurrencyId) -> Amount? {
+        if let balance = wallets[currencyId]?.balance {
+            return balance
+        } else if let coreBalance = coreWallet(currencyId)?.balance, let currency = currencies[currencyId] {
+            return Amount(cryptoAmount: coreBalance, currency: currency)
+        } else {
+            return nil
+        }
     }
 
     /// Adds placeholder WalletStates for all enabled currencies which do not have a Wallet yet.
