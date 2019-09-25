@@ -47,7 +47,6 @@ private let appLaunchCountKey = "appLaunchCountKey"
 private let appLaunchCountAtLastRatingPromptKey = "appLaunchCountAtLastRatingPromptKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
-private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
 private let deviceIdKey = "BR_DEVICE_ID"
 
 typealias ResettableBooleanSetting = [String: Bool]
@@ -71,8 +70,7 @@ extension UserDefaults {
         [debugSuppressAppRatingPromptKey: false],
         [debugShowAppRatingPromptOnEnterWalletKey: false],
         [shouldHideBRDCellHighlightKey: false],
-        [shouldHideBRDRewardsAnimationKey: false],
-        [didTapTradeNotificationKey: false]
+        [shouldHideBRDRewardsAnimationKey: false]
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
@@ -525,16 +523,6 @@ extension UserDefaults {
 
         set {
             defaults.set(newValue, forKey: platformDebugURLKey)
-        }
-    }
-    
-    static var didTapTradeNotification: Bool {
-        get {
-            return defaults.bool(forKey: didTapTradeNotificationKey)
-        }
-        
-        set {
-            defaults.set(newValue, forKey: didTapTradeNotificationKey)
         }
     }
 }
