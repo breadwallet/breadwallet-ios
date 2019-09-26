@@ -45,8 +45,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         return toolbarButtons[tradeButtonIndex]
     }
     
-    private var tradeNotificationImage: UIImageView?
-    
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapManageWallets: (() -> Void)?
     var didTapBuy: (() -> Void)?
@@ -326,10 +324,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     @objc private func trade() {
         saveEvent("currency.didTapTrade", attributes: [:])
-        UserDefaults.didTapTradeNotification = true
         didTapTrade?()
-        tradeNotificationImage?.removeFromSuperview()
-        tradeNotificationImage = nil
     }
     
     @objc private func menu() { didTapMenu?() }
