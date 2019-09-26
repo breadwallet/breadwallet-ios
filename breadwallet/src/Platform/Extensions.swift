@@ -19,7 +19,7 @@ extension String {
             assert(false, "couldnt encode string as utf8 data")
             return ""
         }
-        return CoreHasher.md5.hash(data: stringData).hexString
+        return CoreHasher.md5.hash(data: stringData)?.hexString ?? ""
     }
     
     func base58DecodedData() -> Data? {
@@ -67,7 +67,7 @@ public extension Data {
     // MARK: Hex Conversion
     
     var hexString: String {
-        return CoreCoder.hex.encode(data: self)
+        return CoreCoder.hex.encode(data: self) ?? ""
     }
 
     /// Create Data with bytes from a hex string
@@ -176,7 +176,7 @@ public extension Data {
     }
     
     var base58: String {
-        return CoreCoder.base58.encode(data: self)
+        return CoreCoder.base58.encode(data: self) ?? ""
     }
     
     var base32: String {
@@ -193,15 +193,15 @@ public extension Data {
     }
 
     var sha1: Data {
-        return CoreHasher.sha1.hash(data: self)
+        return CoreHasher.sha1.hash(data: self) ?? Data()
     }
     
     var sha256: Data {
-        return CoreHasher.sha256.hash(data: self)
+        return CoreHasher.sha256.hash(data: self) ?? Data()
     }
 
     var sha256_2: Data {
-        return CoreHasher.sha256_2.hash(data: self)
+        return CoreHasher.sha256_2.hash(data: self) ?? Data()
     }
     
     func uInt8(atOffset offset: UInt) -> UInt8 {
@@ -234,7 +234,7 @@ public extension Data {
     // MARK: Sign / Encrypt
 
     /// Returns the signature by signing `self` with `key`, using secp256k1_ecdsa_sign_recoverable
-    func compactSign(key: Key) -> Data {
+    func compactSign(key: Key) -> Data? {
         return CoreSigner.compact.sign(data32: self, using: key)
     }
 
@@ -251,8 +251,8 @@ public extension Data {
     func chacha20Poly1305AEADEncrypt(key: Key) -> Data {
         let nonce = genNonce()
         guard key.hasSecret else { assertionFailure(); return Data() }
-        let encrypter = CoreEncrypter.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
-        let outData = encrypter.encrypt(data: self)
+        let encrypter = CoreCipher.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
+        guard let outData = encrypter.encrypt(data: self) else { assertionFailure(); return Data() }
         return Data(nonce + outData)
     }
     
@@ -262,8 +262,9 @@ public extension Data {
         guard data.count > 12 else { throw BRReplicatedKVStoreError.malformedData }
         let nonce = Array(data[data.startIndex..<data.startIndex.advanced(by: 12)])
         let inData = Array(data[data.startIndex.advanced(by: 12)..<data.endIndex])
-        let decrypter = CoreEncrypter.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
-        return decrypter.decrypt(data: Data(inData))
+        let decrypter = CoreCipher.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
+        guard let decrypted = decrypter.decrypt(data: Data(inData)) else { /*assertionFailure();*/ throw BRReplicatedKVStoreError.malformedData }
+        return decrypted
     }
 }
 

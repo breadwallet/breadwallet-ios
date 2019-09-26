@@ -27,8 +27,8 @@ class PigeonTests : XCTestCase {
 
     func testEncryptDecrypt() {
         guard let crypto = crypto else { return XCTFail() }
-        let (encryptedData, nonce) = crypto.encrypt(sampleInputData, receiverPublicKey: testPubKey)
-        let decryptedData = crypto.decrypt(encryptedData, nonce: nonce, senderPublicKey: testPubKey)
+        guard let (encryptedData, nonce) = crypto.encrypt(sampleInputData, receiverPublicKey: testPubKey) else { return XCTFail() }
+        guard let decryptedData = crypto.decrypt(encryptedData, nonce: nonce, senderPublicKey: testPubKey) else { return XCTFail() }
         XCTAssertEqual(decryptedData.hexString, sampleInputData.hexString)
     }
 
@@ -38,7 +38,7 @@ class PigeonTests : XCTestCase {
         guard SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes) == 0
             else { return XCTAssert(false) }
         let data = Data(randomBytes)
-        let signature = crypto.sign(data: data)
+        guard let signature = crypto.sign(data: data) else { return XCTFail() }
         guard let pubKey = Key.createFromString(asPrivate: testPrivKey)?.encodeAsPublic.hexToData else { return XCTFail() }
         XCTAssert(crypto.verify(data: data, signature: signature, pubKey: pubKey))
     }
@@ -63,9 +63,9 @@ class PigeonTests : XCTestCase {
                                                   crypto: crypto) else { return XCTFail() }
         XCTAssert(envelope.verify(pairingKey: receiverKey), "Envelope should pass verification")
         let receiverCrypto = PigeonCrypto(privateKey: receiverKey)
-        let decryptedData = receiverCrypto.decrypt(envelope.encryptedMessage,
+        guard let decryptedData = receiverCrypto.decrypt(envelope.encryptedMessage,
                                                    nonce: envelope.nonce,
-                                                   senderPublicKey: senderPubKey)
+                                                   senderPublicKey: senderPubKey) else { return XCTFail() }
         if let deconstructedPing = try? MessagePing(serializedData: decryptedData) {
             XCTAssert(deconstructedPing.ping == "Hi Sam")
         } else {

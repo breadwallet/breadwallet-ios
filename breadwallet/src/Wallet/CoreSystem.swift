@@ -410,20 +410,16 @@ class CoreSystem: Subscriber, Trackable {
         }
     }
 
-    /// Adds placeholder WalletStates for all enabled currencies which do not have a Wallet yet.
-    private func addPlaceholderWalletStates() {
-        guard let assetCollection = assetCollection else { return assertionFailure() }
-        let placeholderStates: [CurrencyId: WalletState] = Dictionary(uniqueKeysWithValues:
-            assetCollection.enabledAssets
-                .filter { self.wallets[$0.uid] == nil }
-                .compactMap { self.currencies[$0.uid] }
-                .enumerated()
-                .map { displayOrder, currency in
-                    (currency.uid, WalletState.initial(currency, displayOrder: displayOrder).mutate(syncState: .connecting))
-        })
-        DispatchQueue.main.async {
-            Store.perform(action: ManageWallets.AddWallets(placeholderStates))
-        }
+    /// Creates placeholder WalletStates for all enabled currencies which do not have a Wallet yet.
+    private var placeholderWalletStates: [CurrencyId: WalletState] {
+        guard let assetCollection = assetCollection else { assertionFailure(); return [:] }
+        return assetCollection.enabledAssets
+            .filter { self.wallets[$0.uid] == nil }
+            .compactMap { self.currencies[$0.uid] }
+            .reduce(into: [CurrencyId: WalletState](), { (walletStates, currency) in
+                guard let displayOrder = assetCollection.displayOrder(for: currency.metaData) else { return }
+                walletStates[currency.uid] = WalletState.initial(currency, displayOrder: displayOrder).mutate(syncState: .connecting)
+            })
     }
 
     /// Adds or replaces WalletState for a Wallet.
@@ -436,29 +432,32 @@ class CoreSystem: Subscriber, Trackable {
         }
     }
     
-    /// Sets the wallet states to match changes to the asset collection and Core wallets
+    /// Sets the wallet states to match changes to the asset collection and Core wallets.
+    /// Triggered by AssetCollection.saveChanges on main thread.
     private func updateWalletStates() {
-        guard let assetCollection = assetCollection else { return }
-        print("[SYS] updating wallets")
-        
-        addPlaceholderWalletStates()
-        updateActiveWallets()
-        updateWalletManagerConnections()
-        
-        // reading+writing Store.state must be on main thread
-        DispatchQueue.main.async {
-            let walletStates: [CurrencyId: WalletState] = Dictionary(uniqueKeysWithValues:
-                assetCollection.enabledAssets
+        queue.async {
+            guard let assetCollection = self.assetCollection else { return }
+            print("[SYS] updating wallets")
+            
+            self.updateActiveWallets()
+            self.updateWalletManagerConnections()
+            self.requestCoreWalletCreation()
+            
+            // reading+writing Store.state must be on main thread
+            DispatchQueue.main.async {
+                // combine and set active wallet states and placeholder (pending wallet creation) wallet states
+                let walletStates: [CurrencyId: WalletState] = assetCollection.enabledAssets
                     .compactMap { self.wallets[$0.uid] }
-                    .enumerated()
-                    .map { displayOrder, wallet in
-                        (wallet.currency.uid, self.walletState(for: wallet, displayOrder: displayOrder))
-            })
-            Store.perform(action: ManageWallets.SetWallets(walletStates))
-            Backend.updateExchangeRates()
+                    .reduce(into: [CurrencyId: WalletState](), { (walletStates, wallet) in
+                        let currency = wallet.currency
+                        guard let displayOrder = assetCollection.displayOrder(for: currency.metaData) else { return }
+                        walletStates[currency.uid] = self.walletState(for: wallet, displayOrder: displayOrder)
+                    })
+                    .merging(self.placeholderWalletStates, uniquingKeysWith: { (existing, _) in existing })
+                Store.perform(action: ManageWallets.SetWallets(walletStates))
+                Backend.updateExchangeRates()
+            }
         }
-        
-        requestCoreWalletCreation()
     }
     
     private func coreWallet(_ currencyId: CurrencyId) -> BRCrypto.Wallet? {
@@ -525,8 +524,8 @@ extension CoreSystem: SystemListener {
             guard !E.isRunningTests else { return }
             let filteredNetworks = networks.filter { $0.isMainnet == !E.isTestnet }
             filteredNetworks.forEach { addCurrencies(for: $0) }
-            addPlaceholderWalletStates()
             DispatchQueue.main.async {
+                Store.perform(action: ManageWallets.AddWallets(self.placeholderWalletStates))
                 Backend.updateExchangeRates()
             }
             filteredNetworks.forEach { setupWalletManager(for: $0) }
@@ -556,12 +555,15 @@ extension CoreSystem: SystemListener {
 
         case .syncStarted:
             DispatchQueue.main.async {
-                manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {
-                    Store.perform(action: WalletChange($0).setSyncingState(.syncing))
-                }
+                // only show the initial sync for API-mode wallets
+                let isP2Psync = manager.mode == .p2p_only
+                manager.network.currencies.compactMap { self.currencies[$0.uid] }
+                    .filter { isP2Psync || (Store.state[$0]?.syncState == .connecting) }
+                    .forEach { Store.perform(action: WalletChange($0).setSyncingState(.syncing)) }
             }
 
         case .syncProgress(let timestamp, let percentComplete):
+            guard manager.mode == .p2p_only else { break }
             DispatchQueue.main.async {
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {
                     let seconds = UInt32(timestamp?.timeIntervalSince1970 ?? 0)
@@ -587,7 +589,11 @@ extension CoreSystem: SystemListener {
                     let messagePayload = "\(message ?? "") (\(errno))"
                     print("[SYS] \(manager.network) sync error: \(messagePayload)")
                     self.saveEvent("event.syncErrorMessage", attributes: ["network": manager.network.currency.code, "message": messagePayload])
-                    syncState = .failed
+                    syncState = .connecting
+                    // retry by reconnecting
+                    self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
+                        manager.connect(using: manager.customPeer)
+                    }
                 }
                 
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {

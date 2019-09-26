@@ -35,12 +35,17 @@ extension MessageEnvelope {
         self.receiverPublicKey = receiverPubKey
         self.identifier = UUID().uuidString
 
-        let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPubKey)
+        guard let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPubKey) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
         self.encryptedMessage = encryptedMessageData
         self.nonce = nonce
         self.signature = Data()
         let envelopeData = try self.serializedData()
-        self.signature = crypto.sign(data: envelopeData)
+        guard let signature = crypto.sign(data: envelopeData) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
+        self.signature = signature
     }
     
     /// Creates a response envelope to reply to a request envelope. The sender/receiver public keys of the request envelope will be used as the receiver/sender of new envelope.
@@ -54,12 +59,17 @@ extension MessageEnvelope {
         self.receiverPublicKey = requestEnvelope.senderPublicKey
         self.identifier = requestEnvelope.identifier
         
-        let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: requestEnvelope.senderPublicKey)
+        guard let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPublicKey) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
         self.encryptedMessage = encryptedMessageData
         self.nonce = nonce
         self.signature = Data()
         let envelopeData = try self.serializedData()
-        self.signature = crypto.sign(data: envelopeData)
+        guard let signature = crypto.sign(data: envelopeData) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
+        self.signature = signature
     }
     
     func verify(pairingKey: Key) -> Bool {

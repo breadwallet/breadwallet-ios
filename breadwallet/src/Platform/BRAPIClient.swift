@@ -11,20 +11,6 @@ import BRCrypto
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
-// these flags map to api feature flag name values
-// e.g., "buy-notification" is a persistent name in the /me/features list
-@objc public enum BRFeatureFlags: Int, CustomStringConvertible {
-    case buyNotification
-    case tradeNotification
-    
-    public var description: String {
-        switch self {
-        case .buyNotification: return "buy-notification"
-        case .tradeNotification: return "trade-notification"
-        }
-    }
-}
-
 public enum BRAPIClientError: Error {
     case malformedDataError
     case unknownError
@@ -130,8 +116,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         if let tokenData = authenticator.apiUserAccount,
             let token = tokenData["token"] as? String,
             let authKey = authKey,
-            let signingData = mutableRequest.signingString.data(using: .utf8) {
-            let sig = signingData.sha256_2.compactSign(key: authKey)
+            let signingData = mutableRequest.signingString.data(using: .utf8),
+            let sig = signingData.sha256_2.compactSign(key: authKey) {
             let hval = "bread \(token):\(sig.base58)"
             mutableRequest.setValue(hval, forHTTPHeaderField: "Authorization")
         }
