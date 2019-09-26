@@ -37,7 +37,7 @@ open class BRBitID: NSObject {
     // sign a message with a key and return a base64 representation
     class func signMessage(_ message: String, usingKey key: Key) -> String {
         let signingData = formatMessageForBitcoinSigning(message)
-        let signature = signingData.sha256_2.compactSign(key: key)
+        guard let signature = signingData.sha256_2.compactSign(key: key) else { return "" }
         return String(bytes: signature.base64EncodedData(options: []), encoding: String.Encoding.utf8) ?? ""
     }
     

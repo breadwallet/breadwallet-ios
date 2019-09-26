@@ -116,8 +116,8 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         if let tokenData = authenticator.apiUserAccount,
             let token = tokenData["token"] as? String,
             let authKey = authKey,
-            let signingData = mutableRequest.signingString.data(using: .utf8) {
-            let sig = signingData.sha256_2.compactSign(key: authKey)
+            let signingData = mutableRequest.signingString.data(using: .utf8),
+            let sig = signingData.sha256_2.compactSign(key: authKey) {
             let hval = "bread \(token):\(sig.base58)"
             mutableRequest.setValue(hval, forHTTPHeaderField: "Authorization")
         }
