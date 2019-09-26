@@ -69,7 +69,7 @@ class DataExtensionTests: XCTestCase {
         zip(secrets, signatures).forEach { secret, signature in
             let key = Key.createFromString(asPrivate: secret)
             XCTAssertNotNil(key)
-            let outputSig = CoreSigner.compact.sign(data32: message!, using: key!)
+            guard let outputSig = CoreSigner.compact.sign(data32: message!, using: key!) else { return XCTFail() }
             print(outputSig.hexString)
             XCTAssert(outputSig.hexString == signature)
         }

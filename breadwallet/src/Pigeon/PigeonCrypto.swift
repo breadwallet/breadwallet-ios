@@ -9,6 +9,12 @@ import Foundation
 import BRCrypto
 
 struct PigeonCrypto {
+    
+    enum CryptoError: Error {
+        case encryptError
+        case decryptError
+        case signError
+    }
 
     /// Pairing key associated with the remote entity
     private let privateKey: Key
@@ -24,33 +30,36 @@ struct PigeonCrypto {
         let nonce = Array(remoteIdentifier)
         return Key.createForPigeonFrom(key: authKey, nonce: Data(nonce))
     }
-
-    func decrypt(_ data: Data, nonce: Data, senderPublicKey: Data) -> Data {
+    
+    func decrypt(_ data: Data, nonce: Data, senderPublicKey: Data) -> Data? {
         guard let pubKey = Key.createFromString(asPublic: senderPublicKey.hexString) else {
             assertionFailure()
-            return Data()
+            return nil
         }
-        let decrypter = CoreEncrypter.pigeon(privKey: privateKey,
-                                             pubKey: pubKey,
-                                             nonce12: nonce)
+        let decrypter = CoreCipher.pigeon(privKey: privateKey,
+                                          pubKey: pubKey,
+                                          nonce12: nonce)
         return decrypter.decrypt(data: data)
     }
-
+    
     /// Returns (encryptedData, nonce) - the nonce is needed to be attached to the envelope
-    func encrypt(_ data: Data, receiverPublicKey: Data) -> (Data, Data) {
+    func encrypt(_ data: Data, receiverPublicKey: Data) -> (Data, Data)? {
         guard let pubKey = Key.createFromString(asPublic: receiverPublicKey.hexString) else {
             assertionFailure()
             return (Data(), Data())
         }
         let nonce = Data(genNonce())
-        let encrypter = CoreEncrypter.pigeon(privKey: privateKey,
-                                             pubKey: pubKey,
-                                             nonce12: nonce)
-        let outData = encrypter.encrypt(data: data)
-        return (outData, Data(nonce))
+        let encrypter = CoreCipher.pigeon(privKey: privateKey,
+                                          pubKey: pubKey,
+                                          nonce12: nonce)
+        if let outData = encrypter.encrypt(data: data) {
+            return (outData, Data(nonce))
+        } else {
+            return nil
+        }
     }
 
-    func sign(data: Data) -> Data {
+    func sign(data: Data) -> Data? {
         return data.sha256_2.compactSign(key: privateKey)
     }
 

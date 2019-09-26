@@ -194,10 +194,13 @@ class PigeonExchange: Subscriber {
                                 continue
                             }
                             
-                            let decryptedData = PigeonCrypto(privateKey: pairingKey)
+                            guard let decryptedData = PigeonCrypto(privateKey: pairingKey)
                                 .decrypt(envelope.encryptedMessage,
                                          nonce: envelope.nonce,
-                                         senderPublicKey: envelope.senderPublicKey)
+                                         senderPublicKey: envelope.senderPublicKey) else {
+                                            print("[EME] decryption failed!")
+                                            continue
+                            }
                             guard let link = try? MessageLink(serializedData: decryptedData) else {
                                 print("[EME] failed to decode link message")
                                 continue
@@ -350,7 +353,10 @@ class PigeonExchange: Subscriber {
         }
         print("[EME] envelope \(envelope.identifier) verified. contains \(envelope.service) \(envelope.messageType) message")
         let crypto = PigeonCrypto(privateKey: pairingKey)
-        let decryptedData = crypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey)
+        guard let decryptedData = crypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey) else {
+            print("[EME] envelope \(envelope.identifier) decryption failed!")
+            return true
+        }
         do {
             guard let type = PigeonMessageType(rawValue: envelope.messageType) else {
                 print("[EME] ERROR: Unknown message type \(envelope.messageType)")
