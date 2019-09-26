@@ -28,7 +28,7 @@ class ManageCurrencyCell: SeparatorCell {
     private let addColor = UIColor.navigationTint
     private let removeColor = UIColor.orangeButton
 
-    private let header = UILabel(font: .customBold(size: 18.0), color: UIColor.white)
+    private let header = UILabel(font: Theme.h3Title, color: UIColor.white)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: UIColor.transparentWhiteText)
     private let icon = UIImageView()
     private let balanceLabel = UILabel(font: Theme.body3, color: Theme.secondaryText)
@@ -63,6 +63,8 @@ class ManageCurrencyCell: SeparatorCell {
     }
 
     private func setupViews() {
+        header.adjustsFontSizeToFitWidth = true
+        
         addSubviews()
         addConstraints()
         setInitialData()
@@ -92,10 +94,11 @@ class ManageCurrencyCell: SeparatorCell {
             button.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2]),
             button.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             button.heightAnchor.constraint(equalToConstant: 36.0),
-            button.widthAnchor.constraint(equalToConstant: 70.0)])
+            button.widthAnchor.constraint(equalToConstant: 70.0),
+            button.leadingAnchor.constraint(greaterThanOrEqualTo: header.trailingAnchor, constant: C.padding[1])])
         balanceLabel.constrain([
             balanceLabel.trailingAnchor.constraint(equalTo: button.leadingAnchor, constant: -C.padding[1]),
-            balanceLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor)
+            balanceLabel.centerYAnchor.constraint(equalTo: subheader.centerYAnchor)
             ])
     }
 
