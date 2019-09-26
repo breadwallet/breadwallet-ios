@@ -11,20 +11,6 @@ import BRCrypto
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
-// these flags map to api feature flag name values
-// e.g., "buy-notification" is a persistent name in the /me/features list
-@objc public enum BRFeatureFlags: Int, CustomStringConvertible {
-    case buyNotification
-    case tradeNotification
-    
-    public var description: String {
-        switch self {
-        case .buyNotification: return "buy-notification"
-        case .tradeNotification: return "trade-notification"
-        }
-    }
-}
-
 public enum BRAPIClientError: Error {
     case malformedDataError
     case unknownError
