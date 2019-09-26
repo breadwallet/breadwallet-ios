@@ -46,8 +46,8 @@ struct AuthenticationClient {
                 return completion(.failure(.requestError(nil)))
         }
         req.authorize(withToken: clientToken)
-        let signature = CoreSigner.basicDER.sign(data32: signingData.sha256, using: apiKey)
-        guard let pubKey = apiKey.encodeAsPublic.hexToData else {
+        guard let signature = CoreSigner.basicDER.sign(data32: signingData.sha256, using: apiKey),
+            let pubKey = apiKey.encodeAsPublic.hexToData else {
             return completion(.failure(.requestError(nil)))
         }
         let handshake = UserHandshake(signature: signature.base64EncodedString(),
@@ -203,16 +203,15 @@ struct JWT: Codable {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .secondsSince1970
-
+        
         let encodedHeader = try encoder.encode(header).base64url
         let encodedPayload = try encoder.encode(payload).base64url
         let signingString = "\(encodedHeader).\(encodedPayload)"
-        guard let signingData = signingString.data(using: .utf8) else {
-            throw EncodingError.invalidValue(signingString,
-                EncodingError.Context(codingPath: [], debugDescription: "unable to encode JWT payload"))
+        guard let signingData = signingString.data(using: .utf8),
+            let signature = CoreSigner.basicJOSE.sign(data32: signingData.sha256, using: key) else {
+                throw EncodingError.invalidValue(signingString,
+                                                 EncodingError.Context(codingPath: [], debugDescription: "unable to encode JWT payload"))
         }
-
-        let signature = CoreSigner.basicJOSE.sign(data32: signingData.sha256, using: key)
         let encodedSignature = signature.base64url
         return "\(encodedHeader).\(encodedPayload).\(encodedSignature)"
     }
