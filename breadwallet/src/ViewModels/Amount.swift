@@ -119,7 +119,7 @@ public struct Amount {
     /// Token value in default units as Decimal number
     /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the base unit value and precision loss is acceptable.
     var tokenValue: Decimal {
-        return Decimal(string: tokenUnformattedString(in: currency.defaultUnit)) ?? Decimal.zero
+        return Decimal(string: tokenUnformattedString(in: currency.defaultUnit), locale: Locale.current) ?? Decimal.zero
     }
     
     /// Token value in default units as formatted string with currency ticker symbol suffix
@@ -223,7 +223,6 @@ public struct Amount {
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
         format.negativeFormat = "-\(format.positiveFormat!)"
-        
         if let rate = rate {
             format.currencySymbol = rate.currencySymbol
             format.maximumFractionDigits = rate.maxFractionalDigits
@@ -237,12 +236,9 @@ public struct Amount {
     
     // MARK: - Private
     
-    private var commonUnitString: String {
-        return cryptoAmount.string(as: currency.defaultUnit, formatter: rawTokenFormat) ?? ""
-    }
-    
     private var commonUnitValue: Decimal? {
-        return Decimal(string: commonUnitString)
+        let commonUnitString = cryptoAmount.string(as: currency.defaultUnit, formatter: rawTokenFormat) ?? ""
+        return Decimal(string: commonUnitString, locale: Locale.current)
     }
 }
 
