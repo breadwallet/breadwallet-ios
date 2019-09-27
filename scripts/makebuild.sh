@@ -64,9 +64,11 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
 	source ${script_dir}/download_currencylist.sh
 	echo
 	echo "Making $scheme version ${mainBundleShortVersionString} build ${mainBundleVersion} ..."
-  echo
+    echo
 	source ${script_dir}/archive.sh "${scheme}"
-	commit_changes
+	if ![[ "$3" == "testnet" ]]; then
+		commit_changes
+	fi
 else
   # Uncommitted changes
   echo "ERROR: Uncommitted changes. Must start with a clean repo."
