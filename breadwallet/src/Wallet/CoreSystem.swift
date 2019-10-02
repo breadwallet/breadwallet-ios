@@ -8,6 +8,7 @@
 
 import Foundation
 import BRCrypto
+import UIKit
 
 // swiftlint:disable type_body_length
 class CoreSystem: Subscriber, Trackable {
@@ -481,7 +482,19 @@ class CoreSystem: Subscriber, Trackable {
         let supportedCurrencyIds = manager.network.currencies.map { $0.uid }
         return !Set(supportedCurrencyIds).isDisjoint(with: enabledCurrencyIds)
     }
+    
+    // Shows the network activity indicator and prevents
+    // the app from being backgrounded while syncing
+    private func startActivity() {
+        UIApplication.shared.isIdleTimerDisabled = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
 
+    private func endActivity() {
+        UIApplication.shared.isIdleTimerDisabled = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+    
     // MARK: Wallet ID
     
     // walletID identifies a wallet by the ethereum public key
@@ -560,6 +573,9 @@ extension CoreSystem: SystemListener {
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }
                     .filter { isP2Psync || (Store.state[$0]?.syncState == .connecting) }
                     .forEach { Store.perform(action: WalletChange($0).setSyncingState(.syncing)) }
+                if isP2Psync {
+                    self.startActivity()
+                }
             }
 
         case .syncProgress(let timestamp, let percentComplete):
@@ -604,6 +620,16 @@ extension CoreSystem: SystemListener {
                         }
                     }
                     Store.perform(action: WalletChange($0).setSyncingState(syncState))
+                }
+                
+                // If there are no more p2p wallets syncing, hide
+                // the network activity indicator and resume
+                // the idle timer
+                let syncingCount = system.managers
+                    .filter { $0.mode == .p2p_only }
+                    .filter { $0.state == .syncing || $0.state == .created }.count
+                if syncingCount == 0 {
+                    self.endActivity()
                 }
             }
 
