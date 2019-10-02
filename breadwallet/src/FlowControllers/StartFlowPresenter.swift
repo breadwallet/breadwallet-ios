@@ -95,6 +95,7 @@ class StartFlowPresenter: Subscriber, Trackable {
         navigationController?.delegate = navigationControllerDelegate
         
         if let onboardingFlow = navigationController {
+            onboardingFlow.modalPresentationStyle = .fullScreen
             onboardingFlow.setNavigationBarHidden(true, animated: false)
             
             // This will be set to true if the user exits onboarding with the `createWalletBuyCoin` action.
