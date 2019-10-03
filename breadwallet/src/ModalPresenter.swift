@@ -402,21 +402,13 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Bitcoin Menu
         var btcItems: [MenuItem] = []
         if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
-            // Connection
-            btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) { [weak self] in
-                guard let `self` = self else { return }
-                guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
-                    return assertionFailure()
-                }
-                let connectionSettings = WalletConnectionSettings(system: self.system,
-                                                                  kvStore: kv,
-                                                                  walletInfo: walletInfo)
-                let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings) { _ in
-                    (menuNav.viewControllers.compactMap { $0 as? MenuViewController }).last?.reloadMenu()
-                }
-                menuNav.pushViewController(connectionSettingsVC, animated: true)
-            })
+            // Connection mode
             
+            // TODO:CRYPTO: Re-enable this menu item once fast sync is ready to deploy.
+            //btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) { [weak self] in
+            //    self?.presentConnectionModeScreen(menuNav: menuNav)
+            //})
+
             // Rescan
             var rescan = MenuItem(title: S.Settings.sync, callback: { [unowned self] in
                 menuNav.pushViewController(ReScanViewController(system: self.system, wallet: btcWallet), animated: true)
@@ -642,6 +634,10 @@ class ModalPresenter: Subscriber, Trackable {
         if E.isSimulator || E.isDebug || E.isTestFlight {
             var developerItems = [MenuItem]()
             
+            developerItems.append(MenuItem(title: "Fast Sync", callback: { [weak self] in
+                self?.presentConnectionModeScreen(menuNav: menuNav)
+            }))
+            
             developerItems.append(MenuItem(title: S.Settings.sendLogs) { [weak self] in
                 guard let `self` = self else { return }
                 self.showEmailLogsModal()
@@ -841,6 +837,19 @@ class ModalPresenter: Subscriber, Trackable {
         return String(format: "%p", addr)
     }
     
+    private func presentConnectionModeScreen(menuNav: UINavigationController) {
+        guard let kv = Backend.kvStore, let walletInfo = WalletInfo(kvStore: kv) else {
+            return assertionFailure()
+        }
+        let connectionSettings = WalletConnectionSettings(system: self.system,
+                                                          kvStore: kv,
+                                                          walletInfo: walletInfo)
+        let connectionSettingsVC = WalletConnectionSettingsViewController(walletConnectionSettings: connectionSettings) { _ in
+            (menuNav.viewControllers.compactMap { $0 as? MenuViewController }).last?.reloadMenu()
+        }
+        menuNav.pushViewController(connectionSettingsVC, animated: true)
+    }
+    
     private func presentScan(parent: UIViewController, currency: Currency?) -> PresentScan {
         return { [weak parent] scanCompletion in
             guard ScanViewController.isCameraAllowed else {
@@ -904,18 +913,15 @@ class ModalPresenter: Subscriber, Trackable {
             self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
             return
         }
-        Store.perform(action: Reset())
+
         self.system.shutdown {
-            DispatchQueue.main.async { [weak self] in
-                guard let `self` = self else { return }
-                
+            DispatchQueue.main.async {
                 Backend.disconnectWallet()
-                
-                activity.dismiss(animated: true)
-                
-                self.cleanUpMenu()
-                
                 Store.trigger(name: .didWipeWallet)
+                
+                activity.dismiss(animated: true, completion: { [unowned self] in
+                    self.cleanUpMenu()
+                })
             }
         }
     }

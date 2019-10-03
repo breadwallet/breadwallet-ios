@@ -8,6 +8,7 @@
 
 import Foundation
 import BRCrypto
+import UIKit
 
 // swiftlint:disable type_body_length
 class CoreSystem: Subscriber, Trackable {
@@ -56,6 +57,7 @@ class CoreSystem: Subscriber, Trackable {
         let backend = BlockChainDB(session: URLSession.shared,
                                    bdbBaseURL: "https://\(C.bdbHost)",
             bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
+                
                 var req = request
                 req.authorize(withToken: authToken)
                 //TODO:CRYPTO does not handle 401, other headers, redirects
@@ -64,7 +66,7 @@ class CoreSystem: Subscriber, Trackable {
             apiBaseURL: "https://\(C.backendHost)",
             apiDataTaskFunc: { (_, req, completion) -> URLSessionDataTask in
                 return Backend.apiClient.dataTaskWithRequest(req,
-                                                             authenticated: true,
+                                                             authenticated: Backend.isConnected,
                                                              retryCount: 0,
                                                              responseQueue: self.queue,
                                                              handler: completion)
@@ -72,13 +74,17 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        self.system = System(listener: self,
-                             account: account,
-                             onMainnet: !E.isTestnet,
-                             path: C.coreDataDirURL.path,
-                             query: backend,
-                             listenerQueue: self.queue)
+        self.system = System.create(listener: self,
+                                    account: account,
+                                    onMainnet: !E.isTestnet,
+                                    path: C.coreDataDirURL.path,
+                                    query: backend,
+                                    listenerQueue: self.queue)
 
+        if let system = self.system {
+            System.wipeAll(atPath: C.coreDataDirURL.path, except: [system])
+        }
+        
         Backend.apiClient.getCurrencyMetaData { currencyMetaData in
             self.queue.async {
                 self.assetCollection = AssetCollection(kvStore: kvStore,
@@ -112,7 +118,7 @@ class CoreSystem: Subscriber, Trackable {
         queue.async {
             print("[SYS] disconnect")
             guard let system = self.system else { return }
-            system.stop()
+            system.disconnectAll()
         }
     }
 
@@ -121,7 +127,9 @@ class CoreSystem: Subscriber, Trackable {
         queue.async {
             print("[SYS] shutdown / wipe")
             guard let system = self.system else { return assertionFailure() }
-            system.stop()
+            
+            System.wipe(system: system)
+            
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
@@ -481,7 +489,19 @@ class CoreSystem: Subscriber, Trackable {
         let supportedCurrencyIds = manager.network.currencies.map { $0.uid }
         return !Set(supportedCurrencyIds).isDisjoint(with: enabledCurrencyIds)
     }
+    
+    // Shows the network activity indicator and prevents
+    // the app from being backgrounded while syncing
+    private func startActivity() {
+        UIApplication.shared.isIdleTimerDisabled = true
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+    }
 
+    private func endActivity() {
+        UIApplication.shared.isIdleTimerDisabled = false
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
+    }
+    
     // MARK: Wallet ID
     
     // walletID identifies a wallet by the ethereum public key
@@ -560,6 +580,9 @@ extension CoreSystem: SystemListener {
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }
                     .filter { isP2Psync || (Store.state[$0]?.syncState == .connecting) }
                     .forEach { Store.perform(action: WalletChange($0).setSyncingState(.syncing)) }
+                if isP2Psync {
+                    self.startActivity()
+                }
             }
 
         case .syncProgress(let timestamp, let percentComplete):
@@ -604,6 +627,16 @@ extension CoreSystem: SystemListener {
                         }
                     }
                     Store.perform(action: WalletChange($0).setSyncingState(syncState))
+                }
+                
+                // If there are no more p2p wallets syncing, hide
+                // the network activity indicator and resume
+                // the idle timer
+                let syncingCount = system.managers
+                    .filter { $0.mode == .p2p_only }
+                    .filter { $0.state == .syncing || $0.state == .created }.count
+                if syncingCount == 0 {
+                    self.endActivity()
                 }
             }
 
