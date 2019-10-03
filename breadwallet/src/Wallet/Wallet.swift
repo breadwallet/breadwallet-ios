@@ -206,7 +206,6 @@ extension Wallet {
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setBalance(Amount(cryptoAmount: amount, currency: self.currency)))
-                Store.perform(action: WalletChange(self.currency).setSyncingState(.success))
             }
         case .feeBasisUpdated, .feeBasisEstimated:
             break
