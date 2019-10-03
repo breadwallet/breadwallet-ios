@@ -33,8 +33,9 @@ class EnterPhraseCell: UICollectionViewCell {
             updatePlaceholder()
         }
     }
+    
     private(set) var text: String?
-
+    
     var didTapPrevious: (() -> Void)? {
         didSet {
             previousField.tap = didTapPrevious

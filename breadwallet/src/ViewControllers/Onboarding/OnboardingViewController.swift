@@ -750,7 +750,6 @@ class OnboardingViewController: UIViewController {
             logEvent(.appeared, screen: .landingPage)
         }
         appearanceCount += 1
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
