@@ -50,7 +50,7 @@ set -e
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ "$3" == "testnet" ]]; then
+if [ "$3" == "testnet" ]; then
 	scheme="BRD Testnet - TestFlight"
 else
 	scheme="BRD Internal - TestFlight"
@@ -66,7 +66,7 @@ if output=$(git status --porcelain) && [ -z "$output" ]; then
 	echo "Making $scheme version ${mainBundleShortVersionString} build ${mainBundleVersion} ..."
     echo
 	source ${script_dir}/archive.sh "${scheme}"
-	if ![[ "$3" == "testnet" ]]; then
+	if [ "$3" != "testnet" ]; then
 		commit_changes
 	fi
 else
