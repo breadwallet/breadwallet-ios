@@ -135,7 +135,7 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         }
         return actualRequest
     }
-    
+        
     public func dataTaskWithRequest(_ request: URLRequest,
                                     authenticated: Bool = false,
                                     retryCount: Int = 0,
@@ -149,9 +149,11 @@ open class BRAPIClient: NSObject, URLSessionDelegate, URLSessionTaskDelegate, BR
         
         // copy the request and authenticate it. retain the original request for retries
         var actualRequest = decorateRequest(request)
+            
         if authenticated {
             actualRequest = signRequest(actualRequest)
         }
+
         return session.dataTask(with: actualRequest, completionHandler: { (data, resp, err) -> Void in
             let end = Date()
             let dur = Int(end.timeIntervalSince(start) * 1000)
