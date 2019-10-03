@@ -913,18 +913,15 @@ class ModalPresenter: Subscriber, Trackable {
             self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
             return
         }
-        Store.perform(action: Reset())
+
         self.system.shutdown {
-            DispatchQueue.main.async { [weak self] in
-                guard let `self` = self else { return }
-                
+            DispatchQueue.main.async {
                 Backend.disconnectWallet()
-                
-                activity.dismiss(animated: true)
-                
-                self.cleanUpMenu()
-                
                 Store.trigger(name: .didWipeWallet)
+                
+                activity.dismiss(animated: true, completion: { [unowned self] in
+                    self.cleanUpMenu()
+                })
             }
         }
     }

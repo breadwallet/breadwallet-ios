@@ -57,6 +57,7 @@ class CoreSystem: Subscriber, Trackable {
         let backend = BlockChainDB(session: URLSession.shared,
                                    bdbBaseURL: "https://\(C.bdbHost)",
             bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
+                
                 var req = request
                 req.authorize(withToken: authToken)
                 //TODO:CRYPTO does not handle 401, other headers, redirects
@@ -65,7 +66,7 @@ class CoreSystem: Subscriber, Trackable {
             apiBaseURL: "https://\(C.backendHost)",
             apiDataTaskFunc: { (_, req, completion) -> URLSessionDataTask in
                 return Backend.apiClient.dataTaskWithRequest(req,
-                                                             authenticated: true,
+                                                             authenticated: Backend.isConnected,
                                                              retryCount: 0,
                                                              responseQueue: self.queue,
                                                              handler: completion)
@@ -73,13 +74,17 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        self.system = System(listener: self,
-                             account: account,
-                             onMainnet: !E.isTestnet,
-                             path: C.coreDataDirURL.path,
-                             query: backend,
-                             listenerQueue: self.queue)
+        self.system = System.create(listener: self,
+                                    account: account,
+                                    onMainnet: !E.isTestnet,
+                                    path: C.coreDataDirURL.path,
+                                    query: backend,
+                                    listenerQueue: self.queue)
 
+        if let system = self.system {
+            System.wipeAll(atPath: C.coreDataDirURL.path, except: [system])
+        }
+        
         Backend.apiClient.getCurrencyMetaData { currencyMetaData in
             self.queue.async {
                 self.assetCollection = AssetCollection(kvStore: kvStore,
@@ -113,7 +118,7 @@ class CoreSystem: Subscriber, Trackable {
         queue.async {
             print("[SYS] disconnect")
             guard let system = self.system else { return }
-            system.stop()
+            system.disconnectAll()
         }
     }
 
@@ -122,7 +127,9 @@ class CoreSystem: Subscriber, Trackable {
         queue.async {
             print("[SYS] shutdown / wipe")
             guard let system = self.system else { return assertionFailure() }
-            system.stop()
+            
+            System.wipe(system: system)
+            
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
