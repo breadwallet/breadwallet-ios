@@ -246,8 +246,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
         tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
-
-        view.layoutIfNeeded()
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                           action: #selector(rewardsViewTapped))

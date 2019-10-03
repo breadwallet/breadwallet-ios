@@ -37,10 +37,11 @@ class UnitConversionTests : XCTestCase {
         XCTAssertEqual(Amount(tokenString: "0.0000011", currency: TestCurrencies.eth, unit: TestCurrencies.eth.defaultUnit, rate: rate).tokenDescription, "0.0000011 ETH") // tests override default max digits
         
         let french = Locale(identifier: "fr_FR")
+        let groupingSeparator = french.groupingSeparator! // special whitespace character on iOS 13
         XCTAssertEqual(Amount(tokenString: "1,0", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1000000000000000000")
         XCTAssertEqual(Amount(tokenString: "0,000000000000000001", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1")
         XCTAssertEqual(Amount(tokenString: "1,2345678", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1234567800000000000")
-        XCTAssertEqual(Amount(tokenString: "1 234 567,891", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1234567891000000000000000")
+        XCTAssertEqual(Amount(tokenString: "1\(groupingSeparator)234\(groupingSeparator)567,891", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1234567891000000000000000")
         XCTAssertEqual(Amount(tokenString: "1,234567891234567891", currency: TestCurrencies.eth, locale: french).tokenUnformattedString(in: TestCurrencies.eth.baseUnit), "1234567891234567891")
 
         // input uses the specified locale (parameter is only used for tests), output uses the system locale (assume en_US)
@@ -66,6 +67,13 @@ class UnitConversionTests : XCTestCase {
         let rate = Rate(code: "USD", name: "USD", rate: 200.0, reciprocalCode: "ETH")
         let a = Amount(tokenString: "123000000000000000000", currency: TestCurrencies.eth, unit: TestCurrencies.eth.baseUnit, rate: rate)
         XCTAssertNotNil(a)
-        XCTAssertEqual("wei123,000,000,000,000,000,000", a.cryptoAmount.description)
+        let format = NumberFormatter()
+        format.numberStyle = .currency
+        format.generatesDecimalNumbers = false
+        format.currencyCode = ""
+        format.currencySymbol = ""
+        format.maximumFractionDigits = 0
+        XCTAssertEqual("123,000,000,000,000,000,000",
+                       a.cryptoAmount.string(as: TestCurrencies.eth.baseUnit, formatter: format) ?? "")
     }
 }

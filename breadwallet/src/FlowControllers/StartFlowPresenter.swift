@@ -95,6 +95,7 @@ class StartFlowPresenter: Subscriber, Trackable {
         navigationController?.delegate = navigationControllerDelegate
         
         if let onboardingFlow = navigationController {
+            onboardingFlow.modalPresentationStyle = .fullScreen
             onboardingFlow.setNavigationBarHidden(true, animated: false)
             
             // This will be set to true if the user exits onboarding with the `createWalletBuyCoin` action.
@@ -138,9 +139,10 @@ class StartFlowPresenter: Subscriber, Trackable {
     private func addSubscriptions() {
         Store.lazySubscribe(self,
                             selector: { $0.isLoginRequired != $1.isLoginRequired },
-                            callback: { self.handleLoginRequiredChange(state: $0)
+                            callback: { [unowned self] in
+                                self.handleLoginRequiredChange(state: $0)
         })
-        Store.subscribe(self, name: .lock, callback: { _ in
+        Store.subscribe(self, name: .lock, callback: { [unowned self] _ in
             self.presentLoginFlow(for: .manualLock)
         })
     }
@@ -230,11 +232,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     private func pushStartPaperPhraseCreationViewController(pin: String, eventContext: EventContext = .none) {
         guard let navController = navigationController else { return }
         
+        let dismissAction: (() -> Void) = { [weak self] in
+            self?.dismissStartFlow()
+        }
+        
         RecoveryKeyFlowController.enterRecoveryKeyFlow(pin: pin,
                                                        keyMaster: self.keyMaster,
                                                        from: navController,
                                                        context: eventContext,
-                                                       dismissAction: dismissStartFlow,
+                                                       dismissAction: dismissAction,
                                                        modalPresentation: false,
                                                        canExit: false)
     }
