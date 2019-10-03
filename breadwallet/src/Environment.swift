@@ -12,6 +12,7 @@ import UIKit
 
 /// Environment Flags
 struct E {
+
     static let isTestnet: Bool = {
         #if TESTNET
             return true

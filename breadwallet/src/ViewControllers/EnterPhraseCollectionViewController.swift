@@ -50,7 +50,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
                 return phraseCell.textField.text?.lowercased() ?? ""
             }.joined(separator: " ")
     }
-
+    
     override func viewDidLoad() {
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = Theme.primaryBackground
