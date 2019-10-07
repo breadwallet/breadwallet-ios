@@ -58,7 +58,7 @@ class Wallet {
     
     func feeForLevel(level: FeeLevel) -> NetworkFee {
         //Find nearest NetworkFee for FeeLevel
-        let target = level.preferredTime
+        let target = level.preferredTime(forCurrency: currency)
         guard let result = fees.enumerated().min(by: { abs($0.1.time - target) < abs($1.1.time - target) }) else {
             return fees.first!
         }
