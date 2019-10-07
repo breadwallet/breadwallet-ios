@@ -102,7 +102,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             addSubview(delistedTokenView)
         }
         graphButtons.forEach {
-            self.graphButtonStackView.addArrangedSubview($0.button)
+            graphButtonStackView.addArrangedSubview($0.button)
         }
     }
     
@@ -187,7 +187,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         priceDateLabel.alpha = 0.0
         
         graphButtons.forEach {
-            $0.callback = { button, period in
+            $0.callback = { [unowned self] button, period in
                 self.chartView.historyPeriod = period
                 self.didTap(button: button)
             }
@@ -195,26 +195,26 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         
         Store.subscribe(self,
                             selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
-                            callback: {
-                                guard let rate = $0[self.currency]?.currentRate, !self.isScrubbing else { return }
+                            callback: { [weak self] in
+                                guard let `self` = self, let rate = $0[self.currency]?.currentRate, !self.isScrubbing else { return }
                                 self.exchangeRateLabel.text = rate.localString(forCurrency: self.currency)
         })
         setGraphViewScrubbingCallbacks()
-        chartView.shouldHideChart = {
+        chartView.shouldHideChart = { [unowned self] in
             self.shouldLockExpandingChart = true
             self.collapseHeader()
         }
     }
     
     private func setGraphViewScrubbingCallbacks() {
-        chartView.scrubberDidUpdateToValues = {
+        chartView.scrubberDidUpdateToValues = { [unowned self] in
             //We can receive a scrubberDidUpdateToValues call after scrubberDidEnd
             //so we need to guard against updating the scrubber labels
             guard self.isScrubbing else { return }
             self.exchangeRateLabel.text = $0
             self.priceDateLabel.text = $1
         }
-        chartView.scrubberDidEnd = {
+        chartView.scrubberDidEnd = { [unowned self] in
             self.isScrubbing = false
             UIView.animate(withDuration: C.animationDuration, animations: {
                 self.priceChangeView.alpha = 1.0
@@ -224,7 +224,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             self.exchangeRateLabel.text = Store.state[self.currency]?.currentRate?.localString(forCurrency: self.currency)
         }
         
-        chartView.scrubberDidBegin = {
+        chartView.scrubberDidBegin = { [unowned self] in
             self.saveEvent(self.makeEventName([EventContext.wallet.name, self.currency.code, Event.scrubbed.name]))
             self.isScrubbing = true
             UIView.animate(withDuration: C.animationDuration, animations: {
@@ -294,10 +294,10 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     }
     
     private func expandHeader() {
-        self.headerHeight?.constant = AccountHeaderView.headerViewMaxHeight
+        headerHeight?.constant = AccountHeaderView.headerViewMaxHeight
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.superview?.superview?.layoutIfNeeded()
-        }, completion: {_ in
+        }, completion: { _ in
             self.showChart()
         })
     }
@@ -305,10 +305,10 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     //Needs to be public so that it can be hidden
     //when the rewards view is expanded on the iPhone5
     func collapseHeader() {
-        self.headerHeight?.constant = AccountHeaderView.headerViewMinHeight
+        headerHeight?.constant = AccountHeaderView.headerViewMinHeight
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.superview?.superview?.layoutIfNeeded()
-        }, completion: {_ in
+        }, completion: { _ in
             self.hideChart()
         })
     }
