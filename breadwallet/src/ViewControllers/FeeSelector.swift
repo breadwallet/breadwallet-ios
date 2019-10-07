@@ -15,7 +15,11 @@ enum FeeLevel: Int {
     case priority
     
     //Time in millis
-    var preferredTime: Int {
+    func preferredTime(forCurrency: Currency) -> Int {
+        guard forCurrency.uid == Currencies.btc.uid else {
+            return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
+        }
+        
         switch self {
         case .economy:
             return Int(C.secondsInMinute) * 60 * 10 * 1000 //10 hrs
