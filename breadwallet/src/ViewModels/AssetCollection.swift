@@ -103,7 +103,8 @@ class AssetCollection: Subscriber {
             _ = save()
         }
         
-        Store.subscribe(self, name: .didSyncKVStore) { _ in
+        Store.subscribe(self, name: .didSyncKVStore) { [weak self] _ in
+            guard let `self` = self else { return }
             if let newAssetIndex = AssetIndex(kvStore: self.kvStore), newAssetIndex.version > self.assetIndex.version {
                 assert(self.hasUnsavedChanges == false)
                 print("[KV] asset index reloaded")

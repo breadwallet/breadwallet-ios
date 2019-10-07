@@ -19,12 +19,22 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         self.footerView = AccountFooterView(currency: wallet.currency)
         self.searchHeaderview = SearchHeaderView()
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: didSelectTransaction)
+        self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: { [unowned self] (transactions, index) in
+            self.didSelectTransaction(transactions: transactions, selectedIndex: index)
+        })
 
-        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
-        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
-        footerView.sellCallback = { Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
+        footerView.sendCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
+        footerView.receiveCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
+        footerView.buyCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
+        footerView.sellCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
+    }
+    
+    deinit {
+        Store.unsubscribe(self)
     }
 
     // MARK: - Private
@@ -80,10 +90,10 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         if shouldShowRewardsView {
             addRewardsView()
         }
-        transactionsTableView.didScrollToYOffset = { offset in
+        transactionsTableView.didScrollToYOffset = { [unowned self] offset in
             self.headerView.setOffset(offset)
         }
-        transactionsTableView.didStopScrolling = {
+        transactionsTableView.didStopScrolling = { [unowned self] in
             self.headerView.didStopScrolling()
         }
     }
@@ -116,7 +126,9 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         searchButton.widthAnchor.constraint(equalToConstant: 22.0).isActive = true
         searchButton.heightAnchor.constraint(equalToConstant: 22.0).isActive = true
         searchButton.tintColor = .white
-        searchButton.tap = showSearchHeaderView
+        searchButton.tap = { [unowned self] in
+            self.showSearchHeaderView()
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
     }
 
@@ -147,22 +159,24 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, name: .showStatusBar, callback: { _ in
-            self.shouldShowStatusBar = true
+        Store.subscribe(self, name: .showStatusBar, callback: { [weak self] _ in
+            self?.shouldShowStatusBar = true
         })
-        Store.subscribe(self, name: .hideStatusBar, callback: { _ in
-            self.shouldShowStatusBar = false
+        Store.subscribe(self, name: .hideStatusBar, callback: { [weak self] _ in
+            self?.shouldShowStatusBar = false
         })
     }
 
     private func setInitialData() {
         searchHeaderview.isHidden = true
-        searchHeaderview.didCancel = hideSearchHeaderView
+        searchHeaderview.didCancel = { [weak self] in
+            self?.hideSearchHeaderView()
+        }
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
-        headerView.setHostContentOffset = { offset in
-            self.transactionsTableView.tableView.contentOffset.y = offset
+        headerView.setHostContentOffset = { [weak self] offset in
+            self?.transactionsTableView.tableView.contentOffset.y = offset
         }
     }
     
@@ -191,15 +205,15 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func showSearchHeaderView() {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
         headerView.stopHeightConstraint()
         headerContainerSearchHeight?.isActive = true
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.view.layoutIfNeeded()
         })
         
-        UIView.transition(from: self.headerView,
-                          to: self.searchHeaderview,
+        UIView.transition(from: headerView,
+                          to: searchHeaderview,
                           duration: C.animationDuration,
                           options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
                           completion: { _ in
@@ -209,15 +223,15 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func hideSearchHeaderView() {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         headerView.resumeHeightConstraint()
         headerContainerSearchHeight?.isActive = false
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.view.layoutIfNeeded()
         })
         
-        UIView.transition(from: self.searchHeaderview,
-                          to: self.headerView,
+        UIView.transition(from: searchHeaderview,
+                          to: headerView,
                           duration: C.animationDuration,
                           options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
                           completion: { _ in

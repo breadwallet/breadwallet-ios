@@ -219,9 +219,23 @@ extension Wallet {
 
     func handleTransferEvent(_ event: TransferEvent, transfer: BRCrypto.Transfer) {
         //print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
-        if case .changed(_, let new) = event, case .submitted = new {
+        switch event {
+        case .created:
+            publishEvent(.transferAdded(transfer: transfer))
+        case .changed(_, let new):
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
-            publishEvent(.transferSubmitted(transfer: transfer, success: true))
+            switch new {
+            case .submitted:
+                publishEvent(.transferSubmitted(transfer: transfer, success: true))
+            case .created:
+                publishEvent(.transferAdded(transfer: transfer))
+            case .deleted:
+                publishEvent(.transferDeleted(transfer: transfer))
+            default:
+                publishEvent(.transferChanged(transfer: transfer))
+            }
+        case .deleted:
+            publishEvent(.transferDeleted(transfer: transfer))
         }
         if case .changed(_, let new) = event, case .failed(_) = new {
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
