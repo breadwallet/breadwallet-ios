@@ -125,7 +125,7 @@ class StartFlowPresenter: Subscriber, Trackable {
             
         case .failure(let error):
             switch error {
-            case .invalidSerialization:
+            case .invalidSerialization, .disabled:
                 // account needs to be recreated from seed so we must authenticate first
                 presentLoginFlow(for: .initialLaunch(loginHandler: completion))
             default:
