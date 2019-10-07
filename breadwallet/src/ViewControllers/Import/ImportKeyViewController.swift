@@ -166,12 +166,14 @@ class ImportKeyViewController: UIViewController, Subscriber {
     private func createTransaction(withPrivKey key: Key) {
         present(balanceActivity, animated: true, completion: nil)
         wallet.createSweeper(forKey: key) { result in
-            self.balanceActivity.dismiss(animated: true) {
-                switch result {
-                case .success(let sweeper):
-                    self.importFrom(sweeper)
-                case .failure(let error):
-                    self.handleError(error)
+            DispatchQueue.main.async {
+                self.balanceActivity.dismiss(animated: true) {
+                    switch result {
+                    case .success(let sweeper):
+                        self.importFrom(sweeper)
+                    case .failure(let error):
+                        self.handleError(error)
+                    }
                 }
             }
         }
@@ -182,11 +184,13 @@ class ImportKeyViewController: UIViewController, Subscriber {
         let balanceAmount = Amount(cryptoAmount: balance, currency: wallet.currency)
         guard !balanceAmount.isZero else { return self.showErrorMessage(S.Import.Error.empty) }
         sweeper.estimate(fee: wallet.feeForLevel(level: .regular)) { result in
-            switch result {
-            case .success(let feeBasis):
-                self.confirmImport(fromSweeper: sweeper, fee: feeBasis)
-            case .failure(let error):
-                self.handleEstimateFeeError(error)
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let feeBasis):
+                    self.confirmImport(fromSweeper: sweeper, fee: feeBasis)
+                case .failure(let error):
+                    self.handleEstimateFeeError(error)
+                }
             }
         }
     }
