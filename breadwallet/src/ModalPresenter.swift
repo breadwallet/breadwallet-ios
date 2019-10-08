@@ -51,7 +51,7 @@ class ModalPresenter: Subscriber, Trackable {
     private func addSubscriptions() {
 
         Store.lazySubscribe(self,
-                            selector: { $0.rootModal != $1.rootModal},
+                            selector: { $0.rootModal != $1.rootModal },
                             callback: { [weak self] in self?.presentModal($0.rootModal) })
         
         Store.subscribe(self, name: .presentFaq("", nil), callback: { [weak self] in
@@ -190,10 +190,6 @@ class ModalPresenter: Subscriber, Trackable {
             Store.trigger(name: .hideStatusBar)
         }
     }
-
-    func shutDown() {
-        Store.unsubscribe(self)
-    }
     
     func preloadSupportCenter() {
         supportCenter.preload() // pre-load contents for faster access
@@ -318,7 +314,7 @@ class ModalPresenter: Subscriber, Trackable {
         let root = ModalViewController(childViewController: sendVC)
         sendVC.presentScan = presentScan(parent: root, currency: currency)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, success in
-            guard let `self` = self else { return }
+            guard let `self` = self, let root = root else { return }
             let vc = VerifyPinViewController(bodyText: bodyText,
                                              pinLength: Store.state.pinLength,
                                              walletAuthenticator: self.keyStore,
@@ -327,8 +323,8 @@ class ModalPresenter: Subscriber, Trackable {
             vc.transitioningDelegate = self.verifyPinTransitionDelegate
             vc.modalPresentationStyle = .overFullScreen
             vc.modalPresentationCapturesStatusBarAppearance = true
-            root?.view.isFrameChangeBlocked = true
-            root?.present(vc, animated: true, completion: nil)
+            root.view.isFrameChangeBlocked = true
+            root.present(vc, animated: true, completion: nil)
         }
         sendVC.onPublishSuccess = { [weak self] in
             self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
@@ -383,14 +379,6 @@ class ModalPresenter: Subscriber, Trackable {
             case .invalid:
                 break
             }
-        }
-    }
-    
-    func cleanUpMenu() {
-        if let menu = menuNavController {
-            menu.setViewControllers([], animated: false)
-            menu.dismiss(animated: false, completion: nil)
-            self.menuNavController = nil
         }
     }
     
@@ -526,14 +514,11 @@ class ModalPresenter: Subscriber, Trackable {
         let securityItems: [MenuItem] = [
             // Unlink
             MenuItem(title: S.Settings.wipe) { [weak self] in
-                guard let `self` = self else { return }
-                guard let vc = self.topViewController else { return }
-
+                guard let `self` = self, let vc = self.topViewController else { return }
                 RecoveryKeyFlowController.enterUnlinkWalletFlow(from: vc,
                                                                 keyMaster: self.keyStore,
                                                                 phraseEntryReason: .validateForWipingWallet({ [weak self] in
-                                                                    guard let `self` = self else { return }
-                                                                    self.wipeWallet()
+                                                                    self?.wipeWallet()
                                                                 }))
             },
             
@@ -561,14 +546,12 @@ class ModalPresenter: Subscriber, Trackable {
         var rootItems: [MenuItem] = [
             // Scan QR Code
             MenuItem(title: S.MenuButton.scan, icon: MenuItem.Icon.scan) { [weak self] in
-                guard let `self` = self else { return }
-                self.presentLoginScan()
+                self?.presentLoginScan()
             },
             
             // Manage Wallets
             MenuItem(title: S.MenuButton.manageWallets, icon: MenuItem.Icon.wallet) { [weak self] in
-                guard let `self` = self else { return }
-                guard let assetCollection = self.system.assetCollection else { return }
+                guard let `self` = self, let assetCollection = self.system.assetCollection else { return }
                 let vc = ManageWalletsViewController(assetCollection: assetCollection, coreSystem: self.system)
                 menuNav.pushViewController(vc, animated: true)
             },
@@ -585,14 +568,12 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [weak self] in
-                guard let `self` = self else { return }
-                self.presentFaq()
+                self?.presentFaq()
             },
                         
             // Rewards
             MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) { [weak self] in
-                guard let `self` = self else { return }
-                self.presentPlatformWebViewController("/rewards")
+                self?.presentPlatformWebViewController("/rewards")
             },
             
             // About
@@ -631,6 +612,7 @@ class ModalPresenter: Subscriber, Trackable {
         }
         
         // MARK: Developer/QA Menu
+        
         if E.isSimulator || E.isDebug || E.isTestFlight {
             var developerItems = [MenuItem]()
             
@@ -639,8 +621,7 @@ class ModalPresenter: Subscriber, Trackable {
             }))
             
             developerItems.append(MenuItem(title: S.Settings.sendLogs) { [weak self] in
-                guard let `self` = self else { return }
-                self.showEmailLogsModal()
+                self?.showEmailLogsModal()
             })
 
             developerItems.append(MenuItem(title: "Lock Wallet") {
@@ -685,9 +666,9 @@ class ModalPresenter: Subscriber, Trackable {
             }))
 
             // Shows a preview of the paper key.
-            if let paperKey = self.keyStore.seedPhrase(pin: "111111") {
+            if let paperKey = keyStore.seedPhrase(pin: "111111") {
                 let words = paperKey.components(separatedBy: " ")
-                let timestamp = (try? self.keyStore.loadAccount().map { $0.timestamp }.get()) ?? Date.zeroValue()
+                let timestamp = (try? keyStore.loadAccount().map { $0.timestamp }.get()) ?? Date.zeroValue()
                 let preview = "\(words[0]) \(words[1])... (\(DateFormatter.mediumDateFormatter.string(from: timestamp))"
                 developerItems.append(MenuItem(title: "Paper key preview",
                                                accessoryText: { UserDefaults.debugShouldShowPaperKeyPreview ? preview : "" },
@@ -913,15 +894,19 @@ class ModalPresenter: Subscriber, Trackable {
             self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
             return
         }
-
+        
         self.system.shutdown {
             DispatchQueue.main.async {
                 Backend.disconnectWallet()
-                Store.trigger(name: .didWipeWallet)
-                
-                activity.dismiss(animated: true, completion: { [unowned self] in
-                    self.cleanUpMenu()
-                })
+                Store.perform(action: Reset())
+                activity.dismiss(animated: true) { [weak self] in
+                    // cleanup all views before triggering reset to onboarding
+                    guard let menuNav = self?.menuNavController,
+                        let rootNav = self?.window.rootViewController as? UINavigationController else { preconditionFailure() }
+                    menuNav.viewControllers.removeAll()
+                    rootNav.viewControllers.removeAll()
+                    Store.trigger(name: .didWipeWallet)
+                }
             }
         }
     }

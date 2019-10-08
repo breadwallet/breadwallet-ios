@@ -105,8 +105,6 @@ class ApplicationController: Subscriber, Trackable {
         appRatingManager.start()
 
         Store.subscribe(self, name: .didWipeWallet) { [unowned self] _ in
-            Store.perform(action: Reset())
-            
             self.modalPresenter = nil
             self.rootNavigationController?.viewControllers = []
             
