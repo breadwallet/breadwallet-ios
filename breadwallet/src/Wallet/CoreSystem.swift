@@ -133,13 +133,6 @@ class CoreSystem: Subscriber, Trackable {
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
-
-            let url = C.coreDataDirURL
-            do {
-                try FileManager.default.removeItem(at: url)
-            } catch let error {
-                print("[SYS] ERROR removing dir \(url.absoluteString): \(error)")
-            }
             
             completion?()
         }
