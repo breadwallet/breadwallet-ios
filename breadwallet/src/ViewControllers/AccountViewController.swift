@@ -34,9 +34,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     deinit {
+        rewardsShrinkTimer?.invalidate()
+        rewardsShrinkTimer = nil
         Store.unsubscribe(self)
     }
-
+    
     // MARK: - Private
     private let wallet: Wallet
     private let headerView: AccountHeaderView
@@ -62,10 +64,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     private var rewardsView: RewardsView?
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
+    private var rewardsShrinkTimer: Timer?
     private var rewardsTappedEvent: String {
         return makeEventName([EventContext.rewards.name, Event.banner.name])
     }
-    
+
     private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
         return rewardsViewState == .expanded ? RewardsView.expandedSize : (RewardsView.normalSize)
     }
@@ -278,12 +281,14 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             self.tableViewTopConstraint?.constant = constants.0
             self.rewardsViewHeightConstraint?.constant = constants.1
             self.view.layoutIfNeeded()
-        }, completion: { [unowned self] _ in
+        }, completion: { [weak self] _ in
+            guard let `self` = self else { return }
+            
             self.rewardsView?.animateIcon()
 
             UserDefaults.shouldShowBRDRewardsAnimation = false
-
-            Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { [unowned self] _ in
+            
+            self.rewardsShrinkTimer = Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { _ in
                 self.shrinkRewardsView()
             }
         })
