@@ -133,13 +133,6 @@ class CoreSystem: Subscriber, Trackable {
             self.wallets.removeAll()
             self.currencies.removeAll()
             self.system = nil
-
-            let url = C.coreDataDirURL
-            do {
-                try FileManager.default.removeItem(at: url)
-            } catch let error {
-                print("[SYS] ERROR removing dir \(url.absoluteString): \(error)")
-            }
             
             completion?()
         }
@@ -230,10 +223,11 @@ class CoreSystem: Subscriber, Trackable {
             mode = system.defaultMode(network: network)
         }
         print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-        system.createWalletManager(network: network,
-                                   mode: mode,
-                                   addressScheme: addressScheme,
-                                   currencies: requiredTokens)
+        let result = system.createWalletManager(network: network,
+                                                mode: mode,
+                                                addressScheme: addressScheme,
+                                                currencies: requiredTokens)
+        assert(result, "failed to create \(network) wallet manager")
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.

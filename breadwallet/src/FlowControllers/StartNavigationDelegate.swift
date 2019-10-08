@@ -45,10 +45,5 @@ class StartNavigationDelegate: NSObject, UINavigationControllerDelegate {
                 navigationController.view.removeGestureRecognizer(gr)
             }
         }
-
-        if viewController is StartWipeWalletViewController {
-            navigationController.setClearNavbar()
-            navigationController.setWhiteStyle()
-        }
     }
 }
