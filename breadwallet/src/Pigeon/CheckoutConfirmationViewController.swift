@@ -10,11 +10,11 @@ import UIKit
 
 class CheckoutConfirmationViewController: UIViewController {
 
-    private let header = UIView(color: .darkerBackground)
+    private let header = UIView(color: Theme.secondaryBackground)
     private let titleLabel = UILabel(font: .customBold(size: 18.0), color: .white)
     private let footer = UIStackView()
     private let body = UIStackView()
-    private let footerBackground = UIView(color: .darkerBackground)
+    private let footerBackground = UIView(color: Theme.secondaryBackground)
     private let buy = BRDButton(title: S.Button.buy, type: .primary)
     private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
     private let logo = UIImageView()

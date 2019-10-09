@@ -21,10 +21,6 @@ extension UIColor {
     static var darkBackground: UIColor {
         return Theme.primaryBackground
     }
-
-    static var darkerBackground: UIColor {
-        return UIColor.fromHex("251935")
-    }
     
     static var darkPromptBackground: UIColor {
         return UIColor.fromHex("3E334F")
