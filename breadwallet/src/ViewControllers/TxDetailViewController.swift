@@ -72,7 +72,13 @@ class TxDetailViewController: UIViewController, Subscriber {
         registerForKeyboardNotifications()
         
         // refresh if rate changes
-        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency]?.currentRate != $1[self.viewModel.currency]?.currentRate }, callback: { _ in self.reload() })
+        Store.lazySubscribe(self,
+                            selector: { [weak self] oldState, newState in
+                                guard let `self` = self else { return false }
+                                return oldState[self.viewModel.currency]?.currentRate != newState[self.viewModel.currency]?.currentRate },
+                            callback: { [weak self] _ in
+                                self?.reload()
+        })
         // refresh if tx state changes
         //TODO:CRYPTO hook up refresh logic to System/Wallet tx events IOS-1162
     }
