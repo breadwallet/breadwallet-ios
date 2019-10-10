@@ -23,7 +23,10 @@ class CoreDatabase {
     }
 
     func close() {
-        if db != nil { sqlite3_close(db) }
+        if db != nil {
+            sqlite3_close(db)
+            db = nil
+        }
     }
     
     func openDatabase(path: String) throws {
