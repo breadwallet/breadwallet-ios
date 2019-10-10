@@ -38,10 +38,10 @@ extension BRAPIClient {
                 if let archive = AssetArchive(name: name, apiClient: self) {
                     grp.enter()
                     archive.update(completionHandler: { (err) in
-                        objc_sync_enter(results)
-                        results[resIdx] = (name, err)
-                        objc_sync_exit(results)
-                        grp.leave()
+                        queue.async(flags: .barrier) {
+                            results[resIdx] = (name, err)
+                            grp.leave()
+                        }
                     })
                 }
             }
