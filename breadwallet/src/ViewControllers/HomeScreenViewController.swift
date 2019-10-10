@@ -56,6 +56,15 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         // There's already a lot going on, so don't show the home-screen prompts right away.
         return !Store.state.displayCurrencies.isEmpty
     }
+    
+    private lazy var totalAssetsNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.isLenient = true
+        formatter.numberStyle = .currency
+        formatter.generatesDecimalNumbers = true
+        formatter.negativeFormat = formatter.positiveFormat.replacingCharacters(in: formatter.positiveFormat.range(of: "#")!, with: "-#")
+        return formatter
+    }()
 
     // MARK: -
     
@@ -295,7 +304,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             self.saveEvent("experiment.buySellMenuButton", attributes: ["show": self.shouldShowBuyAndSell ? "true" : "false"])
         })
     }
-        
+    
     private func updateTotalAssets() {
         let fiatTotal: Decimal = Store.state.displayCurrencies.map {
             guard let balance = Store.state[$0]?.balance,
@@ -305,14 +314,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             return amount.fiatValue
             }.reduce(0.0, +)
         
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
+        totalAssetsNumberFormatter.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         
-        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
+        self.total.text = totalAssetsNumberFormatter.string(from: fiatTotal as NSDecimalNumber)
     }
     
     // MARK: Actions
