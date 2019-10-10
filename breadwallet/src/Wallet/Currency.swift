@@ -253,7 +253,7 @@ extension CurrencyMetaData: Codable {
         }
         self.uid = CurrencyId(rawValue: uid) //try container.decode(CurrencyId.self, forKey: .uid)
         code = try container.decode(String.self, forKey: .code)
-        var colorValues = try container.decode([String].self, forKey: .colors)
+        let colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
             colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         } else {
