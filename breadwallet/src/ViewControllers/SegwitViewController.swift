@@ -73,7 +73,7 @@ class SegwitViewController: UIViewController {
     }
     
     private func setInitialData() {
-        view.backgroundColor = .darkBackground
+        view.backgroundColor = Theme.primaryBackground
         view.clipsToBounds = true //Some subviews are placed just offscreen so they can be animated into view
         label.text = S.Segwit.confirmationInstructionsInstructions
         
