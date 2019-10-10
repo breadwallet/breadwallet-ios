@@ -156,7 +156,7 @@ class CoreSystem: Subscriber, Trackable {
     /// Re-sync blockchain from specified depth
     func rescan(walletManager: WalletManager, fromDepth depth: WalletManagerSyncDepth) {
         queue.async {
-            walletManager.connect(using: walletManager.customPeer)
+            guard walletManager.isConnected else { return assertionFailure() }
             walletManager.syncToDepth(depth: depth)
             DispatchQueue.main.async {
                 walletManager.network.currencies
@@ -681,6 +681,10 @@ extension WalletManager {
             let address = UserDefaults.customNodeIP else { return nil }
         let port = UInt16(UserDefaults.customNodePort ?? C.standardPort)
         return network.createPeer(address: address, port: port, publicKey: nil)
+    }
+    
+    var isConnected: Bool {
+        return state == .connected || state == .syncing
     }
 }
 
