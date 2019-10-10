@@ -194,10 +194,12 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         }
         
         Store.subscribe(self,
-                            selector: { $0[self.currency]?.currentRate != $1[self.currency]?.currentRate},
-                            callback: { [weak self] in
-                                guard let `self` = self, let rate = $0[self.currency]?.currentRate, !self.isScrubbing else { return }
-                                self.exchangeRateLabel.text = rate.localString(forCurrency: self.currency)
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.currency]?.currentRate != newState[self.currency]?.currentRate },
+                        callback: { [weak self] in
+                            guard let `self` = self, let rate = $0[self.currency]?.currentRate, !self.isScrubbing else { return }
+                            self.exchangeRateLabel.text = rate.localString(forCurrency: self.currency)
         })
         setGraphViewScrubbingCallbacks()
         chartView.shouldHideChart = { [unowned self] in
