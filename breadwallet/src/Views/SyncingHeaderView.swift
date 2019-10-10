@@ -62,22 +62,30 @@ class SyncingHeaderView: UIView, Subscriber {
             lineLoadingView.centerYAnchor.constraint(equalTo: separator.centerYAnchor),
             lineLoadingView.widthAnchor.constraint(equalTo: separator.widthAnchor)])
     }
-
+    
     private func setInitialState() {
         backgroundColor = .white
-
-        Store.subscribe(self, selector: { $0[self.currency]?.syncState != $1[self.currency]?.syncState },
-                        callback: { state in
-                            guard let syncState = state[self.currency]?.syncState else { return }
+        
+        Store.subscribe(self,
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.currency]?.syncState != newState[self.currency]?.syncState },
+                        callback: { [weak self] state in
+                            guard let `self` = self,
+                                let syncState = state[self.currency]?.syncState else { return }
                             self.syncState = syncState
         })
         
-        Store.subscribe(self, selector: { $0[self.currency]?.syncProgress != $1[self.currency]?.syncProgress ||
-            $0[self.currency]?.lastBlockTimestamp != $1[self.currency]?.lastBlockTimestamp
-        },
-                        callback: {
-                            self.lastBlockTimestamp = $0[self.currency]?.lastBlockTimestamp ?? 0
-                            if let progress = $0[self.currency]?.syncProgress {
+        Store.subscribe(self,
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.currency]?.syncProgress != newState[self.currency]?.syncProgress ||
+                                oldState[self.currency]?.lastBlockTimestamp != newState[self.currency]?.lastBlockTimestamp
+            },
+                        callback: { [weak self] state in
+                            guard let `self` = self else { return }
+                            self.lastBlockTimestamp = state[self.currency]?.lastBlockTimestamp ?? 0
+                            if let progress = state[self.currency]?.syncProgress {
                                 self.syncIndicator.progress = progress
                             }
         })
