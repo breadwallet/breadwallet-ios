@@ -199,7 +199,9 @@ struct NotificationAuthorizer: Trackable {
         alert.addAction(enableAction)
         alert.addAction(deferAction)
         
-        viewController.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            viewController.present(alert, animated: true, completion: nil)
+        }
     }
     
     private func showAlertForInitialAuthorization(fromViewController viewController: UIViewController,

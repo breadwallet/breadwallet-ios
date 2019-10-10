@@ -840,9 +840,8 @@ class ModalPresenter: Subscriber, Trackable {
                 }
                 return
             }
-            //TODO: ERC-681 support token transfer URIs
-            let scanCurrency = currency?.wallet?.networkCurrency
-            let vc = ScanViewController(forPaymentRequestForCurrency: scanCurrency, completion: { scanResult in
+            
+            let vc = ScanViewController(forPaymentRequestForCurrency: currency, completion: { scanResult in
                 scanCompletion(scanResult)
                 parent?.view.isFrameChangeBlocked = false
             })

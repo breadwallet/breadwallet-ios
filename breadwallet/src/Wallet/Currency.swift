@@ -120,6 +120,22 @@ class Currency: CurrencyWithIcon {
             return "\(scheme):\(address)"
         }
     }
+    
+    func shouldAcceptQRCodeFrom(_ currency: Currency, request: PaymentRequest) -> Bool {
+        if self == currency {
+            return true
+        }
+        
+        //Allows sending erc20 tokens to an Eth receive uri, but not the other way around
+        if self == Currencies.eth.instance
+            && currency.isERC20Token
+            && request.amount == nil //We shouldn't send tokens to an Eth request amount uri
+        {
+            return true
+        }
+        
+        return false
+    }
 
     // MARK: Init
 
@@ -253,7 +269,7 @@ extension CurrencyMetaData: Codable {
         }
         self.uid = CurrencyId(rawValue: uid) //try container.decode(CurrencyId.self, forKey: .uid)
         code = try container.decode(String.self, forKey: .code)
-        var colorValues = try container.decode([String].self, forKey: .colors)
+        let colorValues = try container.decode([String].self, forKey: .colors)
         if colorValues.count == 2 {
             colors = (UIColor.fromHex(colorValues[0]), UIColor.fromHex(colorValues[1]))
         } else {

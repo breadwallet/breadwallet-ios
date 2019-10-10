@@ -330,9 +330,6 @@ private class StartupScreen: UIViewController {
         logoBackground.addSubview(logo)
         view.addSubview(logoBackground)
         
-        logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
-                                            constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin)
-        
         logoBackground.constrain([
             logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
                                                 constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin),
