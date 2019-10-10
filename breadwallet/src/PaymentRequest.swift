@@ -24,6 +24,25 @@ extension PaymentProtocolRequest {
     }
 }
 
+private func parseString(_ string: String) -> NSURL? {
+    let string = string.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")
+    guard let url = NSURL(string: string) else { return nil }
+    return url
+}
+
+private func formatUrl(_ url: NSURL, forCurrency currency: Currency) -> NSURL? {
+    //If the url has a host, then it's a remote request
+    guard url.host == nil else { return nil }
+    
+    //make sure it's the right url Scheme
+    guard url.scheme == currency.urlScheme else { return nil }
+    
+    //convert url to a format that can be parsed by NSURL
+    //eg. bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu -> bitcoin://12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu
+    guard let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier else { return nil }
+    return NSURL(string: "\(scheme)://\(resourceSpecifier)")
+}
+
 struct PaymentRequest {
 
     // MARK: HTTP Headers
@@ -45,60 +64,71 @@ struct PaymentRequest {
     
     init?(string: String, currency: Currency) {
         self.currency = currency
-        if let url = NSURL(string: string.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).replacingOccurrences(of: " ", with: "%20")) {
-            if let scheme = url.scheme, let resourceSpecifier = url.resourceSpecifier, url.host == nil,
-                let url = NSURL(string: "\(scheme)://\(resourceSpecifier)"),
-                scheme == currency.urlScheme {
-                if let host = url.host {
-                    guard let address = Address.create(string: host, network: currency.network) else { return nil }
-                    toAddress = address
-                }
-                
-                //TODO: add support for ERC-681 token transfers, amount field, amount as scientific notation
-                if let components = url.query?.components(separatedBy: "&") {
-                    for component in components {
-                        let pair = component.components(separatedBy: "=")
-                        if pair.count < 2 { continue }
-                        let key = pair[0]
-                        var value = String(component[component.index(key.endIndex, offsetBy: 1)...])
-                        value = (value.replacingOccurrences(of: "+", with: " ") as NSString).removingPercentEncoding!
-                        
-                        switch key {
-                        case "amount":
-                            amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
-                        case "label", "memo":
-                            label = value
-                        case "message":
-                            message = value
-                        case "r":
-                            r = URL(string: value)
-                        default:
-                            print("Key not found: \(key)")
-                        }
-                    }
-                }
-                //Payment request must have either an r value or an address
-                if r == nil {
-                    guard toAddress != nil else { return nil }
-                    type = .local
-                } else {
-                    type = .remote
-                }
-                return
-            } else if url.scheme == "http" || url.scheme == "https" {
-                type = .remote
-                remoteRequest = url as URL
-                return
-            }
-        }
         
+        //Case: Incoming string is just a plain address
         if let address = Address.create(string: string, network: currency.network) {
             toAddress = address
             type = .local
             return
         }
         
-        return nil
+        //Case: Incoming string is a url
+        //By this stage, we know it's not an address, so if it's also
+        //not a url, it's unparsable
+        guard let rawUrl = parseString(string) else { return nil }
+        
+        //Case: Url is a remote request if the scheme is http or https
+        guard rawUrl.scheme != "http" && rawUrl.scheme != "https" else {
+            type = .remote
+            remoteRequest = rawUrl as URL
+            return
+        }
+        
+        //Case: Url has a crypto scheme
+        //eg. bitcoin:xxxxx or ethereum:xxxx
+        guard let url = formatUrl(rawUrl, forCurrency: currency) else { return nil }
+        
+        //The toAddress is always the host except for EIP-681 (erc20 transfer) uris
+        //where the toAddress is in the address param
+        if let host = url.host, !(url.path?.contains("transfer") == true) {
+            guard let address = Address.create(string: host, network: currency.network) else { return nil }
+            toAddress = address
+        }
+        
+        // Parse query params
+        if let queryParams = URLComponents(string: url.description)?.queryItems {
+            for param in queryParams {
+                guard let value = param.value else { break }
+                switch param.name {
+                case "amount":
+                    amount = Amount(tokenString: value, currency: currency, locale: Locale(identifier: "en_US"))
+                case "label", "memo":
+                    label = value
+                case "message":
+                    message = value
+                case "r":
+                    r = URL(string: value)
+                case "address":
+                    //ERC-681 - host should be the token address
+                    if url.host?.lowercased() == currency.tokenAddress?.lowercased() {
+                        toAddress = Address.create(string: value, network: currency.network)
+                    } else {
+                        return nil
+                    }
+                default:
+                    print("Unknown Key found: \(param.name)")
+                }
+            }
+        }
+        
+        //Payment request must have either an r value or an address
+        if r == nil {
+            guard toAddress != nil else { return nil }
+            type = .local
+        } else {
+            type = .remote
+        }
+
     }
 
     init?(data: Data, currency: Currency) {
@@ -154,9 +184,22 @@ struct PaymentRequest {
     }
 
     static func requestString(withAddress address: String, forAmount amount: Amount) -> String {
+        
+        //Create URI for address
         let amountString = amount.tokenUnformattedString(in: amount.currency.defaultUnit)
-        guard let uri = amount.currency.addressURI(address) else { return "" }
-        return "\(uri)?amount=\(amountString)"
+        guard let uriString = amount.currency.addressURI(address) else { return "" }
+        guard let uri = URL(string: uriString) else { return "" }
+        
+        //Append amount query item
+        guard var components = URLComponents(url: uri, resolvingAgainstBaseURL: false) else { return "" }
+        let amountItem = URLQueryItem(name: "amount", value: amountString)
+        if components.queryItems != nil {
+            components.queryItems?.append(amountItem)
+        } else {
+            components.queryItems = [amountItem]
+        }
+        
+        return components.url?.absoluteString ?? ""
     }
     
     static func postProtocolPayment(protocolRequest protoReq: PaymentProtocolRequest, transfer: Transfer, callback: @escaping (String) -> Void) {

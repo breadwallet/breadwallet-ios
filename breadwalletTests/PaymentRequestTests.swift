@@ -42,6 +42,20 @@ class PaymentRequestTests : XCTestCase {
         XCTAssertNotNil(request)
         XCTAssertTrue(request?.toAddress?.description == "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
     }
+    
+    func testERC20() {
+        let uri = "ethereum:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6/transfer?address=0x9c7C4bd7d9A37d68F5B6C95a475299D55cE09D35"
+        let request = PaymentRequest(string: uri, currency: TestCurrencies.brd)
+        XCTAssertNotNil(request)
+        XCTAssertTrue(request?.toAddress?.description == "0x9c7C4bd7d9A37d68F5B6C95a475299D55cE09D35")
+    }
+
+    func testERC20WithAmount() {
+        let uri = "ethereum:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6/transfer?address=0x9c7C4bd7d9A37d68F5B6C95a475299D55cE09D35&amount=5"
+        let request = PaymentRequest(string: uri, currency: TestCurrencies.brd)
+        XCTAssertNotNil(request)
+        XCTAssertTrue(request?.toAddress?.description == "0x9c7C4bd7d9A37d68F5B6C95a475299D55cE09D35")
+    }
 
     func testAmountInUriBTC() {
         let uri = "bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu?amount=1.2"
