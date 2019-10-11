@@ -34,11 +34,18 @@ class ReScanViewController: UIViewController, Subscriber {
         addConstraints()
         setInitialData()
         
-        Store.subscribe(self, selector: { $0[self.wallet.currency]?.syncState != $1[self.wallet.currency]?.syncState },
-                        callback: { state in
-                            guard let syncState = state[self.wallet.currency]?.syncState else { return }
-                            self.button.isEnabled = syncState == .success
-                            if syncState == .syncing {
+        Store.subscribe(self,
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.wallet.currency]?.syncState != newState[self.wallet.currency]?.syncState },
+                        callback: { [weak self] state in
+                            guard let `self` = self,
+                                let walletState = state[self.wallet.currency] else { return }
+                            let enabled = walletState.syncState == .success
+                                && walletState.isRescanning == false
+                                && (self.wallet.networkPrimaryWallet?.manager.isConnected ?? false)
+                            self.button.isEnabled = enabled
+                            if walletState.syncState == .syncing {
                                 self.button.title = S.SyncingView.syncing
                             } else {
                                 self.button.title = S.ReScan.buttonTitle

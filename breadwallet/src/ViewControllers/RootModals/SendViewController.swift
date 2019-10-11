@@ -118,8 +118,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        Store.subscribe(self, selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
-                        callback: { [unowned self] in
+        Store.subscribe(self,
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.currency]?.balance != newState[self.currency]?.balance },
+                        callback: { [weak self] in
+                            guard let `self` = self else { return }
                             if let balance = $0[self.currency]?.balance {
                                 self.balance = balance
                             }
