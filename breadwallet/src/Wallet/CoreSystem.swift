@@ -633,6 +633,11 @@ extension CoreSystem: SystemListener {
                     self.endActivity()
                 }
             }
+            
+        case .syncRecommended(let depth):
+            print("[SYS] \(manager.network) rescan recommended from \(depth)")
+            rescan(walletManager: manager, fromDepth: depth)
+            saveEvent("event.recommendRescan")
 
         case .blockUpdated: // (let height):
             break
@@ -709,6 +714,8 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "syncProgress(\(percentComplete))"
         case .syncEnded(let reason):
             return "syncEnded(\(reason))"
+        case .syncRecommended(let depth):
+            return "syncRecommended(\(depth))"
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
         }
