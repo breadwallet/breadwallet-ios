@@ -156,7 +156,7 @@ class CoreSystem: Subscriber, Trackable {
     /// Re-sync blockchain from specified depth
     func rescan(walletManager: WalletManager, fromDepth depth: WalletManagerSyncDepth) {
         queue.async {
-            walletManager.connect(using: walletManager.customPeer)
+            guard walletManager.isConnected else { return assertionFailure() }
             walletManager.syncToDepth(depth: depth)
             DispatchQueue.main.async {
                 walletManager.network.currencies
@@ -633,6 +633,11 @@ extension CoreSystem: SystemListener {
                     self.endActivity()
                 }
             }
+            
+        case .syncRecommended(let depth):
+            print("[SYS] \(manager.network) rescan recommended from \(depth)")
+            rescan(walletManager: manager, fromDepth: depth)
+            saveEvent("event.recommendRescan")
 
         case .blockUpdated: // (let height):
             break
@@ -682,6 +687,10 @@ extension WalletManager {
         let port = UInt16(UserDefaults.customNodePort ?? C.standardPort)
         return network.createPeer(address: address, port: port, publicKey: nil)
     }
+    
+    var isConnected: Bool {
+        return state == .connected || state == .syncing
+    }
 }
 
 extension WalletManagerEvent: CustomStringConvertible {
@@ -705,6 +714,8 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "syncProgress(\(percentComplete))"
         case .syncEnded(let reason):
             return "syncEnded(\(reason))"
+        case .syncRecommended(let depth):
+            return "syncRecommended(\(depth))"
         case .blockUpdated(let height):
             return "blockUpdated(\(height))"
         }

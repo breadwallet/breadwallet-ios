@@ -54,6 +54,13 @@ class SyncingIndicator: UIView {
         }
     }
     
+    private lazy var syncProgressNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
+    
     // MARK: Init
     
     init(style: SyncingIndicatorStyle) {
@@ -86,12 +93,8 @@ class SyncingIndicator: UIView {
             label.text = text
             return
         }
-
-        let nf = NumberFormatter()
-        nf.numberStyle = .percent
-        nf.maximumFractionDigits = 0
         
-        if syncState == .syncing, let percent = nf.string(from: NSNumber(value: progress)) {
+        if syncState == .syncing, let percent = syncProgressNumberFormatter.string(from: NSNumber(value: progress)) {
             label.text = "\(text) \(percent)"
         } else {
             label.text = text
