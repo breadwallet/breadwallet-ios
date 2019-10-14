@@ -9,20 +9,23 @@
 import UIKit
 
 func guardProtected(queue: DispatchQueue, callback: @escaping () -> Void) {
-    if UIApplication.shared.isProtectedDataAvailable {
-        callback()
-    } else {
-        var observer: Any?
-        observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil,
-                                                          using: { note in
-                                                            queue.async {
-                                                                callback()
-                                                            }
-                                                            if let observer = observer {
-                                                                NotificationCenter.default.removeObserver(observer)
-                                                            }
-        })
-    }
+    
+    DispatchQueue.main.async(execute: {
+        if UIApplication.shared.isProtectedDataAvailable {
+            callback()
+        } else {
+            var observer: Any?
+            observer = NotificationCenter.default.addObserver(forName: .UIApplicationProtectedDataDidBecomeAvailable, object: nil, queue: nil,
+                                                              using: { note in
+                                                                queue.async {
+                                                                    callback()
+                                                                }
+            if let observer = observer {
+                NotificationCenter.default.removeObserver(observer)
+            }
+            })
+        }
+    })
 }
 
 func strongify<Context: AnyObject>(_ context: Context, closure: @escaping(Context) -> Void) -> () -> Void {
