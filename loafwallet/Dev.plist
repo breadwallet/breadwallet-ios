@@ -4,25 +4,10 @@
 <dict>
 	<key></key>
 	<string></string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>UISupportsDocumentBrowser</key>
-	<string>NO</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -71,23 +56,23 @@
 			</dict>
 		</dict>
 	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to scan barcodes</string>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>CFBundleDisplayName</key>
-	<string>LoafWallet-Dev</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleVersion</key>
+	<string>65</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
 		<string>remote-notification</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to scan barcodes</string>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.3.6</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -121,45 +106,58 @@
 			</array>
 		</dict>
 	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Used to scan barcodes</string>
-	<key>CFBundleShortVersionString</key>
-	<string>2.3.6</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to Unlock app &amp; Authorize payments</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<string>NO</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>CircularPro-Bold.otf</string>
 		<string>CircularPro-Book.otf</string>
 		<string>CircularPro-Medium.otf</string>
 	</array>
-	<key>CFBundleVersion</key>
-	<string>42</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<string>NO</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>LoafWallet-Dev</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to scan barcodes</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Used to Unlock app &amp; Authorize payments</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -193,5 +191,7 @@
 			<string>Editor</string>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
 </dict>
 </plist>
