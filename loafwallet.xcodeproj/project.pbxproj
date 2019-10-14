@@ -215,7 +215,6 @@
 		1B86CE952091528B00BCE82E /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9611DF61FE0000F0016 /* SystemConfiguration.framework */; };
 		1B86CE962091528B00BCE82E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A95F1DF61FD8000F0016 /* CoreLocation.framework */; };
 		1B86CE972091528B00BCE82E /* PushKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A95D1DF61FD0000F0016 /* PushKit.framework */; };
-		1B86CE982091528B00BCE82E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA74B85206AD60A0083BD2A /* Fabric.framework */; };
 		1B86CE992091528B00BCE82E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA74B86206AD60A0083BD2A /* Crashlytics.framework */; };
 		1B86CE9A2091528B00BCE82E /* libbz2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22A9A9961DF63426000F0016 /* libbz2.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1B86CE9B2091528B00BCE82E /* sqlite3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 752FB04A1DF8BE6B009086FB /* sqlite3.framework */; };
@@ -243,8 +242,6 @@
 		1B86CF04209154FA00BCE82E /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE916E291EDA7E4400D641D6 /* Media.xcassets */; };
 		1B86CF05209154FA00BCE82E /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */; };
 		1B86CF10209154FB00BCE82E /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2A81E1DA5938500A983D8 /* NotificationService.swift */; };
-		1BA74B87206AD60A0083BD2A /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA74B85206AD60A0083BD2A /* Fabric.framework */; };
-		1BA74B88206AD60A0083BD2A /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1BA74B86206AD60A0083BD2A /* Crashlytics.framework */; };
 		1BA9C99C20916186005ADF44 /* TodayExtension-dev.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1B86CF0C209154FA00BCE82E /* TodayExtension-dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1BA9C99D20916191005ADF44 /* NotificationServiceExtension-dev.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1B86CF19209154FB00BCE82E /* NotificationServiceExtension-dev.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1BA9FE3D216F68A700BB2DE8 /* BRBech32.c in Sources */ = {isa = PBXBuildFile; fileRef = 1BA9FE3C216F68A700BB2DE8 /* BRBech32.c */; };
@@ -2066,7 +2063,6 @@
 				1B86CE952091528B00BCE82E /* SystemConfiguration.framework in Frameworks */,
 				1B86CE962091528B00BCE82E /* CoreLocation.framework in Frameworks */,
 				1B86CE972091528B00BCE82E /* PushKit.framework in Frameworks */,
-				1B86CE982091528B00BCE82E /* Fabric.framework in Frameworks */,
 				1B86CE992091528B00BCE82E /* Crashlytics.framework in Frameworks */,
 				1B86CE9A2091528B00BCE82E /* libbz2.framework in Frameworks */,
 				1B86CE9B2091528B00BCE82E /* sqlite3.framework in Frameworks */,
@@ -2138,8 +2134,6 @@
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
 				22A9A9601DF61FD8000F0016 /* CoreLocation.framework in Frameworks */,
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
-				1BA74B87206AD60A0083BD2A /* Fabric.framework in Frameworks */,
-				1BA74B88206AD60A0083BD2A /* Crashlytics.framework in Frameworks */,
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
 				752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */,
 				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
