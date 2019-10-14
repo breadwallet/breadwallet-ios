@@ -170,7 +170,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         ]
 
         swappedConstraints = [
-            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
+            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
             secondaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             equals.firstBaselineAnchor.constraint(equalTo: secondaryBalance.firstBaselineAnchor),
             equals.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
