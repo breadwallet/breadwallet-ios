@@ -4,10 +4,147 @@
 <dict>
 	<key></key>
 	<string></string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>LoafWallet-Dev</string>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Litecoin Payment Request</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>litecoin.paymentrequest</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Litecoin Payment</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>litecoin.payment</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeIconFiles</key>
+			<array/>
+			<key>CFBundleTypeName</key>
+			<string>Litecoin Payment ACK</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>litecoin.paymentack</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
 	<key>CFBundleName</key>
 	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.4.0</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>litecoin</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>litecoin</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.litecoin.loafwallet</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>loaf</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>liteid</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>liteid</string>
+			</array>
+		</dict>
+	</array>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<string>NO</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Used to scan barcodes</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Used to Unlock app &amp; Authorize payments</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Used to scan barcodes</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>CircularPro-Bold.otf</string>
+		<string>CircularPro-Book.otf</string>
+		<string>CircularPro-Medium.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<string>NO</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -15,10 +152,10 @@
 			<array>
 				<string>public.data</string>
 			</array>
-			<key>UTTypeIdentifier</key>
-			<string>litecoin.paymentrequest</string>
 			<key>UTTypeDescription</key>
 			<string>Litecoin Payment Request</string>
+			<key>UTTypeIdentifier</key>
+			<string>litecoin.paymentrequest</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
@@ -30,10 +167,10 @@
 			<array>
 				<string>public.data</string>
 			</array>
-			<key>UTTypeIdentifier</key>
-			<string>litecoin.payment</string>
 			<key>UTTypeDescription</key>
 			<string>Litecoin Payment</string>
+			<key>UTTypeIdentifier</key>
+			<string>litecoin.payment</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
@@ -45,10 +182,10 @@
 			<array>
 				<string>public.data</string>
 			</array>
-			<key>UTTypeIdentifier</key>
-			<string>litecoin.paymentack</string>
 			<key>UTTypeDescription</key>
 			<string>Litecoin Payment ACK</string>
+			<key>UTTypeIdentifier</key>
+			<string>litecoin.paymentack</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.mime-type</key>
@@ -56,142 +193,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
-	<key>CFBundleVersion</key>
-	<string>65</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>remote-notification</string>
-	</array>
-	<key>NSCameraUsageDescription</key>
-	<string>Used to scan barcodes</string>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
-	<key>CFBundleShortVersionString</key>
-	<string>2.3.6</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Litecoin Payment Request</string>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>litecoin.paymentrequest</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Litecoin Payment</string>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>litecoin.payment</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Litecoin Payment ACK</string>
-			<key>CFBundleTypeIconFiles</key>
-			<array/>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>litecoin.paymentack</string>
-			</array>
-		</dict>
-	</array>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Used to Unlock app &amp; Authorize payments</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UISupportsDocumentBrowser</key>
-	<string>NO</string>
-	<key>UIRequiresFullScreen</key>
-	<true/>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>CircularPro-Bold.otf</string>
-		<string>CircularPro-Book.otf</string>
-		<string>CircularPro-Medium.otf</string>
-	</array>
-	<key>LSSupportsOpeningDocumentsInPlace</key>
-	<string>NO</string>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-	<key>CFBundleDisplayName</key>
-	<string>LoafWallet-Dev</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Used to scan barcodes</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>litecoin</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>litecoin</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-		</dict>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>com.litecoin.loafwallet</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>loaf</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-		</dict>
-		<dict>
-			<key>CFBundleURLName</key>
-			<string>liteid</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>liteid</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-		</dict>
-	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to determine the closest node to you - never recorded or shared with anyone</string>
 </dict>
 </plist>
