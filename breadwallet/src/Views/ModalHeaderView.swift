@@ -93,6 +93,7 @@ class ModalHeaderView: UIView {
             faq?.tintColor = .white
         case .dark:
             border.backgroundColor = .secondaryShadow
+            faq?.tintColor = .lightGray
         case .transaction:
             titleLabel.font = .customBody(size: 16.0)
             titleLabel.textColor = .darkGray
