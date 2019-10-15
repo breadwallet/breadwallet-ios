@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1B86CDBC2091528B00BCE82E"
-               BuildableName = "loafwallet-dev.app"
+               BuildableName = "Litewallet-Dev.app"
                BlueprintName = "loafwallet-dev"
                ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
@@ -27,19 +27,17 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B86CDBC2091528B00BCE82E"
-            BuildableName = "loafwallet-dev.app"
+            BuildableName = "Litewallet-Dev.app"
             BlueprintName = "loafwallet-dev"
             ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Development"
@@ -56,13 +54,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B86CDBC2091528B00BCE82E"
-            BuildableName = "loafwallet-dev.app"
+            BuildableName = "Litewallet-Dev.app"
             BlueprintName = "loafwallet-dev"
             ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -75,7 +71,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1B86CDBC2091528B00BCE82E"
-            BuildableName = "loafwallet-dev.app"
+            BuildableName = "Litewallet-Dev.app"
             BlueprintName = "loafwallet-dev"
             ReferencedContainer = "container:loafwallet.xcodeproj">
          </BuildableReference>
