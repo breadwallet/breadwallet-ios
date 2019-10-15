@@ -13,6 +13,8 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Litecoin Payment Request</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>litecoin.paymentrequest</string>
@@ -23,6 +25,8 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Litecoin Payment</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>litecoin.payment</string>
@@ -33,6 +37,8 @@
 			<array/>
 			<key>CFBundleTypeName</key>
 			<string>Litecoin Payment ACK</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>litecoin.paymentack</string>
