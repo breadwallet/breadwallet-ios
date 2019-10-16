@@ -360,12 +360,9 @@ class ModalPresenter: Subscriber, Trackable {
                 top.present(alert, animated: true, completion: nil)
                 
             case .privateKey:
-                //TODO:CRYPTO scan private key
-                break
-//                if let walletManager = self.walletManagers[Currencies.btc.code] as? BTCWalletManager {
-//                    self.presentKeyImport(walletManager: walletManager, scanResult: scanResult)
-//                }
-
+                if let wallet = Currencies.btc.instance?.wallet {
+                    self.presentKeyImport(wallet: wallet, scanResult: scanResult)
+                }
             case .deepLink(let url):
                 if let params = url.queryParameters,
                     let pubKey = params["publicKey"],
