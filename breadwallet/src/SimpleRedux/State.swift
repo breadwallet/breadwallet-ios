@@ -35,10 +35,6 @@ struct State {
     var currencies: [Currency] {
         return orderedWallets.map { $0.currency }
     }
-
-    var displayCurrencies: [Currency] {
-        return orderedWallets.filter { $0.displayOrder >= 0 }.map { $0.currency }
-    }
     
     var shouldShowBuyNotificationForDefaultCurrency: Bool {
         switch defaultCurrencyCode {
