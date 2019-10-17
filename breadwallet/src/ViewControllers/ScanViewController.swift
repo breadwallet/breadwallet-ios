@@ -40,7 +40,8 @@ class ScanViewController: UIViewController, Trackable {
     fileprivate var currentUri = ""
     private var toolbarHeightConstraint: NSLayoutConstraint?
     private let toolbarHeight: CGFloat = 48.0
-
+    private var hasCompleted = false
+    
     init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
         self.paymentRequestCurrencyRestriction = currencyRestriction
@@ -206,9 +207,12 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         
         guide.state = .positive
         
-        saveScanEvent(result)
-        
+        //handleURI can be called many times, so we
+        //need to make sure the completion block only gets called once
+        guard !hasCompleted else { return }
+        hasCompleted = true
         // add a small delay so the green guide will be seen
+        saveScanEvent(result)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
             self.dismiss(animated: true, completion: {
                 self.completion(result)
