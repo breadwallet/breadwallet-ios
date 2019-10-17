@@ -614,6 +614,7 @@ extension CoreSystem: SystemListener {
                     syncState = .connecting
                     // retry by reconnecting
                     self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
+                        guard UIApplication.shared.applicationState == .active else { return }
                         manager.connect(using: manager.customPeer)
                     }
                 }
