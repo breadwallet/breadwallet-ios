@@ -82,10 +82,12 @@ extension TxDetailViewModel {
         transactionHash = tx.hash
         self.tx = tx
 
-        var feeAmount = tx.fee
-        feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
-        feeAmount.rate = rate
-        fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
+        if tx.direction == .sent {
+            var feeAmount = tx.fee
+            feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
+            feeAmount.rate = rate
+            fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
+        }
 
         //TODO:CRYPTO incoming token transfers have a feeBasis with 0 values
         if let feeBasis = tx.feeBasis,
