@@ -28,7 +28,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupAddWalletButton()
-        if Store.state.displayCurrencies.isEmpty {
+        if Store.state.wallets.isEmpty {
             showLoadingState(true)
         }
     }
@@ -85,7 +85,7 @@ class AssetListTableView: UITableViewController, Subscriber {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.displayCurrencies.forEach { currency in
+            $0.wallets.values.map { $0.currency }.forEach { currency in
                 if oldState[currency]?.balance != newState[currency]?.balance
                     || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate {
                     result = true
@@ -97,7 +97,7 @@ class AssetListTableView: UITableViewController, Subscriber {
         })
         
         Store.lazySubscribe(self, selector: {
-            $0.displayCurrencies.map { $0.code } != $1.displayCurrencies.map { $0.code }
+            $0.currencies.map { $0.code } != $1.currencies.map { $0.code }
         }, callback: { _ in
             self.reload()
         })
@@ -123,11 +123,11 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Store.state.displayCurrencies.count
+        return Store.state.currencies.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let currency = Store.state.displayCurrencies[indexPath.row]
+        let currency = Store.state.currencies[indexPath.row]
         let viewModel = HomeScreenAssetViewModel(currency: currency)
         
         let cellIdentifier = (shouldHighlightCell(for: currency) ? HomeScreenCellIds.highlightableCell : HomeScreenCellIds.regularCell).rawValue
@@ -147,7 +147,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     // MARK: - Delegate
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let currency = Store.state.displayCurrencies[indexPath.row]
+        let currency = Store.state.currencies[indexPath.row]
         didSelectCurrency?(currency)
         handleCellHighlightingOnSelect(indexPath: indexPath, currency: currency)
     }
