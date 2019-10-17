@@ -217,7 +217,6 @@ class ApplicationController: Subscriber, Trackable {
     }
 
     func didEnterBackground() {
-        beginBackgroundTask()
         disconnect()
         //Save the backgrounding time if the user is logged in
         if !Store.state.isLoginRequired {
@@ -227,7 +226,6 @@ class ApplicationController: Subscriber, Trackable {
         Backend.kvStore?.syncAllKeys { error in
             print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
             Store.trigger(name: .didSyncKVStore)
-            self.endBackgroundTask()
         }
     }
     
