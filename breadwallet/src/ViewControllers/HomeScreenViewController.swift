@@ -54,7 +54,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     var okToShowPrompts: Bool {
         // On the initial display we need to load the walletes in the asset list table view first.
         // There's already a lot going on, so don't show the home-screen prompts right away.
-        return !Store.state.displayCurrencies.isEmpty
+        return !Store.state.wallets.isEmpty
     }
     
     private lazy var totalAssetsNumberFormatter: NumberFormatter = {
@@ -274,7 +274,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.displayCurrencies.forEach { currency in
+            $0.wallets.values.map { $0.currency }.forEach { currency in
                 result = result || oldState[currency]?.balance != newState[currency]?.balance
                 result = result || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
             }
@@ -306,13 +306,13 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func updateTotalAssets() {
-        let fiatTotal: Decimal = Store.state.displayCurrencies.map {
-            guard let balance = Store.state[$0]?.balance,
-                let rate = Store.state[$0]?.currentRate else { return 0.0 }
+        let fiatTotal: Decimal = Store.state.wallets.values.map {
+            guard let balance = $0.balance,
+                let rate = $0.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
                                 rate: rate)
             return amount.fiatValue
-            }.reduce(0.0, +)
+        }.reduce(0.0, +)
         
         totalAssetsNumberFormatter.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         

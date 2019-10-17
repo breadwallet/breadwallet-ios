@@ -99,17 +99,23 @@ extension BRAPIClient {
         let request = URLRequest(url: period.urlForCode(code: forCode))
         dataTaskWithRequest(request, handler: { data, _, error in
             guard error == nil, let data = data else { callback(.unavailable); return }
-            let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .secondsSince1970
-            do {
-                let response = try decoder.decode(HistoryResponseContainer.self, from: data)
-                callback(.success(reduceDataSize(array: response.Data, byFactor: period.reductionFactor)))
-            } catch {
-                callback(.unavailable)
+            DispatchQueue.global(qos: .utility).async {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .secondsSince1970
+                do {
+                    let response = try decoder.decode(HistoryResponseContainer.self, from: data)
+                    let reduced = reduceDataSize(array: response.Data, byFactor: period.reductionFactor)
+                    DispatchQueue.main.async {
+                        callback(.success(reduced))
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        callback(.unavailable)
+                    }
+                }
             }
         }).resume()
     }
-    
 }
 
 //Reduces the size of an array by a factor.
