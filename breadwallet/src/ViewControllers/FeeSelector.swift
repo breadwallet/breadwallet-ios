@@ -22,11 +22,11 @@ enum FeeLevel: Int {
         
         switch self {
         case .economy:
-            return Int(C.secondsInMinute) * 60 * 10 * 1000 //10 hrs
+            return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
         case .regular:
-            return Int(C.secondsInMinute) * 60 * 1000 //60 mins
+            return Int(C.secondsInMinute) * 50 * 1000 //50 mins
         case .priority:
-            return 0
+            return Int(C.secondsInMinute) * 10 * 1000 //10 mins
         }
     }
 }
