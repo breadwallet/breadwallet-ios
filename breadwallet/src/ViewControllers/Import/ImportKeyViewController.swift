@@ -54,8 +54,8 @@ class ImportKeyViewController: UIViewController, Subscriber {
         setInitialData()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         if let code = initialQRCode {
             handleScanResult(code)
             

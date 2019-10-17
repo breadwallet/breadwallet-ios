@@ -343,14 +343,19 @@ class CoreSystem: Subscriber, Trackable {
             }
         }
 
-        activeManagers.forEach {
-            print("[SYS] connecting \($0.network.currency.code) wallet manager")
-            $0.connect(using: $0.customPeer)
-        }
+        // These connect() and disconnect() calls can block for up to 20 seconds which
+        // blocks updating the display currencies when they change.
+        // TODO: remove the async call once the disconnect() bug has been fixed.
+        DispatchQueue.global(qos: .utility).async {
+            activeManagers.forEach {
+                print("[SYS] connecting \($0.network.currency.code) wallet manager")
+                $0.connect(using: $0.customPeer)
+            }
 
-        inactiveManagers.forEach {
-            print("[SYS] disconnecting \($0.network.currency.code) wallet manager")
-            $0.disconnect()
+            inactiveManagers.forEach {
+                print("[SYS] disconnecting \($0.network.currency.code) wallet manager")
+                $0.disconnect()
+            }
         }
     }
 
@@ -609,6 +614,7 @@ extension CoreSystem: SystemListener {
                     syncState = .connecting
                     // retry by reconnecting
                     self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
+                        guard UIApplication.shared.applicationState == .active else { return }
                         manager.connect(using: manager.customPeer)
                     }
                 }
