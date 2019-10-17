@@ -595,30 +595,34 @@ extension CoreSystem: SystemListener {
             }
 
         case .syncEnded(let reason):
-            DispatchQueue.main.async {
-                var syncState: SyncState
-                var isComplete: Bool = false
+            var syncState: SyncState
+            var isComplete: Bool = false
+            
+            switch reason {
+            case .complete, .unknown:
+                syncState = .success
+                isComplete = true
                 
-                switch reason {
-                case .complete, .unknown:
-                    syncState = .success
-                    isComplete = true
-                        
-                case .requested: // disconnect/background
-                    syncState = .connecting
-                    
-                case .posix(let errno, let message):
-                    let messagePayload = "\(message ?? "") (\(errno))"
-                    print("[SYS] \(manager.network) sync error: \(messagePayload)")
-                    self.saveEvent("event.syncErrorMessage", attributes: ["network": manager.network.currency.code, "message": messagePayload])
-                    syncState = .connecting
-                    // retry by reconnecting
-                    self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
-                        guard UIApplication.shared.applicationState == .active else { return }
-                        manager.connect(using: manager.customPeer)
-                    }
+            case .requested: // disconnect/background
+                syncState = .connecting
+                
+            case .posix(let errno, let message):
+                let messagePayload = "\(message ?? "") (\(errno))"
+                print("[SYS] \(manager.network) sync error: \(messagePayload)")
+                self.saveEvent("event.syncErrorMessage", attributes: ["network": manager.network.currency.code, "message": messagePayload])
+                syncState = .connecting
+                // retry by reconnecting
+                self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
+                    guard UIApplication.shared.applicationState == .active else { return }
+                    manager.connect(using: manager.customPeer)
                 }
-                
+            }
+            
+            let syncingCount = system.managers
+                .filter { $0.mode == .p2p_only }
+                .filter { $0.state == .syncing || $0.state == .created }.count
+            
+            DispatchQueue.main.async {
                 manager.network.currencies.compactMap { self.currencies[$0.uid] }.forEach {
                     if isComplete {
                         Store.perform(action: WalletChange($0).setIsRescanning(false))
@@ -632,9 +636,6 @@ extension CoreSystem: SystemListener {
                 // If there are no more p2p wallets syncing, hide
                 // the network activity indicator and resume
                 // the idle timer
-                let syncingCount = system.managers
-                    .filter { $0.mode == .p2p_only }
-                    .filter { $0.state == .syncing || $0.state == .created }.count
                 if syncingCount == 0 {
                     self.endActivity()
                 }
