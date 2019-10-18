@@ -33,7 +33,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
-
+ 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -51,10 +51,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let amountView: AmountViewController
     private let addressCell = AddressCell()
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
+    private let donationCell = DonationCell()
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
-    private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
     private var amount: Satoshis?
@@ -67,6 +67,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
+        view.addSubview(donationCell)
         view.addSubview(descriptionCell)
         view.addSubview(sendButton)
 
@@ -78,16 +79,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 amountView.view.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
+        
+        donationCell.constrain([
+                  donationCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
+                  donationCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+                  donationCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
+                  donationCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
 
         descriptionCell.constrain([
             descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
-            descriptionCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+            descriptionCell.topAnchor.constraint(equalTo: donationCell.bottomAnchor),
             descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
             descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
 
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
-
+      
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),

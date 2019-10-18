@@ -79,6 +79,7 @@ class ModalViewController : UIViewController, Subscriber {
         view.layoutIfNeeded()
 
         let height = scrollViewContent.bounds.size.height
+        print("HEIGHT of SCROLLVIEW \(height)")
         let minHeight = scrollView.heightAnchor.constraint(greaterThanOrEqualToConstant: height)
         let midHeight = scrollView.heightAnchor.constraint(equalTo: scrollViewContent.heightAnchor)
         let maxHeight = scrollView.heightAnchor.constraint(lessThanOrEqualTo: view.heightAnchor, constant: -headerHeight)

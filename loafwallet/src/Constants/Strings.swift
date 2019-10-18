@@ -533,6 +533,12 @@ enum S {
         static let errorMessage = NSLocalizedString("BitID.errorMessage", value: "Please check with the service. You may need to try again.", comment: "BitID error alert messaage")
 
     }
+    
+    enum Donate {
+        static let title = NSLocalizedString("Donate.title", value: "Donate", comment: "Donate to the Litecoin Foundation")
+        static let message = NSLocalizedString("Donate.message", value: "Your contribution will fund improvements and maintainentance of Litewallet and it's infrastructure.", comment: "Donate to the Litecoin Foundation")
+        
+    }
 
     enum WipeWallet {
         static let title = NSLocalizedString("WipeWallet.title", value: "Start or Recover Another Wallet", comment: "Wipe wallet navigation item title.")
