@@ -33,10 +33,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
-        self.donationCell = DonationCell(store: store, wantsToDonate: true, didSwitchToDonate: {
-            //
-           // print(self.donationCell.donationSwitch.isOn)
-        })
+        self.donationCell = DonationCell(store: store, wantsToDonate: true)
+         
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -66,16 +64,17 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
-
+    private var wantsToDonate: Bool = false
+    private var donationAmount: Satoshis?
+    
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
         view.addSubview(donationCell)
         view.addSubview(descriptionCell)
         view.addSubview(sendButton)
-
+        
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
-
         addChildViewController(amountView, layout: {
             amountView.view.constrain([
                 amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -128,6 +127,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+         
         descriptionCell.didReturn = { textView in
             textView.resignFirstResponder()
         }
@@ -141,7 +141,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             self?.handleRequest(request)
         }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
-            return self?.balanceTextForAmount(amount: amount, rate: rate)
+            if let wantsToDonate = self?.wantsToDonate {
+                return self?.balanceTextForAmount(amount: amount, wantsToDonate: wantsToDonate, rate: rate)
+            }
+            return nil
         }
 
         amountView.didUpdateAmount = { [weak self] amount in
@@ -166,16 +169,50 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.addressCell.textField.resignFirstResponder()
             }
         }
+        
+        donationCell.isLTCSwapped = store.state.isLtcSwapped
+        
+        donationCell.didSwitchToDonate = { wantsToDonate in
+            self.wantsToDonate = wantsToDonate
+            
+            
+            
+            if let rate = self.store.state.currentRate{
+                
+                //self?.balanceTextForAmount(amount: Satoshis(rawValue: balance), wantsToDonate: self!.wantsToDonate, rate: rate)
+            }
+        }
+        
+        amountView.didShowFiat = { isLTCSwapped in
+            
+            var donationText = ""
+           
+            if isLTCSwapped {
+                donationText = "0.009\n" + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
+            } else {
+                if let rate  = self.store.state.currentRate {
+                let donationAmount = rate.rate * 0.009
+                donationText = String(format:"%.2f", donationAmount) + "\n\(rate.code) (\(rate.currencySymbol))"
+                }
+            }
+              
+            self.donationCell.donationAmountLabel.text = donationText
+        }
+        
     }
 
-    private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
+    private func balanceTextForAmount(amount: Satoshis?, wantsToDonate: Bool, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
+        
+        print("balance:\(balance)")
         let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
+        
         if let amount = amount, amount.rawValue > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
+             
             let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)

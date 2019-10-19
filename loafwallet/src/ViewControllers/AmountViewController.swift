@@ -30,6 +30,7 @@ class AmountViewController : UIViewController, Trackable {
     var balanceTextForAmount: ((Satoshis?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Satoshis?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
+    var didShowFiat: ((_ isShowingFiat: Bool)  -> ())?
 
     var currentOutput: String {
         return amountLabel.text ?? ""
@@ -355,10 +356,13 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     private func updateCurrencyToggleTitle() {
+         
         if let rate = selectedRate {
             self.currencyToggle.title = "\(rate.code) (\(rate.currencySymbol))"
+            self.didShowFiat?(false)
         } else {
             self.currencyToggle.title = S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            self.didShowFiat?(true)
         }
     }
 
