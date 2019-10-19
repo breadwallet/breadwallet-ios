@@ -312,8 +312,6 @@
 		24AF00FE221B331D00FF636F /* WarningConfirmation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */; };
 		24AF0100221B349100FF636F /* WarningConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */; };
 		24AF0101221B349100FF636F /* WarningConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */; };
-		24B7299223598B37007F3283 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B7299123598B37007F3283 /* DonateViewController.swift */; };
-		24B7299323598B37007F3283 /* DonateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B7299123598B37007F3283 /* DonateViewController.swift */; };
 		24B7299523599540007F3283 /* DonationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B7299423599540007F3283 /* DonationCell.swift */; };
 		24B7299623599540007F3283 /* DonationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B7299423599540007F3283 /* DonationCell.swift */; };
 		24B8FAC12160497C00A155B1 /* BuyCenterTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */; };
@@ -1135,7 +1133,6 @@
 		24A6DCFA2230BD9000505F44 /* WipeEmptyWalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WipeEmptyWalletViewController.swift; sourceTree = "<group>"; };
 		24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = WarningConfirmation.storyboard; sourceTree = "<group>"; };
 		24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WarningConfirmationViewController.swift; sourceTree = "<group>"; };
-		24B7299123598B37007F3283 /* DonateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonateViewController.swift; sourceTree = "<group>"; };
 		24B7299423599540007F3283 /* DonationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DonationCell.swift; sourceTree = "<group>"; };
 		24B8FAC02160497B00A155B1 /* BuyCenterTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuyCenterTableViewController.swift; sourceTree = "<group>"; };
 		24B8FAC3216128A000A155B1 /* PartnerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnerData.swift; sourceTree = "<group>"; };
@@ -3282,7 +3279,6 @@
 			isa = PBXGroup;
 			children = (
 				24B7299423599540007F3283 /* DonationCell.swift */,
-				24B7299123598B37007F3283 /* DonateViewController.swift */,
 				75A2A7921DA5934300A983D8 /* loafwallet */,
 				75A2A7A71DA5934300A983D8 /* loafwalletTests */,
 				75A2A7B21DA5934300A983D8 /* loafwalletUITests */,
@@ -4774,7 +4770,6 @@
 				1B86CE012091528B00BCE82E /* ClearNumberPad.swift in Sources */,
 				1B86CE022091528B00BCE82E /* SyncingView.swift in Sources */,
 				1B86CE032091528B00BCE82E /* UIView+BRWAdditions.swift in Sources */,
-				24B7299223598B37007F3283 /* DonateViewController.swift in Sources */,
 				1B86CE042091528B00BCE82E /* UIView+InitAdditions.swift in Sources */,
 				1B86CE052091528B00BCE82E /* SendViewController.swift in Sources */,
 				1B86CE062091528B00BCE82E /* StartPaperPhraseViewController.swift in Sources */,
@@ -5244,7 +5239,6 @@
 				CEC6AA491DEFD00100EE5AFD /* MenuButton.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
-				24B7299323598B37007F3283 /* DonateViewController.swift in Sources */,
 				CECCE5B21E04B00D00D99448 /* SendCell.swift in Sources */,
 				24B8FAD22162B10200A155B1 /* BuyCenterWebViewController.swift in Sources */,
 				CE6DCC301E6666470044257B /* NonScrollingCollectionView.swift in Sources */,

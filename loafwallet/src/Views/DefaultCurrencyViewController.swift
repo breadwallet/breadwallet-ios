@@ -51,6 +51,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         store.subscribe(self, selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode }, callback: {
             self.defaultCurrencyCode = $0.defaultCurrencyCode
+            
         })
         store.subscribe(self, selector: { $0.maxDigits != $1.maxDigits }, callback: { _ in
             self.setExchangeRateLabel()
@@ -77,6 +78,7 @@ class DefaultCurrencyViewController : UITableViewController, Subscriber {
             let bitsAmount = Amount(amount: C.satoshis, rate: currentRate, maxDigits: store.state.maxDigits)
             rateLabel.textColor = .darkText
             rateLabel.text = "\(bitsAmount.bits) = \(amount.string(forLocal: currentRate.locale))"
+            
         }
     }
 

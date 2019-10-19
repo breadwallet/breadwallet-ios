@@ -221,8 +221,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let oneLTCPlaceholder = Amount(amount: 1000000, rate: rate, maxDigits: $0.maxDigits)
+
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.ltcFormat
+                                self.currentLTCValueLabel.formatter = oneLTCPlaceholder.localFormat
                             }
                             self.exchangeRate = $0.currentRate
                         })
@@ -232,8 +235,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let oneLTCPlaceholder = Amount(amount: 1000000, rate: rate, maxDigits: $0.maxDigits)
+                                
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.ltcFormat
+                                self.currentLTCValueLabel.formatter = oneLTCPlaceholder.localFormat
                                 self.setBalances()
                             }
         })
@@ -251,10 +257,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setBalances() {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
-        let singleLtcAmount = Amount(amount: 100000000, rate: rate, maxDigits: store.state.maxDigits)
+        let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
 
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
+            let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
+
             NSLayoutConstraint.deactivate(isLtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
             primaryBalance.setValue(amount.amountForLtcFormat)
@@ -294,6 +302,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 }
                 myself.hideExtraViews()
             })
+            
+            currentLTCValueLabel.setValue(singleLtcAmount.localAmount)
+
         }
     }
 
