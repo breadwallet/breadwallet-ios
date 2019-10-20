@@ -64,7 +64,7 @@ struct PaymentRequest {
     }
 
     init?(data: Data) {
-        self.paymentProtoclRequest = PaymentProtocolRequest(data: data)
+        self.paymentProtocolRequest = PaymentProtocolRequest(data: data)
         type = .local
     }
 
@@ -110,7 +110,7 @@ struct PaymentRequest {
     var label: String?
     var message: String?
     var remoteRequest: NSURL?
-    var paymentProtoclRequest: PaymentProtocolRequest?
+    var paymentProtocolRequest: PaymentProtocolRequest?
     var r: URL?
 }
 
