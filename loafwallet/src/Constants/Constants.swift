@@ -9,6 +9,8 @@
 import UIKit
 
 let π: CGFloat = .pi
+let kDonationAmount = 0.009
+let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
 
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
@@ -16,6 +18,11 @@ struct Padding {
             return CGFloat(multiplier) * 8.0
         }
     }
+}
+
+struct DonationAddress {
+    
+    static let firstLF: String = kDonationAddress1
 }
 
 struct C {
