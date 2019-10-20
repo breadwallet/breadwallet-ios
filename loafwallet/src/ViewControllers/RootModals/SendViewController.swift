@@ -14,7 +14,7 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
-
+ 
 class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
 
     //MARK - Public
@@ -34,7 +34,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
         self.donationCell = DonationCell(store: store, wantsToDonate: true)
-         
+        self.donationAmount = Satoshis(rawValue: UInt64(kDonationAmount))
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -59,13 +59,13 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
     private var amount: Satoshis?
+    private var donationAmount: Satoshis?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
-    private var wantsToDonate: Bool = false
-    private var donationAmount: Satoshis?
+    private var wantsToDonate: Bool = true
     
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -174,36 +174,31 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         donationCell.didSwitchToDonate = { wantsToDonate in
             self.wantsToDonate = wantsToDonate
-            
-            
-            
-            if let rate = self.store.state.currentRate{
-                
-                //self?.balanceTextForAmount(amount: Satoshis(rawValue: balance), wantsToDonate: self!.wantsToDonate, rate: rate)
-            }
         }
         
         amountView.didShowFiat = { isLTCSwapped in
             
             var donationText = ""
-           
             if isLTCSwapped {
-                donationText = "0.009\n" + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
+                donationText = "\(kDonationAmount) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
             } else {
                 if let rate  = self.store.state.currentRate {
-                let donationAmount = rate.rate * 0.009
-                donationText = String(format:"%.2f", donationAmount) + "\n\(rate.code) (\(rate.currencySymbol))"
+                
+                    
+                    let dbl  = Double(kDonationAmount/1000000)
+                donationText = String(format:"%.2f", rate.rate * dbl) + " \(rate.code) (\(rate.currencySymbol))"
                 }
             }
               
             self.donationCell.donationAmountLabel.text = donationText
         }
-        
     }
 
     private func balanceTextForAmount(amount: Satoshis?, wantsToDonate: Bool, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        
-        print("balance:\(balance)")
+          
+        print("donation balance \(Satoshis(rawValue: UInt64(kDonationAmount)))")
+        print("amount balance \(Satoshis(rawValue: balance))")
+
         let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
@@ -285,17 +280,44 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
+        guard let amount = amount else {
+            NSLog("ERROR: Amount not set")
+            return
+        }
+        
+        if sender.donationTransaction == nil && wantsToDonate {
 
-        guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+            guard let donationAmount = donationAmount else {
+                NSLog("ERROR: Donation Amount not set")
+                return
+            }
+            guard donationAmount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+            }
+            guard sender.createDonationTransaction(amount: donationAmount.rawValue) else {
+                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+            }
+        }
+
+        guard let donationAmount = donationAmount else {
+            NSLog("ERROR: Donation Amount not set")
+            return
+        }
+        print(wantsToDonate)
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics, wantsToDonate: wantsToDonate, donationAmount: donationAmount)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
-                self.send()
+                if self.wantsToDonate {
+                    self.sendDonation()
+                } else {
+                    self.send()
+                }
             })
         }
         confirm.cancelCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.sender.transaction = nil
+                self.sender.donationTransaction = nil
             })
         }
         confirmTransitioningDelegate.shouldShowMaskView = false
@@ -323,7 +345,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             request.fetchRemoteRequest(completion: { [weak self] request in
                 DispatchQueue.main.async {
                     loadingView.dismiss(animated: true, completion: {
-                        if let paymentProtocolRequest = request?.paymentProtoclRequest {
+                        if let paymentProtocolRequest = request?.paymentProtocolRequest {
                             self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
                         } else {
                             self?.showErrorMessage(S.Send.remoteRequestError)
@@ -334,10 +356,58 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
 
-    private func send() {
+    
+    private func sendDonation() {
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
 
+      //  sender.createDonationTransaction(amount: <#T##UInt64#>)
+     //   sender.createDonationTransaction(forPaymentProtocol: <#T##PaymentProtocolRequest#>)
+        
+        sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
+                    rate: rate,
+                    comment: "Litecoin Foundation donation.",
+                    feePerKb: feePerKb,
+                    verifyPinFunction: { [weak self] pinValidationCallback in
+                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
+                            if pinValidationCallback(pin) {
+                                vc.dismiss(animated: true, completion: {
+                                    self?.parent?.view.isFrameChangeBlocked = false
+                                })
+                                return true
+                            } else {
+                                return false
+                            }
+                        }
+            }, completion: { [weak self] result in
+                switch result {
+                case .success:
+                     guard let myself = self else { return }
+                     myself.send()
+//                    self?.dismiss(animated: true, completion: {
+//                        guard let myself = self else { return }
+//                        myself.store.trigger(name: .showStatusBar)
+//                        if myself.isPresentedFromLock {
+//                            myself.store.trigger(name: .loginFromSend)
+//                        }
+//                        myself.onPublishSuccess?()
+//                    })
+                    self?.saveEvent("send.success")
+                case .creationError(let message):
+                    self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                    self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+                case .publishFailure(let error):
+                    if case .posixError(let code, let description) = error {
+                        self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                        self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
+                    }
+                }
+        })
+    }
+    private func send() {
+        guard let rate = store.state.currentRate else { return }
+        guard let feePerKb = walletManager.wallet?.feePerKb else { return }
+          
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
                     comment: descriptionCell.textView.text,

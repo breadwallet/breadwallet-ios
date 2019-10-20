@@ -11,7 +11,7 @@ import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
+    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, wantsToDonate: Bool, donationAmount: Satoshis) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -20,10 +20,13 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
+        self.wantsToDonate = wantsToDonate
+        self.donationAmount = donationAmount
         super.init(nibName: nil, bundle: nil)
     }
 
     private let amount: Satoshis
+    private let donationAmount: Satoshis
     private let feeAmount: Satoshis
     private let feeType: Fee
     private let state: State
@@ -31,7 +34,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingBiometrics: Bool
-
+    private let wantsToDonate: Bool
+    
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
     let blurView = UIVisualEffectView()
@@ -53,8 +57,10 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let sendLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let feeLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let totalLabel = UILabel(font: .customMedium(size: 14.0), color: .darkText)
-
+    private let donationLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    
     private let send = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    private let donation = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let fee = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
 
@@ -73,9 +79,14 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         contentBox.addSubview(address)
         contentBox.addSubview(processingTime)
         contentBox.addSubview(sendLabel)
+        if wantsToDonate {
+           contentBox.addSubview(donation)
+           contentBox.addSubview(donationLabel)
+        }
         contentBox.addSubview(feeLabel)
         contentBox.addSubview(totalLabel)
         contentBox.addSubview(send)
+        contentBox.addSubview(donationLabel)
         contentBox.addSubview(fee)
         contentBox.addSubview(total)
         contentBox.addSubview(cancel)
@@ -111,9 +122,19 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         send.constrain([
             send.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]),
             sendLabel.firstBaselineAnchor.constraint(equalTo: send.firstBaselineAnchor) ])
+        
+        if wantsToDonate {
+            donationLabel.constrain([
+                donationLabel.leadingAnchor.constraint(equalTo: sendLabel.leadingAnchor),
+                donationLabel.topAnchor.constraint(equalTo: sendLabel.bottomAnchor)])
+            donation.constrain([
+                donation.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]),
+                donationLabel.firstBaselineAnchor.constraint(equalTo: donation.firstBaselineAnchor) ])
+        }
+        
         feeLabel.constrain([
             feeLabel.leadingAnchor.constraint(equalTo: sendLabel.leadingAnchor),
-            feeLabel.topAnchor.constraint(equalTo: sendLabel.bottomAnchor) ])
+            feeLabel.topAnchor.constraint(equalTo: wantsToDonate ? donationLabel.bottomAnchor :sendLabel.bottomAnchor) ])
         fee.constrain([
             fee.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]),
             fee.firstBaselineAnchor.constraint(equalTo: feeLabel.firstBaselineAnchor) ])
@@ -139,6 +160,12 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
+        if wantsToDonate {
+            let displayDonationAmount = DisplayAmount(amount: donationAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+            donationLabel.text = S.Donate.titleAction
+            donation.text = displayDonationAmount.description
+        }
+        
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
@@ -147,19 +174,18 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         toLabel.text = S.Confirmation.to
         address.text = addressText
-        address.lineBreakMode = .byTruncatingMiddle
+        address.lineBreakMode = .byTruncatingMiddle 
         switch feeType {
         case .regular:
-            processingTime.text = String(format: S.Confirmation.processingTime, "2.5-5")
+            processingTime.text = String(format: wantsToDonate ? S.Confirmation.processingAndDonationTime : S.Confirmation.processingTime , wantsToDonate ? "5+" : "2.5-5")
         case .economy:
-            processingTime.text = String(format: S.Confirmation.processingTime, "5+")
+            processingTime.text = String(format: wantsToDonate ? S.Confirmation.processingAndDonationTime : S.Confirmation.processingTime, "5+")
         }
 
         sendLabel.text = S.Confirmation.amountLabel
         send.text = displayAmount.description
         feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description
-
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
 

@@ -30,6 +30,7 @@ class Sender {
     private let kvStore: BRReplicatedKVStore
     private let store: Store
     var transaction: BRTxRef?
+    var donationTransaction: BRTxRef?
     var protocolRequest: PaymentProtocolRequest?
     var rate: Rate?
     var comment: String?
@@ -43,6 +44,17 @@ class Sender {
     func createTransaction(forPaymentProtocol: PaymentProtocolRequest) {
         protocolRequest = forPaymentProtocol
         transaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
+    }
+    
+    func createDonationTransaction(amount: UInt64) -> Bool {
+        
+        donationTransaction = walletManager.wallet?.createTransaction(forAmount: amount, toAddress: DonationAddress.firstLF)
+        return donationTransaction != nil
+    }
+
+    func createDonationTransaction(forPaymentProtocol: PaymentProtocolRequest) {
+        protocolRequest = forPaymentProtocol
+        donationTransaction = walletManager.wallet?.createTxForOutputs(forPaymentProtocol.details.outputs)
     }
 
     var fee: UInt64 {
