@@ -166,9 +166,12 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
             wordView.onValidateCallback = { [unowned self] in
                 if self.shouldEnableContinueButton() {
                     self.continueButton.isEnabled = true
-                    // when user gets both words correct, hide the keyboard automatically to show the enabled
-                    // continue button
-                    wordView.loseFocus()
+                    // When user gets both words correct, hide the keyboard automatically to show the enabled
+                    // continue button. Queue the dismissal on the main thread to prevent trimming of the last character
+                    // in the word for some languages such as Japanese.
+                    DispatchQueue.main.async {
+                        wordView.loseFocus()
+                    }
                 } else {
                     self.continueButton.isEnabled = false
                 }

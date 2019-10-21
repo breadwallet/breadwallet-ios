@@ -12,7 +12,7 @@ class SyncingHeaderView: UIView, Subscriber {
 
     static let height: CGFloat = 40.0
     private let syncIndicator = SyncingIndicator(style: .account)
-    private let date = UILabel(font: .customBody(size: 14.0), color: UIColor(red: 0.08, green: 0.07, blue: 0.2, alpha: 0.4))
+    private let date = UILabel(font: Theme.body2, color: UIColor(red: 0.08, green: 0.07, blue: 0.2, alpha: 0.4))
     private let separator = UIView(color: UIColor.fromHex("#EFEFF2"))
     private let lineLoadingView = LineLoadingView(style: .sync)
     private let currency: Currency
@@ -37,6 +37,10 @@ class SyncingHeaderView: UIView, Subscriber {
         addSubviews()
         addConstraints()
         setInitialState()
+        
+        // For languages such as German, the date string can be long and can overlap the sync'ing indicator.
+        date.minimumScaleFactor = 0.75
+        date.adjustsFontSizeToFitWidth = true
     }
 
     private func addSubviews() {
@@ -47,14 +51,15 @@ class SyncingHeaderView: UIView, Subscriber {
     }
 
     private func addConstraints() {
-        date.constrain([
-            date.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            date.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
-            date.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])])
         syncIndicator.constrain([
             syncIndicator.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[1]),
             syncIndicator.topAnchor.constraint(equalTo: topAnchor),
             syncIndicator.bottomAnchor.constraint(equalTo: bottomAnchor)])
+        date.constrain([
+            date.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[1]),
+            date.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
+            date.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]),
+            date.trailingAnchor.constraint(equalTo: syncIndicator.leadingAnchor, constant: -C.padding[1])])
         separator.constrainBottomCorners(height: 1.0)
         lineLoadingView.constrain([
             lineLoadingView.heightAnchor.constraint(equalTo: separator.heightAnchor),
