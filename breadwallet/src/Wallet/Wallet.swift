@@ -247,8 +247,10 @@ extension Wallet {
 extension BRCrypto.Transfer {
     var isVisible: Bool {
         switch state {
-        case .created, .signed, .deleted:
+        case .deleted:
             return false
+        case .created, .signed: // skip un-submitted outgoing transactions
+            return direction != .sent
         default:
             return true
         }
