@@ -15,6 +15,7 @@ class CoreSystem: Subscriber, Trackable {
     
     private var system: System?
     private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
+    private let listenerQueue = DispatchQueue(label: "com.brd.CoreSystem.listener", qos: .utility)
 
     // MARK: Wallets + Currencies
 
@@ -79,7 +80,7 @@ class CoreSystem: Subscriber, Trackable {
                                     onMainnet: !E.isTestnet,
                                     path: C.coreDataDirURL.path,
                                     query: backend,
-                                    listenerQueue: self.queue)
+                                    listenerQueue: self.listenerQueue)
 
         if let system = self.system {
             System.wipeAll(atPath: C.coreDataDirURL.path, except: [system])
@@ -612,9 +613,11 @@ extension CoreSystem: SystemListener {
                 self.saveEvent("event.syncErrorMessage", attributes: ["network": manager.network.currency.code, "message": messagePayload])
                 syncState = .connecting
                 // retry by reconnecting
-                self.queue.asyncAfter(deadline: .now() + .seconds(1)) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
                     guard UIApplication.shared.applicationState == .active else { return }
-                    manager.connect(using: manager.customPeer)
+                    self.queue.async {
+                        manager.connect(using: manager.customPeer)
+                    }
                 }
             }
             
