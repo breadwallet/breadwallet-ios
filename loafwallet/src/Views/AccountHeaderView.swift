@@ -327,7 +327,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        drawGradient(rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+          return
+        }
+        context.setFillColor(UIColor.liteWalletBlue.cgColor)
+        context.fill(bounds)
     }
 
     @objc private func currencySwitchTapped() {

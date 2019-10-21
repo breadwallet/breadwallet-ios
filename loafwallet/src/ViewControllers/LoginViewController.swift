@@ -40,7 +40,15 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     //MARK: - Private
     private let store: Store
-    private let backgroundView = LoginBackgroundView()
+    private let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .liteWalletBlue
+        return view
+    }()
+        
+//        
+//        
+//        = LoginBackgroundView()
     private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let pinViewContainer = UIView()
     private var pinView: PinView?
@@ -71,7 +79,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private var pinPadBottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
-    private let pinPadBackground = GradientView()
+    private let pinPadBackground: UIView = {
+        let view = UIView()
+        view.backgroundColor = .liteWalletBlue
+        return view
+    }()
     private let topControlContainer: UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.white.cgColor

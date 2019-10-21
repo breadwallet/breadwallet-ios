@@ -18,10 +18,9 @@ class DonationCell: UIView {
        self.donationSwitch.isOn = wantsToDonate
           
         if let rate  = store.state.currentRate, store.state.isLtcSwapped {
-            let donationAmount = rate.rate * 0.009
-            self.donationAmountLabel.text = String(format:"%.2f", donationAmount) +  " \(rate.code) (\(rate.currencySymbol))"
+            self.donationAmountLabel.text = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
         } else {
-            self.donationAmountLabel.text = "\(kDonationAmount) " + S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
+            self.donationAmountLabel.text = "\(kDonationAmountInDouble) "  + S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
         }
              
        super.init(frame: .zero)

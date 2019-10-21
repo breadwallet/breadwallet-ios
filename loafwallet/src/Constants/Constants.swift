@@ -10,6 +10,8 @@ import UIKit
 
 let π: CGFloat = .pi
 let kDonationAmount: UInt64 = 900000 //UInt64
+let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
+
 let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
 
 struct Padding {

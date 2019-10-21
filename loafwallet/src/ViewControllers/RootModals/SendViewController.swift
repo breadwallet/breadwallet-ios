@@ -109,7 +109,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         callback: {
                             if let balance = $0.walletState.balance {
                                 self.balance = balance
-                                if balance < (kDonationAmount + UInt64(150000)) {
+                                if balance < (kDonationAmount + 2 * self.store.state.fees.regular + UInt64(150000)) {
                                     
                                     self.donationCell.donationSwitch.isOn = false
                                     self.donationCell.donationSwitch.isEnabled = false
@@ -185,19 +185,18 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         donationCell.didSwitchToDonate = { wantsToDonate in
             self.wantsToDonate = wantsToDonate
+            self.balanceTextForAmount(amount: self.combinedAmount, wantsToDonate: wantsToDonate, rate: self.store.state.currentRate)
+            self.amountView.updateBalanceLabel()
         }
         
         amountView.didShowFiat = { isLTCSwapped in
             
             var donationText = ""
             if isLTCSwapped {
-                donationText = "\(kDonationAmount) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
+                donationText = "\(kDonationAmountInDouble) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
             } else {
                 if let rate  = self.store.state.currentRate {
-                
-                    
-                    let dbl  = Double(kDonationAmount/1000000)
-                donationText = String(format:"%.2f", rate.rate * dbl) + " \(rate.code) (\(rate.currencySymbol))"
+                    donationText = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
                 }
             }
               
@@ -206,41 +205,34 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     }
 
     private func balanceTextForAmount(amount: Satoshis?, wantsToDonate: Bool, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-          
-        print("donation balance \(Satoshis(rawValue: UInt64(kDonationAmount)))")
-        print("amount balance \(Satoshis(rawValue: balance))")
-        
-        var updatedBalance: UInt64 = 0
+         
+        var updatedBalance = balance
         if wantsToDonate {
-            
             var sum : Int = 0
-            
-            let intBal: Int = Int(balance)
+            let intBal = Int(balance)
             let donationBal: Int = Int(kDonationAmount)
             sum = intBal - donationBal
             updatedBalance =  UInt64(sum)
-        } else {
-            updatedBalance = UInt64(balance)
         }
 
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: updatedBalance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: updatedBalance), state: store.state, selectedRate: rate, minimumFractionDigits: 2)
         let balanceText = balanceAmount.description
+
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
         
-        if let amount = amount, amount.rawValue > 0 {
+        if let amount = amount, amount > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
-             
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: wantsToDonate ? (fee + fee) : fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
-            if (balance >= fee) && amount.rawValue > (balance - fee) {
+            if (updatedBalance >= (wantsToDonate ? (fee + fee) : fee)) && amount.rawValue > (updatedBalance - (wantsToDonate ? (fee + fee) : fee)) {
                 color = .cameraGuideNegative
             }
         }
 
-        let attributes: [NSAttributedStringKey: Any] = [
+        let balanceAttributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
             NSAttributedStringKey.foregroundColor: color
         ]
@@ -250,7 +242,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             NSAttributedStringKey.foregroundColor: UIColor.grayTextTint
         ]
 
-        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
+        return (NSAttributedString(string: balanceOutput, attributes: balanceAttributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
 
     @objc private func pasteTapped() {
