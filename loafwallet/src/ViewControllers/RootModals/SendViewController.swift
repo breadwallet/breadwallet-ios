@@ -60,6 +60,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var balance: UInt64 = 0
     private var amount: Satoshis?
     private var donationAmount: Satoshis?
+    private var combinedAmount: Satoshis?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
@@ -108,6 +109,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         callback: {
                             if let balance = $0.walletState.balance {
                                 self.balance = balance
+                                if balance < (kDonationAmount + UInt64(150000)) {
+                                    
+                                    self.donationCell.donationSwitch.isOn = false
+                                    self.donationCell.donationSwitch.isEnabled = false
+                                    self.donationCell.descriptionLabel.text = S.Donate.shouldDonateMessage
+                                } else {
+                                    self.donationCell.donationSwitch.isOn = self.wantsToDonate
+                                    self.donationCell.donationSwitch.isEnabled = true
+                                    self.donationCell.descriptionLabel.text = self.wantsToDonate ? S.Donate.willDonateMessage : S.Donate.considerDonateMessage
+                                }
                             }
         })
         walletManager.wallet?.feePerKb = store.state.fees.regular
@@ -148,7 +159,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
 
         amountView.didUpdateAmount = { [weak self] amount in
-            self?.amount = amount
+            self?.combinedAmount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, fee in
             guard let wallet = myself.walletManager.wallet else { return }
@@ -198,8 +209,21 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
           
         print("donation balance \(Satoshis(rawValue: UInt64(kDonationAmount)))")
         print("amount balance \(Satoshis(rawValue: balance))")
+        
+        var updatedBalance: UInt64 = 0
+        if wantsToDonate {
+            
+            var sum : Int = 0
+            
+            let intBal: Int = Int(balance)
+            let donationBal: Int = Int(kDonationAmount)
+            sum = intBal - donationBal
+            updatedBalance =  UInt64(sum)
+        } else {
+            updatedBalance = UInt64(balance)
+        }
 
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: updatedBalance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""

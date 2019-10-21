@@ -6,11 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="BarlowSemiCondensed-Light.ttf">
-            <string>BarlowSemiCondensed-Light</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
@@ -24,36 +19,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="coinBlueWhite" translatesAutoresizingMaskIntoConstraints="NO" id="Hkr-9k-VHy">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo_ltcnew" translatesAutoresizingMaskIntoConstraints="NO" id="Hkr-9k-VHy">
                                 <rect key="frame" x="147.5" y="223.5" width="80" height="80"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="80" id="EM6-55-g3B"/>
                                     <constraint firstAttribute="width" constant="80" id="HMG-OY-BN4"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LiteWallet" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mrh-bv-5c8">
-                                <rect key="frame" x="50" y="323.5" width="275" height="24"/>
-                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="20"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Litecoin Foundation, Ltd." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4RY-cH-kqG">
-                                <rect key="frame" x="50" y="599" width="275" height="18"/>
-                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="15"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Hkr-9k-VHy" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="OY7-8i-vfO"/>
-                            <constraint firstItem="Mrh-bv-5c8" firstAttribute="top" secondItem="Hkr-9k-VHy" secondAttribute="bottom" constant="20" id="WRj-he-Tja"/>
-                            <constraint firstItem="4RY-cH-kqG" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="50" id="XEC-R0-ije"/>
-                            <constraint firstItem="Mrh-bv-5c8" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="50" id="hyS-XG-hMU"/>
-                            <constraint firstAttribute="trailing" secondItem="Mrh-bv-5c8" secondAttribute="trailing" constant="50" id="tby-ri-26W"/>
-                            <constraint firstAttribute="trailing" secondItem="4RY-cH-kqG" secondAttribute="trailing" constant="50" id="u06-v2-4yY"/>
                             <constraint firstItem="Hkr-9k-VHy" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-70" id="vFe-K9-GNt"/>
-                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="4RY-cH-kqG" secondAttribute="bottom" constant="50" id="waL-tf-hbr"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
@@ -64,6 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="coinBlueWhite" width="230" height="230"/>
+        <image name="Logo_ltcnew" width="41.666667938232422" height="41.666667938232422"/>
     </resources>
 </document>

@@ -31,7 +31,7 @@ class DonationCell: UIView {
     let border = UIView(color: .secondaryShadow)
     private var wantsToDonate = true
     private var titleLabel = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
-    private var descriptionLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    var descriptionLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
     var donationAmountLabel = UILabel(font: .customBody(size: 12.0), color: .darkText)
     var isLTCSwapped: Bool?
     var donationSwitch = UISwitch()
