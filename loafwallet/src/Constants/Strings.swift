@@ -540,6 +540,7 @@ enum S {
         static let willDonateMessage = NSLocalizedString("Donate.will.message", value: "Thanks! Your contribution will fund maintenance and improvements of Litewallet.", comment: "Will donate to the Litecoin Foundation")
         static let considerDonateMessage = NSLocalizedString("Donate.consider.message", value: "Please considering donating to the Litecoin Foundation!", comment: "Donate to the Litecoin Foundation")
         static let shouldDonateMessage = NSLocalizedString("Donate.should.message", value: "Please consider donating after adding more funds to your LiteWallet!", comment: "Donate to the Litecoin Foundation after funding wallet")
+        static let defaultDonationMemo = NSLocalizedString("Donate.default.memo", value: "Litecoin Foundation donation.", comment: "Default donation memo")
     }
 
     enum WipeWallet {

@@ -268,58 +268,15 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
-
-        if sender.transaction == nil {
-            guard let address = addressCell.address else {
-                return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
-            }
-            guard address.isValidAddress else {
-                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
-            }
-            guard let amount = amount else {
-                return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
-            }
-            if let minOutput = walletManager.wallet?.minOutputAmount {
-                guard amount.rawValue >= minOutput else {
-                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
-                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isLtcSwapped: store.state.isLtcSwapped))
-                    return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
-                }
-            }
-            guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
-                return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-            }
-            guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
-                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
-            }
-            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
-                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
-            }
-        }
         guard let amount = amount else {
             NSLog("ERROR: Amount not set")
             return
         }
-        
-        if sender.donationTransaction == nil && wantsToDonate {
-
-            guard let donationAmount = donationAmount else {
-                NSLog("ERROR: Donation Amount not set")
-                return
-            }
-            guard donationAmount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
-                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
-            }
-            guard sender.createDonationTransaction(amount: donationAmount.rawValue) else {
-                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
-            }
-        }
-
         guard let donationAmount = donationAmount else {
             NSLog("ERROR: Donation Amount not set")
             return
         }
-        print(wantsToDonate)
+        
         let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics, wantsToDonate: wantsToDonate, donationAmount: donationAmount)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
@@ -333,7 +290,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         confirm.cancelCallback = {
             confirm.dismiss(animated: true, completion: {
                 self.sender.transaction = nil
-                self.sender.donationTransaction = nil
             })
         }
         confirmTransitioningDelegate.shouldShowMaskView = false
@@ -372,58 +328,38 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
     }
 
-    
-    private func sendDonation() {
-        guard let rate = store.state.currentRate else { return }
-        guard let feePerKb = walletManager.wallet?.feePerKb else { return }
-
-      //  sender.createDonationTransaction(amount: <#T##UInt64#>)
-     //   sender.createDonationTransaction(forPaymentProtocol: <#T##PaymentProtocolRequest#>)
-        
-        sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
-                    rate: rate,
-                    comment: "Litecoin Foundation donation.",
-                    feePerKb: feePerKb,
-                    verifyPinFunction: { [weak self] pinValidationCallback in
-                        self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
-                            if pinValidationCallback(pin) {
-                                vc.dismiss(animated: true, completion: {
-                                    self?.parent?.view.isFrameChangeBlocked = false
-                                })
-                                return true
-                            } else {
-                                return false
-                            }
-                        }
-            }, completion: { [weak self] result in
-                switch result {
-                case .success:
-                     guard let myself = self else { return }
-                     myself.send()
-//                    self?.dismiss(animated: true, completion: {
-//                        guard let myself = self else { return }
-//                        myself.store.trigger(name: .showStatusBar)
-//                        if myself.isPresentedFromLock {
-//                            myself.store.trigger(name: .loginFromSend)
-//                        }
-//                        myself.onPublishSuccess?()
-//                    })
-                    self?.saveEvent("send.success")
-                case .creationError(let message):
-                    self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                    self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
-                case .publishFailure(let error):
-                    if case .posixError(let code, let description) = error {
-                        self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
-                        self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
-                    }
-                }
-        })
-    }
     private func send() {
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
-          
+        
+        if sender.transaction == nil {
+            guard let address = addressCell.address else {
+                return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
+            }
+            guard address.isValidAddress else {
+                return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
+            }
+            guard let amount = amount else {
+                return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
+            }
+            if let minOutput = walletManager.wallet?.minOutputAmount {
+                guard amount.rawValue >= minOutput else {
+                    let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: store.state.maxDigits)
+                    let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isLtcSwapped: store.state.isLtcSwapped))
+                    return showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
+                }
+            }
+            guard !(walletManager.wallet?.containsAddress(address) ?? false) else {
+                return showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+            }
+            guard amount.rawValue <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
+                return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+            }
+            guard sender.createTransaction(amount: amount.rawValue, to: address) else {
+                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+            }
+        }
+  
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
                     comment: descriptionCell.textView.text,
@@ -462,6 +398,74 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 }
         })
     }
+    
+    private func sendDonation() {
+        
+        guard let rate = store.state.currentRate else { return }
+        guard let feePerKb = walletManager.wallet?.feePerKb else { return }
+
+        self.sender.transaction = nil
+
+        guard let donationAmount = self.donationAmount else {
+            NSLog("ERROR: Donation Amount not set")
+            return
+        }
+
+        let rawDonation = donationAmount.rawValue
+       
+        if let minOutput = self.walletManager.wallet?.minOutputAmount {
+            guard donationAmount.rawValue >= minOutput else {
+                let minOutputAmount = Amount(amount: minOutput, rate: Rate.empty, maxDigits: self.store.state.maxDigits)
+                let message = String(format: S.PaymentProtocol.Errors.smallPayment, minOutputAmount.string(isLtcSwapped: self.store.state.isLtcSwapped))
+                return self.showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
+            }
+        }
+        guard !(self.walletManager.wallet?.containsAddress(DonationAddress.firstLF) ?? false) else {
+            return self.showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
+        }
+        guard donationAmount.rawValue <= (self.walletManager.wallet?.maxOutputAmount ?? 0) else {
+            return self.showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
+        }
+        guard self.sender.createTransaction(amount: rawDonation, to: DonationAddress.firstLF) else {
+            return self.showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+        }
+         
+           sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
+                       rate: rate,
+                       comment: descriptionCell.textView.text,
+                       feePerKb: feePerKb,
+                       verifyPinFunction: { [weak self] pinValidationCallback in
+                           self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
+                               if pinValidationCallback(pin) {
+                                   vc.dismiss(animated: true, completion: {
+                                       self?.parent?.view.isFrameChangeBlocked = false
+                                   })
+                                   return true
+                               } else {
+                                   return false
+                               }
+                           }
+               }, completion: { [weak self] result in
+                   switch result {
+                   case .success:
+                       self?.dismiss(animated: true, completion: {
+                        self?.sender.transaction = nil
+                        self?.send()
+                       })
+                       self?.saveEvent("send.success")
+                   case .creationError(let message):
+                       self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                       self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+                   case .publishFailure(let error):
+                       if case .posixError(let code, let description) = error {
+                           self?.showAlert(title: S.Alerts.sendFailure, message: "\(description) (\(code))", buttonLabel: S.Button.ok)
+                           self?.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(description) (\(code))"])
+                       }
+                   }
+           })
+       }
+    
+    
 
     func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
         guard let firstOutput = protoReq.details.outputs.first else { return }
