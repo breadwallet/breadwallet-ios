@@ -160,15 +160,20 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
+        var totalAmount = amount + feeAmount
         if wantsToDonate {
             let displayDonationAmount = DisplayAmount(amount: donationAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
             donationLabel.text = S.Donate.titleAction
             donation.text = displayDonationAmount.description
+            totalAmount = totalAmount + donationAmount
         }
+        print("XXX\(totalAmount)")
         
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        let displayTotal = DisplayAmount(amount: totalAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
+        
+        print("XXX\(amount.rawValue) \(feeAmount.rawValue) \(totalAmount.rawValue)")
 
         amountLabel.text = displayAmount.combinedDescription
 
