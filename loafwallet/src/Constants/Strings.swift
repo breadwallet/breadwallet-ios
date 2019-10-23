@@ -535,12 +535,9 @@ enum S {
     }
     
     enum Donate {
-        static let title = NSLocalizedString("Donate.title", value: "Donate", comment: "Donate to the Litecoin Foundation")
-        static let titleAction = NSLocalizedString("Donate.action", value: "Donation:", comment: "Donatioon to the Litecoin Foundation")
-        static let willDonateMessage = NSLocalizedString("Donate.will.message", value: "Thanks! Your contribution will fund maintenance and improvements of Litewallet.", comment: "Will donate to the Litecoin Foundation")
-        static let considerDonateMessage = NSLocalizedString("Donate.consider.message", value: "Please considering donating to the Litecoin Foundation!", comment: "Donate to the Litecoin Foundation")
-        static let shouldDonateMessage = NSLocalizedString("Donate.should.message", value: "Please consider donating after adding more funds to your LiteWallet!", comment: "Donate to the Litecoin Foundation after funding wallet")
-        static let defaultDonationMemo = NSLocalizedString("Donate.default.memo", value: "Litecoin Foundation donation.", comment: "Default donation memo")
+        static let title = NSLocalizedString("Donate.title", value: "Tap to Donate to the Litecoin Foundation!", comment: "Donate to the Litecoin Foundation")
+        static let titleConfirmation = NSLocalizedString("Donate.title.confirmation", value: "Confirm Donation", comment: "Donate Confirmation")
+        static let memo = NSLocalizedString("Donate.memo", value: "Donation to the Litecoin Foundation", comment: "Donate Memo")
     }
 
     enum WipeWallet {
@@ -578,6 +575,7 @@ enum S {
         static let processingTime = NSLocalizedString("Confirmation.processingTime", value: "Processing time: This transaction will take %1$@ minutes to process.", comment: "eg. Processing time: This transaction will take 10-30 minutes to process.")
          static let processingAndDonationTime = NSLocalizedString("Confirmation.processingTime", value: "Processing time: These transactions will take %1$@ minutes to process.", comment: "eg. Processing with Donation time: This transaction will take 10-30 minutes to process.")
         static let amountLabel = NSLocalizedString("Confirmation.amountLabel", value: "Amount to Send:", comment: "Amount to Send: ($1.00)")
+        static let donateLabel = NSLocalizedString("Confirmation.amountLabel", value: "Amount to Donate:", comment: "Amount to Donate: ($1.00)")
         static let feeLabel = NSLocalizedString("Confirmation.feeLabel", value: "Network Fee:", comment: "Network Fee: ($1.00)")
         static let totalLabel = NSLocalizedString("Confirmation.totalLabel", value: "Total Cost:", comment: "Total Cost: ($5.00)")
     }

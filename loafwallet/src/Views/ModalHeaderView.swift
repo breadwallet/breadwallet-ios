@@ -20,19 +20,19 @@ class ModalHeaderView : UIView {
         didSet { close.tap = closeCallback }
     }
 
-    init(title: String, style: ModalHeaderViewStyle, faqInfo: (Store, String)? = nil) {
+    init(title: String, style: ModalHeaderViewStyle, faqInfo: (Store, String)? = nil, showCloseButton: Bool = true) {
         self.title.text = title
         self.style = style
 
         if let faqInfo = faqInfo {
             self.faq = UIButton.buildFaqButton(store: faqInfo.0, articleId: faqInfo.1)
         }
-
+        self.showCloseButton = showCloseButton
         super.init(frame: .zero)
         setupSubviews()
         addFaqButton()
     }
-
+    let showCloseButton: Bool
     var faqInfo: (Store, String)? {
         didSet {
             if oldValue == nil {
@@ -53,13 +53,16 @@ class ModalHeaderView : UIView {
 
     private func setupSubviews() {
         addSubview(title)
-        addSubview(close)
         addSubview(border)
-        close.constrain([
-            close.constraint(.leading, toView: self, constant: 0.0),
-            close.constraint(.centerY, toView: self, constant: 0.0),
-            close.constraint(.height, constant: buttonSize),
-            close.constraint(.width, constant: buttonSize) ])
+        if showCloseButton {
+            addSubview(close)
+            close.constrain([
+                close.constraint(.leading, toView: self, constant: 0.0),
+                close.constraint(.centerY, toView: self, constant: 0.0),
+                close.constraint(.height, constant: buttonSize),
+                close.constraint(.width, constant: buttonSize) ])
+        }
+        
         title.constrain([
             title.constraint(.centerX, toView: self, constant: 0.0),
             title.constraint(.centerY, toView: self, constant: 0.0) ])

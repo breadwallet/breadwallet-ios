@@ -61,7 +61,9 @@ class Sender {
 
     //Amount in bits
     func send(biometricsMessage: String, rate: Rate?, comment: String?, feePerKb: UInt64, verifyPinFunction: @escaping (@escaping(String) -> Bool) -> Void, completion:@escaping (SendResult) -> Void) {
-        guard let tx = transaction else { return completion(.creationError(S.Send.createTransactionError)) }
+        guard let tx = transaction else {
+            return completion(.creationError(S.Send.createTransactionError))
+        }
 
         self.rate = rate
         self.comment = comment
@@ -120,7 +122,7 @@ class Sender {
     private func publish(completion: @escaping (SendResult) -> Void) {
         guard let tx = transaction else { assert(false, "publish failure"); return }
         DispatchQueue.walletQueue.async { [weak self] in
-            guard let myself = self else { assert(false, "myelf didn't exist"); return }
+            guard let myself = self else { assert(false, "myself didn't exist"); return }
             myself.walletManager.peerManager?.publishTx(tx, completion: { success, error in
                 DispatchQueue.main.async {
                     if let error = error {

@@ -179,16 +179,6 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-//    private func presentFaq(articleId: String? = nil) {
-//        guard let supportCenter = supportCenter else { return }
-//        supportCenter.modalPresentationStyle = .overFullScreen
-//        supportCenter.modalPresentationCapturesStatusBarAppearance = true
-//        supportCenter.transitioningDelegate = supportCenter
-//        let url = articleId == nil ? "/support" : "/support?id=\(articleId!)"
-//        supportCenter.navigate(to: url)
-//        topViewController?.present(supportCenter, animated: true, completion: {})
-//    }
-    
     private func presentWebView(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
         let vc = WebViewContainer(mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: self.noAuthApiClient)
@@ -255,7 +245,8 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest)
+ 
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), donationSender: Sender(walletManager: walletManager, kvStore: kvStore, store: store),  walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
         if store.state.isLoginRequired {
