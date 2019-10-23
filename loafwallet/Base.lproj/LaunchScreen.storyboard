@@ -20,17 +20,25 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logo_ltcnew" translatesAutoresizingMaskIntoConstraints="NO" id="Hkr-9k-VHy">
-                                <rect key="frame" x="147.5" y="223.5" width="80" height="80"/>
+                                <rect key="frame" x="166" y="113" width="43" height="43"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="EM6-55-g3B"/>
-                                    <constraint firstAttribute="width" constant="80" id="HMG-OY-BN4"/>
+                                    <constraint firstAttribute="height" constant="43" id="EM6-55-g3B"/>
+                                    <constraint firstAttribute="width" constant="43" id="HMG-OY-BN4"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="LiteWallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RJf-Mh-ffr">
+                                <rect key="frame" x="148" y="196" width="79" height="24"/>
+                                <fontDescription key="fontDescription" name="PingFangHK-Regular" family="PingFang HK" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="RJf-Mh-ffr" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="O9y-w8-Jtm"/>
                             <constraint firstItem="Hkr-9k-VHy" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="OY7-8i-vfO"/>
-                            <constraint firstItem="Hkr-9k-VHy" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-70" id="vFe-K9-GNt"/>
+                            <constraint firstItem="Hkr-9k-VHy" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="113" id="XDs-gO-JzJ"/>
+                            <constraint firstItem="RJf-Mh-ffr" firstAttribute="top" secondItem="Hkr-9k-VHy" secondAttribute="bottom" constant="40" id="zMr-JT-pqk"/>
                         </constraints>
                     </view>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>

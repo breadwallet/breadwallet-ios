@@ -42,7 +42,7 @@ class DonationSetupCell: UIView {
             NSLog("ERROR: Donate button not initialized")
             return
         }
-        
+         
         addSubview(titleLabel)
         addSubview(donateButton)
         addSubview(border)
@@ -66,7 +66,7 @@ class DonationSetupCell: UIView {
 
         viewConstraints += titleConstraintVertical
         
-        let descriptionConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[donateButton(40)]-|", options: [], metrics: nil, views: viewsDictionary)
+        let descriptionConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[donateButton]-16-|", options: [], metrics: nil, views: viewsDictionary)
 
         viewConstraints += descriptionConstraintVertical
             

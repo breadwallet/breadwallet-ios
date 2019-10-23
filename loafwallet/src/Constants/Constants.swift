@@ -9,10 +9,10 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 300000 //UInt64
+let kDonationAmount: UInt64 = 900000 //UInt64
 let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
 
-let kDonationAddress1 = "LhqYZyHuBcJk9z8Uoqp33NcwhUGdFyc8Yf"//TODO: Add Offical ADDRESS: "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
+let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
 
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {

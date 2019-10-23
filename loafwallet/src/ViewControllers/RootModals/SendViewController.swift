@@ -84,17 +84,14 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                   donationCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
                   donationCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
                   donationCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
-                  donationCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
-
+                  donationCell.heightAnchor.constraint(equalToConstant: 72.0)])
         descriptionCell.constrain([
             descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
             descriptionCell.topAnchor.constraint(equalTo: donationCell.bottomAnchor),
             descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
             descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
-
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
-      
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
@@ -366,10 +363,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 }
         })
     }
-    
- 
-    
-
+     
     func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
         guard let firstOutput = protoReq.details.outputs.first else { return }
         guard let wallet = walletManager.wallet else { return }
