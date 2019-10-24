@@ -42,6 +42,8 @@ class InfoView: UIView {
         infoLabel.numberOfLines = 0
         infoLabel.textColor = Theme.secondaryText
         infoLabel.font = Theme.caption
+        infoLabel.adjustsFontSizeToFitWidth = true
+        infoLabel.minimumScaleFactor = 0.5
         
         infoImageView.contentMode = .center
 
