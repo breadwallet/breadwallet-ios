@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-07-16.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -105,4 +105,50 @@ extension NotificationHandler {
             }
         }
     }
+}
+
+extension BRAPIClient {
+    
+    func savePushNotificationToken(_ token: Data) {
+        var req = URLRequest(url: url("/me/push-devices"))
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue("application/json", forHTTPHeaderField: "Accept")
+        let reqJson = [
+            "token": token.hexString,
+            "service": "apns",
+            "data": [   "e": pushNotificationEnvironment(),
+                        "b": Bundle.main.bundleIdentifier!]
+            ] as [String: Any]
+        do {
+            let dat = try JSONSerialization.data(withJSONObject: reqJson, options: .prettyPrinted)
+            req.httpBody = dat
+        } catch let e {
+            log("JSON Serialization error \(e)")
+            return
+        }
+        dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (dat, resp, _) in
+            print("[PUSH] registered device token: \(reqJson)")
+            let datString = String(data: dat ?? Data(), encoding: .utf8)
+            self.log("save push token resp: \(resp?.statusCode ?? 0) data: \(String(describing: datString))")
+            }.resume()
+    }
+    
+    func deletePushNotificationToken(_ token: Data) {
+        var req = URLRequest(url: url("/me/push-devices/apns/\(token.hexString)"))
+        req.httpMethod = "DELETE"
+        dataTaskWithRequest(req as URLRequest, authenticated: true, retryCount: 0) { (_, resp, _) in
+            self.log("delete push token resp: \(String(describing: resp))")
+            if let statusCode = resp?.statusCode {
+                if statusCode >= 200 && statusCode < 300 {
+                    UserDefaults.pushToken = nil
+                    self.log("deleted old token")
+                }
+            }
+            }.resume()
+    }
+}
+
+private func pushNotificationEnvironment() -> String {
+    return E.isDebug ? "d" : "p" //development or production
 }

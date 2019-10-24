@@ -63,6 +63,20 @@ open class BRKeyedArchiver {
             return "{}".data(using: String.Encoding.utf8)!
         }
     }
+
+    static func archiveData<T: Encodable>(withRootObject obj: T, compressed: Bool = true) -> Data {
+        do {
+            let data = try JSONEncoder().encode(obj)
+            guard let bz = (compressed ? data.bzCompressedData : data) else {
+                print("compression error")
+                return Data()
+            }
+            return bz
+        } catch let e {
+            print("BRKeyedArchiver unable to archive object: \(e)")
+            return "{}".data(using: String.Encoding.utf8)!
+        }
+    }
 }
 
 // A basic analogue of NSKeyedUnarchiver
@@ -81,6 +95,19 @@ open class BRKeyedUnarchiver {
             return nil
         }
         
+    }
+
+    static func unarchiveObject<T: Decodable>(withData data: Data, compressed: Bool = true) -> T? {
+        do {
+            guard let bz = (compressed ? Data(bzCompressedData: data) : data) else {
+                print("BRKeyedUnarchiver invalid bz data")
+                return nil
+            }
+            return try JSONDecoder().decode(T.self, from: bz)
+        } catch let e {
+            print("BRKeyedUnarchiver unable to deserialize JSON: \(e)")
+            return nil
+        }
     }
 }
 

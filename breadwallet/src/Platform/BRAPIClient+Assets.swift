@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Samuel Sutch on 3/31/17.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -38,10 +38,10 @@ extension BRAPIClient {
                 if let archive = AssetArchive(name: name, apiClient: self) {
                     grp.enter()
                     archive.update(completionHandler: { (err) in
-                        objc_sync_enter(results)
-                        results[resIdx] = (name, err)
-                        objc_sync_exit(results)
-                        grp.leave()
+                        queue.async(flags: .barrier) {
+                            results[resIdx] = (name, err)
+                            grp.leave()
+                        }
                     })
                 }
             }

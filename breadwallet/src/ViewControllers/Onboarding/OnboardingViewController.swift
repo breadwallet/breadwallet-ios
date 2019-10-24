@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2018-10-30.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -750,7 +750,6 @@ class OnboardingViewController: UIViewController {
             logEvent(.appeared, screen: .landingPage)
         }
         appearanceCount += 1
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {

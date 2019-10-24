@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-12-20.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 /// View model of a transaction in detail view
 struct TxDetailViewModel: TxViewModel {
@@ -30,7 +29,7 @@ struct TxDetailViewModel: TxViewModel {
     var title: String {
         guard status != .invalid else { return S.TransactionDetails.titleFailed }
         switch direction {
-        case .moved:
+        case .recovered:
             return S.TransactionDetails.titleInternal
         case .received:
             return status == .complete ? S.TransactionDetails.titleReceived : S.TransactionDetails.titleReceiving
@@ -62,7 +61,7 @@ struct TxDetailViewModel: TxViewModel {
         if direction == .sent {
             return S.TransactionDetails.addressToHeader
         } else {
-            if tx is BtcTransaction {
+            if tx.currency.isBitcoinCompatible {
                 return S.TransactionDetails.addressViaHeader
             } else {
                 return S.TransactionDetails.addressFromHeader
@@ -83,42 +82,30 @@ extension TxDetailViewModel {
         transactionHash = tx.hash
         self.tx = tx
 
-        // gas limit/price not available for incoming token transfers
-        if let tx = tx as? EthLikeTransaction, (tx.direction == .sent || tx is EthTransaction) {
+        if tx.direction == .sent {
+            var feeAmount = tx.fee
+            feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
+            feeAmount.rate = rate
+            fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
+        }
+
+        //TODO:CRYPTO incoming token transfers have a feeBasis with 0 values
+        if let feeBasis = tx.feeBasis,
+            (currency.isEthereum || (currency.isEthereumCompatible && tx.direction == .sent)) {
             let gasFormatter = NumberFormatter()
             gasFormatter.numberStyle = .decimal
             gasFormatter.maximumFractionDigits = 0
-            gasLimit = (currency is ERC20Token) ? nil : gasFormatter.string(from: tx.gasLimit as NSNumber)
-            
-            let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-            
-            gasPrice = Amount(amount: tx.gasPrice, currency: feeCurrency, rate: rate).tokenDescription(inUnit: Ethereum.Units.gwei)
-            
-            let totalFee = tx.gasPrice * UInt256(tx.gasUsed)
-            let feeAmount = Amount(amount: totalFee, currency: feeCurrency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            
-            // gas used is unknown until confirmed
-            if tx.direction == .sent && tx.confirmations > 0 {
-                // omit total for ERC20
-                let totalAmount: Amount? = (currency is ERC20Token) ? nil
-                    : Amount(amount: tx.amount + totalFee,
-                             currency: tx.currency,
-                             rate: rate,
-                             maximumFractionDigits: Amount.highPrecisionDigits)
-                
-                if Store.state.isBtcSwapped {
-                    fee = feeAmount.fiatDescription
-                    total = totalAmount?.fiatDescription
-                } else {
-                    fee = feeAmount.tokenDescription
-                    total = totalAmount?.tokenDescription
-                }
-            }
+            self.gasLimit = gasFormatter.string(from: feeBasis.costFactor as NSNumber)
+
+            let gasUnit = feeBasis.pricePerCostFactor.currency.unit(named: "gwei") ?? currency.defaultUnit
+            gasPrice = feeBasis.pricePerCostFactor.tokenDescription(in: gasUnit)
         }
-        
-        if let tx = tx as? BtcTransaction, tx.direction == .sent {
-            let feeAmount = Amount(amount: UInt256(tx.fee), currency: tx.currency, rate: rate, maximumFractionDigits: Amount.highPrecisionDigits)
-            fee = Store.state.isBtcSwapped ? feeAmount.fiatDescription : feeAmount.tokenDescription
+
+        // for outgoing txns for native tokens show the total amount sent including fee
+        if tx.direction == .sent, tx.confirmations > 0, tx.amount.currency == tx.fee.currency {
+            var totalWithFee = tx.amount + tx.fee
+            totalWithFee.maximumFractionDigits = Amount.highPrecisionDigits
+            total = Store.state.showFiatAmounts ? totalWithFee.fiatDescription : totalWithFee.tokenDescription
         }
     }
     
@@ -136,7 +123,6 @@ extension TxDetailViewModel {
     
     private static func tokenAmount(tx: Transaction) -> String? {
         let amount = Amount(amount: tx.amount,
-                            currency: tx.currency,
                             rate: nil,
                             maximumFractionDigits: Amount.highPrecisionDigits,
                             negative: (tx.direction == .sent))
@@ -152,20 +138,14 @@ extension TxDetailViewModel {
                                     rate: txRate,
                                     reciprocalCode: currentRate.reciprocalCode)
             let currentAmount = Amount(amount: tx.amount,
-                                       currency: tx.currency,
-                                       rate: currentRate,
-                                       negative: false).description
+                                       rate: currentRate).description
             let originalAmount = Amount(amount: tx.amount,
-                                        currency: tx.currency,
-                                        rate: originalRate,
-                                        negative: false).description
+                                        rate: originalRate).description
             return (currentAmount, originalAmount)
         } else {
             // no tx-time rate
             let currentAmount = Amount(amount: tx.amount,
-                                       currency: tx.currency,
-                                       rate: currentRate,
-                                       negative: false)
+                                       rate: currentRate)
             return (currentAmount.description, nil)
         }
     }

@@ -3,10 +3,11 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-30.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
+import BRCrypto
 
 private let qrSize: CGFloat = 186.0
 private let smallButtonHeight: CGFloat = 32.0
@@ -53,16 +54,18 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
         setStyle()
         addActions()
         setupCopiedMessage()
-        
-        if isBTCLegacy {
-            Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
-                self.setReceiveAddress()
-            })
-        } else {
-            Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
-                self.setReceiveAddress()
-            })
-        }
+
+        //TODO:CRYPTO this does not work since receive address is not a stored property in WalletState
+        // need to hook up a WalletListener
+//        if isBTCLegacy {
+//            Store.subscribe(self, selector: { $0[self.currency]?.legacyReceiveAddress != $1[self.currency]?.legacyReceiveAddress }, callback: { _ in
+//                self.setReceiveAddress()
+//            })
+//        } else {
+//            Store.subscribe(self, selector: { $0[self.currency]?.receiveAddress != $1[self.currency]?.receiveAddress }, callback: { _ in
+//                self.setReceiveAddress()
+//            })
+//        }
     }
 
     private func addSubviews() {
@@ -148,10 +151,8 @@ class ReceiveViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func setReceiveAddress() {
-        guard var addressText = isBTCLegacy ? currency.state?.legacyReceiveAddress : currency.state?.receiveAddress else { return }
-        if currency.matches(Currencies.bch) {
-            addressText = addressText.bCashAddr
-        }
+        guard let wallet = currency.wallet else { return assertionFailure() }
+        let addressText = isBTCLegacy ? wallet.receiveAddress(for: .btcLegacy) : wallet.receiveAddress
         address.text = addressText
         if let uri = currency.addressURI(addressText),
             let uriData = uri.data(using: .utf8),

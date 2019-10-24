@@ -3,13 +3,14 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-04-04.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 
 private let defaults = UserDefaults.standard
 private let isBiometricsEnabledKey = "istouchidenabled"
+private let isBiometricsEnabledForTransactionsKey = "isbiometricsenabledtx"
 private let defaultCurrencyCodeKey = "defaultcurrency"
 private let hasAquiredShareDataPermissionKey = "has_acquired_permission"
 private let legacyWalletNeedsBackupKey = "WALLET_NEEDS_BACKUP"
@@ -17,8 +18,7 @@ private let writePaperPhraseDateKey = "writepaperphrasedatekey"
 private let hasPromptedBiometricsKey = "haspromptedtouched"
 private let hasPromptedForEmailKey = "hasPromptedForEmail"
 private let hasSubscribedToEmailUpdatesKey = "hasSubscribedToEmailUpdates"
-private let isBtcSwappedKey = "isBtcSwappedKey"
-private let maxDigitsKey = "SETTINGS_MAX_DIGITS"
+private let showFiatAmountsKey = "isBtcSwappedKey" // legacy key name
 private let pushTokenKey = "pushTokenKey"
 private let currentRateKey = "currentRateKey"
 private let customNodeIPKey = "customNodeIPKey"
@@ -26,12 +26,11 @@ private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasCompletedKYC = "hasCompletedKYCKey"
 private let hasAgreedToCrowdsaleTermsKey = "hasAgreedToCrowdsaleTermsKey"
-private let feesKey = "feesKey"
 private let selectedCurrencyCodeKey = "selectedCurrencyCodeKey"
 private let mostRecentSelectedCurrencyCodeKey = "mostRecentSelectedSPVCurrencyCodeKey"
 private let hasSetSelectedCurrencyKey = "hasSetSelectedCurrencyKey"
 private let hasBchConnectedKey = "hasBchConnectedKey"
-private let rescanStateKeyPrefix = "lastRescan" // append uppercased currency code for key
+private let rescanStateKeyPrefix = "lastRescan-" // append uppercased currency code for key
 private let hasOptedInSegwitKey = "hasOptedInSegwitKey"
 private let hasScannedForTokenBalancesKey = "hasScannedForTokenBalances"
 private let debugShouldAutoEnterPinKey = "shouldAutoEnterPIN"
@@ -45,10 +44,10 @@ private let debugBackendHostKey = "debugBackendHostKey"
 private let debugWebBundleNameKey = "debugWebBundleNameKey"
 private let platformDebugURLKey = "platformDebugURLKey"
 private let appLaunchCountKey = "appLaunchCountKey"
+private let appLaunchCountAtLastRatingPromptKey = "appLaunchCountAtLastRatingPromptKey"
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
-private let didTapTradeNotificationKey = "didTapTradeNotificationKey"
-private let debugEthereumNetworkModeKey = "debugEthereumNetworkMode"
+private let deviceIdKey = "BR_DEVICE_ID"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -62,6 +61,7 @@ extension UserDefaults {
         [hasSubscribedToEmailUpdatesKey: false],
         [hasPromptedBiometricsKey: false],
         [isBiometricsEnabledKey: false],
+        [isBiometricsEnabledForTransactionsKey: false],
         [hasPromptedShareDataKey: false],
         [hasOptedInSegwitKey: false],
         [debugShouldAutoEnterPinKey: false],
@@ -70,13 +70,11 @@ extension UserDefaults {
         [debugSuppressAppRatingPromptKey: false],
         [debugShowAppRatingPromptOnEnterWalletKey: false],
         [shouldHideBRDCellHighlightKey: false],
-        [shouldHideBRDRewardsAnimationKey: false],
-        [didTapTradeNotificationKey: false]
+        [shouldHideBRDRewardsAnimationKey: false]
     ]
     
     static let resettableObjects: [ResettableObjectSetting] = [
-        writePaperPhraseDateKey,
-        debugEthereumNetworkModeKey
+        writePaperPhraseDateKey
     ]
     
     // Called from the Reset User Defaults menu item to allow the resetting of
@@ -110,17 +108,30 @@ extension UserDefaults {
 }
 
 extension UserDefaults {
+
+    /// A UUID unique to the installation, generated on first use
+    /// Used for BlockchainDB subscription, tx metadata, backend auth
+    static var deviceID: String {
+        if let s = defaults.string(forKey: deviceIdKey) {
+            return s
+        }
+        let s = UUID().uuidString
+        defaults.set(s, forKey: deviceIdKey)
+        return s
+    }
     
+    // Legacy setting for biometrics allowing unlocking the app. This is checked when migrating from
+    // UserDefaults to KeyStore for storing the biometrics authorization.
     static var isBiometricsEnabled: Bool {
-        get {
-            guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
-                return false
-            }
-            return defaults.bool(forKey: isBiometricsEnabledKey)
+        guard defaults.object(forKey: isBiometricsEnabledKey) != nil else {
+            return false
         }
-        set { 
-            defaults.set(newValue, forKey: isBiometricsEnabledKey)
-        }
+        return defaults.bool(forKey: isBiometricsEnabledKey)
+    }
+    
+    // Deprecates legacy biometrics setting after migrating the settings to KeyStore.
+    static func deprecateLegacyBiometricsSetting() {
+        defaults.set(nil, forKey: isBiometricsEnabledKey)
     }
 
     static var defaultCurrencyCode: String {
@@ -144,30 +155,10 @@ extension UserDefaults {
         set { defaults.set(newValue, forKey: hasAquiredShareDataPermissionKey) }
     }
 
-    static var isBtcSwapped: Bool {
-        get { return defaults.bool(forKey: isBtcSwappedKey)
+    static var showFiatAmounts: Bool {
+        get { return defaults.bool(forKey: showFiatAmountsKey)
         }
-        set { defaults.set(newValue, forKey: isBtcSwappedKey) }
-    }
-
-    //
-    // 2 - bits
-    // 5 - mBTC
-    // 8 - BTC
-    //
-    static var maxDigits: Int {
-        get {
-            guard defaults.object(forKey: maxDigitsKey) != nil else {
-                return Currencies.btc.commonUnit.decimals
-            }
-            let maxDigits = defaults.integer(forKey: maxDigitsKey)
-            if maxDigits == 5 {
-                return 8 //Convert mBTC to BTC
-            } else {
-                return maxDigits
-            }
-        }
-        set { defaults.set(newValue, forKey: maxDigitsKey) }
+        set { defaults.set(newValue, forKey: showFiatAmountsKey) }
     }
 
     static var pushToken: Data? {
@@ -198,10 +189,18 @@ extension UserDefaults {
         defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
     }
 
-    static var customNodeIP: Int? {
+    static var customNodeIP: String? {
         get {
             guard defaults.object(forKey: customNodeIPKey) != nil else { return nil }
-            return defaults.integer(forKey: customNodeIPKey)
+            // migrate IPs stored as integer to string format
+            if var numericAddress = defaults.object(forKey: customNodeIPKey) as? Int32,
+                let buf = addr2ascii(AF_INET, &numericAddress, Int32(MemoryLayout<in_addr_t>.size), nil) {
+                    let addressString = String(cString: buf)
+                    defaults.set(addressString, forKey: customNodeIPKey)
+                    return addressString
+            } else {
+                return defaults.string(forKey: customNodeIPKey)
+            }
         }
         set { defaults.set(newValue, forKey: customNodeIPKey) }
     }
@@ -217,23 +216,6 @@ extension UserDefaults {
     static var hasPromptedShareData: Bool {
         get { return defaults.bool(forKey: hasPromptedBiometricsKey) }
         set { defaults.set(newValue, forKey: hasPromptedBiometricsKey) }
-    }
-
-    // TODO:BCH not used, remove?
-    static var fees: Fees? {
-        //Returns nil if feeCacheTimeout exceeded
-        get {
-            if let feeData = defaults.data(forKey: feesKey), let fees = try? JSONDecoder().decode(Fees.self, from: feeData) {
-                return (Date().timeIntervalSince1970 - fees.timestamp) <= C.feeCacheTimeout ? fees : nil
-            } else {
-                return nil
-            }
-        }
-        set {
-            if let fees = newValue, let data = try? JSONEncoder().encode(fees) {
-                defaults.set(data, forKey: feesKey)
-            }
-        }
     }
     
     static func rescanState(for currency: Currency) -> RescanState? {
@@ -367,6 +349,13 @@ extension UserDefaults {
         get { return defaults.integer(forKey: appLaunchCountKey ) }
         set { defaults.set(newValue, forKey: appLaunchCountKey )}
     }
+    
+    // The app launch count the last time the ratings prompt was shown.
+    static var appLaunchCountAtLastRatingPrompt: Int {
+        get { return UserDefaults.standard.integer(forKey: appLaunchCountAtLastRatingPromptKey ) }
+        set { UserDefaults.standard.set(newValue, forKey: appLaunchCountAtLastRatingPromptKey )}
+    }
+
 }
 
 // MARK: - State Restoration
@@ -534,34 +523,6 @@ extension UserDefaults {
 
         set {
             defaults.set(newValue, forKey: platformDebugURLKey)
-        }
-    }
-    
-    static var didTapTradeNotification: Bool {
-        get {
-            return defaults.bool(forKey: didTapTradeNotificationKey)
-        }
-        
-        set {
-            defaults.set(newValue, forKey: didTapTradeNotificationKey)
-        }
-    }
-    
-    static var debugEthereumNetworkMode: EthereumMode? {
-        get {
-            if let value = defaults.object(forKey: debugEthereumNetworkModeKey) as? Int {
-                return EthereumMode(rawValue: value)
-            } else {
-                return nil
-            }
-        }
-        
-        set {
-            if let value = newValue?.rawValue {
-                defaults.set(value, forKey: debugEthereumNetworkModeKey)
-            } else {
-                defaults.removeObject(forKey: debugEthereumNetworkModeKey)
-            }
         }
     }
 }

@@ -3,109 +3,44 @@
 //  breadwallet
 //
 //  Created by Samuel Sutch on 12/7/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
 @testable import breadwallet
-import BRCore
-
-class FakeAuthenticator: WalletAuthenticator {
-    var secret: UInt256
-    let key: BRKey
-    var userAccount: [AnyHashable: Any]? = nil
-
-    init() {
-        var keyData = Data(count: 32)
-        let count = keyData.count
-        let result = keyData.withUnsafeMutableBytes {
-            SecRandomCopyBytes(kSecRandomDefault, count, $0)
-        }
-        if result != errSecSuccess {
-            fatalError("couldnt generate random data for key")
-        }
-        print("base58 encoded secret key data \(keyData.base58)")
-        secret = keyData.uInt256
-        key = withUnsafePointer(to: &secret, { (secPtr: UnsafePointer<UInt256>) in
-            var k = BRKey()
-            k.compressed = 1
-            BRKeySetSecret(&k, secPtr, 0)
-            return k
-        })
-    }
-
-    var noWallet: Bool { return false }
-
-    var apiAuthKey: String? {
-        var k = key
-        k.compressed = 1
-        let pkLen = BRKeyPrivKey(&k, nil, 0)
-        var pkData = Data(count: pkLen)
-        BRKeyPrivKey(&k, pkData.withUnsafeMutableBytes({ $0 }), pkLen)
-        return String(data: pkData, encoding: .utf8)
-    }
-
-    // not used
-    
-    var creationTime: TimeInterval { return C.bip39CreationTime }
-
-    var masterPubKey: BRMasterPubKey? { return nil }
-    var ethPubKey: BRKey? { return nil }
-
-    var pinLoginRequired: Bool { return false }
-    var pinLength: Int { assertionFailure(); return 0 }
-
-    var walletDisabledUntil: TimeInterval { return TimeInterval() }
-
-    func authenticate(withPin: String) -> Bool {
-        assertionFailure()
-        return false
-    }
-
-    func authenticate(withPhrase: String) -> Bool {
-        assertionFailure()
-        return false
-    }
-
-    func authenticate(withBiometricsPrompt: String, completion: @escaping (BiometricsResult) -> Void) {
-        assertionFailure()
-        completion(.failure)
-    }
-
-    func buildBitIdKey(url: String, index: Int) -> BRKey? {
-        assertionFailure()
-        return nil
-    }
-}
+import BRCrypto
 
 // This test will test against the live API at api.breadwallet.com
 class BRAPIClientTests: XCTestCase {
-    var authenticator: WalletAuthenticator!
+    var authenticator: WalletAuthenticator { return keyStore as WalletAuthenticator }
     var client: BRAPIClient!
+    private var keyStore: KeyStore!
     
     override func setUp() {
         super.setUp()
-        authenticator = FakeAuthenticator() // each test will get its own account
+        clearKeychain()
+        keyStore = try! KeyStore.create()
+        _ = setupNewAccount(keyStore: keyStore) // each test will get its own account
         client = BRAPIClient(authenticator: authenticator)
     }
     
     override func tearDown() {
         super.tearDown()
-        authenticator = nil
         client = nil
+        clearKeychain()
+        keyStore.destroy()
     }
     
     func testPublicKeyEncoding() {
-        let pubKey1 = client.authKey!.publicKey.base58
-        let b = pubKey1.base58DecodedData()
-        let b2 = b.base58
-        XCTAssertEqual(pubKey1, b2) // sanity check on our base58 functions
-        let key = client.authKey!.publicKey.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> BRKey in
-            var k = BRKey()
-            BRKeySetPubKey(&k, ptr.baseAddress!.assumingMemoryBound(to: UInt8.self), client.authKey!.publicKey.count)
-            return k
+        guard let pubKey1 = client.authKey?.encodeAsPublic.hexToData?.base58 else {
+            return XCTFail()
         }
-        XCTAssertEqual(pubKey1, key.publicKey.base58) // the key decoded from our encoded key is the same
+        let b = pubKey1.base58DecodedData()
+        XCTAssertNotNil(b)
+        let b2 = b!.base58
+        XCTAssertEqual(pubKey1, b2) // sanity check on our base58 functions
+        let key = Key.createFromString(asPublic: client.authKey!.encodeAsPublic)
+        XCTAssertEqual(pubKey1, key?.encodeAsPublic.hexToData?.base58) // the key decoded from our encoded key is the same
     }
     
     func testHandshake() {
@@ -116,6 +51,39 @@ class BRAPIClientTests: XCTestCase {
             XCTAssertEqual(resp?.statusCode, 200)
             exp.fulfill()
         }.resume()
+        waitForExpectations(timeout: 30, handler: nil)
+    }
+    
+    func testBlockchainDBAuthentication() {
+        let baseUrl = "https://api.blockset.com"
+        let authClient = AuthenticationClient(baseURL: URL(string: baseUrl)!,
+                                              urlSession: URLSession.shared)
+
+        //let deviceId = UUID().uuidString
+        let exp = expectation(description: "auth")
+
+        authenticator.authenticateWithBlockchainDB(client: authClient) { result in
+            switch result {
+            case .success(let jwt):
+                XCTAssertFalse(jwt.isExpired)
+                let token = jwt.token
+                // test authenticated request
+                var req = URLRequest(url: URL(string: "\(baseUrl)/blockchains")!)
+                req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                req.setValue("application/json", forHTTPHeaderField: "Accept")
+                req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+                URLSession.shared.dataTask(with: req) { (data, response, error) in
+                    XCTAssertNil(error)
+                    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode ?? 0, 200)
+                    print("response: \(data != nil ? String(data: data!, encoding: .utf8)! : "none")")
+                    exp.fulfill()
+                    }.resume()
+            case .failure(let error):
+                XCTFail("BDB authentication error: \(error)")
+                exp.fulfill()
+            }
+        }
+
         waitForExpectations(timeout: 30, handler: nil)
     }
 }

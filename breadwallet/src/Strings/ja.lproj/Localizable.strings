@@ -232,6 +232,8 @@
 "ErrorMessages.touchIdFailed.android" = "指紋が認識されませんでした。もう一度やり直してください。";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "%1$@からFace ID使用限度額をカスタマイズすることができます。";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Face IDを使用してBRDアプリのロックを解除し、送金してください。";
 /* Face Id screen label */
 "FaceIDSettings.label" = "自分の顔を使って、ブレッドのロックを解除して、設定された使用限度額までお金を送金しましょう。";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -240,10 +242,14 @@
 "FaceIDSettings.switchLabel" = "ブレッド利用時にFace IDを有効にする";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Face IDを有効にして送金する";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "このデバイスではFace IDのセットアップが完了していません。設定->Face IDとパスコードに移動して、今すぐセットアップしましょう。";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face IDがセットアップされていません";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Face IDを有効にしてBRDのロックを解除する";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Face ID使用限度額";
 /* Economy fee */
@@ -911,6 +917,8 @@
 "TouchIdSettings.disabledWarning.body.android" = "この機器は指紋認証が有効化されていません。設定 -> セキュリティに移動して指紋認証を設定してください。";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "指紋認証が有効ではありません";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Touch IDを使用してBRDアプリのロックを解除し、送金してください。";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "設定された限度額以下の送金を行う場合には、指紋認証でご自身のブレッドのロックを解除できます。";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -925,10 +933,14 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "指紋認証";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Touch IDを有効にして送金する";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "あなたはこの端末でTouch IDの利用設定をしていません。設定->Touch IDとパスコードに移動し、今すぐ設定してください。";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch IDが設定されていません";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Touch IDを有効にしてBRDのロックを解除する";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "常にパスコードを要求する";
 /* Touch ID spending limit screen body */

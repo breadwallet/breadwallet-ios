@@ -3,41 +3,44 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
-import MachO
 
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
-    let currency: Currency
+    var currency: Currency { return wallet.currency }
     
-    init(currency: Currency, walletManager: WalletManager) {
-        self.walletManager = walletManager
-        self.currency = currency
-        self.headerView = AccountHeaderView(currency: currency)
-        self.footerView = AccountFooterView(currency: currency)
+    init(wallet: Wallet) {
+        self.wallet = wallet
+        self.headerView = AccountHeaderView(currency: wallet.currency)
+        self.footerView = AccountFooterView(currency: wallet.currency)
         self.searchHeaderview = SearchHeaderView()
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(currency: currency, walletManager: walletManager, didSelectTransaction: didSelectTransaction)
+        self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: { [unowned self] (transactions, index) in
+            self.didSelectTransaction(transactions: transactions, selectedIndex: index)
+        })
 
-        if let btcWalletManager = walletManager as? BTCWalletManager {
-            headerView.isWatchOnly = btcWalletManager.isWatchOnly
-        } else {
-            headerView.isWatchOnly = false
-        }
-
-        footerView.sendCallback = { Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
-        footerView.receiveCallback = { Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.buyCallback = { Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
-        footerView.sellCallback = { Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
+        footerView.sendCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
+        footerView.receiveCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
+        footerView.buyCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
+        footerView.sellCallback = { [unowned self] in
+            Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
     }
-
+    
+    deinit {
+        rewardsShrinkTimer?.invalidate()
+        rewardsShrinkTimer = nil
+        Store.unsubscribe(self)
+    }
+    
     // MARK: - Private
-    private let walletManager: WalletManager
+    private let wallet: Wallet
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private var footerHeightConstraint: NSLayoutConstraint?
@@ -55,23 +58,23 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             }
         }
     }
-    private var notificationObservers = [String: NSObjectProtocol]()
     private var tableViewTopConstraint: NSLayoutConstraint?
     private var headerContainerSearchHeight: NSLayoutConstraint?
     private var rewardsViewHeightConstraint: NSLayoutConstraint?
     private var rewardsView: RewardsView?
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
+    private var rewardsShrinkTimer: Timer?
     private var rewardsTappedEvent: String {
         return makeEventName([EventContext.rewards.name, Event.banner.name])
     }
-    
+
     private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
         return rewardsViewState == .expanded ? RewardsView.expandedSize : (RewardsView.normalSize)
     }
     
     private var shouldShowRewardsView: Bool {
-        return Currencies.brd.code == currency.code
+        return currency.isBRDToken
     }
     
     private var shouldAnimateRewardsView: Bool {
@@ -80,24 +83,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
-        if !E.isSimulator {
-            var s = stat()
-            var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
-            for i in 0..<_dyld_image_count() {
-                guard !isJailbroken else { break }
-                // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
-                if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
-                    isJailbroken = true
-                }
-            }
-            notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
-                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-                self.showJailbreakWarnings(isJailbroken: isJailbroken)
-            }
-            showJailbreakWarnings(isJailbroken: isJailbroken)
-        }
-        
         setupNavigationBar()
         addSubviews()
         addConstraints()
@@ -108,10 +93,10 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         if shouldShowRewardsView {
             addRewardsView()
         }
-        transactionsTableView.didScrollToYOffset = { offset in
+        transactionsTableView.didScrollToYOffset = { [unowned self] offset in
             self.headerView.setOffset(offset)
         }
-        transactionsTableView.didStopScrolling = {
+        transactionsTableView.didStopScrolling = { [unowned self] in
             self.headerView.didStopScrolling()
         }
     }
@@ -123,12 +108,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if walletManager.peerManager?.connectionStatus == BRPeerStatusDisconnected {
-            DispatchQueue.walletQueue.async { [weak self] in
-                self?.walletManager.peerManager?.connect()
-            }
-        }
         
         if shouldAnimateRewardsView {
             expandRewardsView()
@@ -150,7 +129,9 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         searchButton.widthAnchor.constraint(equalToConstant: 22.0).isActive = true
         searchButton.heightAnchor.constraint(equalToConstant: 22.0).isActive = true
         searchButton.tintColor = .white
-        searchButton.tap = showSearchHeaderView
+        searchButton.tap = { [unowned self] in
+            self.showSearchHeaderView()
+        }
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: searchButton)
     }
 
@@ -181,22 +162,24 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func addSubscriptions() {
-        Store.subscribe(self, name: .showStatusBar, callback: { _ in
-            self.shouldShowStatusBar = true
+        Store.subscribe(self, name: .showStatusBar, callback: { [weak self] _ in
+            self?.shouldShowStatusBar = true
         })
-        Store.subscribe(self, name: .hideStatusBar, callback: { _ in
-            self.shouldShowStatusBar = false
+        Store.subscribe(self, name: .hideStatusBar, callback: { [weak self] _ in
+            self?.shouldShowStatusBar = false
         })
     }
 
     private func setInitialData() {
         searchHeaderview.isHidden = true
-        searchHeaderview.didCancel = hideSearchHeaderView
+        searchHeaderview.didCancel = { [weak self] in
+            self?.hideSearchHeaderView()
+        }
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
         }
-        headerView.setHostContentOffset = { offset in
-            self.transactionsTableView.tableView.contentOffset.y = offset
+        headerView.setHostContentOffset = { [weak self] offset in
+            self?.transactionsTableView.tableView.contentOffset.y = offset
         }
     }
     
@@ -223,33 +206,17 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         transactionDetails.modalPresentationCapturesStatusBarAppearance = true
         present(transactionDetails, animated: true, completion: nil)
     }
-
-    private func showJailbreakWarnings(isJailbroken: Bool) {
-        guard isJailbroken else { return }
-        let totalSent = walletManager.wallet?.totalSent ?? 0
-        let message = totalSent > 0 ? S.JailbreakWarnings.messageWithBalance : S.JailbreakWarnings.messageWithBalance
-        let alert = UIAlertController(title: S.JailbreakWarnings.title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: nil))
-        if totalSent > 0 {
-            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.wipe, style: .default, handler: nil)) //TODO - implement wipe
-        } else {
-            alert.addAction(UIAlertAction(title: S.JailbreakWarnings.close, style: .default, handler: { _ in
-                exit(0)
-            }))
-        }
-        present(alert, animated: true, completion: nil)
-    }
     
     private func showSearchHeaderView() {
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
         headerView.stopHeightConstraint()
         headerContainerSearchHeight?.isActive = true
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.view.layoutIfNeeded()
         })
         
-        UIView.transition(from: self.headerView,
-                          to: self.searchHeaderview,
+        UIView.transition(from: headerView,
+                          to: searchHeaderview,
                           duration: C.animationDuration,
                           options: [.transitionFlipFromBottom, .showHideTransitionViews, .curveEaseOut],
                           completion: { _ in
@@ -259,15 +226,15 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func hideSearchHeaderView() {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
         headerView.resumeHeightConstraint()
         headerContainerSearchHeight?.isActive = false
         UIView.animate(withDuration: C.animationDuration, animations: {
             self.view.layoutIfNeeded()
         })
         
-        UIView.transition(from: self.searchHeaderview,
-                          to: self.headerView,
+        UIView.transition(from: searchHeaderview,
+                          to: headerView,
                           duration: C.animationDuration,
                           options: [.transitionFlipFromTop, .showHideTransitionViews, .curveEaseOut],
                           completion: { _ in
@@ -296,8 +263,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
         tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
-
-        view.layoutIfNeeded()
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                           action: #selector(rewardsViewTapped))
@@ -316,12 +281,14 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             self.tableViewTopConstraint?.constant = constants.0
             self.rewardsViewHeightConstraint?.constant = constants.1
             self.view.layoutIfNeeded()
-        }, completion: { [unowned self] _ in
+        }, completion: { [weak self] _ in
+            guard let `self` = self else { return }
+            
             self.rewardsView?.animateIcon()
 
             UserDefaults.shouldShowBRDRewardsAnimation = false
-
-            Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { [unowned self] _ in
+            
+            self.rewardsShrinkTimer = Timer.scheduledTimer(withTimeInterval: self.rewardsShrinkTimerDuration, repeats: false) { _ in
                 self.shrinkRewardsView()
             }
         })
@@ -353,12 +320,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .slide
-    }
-
-    deinit {
-        notificationObservers.values.forEach { observer in
-            NotificationCenter.default.removeObserver(observer)
-        }
     }
 
     required init?(coder aDecoder: NSCoder) {

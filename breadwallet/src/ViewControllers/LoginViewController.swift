@@ -3,51 +3,58 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-19.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
 import LocalAuthentication
+import BRCrypto
+import MachO
 
 private let topControlHeight: CGFloat = 32.0
 
 class LoginViewController: UIViewController, Subscriber, Trackable {
 
-    // MARK: - Public
-    var keyMaster: KeyMaster? {
-        didSet {
-            guard keyMaster != nil else { return }
-            pinView = PinView(style: .login, length: Store.state.pinLength)
+    enum Context {
+        case initialLaunch(loginHandler: LoginCompletionHandler)
+        case automaticLock
+        case manualLock
+
+        var shouldAttemptBiometricUnlock: Bool {
+            switch self {
+            case .manualLock:
+                return false
+            default:
+                return true
+            }
         }
     }
-    
-    init(isPresentedForLock: Bool, keyMaster: KeyMaster? = nil) {
+
+    init(for context: Context, keyMaster: KeyMaster) {
+        self.context = context
         self.keyMaster = keyMaster
-        self.isPresentedForLock = isPresentedForLock
         self.disabledView = WalletDisabledView()
-        var shouldUseBiometrics = false
-        if let keyMaster = keyMaster, LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && Store.state.isBiometricsEnabled {
-            shouldUseBiometrics = true
-        }
-        self.pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
-        if keyMaster != nil {
-            self.pinView = PinView(style: .login, length: Store.state.pinLength)
-        }
         super.init(nibName: nil, bundle: nil)
     }
 
     deinit {
         Store.unsubscribe(self)
+        notificationObservers.values.forEach { observer in
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     // MARK: - Private
+    private let keyMaster: KeyMaster
     private let backgroundView = UIView()
-    private let pinPad: PinPadViewController
     private let pinViewContainer = UIView()
-    private var pinView: PinView?
-    private let isPresentedForLock: Bool
+    private lazy var pinPad: PinPadViewController = {
+        return PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0, shouldShowBiometrics: shouldUseBiometrics)
+    }()
+    private lazy var pinView: PinView = {
+        return PinView(style: .login, length: Store.state.pinLength)
+    }()
     private let disabledView: WalletDisabledView
-    private let activityView = UIActivityIndicatorView(style: .whiteLarge)
     private var logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private var pinPadPottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
@@ -57,22 +64,27 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
-
+    private let context: Context
+    private var notificationObservers = [String: NSObjectProtocol]()
+    
+    var isBiometricsEnabledForUnlocking: Bool {
+        return self.keyMaster.isBiometricsEnabledForUnlocking
+    }
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
         addPinPadCallbacks()
-        if pinView != nil {
-            addPinView()
-        }
+        addPinView()
+
         disabledView.didTapReset = { [weak self] in
-            guard let `self` = self, let keyMaster = self.keyMaster else { return }
+            guard let `self` = self else { return }
             self.isResetting = true
             
             RecoveryKeyFlowController.enterResetPinFlow(from: self,
-                                                        keyMaster: keyMaster,
+                                                        keyMaster: self.keyMaster,
                                                         callback: { (phrase, navController) in
-                                                            let updatePin = UpdatePinViewController(keyMaster: keyMaster,
+                                                            let updatePin = UpdatePinViewController(keyMaster: self.keyMaster,
                                                                                                     type: .creationWithPhrase,
                                                                                                     showsBackButton: false,
                                                                                                     phrase: phrase)
@@ -83,8 +95,13 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                                 self.disabledView.isHidden = true
                                                             }
                                                             
-                                                            updatePin.resetFromDisabledSuccess = {
-                                                                self.authenticationSucceded()
+                                                            updatePin.resetFromDisabledSuccess = { pin in
+                                                                if case .initialLaunch = self.context {
+                                                                    guard let account = self.keyMaster.createAccount(withPin: pin) else { return assertionFailure() }
+                                                                    self.authenticationSucceded(forLoginWithAccount: account)
+                                                                } else {
+                                                                    self.authenticationSucceded()
+                                                                }
                                                             }
             })            
         }
@@ -98,12 +115,30 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         super.viewDidAppear(animated)
         guard UIApplication.shared.applicationState != .background else { return }
 
-        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && !isPresentedForLock {
+        if shouldUseBiometrics && !hasAttemptedToShowBiometrics && context.shouldAttemptBiometricUnlock {
             hasAttemptedToShowBiometrics = true
             biometricsTapped()
         }
         if !isResetting {
             lockIfNeeded()
+        }
+        
+        // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
+        if !E.isSimulator {
+            var s = stat()
+            var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
+            for i in 0..<_dyld_image_count() {
+                guard !isJailbroken else { break }
+                // some anti-jailbreak detection tools re-sandbox apps, so do a secondary check for any MobileSubstrate dyld images
+                if strstr(_dyld_get_image_name(i), "MobileSubstrate") != nil {
+                    isJailbroken = true
+                }
+            }
+            notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
+                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
+                    self.showJailbreakWarnings(isJailbroken: isJailbroken)
+            }
+            showJailbreakWarnings(isJailbroken: isJailbroken)
         }
     }
 
@@ -113,7 +148,6 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func addPinView() {
-        guard let pinView = pinView else { return }
         pinViewContainer.addSubview(pinView)
         pinView.constrain([
             pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: E.isIPhone4 ? -C.padding[2] : 0.0),
@@ -127,11 +161,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         view.addSubview(pinViewContainer)
         view.addSubview(logoBackground)
         logoBackground.addSubview(logo)
-        if keyMaster != nil {
-            view.addSubview(pinPadBackground)
-        } else {
-            view.addSubview(activityView)
-        }
+        view.addSubview(pinPadBackground)
     }
 
     private func addConstraints() {
@@ -139,10 +169,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         backgroundView.backgroundColor = Theme.primaryBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
         topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
-                                                            constant: topControlHeight
-                                                                + (E.isIPhoneX
-                                                                    ? C.padding[9] + 35.0
-                                                                    : C.padding[9] + 20.0))
+                                                            constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin)
         logoBackground.constrain([
             topControlTop,
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -150,23 +177,16 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.45) ])
         logo.constrain(toSuperviewEdges: nil)
 
-        if keyMaster != nil {
-            pinPadPottom = pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0)
-            pinPadBackground.constrain([
-                pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
-                pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
-                pinPadPottom ])
-            addChild(pinPad)
-            pinPadBackground.addSubview(pinPad.view)
-            pinPad.view.constrain(toSuperviewEdges: nil)
-            pinPad.didMove(toParent: self)
-        } else {
-            activityView.constrain([
-                activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                activityView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -20.0) ])
-            activityView.startAnimating()
-        }
+        pinPadPottom = pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0)
+        pinPadBackground.constrain([
+            pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
+            pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
+            pinPadPottom ])
+        addChild(pinPad)
+        pinPadBackground.addSubview(pinPad.view)
+        pinPad.view.constrain(toSuperviewEdges: nil)
+        pinPad.didMove(toParent: self)
     }
 
     private func addPinPadCallbacks() {
@@ -185,13 +205,17 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func authenticate(withPin pin: String) {
-        guard let keyStore = keyMaster else { return }
         guard !E.isScreenshots else { return authenticationSucceded() }
-        guard keyStore.authenticate(withPin: pin) else { return authenticationFailed() }
-        authenticationSucceded()
+        if case .initialLaunch = context {
+            guard let account = keyMaster.createAccount(withPin: pin) else { return authenticationFailed() }
+            authenticationSucceded(forLoginWithAccount: account)
+        } else {
+            guard keyMaster.authenticate(withPin: pin) else { return authenticationFailed() }
+            authenticationSucceded()
+        }
     }
 
-    private func authenticationSucceded() {
+    private func authenticationSucceded(forLoginWithAccount account: Account? = nil) {
         saveEvent("login.success")
         let label = UILabel(font: .customBody(size: 16.0))
         label.textColor = .white
@@ -215,11 +239,15 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             self.topControlTop?.constant = -100.0
             lock.alpha = 1.0
             label.alpha = 1.0
-            self.pinView?.alpha = 0.0
+            self.pinView.alpha = 0.0
             self.view.layoutIfNeeded()
         }, completion: { _ in
             self.dismiss(animated: true, completion: {
                 Store.perform(action: LoginSuccess())
+                if case .initialLaunch(let loginHandler) = self.context {
+                    guard let account = account else { return assertionFailure() }
+                    loginHandler(account)
+                }
             })
             Store.trigger(name: .showStatusBar)
         })
@@ -227,43 +255,40 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
     private func authenticationFailed() {
         saveEvent("login.failed")
-        guard let pinView = pinView else { return }
         pinPad.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
             self?.pinPad.view.isUserInteractionEnabled = true
         }
         pinPad.clear()
-        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
-            pinView.fill(0)
-            self?.lockIfNeeded()
+        DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) {
+            self.pinView.fill(0)
+            self.lockIfNeeded()
         }
     }
 
     private var shouldUseBiometrics: Bool {
-        guard let keyStore = self.keyMaster else { return false }
-        return LAContext.canUseBiometrics && !keyStore.pinLoginRequired && Store.state.isBiometricsEnabled
+        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && isBiometricsEnabledForUnlocking
     }
 
     @objc func biometricsTapped() {
         guard !isWalletDisabled else { return }
-        keyMaster?.authenticate(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
-            if result == .success {
-                self.authenticationSucceded()
-            }
-        })
-    }
-
-    @objc func addressTapped() {
-        Store.perform(action: RootModalActions.Present(modal: .loginAddress))
-    }
-
-    @objc func scanTapped() {
-        Store.perform(action: RootModalActions.Present(modal: .loginScan))
+        if case .initialLaunch = context {
+            keyMaster.createAccount(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { account in
+                if let account = account {
+                    self.authenticationSucceded(forLoginWithAccount: account)
+                }
+            })
+        } else {
+            keyMaster.authenticate(withBiometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
+                if result == .success {
+                    self.authenticationSucceded()
+                }
+            })
+        }
     }
 
     private func lockIfNeeded() {
-        guard let keyStore = keyMaster else { return }
-        guard keyStore.walletIsDisabled else {
+        guard keyMaster.walletIsDisabled else {
             pinPad.view.isUserInteractionEnabled = true
             disabledView.hide { [weak self] in
                 self?.disabledView.removeFromSuperview()
@@ -272,7 +297,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             return
         }
         saveEvent("login.locked")
-        let disabledUntil = keyStore.walletDisabledUntil
+        let disabledUntil = keyMaster.walletDisabledUntil
         let disabledUntilDate = Date(timeIntervalSince1970: disabledUntil)
         let unlockInterval = disabledUntil - Date().timeIntervalSince1970
         let df = DateFormatter()
@@ -282,12 +307,20 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
         pinPad.view.isUserInteractionEnabled = false
         unlockTimer?.invalidate()
-        unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
+        unlockTimer =  Timer.scheduledTimer(withTimeInterval: unlockInterval, repeats: false) { _ in
+            self.saveEvent("login.unlocked")
+            self.pinPad.view.isUserInteractionEnabled = true
+            self.unlockTimer = nil
+            self.disabledView.hide { [unowned self] in
+                self.disabledView.removeFromSuperview()
+                self.setNeedsStatusBarAppearanceUpdate()
+            }
+        }
 
         let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.walletDisabled)
         faqButton.tintColor = Theme.primaryText
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faqButton)
-        
+
         if disabledView.superview == nil {
             view.addSubview(disabledView)
             setNeedsStatusBarAppearanceUpdate()
@@ -297,19 +330,21 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var isWalletDisabled: Bool {
-        guard let keyStore = keyMaster else { return false }
         let now = Date().timeIntervalSince1970
-        return keyStore.walletDisabledUntil > now
+        return keyMaster.walletDisabledUntil > now
     }
-
-    @objc private func unlock() {
-        saveEvent("login.unlocked")
-        pinPad.view.isUserInteractionEnabled = true
-        unlockTimer = nil
-        disabledView.hide { [weak self] in
-            self?.disabledView.removeFromSuperview()
-            self?.setNeedsStatusBarAppearanceUpdate()
-        }
+    
+    private func showJailbreakWarnings(isJailbroken: Bool) {
+        guard isJailbroken else { return }
+        let alert = UIAlertController(title: S.JailbreakWarnings.title, message: S.JailbreakWarnings.messageWithBalance, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.ignore, style: .default, handler: { _ in
+            self.saveEvent(self.makeEventName([EventContext.jailbreak.name, Event.ignore.name]))
+        }))
+        alert.addAction(UIAlertAction(title: S.JailbreakWarnings.close, style: .default, handler: { _ in
+            self.saveEvent(self.makeEventName([EventContext.jailbreak.name, Event.close.name]))
+            exit(0)
+        }))
+        present(alert, animated: true, completion: nil)
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

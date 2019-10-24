@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by David Seitz Jr on 1/27/19.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit

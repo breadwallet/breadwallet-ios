@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-05-27
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -118,6 +118,10 @@ class Theme: BRDTheme {
     
     static var body1Accent: UIFont {
         return font(.bold, .body1, .body)
+    }
+    
+    static var h3Accent: UIFont {
+        return font(.bold, .h3Title, .body)
     }
     
     static var body2: UIFont {

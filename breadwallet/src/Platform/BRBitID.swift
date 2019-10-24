@@ -3,29 +3,12 @@
 //  BreadWallet
 //
 //  Created by Samuel Sutch on 6/17/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 import Foundation
 import Security
-import BRCore
+import BRCrypto
 
 open class BRBitID: NSObject {
     static let SCHEME = "bitid"
@@ -52,9 +35,9 @@ open class BRBitID: NSObject {
     }
     
     // sign a message with a key and return a base64 representation
-    class func signMessage(_ message: String, usingKey key: BRKey) -> String {
+    class func signMessage(_ message: String, usingKey key: Key) -> String {
         let signingData = formatMessageForBitcoinSigning(message)
-        let signature = signingData.sha256_2.compactSign(key: key)
+        guard let signature = signingData.sha256_2.compactSign(key: key) else { return "" }
         return String(bytes: signature.base64EncodedData(options: []), encoding: String.Encoding.utf8) ?? ""
     }
     
@@ -135,14 +118,15 @@ open class BRBitID: NSObject {
             let uri = "\(scheme)://\(url.host!)\(url.path)"
 
             // build a payload consisting of the signature, address and signed uri
-            guard var priv = walletAuthenticator.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
+            guard let priv = walletAuthenticator.buildBitIdKey(url: uri, index: Int(BRBitID.DEFAULT_INDEX)) else {
                 return
             }
 
             let uriWithNonce = "bitid://\(url.host!)\(url.path)?x=\(nonce)"
             let signature = BRBitID.signMessage(uriWithNonce, usingKey: priv)
+            
             let payload: [String: String] = [
-                "address": priv.address(legacy: true) ?? "",
+                "address": "", //priv.address(legacy: true) ?? "", //TODO:CRYPTO Key does not expose BRKeyLegacyAddr
                 "signature": signature,
                 "uri": uriWithNonce
             ]

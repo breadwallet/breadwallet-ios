@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-07-27.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
 
 enum PigeonRequestType {
     case payment
@@ -21,7 +20,7 @@ protocol PigeonRequest {
     var memo: String { get }
     var type: PigeonRequestType { get }
     var abiData: String? { get }
-    var txSize: UInt256? { get } // gas limit
+    var txSize: UInt64? { get } // gas limit
     var txFee: Amount? { get } // gas price
 }
 
@@ -55,31 +54,23 @@ extension PigeonRequest {
         }
     }
     
-    func getToken(completion: @escaping (ERC20Token?) -> Void) {
-        Backend.apiClient.getToken(withSaleAddress: address) { result in
-            guard case .success(let data) = result, let token = data.first else {
-                print("[EME] error fetching token by sale address")
-                completion(nil)
-                return
-            }
-            completion(token)
-        }
+    func getToken(completion: @escaping (Currency?) -> Void) {
+        assertionFailure()
     }
 }
 
 class MessagePaymentRequestWrapper: PigeonRequest {
     private let paymentRequest: MessagePaymentRequest
 
-    init(paymentRequest: MessagePaymentRequest) {
+    init(paymentRequest: MessagePaymentRequest, currency: Currency) {
         self.paymentRequest = paymentRequest
+        self.currency = currency
     }
 
-    var currency: Currency {
-        return Currencies.eth
-    }
+    var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: paymentRequest.amount), currency: currency)
+        return Amount(tokenString: paymentRequest.amount, currency: currency, unit: currency.baseUnit)
     }
 
     var type: PigeonRequestType {
@@ -98,12 +89,12 @@ class MessagePaymentRequestWrapper: PigeonRequest {
         return paymentRequest.memo
     }
     
-    var txSize: UInt256? {
-        return paymentRequest.hasTransactionSize ? UInt256(string: paymentRequest.transactionSize) : UInt256(100000)
+    var txSize: UInt64? {
+        return paymentRequest.hasTransactionSize ? UInt64(paymentRequest.transactionSize) : 100000
     }
     
     var txFee: Amount? {
-        return paymentRequest.hasTransactionFee ? Amount(amount: UInt256(string: paymentRequest.transactionFee), currency: currency) : nil
+        return paymentRequest.hasTransactionFee ? Amount(tokenString: paymentRequest.transactionFee, currency: currency, unit: currency.baseUnit) : nil
     }
 }
 
@@ -111,16 +102,15 @@ class MessageCallRequestWrapper: PigeonRequest {
 
     private let callRequest: MessageCallRequest
 
-    init(callRequest: MessageCallRequest) {
+    init(callRequest: MessageCallRequest, currency: Currency) {
         self.callRequest = callRequest
+        self.currency = currency
     }
 
-    var currency: Currency {
-        return Currencies.eth
-    }
+    var currency: Currency
 
     var purchaseAmount: Amount {
-        return Amount(amount: UInt256(string: callRequest.amount), currency: currency)
+        return Amount(tokenString: callRequest.amount, currency: currency, unit: currency.baseUnit)
     }
 
     var type: PigeonRequestType {
@@ -139,11 +129,11 @@ class MessageCallRequestWrapper: PigeonRequest {
         return callRequest.memo
     }
     
-    var txSize: UInt256? {
-        return callRequest.hasTransactionSize ? UInt256(string: callRequest.transactionSize) : UInt256(200000)
+    var txSize: UInt64? {
+        return callRequest.hasTransactionSize ? UInt64(callRequest.transactionSize) : 200000
     }
     
     var txFee: Amount? {
-        return callRequest.hasTransactionFee ? Amount(amount: UInt256(string: callRequest.transactionFee), currency: currency) : nil
+        return callRequest.hasTransactionFee ? Amount(tokenString: callRequest.transactionFee, currency: currency, unit: currency.baseUnit) : nil
     }
 }
