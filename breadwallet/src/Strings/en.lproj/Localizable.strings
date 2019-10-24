@@ -1058,8 +1058,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.statusHeader" = "Status";
 /* Transaction Details Title */
 "TransactionDetails.title" = "Transaction Details";
-/* Hide Details button */
-"TransactionDetails.titleFailed" = "Hide Details";
+/* Transaction Details Title - Failed */
+"TransactionDetails.titleFailed" = "Failed";
 /* Transaction Details Title - Internal */
 "TransactionDetails.titleInternal" = "Internal";
 /* Transaction Details Title - Received */
