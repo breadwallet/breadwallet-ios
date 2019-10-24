@@ -139,7 +139,7 @@ class ApplicationController: Subscriber, Trackable {
     private func unlockExistingAccount() {
         guardProtected(queue: DispatchQueue.main) {
             guard let startFlowController = self.startFlowController, !self.keyStore.noWallet else { return assertionFailure() }
-            
+            Store.perform(action: PinLength.Set(self.keyStore.pinLength))
             startFlowController.startLogin { [unowned self] account in
                 self.setupSystem(with: account)
             }
