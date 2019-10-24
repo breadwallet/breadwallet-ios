@@ -73,6 +73,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 browser.onDone = {
                     self.hasBrowser = false
                 }
+                browser.modalPresentationStyle = .fullScreen
                 self.controller?.present(browser, animated: true, completion: nil)
             }
             return BRHTTPResponse(request: request, code: 204)
@@ -131,6 +132,7 @@ class BRLinkPlugin: NSObject, BRHTTPRouterPlugin, SFSafariViewControllerDelegate
                 browser.onDone = {
                     self.hasBrowser = false
                 }
+                browser.modalPresentationStyle = .fullScreen
                 self.controller?.present(browser, animated: true, completion: nil)
             }
             return BRHTTPResponse(request: request, code: 204)
