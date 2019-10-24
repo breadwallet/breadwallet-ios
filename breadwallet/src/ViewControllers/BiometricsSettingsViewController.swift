@@ -80,6 +80,12 @@ class BiometricsSettingsViewController: UIViewController, Subscriber, Trackable 
         
         unlockToggleSeparator.backgroundColor = Theme.tertiaryBackground
         transactionsToggleSeparator.backgroundColor = Theme.tertiaryBackground
+        
+        [unlockTitleLabel, transactionsTitleLabel].forEach({
+            $0.adjustsFontSizeToFitWidth = true
+            $0.minimumScaleFactor = 0.5
+        })
+            
     }
     
     private func addConstraints() {
@@ -106,17 +112,17 @@ class BiometricsSettingsViewController: UIViewController, Subscriber, Trackable 
         
         unlockTitleLabel.constrain([
             unlockTitleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            unlockTitleLabel.rightAnchor.constraint(equalTo: unlockToggle.leftAnchor, constant: -C.padding[2]),
             unlockTitleLabel.topAnchor.constraint(equalTo: explanationLabel.bottomAnchor, constant: C.padding[5])
             ])
         
         unlockToggle.constrain([
             unlockToggle.centerYAnchor.constraint(equalTo: unlockTitleLabel.centerYAnchor),
-            unlockToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2]),
-            unlockToggle.leftAnchor.constraint(greaterThanOrEqualTo: unlockTitleLabel.rightAnchor, constant: C.padding[1])
+            unlockToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2])
             ])
         
         unlockToggleSeparator.constrain([
-            unlockToggleSeparator.topAnchor.constraint(equalTo: unlockToggle.bottomAnchor, constant: C.padding[1]),
+            unlockToggleSeparator.topAnchor.constraint(equalTo: unlockTitleLabel.bottomAnchor, constant: C.padding[1]),
             unlockToggleSeparator.leftAnchor.constraint(equalTo: view.leftAnchor),
             unlockToggleSeparator.rightAnchor.constraint(equalTo: view.rightAnchor),
             unlockToggleSeparator.heightAnchor.constraint(equalToConstant: 1.0)
@@ -128,17 +134,20 @@ class BiometricsSettingsViewController: UIViewController, Subscriber, Trackable 
 
         transactionsTitleLabel.constrain([
             transactionsTitleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
-            transactionsTitleLabel.topAnchor.constraint(equalTo: unlockTitleLabel.bottomAnchor, constant: C.padding[4])
+            transactionsTitleLabel.rightAnchor.constraint(equalTo: transactionsToggle.leftAnchor, constant: -C.padding[2]),
+            transactionsTitleLabel.topAnchor.constraint(equalTo: unlockTitleLabel.bottomAnchor, constant: C.padding[5])
             ])
         
         transactionsToggle.constrain([
             transactionsToggle.centerYAnchor.constraint(equalTo: transactionsTitleLabel.centerYAnchor),
-            transactionsToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2]),
-            transactionsToggle.leftAnchor.constraint(greaterThanOrEqualTo: transactionsTitleLabel.rightAnchor, constant: C.padding[1])
+            transactionsToggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2])
             ])
+
+        unlockToggle.setContentCompressionResistancePriority(.required, for: .horizontal)
+        transactionsToggle.setContentCompressionResistancePriority(.required, for: .horizontal)
         
         transactionsToggleSeparator.constrain([
-            transactionsToggleSeparator.topAnchor.constraint(equalTo: transactionsToggle.bottomAnchor, constant: C.padding[1]),
+            transactionsToggleSeparator.topAnchor.constraint(equalTo: transactionsTitleLabel.bottomAnchor, constant: C.padding[1]),
             transactionsToggleSeparator.leftAnchor.constraint(equalTo: view.leftAnchor),
             transactionsToggleSeparator.rightAnchor.constraint(equalTo: view.rightAnchor),
             transactionsToggleSeparator.heightAnchor.constraint(equalToConstant: 1.0)
