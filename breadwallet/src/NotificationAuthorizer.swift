@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-07-16.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -100,6 +100,13 @@ struct NotificationAuthorizer: Trackable {
             return
         }
         
+        // Don't show the opt-in prompt if we haven't had sufficent app launches since there
+        // is already a lot going on when the user first creates or restores a wallet.
+        guard UserDefaults.appLaunchCount > ApplicationController.initialLaunchCount else {
+            completion(false)
+            return
+        }
+        
         // First check if the user has already granted or denied push notifications.
         UNUserNotificationCenter.current().getNotificationSettings(completionHandler: { settings in
 
@@ -192,7 +199,9 @@ struct NotificationAuthorizer: Trackable {
         alert.addAction(enableAction)
         alert.addAction(deferAction)
         
-        viewController.present(alert, animated: true, completion: nil)
+        DispatchQueue.main.async {
+            viewController.present(alert, animated: true, completion: nil)
+        }
     }
     
     private func showAlertForInitialAuthorization(fromViewController viewController: UIViewController,

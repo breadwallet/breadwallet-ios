@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-01-13.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 /// View model of a transaction in list view
 struct TxListViewModel: TxViewModel {
@@ -27,10 +26,11 @@ struct TxListViewModel: TxViewModel {
             var address = tx.toAddress
             var format: String
             switch tx.direction {
-            case .sent, .moved:
+            case .sent, .recovered:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                if let tx = tx as? EthLikeTransaction {
+                //TODO:CRYPTO via/from
+                if tx.currency.isEthereumCompatible {
                     format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
                     address = tx.fromAddress
                 } else {
@@ -41,16 +41,16 @@ struct TxListViewModel: TxViewModel {
         }
     }
 
-    func amount(isBtcSwapped: Bool, rate: Rate) -> NSAttributedString {
+    func amount(showFiatAmounts: Bool, rate: Rate) -> NSAttributedString {
         var amount = tx.amount
-        
-        if let tx = tx as? EthTransaction, tokenTransferCode != nil {
-            amount = tx.gasPrice * UInt256(tx.gasUsed)
+
+        if tokenTransferCode != nil {
+            // this is the originating tx of a token transfer, so the amount is 0 but we want to show the fee
+            amount = tx.fee
         }
-        
+
         let text = Amount(amount: amount,
-                          currency: tx.currency,
-                          rate: isBtcSwapped ? rate : nil,
+                          rate: showFiatAmounts ? rate : nil,
                           negative: (tx.direction == .sent)).description
         let color: UIColor = (tx.direction == .received) ? .receivedGreen : .darkGray
         

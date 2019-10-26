@@ -3,123 +3,35 @@
 //  BreadWallet
 //
 //  Created by Samuel Sutch on 1/30/16.
-//  Copyright (c) 2016 breadwallet LLC
+//  Copyright (c) 2016-2019 Breadwinner AG. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 import Foundation
-import BRCore
 import libbz2
 import UIKit
+import BRCrypto
 
-public extension String {
-    static func buildQueryString(_ options: [String: [String]]?, includeQ: Bool = false) -> String {
-        var s = ""
-        if let options = options, !options.isEmpty {
-            s = includeQ ? "?" : ""
-            var i = 0
-            for (k, vals) in options {
-                for v in vals {
-                    if i != 0 {
-                        s += "&"
-                    }
-                    i += 1
-                    s += "\(k.urlEscapedString)=\(v.urlEscapedString)"
-                }
-            }
-        }
-        return s
-    }
-    
-    static var urlQuoteCharacterSet: CharacterSet {
-        if let cset = (NSMutableCharacterSet.urlQueryAllowed as NSCharacterSet).mutableCopy() as? NSMutableCharacterSet {
-            cset.removeCharacters(in: "?=&")
-            return cset as CharacterSet
-        }
-        return NSMutableCharacterSet.urlQueryAllowed as CharacterSet
-    }
-    
+// MARK: -
+
+extension String {
     func md5() -> String {
         guard let stringData = self.data(using: .utf8) else {
             assert(false, "couldnt encode string as utf8 data")
             return ""
         }
-        
-        var data = [UInt8](stringData)
-        var result = [UInt8](repeating: 0, count: 128/8)
-        let resultCount = result.count
-        BRMD5(&result, &data, data.count)
-        var hash = String()
-        for i in 0..<resultCount {
-            hash = hash.appendingFormat("%02x", result[i])
-        }
-        return hash
+        return CoreHasher.md5.hash(data: stringData)?.hexString ?? ""
     }
     
-    func base58DecodedData() -> Data {
-        let len = BRBase58Decode(nil, 0, self)
-        var data = [UInt8](repeating: 0, count: len)
-        BRBase58Decode(&data, len, self)
-        return Data(data)
-    }
-    
-    var urlEscapedString: String {
-        return addingPercentEncoding(withAllowedCharacters: String.urlQuoteCharacterSet) ?? ""
-    }
-    
-    func parseQueryString() -> [String: [String]] {
-        var ret = [String: [String]]()
-        var strippedString = self
-        if String(self[..<self.index(self.startIndex, offsetBy: 1)]) == "?" {
-            strippedString = String(self[self.index(self.startIndex, offsetBy: 1)...])
-        }
-        strippedString = strippedString.replacingOccurrences(of: "+", with: " ")
-        strippedString = strippedString.removingPercentEncoding!
-        for s in strippedString.components(separatedBy: "&") {
-            let kp = s.components(separatedBy: "=")
-            if kp.count == 2 {
-                if var k = ret[kp[0]] {
-                    k.append(kp[1])
-                } else {
-                    ret[kp[0]] = [kp[1]]
-                }
-            }
-        }
-        return ret
-    }    
-}
-
-extension UserDefaults {
-    var deviceID: String {
-        if let s = string(forKey: "BR_DEVICE_ID") {
-            return s
-        }
-        let s = CFUUIDCreateString(nil, CFUUIDCreate(nil)) as String
-        setValue(s, forKey: "BR_DEVICE_ID")
-        print("new device id \(s)")
-        return s
+    func base58DecodedData() -> Data? {
+        return CoreCoder.base58.decode(string: self)
     }
 }
 
-let VAR_INT16_HEADER: UInt64 = 0xfd
-let VAR_INT32_HEADER: UInt64 = 0xfe
-let VAR_INT64_HEADER: UInt64 = 0xff
+// MARK: -
+
+private let VAR_INT16_HEADER: UInt64 = 0xfd
+private let VAR_INT32_HEADER: UInt64 = 0xfe
+private let VAR_INT64_HEADER: UInt64 = 0xff
 
 extension NSMutableData {
 
@@ -146,32 +58,30 @@ extension NSMutableData {
     }
 }
 
-var BZCompressionBufferSize: UInt32 = 1024
-var BZDefaultBlockSize: Int32 = 7
-var BZDefaultWorkFactor: Int32 = 100
-
-private struct AssociatedKeys {
-    static var hexString = "hexString"
-}
+private var BZCompressionBufferSize: UInt32 = 1024
+private var BZDefaultBlockSize: Int32 = 7
+private var BZDefaultWorkFactor: Int32 = 100
 
 public extension Data {
+    
+    // MARK: Hex Conversion
+    
     var hexString: String {
-        if let string = getCachedHexString() {
-            return string
-        } else {
-            let string = reduce("") {$0 + String(format: "%02x", $1)}
-            setHexString(string: string)
-            return string
-        }
+        return CoreCoder.hex.encode(data: self) ?? ""
     }
 
-    private func setHexString(string: String) {
-        objc_setAssociatedObject(self, &AssociatedKeys.hexString, string, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    /// Create Data with bytes from a hex string
+    ///
+    /// - Parameters:
+    ///   - hexString: input
+    ///   - reversed: reverse the bytes (for UInt256 little-endian compatibility)
+    init?(hexString: String, reversed: Bool = false) {
+        guard hexString.isValidHexString,
+            let result = CoreCoder.hex.decode(string: hexString.withoutHexPrefix) else { return nil }
+        self = reversed ? Data(result.reversed()) : result
     }
-
-    private func getCachedHexString() -> String? {
-        return objc_getAssociatedObject(self, &AssociatedKeys.hexString) as? String
-    }
+    
+    // MARL: Compression
 
     var bzCompressedData: Data? {
         guard !self.isEmpty else {
@@ -256,41 +166,42 @@ public extension Data {
         self.init(decompressed)
     }
     
-    var base58: String {
-        return self.withUnsafeBytes {
-            let bytes = $0.baseAddress?.assumingMemoryBound(to: UInt8.self)
-            let len = BRBase58Encode(nil, 0, bytes, self.count)
-            var data = Data(count: len)
-            return data.withUnsafeMutableBytes {
-                guard let outBuf = $0.baseAddress?.assumingMemoryBound(to: Int8.self) else { assertionFailure(); return "" }
-                BRBase58Encode(outBuf, len, bytes, self.count)
-                return String(cString: outBuf)
-            }
+    // MARK: Encode/Decode
+    
+    var urlEncodedObject: [String: [String]]? {
+        guard let str = String(data: self, encoding: .utf8) else {
+            return nil
         }
+        return str.parseQueryString()
+    }
+    
+    var base58: String {
+        return CoreCoder.base58.encode(data: self) ?? ""
+    }
+    
+    var base32: String {
+        return Base32.encode(self)
+    }
+
+    // https://tools.ietf.org/html/rfc4648#section-5
+    var base64url: String {
+        var result = self.base64EncodedString()
+        result = result.replacingOccurrences(of: "+", with: "-")
+        result = result.replacingOccurrences(of: "/", with: "_")
+        result = result.replacingOccurrences(of: "=", with: "")
+        return result
     }
 
     var sha1: Data {
-        var result = [UInt8](repeating: 0, count: 20)
-        var myself = [UInt8](self)
-        BRSHA1(&result, &myself, self.count)
-        return Data(result)
+        return CoreHasher.sha1.hash(data: self) ?? Data()
     }
     
     var sha256: Data {
-        var result = [UInt8](repeating: 0, count: 32)
-        var myself = [UInt8](self)
-        BRSHA256(&result, &myself, count)
-        return Data(result)
+        return CoreHasher.sha256.hash(data: self) ?? Data()
     }
 
     var sha256_2: Data {
-        return self.sha256.sha256
-    }
-    
-    var uInt256: UInt256 {
-        return self.withUnsafeBytes {
-            return $0.load(as: UInt256.self)
-        }
+        return CoreHasher.sha256_2.hash(data: self) ?? Data()
     }
     
     func uInt8(atOffset offset: UInt) -> UInt8 {
@@ -319,12 +230,12 @@ public extension Data {
             return CFSwapInt64LittleToHost($0.load(as: UInt64.self))
         }
     }
+    
+    // MARK: Sign / Encrypt
 
-    func compactSign(key: BRKey) -> Data {
-        var result = [UInt8](repeating: 0, count: 65)
-        var k = key
-        BRKeyCompactSign(&k, &result, 65, self.uInt256)
-        return Data(result)
+    /// Returns the signature by signing `self` with `key`, using secp256k1_ecdsa_sign_recoverable
+    func compactSign(key: Key) -> Data? {
+        return CoreSigner.compact.sign(data32: self, using: key)
     }
 
     fileprivate func genNonce() -> [UInt8] {
@@ -337,66 +248,27 @@ public extension Data {
         }
     }
     
-    func chacha20Poly1305AEADEncrypt(key: BRKey) -> Data {
-        let data = [UInt8](self)
-        let inData = UnsafePointer<UInt8>(data)
+    func chacha20Poly1305AEADEncrypt(key: Key) -> Data {
         let nonce = genNonce()
-        var null =  CChar(0)
-        var sk = key.secret
-        return withUnsafePointer(to: &sk) {
-            let outSize = BRChacha20Poly1305AEADEncrypt(nil, 0, $0, nonce, inData, data.count, &null, 0)
-            var outData = [UInt8](repeating: 0, count: outSize)
-            BRChacha20Poly1305AEADEncrypt(&outData, outSize, $0, nonce, inData, data.count, &null, 0)
-            return Data(nonce + outData)
-        }
+        guard key.hasSecret else { assertionFailure(); return Data() }
+        let encrypter = CoreCipher.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
+        guard let outData = encrypter.encrypt(data: self) else { assertionFailure(); return Data() }
+        return Data(nonce + outData)
     }
     
-    func chacha20Poly1305AEADDecrypt(key: BRKey) throws -> Data {
+    func chacha20Poly1305AEADDecrypt(key: Key) throws -> Data {
+        guard key.hasSecret else { throw BRReplicatedKVStoreError.invalidKey }
         let data = [UInt8](self)
         guard data.count > 12 else { throw BRReplicatedKVStoreError.malformedData }
-        let nonce = Array(data[data.startIndex...data.startIndex.advanced(by: 12)])
-        let inData = Array(data[data.startIndex.advanced(by: 12)...(data.endIndex-1)])
-        var null =  CChar(0)
-        var sk = key.secret
-        return withUnsafePointer(to: &sk) {
-            let outSize = BRChacha20Poly1305AEADDecrypt(nil, 0, $0, nonce, inData, inData.count, &null, 0)
-            var outData = [UInt8](repeating: 0, count: outSize)
-            BRChacha20Poly1305AEADDecrypt(&outData, outSize, $0, nonce, inData, inData.count, &null, 0)
-            return Data(outData)
-        }
-    }
-
-    var masterPubKey: BRMasterPubKey? {
-        typealias PubKeyType = (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
-                                UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
-                                UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8,
-                                UInt8, UInt8, UInt8) //uint8_t pubKey[33];
-        guard self.count >= (4 + 32 + 33) else { return nil }
-        var mpk = BRMasterPubKey()
-        mpk.fingerPrint = self.subdata(in: 0..<4).withUnsafeBytes { $0.load(as: UInt32.self) }
-        mpk.chainCode = self.subdata(in: 4..<(4 + 32)).withUnsafeBytes { $0.load(as: UInt256.self) }
-        mpk.pubKey = self.subdata(in: (4 + 32)..<(4 + 32 + 33)).withUnsafeBytes { $0.load(as: PubKeyType.self) }
-        return mpk
-    }
-
-    init(masterPubKey mpk: BRMasterPubKey) {
-        var data = [mpk.fingerPrint].withUnsafeBufferPointer { Data(buffer: $0) }
-        [mpk.chainCode].withUnsafeBufferPointer { data.append($0) }
-        [mpk.pubKey].withUnsafeBufferPointer { data.append($0) }
-        self.init(data)
-    }
-
-    var urlEncodedObject: [String: [String]]? {
-        guard let str = String(data: self, encoding: .utf8) else {
-            return nil
-        }
-        return str.parseQueryString()
-    }
-    
-    var base32: String {
-        return Base32.encode(self)
+        let nonce = Array(data[data.startIndex..<data.startIndex.advanced(by: 12)])
+        let inData = Array(data[data.startIndex.advanced(by: 12)..<data.endIndex])
+        let decrypter = CoreCipher.chacha20_poly1305(key: key, nonce12: Data(nonce), ad: Data())
+        guard let decrypted = decrypter.decrypt(data: Data(inData)) else { /*assertionFailure();*/ throw BRReplicatedKVStoreError.malformedData }
+        return decrypted
     }
 }
+
+// MARK: -
 
 public extension Date {
     static func withMsTimestamp(_ ms: UInt64) -> Date {
@@ -484,6 +356,19 @@ public extension Date {
     }
 }
 
+extension DateFormatter {
+    static let iso8601Full: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ"
+        formatter.calendar = Calendar(identifier: .iso8601)
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+}
+
+// MARK: -
+
 extension UIImage {
     
     /// Represents a scaling mode
@@ -542,6 +427,8 @@ extension UIImage {
     }
 }
 
+// MARK: - 
+
 extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
     var flattened: [Key: String] {
         var ret = [Key: String]()
@@ -575,269 +462,5 @@ extension Array {
 extension Result where Success == Void {
     static var success: Result {
         return .success(())
-    }
-}
-
-//  Bases32 Encoding provided by:
-//  https://github.com/mattrubin/Bases
-//  Commit: 6b780caed18179a598ba574ce12e75674d6f4f1f
-//
-//  Copyright (c) 2015-2016 Matt Rubin and the Bases authors
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in all
-//  copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-//  SOFTWARE.
-//
-
-typealias Byte = UInt8
-typealias Quintet = UInt8
-typealias EncodedChar = UInt8
-
-func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte, _ fourthByte: Byte, _ fifthByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet) {
-    return (
-        firstQuintet(firstByte: firstByte),
-        secondQuintet(firstByte: firstByte, secondByte: secondByte),
-        thirdQuintet(secondByte: secondByte),
-        fourthQuintet(secondByte: secondByte, thirdByte: thirdByte),
-        fifthQuintet(thirdByte: thirdByte, fourthByte: fourthByte),
-        sixthQuintet(fourthByte: fourthByte),
-        seventhQuintet(fourthByte: fourthByte, fifthByte: fifthByte),
-        eighthQuintet(fifthByte: fifthByte)
-    )
-}
-
-func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte, _ fourthByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet, Quintet, Quintet) {
-    return (
-        firstQuintet(firstByte: firstByte),
-        secondQuintet(firstByte: firstByte, secondByte: secondByte),
-        thirdQuintet(secondByte: secondByte),
-        fourthQuintet(secondByte: secondByte, thirdByte: thirdByte),
-        fifthQuintet(thirdByte: thirdByte, fourthByte: fourthByte),
-        sixthQuintet(fourthByte: fourthByte),
-        seventhQuintet(fourthByte: fourthByte, fifthByte: 0)
-    )
-}
-
-func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte, _ thirdByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet, Quintet) {
-    return (
-        firstQuintet(firstByte: firstByte),
-        secondQuintet(firstByte: firstByte, secondByte: secondByte),
-        thirdQuintet(secondByte: secondByte),
-        fourthQuintet(secondByte: secondByte, thirdByte: thirdByte),
-        fifthQuintet(thirdByte: thirdByte, fourthByte: 0)
-    )
-}
-
-func quintetsFromBytes(_ firstByte: Byte, _ secondByte: Byte)
-    -> (Quintet, Quintet, Quintet, Quintet) {
-    return (
-        firstQuintet(firstByte: firstByte),
-        secondQuintet(firstByte: firstByte, secondByte: secondByte),
-        thirdQuintet(secondByte: secondByte),
-        fourthQuintet(secondByte: secondByte, thirdByte: 0)
-    )
-}
-
-func quintetsFromBytes(_ firstByte: Byte)
-    -> (Quintet, Quintet) {
-    return (
-        firstQuintet(firstByte: firstByte),
-        secondQuintet(firstByte: firstByte, secondByte: 0)
-    )
-}
-
-private func firstQuintet(firstByte: Byte) -> Quintet {
-    return ((firstByte & 0b11111000) >> 3)
-}
-
-private func secondQuintet(firstByte: Byte, secondByte: Byte) -> Quintet {
-    return ((firstByte & 0b00000111) << 2)
-        | ((secondByte & 0b11000000) >> 6)
-}
-
-private func thirdQuintet(secondByte: Byte) -> Quintet {
-    return ((secondByte & 0b00111110) >> 1)
-}
-
-private func fourthQuintet(secondByte: Byte, thirdByte: Byte) -> Quintet {
-    return ((secondByte & 0b00000001) << 4)
-        | ((thirdByte & 0b11110000) >> 4)
-}
-
-private func fifthQuintet(thirdByte: Byte, fourthByte: Byte) -> Quintet {
-    return ((thirdByte & 0b00001111) << 1)
-        | ((fourthByte & 0b10000000) >> 7)
-}
-
-private func sixthQuintet(fourthByte: Byte) -> Quintet {
-    return ((fourthByte & 0b01111100) >> 2)
-}
-
-private func seventhQuintet(fourthByte: Byte, fifthByte: Byte) -> Quintet {
-    return ((fourthByte & 0b00000011) << 3)
-        | ((fifthByte & 0b11100000) >> 5)
-}
-
-private func eighthQuintet(fifthByte: Byte) -> Quintet {
-    return (fifthByte & 0b00011111)
-}
-
-internal let paddingCharacter: EncodedChar = 61
-private let encodingTable: [EncodedChar] = [65, 66, 67, 68, 69, 70, 71, 72,
-                                            73, 74, 75, 76, 77, 78, 79, 80,
-                                            81, 82, 83, 84, 85, 86, 87, 88,
-                                            89, 90, 50, 51, 52, 53, 54, 55]
-
-internal func character(encoding quintet: Quintet) -> EncodedChar {
-    return encodingTable[Int(quintet)]
-}
-
-internal typealias EncodedBlock = (EncodedChar, EncodedChar, EncodedChar, EncodedChar, EncodedChar,
-    EncodedChar, EncodedChar, EncodedChar)
-
-internal func encodeBlock(bytes: UnsafePointer<Byte>, size: Int) -> EncodedBlock {
-    switch size {
-    case 1:
-        return encodeBlock(bytes[0])
-    case 2:
-        return encodeBlock(bytes[0], bytes[1])
-    case 3:
-        return encodeBlock(bytes[0], bytes[1], bytes[2])
-    case 4:
-        return encodeBlock(bytes[0], bytes[1], bytes[2], bytes[3])
-    case 5:
-        return encodeBlock(bytes[0], bytes[1], bytes[2], bytes[3], bytes[4])
-    default:
-        fatalError()
-    }
-}
-
-private func encodeBlock(_ b0: Byte, _ b1: Byte, _ b2: Byte, _ b3: Byte, _ b4: Byte) -> EncodedBlock {
-    let q = quintetsFromBytes(b0, b1, b2, b3, b4)
-    let c0 = character(encoding: q.0)
-    let c1 = character(encoding: q.1)
-    let c2 = character(encoding: q.2)
-    let c3 = character(encoding: q.3)
-    let c4 = character(encoding: q.4)
-    let c5 = character(encoding: q.5)
-    let c6 = character(encoding: q.6)
-    let c7 = character(encoding: q.7)
-    return (c0, c1, c2, c3, c4, c5, c6, c7)
-}
-
-private func encodeBlock(_ b0: Byte, _ b1: Byte, _ b2: Byte, _ b3: Byte) -> EncodedBlock {
-    let q = quintetsFromBytes(b0, b1, b2, b3)
-    let c0 = character(encoding: q.0)
-    let c1 = character(encoding: q.1)
-    let c2 = character(encoding: q.2)
-    let c3 = character(encoding: q.3)
-    let c4 = character(encoding: q.4)
-    let c5 = character(encoding: q.5)
-    let c6 = character(encoding: q.6)
-    let c7 = paddingCharacter
-    return (c0, c1, c2, c3, c4, c5, c6, c7)
-}
-
-private func encodeBlock(_ b0: Byte, _ b1: Byte, _ b2: Byte) -> EncodedBlock {
-    let q = quintetsFromBytes(b0, b1, b2)
-    let c0 = character(encoding: q.0)
-    let c1 = character(encoding: q.1)
-    let c2 = character(encoding: q.2)
-    let c3 = character(encoding: q.3)
-    let c4 = character(encoding: q.4)
-    let c5 = paddingCharacter
-    let c6 = paddingCharacter
-    let c7 = paddingCharacter
-    return (c0, c1, c2, c3, c4, c5, c6, c7)
-}
-
-private func encodeBlock(_ b0: Byte, _ b1: Byte) -> EncodedBlock {
-    let q = quintetsFromBytes(b0, b1)
-    let c0 = character(encoding: q.0)
-    let c1 = character(encoding: q.1)
-    let c2 = character(encoding: q.2)
-    let c3 = character(encoding: q.3)
-    let c4 = paddingCharacter
-    let c5 = paddingCharacter
-    let c6 = paddingCharacter
-    let c7 = paddingCharacter
-    return (c0, c1, c2, c3, c4, c5, c6, c7)
-}
-
-private func encodeBlock(_ b0: Byte) -> EncodedBlock {
-    let q = quintetsFromBytes(b0)
-    let c0 = character(encoding: q.0)
-    let c1 = character(encoding: q.1)
-    let c2 = paddingCharacter
-    let c3 = paddingCharacter
-    let c4 = paddingCharacter
-    let c5 = paddingCharacter
-    let c6 = paddingCharacter
-    let c7 = paddingCharacter
-    return (c0, c1, c2, c3, c4, c5, c6, c7)
-}
-
-public enum Base32 {
-    /// The size of a block before encoding, measured in bytes.
-    private static let unencodedBlockSize = 5
-    /// The size of a block after encoding, measured in bytes.
-    private static let encodedBlockSize = 8
-    
-    public static func encode(_ data: Data) -> String {
-        let unencodedByteCount = data.count
-        
-        let encodedByteCount = byteCount(encoding: unencodedByteCount)
-        let encodedBytes = UnsafeMutablePointer<EncodedChar>.allocate(capacity: encodedByteCount)
-        
-        data.withUnsafeBytes {
-            guard let unencodedBytes = $0.baseAddress?.assumingMemoryBound(to: Byte.self) else { return }
-            var encodedWriteOffset = 0
-            for unencodedReadOffset in stride(from: 0, to: unencodedByteCount, by: unencodedBlockSize) {
-                let nextBlockBytes = unencodedBytes + unencodedReadOffset
-                let nextBlockSize = min(unencodedBlockSize, unencodedByteCount - unencodedReadOffset)
-                
-                let nextChars = encodeBlock(bytes: nextBlockBytes, size: nextBlockSize)
-                encodedBytes[encodedWriteOffset + 0] = nextChars.0
-                encodedBytes[encodedWriteOffset + 1] = nextChars.1
-                encodedBytes[encodedWriteOffset + 2] = nextChars.2
-                encodedBytes[encodedWriteOffset + 3] = nextChars.3
-                encodedBytes[encodedWriteOffset + 4] = nextChars.4
-                encodedBytes[encodedWriteOffset + 5] = nextChars.5
-                encodedBytes[encodedWriteOffset + 6] = nextChars.6
-                encodedBytes[encodedWriteOffset + 7] = nextChars.7
-                
-                encodedWriteOffset += encodedBlockSize
-            }
-        }
-        
-        // The Data instance takes ownership of the allocated bytes and will handle deallocation.
-        let encodedData = Data(bytesNoCopy: encodedBytes,
-                               count: encodedByteCount,
-                               deallocator: .free)
-        return String(data: encodedData, encoding: .ascii)!
-    }
-    
-    private static func byteCount(encoding unencodedByteCount: Int) -> Int {
-        let fullBlockCount = unencodedByteCount / unencodedBlockSize
-        let remainingRawBytes = unencodedByteCount % unencodedBlockSize
-        let blockCount = remainingRawBytes > 0 ? fullBlockCount + 1 : fullBlockCount
-        return blockCount * encodedBlockSize
     }
 }

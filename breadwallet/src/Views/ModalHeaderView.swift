@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-01.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -93,6 +93,7 @@ class ModalHeaderView: UIView {
             faq?.tintColor = .white
         case .dark:
             border.backgroundColor = .secondaryShadow
+            faq?.tintColor = .lightGray
         case .transaction:
             titleLabel.font = .customBody(size: 16.0)
             titleLabel.textColor = .darkGray

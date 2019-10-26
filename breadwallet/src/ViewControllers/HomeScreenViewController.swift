@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-11-27.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -45,13 +45,26 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         return toolbarButtons[tradeButtonIndex]
     }
     
-    private var tradeNotificationImage: UIImageView?
-    
     var didSelectCurrency: ((Currency) -> Void)?
-    var didTapAddWallet: (() -> Void)?
+    var didTapManageWallets: (() -> Void)?
     var didTapBuy: (() -> Void)?
     var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
+    
+    var okToShowPrompts: Bool {
+        // On the initial display we need to load the walletes in the asset list table view first.
+        // There's already a lot going on, so don't show the home-screen prompts right away.
+        return !Store.state.wallets.isEmpty
+    }
+    
+    private lazy var totalAssetsNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.isLenient = true
+        formatter.numberStyle = .currency
+        formatter.generatesDecimalNumbers = true
+        formatter.negativeFormat = formatter.positiveFormat.replacingCharacters(in: formatter.positiveFormat.range(of: "#")!, with: "-#")
+        return formatter
+    }()
 
     // MARK: -
     
@@ -60,6 +73,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
+    deinit {
+        Store.unsubscribe(self)
+    }
+    
     func reload() {
         setInitialData()
         setupSubscriptions()
@@ -69,7 +86,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidLoad() {
         assetList.didSelectCurrency = didSelectCurrency
-        assetList.didTapAddWallet = didTapAddWallet
+        assetList.didTapAddWallet = didTapManageWallets
         addSubviews()
         addConstraints()
         setInitialData()
@@ -130,9 +147,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             ])
 
         debugLabel.constrain([
-            debugLabel.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor),
-            debugLabel.topAnchor.constraint(equalTo: subHeaderView.topAnchor)
-            ])
+            debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
+            debugLabel.bottomAnchor.constraint(equalTo: logo.topAnchor, constant: -4.0)])
         
         promptHiddenConstraint = prompt.heightAnchor.constraint(equalToConstant: 0.0)
         prompt.constrain([
@@ -258,7 +274,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             var result = false
             let oldState = $0
             let newState = $1
-            $0.displayCurrencies.forEach { currency in
+            $0.wallets.values.map { $0.currency }.forEach { currency in
                 result = result || oldState[currency]?.balance != newState[currency]?.balance
                 result = result || oldState[currency]?.currentRate?.rate != newState[currency]?.currentRate?.rate
             }
@@ -288,25 +304,19 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             self.saveEvent("experiment.buySellMenuButton", attributes: ["show": self.shouldShowBuyAndSell ? "true" : "false"])
         })
     }
-        
+    
     private func updateTotalAssets() {
-        let fiatTotal: Decimal = Store.state.displayCurrencies.map {
-            guard let balance = Store.state[$0]?.balance,
-                let rate = Store.state[$0]?.currentRate else { return 0.0 }
+        let fiatTotal: Decimal = Store.state.wallets.values.map {
+            guard let balance = $0.balance,
+                let rate = $0.currentRate else { return 0.0 }
             let amount = Amount(amount: balance,
-                                currency: $0,
                                 rate: rate)
             return amount.fiatValue
-            }.reduce(0.0, +)
+        }.reduce(0.0, +)
         
-        let format = NumberFormatter()
-        format.isLenient = true
-        format.numberStyle = .currency
-        format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
-        format.currencySymbol = Store.state[Currencies.btc]?.currentRate?.currencySymbol ?? ""
+        totalAssetsNumberFormatter.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         
-        self.total.text = format.string(from: fiatTotal as NSDecimalNumber)
+        self.total.text = totalAssetsNumberFormatter.string(from: fiatTotal as NSDecimalNumber)
     }
     
     // MARK: Actions
@@ -318,10 +328,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     @objc private func trade() {
         saveEvent("currency.didTapTrade", attributes: [:])
-        UserDefaults.didTapTradeNotification = true
         didTapTrade?()
-        tradeNotificationImage?.removeFromSuperview()
-        tradeNotificationImage = nil
     }
     
     @objc private func menu() { didTapMenu?() }
@@ -369,9 +376,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func attemptShowPrompt() {
-        guard currentPromptView == nil else {
-            return
-        }
+        guard okToShowPrompts else { return }
+        guard currentPromptView == nil else { return }
         
         if let nextPrompt = PromptFactory.nextPrompt(walletAuthenticator: walletAuthenticator) {
             self.saveEvent("prompt.\(nextPrompt.name).displayed")
@@ -390,9 +396,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             
             if !prompt.shouldHandleTap {
                 prompt.continueButton.tap = { [unowned self] in
-                    // TODO:BCH move out of home screen
-                    
-                    if let trigger = nextPrompt.trigger(for: Currencies.btc) {
+                    if let trigger = nextPrompt.trigger {
                         Store.trigger(name: trigger)
                     }
                     self.saveEvent("prompt.\(nextPrompt.name).trigger")

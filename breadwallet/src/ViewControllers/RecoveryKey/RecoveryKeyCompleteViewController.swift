@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-04-11.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -11,6 +11,7 @@ import UIKit
 class RecoveryKeyCompleteViewController: BaseRecoveryKeyViewController {
 
     private var proceedToWallet: (() -> Void)?
+    private var fromNewUserOnboarding: Bool = false
     
     private var lockTopConstraintConstant: CGFloat {
         let statusHeight = UIApplication.shared.statusBarFrame.height
@@ -27,15 +28,28 @@ class RecoveryKeyCompleteViewController: BaseRecoveryKeyViewController {
     private let subheadingLabel = UILabel()
     private let continueButton = BRDButton(title: S.RecoverKeyFlow.goToWalletButtonTitle, type: .primary)
 
-    init(proceedToWallet: (() -> Void)?) {
+    init(fromOnboarding: Bool, proceedToWallet: (() -> Void)?) {
         super.init()
+        self.fromNewUserOnboarding = fromOnboarding
         self.proceedToWallet = proceedToWallet
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
+    private var shouldShowGoToWalletButton: Bool {
+        return fromNewUserOnboarding
+    }
+    
+    override var closeButtonStyle: BaseRecoveryKeyViewController.CloseButtonStyle {
+        return self.shouldShowGoToWalletButton ? super.closeButtonStyle : .close
+    }
+    
+    override func onCloseButton() {
+        dismiss(animated: true, completion: nil)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -85,11 +99,15 @@ class RecoveryKeyCompleteViewController: BaseRecoveryKeyViewController {
         //
         // go-to-wallet button
         //
-        view.addSubview(continueButton)
-        
-        constrainContinueButton(continueButton)
-        continueButton.tap = { [unowned self] in
-            self.proceedToWallet?()
+        if shouldShowGoToWalletButton {
+            view.addSubview(continueButton)
+            
+            constrainContinueButton(continueButton)
+            continueButton.tap = { [unowned self] in
+                self.proceedToWallet?()
+            }
+        } else {
+            showCloseButton()
         }
     }
 }

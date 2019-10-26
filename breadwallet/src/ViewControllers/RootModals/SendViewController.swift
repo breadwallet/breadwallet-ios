@@ -3,24 +3,23 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-11-30.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
 import LocalAuthentication
-import BRCore
+import BRCrypto
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
-// TODO: refactor
 // swiftlint:disable type_body_length
-
 class SendViewController: UIViewController, Subscriber, ModalPresentable, Trackable {
 
     // MARK: - Public
+    
     var presentScan: PresentScan?
     var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
     var onPublishSuccess: (() -> Void)?
@@ -28,10 +27,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     var isPresentedFromLock = false
 
-    init(sender: Sender, currency: Currency, initialRequest: PaymentRequest? = nil) {
+    init(sender: Sender, initialRequest: PaymentRequest? = nil) {
+        let currency = sender.wallet.currency
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
+        self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
 
@@ -41,6 +42,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
 
     // MARK: - Private
+    
     deinit {
         Store.unsubscribe(self)
         NotificationCenter.default.removeObserver(self)
@@ -55,30 +57,37 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
-    
     private let sender: Sender
     private let currency: Currency
     private let initialRequest: PaymentRequest?
-    private var validatedProtoRequest: PaymentProtocolRequest?
+    private var paymentProtocolRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    private var feeSelection: FeeLevel?
-    private var balance: UInt256 = 0
+    private var feeSelection: FeeLevel? = .regular {
+        didSet {
+            updateFees()
+        }
+    }
+    private var balance: Amount
     private var amount: Amount? {
         didSet {
-            attemptEstimateGas()
+            updateFees()
         }
     }
     private var address: String? {
-        if let protoRequest = validatedProtoRequest {
-            return currency.matches(Currencies.bch) ? protoRequest.address.bCashAddr : protoRequest.address
+        if let protoRequest = paymentProtocolRequest {
+            return protoRequest.primaryTarget?.description
         } else {
             return addressCell.address
         }
     }
+    
+    private var currentFeeBasis: TransferFeeBasis?
 
     // MARK: - Lifecycle
+    
     override func viewDidLoad() {
+        super.viewDidLoad()
         view.backgroundColor = .white
         view.addSubview(addressCell)
         view.addSubview(memoCell)
@@ -109,20 +118,19 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
-        Store.subscribe(self, selector: { $0[self.currency]?.balance != $1[self.currency]?.balance },
-                        callback: { [unowned self] in
+        Store.subscribe(self,
+                        selector: { [weak self] oldState, newState in
+                            guard let `self` = self else { return false }
+                            return oldState[self.currency]?.balance != newState[self.currency]?.balance },
+                        callback: { [weak self] in
+                            guard let `self` = self else { return }
                             if let balance = $0[self.currency]?.balance {
                                 self.balance = balance
                             }
         })
-        Store.subscribe(self, selector: { $0[self.currency]?.fees != $1[self.currency]?.fees }, callback: { [unowned self] in
-            guard let fees = $0[self.currency]?.fees else { return }
-            self.sender.updateFeeRates(fees, toLevel: self.feeSelection)
-        })
         
-        if currency.matches(Currencies.eth) || currency is ERC20Token {
-            addEstimateGasListener()
-        }
+        addAddressChangeListener()
+        sender.updateNetworkFees()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -132,21 +140,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
-    private func addEstimateGasListener() {
+    private func addAddressChangeListener() {
         addressCell.textDidChange = { [weak self] text in
             guard let `self` = self else { return }
             guard let text = text else { return }
             guard self.currency.isValidAddress(text) else { return }
-            self.attemptEstimateGas()
+            self.updateFees()
         }
-    }
-    
-    private func attemptEstimateGas() {
-        guard let gasEstimator = self.sender as? GasEstimator else { return }
-        guard let address = addressCell.address else { return }
-        guard let amount = amount else { return }
-        guard !gasEstimator.hasFeeForAddress(address, amount: amount) else { return }
-        gasEstimator.estimateGas(toAddress: address, amount: amount)
     }
 
     // MARK: - Actions
@@ -173,13 +173,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
         }
-        amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard myself.currency is Bitcoin else { return }
-            myself.feeSelection = fee
-            if let fees = myself.currency.state?.fees {
-                myself.sender.updateFeeRates(fees, toLevel: fee)
-            }
-            myself.amountView.updateBalanceLabel()
+        amountView.didUpdateFee = strongify(self) { myself, feeLevel in
+            guard myself.currency.isBitcoinCompatible else { return }
+            myself.feeSelection = feeLevel
         }
         
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
@@ -190,26 +186,43 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    private func updateFees() {
+        guard paymentProtocolRequest == nil else {
+            self.estimateFeeForRequest(paymentProtocolRequest!) {
+                guard case .success(let feeBasis) = $0 else { return }
+                self.handleFeeEstimationResult(feeBasis)
+            }
+            return
+        }
+        guard let address = address else { return }
+        guard let amount = amount else { return }
+        guard let fee = feeSelection else { return }
+        sender.estimateFee(address: address, amount: amount, tier: fee) { self.handleFeeEstimationResult($0) }
+    }
+    
+    private func handleFeeEstimationResult(_ basis: TransferFeeBasis?) {
+        DispatchQueue.main.async {
+            self.currentFeeBasis = basis
+            self.amountView.updateBalanceLabel()
+        }
+    }
+    
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(amount: balance, currency: currency, rate: rate, minimumFractionDigits: 0)
+        let balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
-        var feeColor: UIColor = .grayTextTint
-        
-        if let amount = amount, amount.rawValue > UInt256(0) {
-            if let fee = sender.fee(forAmount: amount.rawValue) {
-                let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-                let feeAmount = Amount(amount: fee, currency: feeCurrency, rate: rate)
-                let feeText = feeAmount.description
-                feeOutput = String(format: S.Send.fee, feeText)
-                if feeCurrency.matches(currency) && (balance >= fee) && amount.rawValue > (balance - fee) {
-                    color = .cameraGuideNegative
-                }
-            } else {
-                feeOutput = S.Send.nilFeeError
-                feeColor = .cameraGuideNegative
+        let feeColor: UIColor = .grayTextTint
+
+        if let amount = amount, !amount.isZero, let feeBasis = currentFeeBasis {
+            var feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: sender.wallet.feeCurrency)
+            feeAmount.rate = rate
+            let feeText = feeAmount.description
+            feeOutput = String(format: S.Send.fee, feeText)
+
+            if feeAmount.currency == currency && (balance >= feeAmount) && amount > (balance - feeAmount) {
+                color = .cameraGuideNegative
             }
         }
         
@@ -223,11 +236,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             NSAttributedString.Key.foregroundColor: feeColor
         ]
         
-        if sender is GasEstimator {
-            return (NSAttributedString(string: balanceOutput, attributes: attributes), nil)
-        } else {
-            return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
-        }
+        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
     
     @objc private func pasteTapped() {
@@ -239,7 +248,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
             return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
         }
-        self.validatedProtoRequest = nil
+        self.paymentProtocolRequest = nil
         handleRequest(request)
     }
 
@@ -247,27 +256,39 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         memoCell.textView.resignFirstResponder()
         addressCell.textField.resignFirstResponder()
         presentScan? { [weak self] scanResult in
-            self?.validatedProtoRequest = nil
+            self?.paymentProtocolRequest = nil
             guard case .paymentRequest(let request)? = scanResult else { return }
             self?.handleRequest(request)
         }
     }
     
     private func validateSendForm() -> Bool {
+        //Payment Protocol Requests do their own validation
+        guard paymentProtocolRequest == nil else { return true }
+        
         guard let address = address, !address.isEmpty else {
             showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             return false
         }
         
-        guard let amount = amount, amount.rawValue > UInt256(0) else {
+        guard let amount = amount, !amount.isZero else {
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
         }
+        
+        guard let feeBasis = currentFeeBasis else {
+            showAlert(title: S.Alert.error, message: "No fee estimate", buttonLabel: S.Button.ok)
+            return false
+        }
 
-        let validationResult = sender.createTransaction(address: address,
-                                                        amount: amount.rawValue,
-                                                        comment: memoCell.textView.text)
-        switch validationResult {
+        return handleValidationResult(sender.createTransaction(address: address,
+                                                        amount: amount,
+                                                        feeBasis: feeBasis,
+                                                        comment: memoCell.textView.text))
+    }
+    
+    private func handleValidationResult(_ result: SenderValidationResult, protocolRequest: PaymentProtocolRequest? = nil) -> Bool {
+        switch result {
         case .noFees:
             showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             
@@ -278,9 +299,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         case .ownAddress:
             showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             
-        case .outputTooSmall(let minOutput):
-            let minOutputAmount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let text = Store.state.isBtcSwapped ? minOutputAmount.fiatDescription : minOutputAmount.tokenDescription
+        case .outputTooSmall(let minOutput), .paymentTooSmall(let minOutput):
+            let text = Store.state.showFiatAmounts ? minOutput.fiatDescription : minOutput.tokenDescription
             let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
             showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
             
@@ -293,12 +313,26 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         case .insufficientGas:
             showInsufficientGasError()
             
+        case .identityNotCertified(let message):
+            showError(title: S.Send.identityNotCertified, message: message, ignore: { [unowned self] in
+                self.didIgnoreIdentityNotCertified = true
+                if let protoReq = protocolRequest {
+                    self.didReceivePaymentProtocolRequest(protoReq)
+                }
+            })
+            return false
+        case .invalidRequest(let errorMessage):
+            showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
+            return false
+        case .usedAddress:
+            showError(title: S.Send.UsedAddress.title, message: "\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)", ignore: { [unowned self] in
+                self.didIgnoreUsedAddressWarning = true
+            })
+            return false
+            
         // allow sending without exchange rates available (the tx metadata will not be set)
         case .ok, .noExchangeRate:
             return true
-            
-        default:
-            break
         }
         
         return false
@@ -311,17 +345,16 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         
         guard validateSendForm(),
             let amount = amount,
-            let address = address else { return }
+            let address = address,
+            let feeBasis = currentFeeBasis else { return }
+
+        let feeCurrency = sender.wallet.feeCurrency
+        let fee = Amount(cryptoAmount: feeBasis.fee, currency: feeCurrency)
         
-        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
-        let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-        
-        let displyAmount = Amount(amount: amount.rawValue,
-                                  currency: currency,
+        let displyAmount = Amount(amount: amount,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
         let feeAmount = Amount(amount: fee,
-                               currency: feeCurrency,
                                rate: (amountView.selectedRate != nil) ? feeCurrency.state?.currentRate : nil,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
@@ -342,52 +375,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         present(confirm, animated: true, completion: nil)
         return
     }
-
-    private func handleRequest(_ request: PaymentRequest) {
-        guard request.warningMessage == nil else { return handleRequestWithWarning(request) }
-        switch request.type {
-        case .local:
-            addressCell.setContent(request.displayAddress)
-            addressCell.isEditable = true
-            if let amount = request.amount {
-                amountView.forceUpdateAmount(amount: amount)
-            }
-            if request.label != nil {
-                memoCell.content = request.label
-            }
-        case .remote:
-            let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
-            present(loadingView, animated: true, completion: nil)
-            request.fetchRemoteRequest(completion: { [weak self] request in
-                DispatchQueue.main.async {
-                    loadingView.dismiss(animated: true, completion: {
-                        if let paymentProtocolRequest = request?.paymentProtocolRequest {
-                            self?.confirmProtocolRequest(paymentProtocolRequest)
-                        } else {
-                            self?.showErrorMessage(S.Send.remoteRequestError)
-                        }
-                    })
-                }
-            })
-        }
-    }
-
-    private func handleRequestWithWarning(_ request: PaymentRequest) {
-        guard let message = request.warningMessage else { return }
-        let alert = UIAlertController(title: S.Alert.warning, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: S.Button.continueAction, style: .default, handler: { [weak self] _ in
-            var requestCopy = request
-            requestCopy.warningMessage = nil
-            self?.handleRequest(requestCopy)
-        }))
-        present(alert, animated: true, completion: nil)
-    }
-
+    
     private func send() {
         let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
             guard let `self` = self else { return assertionFailure() }
-
             self.sendingActivity.dismiss(animated: false) {
                 self.presentVerifyPin?(S.VerifyPin.authorize) { pin in
                     self.parent?.view.isFrameChangeBlocked = false
@@ -396,11 +387,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 }
             }
         }
-
+        
         present(sendingActivity, animated: true)
-        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: nil) { [weak self] result in
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
             guard let `self` = self else { return }
             self.sendingActivity.dismiss(animated: true) {
+                defer { self.sender.reset() }
                 switch result {
                 case .success:
                     self.dismiss(animated: true) {
@@ -424,79 +416,92 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             }
         }
     }
+    
+    // MARK: - Payment Protocol Requests
 
-    func confirmProtocolRequest(_ protoReq: PaymentProtocolRequest) {
-        let result = sender.validate(paymentRequest: protoReq, ignoreUsedAddress: didIgnoreUsedAddressWarning, ignoreIdentityNotCertified: didIgnoreIdentityNotCertified)
-        
-        switch result {
-        case .invalidRequest(let errorMessage):
-            return showAlert(title: S.PaymentProtocol.Errors.badPaymentRequest, message: errorMessage, buttonLabel: S.Button.ok)
-            
-        case .ownAddress:
-            return showAlert(title: S.Alert.warning, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
-            
-        case .usedAddress:
-            let message = "\(S.Send.UsedAddress.title)\n\n\(S.Send.UsedAddress.firstLine)\n\n\(S.Send.UsedAddress.secondLine)"
-            return showError(title: S.Alert.warning, message: message, ignore: { [unowned self] in
-                self.didIgnoreUsedAddressWarning = true
-                self.confirmProtocolRequest(protoReq)
-            })
-            
-        case .identityNotCertified(let errorMessage):
-            return showError(title: S.Send.identityNotCertified, message: errorMessage, ignore: { [unowned self] in
-                self.didIgnoreIdentityNotCertified = true
-                self.confirmProtocolRequest(protoReq)
-            })
-            
-        case .paymentTooSmall(let minOutput):
-            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amount.tokenDescription)
-            return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
-            
-        case .outputTooSmall(let minOutput):
-            let amount = Amount(amount: UInt256(minOutput), currency: currency, rate: Rate.empty)
-            let message = String(format: S.PaymentProtocol.Errors.smallTransaction, amount.tokenDescription)
-            return showAlert(title: S.PaymentProtocol.Errors.smallOutputErrorTitle, message: message, buttonLabel: S.Button.ok)
-
-        case .insufficientFunds:
-            return showAlert(title: S.Alert.error, message: S.Send.insufficientFunds, buttonLabel: S.Button.ok)
-            
-        case .ok:
-            self.validatedProtoRequest = protoReq
-            
-        default:
-            assertionFailure("unhandled error")
-            print("[SEND] payment request validation error: \(result)")
-            return
-        }
-
-        let address = protoReq.address
-        let requestAmount = UInt256(protoReq.amount)
-        
-        if let name = protoReq.commonName {
-            addressCell.setContent(protoReq.pkiType != "none" ? "\(S.Symbols.lock) \(name.sanitized)" : name.sanitized)
-        } else {
-            addressCell.setContent(currency.matches(Currencies.bch) ? address.bCashAddr : address)
-        }
-        
-        if requestAmount > UInt256(0) {
-            amountView.forceUpdateAmount(amount: Amount(amount: requestAmount, currency: currency))
-        }
-        memoCell.content = protoReq.details.memo
-
-        if requestAmount == 0 {
-            if let amount = amount {
-                guard case .ok = sender.createTransaction(address: address, amount: amount.rawValue, comment: nil) else {
-                    return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
+    private func handleRequest(_ request: PaymentRequest) {
+        switch request.type {
+        case .local:
+            addressCell.setContent(request.toAddress?.description)
+            addressCell.isEditable = true
+            if let amount = request.amount {
+                amountView.forceUpdateAmount(amount: amount)
+            }
+            if request.label != nil {
+                memoCell.content = request.label
+            }
+        case .remote:
+            let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
+            present(loadingView, animated: true, completion: nil)
+            request.fetchRemoteRequest(completion: { [weak self] request in
+                DispatchQueue.main.async {
+                    loadingView.dismiss(animated: true, completion: {
+                        if let paymentProtocolRequest = request?.paymentProtocolRequest {
+                            self?.didReceivePaymentProtocolRequest(paymentProtocolRequest)
+                        } else {
+                            self?.showErrorMessage(S.Send.remoteRequestError)
+                        }
+                    })
                 }
-            }
-        } else {
-            addressCell.isEditable = false
-            guard case .ok = sender.createTransaction(forPaymentProtocol: protoReq) else {
-                return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
-            }
+            })
         }
     }
+    
+    private func didReceivePaymentProtocolRequest(_ paymentProtocolRequest: PaymentProtocolRequest) {
+        self.paymentProtocolRequest = paymentProtocolRequest
+        estimateFeeForRequest(paymentProtocolRequest) { self.handleProtoReqFeeEstimation(paymentProtocolRequest, result: $0) }
+    }
+    
+    func estimateFeeForRequest(_ protoReq: PaymentProtocolRequest, completion: @escaping (Result<TransferFeeBasis, BRCrypto.Wallet.FeeEstimationError>) -> Void) {
+        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeSelection ?? .regular)
+        protoReq.estimateFee(fee: networkFee, completion: completion)
+    }
+    
+    private func handleProtoReqFeeEstimation(_ protoReq: PaymentProtocolRequest, result: Result<TransferFeeBasis, BRCrypto.Wallet.FeeEstimationError>) {
+        switch result {
+        case .success(let transferFeeBasis):
+            DispatchQueue.main.async {
+                //We need to keep track of the fee basis here so that we can display the fee amount
+                //in the tx confirmation view
+                self.currentFeeBasis = transferFeeBasis
+                self.validateReq(protoReq: protoReq, feeBasis: transferFeeBasis)
+            }
+        case .failure(let error):
+            self.showErrorMessage("Error estimating fee: \(error)")
+        }
+    }
+    
+    private func validateReq(protoReq: PaymentProtocolRequest, feeBasis: TransferFeeBasis) {
+        guard let totalAmount = protoReq.totalAmount else { handleZeroAmountPaymentProtocolRequest(protoReq); return }
+        let requestAmount = Amount(cryptoAmount: totalAmount, currency: currency, maximumFractionDigits: 8)
+        guard !requestAmount.isZero else { handleZeroAmountPaymentProtocolRequest(protoReq); return }
+        let result = sender.createTransaction(protocolRequest: protoReq,
+                                            ignoreUsedAddress: didIgnoreUsedAddressWarning,
+                                            ignoreIdentityNotCertified: didIgnoreIdentityNotCertified,
+                                            feeBasis: feeBasis,
+                                            comment: protoReq.memo)
+        guard handleValidationResult(result, protocolRequest: protoReq) else { return }
+        addressCell.setContent(protoReq.displayText)
+        memoCell.content = protoReq.memo
+        amountView.forceUpdateAmount(amount: requestAmount)
+        addressCell.isEditable = false
+        addressCell.hideActionButtons()
+        amountView.isEditable = false
+        sender.displayPaymentProtocolResponse = { self.showAlert(title: S.Import.success, message: $0) }
+    }
+    
+    private func handleZeroAmountPaymentProtocolRequest(_ protoReq: PaymentProtocolRequest) {
+        guard let address = protoReq.primaryTarget?.description else {
+            showErrorMessage(S.Send.invalidAddressTitle); return
+        }
+        //After this point, a zero amount Payment protocol request behaves like a
+        //regular send except the address cell isn't editable
+        addressCell.setContent(address)
+        addressCell.isEditable = false
+        addressCell.hideActionButtons()
+    }
+    
+    // MARK: - Errors
 
     private func showError(title: String, message: String, ignore: @escaping () -> Void) {
         let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -509,28 +514,35 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     /// Insufficient gas for ERC20 token transfer
     private func showInsufficientGasError() {
-        guard let amount = self.amount,
-            let fee = self.sender.fee(forAmount: amount.rawValue) else { return assertionFailure() }
-        let feeAmount = Amount(amount: fee, currency: Currencies.eth, rate: nil)
-        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
+        guard let feeAmount = self.currentFeeBasis?.fee else { return assertionFailure() }
         
+        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
+
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
-            Store.trigger(name: .showCurrency(Currencies.eth))
+            Store.trigger(name: .showCurrency(self.sender.wallet.feeCurrency))
         }))
         alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
 
-    // MARK: - Keyboard Notifications
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: - Keyboard Notifications
+
+extension SendViewController {
+    
     @objc private func keyboardWillShow(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
-
+    
     @objc private func keyboardWillHide(notification: Notification) {
         copyKeyboardChangeAnimation(notification: notification)
     }
-
+    
     //TODO - maybe put this in ModalPresentable?
     private func copyKeyboardChangeAnimation(notification: Notification) {
         guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
@@ -539,11 +551,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             parentView.frame = parentView.frame.offsetBy(dx: 0, dy: info.deltaY)
         }, completion: nil)
     }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
+
+// MARK: - ModalDisplayable
 
 extension SendViewController: ModalDisplayable {
     var faqArticleId: String? {

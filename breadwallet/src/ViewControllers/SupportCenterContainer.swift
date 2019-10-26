@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-05-02.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -14,17 +14,16 @@ class SupportCenterContainer: UIViewController {
         webView.navigate(to: to)
     }
 
-    init(walletAuthenticator: TransactionAuthenticator, walletManagers: [String: WalletManager]) {
+    init(walletAuthenticator: TransactionAuthenticator) {
         let mountPoint = "/support"
         webView = BRWebViewController(bundleName: C.webBundle,
                                       mountPoint: mountPoint,
-                                      walletAuthenticator: walletAuthenticator,
-                                      walletManagers: walletManagers)
+                                      walletAuthenticator: walletAuthenticator)
         super.init(nibName: nil, bundle: nil)
-        loadWebView()
     }
 
     private var webView: BRWebViewController
+    
     let blur = UIVisualEffectView()
 
     override func viewDidLoad() {
@@ -39,13 +38,13 @@ class SupportCenterContainer: UIViewController {
         addTopCorners()
     }
 
-    func loadWebView() {
+    func preload() {
         webView.stopServer()
         webView.bundleName = C.webBundle // reset in case of developer override
         webView.startServer()
         webView.preload()
     }
-
+    
     private func addTopCorners() {
         let path = UIBezierPath(roundedRect: view.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 6.0, height: 6.0)).cgPath
         let maskLayer = CAShapeLayer()

@@ -3,19 +3,18 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-07-31.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 class CheckoutConfirmationViewController: UIViewController {
 
-    private let header = UIView(color: .darkerBackground)
+    private let header = UIView(color: Theme.secondaryBackground)
     private let titleLabel = UILabel(font: .customBold(size: 18.0), color: .white)
     private let footer = UIStackView()
     private let body = UIStackView()
-    private let footerBackground = UIView(color: .darkerBackground)
+    private let footerBackground = UIView(color: Theme.secondaryBackground)
     private let buy = BRDButton(title: S.Button.buy, type: .primary)
     private let cancel = BRDButton(title: S.Button.cancel, type: .secondary)
     private let logo = UIImageView()
@@ -25,7 +24,7 @@ class CheckoutConfirmationViewController: UIViewController {
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let request: PigeonRequest
     private let sender: Sender
-    private var token: ERC20Token? {
+    private var token: Currency? {
         didSet {
             coinName.text = token?.name ?? S.LinkWallet.logoFooter
             amount.text = String(format: S.PaymentConfirmation.amountText, request.purchaseAmount.description, token?.code ?? "")
@@ -123,20 +122,12 @@ class CheckoutConfirmationViewController: UIViewController {
         let address = request.address
         let currency = request.currency
 
-        let fee = sender.fee(forAmount: amount.rawValue) ?? UInt256(0)
-        let feeCurrency = (currency is ERC20Token) ? Currencies.eth : currency
-
-        let displyAmount = Amount(amount: amount.rawValue,
-                                  currency: currency,
+        let displyAmount = Amount(amount: amount,
                                   rate: nil,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
-        let feeAmount = Amount(amount: fee,
-                               currency: feeCurrency,
-                               rate: nil,
-                               maximumFractionDigits: Amount.highPrecisionDigits)
 
         let confirm = ConfirmationViewController(amount: displyAmount,
-                                                 fee: feeAmount,
+                                                 fee: Amount.zero(currency), //TODO:CRYPTO_V2
                                                  displayFeeLevel: .regular,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
@@ -152,64 +143,76 @@ class CheckoutConfirmationViewController: UIViewController {
         return
     }
     
-    private func validateTransaction() -> Bool {
-        let validationResult = sender.createTransaction(address: request.address,
-                                                        amount: request.purchaseAmount.rawValue,
-                                                        comment: request.memo)
-        switch validationResult {
-        case .ok, .noExchangeRate:
-            return true
-        case .insufficientFunds:
-            showErrorMessageAndDismiss(S.Send.insufficientFunds)
-        case .insufficientGas:
-            showInsufficientGasError()
-        default:
-            showErrorMessageAndDismiss(S.Send.createTransactionError)
+    private func validateTransaction(completion: @escaping (Bool) -> Void) {
+        sender.estimateFee(address: request.address,
+                           amount: request.purchaseAmount,
+                           tier: .priority) { feeBasis in
+            
+            guard let feeBasis = feeBasis else {
+                completion(false)
+                return
+            }
+                            
+            let validationResult = self.sender.createTransaction(address: self.request.address,
+                                                                 amount: self.request.purchaseAmount,
+                                                                 feeBasis: feeBasis,
+                                                                 comment: self.request.memo)
+            switch validationResult {
+            case .ok, .noExchangeRate:
+                return completion(true)
+            case .insufficientFunds:
+                self.showErrorMessageAndDismiss(S.Send.insufficientFunds)
+            case .insufficientGas:
+                self.showInsufficientGasError()
+            default:
+                self.showErrorMessageAndDismiss(S.Send.createTransactionError)
+            }
+            self.request.responseCallback?(CheckoutResult.accepted(result: .creationError(message: "")))
+            completion(false)
         }
-        self.request.responseCallback?(CheckoutResult.accepted(result: .creationError(message: "")))
-        return false
     }
 
     private func send() {
-        
-        guard validateTransaction() else { return }
-        
-        let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
-            self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
-                self?.parent?.view.isFrameChangeBlocked = false
-                pinValidationCallback(pin)
+        validateTransaction { valid in
+            guard valid else { return }
+            
+            let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+                self?.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                    self?.parent?.view.isFrameChangeBlocked = false
+                    pinValidationCallback(pin)
+                }
             }
-        }
-
-        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier, abi: request.abiData) { [weak self] result in
-            guard let `self` = self else { return }
-            self.request.responseCallback?(CheckoutResult.accepted(result: result))
-            switch result {
-            case .success:
-                self.dismiss(animated: true, completion: {
-                    Store.trigger(name: .showStatusBar)
-                    self.onPublishSuccess?()
-                })
-            case .creationError(let message):
-                self.showAlertAndDismiss(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-            case .publishFailure(let error):
-                self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
-            case .insufficientGas:
-                self.showInsufficientGasError()
+            
+            //TODO:CRYPTO_V2 contract execution
+            self.sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
+                guard let `self` = self else { return }
+                self.request.responseCallback?(CheckoutResult.accepted(result: result))
+                switch result {
+                case .success:
+                    self.dismiss(animated: true, completion: {
+                        Store.trigger(name: .showStatusBar)
+                        self.onPublishSuccess?()
+                    })
+                case .creationError(let message):
+                    self.showAlertAndDismiss(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
+                case .publishFailure(let error):
+                    self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
+                case .insufficientGas:
+                    self.showInsufficientGasError()
+                }
             }
         }
     }
 
     /// Insufficient gas for ERC20 token transfer
     private func showInsufficientGasError() {
-        guard let fee = sender.fee(forAmount: request.purchaseAmount.rawValue) else { return assertionFailure() }
-        let feeAmount = Amount(amount: fee, currency: Currencies.eth, rate: nil)
-        let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
+        let fee = Amount.zero(request.currency) //TODO:CRYPTO_V2
+        let message = String(format: S.Send.insufficientGasMessage, fee.description)
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
             self.dismiss(animated: true) {
-                Store.trigger(name: .showCurrency(Currencies.eth))
+                Store.trigger(name: .showCurrency(fee.currency))
             }
         }))
         alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: { _ in

@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-02-19.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -32,12 +32,12 @@ class TxListCell: UITableViewCell {
         setupViews()
     }
     
-    func setTransaction(_ viewModel: TxListViewModel, isBtcSwapped: Bool, rate: Rate, maxDigits: Int, isSyncing: Bool) {
+    func setTransaction(_ viewModel: TxListViewModel, showFiatAmounts: Bool, rate: Rate, isSyncing: Bool) {
         self.viewModel = viewModel
         
         timestamp.text = viewModel.shortTimestamp
         descriptionLabel.text = viewModel.shortDescription
-        amount.attributedText = viewModel.amount(isBtcSwapped: isBtcSwapped, rate: rate)
+        amount.attributedText = viewModel.amount(showFiatAmounts: showFiatAmounts, rate: rate)
         
         statusIndicator.status = viewModel.status
         

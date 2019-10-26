@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-23.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -50,7 +50,7 @@ class EnterPhraseCollectionViewController: UICollectionViewController, UICollect
                 return phraseCell.textField.text?.lowercased() ?? ""
             }.joined(separator: " ")
     }
-
+    
     override func viewDidLoad() {
         collectionView = NonScrollingCollectionView(frame: view.bounds, collectionViewLayout: collectionViewLayout)
         collectionView.backgroundColor = Theme.primaryBackground

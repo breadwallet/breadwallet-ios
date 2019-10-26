@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-21.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -20,10 +20,6 @@ extension UIColor {
 
     static var darkBackground: UIColor {
         return Theme.primaryBackground
-    }
-
-    static var darkerBackground: UIColor {
-        return UIColor.fromHex("251935")
     }
     
     static var darkPromptBackground: UIColor {

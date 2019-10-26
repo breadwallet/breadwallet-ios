@@ -3,10 +3,11 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-06-27.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
+import BRCrypto
 
 enum QRCode: Equatable {
     case paymentRequest(PaymentRequest)
@@ -15,7 +16,7 @@ enum QRCode: Equatable {
     case invalid
     
     init(content: String) {
-        if content.isValidPrivateKey || content.isValidBip38Key {
+        if (Key.createFromString(asPrivate: content) != nil) || Key.isProtected(asPrivate: content) {
             self = .privateKey(content)
         } else if let url = URL(string: content), url.isDeepLink {
             self = .deepLink(url)
@@ -27,13 +28,9 @@ enum QRCode: Equatable {
     }
     
     private static func detectPaymentRequest(fromURI uri: String) -> PaymentRequest? {
-        let currencies: [Currency] = [Currencies.btc, Currencies.bch, Currencies.eth]
-        for currency in currencies {
-            if let request = PaymentRequest(string: uri, currency: currency) {
-                return request
-            }
-        }
-        return nil
+        return Store.state.currencies.compactMap {
+            PaymentRequest(string: uri, currency: $0)
+        }.first
     }
     
     static func == (lhs: QRCode, rhs: QRCode) -> Bool {

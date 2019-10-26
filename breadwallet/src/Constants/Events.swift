@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-02-13.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -18,6 +18,8 @@ public enum EventContext: String {
     case pushNotifications
     case inAppNotifications
     case wallet
+    case jailbreak
+    case fastSync
     var name: String { return rawValue }
 }
 
@@ -81,6 +83,14 @@ public enum Event: String {
     case scrubbed
     
     case test
+    
+    //jailbreak actions
+    case ignore
+    case close
+    
+    // fastSync
+    case enable
+    case disable
     
     var name: String { return rawValue }
 }

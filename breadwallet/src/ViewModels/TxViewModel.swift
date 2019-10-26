@@ -3,10 +3,11 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-01-11.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
+import BRCrypto
 
 /// Representation of a transaction
 protocol TxViewModel {
@@ -15,7 +16,7 @@ protocol TxViewModel {
     var blockHeight: String { get }
     var longTimestamp: String { get }
     var status: TransactionStatus { get }
-    var direction: TransactionDirection { get }
+    var direction: TransferDirection { get }
     var displayAddress: String { get }
     var comment: String? { get }
     var tokenTransferCode: String? { get }
@@ -26,12 +27,13 @@ extension TxViewModel {
 
     var currency: Currency { return tx.currency }
     var status: TransactionStatus { return tx.status }
-    var direction: TransactionDirection { return tx.direction }
+    var direction: TransferDirection { return tx.direction }
     var comment: String? { return tx.comment }
     
     // BTC does not have "from" address, only "sent to" or "received at"
     var displayAddress: String {
-        if let tx = tx as? EthLikeTransaction {
+        //TODO:CRYPTO via/from
+        if tx.currency.isEthereumCompatible {
             if direction == .sent {
                 return tx.toAddress
             } else {
@@ -43,9 +45,10 @@ extension TxViewModel {
     }
     
     var blockHeight: String {
-        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
-            ? S.TransactionDetails.notConfirmedBlockHeightLabel
-            : "\(tx.blockHeight)"
+        return tx.blockNumber?.description ?? S.TransactionDetails.notConfirmedBlockHeightLabel
+//        return (tx.blockHeight == C.txUnconfirmedHeight || tx.confirmations == 0)
+//            ? S.TransactionDetails.notConfirmedBlockHeightLabel
+//            : "\(tx.blockHeight)"
     }
     
     var confirmations: String {

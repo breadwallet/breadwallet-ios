@@ -3,11 +3,11 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-07-24.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
-import BRCore
+import BRCrypto
 import UIKit
 
 // swiftlint:disable type_body_length
@@ -85,12 +85,11 @@ class PigeonExchange: Subscriber {
         }
         
         guard let pairingKey = PigeonCrypto.pairingKey(forIdentifier: pairingRequest.identifier, authKey: authKey),
-            let remotePubKey = pairingRequest.publicKey.hexToData else {
+            let remotePubKey = pairingRequest.publicKey.hexToData,
+            let localPubKey = pairingKey.encodeAsPublic.hexToData else {
                 print("[EME] invalid pairing request parameters. pairing aborted!")
                 return completionHandler(.error(message: "invalid pairing request parameters. pairing aborted!"))
         }
-        
-        let localPubKey = pairingKey.publicKey
         
         var link = MessageLink()
         link.id = localIdentifier
@@ -195,10 +194,13 @@ class PigeonExchange: Subscriber {
                                 continue
                             }
                             
-                            let decryptedData = PigeonCrypto(privateKey: pairingKey)
+                            guard let decryptedData = PigeonCrypto(privateKey: pairingKey)
                                 .decrypt(envelope.encryptedMessage,
                                          nonce: envelope.nonce,
-                                         senderPublicKey: envelope.senderPublicKey)
+                                         senderPublicKey: envelope.senderPublicKey) else {
+                                            print("[EME] decryption failed!")
+                                            continue
+                            }
                             guard let link = try? MessageLink(serializedData: decryptedData) else {
                                 print("[EME] failed to decode link message")
                                 continue
@@ -233,6 +235,7 @@ class PigeonExchange: Subscriber {
     private func rejectPairingRequest(_ pairingRequest: WalletPairingRequest, completionHandler: @escaping PairingCompletionHandler) {
         guard let authKey = apiClient.authKey,
             let pairingKey = PigeonCrypto.pairingKey(forIdentifier: pairingRequest.identifier, authKey: authKey),
+            let pairingPubKey = pairingKey.encodeAsPublic.hexToData,
             let remotePubKey = pairingRequest.publicKey.hexToData else {
                 return completionHandler(.error(message: "error constructing remote pub key"))
         }
@@ -241,7 +244,7 @@ class PigeonExchange: Subscriber {
         link.status = .rejected
         link.error = .userDenied
         guard let envelope = try? MessageEnvelope(to: remotePubKey,
-                                                  from: pairingKey.publicKey,
+                                                  from: pairingPubKey,
                                                   message: link,
                                                   type: .link,
                                                   service: pairingRequest.service,
@@ -350,7 +353,10 @@ class PigeonExchange: Subscriber {
         }
         print("[EME] envelope \(envelope.identifier) verified. contains \(envelope.service) \(envelope.messageType) message")
         let crypto = PigeonCrypto(privateKey: pairingKey)
-        let decryptedData = crypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey)
+        guard let decryptedData = crypto.decrypt(envelope.encryptedMessage, nonce: envelope.nonce, senderPublicKey: envelope.senderPublicKey) else {
+            print("[EME] envelope \(envelope.identifier) decryption failed!")
+            return true
+        }
         do {
             guard let type = PigeonMessageType(rawValue: envelope.messageType) else {
                 print("[EME] ERROR: Unknown message type \(envelope.messageType)")
@@ -399,8 +405,9 @@ class PigeonExchange: Subscriber {
         }
         
         let currencyCode = accountRequest.scope.uppercased()
+        let currencyId = CurrencyId(rawValue: currencyCode) //TODO:CRYPTO_V2 code to uid
         var response = MessageAccountResponse()
-        if let receiveAddress = Store.state.wallets[currencyCode]?.receiveAddress {
+        if let receiveAddress = Store.state.wallets[currencyId]?.receiveAddress {
             response.scope = accountRequest.scope
             response.address = receiveAddress
             response.status = .accepted
@@ -421,7 +428,9 @@ class PigeonExchange: Subscriber {
     // MARK: - Purchase/Call Request
     
     private func handlePaymentRequest(_ paymentRequest: MessagePaymentRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessagePaymentRequestWrapper(paymentRequest: paymentRequest)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+        var request = MessagePaymentRequestWrapper(paymentRequest: paymentRequest, currency: currency)
         request.responseCallback = { result in
             self.sendPaymentResponse(result: result, forRequest: paymentRequest, from: requestEnvelope)
         }
@@ -429,7 +438,9 @@ class PigeonExchange: Subscriber {
     }
     
     private func handleCallRequest(_ callRequest: MessageCallRequest, from requestEnvelope: MessageEnvelope) {
-        var request = MessageCallRequestWrapper(callRequest: callRequest)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+        var request = MessageCallRequestWrapper(callRequest: callRequest, currency: currency)
         request.responseCallback = { result in
             self.sendCallResponse(result: result, forRequest: callRequest, from: requestEnvelope)
         }
@@ -509,26 +520,24 @@ class PigeonExchange: Subscriber {
         }
         apiClient.sendMessage(envelope: envelope)
 
-        let requestWrapper = MessageCallRequestWrapper(callRequest: request)
+        //TODO:CRYPTO cleanup
+        guard let currency = Store.state.currencies.first(where: { $0.isEthereum }) else { return assertionFailure() }
+
+        let requestWrapper = MessageCallRequestWrapper(callRequest: request, currency: currency)
         requestWrapper.getToken { [unowned self] token in
-            var amountToReceive = ""
+            let amountToReceive = ""
             var tokenCode = ""
             if let token = token {
                 self.addTokenWallet(token: token)
                 tokenCode = token.code
-                if let rate = token.defaultRate {
-                    // exchange rate is in the currency's common units
-                    let formatter = Amount(amount: 0, currency: token).tokenFormat
-                    let value: Decimal = requestWrapper.purchaseAmount.tokenValue / Decimal(rate)
-                    amountToReceive = formatter.string(from: value as NSDecimalNumber) ?? ""
-                }
             }
+            let currencyId = CurrencyId(rawValue: request.scope) //TODO:CRYPTO_V2 code to uid
             self.apiClient.sendCheckoutEvent(status: response.status.rawValue,
                                              identifier: requestEnvelope.identifier,
                                              service: requestEnvelope.service,
                                              fromCurrency: request.scope,
-                                             fromAddress: Store.state.wallets[request.scope]?.receiveAddress ?? "",
-                                             fromAmount: requestWrapper.purchaseAmount.tokenFormattedValue,
+                                             fromAddress: Store.state.wallets[currencyId]?.receiveAddress ?? "",
+                                             fromAmount: requestWrapper.purchaseAmount.tokenUnformattedString(in: requestWrapper.currency.defaultUnit),
                                              toCurrency: tokenCode,
                                              toAmount: amountToReceive,
                                              toAddress: request.address,
@@ -540,13 +549,14 @@ class PigeonExchange: Subscriber {
     // MARK: - Ping
     
     func sendPing(remotePubKey: Data) {
-        guard let pairingKey = pairingKey(forRemotePubKey: remotePubKey) else { return }
+        guard let pairingKey = pairingKey(forRemotePubKey: remotePubKey),
+            let pairingPubKey = pairingKey.encodeAsPublic.hexToData else { return }
 
         let crypto = PigeonCrypto(privateKey: pairingKey)
 
         var ping = MessagePing()
         ping.ping = "Hello from BC"
-        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingKey.publicKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else {
+        guard let envelope = try? MessageEnvelope(to: remotePubKey, from: pairingPubKey, message: ping, type: .ping, service: "PWB", crypto: crypto) else {
             return print("[EME] envelope construction failed!")
         }
         apiClient.sendMessage(envelope: envelope)
@@ -554,7 +564,7 @@ class PigeonExchange: Subscriber {
     
     private func sendPong(message: String, toPing ping: MessageEnvelope) {
         guard let pairingKey = pairingKey(forRemotePubKey: ping.senderPublicKey) else { return }
-        assert(pairingKey.publicKey == ping.receiverPublicKey)
+        assert(pairingKey.encodeAsPublic == ping.receiverPublicKey.hexString)
         var pong = MessagePong()
         pong.pong = message
         guard let envelope = try? MessageEnvelope(replyTo: ping, message: pong, type: .pong, crypto: PigeonCrypto(privateKey: pairingKey)) else {
@@ -622,17 +632,20 @@ class PigeonExchange: Subscriber {
         }
     }
     
-    private func pairingKey(forRemotePubKey remotePubKey: Data) -> BRKey? {
+    private func pairingKey(forRemotePubKey remotePubKey: Data) -> Key? {
         guard let pwd = PairedWalletData(remotePubKey: remotePubKey.base64EncodedString(), store: kvStore) else { return nil }
         return PigeonCrypto.pairingKey(forIdentifier: pwd.identifier, authKey: apiClient.authKey!)
     }
 
-    private func addTokenWallet(token: ERC20Token) {
+    private func addTokenWallet(token: Currency) {
+        //TODO:CRYPTO to add a wallet need access to System wallets
+        /*
         guard !Store.state.displayCurrencies.contains(where: {$0.code.lowercased() == token.code.lowercased()}) else { return }
         var walletDict = [String: WalletState]()
         walletDict[token.code] = WalletState.initial(token, displayOrder: Store.state.displayCurrencies.count)
         let metaData = CurrencyListMetaData(kvStore: self.kvStore)!
-        metaData.addTokenAddresses(addresses: [token.address])
+        //TODO:CRYPTO token address / user wallets
+        //metaData.addTokenAddresses(addresses: [token.address])
         do {
             _ = try self.kvStore.set(metaData)
         } catch let error {
@@ -641,5 +654,6 @@ class PigeonExchange: Subscriber {
         DispatchQueue.main.async {
             Store.perform(action: ManageWallets.AddWallets(walletDict))
         }
+         */
     }
 }

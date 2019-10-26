@@ -3,12 +3,12 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-07-17.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 import SwiftProtobuf
-import BRCore
+import BRCrypto
 
 enum PigeonMessageType: String {
     case link = "LINK"
@@ -35,12 +35,17 @@ extension MessageEnvelope {
         self.receiverPublicKey = receiverPubKey
         self.identifier = UUID().uuidString
 
-        let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPubKey)
+        guard let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPubKey) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
         self.encryptedMessage = encryptedMessageData
         self.nonce = nonce
         self.signature = Data()
         let envelopeData = try self.serializedData()
-        self.signature = crypto.sign(data: envelopeData)
+        guard let signature = crypto.sign(data: envelopeData) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
+        self.signature = signature
     }
     
     /// Creates a response envelope to reply to a request envelope. The sender/receiver public keys of the request envelope will be used as the receiver/sender of new envelope.
@@ -54,16 +59,22 @@ extension MessageEnvelope {
         self.receiverPublicKey = requestEnvelope.senderPublicKey
         self.identifier = requestEnvelope.identifier
         
-        let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: requestEnvelope.senderPublicKey)
+        guard let (encryptedMessageData, nonce) = crypto.encrypt(try message.serializedData(), receiverPublicKey: receiverPublicKey) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
         self.encryptedMessage = encryptedMessageData
         self.nonce = nonce
         self.signature = Data()
         let envelopeData = try self.serializedData()
-        self.signature = crypto.sign(data: envelopeData)
+        guard let signature = crypto.sign(data: envelopeData) else {
+            throw PigeonCrypto.CryptoError.encryptError
+        }
+        self.signature = signature
     }
     
-    func verify(pairingKey: BRKey) -> Bool {
-        guard pairingKey.publicKey == receiverPublicKey else { return false }
+    func verify(pairingKey: Key) -> Bool {
+        guard pairingKey.encodeAsPublic == receiverPublicKey.hexString else { return false }
+        guard !self.signature.isEmpty else { return false }
         let crypto = PigeonCrypto(privateKey: pairingKey)
         var envelope = self
         envelope.signature = Data()
