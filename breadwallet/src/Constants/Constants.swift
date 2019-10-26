@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-24.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 let π: CGFloat = .pi
 
@@ -35,6 +34,8 @@ struct C {
         static let cutoutLogoAspectRatio: CGFloat = 342.0/553.0
         static let roundedCornerRadius: CGFloat = 6.0
         static let homeCellCornerRadius: CGFloat = 2.0
+        static let brdLogoHeight: CGFloat = 32.0
+        static let brdLogoTopMargin: CGFloat = E.isIPhoneX ? C.padding[9] + 35.0 : C.padding[9] + 20.0
     }
     static var defaultTintColor: UIColor = {
         return UIView().tintColor
@@ -53,8 +54,7 @@ struct C {
     static var standardPort: Int {
         return E.isTestnet ? 18333 : 8333
     }
-    static let feeCacheTimeout: TimeInterval = C.secondsInMinute*10
-    static let bip39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
+    static let bip39CreationTime = TimeInterval(1388534400) - NSTimeIntervalSince1970
     static let bCashForkBlockHeight: UInt32 = E.isTestnet ? 1155876 : 478559
     static let bCashForkTimeStamp: TimeInterval = E.isTestnet ? (1501597117 - NSTimeIntervalSince1970) : (1501568580 - NSTimeIntervalSince1970)
     static let txUnconfirmedHeight = Int32.max
@@ -102,6 +102,12 @@ struct C {
             return (E.isDebug || E.isTestFlight) ? "brd-web-3-staging" : "brd-web-3"
         }
     }
+
+    static var bdbHost: String {
+        return "api.blockset.com"
+    }
+
+    static let bdbClientTokenRecordId = "BlockchainDBClientID"
     
     static let daiContractAddress = "0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
     static let daiContractCode = "DAI"
@@ -114,10 +120,5 @@ enum Words {
     static var wordList: [NSString]? {
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
         return NSArray(contentsOfFile: path) as? [NSString]
-    }
-
-    static var rawWordList: [UnsafePointer<CChar>?]? {
-        guard let wordList = Words.wordList, wordList.count == 2048 else { return nil }
-        return wordList.map({ $0.utf8String })
     }
 }

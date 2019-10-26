@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-16.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -19,7 +19,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     // MARK: - Public
     var setPinSuccess: ((String) -> Void)?
-    var resetFromDisabledSuccess: (() -> Void)?
+    var resetFromDisabledSuccess: ((String) -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
 
     init(keyMaster: KeyMaster,
@@ -49,6 +49,12 @@ class UpdatePinViewController: UIViewController, Subscriber {
     private lazy var faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin, currency: nil, tapped: { [unowned self] in
         self.trackEvent(event: .helpButton)
     })
+    
+    private var shouldShowFAQButton: Bool {
+        // Don't show the FAQ button during onboarding because we don't have the wallet/authentication
+        // initialized yet, and therefore can't open platform content.
+        return eventContext != .onboarding
+    }
     
     private var step: Step = .verify {
         didSet {
@@ -92,7 +98,10 @@ class UpdatePinViewController: UIViewController, Subscriber {
     }
 
     override func viewDidLoad() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faq)
+        
+        if shouldShowFAQButton {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(customView: faq)
+        }
         
         header.textAlignment = .center
         instruction.textAlignment = .center
@@ -258,7 +267,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
 
     private func didSetNewPin() {
         guard let newPin = newPin else { return }
-        var success: Bool? = false
+        var success = false
         if let seedPhrase = phrase {
             success = keyMaster.resetPin(newPin: newPin, seedPhrase: seedPhrase)
         } else if let currentPin = currentPin {
@@ -269,19 +278,20 @@ class UpdatePinViewController: UIViewController, Subscriber {
         }
 
         DispatchQueue.main.async {
-            if let success = success, success == true {
+            if success {
                 if self.resetFromDisabledSuccess != nil {
                     self.resetFromDisabledWillSucceed?()
                     Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
                         self?.dismiss(animated: true, completion: {
-                            self?.resetFromDisabledSuccess?()
+                            self?.resetFromDisabledSuccess?(newPin)
                         })
                     })))
                 } else {
                     Store.perform(action: Alert.Show(.pinSet(callback: { [weak self] in
-                        self?.setPinSuccess?(newPin)
-                        if self?.type != .creationNoPhrase {
-                            self?.parent?.dismiss(animated: true, completion: nil)
+                        guard let `self` = self else { return }
+                        self.setPinSuccess?(newPin)
+                        if self.type != .creationNoPhrase {
+                            self.parent?.dismiss(animated: true, completion: nil)
                         }
                     })))
                 }

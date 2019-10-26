@@ -1,5 +1,5 @@
 //
-//  PriceChange.swift
+//  FiatPriceInfo.swift
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2019-06-03.
@@ -8,7 +8,8 @@
 
 import Foundation
 
-struct PriceChange: Equatable {
+struct FiatPriceInfo: Equatable {
     let changePercentage24Hrs: Double
     let change24Hrs: Double
+    let price: Double
 }

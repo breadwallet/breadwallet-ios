@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-12.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -40,12 +40,14 @@ class ScanViewController: UIViewController, Trackable {
     fileprivate var currentUri = ""
     private var toolbarHeightConstraint: NSLayoutConstraint?
     private let toolbarHeight: CGFloat = 48.0
-
+    private var hasCompleted = false
+    
     init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
         self.paymentRequestCurrencyRestriction = currencyRestriction
         self.allowScanningPrivateKeysOnly = forScanningPrivateKeys
         super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .fullScreen
     }
 
     override func viewDidLoad() {
@@ -181,58 +183,64 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
     }
 
     func handleURI(_ uri: String) {
-        if self.currentUri != uri {
-            print("QR content detected: \(uri)")
-            self.currentUri = uri
-            let result = QRCode(content: uri)
-            guard .invalid != result else {
+        print("QR content detected: \(uri)")
+        self.currentUri = uri
+        let result = QRCode(content: uri)
+        guard .invalid != result else {
+            guide.state = .negative
+            return
+        }
+        
+        if allowScanningPrivateKeysOnly {
+            guard case .privateKey(_) = result else {
                 guide.state = .negative
                 return
             }
-            
-            if allowScanningPrivateKeysOnly {
-                guard case .privateKey(_) = result else {
-                    guide.state = .negative
-                    return
-                }
+        }
+        
+        if let currencyRestriction = paymentRequestCurrencyRestriction {
+            guard case .paymentRequest(let request) = result, request.currency.shouldAcceptQRCodeFrom(currencyRestriction, request: request) else {
+                guide.state = .negative
+                return
             }
-            
-            if let currencyRestriction = paymentRequestCurrencyRestriction {
-                guard case .paymentRequest(let request) = result, request.currency.matches(currencyRestriction) else {
-                    guide.state = .negative
-                    return
-                }
-            }
-            
-            guide.state = .positive
-            
-            switch result {
-            case .paymentRequest(let request):
-                switch request.currency.code {
-                case Currencies.bch.code:
-                    saveEvent("scan.bCashAddr")
-                case Currencies.btc.code:
-                    saveEvent("scan.bitcoinUri")
-                case Currencies.eth.code:
-                    saveEvent("scan.ethAddress")
-                default: break
-                }
-                
-            case .privateKey:
-                saveEvent("scan.privateKey")
-                
-            case .deepLink:
-                saveEvent("scan.deepLink")
-            default:
-                assertionFailure("unexpected result")
-            }
-            
-            // add a small delay so the green guide will be seen
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                self.dismiss(animated: true, completion: {
-                    self.completion(result)
-                })
+        }
+        
+        guide.state = .positive
+        
+        //handleURI can be called many times, so we
+        //need to make sure the completion block only gets called once
+        guard !hasCompleted else { return }
+        hasCompleted = true
+        // add a small delay so the green guide will be seen
+        saveScanEvent(result)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+            self.dismiss(animated: true, completion: {
+                self.completion(result)
             })
+        })
+    }
+    
+    private func saveScanEvent(_ result: QRCode) {
+        switch result {
+        case .paymentRequest(let request):
+            switch request.currency.code {
+            case Currencies.bch.code:
+                saveEvent("scan.bCashAddr")
+            case Currencies.btc.code:
+                saveEvent("scan.bitcoinUri")
+            case Currencies.eth.code:
+                saveEvent("scan.ethAddress")
+            default:
+                saveEvent("scan.otherCurrency")
+            }
+            
+        case .privateKey:
+            saveEvent("scan.privateKey")
+            
+        case .deepLink:
+            saveEvent("scan.deepLink")
+        default:
+            assertionFailure("unexpected result")
         }
     }
 }

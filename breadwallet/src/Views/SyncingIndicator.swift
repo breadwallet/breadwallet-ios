@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-02-16.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -20,7 +20,7 @@ class SyncingIndicator: UIView {
     private let style: SyncingIndicatorStyle
     private let label = UILabel()
 
-    var progress: CGFloat = 0.0 {
+    var progress: Float = 0.0 {
         didSet {
             updateTextLabel()
         }
@@ -42,6 +42,8 @@ class SyncingIndicator: UIView {
                 setNeedsLayout()
             case .success:
                 self.text = ""
+            case .failed:
+                self.text = S.SyncingView.failed
             }
         }
     }
@@ -51,6 +53,13 @@ class SyncingIndicator: UIView {
             updateTextLabel()
         }
     }
+    
+    private lazy var syncProgressNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .percent
+        formatter.maximumFractionDigits = 0
+        return formatter
+    }()
     
     // MARK: Init
     
@@ -84,11 +93,8 @@ class SyncingIndicator: UIView {
             label.text = text
             return
         }
-
-        let nf = NumberFormatter()
-        nf.numberStyle = .percent
-        nf.maximumFractionDigits = 0
-        if text == S.SyncingView.syncing, let percent = nf.string(from: NSNumber(value: Float(progress))) {
+        
+        if syncState == .syncing, let percent = syncProgressNumberFormatter.string(from: NSNumber(value: progress)) {
             label.text = "\(text) \(percent)"
         } else {
             label.text = text

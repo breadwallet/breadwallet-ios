@@ -17,7 +17,6 @@ excluded:
   - breadwalletUITests
   - breadwallet/src/Constants/Strings.swift
   - breadwallet/*.pb.swift # ProtoBuf generated files
-  - breadwallet/src/BRCore.swift
 
 line_length:
     warning: 170

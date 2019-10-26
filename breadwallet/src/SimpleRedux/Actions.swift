@@ -3,25 +3,12 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-10-22.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 // MARK: - Startup Modals
-struct ShowStartFlow: Action {
-    let reduce: Reducer = {
-        return $0.mutate(isStartFlowVisible: true)
-    }
-}
-
-struct HideStartFlow: Action {
-    let reduce: Reducer = { state in
-        return state.mutate(isStartFlowVisible: false, rootModal: .none)
-    }
-}
-
 struct Reset: Action {
     let reduce: Reducer = { _ in
         return State.initial.mutate(isLoginRequired: false)
@@ -63,7 +50,7 @@ enum ManageWallets {
 
     struct SetWallets: Action {
         let reduce: Reducer
-        init(_ newWallets: [String: WalletState]) {
+        init(_ newWallets: [CurrencyId: WalletState]) {
             reduce = {
                 return $0.mutate(wallets: newWallets)
             }
@@ -72,31 +59,9 @@ enum ManageWallets {
 
     struct AddWallets: Action {
         let reduce: Reducer
-        init(_ newWallets: [String: WalletState]) {
+        init(_ newWallets: [CurrencyId: WalletState]) {
             reduce = {
                 return $0.mutate(wallets: $0.wallets.merging(newWallets) { (x, _) in x })
-            }
-        }
-    }
-    
-    struct RemoveTokenAddresses: Action {
-        let reduce: Reducer
-        init(_ removedTokenAddresses: [String]) {
-            reduce = {
-                let newWallets = $0.wallets.filter {
-                    guard let token = $0.value.currency as? ERC20Token else { return true }
-                    return !removedTokenAddresses.contains(token.address)
-                }
-                return $0.mutate(wallets: newWallets)
-            }
-        }
-    }
-    
-    struct SetAvailableTokens: Action {
-        let reduce: Reducer
-        init(_ availableTokens: [ERC20Token]) {
-            reduce = {
-                return $0.mutate(availableTokens: availableTokens)
             }
         }
     }
@@ -114,47 +79,28 @@ struct WalletChange: Trackable {
         self.currency = currency
     }
     
-    func setProgress(progress: Double, timestamp: UInt32) -> WalletAction {
+    func setProgress(progress: Float, timestamp: UInt32) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncProgress: progress, lastBlockTimestamp: timestamp)) })
     }
+
     func setSyncingState(_ syncState: SyncState) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(syncState: syncState)) })
     }
-    func setBalance(_ balance: UInt256) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let walletState = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: walletState.mutate(balance: balance)) })
-    }
-    func setTransactions(_ transactions: [Transaction]) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(transactions: transactions)) })
-    }
-    func setWalletName(_ name: String) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(name: name)) })
-    }
-    func setWalletCreationDate(_ date: Date) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(creationDate: date)) })
-    }
+
     func setIsRescanning(_ isRescanning: Bool) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
             return $0.mutate(walletState: state.mutate(isRescanning: isRescanning)) })
     }
-    
-    func setExchangeRates(currentRate: Rate, rates: [Rate]) -> WalletAction {
-        UserDefaults.setCurrentRateData(newValue: currentRate.dictionary, forCode: currentRate.reciprocalCode)
+
+    func setBalance(_ balance: Amount) -> WalletAction {
         return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(currentRate: currentRate, rates: rates)) })
+            guard let walletState = $0[self.currency] else { return $0 }
+            return $0.mutate(walletState: walletState.mutate(balance: balance)) })
     }
     
     func setExchangeRate(_ currentRate: Rate) -> WalletAction {
@@ -163,30 +109,22 @@ struct WalletChange: Trackable {
             return $0.mutate(walletState: state.mutate(currentRate: currentRate)) })
     }
     
-    func setFees(_ fees: Fees) -> WalletAction {
+    func setFiatPriceInfo(_ priceInfo: FiatPriceInfo) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(fees: fees)) })
+            return $0.mutate(walletState: state.mutate(fiatPriceInfo: priceInfo))
+        })
     }
 
-    func setMaxDigits(_ maxDigits: Int) -> WalletAction {
-        if self.currency is Bitcoin {
-            UserDefaults.maxDigits = maxDigits
-        }
+    func setWallet(_ wallet: Wallet) -> WalletAction {
         return WalletAction(reduce: {
             guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(maxDigits: maxDigits)) })
+            return $0.mutate(walletState: state.mutate(wallet: wallet))
+        })
     }
-    
+
     func set(_ walletState: WalletState) -> WalletAction {
         return WalletAction(reduce: { $0.mutate(walletState: walletState)})
-    }
-    
-    func setPriceChange(_ priceChange: PriceChange) -> WalletAction {
-        return WalletAction(reduce: {
-            guard let state = $0[self.currency] else { return $0 }
-            return $0.mutate(walletState: state.mutate(priceChange: priceChange))
-        })
     }
 }
 
@@ -194,15 +132,15 @@ struct WalletChange: Trackable {
 enum CurrencyChange {
     struct Toggle: Action {
         let reduce: Reducer = {
-            UserDefaults.isBtcSwapped = !$0.isBtcSwapped
-            return $0.mutate(isBtcSwapped: !$0.isBtcSwapped)
+            UserDefaults.showFiatAmounts = !$0.showFiatAmounts
+            return $0.mutate(showFiatAmounts: !$0.showFiatAmounts)
         }
     }
 
-    struct SetIsSwapped: Action {
+    struct SetShowFiatAmounts: Action {
         let reduce: Reducer
-        init(_ isBtcSwapped: Bool) {
-            reduce = { $0.mutate(isBtcSwapped: isBtcSwapped) }
+        init(_ showFiatAmounts: Bool) {
+            reduce = { $0.mutate(showFiatAmounts: showFiatAmounts) }
         }
     }
 }
@@ -219,17 +157,6 @@ enum Alert {
         let reduce: Reducer = {
             let newState = $0.mutate(alert: AlertType.none)
             return newState
-        }
-    }
-}
-
-enum Biometrics {
-    struct SetIsEnabled: Action, Trackable {
-        let reduce: Reducer
-        init(_ isBiometricsEnabled: Bool) {
-            UserDefaults.isBiometricsEnabled = isBiometricsEnabled
-            reduce = { $0.mutate(isBiometricsEnabled: isBiometricsEnabled) }
-            saveEvent("event.enableBiometrics", attributes: ["isEnabled": "\(isBiometricsEnabled)"])
         }
     }
 }

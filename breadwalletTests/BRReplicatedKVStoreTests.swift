@@ -3,12 +3,12 @@
 //  breadwallet
 //
 //  Created by Samuel Sutch on 12/7/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
 @testable import breadwallet
-import BRCore
+import BRCrypto
 
 class BRReplicatedKVStoreTestAdapter: BRRemoteKVStoreAdaptor {
     let testCase: XCTestCase
@@ -89,13 +89,9 @@ class BRReplicatedKVStoreTestAdapter: BRRemoteKVStoreAdaptor {
 
 class BRReplicatedKVStoreTest: XCTestCase {
     var store: BRReplicatedKVStore!
-    var key: BRKey {
-        var key = BRKey()
+    var key: Key {
         let privKey = "S6c56bnXQiBjk9mqSYE7ykVQ7NzrRy"
-        _ = privKey.data(using: .utf8)?.withUnsafeBytes({ (pkPtr: UnsafeRawBufferPointer) in
-            BRKeySetPrivKey(&key, pkPtr.baseAddress!.assumingMemoryBound(to: Int8.self))
-        })
-        return key
+        return Key.createFromString(asPrivate: privKey)!
     }
     var adapter: BRReplicatedKVStoreTestAdapter!
     

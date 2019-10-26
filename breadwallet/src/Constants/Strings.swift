@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2016-12-14.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -83,6 +83,7 @@ enum S {
         static let publicTransactionError = NSLocalizedString("Send.publishTransactionError", value: "Could not publish transaction.", comment: "Could not publish transaction alert title")
         static let noAddress = NSLocalizedString("Send.noAddress", value: "Please enter the recipient's address.", comment: "Empty address alert message")
         static let noAmount = NSLocalizedString("Send.noAmount", value: "Please enter an amount to send.", comment: "Emtpy amount alert message")
+        //TODO:CRYPTO remove
         static let isRescanning = NSLocalizedString("Send.isRescanning", value: "Sending is disabled during a full rescan.", comment: "Is rescanning error message")
         static let remoteRequestError = NSLocalizedString("Send.remoteRequestError", value: "Could not load payment request", comment: "Could not load remote request error message")
         static let loadingRequest = NSLocalizedString("Send.loadingRequest", value: "Loading Request", comment: "Loading request activity view message")
@@ -116,7 +117,6 @@ enum S {
     enum JailbreakWarnings {
         static let title = NSLocalizedString("JailbreakWarnings.title", value:"WARNING", comment: "Jailbreak warning title")
         static let messageWithBalance = NSLocalizedString("JailbreakWarnings.messageWithBalance", value:"DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.", comment: "Jailbreak warning message")
-        static let messageWithoutBalance = NSLocalizedString("JailbreakWarnings.messageWithoutBalance", value:"DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access BRD's keychain data and steal your bitcoin. Please only use BRD on a non-jailbroken device.", comment: "Jailbreak warning message")
         static let ignore = NSLocalizedString("JailbreakWarnings.ignore", value:"Ignore", comment: "Ignore jailbreak warning button")
         static let wipe = NSLocalizedString("JailbreakWarnings.wipe", value:"Wipe", comment: "Wipe wallet button")
         static let close = NSLocalizedString("JailbreakWarnings.close", value:"Close", comment: "Close app button")
@@ -262,35 +262,24 @@ enum S {
 
     enum TouchIdSettings {
         static let title = NSLocalizedString("TouchIdSettings.title", value:"Touch ID", comment: "Touch ID settings view title")
-        static let label = NSLocalizedString("TouchIdSettings.label", value:"Use your fingerprint to unlock your BRD and send money up to a set limit.", comment: "Touch Id screen label")
+        static let explanatoryText = NSLocalizedString("TouchIdSettings.explanatoryText", value: "Use Touch ID to unlock your BRD app and send money.", comment: "Explanation for Touch ID settings")
         static let switchLabel = NSLocalizedString("TouchIdSettings.switchLabel", value:"Enable Touch ID for BRD", comment: "Touch id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("TouchIdSettings.unavailableAlertTitle", value:"Touch ID Not Set Up", comment: "Touch ID unavailable alert title")
+        static let transactionsTitleText = NSLocalizedString("TouchIdSettings.transactionsTitleText", value: "Enable Touch ID to send money", comment: "Title for Touch ID transactions toggle")
         static let unavailableAlertMessage = NSLocalizedString("TouchIdSettings.unavailableAlertMessage", value:"You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
-        static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending limit: %1$@ (%2$@)", comment: "Spending Limit: b100,000 ($100)")
-        static let customizeText = NSLocalizedString("TouchIdSettings.customizeText", value: "You can customize your Touch ID spending limit from the %1$@.", comment: "You can customize your Touch ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
-        static let linkText = NSLocalizedString("TouchIdSettings.linkText", value: "Touch ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
+        static let unlockTitleText = NSLocalizedString("TouchIdSettings.unlockTitleText", value: "Enable Touch ID to unlock BRD", comment: "Touch ID unlock toggle title")
     }
     
     enum FaceIDSettings {
         static let title = NSLocalizedString("FaceIDSettings.title", value:"Face ID", comment: "Face ID settings view title")
-        static let label = NSLocalizedString("FaceIDSettings.label", value:"Use your face to unlock your BRD and send money up to a set limit.", comment: "Face Id screen label")
+        static let explanatoryText = NSLocalizedString("FaceIDSettings.explanatoryText", value: "Use Face ID to unlock your BRD app and send money.", comment: "Explanation for Face ID settings")
         static let switchLabel = NSLocalizedString("FaceIDSettings.switchLabel", value:"Enable Face ID for BRD", comment: "Face id switch label.")
         static let unavailableAlertTitle = NSLocalizedString("FaceIDSettings.unavailableAlertTitle", value:"Face ID Not Set Up", comment: "Face ID unavailable alert title")
+        static let transactionsTitleText = NSLocalizedString("FaceIDSettings.transactionsTitleText", value: "Enable Face ID to send money", comment: "Title for Face ID transactions toggle")
         static let unavailableAlertMessage = NSLocalizedString("FaceIDSettings.unavailableAlertMessage", value:"You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.", comment: "Face ID unavailable alert message")
-        static let customizeText = NSLocalizedString("FaceIDSettings.customizeText", value: "You can customize your Face ID spending limit from the %1$@.", comment: "You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
-        static let linkText = NSLocalizedString("FaceIDSettings.linkText", value: "Face ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
-    }
-
-    enum TouchIdSpendingLimit {
-        static let title = NSLocalizedString("TouchIdSpendingLimit.title", value:"Touch ID Spending Limit", comment: "Touch Id spending limit screen title")
-        static let body = NSLocalizedString("TouchIdSpendingLimit.body", value:"You will be asked to enter your 6-digit PIN to send any transaction over your spending limit, and every 48 hours since the last time you entered your 6-digit PIN.", comment: "Touch ID spending limit screen body")
-        static let requirePasscode = NSLocalizedString("TouchIdSpendingLimit", value: "Always require passcode", comment: "Always require passcode option")
+        static let unlockTitleText = NSLocalizedString("FaceIDSettings.unlockTitleText", value: "Enable Face ID to unlock BRD", comment: "Face ID unlock toggle title")
     }
     
-    enum FaceIdSpendingLimit {
-        static let title = NSLocalizedString("FaceIDSpendingLimit.title", value:"Face ID Spending Limit", comment: "Face Id spending limit screen title")
-    }
-
     enum Settings {
         static let title = NSLocalizedString("Settings.title", value:"Menu", comment: "Settings title")
         static let wallet = NSLocalizedString("Settings.wallet", value: "Wallets", comment: "Wallet Settings section header")
@@ -301,7 +290,6 @@ enum S {
         static let currencyPageTitle = NSLocalizedString("Settings.currencyPageTitle", value: "%1$@ Settings", comment: "Bitcoin Settings page title")
         static let importTile = NSLocalizedString("Settings.importTitle", value:"Redeem Private Key", comment: "Import wallet label")
         static let notifications = NSLocalizedString("Settings.notifications", value:"Notifications", comment: "Notifications label")
-        static let touchIdLimit = NSLocalizedString("Settings.touchIdLimit", value:"Touch ID Spending Limit", comment: "Touch ID spending limit label")
         static let currency = NSLocalizedString("Settings.currency", value:"Display Currency", comment: "Default currency label")
         static let sync = NSLocalizedString("Settings.sync", value:"Sync Blockchain", comment: "Sync blockchain label")
         static let shareData = NSLocalizedString("Settings.shareData", value:"Share Anonymous Data", comment: "Share anonymous data label")
@@ -312,7 +300,6 @@ enum S {
         static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying BRD?", comment: "Are you enjoying BRD alert message body")
         static let wipe = NSLocalizedString("Settings.wipe", value: "Unlink from this device", comment: "Unlink wallet menu label.")
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "Advanced Settings", comment: "Advanced Settings title")
-        static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value:"Face ID Spending Limit", comment: "Face ID spending limit label")
         static let sendLogs = NSLocalizedString("Settings.sendLogs", value: "Send Logs", comment: "Send Logs option")
         static let resetCurrencies = NSLocalizedString("Settings.resetCurrencies", value: "Reset to Default Currencies", comment: "Reset currencies button")
         static let viewLegacyAddress = NSLocalizedString("Settings.ViewLegacyAddress", value: "View Legacy Receive Address", comment: "")
@@ -375,6 +362,17 @@ enum S {
         static let header = NSLocalizedString("ShareData.header", value:"Share Data?", comment: "Share data header")
         static let body = NSLocalizedString("ShareData.body", value:"Help improve BRD by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.", comment: "Share data view body")
         static let toggleLabel = NSLocalizedString("ShareData.toggleLabel", value:"Share Anonymous Data?", comment: "Share data switch label.")
+    }
+
+    enum WalletConnectionSettings {
+        static let menuTitle = NSLocalizedString("WalletConnectionSettings.menuTitle", value:"Connection Mode", comment: "Wallet connection settings menu item title.")
+        static let viewTitle = NSLocalizedString("WalletConnectionSettings.viewTitle", value:"Fast Sync", comment: "Wallet connection settings view title")
+        static let header = NSLocalizedString("WalletConnectionSettings.header", value:"Fast Sync (pilot)", comment: "Wallet connection settings view title")
+        static let explanatoryText = NSLocalizedString("WalletConnectionSettings.explanatoryText", value: "Make syncing your bitcoin wallet practically instant. Learn more about how it works here.", comment: "Explanation for wallet connection setting")
+        static let link = NSLocalizedString("WalletConnectionSettings.link", value: "here", comment: "Link text in explanatoryText")
+        static let footerTitle = NSLocalizedString("WalletConnectionSettings.footerTitle", value:"Powered by", comment: "Connection mode switch label.")
+        static let confirmation = NSLocalizedString("WalletConnectionSettings.confirmation", value:"Are you sure you want to turn off Fast Sync?", comment: "Turn off fast sync confirmation question")
+        static let turnOff = NSLocalizedString("WalletConnectionSettings.turnOff", value:"Turn Off", comment: "Turn off fast sync button label")
     }
 
     enum ConfirmPaperPhrase {
@@ -509,9 +507,6 @@ enum S {
     }
 
     enum URLHandling {
-        static let addressListAlertTitle = NSLocalizedString("URLHandling.addressListAlertTitle", value: "Copy Wallet Addresses", comment: "Authorize to copy wallet address alert title")
-        static let addressListAlertMessage = NSLocalizedString("URLHandling.addressaddressListAlertMessage", value: "Copy wallet addresses to clipboard?", comment: "Authorize to copy wallet addresses alert message")
-        static let addressListVerifyPrompt = NSLocalizedString("URLHandling.addressList", value: "Authorize to copy wallet address to clipboard", comment: "Authorize to copy wallet address PIN view prompt.")
         static let copy = NSLocalizedString("URLHandling.copy", value: "Copy", comment: "Copy wallet addresses alert button label")
     }
 
@@ -565,8 +560,11 @@ enum S {
             static let notValid = NSLocalizedString("Import.Error.notValid", value: "Not a valid private key", comment: "Not a valid private key error message")
             static let duplicate = NSLocalizedString("Import.Error.duplicate", value: "This private key is already in your wallet.", comment: "Duplicate key error message")
             static let empty = NSLocalizedString("Import.Error.empty", value: "This private key is empty.", comment: "empty private key error message")
-            static let highFees = NSLocalizedString("Import.Error.highFees", value: "Transaction fees would cost more than the funds available on this private key.", comment: "High fees error message")
-            static let signing = NSLocalizedString("Import.Error.signing", value: "Error signing transaction", comment: "Import signing error message")
+            static let failedSubmit = NSLocalizedString("Import.Error.failedSubmit", value: "Failed to submit transaction.", comment: "Failed to submit transaction error message")
+            static let unsupportedCurrency = NSLocalizedString("Import.Error.unsupportedCurrency", value: "Unsupported Currency", comment: "Unsupported currencye error message")
+            static let sweepError = NSLocalizedString("Import.Error.sweepError", value: "Unable to sweep wallet", comment: "Unable to sweep wallet error message")
+            static let serviceError = NSLocalizedString("Import.Error.serviceError", value: "Service Error", comment: "Service error error message")
+            static let serviceUnavailable = NSLocalizedString("Import.Error.serviceUnavailable", value: "Service Unavailable", comment: "Service Unavailable error message")
         }
     }
 
@@ -621,6 +619,7 @@ enum S {
     enum NodeSelector {
         static let manualButton = NSLocalizedString("NodeSelector.manualButton", value: "Switch to Manual Mode", comment: "Switch to manual mode button label")
         static let automaticButton = NSLocalizedString("NodeSelector.automaticButton", value: "Switch to Automatic Mode", comment: "Switch to automatic mode button label")
+        static let automaticLabel = NSLocalizedString("NodeSelector.automaticLabel", value: "Automatic", comment: "Automatic mode label")
         static let title = NSLocalizedString("NodeSelector.title", value: "Bitcoin Nodes", comment: "Node Selector view title")
         static let nodeLabel = NSLocalizedString("NodeSelector.nodeLabel", value: "Current Primary Node", comment: "Node address label")
         static let statusLabel = NSLocalizedString("NodeSelector.statusLabel", value: "Node Connection Status", comment: "Node status label")

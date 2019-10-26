@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ehsan Rezaie on 2018-01-18.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -72,15 +72,15 @@ class TxDetailViewController: UIViewController, Subscriber {
         registerForKeyboardNotifications()
         
         // refresh if rate changes
-        Store.lazySubscribe(self, selector: { $0[self.viewModel.currency]?.currentRate != $1[self.viewModel.currency]?.currentRate }, callback: { _ in self.reload() })
-        // refresh if tx state changes
-        Store.lazySubscribe(self, selector: {
-            guard let oldTransactions = $0[self.viewModel.currency]?.transactions else { return false }
-            guard let newTransactions = $1[self.viewModel.currency]?.transactions else { return false }
-            return oldTransactions != newTransactions }, callback: { [unowned self] in
-            guard let tx = $0[self.viewModel.currency]?.transactions.first(where: { $0.hash == self.viewModel.transactionHash }) else { return }
-            self.transaction = tx
+        Store.lazySubscribe(self,
+                            selector: { [weak self] oldState, newState in
+                                guard let `self` = self else { return false }
+                                return oldState[self.viewModel.currency]?.currentRate != newState[self.viewModel.currency]?.currentRate },
+                            callback: { [weak self] _ in
+                                self?.reload()
         })
+        // refresh if tx state changes
+        //TODO:CRYPTO hook up refresh logic to System/Wallet tx events IOS-1162
     }
     
     private func setup() {

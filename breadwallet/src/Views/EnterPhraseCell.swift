@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-24.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -33,8 +33,9 @@ class EnterPhraseCell: UICollectionViewCell {
             updatePlaceholder()
         }
     }
+    
     private(set) var text: String?
-
+    
     var didTapPrevious: (() -> Void)? {
         didSet {
             previousField.tap = didTapPrevious

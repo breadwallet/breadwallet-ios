@@ -3,60 +3,66 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-03-11.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 
-let walletInfoKey = "wallet-info"
+class WalletInfo: BRKVStoreObject, Codable {
+    static let key = "wallet-info"
 
-class WalletInfo: BRKVStoreObject, BRCoding {
-    var classVersion = 2
+    var classVersion = 3
     var name = ""
     var creationDate = Date.zeroValue()
+    /// mapping of network native currency codes to WalletManagerMode
+    var connectionModes = [CurrencyId: UInt8]()
 
-    //Create new
+    enum CodingKeys: String, CodingKey {
+        case classVersion
+        case name
+        case creationDate
+        case connectionModes
+    }
+
+    /// Create new
     init(name: String) {
-        super.init(key: walletInfoKey, version: 0, lastModified: Date(), deleted: false, data: Data())
+        super.init(key: WalletInfo.key, version: 0, lastModified: Date(), deleted: false, data: Data())
         self.name = name
     }
 
-    //Find existing
+    /// Find existing
     init?(kvStore: BRReplicatedKVStore) {
         var ver: UInt64
         var date: Date
         var del: Bool
         var bytes: [UInt8]
         do {
-            (ver, date, del, bytes) = try kvStore.get(walletInfoKey)
+            (ver, date, del, bytes) = try kvStore.get(WalletInfo.key)
         } catch let e {
-            print("Unable to initialize WalletInfo: \(e)")
+            print("[KV] unable to initialize WalletInfo: \(e)")
             return nil
         }
         let bytesData = Data(bytes: &bytes, count: bytes.count)
-        super.init(key: walletInfoKey, version: ver, lastModified: date, deleted: del, data: bytesData)
+        super.init(key: WalletInfo.key, version: ver, lastModified: date, deleted: del, data: bytesData)
     }
 
     override func getData() -> Data? {
-        return BRKeyedArchiver.archivedDataWithRootObject(self)
+        return BRKeyedArchiver.archiveData(withRootObject: self)
     }
 
     override func dataWasSet(_ value: Data) {
-        guard let s: WalletInfo = BRKeyedUnarchiver.unarchiveObjectWithData(value) else { return }
+        guard let s: WalletInfo = BRKeyedUnarchiver.unarchiveObject(withData: value) else { return }
         name = s.name
         creationDate = s.creationDate
+        connectionModes = s.connectionModes
     }
 
-    required public init?(coder decoder: BRCoder) {
-        classVersion = decoder.decode("classVersion")
-        name = decoder.decode("name")
-        creationDate = decoder.decode("creationDate")
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        classVersion = try container.decode(Int.self, forKey: .classVersion)
+        name = try container.decode(String.self, forKey: .name)
+        creationDate = try container.decode(Date.self, forKey: .creationDate)
+        connectionModes = try container.decode([CurrencyId: UInt8].self, forKey: .connectionModes)
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
-    }
-
-    func encode(_ coder: BRCoder) {
-        coder.encode(classVersion, key: "classVersion")
-        coder.encode(name, key: "name")
-        coder.encode(creationDate, key: "creationDate")
     }
 }

@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-01-25.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
@@ -56,7 +56,7 @@ struct Rate: Equatable {
     }
     
     func localString(forCurrency currency: Currency) -> String {
-        let placeholderAmount = Amount(amount: 0, currency: currency, rate: self)
+        let placeholderAmount = Amount.zero(currency, rate: self)
         guard let rateText = placeholderAmount.localFormat.string(from: NSNumber(value: rate)) else { return "" }
         return rateText
     }

@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-10-11.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -57,7 +57,7 @@ class EnableSegwitView: UIView {
     }
     
     private func setInitialData() {
-        backgroundColor = .darkerBackground
+        backgroundColor = Theme.secondaryBackground
         layer.masksToBounds = true
         layer.cornerRadius = 8.0
         label.text = S.Segwit.confirmChoiceLayout

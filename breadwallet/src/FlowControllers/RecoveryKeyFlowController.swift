@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Ray Vander Veen on 2019-03-18.
-//  Copyright © 2019 breadwallet LLC. All rights reserved.
+//  Copyright © 2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -56,7 +56,7 @@ class RecoveryKeyFlowController {
                                      keyMaster: KeyMaster,
                                      from viewController: UIViewController,
                                      context: EventContext,
-                                     dismissAction: Action?,
+                                     dismissAction: (() -> Void)?,
                                      modalPresentation: Bool = true,
                                      canExit: Bool = true) {
         
@@ -92,8 +92,8 @@ class RecoveryKeyFlowController {
             
             EventMonitor.shared.deregister(eventContext)
             
-            if let dismiss = dismissAction {
-                Store.perform(action: dismiss)
+            if let dismissAction = dismissAction {
+                dismissAction()
             } else {
                 if modalPresentation {
                     modalPresentingViewController?.dismiss(animated: true, completion: nil)
@@ -118,13 +118,15 @@ class RecoveryKeyFlowController {
             case .abort:
                 dismissFlow()
             case .confirmKey:
+                
+                let fromOnboarding = (context == .onboarding)
+                let goToWallet = (context == .onboarding) ? dismissFlow : nil
+                
                 pushNext(ConfirmRecoveryKeyViewController(words: words,
                                                           keyMaster: keyMaster,
                                                           eventContext: eventContext,
                                                           confirmed: {
-                                                            pushNext(RecoveryKeyCompleteViewController(proceedToWallet: {
-                                                                dismissFlow()
-                                                            }))
+                                                            pushNext(RecoveryKeyCompleteViewController(fromOnboarding: fromOnboarding, proceedToWallet: goToWallet))
                 }))
             default:
                 break
@@ -163,7 +165,7 @@ class RecoveryKeyFlowController {
                 
                 // The onboarding flow has its own dismiss action.
                 if let dismissAction = dismissAction {
-                    Store.perform(action: dismissAction)
+                    dismissAction()
                 } else {
                     modalPresentingViewController?.dismiss(animated: true, completion: nil)
                 }
@@ -261,6 +263,7 @@ class RecoveryKeyFlowController {
         let pinViewController = VerifyPinViewController(bodyText: S.VerifyPin.continueBody,
                                                         pinLength: Store.state.pinLength,
                                                         walletAuthenticator: keyMaster,
+                                                        pinAuthenticationType: .recoveryKey,
                                                         success: { pin in
                                                             pinResponse(pin)
         })

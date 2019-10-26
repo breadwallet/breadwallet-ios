@@ -3,13 +3,13 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-23.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
 
 enum PhraseEntryReason {
-    case setSeed(EnterPhraseCallback)
+    case setSeed(LoginCompletionHandler)
     case validateForResettingPin(EnterPhraseCallback)
     case validateForWipingWallet(()->Void)
 }
@@ -156,12 +156,12 @@ class EnterPhraseViewController: UIViewController, UIScrollViewDelegate, Trackab
 
         switch reason {
         case .setSeed(let callback):
-            guard self.keyMaster.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }
+            guard let account = self.keyMaster.setSeedPhrase(phrase) else { errorLabel.isHidden = false; return }
             //Since we know that the user had their phrase at this point,
             //this counts as a write date
             UserDefaults.writePaperPhraseDate = Date()
             Store.perform(action: LoginSuccess())
-            return callback(phrase)
+            return callback(account)
         case .validateForResettingPin(let callback):
             guard self.keyMaster.authenticate(withPhrase: phrase) else { errorLabel.isHidden = false; return }
             UserDefaults.writePaperPhraseDate = Date()

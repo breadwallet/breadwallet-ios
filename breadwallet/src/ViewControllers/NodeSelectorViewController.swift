@@ -3,11 +3,10 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-08-03.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
-import BRCore
 
 class NodeSelectorViewController: UIViewController, Trackable {
 
@@ -17,13 +16,13 @@ class NodeSelectorViewController: UIViewController, Trackable {
     private let statusLabel = UILabel(font: .customBody(size: 14.0), color: .white)
     private let status = UILabel(font: .customBody(size: 14.0), color: .white)
     private let button: BRDButton
-    private let walletManager: BTCWalletManager
+    private let wallet: Wallet
     private var okAction: UIAlertAction?
     private var timer: Timer?
     private let decimalSeparator = NumberFormatter().decimalSeparator ?? "."
 
-    init(walletManager: BTCWalletManager) {
-        self.walletManager = walletManager
+    init(wallet: Wallet) {
+        self.wallet = wallet
         if UserDefaults.customNodeIP == nil {
             button = BRDButton(title: S.NodeSelector.manualButton, type: .primary)
         } else {
@@ -80,8 +79,22 @@ class NodeSelectorViewController: UIViewController, Trackable {
     }
 
     @objc private func setStatusText() {
-        status.text = walletManager.peerManager?.connectionStatus.description
-        node.text = walletManager.peerManager?.downloadPeerName
+        switch wallet.manager.state {
+        case .disconnected, .deleted:
+            status.text = S.NodeSelector.notConnected
+        case .created:
+            status.text = S.NodeSelector.connecting
+        case .connected:
+            status.text = S.NodeSelector.connected
+        default:
+            status.text = S.NodeSelector.connected
+        }
+        
+        if let ip = UserDefaults.customNodeIP {
+            node.text = "\(ip):\(UserDefaults.customNodePort ?? C.standardPort)"
+        } else {
+            node.text = S.NodeSelector.automaticLabel
+        }
     }
 
     private func switchToAuto() {
@@ -90,31 +103,24 @@ class NodeSelectorViewController: UIViewController, Trackable {
         UserDefaults.customNodeIP = nil
         UserDefaults.customNodePort = nil
         button.title = S.NodeSelector.manualButton
-        DispatchQueue.walletQueue.async {
-            self.walletManager.peerManager?.setFixedPeer(address: 0, port: 0)
-            self.walletManager.peerManager?.connect()
-        }
+        reconnectWalletManager()
     }
 
     private func switchToManual() {
         let alert = UIAlertController(title: S.NodeSelector.enterTitle, message: S.NodeSelector.enterBody, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
         let okAction = UIAlertAction(title: S.Button.ok, style: .default, handler: { [weak self] _ in
-            guard let myself = self else { return }
-            guard let ip = alert.textFields?.first, let port = alert.textFields?.last else { return }
-            if let addressText = ip.text?.replacingOccurrences(of: myself.decimalSeparator, with: ".") {
-                myself.saveEvent("nodeSelector.switchToManual")
-                var address = in_addr()
-                ascii2addr(AF_INET, addressText, &address)
-                UserDefaults.customNodeIP = Int(address.s_addr)
-                if let portText = port.text {
-                    UserDefaults.customNodePort = Int(portText)
-                }
-                DispatchQueue.walletQueue.async {
-                    myself.walletManager.peerManager?.connect()
-                }
-                myself.button.title = S.NodeSelector.automaticButton
+            guard let `self` = self else { return }
+            guard let ip = alert.textFields?.first,
+                let port = alert.textFields?.last,
+                let addressText = ip.text?.replacingOccurrences(of: self.decimalSeparator, with: ".") else { return }
+            self.saveEvent("nodeSelector.switchToManual")
+            UserDefaults.customNodeIP = addressText
+            if let portText = port.text {
+                UserDefaults.customNodePort = Int(portText)
             }
+            self.reconnectWalletManager()
+            self.button.title = S.NodeSelector.automaticButton
         })
         self.okAction = okAction
         self.okAction?.isEnabled = false
@@ -131,16 +137,15 @@ class NodeSelectorViewController: UIViewController, Trackable {
         present(alert, animated: true, completion: nil)
     }
     
+    private func reconnectWalletManager() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            let manager = self.wallet.manager
+            manager.connect(using: manager.customPeer)
+        }
+    }
+    
     private var keyboardType: UIKeyboardType {
         return decimalSeparator == "." ? .decimalPad : .numbersAndPunctuation
-    }
-
-    private func setCustomNodeText() {
-        if var customNode = UserDefaults.customNodeIP {
-            if let buf = addr2ascii(AF_INET, &customNode, Int32(MemoryLayout<in_addr_t>.size), nil) {
-                node.text = String(cString: buf)
-            }
-        }
     }
 
     @objc private func ipAddressDidChange(textField: UITextField) {

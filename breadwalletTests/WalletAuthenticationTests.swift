@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-02-17.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import XCTest
@@ -48,9 +48,11 @@ class WalletAuthenticationTests : XCTestCase {
         super.setUp()
         clearKeychain()
         keyStore = try! KeyStore.create()
-        seedPhrase = keyStore.setRandomSeedPhrase()
-        XCTAssertNotNil(seedPhrase)
         XCTAssert(keyStore.setPin(pin), "Setting PIN should succeed")
+        if let (phrase, _) = keyStore.setRandomSeedPhrase() {
+            seedPhrase = phrase
+        }
+        XCTAssertNotNil(seedPhrase)
     }
 
     override func tearDown() {
@@ -90,6 +92,54 @@ class WalletAuthenticationTests : XCTestCase {
         })
 
         wait(for: [expectation], timeout: 10)
+    }
+    
+    func testAccountSerialization() {
+        // load the account created during setup
+        guard case .success(let loadedAccount) = keyStore.loadAccount() else { return XCTFail("Loading account from serialization should succesed") }
+        guard let createdAccount = keyStore.createAccount(withPin: pin) else { return XCTFail("Creating account should succesed") }
+        let serializedAccount = createdAccount.serialize
+        XCTAssert(loadedAccount.validate(serialization: serializedAccount))
+        // load the newly created account
+        guard case .success = keyStore.loadAccount() else { return XCTFail("Loading account from serialization should succesed") }
+    }
+    
+    func testMigrationToAccount() {
+        let mpkKey = "masterpubkey"
+        let accountKey = "systemAccount"
+        // simulate upgrade from pre-Account app version
+        
+        // remove account from keychain
+        let accountQuery = [kSecClass as String: kSecClassGenericPassword as String,
+                            kSecAttrService as String: testWalletSecAttrService,
+                            kSecAttrAccount as String: accountKey]
+        XCTAssert(SecItemDelete(accountQuery as CFDictionary) == noErr)
+        XCTAssert(SecItemCopyMatching(accountQuery as CFDictionary, nil) == errSecItemNotFound)
+        
+        // add a dummy masterPubKey to keychain
+        let mpkQuery = [kSecClass as String: kSecClassGenericPassword as String,
+                        kSecAttrService as String: testWalletSecAttrService,
+                        kSecAttrAccount as String: mpkKey]
+        let data = "xpub6B3h7UmH1oMugVBytPLVaJdQjyuVFvSj9j3iZzT21DyNu39UvtWf8juT7w5tHDHo3yf7Pe2QNKfDt2gyNSNdVCfSK4Co61NKKcz31t8xK4s".data(using: .utf8)
+        let item = [kSecClass as String: kSecClassGenericPassword as String,
+                    kSecAttrService as String: testWalletSecAttrService,
+                    kSecAttrAccount as String: mpkKey,
+                    kSecAttrAccessible as String: kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
+                    kSecValueData as String: data as Any]
+        XCTAssert(SecItemAdd(item as CFDictionary, nil) == noErr)
+        XCTAssert(SecItemCopyMatching(mpkQuery as CFDictionary, nil) != errSecItemNotFound)
+        
+        // test migration case detected
+        guard case .failure(let error) = keyStore.loadAccount() else { return XCTFail() }
+        XCTAssert(error == .invalidSerialization)
+        
+        // migrate by creating account
+        let account = keyStore.createAccount(withPin: pin)
+        XCTAssertNotNil(account)
+        guard case .success = keyStore.loadAccount() else { return XCTFail() }
+        
+        // test old keys removed
+        XCTAssert(SecItemCopyMatching(mpkQuery as CFDictionary, nil) == errSecItemNotFound)
     }
 
     func testWalletDisabled() {

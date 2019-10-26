@@ -3,12 +3,11 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2017-07-28.
-//  Copyright © 2017 breadwallet LLC. All rights reserved.
+//  Copyright © 2017-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
 import LocalAuthentication
-import BRCore
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
@@ -134,7 +133,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     }
 
     private func confirmationFeeLabel() -> String {
-        if currency is ERC20Token {
+        if amount.currency != feeAmount.currency && feeAmount.currency.isEthereum {
             return S.Confirmation.feeLabelETH
         } else {
             return S.Confirmation.feeLabel
@@ -145,8 +144,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
 
-        let displayTotal = Amount(amount: amount.rawValue + feeAmount.rawValue,
-                                  currency: currency,
+        let totalAmount = (amount.currency == feeAmount.currency) ? amount + feeAmount : amount
+        let displayTotal = Amount(amount: totalAmount,
                                   rate: amount.rate,
                                   minimumFractionDigits: amount.minimumFractionDigits)
 
@@ -155,8 +154,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         toLabel.text = S.Confirmation.to
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
-        
-        if currency is Bitcoin {
+
+        if currency.isBitcoinCompatible {
             switch displayFeeLevel {
             case .regular:
                 processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
@@ -177,8 +176,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
         totalLabel.text = S.Confirmation.totalLabel
         total.text = displayTotal.description
-        
-        if currency is ERC20Token {
+
+        if currency.isERC20Token {
             totalLabel.isHidden = true
             total.isHidden = true
         }

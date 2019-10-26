@@ -3,29 +3,12 @@
 //  BreadWallet
 //
 //  Created by Samuel Sutch on 8/10/16.
-//  Copyright © 2016 breadwallet LLC. All rights reserved.
+//  Copyright © 2016-2019 Breadwinner AG. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 import Foundation
-import sqlite3
-import BRCore
+import SQLite3
+import BRCrypto
 
 public enum BRReplicatedKVStoreError: Error {
     case sqLiteError
@@ -95,7 +78,7 @@ private func dispatch_sync_throws(_ queue: DispatchQueue, f: () throws -> Void) 
 /// concurrency control
 open class BRReplicatedKVStore: NSObject {
     fileprivate var db: OpaquePointer? // sqlite3*
-    fileprivate(set) var key: BRKey
+    fileprivate(set) var key: Key
     fileprivate(set) var remote: BRRemoteKVStoreAdaptor
     fileprivate(set) var syncRunning = false
     fileprivate var dbQueue: DispatchQueue
@@ -116,11 +99,12 @@ open class BRReplicatedKVStore: NSObject {
     static var dbPath: URL {
         let fm = FileManager.default
         let docsUrl = fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let path = docsUrl.appendingPathComponent("kvstore.sqlite3")
+        let filename = E.isRunningTests ? "kvstore_test.sqlite3" : "kvstore.sqlite3"
+        let path = docsUrl.appendingPathComponent(filename)
         return path
     }
     
-    init(encryptionKey: BRKey, remoteAdaptor: BRRemoteKVStoreAdaptor) throws {
+    init(encryptionKey: Key, remoteAdaptor: BRRemoteKVStoreAdaptor) throws {
         key = encryptionKey
         remote = remoteAdaptor
         dbQueue = DispatchQueue(label: "com.voisine.breadwallet.kvDBQueue", attributes: [])
@@ -134,7 +118,9 @@ open class BRReplicatedKVStore: NSObject {
     open func rmdb() throws {
         try dispatch_sync_throws(dbQueue) {
             try self.checkErr(sqlite3_close(self.db), s: "rmdb - close")
-            try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            if FileManager.default.fileExists(atPath: BRReplicatedKVStore.dbPath.path) {
+                try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            }
             self.db = nil
         }
     }
@@ -243,7 +229,7 @@ open class BRReplicatedKVStore: NSObject {
         let (newVer, time) = try _set(key, value: value, localVer: localVer)
         if syncImmediately {
             try syncKey(key) { _ in
-                self.log("SET key synced: \(key)")
+                self.log("[KV] SET key synced: \(key)")
             }
         }
         return (newVer, time)
@@ -545,8 +531,8 @@ open class BRReplicatedKVStore: NSObject {
         }
         syncRunning = true
         let myCompletionHandler: (_ e: BRReplicatedKVStoreError?) -> Void = { e in
-            completionHandler(e)
             self.syncRunning = false
+            completionHandler(e)
         }
         if let remoteVersion = remoteVersion, let remoteTime = remoteTime {
             try _syncKey(key, remoteVer: remoteVersion, remoteTime: remoteTime,

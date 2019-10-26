@@ -3,7 +3,7 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-07-23.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import UIKit
@@ -15,8 +15,8 @@ class LinkWalletViewController: UIViewController {
     private let body = UIStackView()
     private let footer = UIStackView()
     private let buttonStack = UIStackView()
-    private let footerBackground = UIView(color: .darkerBackground)
-    private let bodyBackground = UIView(color: .darkerBackground)
+    private let footerBackground = UIView(color: Theme.secondaryBackground)
+    private let bodyBackground = UIView(color: Theme.secondaryBackground)
     private let approve = BRDButton(title: S.LinkWallet.approve, type: .primary)
     private let decline = BRDButton(title: S.LinkWallet.decline, type: .secondary)
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))

@@ -3,12 +3,11 @@
 //  breadwallet
 //
 //  Created by Adrian Corscadden on 2018-07-11.
-//  Copyright © 2018 breadwallet LLC. All rights reserved.
+//  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 
 import Foundation
 import SwiftProtobuf
-import BRCore
 
 struct Inbox: Codable {
     let entries: [InboxEntry]
