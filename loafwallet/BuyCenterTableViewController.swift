@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Crashlytics
 
 let buyCellReuseIdentifier = "buyCell"
 
@@ -86,8 +85,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
     switch partner {
       case "Simplex":
         let simplexWebviewVC = BRWebViewController(partner: "Simplex", mountPoint: mountPoint + "_simplex", walletManager: walletManager, store: store, noAuthApiClient: nil)
-        registerLogEvent(name:"OPEN_SIMPLEX_STORE")
-        present(simplexWebviewVC, animated: true
+         present(simplexWebviewVC, animated: true
         , completion: nil)
       case "Changelly":
         print("Changelly No Code Placeholder")
@@ -100,20 +98,22 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
         fatalError("No Partner Chosen")
     }
   }
-   // MARK: - Navigation
-//   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//
-//   }
    
   @objc func dismissWebContainer() {
     dismiss(animated: true, completion: nil)
   }
-  
-  func registerLogEvent(name:String) {
-         Answers.logCustomEvent(withName: name, customAttributes: ["deviceID":UIDevice.current.identifierForVendor?.uuidString ?? "NODEVICEID"])
-  }
-  
 }
 
+
+extension BuyCenterTableViewController: ModalDisplayable {
+  
+  var faqArticleId: String? {
+    return nil
+  }
+  
+  var modalTitle: String {
+    return S.BuyCenter.buyModalTitle
+  }
+}
 
 

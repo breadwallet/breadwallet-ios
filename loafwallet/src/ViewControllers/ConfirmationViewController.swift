@@ -11,7 +11,7 @@ import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool) {
+    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, isDonation: Bool = false) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -20,6 +20,9 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
+        self.isDonation = isDonation
+        
+        self.header = self.isDonation ? ModalHeaderView(title: S.Donate.titleConfirmation, style: .dark, showCloseButton: false) : ModalHeaderView(title: S.Confirmation.title, style: .dark)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -31,7 +34,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingBiometrics: Bool
-
+    private let isDonation: Bool
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
     let blurView = UIVisualEffectView()
@@ -40,7 +43,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     var successCallback: (() -> Void)?
     var cancelCallback: (() -> Void)?
 
-    private let header = ModalHeaderView(title: S.Confirmation.title, style: .dark)
+    private var header: ModalHeaderView?
     private let cancel = ShadowButton(title: S.Button.cancel, type: .secondary)
     private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
 
@@ -66,6 +69,12 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private func addSubviews() {
         view.addSubview(contentBox)
+        
+        guard let header = header else {
+            NSLog("ERROR: Header not initialized")
+            return
+        }
+        
         contentBox.addSubview(header)
         contentBox.addSubview(payLabel)
         contentBox.addSubview(toLabel)
@@ -83,6 +92,12 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     }
 
     private func addConstraints() {
+        
+        guard let header = header else {
+            NSLog("ERROR: Header not initialized")
+            return
+        }
+        
         contentBox.constrain([
             contentBox.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             contentBox.centerYAnchor.constraint(equalTo: view.centerYAnchor),
@@ -138,15 +153,18 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private func setInitialData() {
         view.backgroundColor = .clear
         payLabel.text = S.Confirmation.send
+        guard let header = header else {
+            NSLog("ERROR: Header not initialized")
+            return
+        }
 
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
 
         amountLabel.text = displayAmount.combinedDescription
-
         toLabel.text = S.Confirmation.to
-        address.text = addressText
+        address.text = self.isDonation ? DonationAddress.firstLF : addressText
         address.lineBreakMode = .byTruncatingMiddle
         switch feeType {
         case .regular:
@@ -155,7 +173,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             processingTime.text = String(format: S.Confirmation.processingTime, "5+")
         }
 
-        sendLabel.text = S.Confirmation.amountLabel
+        sendLabel.text = isDonation ? S.Confirmation.donateLabel :
+        S.Confirmation.amountLabel
         send.text = displayAmount.description
         feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description

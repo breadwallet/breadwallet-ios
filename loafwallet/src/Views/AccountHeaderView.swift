@@ -8,10 +8,8 @@
 
 import UIKit
 
-private let largeFontSize: CGFloat = 26.0
+private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 13.0
-private let logoWidth: CGFloat = 0.22 //percentage of width
-private let logoWidthTablet: CGFloat = 0.11 // percentage of width - smaller for iPads
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
@@ -22,11 +20,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         if let rate = store.state.currentRate {
             self.exchangeRate = rate
             let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: store.state.maxDigits)
+            let oneLTCPlaceholder = Amount(amount: 1000000, rate: rate, maxDigits: store.state.maxDigits)
+            self.currentLTCValueLabel = UpdatingLabel(formatter: oneLTCPlaceholder.localFormat)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.ltcFormat)
         } else {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
+            self.currentLTCValueLabel = UpdatingLabel(formatter: NumberFormatter())
         }
         super.init(frame: CGRect())
     }
@@ -38,7 +39,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let manage = UIButton(type: .system)
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
+    private let currentLTCValueLabel: UpdatingLabel
+
     private let currencyTapView = UIView()
+    private let priceTapView = UIView()
     private let store: Store
     private let equals = UILabel(font: .customBody(size: smallFontSize), color: .whiteTint)
     private var regularConstraints: [NSLayoutConstraint] = []
@@ -71,11 +75,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private var exchangeRate: Rate? {
         didSet { setBalances() }
     }
-    private var logo: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
-        image.contentMode = .scaleAspectFit
-        return image
-    }()
     private var balance: UInt64 = 0 {
         didSet { setBalances() }
     }
@@ -107,11 +106,14 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.store.perform(action: RootModalActions.Present(modal: .manageWallet))
         }
         primaryBalance.textColor = .whiteTint
-        primaryBalance.font = UIFont.customBody(size: largeFontSize)
-
+        primaryBalance.font = UIFont.customBold(size: largeFontSize)
+ 
         secondaryBalance.textColor = .whiteTint
-        secondaryBalance.font = UIFont.customBody(size: largeFontSize)
-
+        secondaryBalance.font = UIFont.customBold(size: largeFontSize)
+      
+        currentLTCValueLabel.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
+        currentLTCValueLabel.font = UIFont.customBold(size: largeFontSize)
+      
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
 
@@ -131,10 +133,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(manage)
         addSubview(primaryBalance)
         addSubview(secondaryBalance)
+        addSubview(currentLTCValueLabel)
         addSubview(search)
         addSubview(currencyTapView)
+        addSubview(priceTapView)
         addSubview(equals)
-        addSubview(logo)
         addSubview(modeLabel)
     }
 
@@ -153,8 +156,13 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         equals.translatesAutoresizingMaskIntoConstraints = false
         primaryBalance.translatesAutoresizingMaskIntoConstraints = false
 
+        currentLTCValueLabel.constrain([
+        currentLTCValueLabel.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0),
+        currentLTCValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]-10),
+        ])
+      
         regularConstraints = [
-            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
+            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
             primaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             equals.firstBaselineAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor),
             equals.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
@@ -162,7 +170,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         ]
 
         swappedConstraints = [
-            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
+            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
             secondaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             equals.firstBaselineAnchor.constraint(equalTo: secondaryBalance.firstBaselineAnchor),
             equals.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
@@ -173,10 +181,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         search.constrain([
             search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4]),
-            search.constraint(.width, constant: 44.0),
-            search.constraint(.height, constant: 44.0) ])
-        search.imageEdgeInsets = UIEdgeInsetsMake(8.0, 8.0, 8.0, 8.0)
+            search.topAnchor.constraint(equalTo: topAnchor, constant: 20),
+            search.constraint(.width, constant: 40.0),
+            search.constraint(.height, constant: 40.0) ])
+            search.imageEdgeInsets = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)
 
         currencyTapView.constrain([
             currencyTapView.leadingAnchor.constraint(equalTo: name.leadingAnchor, constant: -C.padding[1]),
@@ -186,16 +194,6 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
 
         let gr = UITapGestureRecognizer(target: self, action: #selector(currencySwitchTapped))
         currencyTapView.addGestureRecognizer(gr)
-
-        logo.constrain([
-            logo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            logo.leftAnchor.constraint(equalTo: leftAnchor, constant: -10.0),
-            logo.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[10]),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
-            logo.widthAnchor.constraint(equalTo: widthAnchor, multiplier: (E.isIPad ? logoWidthTablet : logoWidth)) ])
-        modeLabel.constrain([
-            modeLabel.leadingAnchor.constraint(equalTo: logo.trailingAnchor, constant: C.padding[1]/2.0),
-            modeLabel.firstBaselineAnchor.constraint(equalTo: logo.bottomAnchor, constant: -2.0) ])
     }
 
     private func transform(forView: UIView) ->  CGAffineTransform {
@@ -223,8 +221,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let oneLTCPlaceholder = Amount(amount: 1000000, rate: rate, maxDigits: $0.maxDigits)
+
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.ltcFormat
+                                self.currentLTCValueLabel.formatter = oneLTCPlaceholder.localFormat
                             }
                             self.exchangeRate = $0.currentRate
                         })
@@ -234,8 +235,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                         callback: {
                             if let rate = $0.currentRate {
                                 let placeholderAmount = Amount(amount: 0, rate: rate, maxDigits: $0.maxDigits)
+                                let oneLTCPlaceholder = Amount(amount: 1000000, rate: rate, maxDigits: $0.maxDigits)
+                                
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.ltcFormat
+                                self.currentLTCValueLabel.formatter = oneLTCPlaceholder.localFormat
                                 self.setBalances()
                             }
         })
@@ -253,12 +257,17 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private func setBalances() {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
+        let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
+
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
+            let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
+
             NSLayoutConstraint.deactivate(isLtcSwapped ? self.regularConstraints : self.swappedConstraints)
             NSLayoutConstraint.activate(isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
             primaryBalance.setValue(amount.amountForLtcFormat)
             secondaryBalance.setValue(amount.localAmount)
+            currentLTCValueLabel.setValue(singleLtcAmount.localAmount)
             if isLtcSwapped {
                 primaryBalance.transform = transform(forView: primaryBalance)
             } else {
@@ -293,6 +302,9 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                 }
                 myself.hideExtraViews()
             })
+            
+            currentLTCValueLabel.setValue(singleLtcAmount.localAmount)
+
         }
     }
 
@@ -315,7 +327,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     }
 
     override func draw(_ rect: CGRect) {
-        drawGradient(rect)
+        guard let context = UIGraphicsGetCurrentContext() else {
+          return
+        }
+        context.setFillColor(UIColor.liteWalletBlue.cgColor)
+        context.fill(bounds)
     }
 
     @objc private func currencySwitchTapped() {
@@ -329,6 +345,12 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         }) { _ in }
 
         self.store.perform(action: CurrencyChange.toggle())
+    }
+  
+    @objc private func priceTapViewTapped() {
+      layoutIfNeeded()
+      ///TODO: write an update of the price
+      setBalances()
     }
 
     required init?(coder aDecoder: NSCoder) {

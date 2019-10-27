@@ -179,16 +179,6 @@ class ModalPresenter : Subscriber, Trackable {
         })
     }
 
-//    private func presentFaq(articleId: String? = nil) {
-//        guard let supportCenter = supportCenter else { return }
-//        supportCenter.modalPresentationStyle = .overFullScreen
-//        supportCenter.modalPresentationCapturesStatusBarAppearance = true
-//        supportCenter.transitioningDelegate = supportCenter
-//        let url = articleId == nil ? "/support" : "/support?id=\(articleId!)"
-//        supportCenter.navigate(to: url)
-//        topViewController?.present(supportCenter, animated: true, completion: {})
-//    }
-    
     private func presentWebView(_ mountPoint: String) {
         guard let walletManager = self.walletManager else { return }
         let vc = WebViewContainer(mountPoint: mountPoint, walletManager: walletManager, store: store, apiClient: self.noAuthApiClient)
@@ -204,6 +194,8 @@ class ModalPresenter : Subscriber, Trackable {
         switch type {
         case .none:
             return nil
+        case .buy:
+            return presentBuyController()
         case .send:
             return makeSendView()
         case .receive:
@@ -253,7 +245,8 @@ class ModalPresenter : Subscriber, Trackable {
         }
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), walletManager: walletManager, initialRequest: currentRequest)
+ 
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), donationSender: Sender(walletManager: walletManager, kvStore: kvStore, store: store),  walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
         if store.state.isLoginRequired {
@@ -318,11 +311,6 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.presentSettings()
             }
         }
-        menu.didTapBuy = { [weak self, weak menu] in
-            menu?.dismiss(animated: true, completion: {
-               self?.presentBuyController("/buy")
-            })
-        }
         return root
     }
 
@@ -341,7 +329,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "LoafWallet", "Advanced"]
+        let sections = ["Wallet", "Manage", "Litewallet", "Advanced"]
         var rows = [
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
@@ -415,7 +403,7 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(updatePin, animated: true)
                 })
             ],
-            "LoafWallet": [
+            "Litewallet": [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
@@ -444,7 +432,7 @@ class ModalPresenter : Subscriber, Trackable {
         ]
 
         if BRAPIClient.featureEnabled(.earlyAccess) {
-            rows["LoafWallet"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
+            rows["Litewallet"]?.insert(Setting(title: S.Settings.earlyAccess, callback: {
                 settingsNav.dismiss(animated: true, completion: {
                     self.presentWebView("/ea")
                 })
@@ -588,17 +576,10 @@ class ModalPresenter : Subscriber, Trackable {
         vc.present(paperPhraseNavigationController, animated: true, completion: nil)
     }
 
-    private func presentBuyController(_ mountPoint: String) {
-        guard let walletManager = self.walletManager else { return }
-      
-      let vc : BuyCenterTableViewController
-        #if Debug || Testflight
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
-        #else
-         vc = BuyCenterTableViewController(store: store, walletManager: walletManager, mountPoint: mountPoint)
-        #endif
-      
-         topViewController?.present(vc, animated: true, completion: nil)
+    private func presentBuyController() -> UIViewController {
+
+      let buyVC = BuyCenterTableViewController(store: store, walletManager: walletManager!, mountPoint:"/buy")
+      return buyVC
     }
 
     private func presentRescan() {

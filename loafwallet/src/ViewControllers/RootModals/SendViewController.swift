@@ -14,7 +14,7 @@ typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
 private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
-
+ 
 class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
 
     //MARK - Public
@@ -25,7 +25,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     var initialAddress: String?
     var isPresentedFromLock = false
 
-    init(store: Store, sender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil) {
+    init(store: Store, sender: Sender, donationSender: Sender, walletManager: WalletManager, initialAddress: String? = nil, initialRequest: PaymentRequest? = nil) {
         self.store = store
         self.sender = sender
         self.walletManager = walletManager
@@ -33,7 +33,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
-
+        self.donationCell = DonationSetupCell(store: store, wantsToDonate: true)
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: .UIKeyboardWillHide, object: nil)
@@ -51,10 +51,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let amountView: AmountViewController
     private let addressCell = AddressCell()
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
+    private let donationCell: DonationSetupCell
     private let sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
     private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
-    private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var balance: UInt64 = 0
     private var amount: Satoshis?
@@ -63,31 +63,35 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private var feeType: Fee?
-
+    private var wantsToDonate = false
+    
     override func viewDidLoad() {
         view.backgroundColor = .white
         view.addSubview(addressCell)
+        view.addSubview(donationCell)
         view.addSubview(descriptionCell)
         view.addSubview(sendButton)
-
+        
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
-
         addChildViewController(amountView, layout: {
             amountView.view.constrain([
                 amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 amountView.view.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
-
+        
+        donationCell.constrain([
+                  donationCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
+                  donationCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+                  donationCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
+                  donationCell.heightAnchor.constraint(equalToConstant: 72.0)])
         descriptionCell.constrain([
             descriptionCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
-            descriptionCell.topAnchor.constraint(equalTo: amountView.view.bottomAnchor),
+            descriptionCell.topAnchor.constraint(equalTo: donationCell.bottomAnchor),
             descriptionCell.leadingAnchor.constraint(equalTo: amountView.view.leadingAnchor),
             descriptionCell.heightAnchor.constraint(equalTo: descriptionCell.textView.heightAnchor, constant: C.padding[4]) ])
-
         descriptionCell.accessoryView.constrain([
                 descriptionCell.accessoryView.constraint(.width, constant: 0.0) ])
-
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
@@ -118,6 +122,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+         
         descriptionCell.didReturn = { textView in
             textView.resignFirstResponder()
         }
@@ -156,15 +161,39 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.addressCell.textField.resignFirstResponder()
             }
         }
+        
+        donationCell.isLTCSwapped = store.state.isLtcSwapped
+        
+        donationCell.didTapToDonate = {
+            self.wantsToDonate = true
+            self.sendTapped()
+        }
+        
+        amountView.didShowFiat = { isLTCSwapped in
+            
+            var donationText = ""
+            if isLTCSwapped {
+                donationText = "\(kDonationAmountInDouble) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
+            } else {
+                if let rate  = self.store.state.currentRate {
+                    donationText = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
+                }
+            }
+              
+            self.donationCell.donateButton?.title = donationText
+        }
     }
 
     private func balanceTextForAmount(amount: Satoshis?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
+      
+        let balanceAmount = DisplayAmount(amount: Satoshis(rawValue: balance), state: store.state, selectedRate: rate, minimumFractionDigits: 2)
         let balanceText = balanceAmount.description
+
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
         var color: UIColor = .grayTextTint
-        if let amount = amount, amount.rawValue > 0 {
+        
+        if let amount = amount, amount > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
             let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
             let feeText = feeAmount.description
@@ -174,7 +203,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             }
         }
 
-        let attributes: [NSAttributedStringKey: Any] = [
+        let balanceAttributes: [NSAttributedStringKey: Any] = [
             NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
             NSAttributedStringKey.foregroundColor: color
         ]
@@ -184,7 +213,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             NSAttributedStringKey.foregroundColor: UIColor.grayTextTint
         ]
 
-        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
+        return (NSAttributedString(string: balanceOutput, attributes: balanceAttributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
 
     @objc private func pasteTapped() {
@@ -210,15 +239,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
-
+         
         if sender.transaction == nil {
-            guard let address = addressCell.address else {
+            guard let address = wantsToDonate ? DonationAddress.firstLF :
+            addressCell.address else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAddress, buttonLabel: S.Button.ok)
             }
             guard address.isValidAddress else {
                 return showAlert(title: S.Send.invalidAddressTitle, message: S.Send.invalidAddressMessage, buttonLabel: S.Button.ok)
             }
-            guard let amount = amount else {
+            guard let amount = wantsToDonate ? Satoshis(rawValue: UInt64(kDonationAmount)) : amount else {
                 return showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             }
             if let minOutput = walletManager.wallet?.minOutputAmount {
@@ -238,12 +268,16 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
-
-        guard let amount = amount else { return }
-        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        
+        guard let amount = wantsToDonate ? Satoshis(rawValue: UInt64(kDonationAmount)) : amount else {
+            NSLog("ERROR: Amount not set")
+            return
+        }
+          
+        let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics, isDonation: self.wantsToDonate)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
-                self.send()
+                 self.send()
             })
         }
         confirm.cancelCallback = {
@@ -276,7 +310,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             request.fetchRemoteRequest(completion: { [weak self] request in
                 DispatchQueue.main.async {
                     loadingView.dismiss(animated: true, completion: {
-                        if let paymentProtocolRequest = request?.paymentProtoclRequest {
+                        if let paymentProtocolRequest = request?.paymentProtocolRequest {
                             self?.confirmProtocolRequest(protoReq: paymentProtocolRequest)
                         } else {
                             self?.showErrorMessage(S.Send.remoteRequestError)
@@ -290,10 +324,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private func send() {
         guard let rate = store.state.currentRate else { return }
         guard let feePerKb = walletManager.wallet?.feePerKb else { return }
-
+         
         sender.send(biometricsMessage: S.VerifyPin.touchIdMessage,
                     rate: rate,
-                    comment: descriptionCell.textView.text,
+                    comment: wantsToDonate ? S.Donate.memo : descriptionCell.textView.text,
                     feePerKb: feePerKb,
                     verifyPinFunction: { [weak self] pinValidationCallback in
                         self?.presentVerifyPin?(S.VerifyPin.authorize) { [weak self] pin, vc in
@@ -329,7 +363,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 }
         })
     }
-
+     
     func confirmProtocolRequest(protoReq: PaymentProtocolRequest) {
         guard let firstOutput = protoReq.details.outputs.first else { return }
         guard let wallet = walletManager.wallet else { return }

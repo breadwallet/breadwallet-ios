@@ -77,12 +77,15 @@ class StartFlowPresenter : Subscriber {
             let recoverIntro = RecoverWalletIntroViewController(didTapNext: myself.pushRecoverWalletView)
             myself.navigationController?.setTintableBackArrow()
             myself.navigationController?.setClearNavbar()
+            myself.navigationController?.modalPresentationStyle = .fullScreen
             myself.navigationController?.setNavigationBarHidden(false, animated: false)
             myself.navigationController?.pushViewController(recoverIntro, animated: true)
         })
 
         navigationController = ModalNavigationController(rootViewController: startViewController)
         navigationController?.delegate = navigationControllerDelegate
+        navigationController?.modalPresentationStyle = .fullScreen
+        
         if let startFlow = navigationController {
             startFlow.setNavigationBarHidden(true, animated: false)
             rootViewController.present(startFlow, animated: false, completion: nil)

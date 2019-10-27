@@ -3,7 +3,6 @@
     {
       "size" : "24x24",
       "idiom" : "watch",
-      "filename" : "Icon48.png",
       "scale" : "2x",
       "role" : "notificationCenter",
       "subtype" : "38mm"
@@ -11,7 +10,6 @@
     {
       "size" : "27.5x27.5",
       "idiom" : "watch",
-      "filename" : "Icon55.png",
       "scale" : "2x",
       "role" : "notificationCenter",
       "subtype" : "42mm"
@@ -19,21 +17,20 @@
     {
       "size" : "29x29",
       "idiom" : "watch",
-      "filename" : "Icon58.png",
+      "filename" : "DevCoinBlue58.png",
       "role" : "companionSettings",
       "scale" : "2x"
     },
     {
       "size" : "29x29",
       "idiom" : "watch",
-      "filename" : "Icon87.png",
       "role" : "companionSettings",
       "scale" : "3x"
     },
     {
       "size" : "40x40",
       "idiom" : "watch",
-      "filename" : "Icon80.png",
+      "filename" : "DevCoinBlue80.png",
       "scale" : "2x",
       "role" : "appLauncher",
       "subtype" : "38mm"
@@ -48,6 +45,7 @@
     {
       "size" : "50x50",
       "idiom" : "watch",
+      "filename" : "DevCoinBlue100.png",
       "scale" : "2x",
       "role" : "appLauncher",
       "subtype" : "44mm"
@@ -55,7 +53,6 @@
     {
       "size" : "86x86",
       "idiom" : "watch",
-      "filename" : "Icon172.png",
       "scale" : "2x",
       "role" : "quickLook",
       "subtype" : "38mm"
@@ -63,7 +60,6 @@
     {
       "size" : "98x98",
       "idiom" : "watch",
-      "filename" : "Icon196.png",
       "scale" : "2x",
       "role" : "quickLook",
       "subtype" : "42mm"
@@ -78,7 +74,7 @@
     {
       "size" : "1024x1024",
       "idiom" : "watch-marketing",
-      "filename" : "Icon1024.png",
+      "filename" : "DevCoinBlue1024.png",
       "scale" : "1x"
     }
   ],

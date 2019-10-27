@@ -10,7 +10,7 @@ import UIKit
 import BRCore
 import MachO
 
-let accountHeaderHeight: CGFloat = 136.0
+let accountHeaderHeight: CGFloat = 120.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {
@@ -21,6 +21,9 @@ class AccountViewController : UIViewController, Subscriber {
     }
     var receiveCallback: (() -> Void)? {
         didSet { footerView.receiveCallback = receiveCallback }
+    }
+    var buyCallback: (() -> Void)? {
+      didSet { footerView.buyCallback = buyCallback }
     }
     var menuCallback: (() -> Void)? {
         didSet { footerView.menuCallback = menuCallback }
@@ -60,7 +63,7 @@ class AccountViewController : UIViewController, Subscriber {
     private var footerView = AccountFooterView()
     private let transactionsLoadingView = LoadingProgressView()
     private let transactionsTableView: TransactionsTableViewController
-    private let footerHeight: CGFloat = 56.0
+    private let footerHeight: CGFloat = 60.0
     private var transactionsLoadingViewTop: NSLayoutConstraint?
     private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private var isLoginRequired = false
@@ -89,6 +92,8 @@ class AccountViewController : UIViewController, Subscriber {
 
     override func viewDidLoad() {
         // detect jailbreak so we can throw up an idiot warning, in viewDidLoad so it can't easily be swizzled out
+        self.correctScreenHeight()
+      
         if !E.isSimulator {
             var s = stat()
             var isJailbroken = (stat("/bin/sh", &s) == 0) ? true : false
@@ -143,7 +148,7 @@ class AccountViewController : UIViewController, Subscriber {
 
         footerView.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         footerView.constrain([
-            footerView.constraint(.height, constant: E.isIPhoneX ? footerHeight + 19.0 : footerHeight) ])
+        footerView.constraint(.height, constant: 70.0) ])
         searchHeaderview.constrain(toSuperviewEdges: nil)
     }
 
@@ -260,6 +265,10 @@ class AccountViewController : UIViewController, Subscriber {
 
     @objc private func updateLoadingProgress() {
         transactionsLoadingView.progress = transactionsLoadingView.progress + (1.0 - transactionsLoadingView.progress)/8.0
+    }
+  
+    private func correctScreenHeight() -> CGFloat {
+      return UIScreen.main.bounds.height
     }
 
     private func addTemporaryStartupViews() {

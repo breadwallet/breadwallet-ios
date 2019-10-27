@@ -33,8 +33,8 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     let contentBox = UIView()
     private let callback: VerifyPinCallback
     private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
-    private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
-    private let body = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .white)
+    private let body = UILabel(font: .customBody(size: 14.0), color: .white)
     private let pinView: PinView
     private let toolbar = UIView(color: .whiteTint)
     private let cancel = UIButton(type: .system)
@@ -91,7 +91,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     }
 
     private func setupSubviews() {
-        contentBox.backgroundColor = .white
+        contentBox.backgroundColor = .liteWalletBlue
         contentBox.layer.cornerRadius = 8.0
         contentBox.layer.borderWidth = 1.0
         contentBox.layer.borderColor = UIColor.secondaryShadow.cgColor
@@ -110,10 +110,15 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
             let attemptLength = output.utf8.count
             myself.pinView.fill(attemptLength)
             myself.pinPad.isAppendingDisabled = attemptLength < myself.pinLength ? false : true
+            
             if attemptLength == myself.pinLength {
                 if !myself.callback(output, myself) {
                     myself.authenticationFailed()
-                } 
+                } else {
+                    NSLog("FAILED")
+                }
+            } else {
+                NSLog("FAILED")
             }
         }
         cancel.tap = { [weak self] in

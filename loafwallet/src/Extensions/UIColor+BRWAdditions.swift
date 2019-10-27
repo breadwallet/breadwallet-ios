@@ -9,7 +9,16 @@
 import UIKit
 
 extension UIColor {
+  
+  // TODO: New Color Scheme
+  // #A6A9AA, Silver C, UIColor(red: 166.0/255.0, green: 169.0/255.0, blue: 170.0/255.0, alpha: 1.0)
+  // #4D4D4E, Cool Gray 11 C
+  // #FFFFFF, White
+  // #345D9D, Blue, 7684 C, UIColor(red: 52.0/255.0, green: 52.0/255.0, blue: 157.0/255.0, alpha: 1.0)
 
+    static var liteWalletBlue: UIColor {
+        return #colorLiteral(red: 0.2053973377, green: 0.3632233143, blue: 0.6166344285, alpha: 1)  //UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
+    }
     // MARK: Buttons
     static var primaryButton: UIColor {
         return #colorLiteral(red: 0.2980392157, green: 0.5960784314, blue: 0.9882352941, alpha: 1)  //UIColor(red: 76.0/255.0, green: 152.0/255.0, blue: 252.0/255.0, alpha: 1.0)
