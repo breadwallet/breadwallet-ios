@@ -151,7 +151,6 @@ class ApplicationController: Subscriber, Trackable {
         self.startBackendServices()
         self.setWalletInfo(account: account)
         authenticateWithBackend { jwt in
-            guard let jwt = jwt else { return assertionFailure() }
             self.coreSystem.create(account: account, authToken: jwt)
 
             self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
@@ -312,6 +311,7 @@ class ApplicationController: Subscriber, Trackable {
             case .failure(let error):
                 print("[BDB] authentication failure: \(error)")
                 assertionFailure()
+                completion(nil)
             }
         }
     }
