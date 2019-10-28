@@ -50,7 +50,7 @@ class CoreSystem: Subscriber, Trackable {
     }
 
     /// Creates and configures the System with the Account and BDB authentication token.
-    func create(account: Account, authToken: String) {
+    func create(account: Account, authToken: String?) {
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
         print("[SYS] create | account timestamp: \(account.timestamp)")
         assert(self.system == nil)
@@ -60,7 +60,9 @@ class CoreSystem: Subscriber, Trackable {
             bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
                 
                 var req = request
-                req.authorize(withToken: authToken)
+                if let authToken = authToken {
+                    req.authorize(withToken: authToken)
+                }
                 //TODO:CRYPTO does not handle 401, other headers, redirects
                 return session.dataTask(with: req, completionHandler: completion)
         },
