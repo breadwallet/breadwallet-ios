@@ -19,7 +19,8 @@ class AboutViewController: UIViewController {
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
     private let privacy = UIButton(type: .system)
-    private let footer = UILabel(font: .customBody(size: 13.0), color: .white)
+    private let footer = UILabel.wrapping(font: .customBody(size: 13.0), color: Theme.primaryText)
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -69,7 +70,8 @@ class AboutViewController: UIViewController {
             privacy.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             privacy.topAnchor.constraint(equalTo: reddit.bottomAnchor, constant: C.padding[2])])
         footer.constrain([
-            footer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            footer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[3]),
+            footer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3]),
             footer.topAnchor.constraint(equalTo: privacy.bottomAnchor) ])
     }
 
