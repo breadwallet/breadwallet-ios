@@ -1075,7 +1075,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "Gesamt";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "Bitcoin-Transaktions-ID";
+"TransactionDetails.txHashHeader" = "Transaktions-ID";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "An dieser Adresse empfangen";
 /* (this transaction was) Sent to this address: */
