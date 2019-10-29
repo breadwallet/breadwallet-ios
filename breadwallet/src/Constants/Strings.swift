@@ -166,7 +166,7 @@ enum S {
         static let titleFailed = NSLocalizedString("TransactionDetails.titleFailed", value:"Failed", comment: "Transaction Details Title - Failed")
         
         static let showDetails = NSLocalizedString("TransactionDetails.showDetails", value:"Show Details", comment: "Show Details button")
-        static let hideDetails = NSLocalizedString("TransactionDetails.titleFailed", value:"Hide Details", comment: "Hide Details button")
+        static let hideDetails = NSLocalizedString("TransactionDetails.hideDetails", value:"Hide Details", comment: "Hide Details button")
         
         static let statusHeader = NSLocalizedString("TransactionDetails.statusHeader", value:"Status", comment: "Status section header")
         static let commentsHeader = NSLocalizedString("TransactionDetails.commentsHeader", value:"Memo", comment: "Memo section header")

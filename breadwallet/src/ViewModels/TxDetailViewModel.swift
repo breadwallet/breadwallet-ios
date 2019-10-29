@@ -85,7 +85,6 @@ extension TxDetailViewModel {
         if tx.direction == .sent {
             var feeAmount = tx.fee
             feeAmount.maximumFractionDigits = Amount.highPrecisionDigits
-            feeAmount.rate = rate
             fee = Store.state.showFiatAmounts ? feeAmount.fiatDescription : feeAmount.tokenDescription
         }
 
