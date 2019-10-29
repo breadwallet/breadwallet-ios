@@ -179,7 +179,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
 
         pinPadPottom = pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0)
         pinPadBackground.constrain([
-            pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
+            pinPadBackground.widthAnchor.constraint(equalToConstant: floor(UIScreen.main.safeWidth/3.0)*3.0),
             pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
             pinPadPottom ])
