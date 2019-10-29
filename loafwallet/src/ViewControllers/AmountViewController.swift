@@ -64,8 +64,8 @@ class AmountViewController : UIViewController, Trackable {
     private var pinPadHeight: NSLayoutConstraint?
     private var feeSelectorHeight: NSLayoutConstraint?
     private var feeSelectorTop: NSLayoutConstraint?
-    private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
-    private let amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
+    private var placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
+    private var amountLabel = UILabel(font: .customBody(size: 26.0), color: .darkText)
     private let pinPad: PinPadViewController
     private let currencyToggle: ShadowButton
     private let border = UIView(color: .secondaryShadow)
@@ -87,6 +87,19 @@ class AmountViewController : UIViewController, Trackable {
     }
 
     override func viewDidLoad() {
+        
+        if #available(iOS 11.0, *) {
+            guard let headerTextColor = UIColor(named: "headerTextColor"),
+                let textColor = UIColor(named: "labelTextColor") else {
+               NSLog("ERROR: Custom color")
+               return
+            }
+            placeholder.textColor = headerTextColor
+            amountLabel.textColor = textColor
+        } else {
+            placeholder.textColor = .grayTextTint
+            amountLabel.textColor = .darkText
+        }
         addSubviews()
         addConstraints()
         setInitialData()

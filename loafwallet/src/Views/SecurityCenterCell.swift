@@ -21,14 +21,28 @@ class SecurityCenterCell : UIControl {
 
     init(title: String, descriptionText: String) {
         super.init(frame: .zero)
-        self.title.text = title
+        self.titleLabel.text = title
+        
+        if #available(iOS 11.0, *) {
+            guard let headerTextColor = UIColor(named: "headerTextColor"),
+                let labelTextColor = UIColor(named: "labelTextColor"),
+                let backgroundColor = UIColor(named: "lfBackgroundColor") else {
+               NSLog("ERROR: Custom colors not set")
+               return
+            }
+            check.tintColor = headerTextColor
+            titleLabel.textColor = labelTextColor
+            descriptionLabel.textColor = labelTextColor
+            self.backgroundColor = backgroundColor
+        }
+        
         descriptionLabel.text = descriptionText
         setup()
     }
 
     //MARK: - Private
     private func setup() {
-        addSubview(title)
+        addSubview(titleLabel)
         addSubview(descriptionLabel)
         addSubview(separator)
         addSubview(check)
@@ -37,18 +51,18 @@ class SecurityCenterCell : UIControl {
             check.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
             check.widthAnchor.constraint(equalToConstant: buttonSize),
             check.heightAnchor.constraint(equalToConstant: buttonSize) ])
-        title.constrain([
-            title.leadingAnchor.constraint(equalTo: check.trailingAnchor, constant: C.padding[1]),
-            title.topAnchor.constraint(equalTo: check.topAnchor),
-            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+        titleLabel.constrain([
+            titleLabel.leadingAnchor.constraint(equalTo: check.trailingAnchor, constant: C.padding[1]),
+            titleLabel.topAnchor.constraint(equalTo: check.topAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
         descriptionLabel.constrain([
-            descriptionLabel.leadingAnchor.constraint(equalTo: title.leadingAnchor),
-            descriptionLabel.topAnchor.constraint(equalTo: title.bottomAnchor),
-            descriptionLabel.trailingAnchor.constraint(equalTo: title.trailingAnchor) ])
+            descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            descriptionLabel.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor) ])
         separator.constrain([
             separator.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: C.padding[3]),
             separator.leadingAnchor.constraint(equalTo: check.leadingAnchor),
-            separator.trailingAnchor.constraint(equalTo: title.trailingAnchor),
+            separator.trailingAnchor.constraint(equalTo: titleLabel.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1.0),
             separator.bottomAnchor.constraint(equalTo: bottomAnchor) ])
 
@@ -61,17 +75,25 @@ class SecurityCenterCell : UIControl {
     override var isHighlighted: Bool {
         didSet {
             if isHighlighted {
-                backgroundColor = .secondaryButton
+                if #available(iOS 11.0, *) {
+                    backgroundColor = UIColor(named: "buttonSelectionColor")
+                } else {
+                    backgroundColor = .secondaryButton
+                }
             } else {
-                backgroundColor = .white
+                if #available(iOS 11.0, *) {
+                   backgroundColor = UIColor(named: "buttonSelectionColor")
+                } else {
+                   backgroundColor = .white
+                }
             }
         }
     }
 
-    private let title = UILabel(font: .customBold(size: 13.0))
-    private let descriptionLabel = UILabel(font: .customBody(size: 13.0))
-    private let separator = UIView(color: .secondaryShadow)
-    private let check = UIButton(type: .system)
+    private var titleLabel = UILabel(font: .customBold(size: 13.0))
+    private var descriptionLabel = UILabel(font: .customBody(size: 13.0))
+    private var separator = UIView(color: .secondaryShadow)
+    private var check = UIButton(type: .system)
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

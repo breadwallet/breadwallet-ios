@@ -13,10 +13,22 @@ class DescriptionSendCell : SendCell {
     init(placeholder: String) {
         super.init()
         textView.delegate = self
-        textView.textColor = .darkText
         textView.font = .customBody(size: 20.0)
         textView.returnKeyType = .done
         self.placeholder.text = placeholder
+        
+        if #available(iOS 11.0, *) {
+            guard let headerTextColor = UIColor(named: "headerTextColor"),
+                let textColor = UIColor(named: "labelTextColor") else {
+               NSLog("ERROR: Custom color")
+               return
+            }
+            textView.textColor = textColor
+            self.placeholder.textColor = headerTextColor
+        } else {
+            textView.textColor = .darkText
+        }
+        
         setupViews()
     }
 
@@ -30,8 +42,8 @@ class DescriptionSendCell : SendCell {
         }
     }
 
-    let textView = UITextView()
-    fileprivate let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
+    var textView = UITextView()
+    fileprivate var placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
     private func setupViews() {
         textView.isScrollEnabled = false
         addSubview(textView)

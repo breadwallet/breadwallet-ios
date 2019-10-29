@@ -57,6 +57,26 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         status.text = transaction.status
         comment.text = transaction.comment
         availability.text = transaction.shouldDisplayAvailableToSpend ? S.Transaction.available : ""
+        
+        if #available(iOS 11.0, *) {
+                   guard let textColor = UIColor(named: "labelTextColor") else {
+                       NSLog("ERROR: Custom color not found")
+                       return
+                   }
+                   transactionLabel.textColor = textColor
+                   address.textColor = textColor
+                   comment.textColor = textColor
+                   status.textColor = textColor
+                   timestamp.textColor = textColor
+                   shadowView.layer.shadowColor = textColor.cgColor
+                      
+               } else {
+                   comment.textColor = .darkText
+                   status.textColor = .darkText
+                   timestamp.textColor = .grayTextTint
+                   shadowView.backgroundColor = .clear
+                   shadowView.layer.shadowColor = UIColor.black.cgColor
+               }
 
         if transaction.status == S.Transaction.complete {
             status.isHidden = false
@@ -167,7 +187,6 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
         timestamp.textColor = .grayTextTint
 
         shadowView.backgroundColor = .clear
-        shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOpacity = 0.5
         shadowView.layer.shadowRadius = 4.0
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 0)
@@ -190,17 +209,18 @@ class TransactionTableViewCell : UITableViewCell, Subscriber {
             timer?.invalidate()
         }
     }
-
+    
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         //intentional noop for now
         //The default selected state doesn't play nicely
         //with this custom cell
     }
 
-    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
-        guard selectionStyle != .none else { container.backgroundColor = .white; return }
-        container.backgroundColor = highlighted ? .secondaryShadow : .white
-    }
+//    override func setHighlighted(_ highlighted: Bool, animated: Bool) {
+//        guard selectionStyle != .none else { container.backgroundColor = .white; return }
+//        container.backgroundColor = highlighted ? .secondaryShadow : .white
+//    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

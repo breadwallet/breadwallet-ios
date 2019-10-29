@@ -9,6 +9,7 @@ import UIKit
 import LocalAuthentication
 
 class SettingsViewController : UITableViewController, CustomTitleView {
+    //TODO: Review dark mode color scheme
 
   init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
@@ -20,6 +21,7 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             tempRows["Manage"] = tempRows["Manage"]?.filter { $0.title != biometricsLimit }
             self.rows = tempRows
         }
+
         customTitle = optionalTitle ?? S.Settings.title
         titleLabel.text = optionalTitle ?? S.Settings.title
         super.init(style: .plain)
@@ -28,20 +30,36 @@ class SettingsViewController : UITableViewController, CustomTitleView {
     private let sections: [String]
     private var rows: [String: [Setting]]
     private let cellIdentifier = "CellIdentifier"
-    let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    internal var titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
     let customTitle: String
     private var walletIsEmpty = true
 
     override func viewDidLoad() {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
-        headerView.backgroundColor = .whiteTint
+         
+        if #available(iOS 11.0, *) {
+            guard let textColor = UIColor(named: "labelTextColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            }
+
+            headerView.backgroundColor = UIColor(named: "lfBackgroundColor")
+            tableView.backgroundColor = UIColor(named: "lfBackgroundColor")
+            titleLabel = UILabel(font: .customBold(size: 26.0), color: textColor)
+
+        } else {
+            headerView.backgroundColor = .liteWalletBlue
+            tableView.backgroundColor = .clear
+            titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+        }
+             
         headerView.addSubview(titleLabel)
         titleLabel.constrain(toSuperviewEdges: UIEdgeInsetsMake(0, C.padding[2], 0, 0))
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         tableView.tableHeaderView = headerView
         tableView.tableFooterView = UIView()
-        tableView.separatorStyle = .none
-        tableView.backgroundColor = .whiteTint
+        tableView.separatorStyle = .none 
+         
         addCustomTitle()
     }
 

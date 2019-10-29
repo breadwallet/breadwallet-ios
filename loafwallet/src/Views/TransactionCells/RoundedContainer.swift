@@ -17,6 +17,15 @@ class RoundedContainer: UIView {
     }
 
     override func layoutSubviews() {
+        
+        if #available(iOS 11.0, *) {
+             
+            guard let backgroundColor = UIColor(named: "lfBackgroundColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            }
+            self.backgroundColor = backgroundColor
+        }
         let maskLayer = CAShapeLayer()
         let corners: UIRectCorner
         switch style {

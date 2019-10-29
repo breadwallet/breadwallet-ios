@@ -330,7 +330,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         guard let context = UIGraphicsGetCurrentContext() else {
           return
         }
-        context.setFillColor(UIColor.liteWalletBlue.cgColor)
+        
+        var backgroundColor = UIColor.liteWalletBlue
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor") else {
+                NSLog("ERROR: Main color")
+                return
+            }
+            backgroundColor = mainColor
+        }
+        context.setFillColor(backgroundColor.cgColor)
         context.fill(bounds)
     }
 

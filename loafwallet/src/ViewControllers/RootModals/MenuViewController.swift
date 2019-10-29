@@ -48,8 +48,13 @@ class MenuViewController : UIViewController, Trackable {
 
         previousButton?.constrain([
             previousButton?.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[2]) ])
-
-        view.backgroundColor = .white
+        
+        if #available(iOS 11.0, *) {
+            view.backgroundColor = UIColor(named: "lfBackgroundColor")
+        } else {
+            view.backgroundColor = .white
+        }
+        
     }
 
     @objc private func didTapButton(button: MenuButton) {

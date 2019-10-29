@@ -25,8 +25,17 @@ extension CustomTitleView {
 
     var label: UILabel {
         get {
+             
+            var textColor: UIColor
+            
+            if #available(iOS 11.0, *) {
+                textColor = UIColor(named: "lfBackgroundColor")!
+            } else {
+                textColor = .darkText
+            }
+            
             guard let label = objc_getAssociatedObject(self, &AssociatedKeys.label) as? UILabel else {
-                let newLabel = UILabel(font: .customBold(size: 17.0), color: .darkText)
+                let newLabel = UILabel(font: .customBold(size: 17.0), color: textColor)
                 objc_setAssociatedObject(self, &AssociatedKeys.label, newLabel, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
                 return newLabel
             }
@@ -50,7 +59,15 @@ extension CustomTitleView {
 
     func addCustomTitle() {
         let titleView = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 40))
-        titleView.backgroundColor = .clear
+
+        if #available(iOS 11.0, *) {
+            titleView.backgroundColor = UIColor(named: "lfBackgroundColor")
+            label.textColor = UIColor(named: "labelTextColor")
+       } else {
+            titleView.backgroundColor = .clear
+            label.textColor = .darkText
+       }
+        
         titleView.clipsToBounds = true
         label.text = customTitle
         titleView.addSubview(label)

@@ -10,10 +10,6 @@ import UIKit
 
 class TransactionDetailCollectionViewCell : UICollectionViewCell {
   
-  enum DeviceIdiom {
-    
-  }
-
     //MARK: - Public
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,6 +23,19 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     func set(transaction: Transaction, isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) {
+        
+        guard let address = self.address,
+            let amount = self.amount,
+            let amountDetails = self.amountDetails,
+            let status = self.status,
+            let addressHeader = self.addressHeader,
+            let timestamp = self.timestamp,
+            let availability = self.availability,
+            let blockHeight = self.blockHeight else {
+                NSLog("ERROR: a UILabel was not initialized")
+                return
+        }
+        
         timestamp.text = transaction.longTimestamp
         amount.text = String(format: transaction.direction.amountFormat, "\(transaction.amountDescription(isLtcSwapped: isLtcSwapped, rate: rate, maxDigits: maxDigits))")
         address.text = transaction.detailsAddressText
@@ -66,36 +75,92 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
 
     //MARK: - Private
     private let header = ModalHeaderView(title: S.TransactionDetails.title, style: .dark)
-    private let timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let address = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
-    private let statusHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
-    private let commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let comment = UITextView()
-    private let amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
-    private let addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let fullAddress = UIButton(type: .system)
+    var timestamp: UILabel?
+    var amount: UILabel?
+    var address: UILabel?
+    var separators = (0...4).map { _ in UIView(color: .secondaryShadow) }
+    var statusHeader: UILabel?
+    var status: UILabel?
+    var commentsHeader: UILabel?
+    var amountHeader: UILabel?
+    var amountDetails: UILabel?
+    var addressHeader: UILabel?
+    var comment = UITextView()
+    var fullAddress = UIButton(type: .system)
     private let headerHeight: CGFloat = 70
     private let scrollViewContent = UIView()
     private let scrollView = UIScrollView()
-    private let moreButton = UIButton(type: .system)
+    private var moreButton = UIButton(type: .system)
     private let moreContentView = UIView()
-    private let txHash = UIButton(type: .system)
-    private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let availability = UILabel(font: .customBold(size: 13.0), color: .txListGreen)
-    private let blockHeight = UILabel(font: .customBody(size: 13.0), color: .darkText)
+    private var txHash = UIButton(type: .system)
+    var txHashHeader: UILabel? // = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+    var availability: UILabel? //= UILabel(font: .customBold(size: 13.0), color: .txListGreen)
+    var blockHeight: UILabel? // = UILabel(font: .customBody(size: 13.0), color: .darkText)
     private var scrollViewHeight: NSLayoutConstraint?
 
     private func setup() {
+        
+        self.backgroundColor = .white
+        self.timestamp = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.amount = UILabel(font: .customBold(size: 26.0), color: .darkText)
+        self.address = UILabel(font: .customBold(size: 14.0), color: .darkText)
+        self.statusHeader = UILabel(font: .customBold(size: 14.0), color: .darkText)
+        self.status = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+        self.commentsHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.amountHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.amountDetails = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.addressHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        self.availability = UILabel(font: .customBold(size: 13.0), color: .txListGreen)
+        self.blockHeight = UILabel(font: .customBold(size: 14.0), color: .darkText)
+        self.comment.textColor = .darkText
+
+        if #available(iOS 11.0, *),
+          let textColor = UIColor(named: "labelTextColor"),
+            let headerTextColor = UIColor(named: "headerTextColor"),
+            let darkModeBackgroundColor = UIColor(named: "lfBackgroundColor") {
+            separators = (0...4).map { _ in UIView(color: headerTextColor) }
+          self.backgroundColor = darkModeBackgroundColor
+          self.timestamp = UILabel(font: .customBold(size: 14.0), color: headerTextColor)
+          self.amount = UILabel(font: .customBold(size: 26.0), color: textColor)
+          self.address = UILabel(font: .customBold(size: 14.0), color: textColor)
+          self.statusHeader = UILabel(font: .customBold(size: 14.0), color: textColor)
+          self.status = UILabel.wrapping(font: .customBody(size: 13.0), color: textColor)
+          self.commentsHeader = UILabel(font: .customBold(size: 14.0), color: headerTextColor)
+          self.amountHeader = UILabel(font: .customBold(size: 14.0), color: headerTextColor)
+          self.amountDetails = UILabel.wrapping(font: .customBody(size: 13.0), color: headerTextColor)
+          self.addressHeader = UILabel(font: .customBold(size: 14.0), color: textColor)
+          self.txHashHeader = UILabel(font: .customBold(size: 14.0), color: headerTextColor)
+          self.blockHeight = UILabel(font: .customBody(size: 13.0), color: textColor)
+          self.txHash.setTitleColor(textColor, for: .normal)
+          self.moreButton.setTitleColor(textColor, for: .normal)
+          self.fullAddress.setTitleColor(textColor, for: .normal)
+          self.comment.textColor = textColor
+          self.comment.backgroundColor = darkModeBackgroundColor
+            
+        }
         addSubviews()
         addConstraints()
         setData()
     }
 
     private func addSubviews() {
+        
+        
+        guard let address = self.address,
+            let amount = self.amount,
+            let amountDetails = self.amountDetails,
+            let amountHeader = self.amountHeader,
+            let status = self.status,
+            let statusHeader = self.statusHeader,
+            let commentsHeader = self.commentsHeader,
+            let addressHeader = self.addressHeader,
+            let availability = self.availability,
+            let timestamp = self.timestamp else {
+                NSLog("ERROR: a UILabel was not initialized")
+                return
+        }
+        
         contentView.addSubview(scrollView)
         contentView.addSubview(header)
         scrollView.addSubview(scrollViewContent)
@@ -117,6 +182,22 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     private func addConstraints() {
+        
+        guard let address = self.address,
+            let amount = self.amount,
+            let amountDetails = self.amountDetails,
+            let amountHeader = self.amountHeader,
+            let status = self.status,
+            let statusHeader = self.statusHeader,
+            let commentsHeader = self.commentsHeader,
+            let addressHeader = self.addressHeader,
+            let timestamp = self.timestamp,
+            let availability = self.availability,
+            let blockHeight = self.blockHeight else {
+                NSLog("ERROR: a UILabel was not initialized")
+                return
+        }
+        
         header.constrainTopCorners(height: headerHeight)
         scrollViewHeight = scrollView.heightAnchor.constraint(equalTo: contentView.heightAnchor, constant: -headerHeight)
         scrollView.constrain([
@@ -214,21 +295,26 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     private func setData() {
-        backgroundColor = .white
-
+        guard let amount = self.amount,
+            let amountHeader = self.amountHeader,
+            let statusHeader = self.statusHeader,
+            let commentsHeader = self.commentsHeader,
+            let availability = self.availability else {
+                NSLog("ERROR: a UILabel was not initialized")
+                return
+        }
         statusHeader.text = S.TransactionDetails.statusHeader
         commentsHeader.text = S.TransactionDetails.commentsHeader
         amountHeader.text = S.TransactionDetails.amountHeader
         availability.text = S.Transaction.available
 
         comment.font = .customBody(size: 13.0)
-        comment.textColor = .darkText
         comment.isScrollEnabled = false
         comment.returnKeyType = .done
         comment.delegate = self
 
         moreButton.setTitle(S.TransactionDetails.more, for: .normal)
-        moreButton.tintColor = .grayTextTint
+//        moreButton.tintColor = .grayTextTint
         moreButton.titleLabel?.font = .customBold(size: 14.0)
 
         moreButton.tap = { [weak self] in
@@ -241,7 +327,6 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         fullAddress.titleLabel?.font = .customBody(size: 13.0)
         fullAddress.titleLabel?.numberOfLines = 0
         fullAddress.titleLabel?.lineBreakMode = .byCharWrapping
-        fullAddress.tintColor = .darkText
         fullAddress.tap = strongify(self) { myself in
             myself.fullAddress.tempDisable()
             myself.store?.trigger(name: .lightWeightAlert(S.Receive.copied))
@@ -252,7 +337,7 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
         txHash.titleLabel?.font = .customBody(size: 13.0)
         txHash.titleLabel?.numberOfLines = 0
         txHash.titleLabel?.lineBreakMode = .byCharWrapping
-        txHash.tintColor = .darkText
+//        txHash.tintColor = .darkText
         txHash.contentHorizontalAlignment = .left
         txHash.tap = strongify(self) { myself in
             myself.txHash.tempDisable()
@@ -262,6 +347,29 @@ class TransactionDetailCollectionViewCell : UICollectionViewCell {
     }
 
     private func addMoreView() {
+        
+//
+        guard let blockHeight = self.blockHeight,
+            let txHashHeader = self.txHashHeader else {
+                NSLog("ERROR: a UILabel was not initialized")
+                return
+        }
+//
+//
+//        var modeTextColor = UIColor
+//        if #available(iOS 11.0, *) {
+//
+//            txHashHeader.textColor
+//        }
+////        let textColor = UIColor(named: "labelTextColor"),
+////          let headerTextColor = UIColor(named: "headerTextColor"),
+////          let darkModeBackgroundColor = UIColor(named: "lfBackgroundColor") {
+////          separators = (0...4).map { _ in UIView(color: headerTextColor) }
+////        self.backgroundColor = darkModeBackgroundColor
+////        self.timestamp = UILabel(font: .customBold(size: 14.0), color: headerTextColor)
+////        self.amount = UILabel(font: .customBold(size: 26.0), color: textColor)
+////        self.
+//
         moreButton.removeFromSuperview()
         let newSeparator = UIView(color: .secondaryShadow)
         moreContentView.addSubview(newSeparator)

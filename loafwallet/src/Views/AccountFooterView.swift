@@ -23,30 +23,49 @@ class AccountFooterView: UIView {
 
     override func layoutSubviews() {
         guard !hasSetup else { return }
-        setupSubViews()
+        DispatchQueue.main.async {
+            self.setupSubViews()
+        }
         hasSetup = true
     }
 
     func setupSubViews(){
-
+        
         let backgroundView = UITabBar()
         addSubview(backgroundView)
         backgroundView.constrain(toSuperviewEdges: nil)
 
         let send = UIButton.vertical(title: S.Button.send.uppercased(), image: #imageLiteral(resourceName: "SendButtonIcon"))
-        send.tintColor = .grayTextTint
+        if #available(iOS 11.0, *) {
+            backgroundView.barTintColor = UIColor(named: "lfBackgroundColor")
+            send.tintColor = UIColor(named: "headerTextColor")
+        } else {
+            send.tintColor = .grayTextTint
+        }
         send.addTarget(self, action: #selector(AccountFooterView.send), for: .touchUpInside)
 
         let receive = UIButton.vertical(title: S.Button.receive.uppercased(), image: #imageLiteral(resourceName: "ReceiveButtonIcon"))
-        receive.tintColor = .grayTextTint
+        if #available(iOS 11.0, *) {
+            receive.tintColor = UIColor(named: "headerTextColor")
+        } else {
+            receive.tintColor = .grayTextTint
+        }
         receive.addTarget(self, action: #selector(AccountFooterView.receive), for: .touchUpInside)
       
         let buy = UIButton.vertical(title: S.Button.buy.uppercased(), image: #imageLiteral(resourceName: "BuyIcon"))
-        buy.tintColor = .grayTextTint
+        if #available(iOS 11.0, *) {
+            buy.tintColor = UIColor(named: "headerTextColor")
+        } else {
+            buy.tintColor = .grayTextTint
+        }
         buy.addTarget(self, action: #selector(AccountFooterView.buy), for: .touchUpInside)
       
         let menu = UIButton.vertical(title: S.Button.menu.uppercased(), image: #imageLiteral(resourceName: "MenuButtonIcon"))
-        menu.tintColor = .grayTextTint
+        if #available(iOS 11.0, *) {
+            menu.tintColor = UIColor(named: "headerTextColor")
+        } else {
+            menu.tintColor = .grayTextTint
+        }
         menu.addTarget(self, action: #selector(AccountFooterView.menu), for: .touchUpInside)
 
         if E.isScreenshots {
@@ -93,7 +112,9 @@ class AccountFooterView: UIView {
     }
     
     func refreshButtonStatus() {
-        self.setupSubViews()
+        DispatchQueue.main.async {
+            self.setupSubViews()
+        }
     }
 
     @objc private func send() { sendCallback?() }

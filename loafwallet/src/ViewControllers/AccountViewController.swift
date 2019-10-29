@@ -14,7 +14,7 @@ let accountHeaderHeight: CGFloat = 120.0
 private let transactionsLoadingViewHeightConstant: CGFloat = 48.0
 
 class AccountViewController : UIViewController, Subscriber {
-
+    //TODO: Review dark mode color scheme
     //MARK: - Public
     var sendCallback: (() -> Void)? {
         didSet { footerView.sendCallback = sendCallback }
@@ -54,6 +54,10 @@ class AccountViewController : UIViewController, Subscriber {
         self.headerView = AccountHeaderView(store: store)
         self.loginView = LoginViewController(store: store, isPresentedForLock: false)
         self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
+        if #available(iOS 11.0, *) {
+            transactionsTableView.tableView.backgroundColor = UIColor(named: "lfBackgroundColor")
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
 

@@ -16,6 +16,7 @@ private let verticalButtonPadding: CGFloat = 32.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
  
 class SendViewController : UIViewController, Subscriber, ModalPresentable, Trackable {
+    //TODO: Review dark mode color scheme
 
     //MARK - Public
     var presentScan: PresentScan?
@@ -66,7 +67,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var wantsToDonate = false
     
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor"),
+                let textColor = UIColor(named: "labelTextColor"),
+                let backgroundColor = UIColor(named: "lfBackgroundColor") else {
+               NSLog("ERROR: Main color")
+               return
+            }
+            view.backgroundColor = backgroundColor
+        } else {
+            view.backgroundColor = .white
+        }
+        
         view.addSubview(addressCell)
         view.addSubview(donationCell)
         view.addSubview(descriptionCell)
