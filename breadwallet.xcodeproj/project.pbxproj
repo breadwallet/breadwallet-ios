@@ -3507,7 +3507,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules",
@@ -3524,6 +3524,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3539,7 +3540,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"brd-web-3-staging.tar",
@@ -3560,6 +3561,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -3736,7 +3738,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules",
@@ -3753,6 +3755,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -3936,7 +3939,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"brd-web-3.tar",
@@ -3957,6 +3960,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4140,7 +4144,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"brd-web-3.tar",
@@ -4161,6 +4165,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -4420,7 +4425,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules",
@@ -4437,6 +4442,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4625,7 +4631,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules",
@@ -4642,6 +4648,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -4825,7 +4832,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 4R7S6N88W9;
 				EXCLUDED_SOURCE_FILE_NAMES = (
 					"brd-web-3.tar",
@@ -4846,6 +4853,7 @@
 					"@executable_path/Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
+				MARKETING_VERSION = 3.17.2;
 				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
