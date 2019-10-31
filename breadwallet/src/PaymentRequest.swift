@@ -115,6 +115,10 @@ struct PaymentRequest {
                     } else {
                         return nil
                     }
+                case "tokenaddress":
+                    if value.lowercased() != currency.tokenAddress?.lowercased() {
+                        return nil
+                    }
                 default:
                     print("Unknown Key found: \(param.name)")
                 }
