@@ -46,7 +46,7 @@ class RequestUrlTests : XCTestCase {
         let address = "0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508"
         let uri = TestCurrencies.brd.addressURI(address)
         XCTAssertNotNil(uri)
-        XCTAssertEqual(uri, "ethereum:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6/transfer?address=0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508")
+        XCTAssertEqual(uri, "ethereum:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508?tokenaddress=0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
     }
     
     //MARK: With Amounts
@@ -87,7 +87,7 @@ class RequestUrlTests : XCTestCase {
         let amount = Amount(tokenString: "1", currency: TestCurrencies.brd)
         let uri = PaymentRequest.requestString(withAddress: address, forAmount: amount)
         XCTAssertNotNil(uri)
-        XCTAssertEqual(uri, "ethereum:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6/transfer?address=0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508&amount=1")
+        XCTAssertEqual(uri, "ethereum:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508?tokenaddress=0x558ec3152e2eb2174905cd19aea4e34a23de9ad6&amount=1")
     }
     
 }

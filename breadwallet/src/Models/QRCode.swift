@@ -28,9 +28,12 @@ enum QRCode: Equatable {
     }
     
     private static func detectPaymentRequest(fromURI uri: String) -> PaymentRequest? {
-        return Store.state.currencies.compactMap {
-            PaymentRequest(string: uri, currency: $0)
-        }.first
+        return Store.state.currencies
+            .sorted(by: { lhs, _ in
+                return lhs.tokenType == .native //For generic QR code scanning, we should prefer native currencies
+            }).compactMap {
+                PaymentRequest(string: uri, currency: $0)
+            }.first
     }
     
     static func == (lhs: QRCode, rhs: QRCode) -> Bool {
