@@ -41,6 +41,9 @@ class QRCodeTests: XCTestCase {
         
         // Payment Protocol
         assertPaymentRequest(fromContent: "https://www.syndicoin.co/signednoroot.paymentrequest", currency: TestCurrencies.btc)
+        
+        // Tokens
+        assertPaymentRequest(fromContent: "ethereum:0xbDFdAd139440D2Db9BA2aa3B7081C2dE39291508?tokenaddress=0x558ec3152e2eb2174905cd19aea4e34a23de9ad6", currency: TestCurrencies.brd)
     }
     
     func testPrivateKeys() {
