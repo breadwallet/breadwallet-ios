@@ -105,8 +105,8 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                             }
             })            
         }
-        Store.subscribe(self, name: .loginFromSend, callback: {_ in
-            self.authenticationSucceded()
+        Store.subscribe(self, name: .loginFromSend, callback: { [weak self] _ in
+            self?.authenticationSucceded()
         })
         logo.tintColor = .darkBackground
     }
