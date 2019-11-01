@@ -42,6 +42,10 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
     private func confirmationWordLabel(_ index: Int) -> String {
         return String(format: S.ConfirmPaperPhrase.word, "\(index + 1)") // zero-based array, so add one
     }
+    
+    private var notificationObservers = [String: NSObjectProtocol]()
+    
+    // MARK: -
         
     init(words: [String], keyMaster: KeyMaster, eventContext: EventContext, confirmed: (() -> Void)?) {
         self.words = words
@@ -64,6 +68,27 @@ class ConfirmRecoveryKeyViewController: BaseRecoveryKeyViewController {
         setUpTitles()
         setUpInputFields()
         setUpContinueButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        listenForBackgroundNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        unsubscribeNotifications()
+    }
+    
+    private func listenForBackgroundNotification() {
+        notificationObservers[UIApplication.willResignActiveNotification.rawValue] =
+            NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
+                self?.dismiss(animated: false, completion: nil)
+        }
+    }
+    
+    private func unsubscribeNotifications() {
+        notificationObservers.values.forEach { NotificationCenter.default.removeObserver($0) }
     }
     
     override var closeButtonStyle: BaseRecoveryKeyViewController.CloseButtonStyle {
