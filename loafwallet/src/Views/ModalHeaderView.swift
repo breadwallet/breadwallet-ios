@@ -69,9 +69,6 @@ class ModalHeaderView : UIView {
         border.constrain([
             border.constraint(.height, constant: 1.0) ])
         border.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
-
-        backgroundColor = .white
-
         setColors()
     }
 
@@ -86,18 +83,22 @@ class ModalHeaderView : UIView {
     }
 
     private func setColors() {
-        switch style {
-        case .light:
-            NSLog("deprecated by iOS 13 Dark Mode")
-        case .dark:
-            border.backgroundColor = .secondaryShadow
-        }
         
         if #available(iOS 11.0, *) {
             title.textColor = UIColor(named: "labelTextColor")
             close.tintColor = UIColor(named: "labelTextColor")
             faq?.tintColor = UIColor(named: "labelTextColor")
             backgroundColor = UIColor(named: "lfBackgroundColor")
+        } else {
+            backgroundColor = .white
+            switch style {
+            case .light:
+                title.textColor = .white
+                close.tintColor = .white
+                faq?.tintColor = .white
+            case .dark:
+                border.backgroundColor = .secondaryShadow
+            }
         }
     }
 
