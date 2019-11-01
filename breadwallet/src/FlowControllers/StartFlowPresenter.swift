@@ -246,7 +246,7 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func dismissStartFlow() {
-        guard let navigationController = navigationController else { preconditionFailure() }
+        guard let navigationController = navigationController else { return assertionFailure() }
         saveEvent(context: .onboarding, event: .complete)
         
         // Onboarding is finished.
@@ -307,7 +307,11 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
 
     private func dismissLoginFlow() {
-        loginViewController?.dismiss(animated: true, completion: { [weak self] in
+        guard let loginViewController = loginViewController, loginViewController.isBeingPresented else {
+            self.loginViewController = nil
+            return
+        }
+        loginViewController.dismiss(animated: true, completion: { [weak self] in
             self?.loginViewController = nil
         })
     }
