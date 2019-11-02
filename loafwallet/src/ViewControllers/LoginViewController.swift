@@ -42,7 +42,16 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private let store: Store
     private let backgroundView: UIView = {
         let view = UIView()
-        view.backgroundColor = .liteWalletBlue
+        
+        var backgroundColor = UIColor.liteWalletBlue
+        view.backgroundColor = backgroundColor
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor") else {
+                NSLog("ERROR: Main color")
+                return view
+            }
+            view.backgroundColor = mainColor
+        }
         return view
     }()
         
@@ -80,8 +89,17 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
     private let pinPadBackground: UIView = {
+        
         let view = UIView()
-        view.backgroundColor = .liteWalletBlue
+        var backgroundColor = UIColor.liteWalletBlue
+        view.backgroundColor = backgroundColor
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor") else {
+                NSLog("ERROR: Main color")
+                return view
+            }
+            view.backgroundColor = mainColor
+        }
         return view
     }()
     private let topControlContainer: UIView = {

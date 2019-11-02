@@ -62,9 +62,12 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
 
     override func viewDidLoad() {
-        addSubviews()
-        addConstraints()
-        setInitialData()
+         
+        DispatchQueue.main.async(execute: {
+            self.addSubviews()
+            self.addConstraints()
+            self.setInitialData()
+        })
     }
 
     private func addSubviews() {

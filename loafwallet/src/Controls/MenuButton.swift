@@ -16,6 +16,13 @@ class MenuButton : UIControl {
     init(type: MenuButtonType) {
         self.type = type
         super.init(frame: .zero)
+        
+        if #available(iOS 11.0, *) {
+            label.textColor = UIColor(named: "labelTextColor")
+            self.backgroundColor = UIColor(named: "lfBackgroundColor")
+            image.tintColor = .whiteTint
+        }
+        
         setupViews()
     }
 
@@ -26,11 +33,20 @@ class MenuButton : UIControl {
 
     override var isHighlighted: Bool {
         didSet {
+             
             if isHighlighted {
-                backgroundColor = .secondaryButton
+                if #available(iOS 11.0, *) {
+                    backgroundColor = UIColor(named: "buttonSelectionColor")
+                } else {
+                    backgroundColor = .secondaryButton
+                }
             } else {
-                backgroundColor = .white
-            }
+                if #available(iOS 11.0, *) {
+                   backgroundColor = UIColor(named: "buttonSelectionColor")
+                } else {
+                   backgroundColor = .white
+                }
+            } 
         }
     }
 
@@ -38,7 +54,9 @@ class MenuButton : UIControl {
         addSubview(label)
         addSubview(image)
         addSubview(border)
-
+        
+        
+        
         label.constrain([
             label.constraint(.centerY, toView: self, constant: 0.0),
             label.constraint(.leading, toView: self, constant: C.padding[2]) ])

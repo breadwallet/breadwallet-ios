@@ -36,13 +36,26 @@ class AddressCell : UIView {
     let textField = UITextField()
     let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
-    fileprivate let contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let label = UILabel(font: .customBody(size: 16.0))
+    fileprivate var contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    private var label = UILabel(font: .customBody(size: 16.0))
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
 
     private func setupViews() {
+        
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor"),
+                let textColor = UIColor(named: "labelTextColor") else {
+               NSLog("ERROR: Main color")
+               return
+            }
+            contentLabel.textColor = textColor
+            label.textColor = textColor
+        } else {
+            contentLabel.textColor = .darkText
+        }
+         
         addSubviews()
         addConstraints()
         setInitialData()

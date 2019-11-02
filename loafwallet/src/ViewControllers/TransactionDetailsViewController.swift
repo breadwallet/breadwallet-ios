@@ -50,7 +50,6 @@ class TransactionDetailsViewController : UICollectionViewController, Subscriber 
         collectionView?.register(TransactionDetailCollectionViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         collectionView?.delegate = self
         collectionView?.dataSource = self
-        collectionView?.backgroundColor = .clear
         collectionView?.contentInset = UIEdgeInsetsMake(C.padding[2], C.padding[2], C.padding[2], C.padding[2])
         setupScrolling()
         store.subscribe(self, selector: { $0.isLtcSwapped != $1.isLtcSwapped }, callback: { self.isLtcSwapped = $0.isLtcSwapped })

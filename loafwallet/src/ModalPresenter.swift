@@ -329,7 +329,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Litewallet", "Advanced"]
+        let sections = ["Wallet", "Manage", "Support", "Blockchain"]
         var rows = [
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
@@ -403,7 +403,7 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(updatePin, animated: true)
                 })
             ],
-            "Litewallet": [
+            "Support": [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(store: self.store), animated: true)
                 }),
@@ -411,7 +411,7 @@ class ModalPresenter : Subscriber, Trackable {
                     settingsNav.pushViewController(AboutViewController(), animated: true)
                 }),
             ],
-            "Advanced": [
+            "Blockchain": [
                 Setting(title: "Advanced", callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
@@ -443,11 +443,20 @@ class ModalPresenter : Subscriber, Trackable {
         settings.addCloseNavigationItem()
         settingsNav.viewControllers = [settings]
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 1, height: 1))
-        view.backgroundColor = .whiteTint
+        if #available(iOS 11.0, *) {
+            guard let textColor = UIColor(named: "labelTextColor"),
+            let backGroundColor = UIColor(named: "lfBackgroundColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            }
+         //TODO: Remove this code and create new Settings View Controller...this is a mess
+            view.backgroundColor = .whiteTint
+        } else {
+            view.backgroundColor = .whiteTint
+        }
+        
         settingsNav.navigationBar.setBackgroundImage(view.imageRepresentation, for: .default)
         settingsNav.navigationBar.shadowImage = UIImage()
-        settingsNav.navigationBar.isTranslucent = false
-        settingsNav.setBlackBackArrow()
         top.present(settingsNav, animated: true, completion: nil)
     }
 

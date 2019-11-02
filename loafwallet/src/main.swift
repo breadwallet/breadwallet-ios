@@ -17,4 +17,4 @@ private let unsafeArgv = UnsafeMutableRawPointer(CommandLine.unsafeArgv)
                                 to: UnsafeMutablePointer<Int8>.self,
                                 capacity: Int(CommandLine.argc))
 
-UIApplicationMain(CommandLine.argc, unsafeArgv, nil, delegateClassName())
+let _ = UIApplicationMain(CommandLine.argc, unsafeArgv, nil, delegateClassName())

@@ -9,12 +9,6 @@
 import UIKit
 import LocalAuthentication
 
-class SecurityCenterHeader : UIView, GradientDrawable {
-    override func draw(_ rect: CGRect) {
-        drawGradient(rect)
-    }
-}
-
 private let headerHeight: CGFloat = 222.0
 private let fadeStart: CGFloat = 185.0
 private let fadeEnd: CGFloat = 160.0
@@ -22,10 +16,14 @@ private let fadeEnd: CGFloat = 160.0
 class SecurityCenterViewController : UIViewController, Subscriber {
 
     var didTapPin: (() -> Void)? {
-        didSet { pinCell.tap = didTapPin }
+        didSet {
+            pinCell.tap = didTapPin
+        }
     }
     var didTapBiometrics: (() -> Void)? {
-        didSet { biometricsCell.tap = didTapBiometrics }
+        didSet {
+            biometricsCell.tap = didTapBiometrics
+        }
     }
     var didTapPaperKey: (() -> Void)? {
         didSet { paperKeyCell.tap = didTapPaperKey }
@@ -35,19 +33,25 @@ class SecurityCenterViewController : UIViewController, Subscriber {
         self.store = store
         self.walletManager = walletManager
         self.header = ModalHeaderView(title: S.SecurityCenter.title, style: .light, faqInfo: (store, ArticleIds.securityCenter))
+         
+        if #available(iOS 11.0, *) {
+            shield.tintColor = UIColor(named: "labelTextColor")
+            headerBackground.backgroundColor = UIColor(named: "mainColor")
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
 
     fileprivate var headerBackgroundHeight: NSLayoutConstraint?
-    private let headerBackground = SecurityCenterHeader()
+    private var headerBackground = UIView()
     private let header: ModalHeaderView
-    fileprivate let shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
+    fileprivate var shield = UIImageView(image: #imageLiteral(resourceName: "shield"))
     private let scrollView = UIScrollView()
     private let info = UILabel(font: .customBody(size: 16.0))
     private let pinCell = SecurityCenterCell(title: S.SecurityCenter.Cells.pinTitle, descriptionText: S.SecurityCenter.Cells.pinDescription)
     private let biometricsCell = SecurityCenterCell(title: LAContext.biometricType() == .face ? S.SecurityCenter.Cells.faceIdTitle : S.SecurityCenter.Cells.touchIdTitle, descriptionText: S.SecurityCenter.Cells.touchIdDescription)
     private let paperKeyCell = SecurityCenterCell(title: S.SecurityCenter.Cells.paperKeyTitle, descriptionText: S.SecurityCenter.Cells.paperKeyDescription)
-    private let separator = UIView(color: .secondaryShadow)
+    private var separator = UIView(color: .secondaryShadow)
     private let store: Store
     private let walletManager: WalletManager
     fileprivate var didViewAppear = false
@@ -83,7 +87,17 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     }
 
     private func setupSubviewProperties() {
-        view.backgroundColor = .white
+         
+        if #available(iOS 11.0, *) {
+           guard let backgroundColor = UIColor(named: "lfBackgroundColor") else {
+                        NSLog("ERROR: Main color")
+                        return
+                     }
+               view.backgroundColor = backgroundColor
+        } else {
+            view.backgroundColor = .white
+        }
+        
         header.closeCallback = {
             self.dismiss(animated: true, completion: nil)
         }

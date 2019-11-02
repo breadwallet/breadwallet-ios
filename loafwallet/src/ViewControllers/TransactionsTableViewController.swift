@@ -213,6 +213,7 @@ class TransactionsTableViewController : UITableViewController, Subscriber, Track
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if hasExtraSection && indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: headerCellIdentifier, for: indexPath)
+            
             if let transactionCell = cell as? TransactionTableViewCell {
                 transactionCell.setStyle(.single)
                 transactionCell.container.subviews.forEach {
