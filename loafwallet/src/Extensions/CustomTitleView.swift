@@ -29,7 +29,8 @@ extension CustomTitleView {
             var textColor: UIColor
             
             if #available(iOS 11.0, *) {
-                textColor = UIColor(named: "lfBackgroundColor")!
+                textColor = UIColor(named: "labelTextColor")!
+                
             } else {
                 textColor = .darkText
             }

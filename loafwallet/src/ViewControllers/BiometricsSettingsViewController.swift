@@ -21,11 +21,12 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     private let header = RadialGradientView(backgroundColor: .darkPurple)
     private let illustration = LAContext.biometricType() == .face ? UIImageView(image: #imageLiteral(resourceName: "FaceId-Large")) : UIImageView(image: #imageLiteral(resourceName: "TouchId-Large"))
-    private let label = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
-    private let switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
+    private var label = UILabel.wrapping(font: .customBody(size: 16.0), color: .darkText)
+    private var switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
+    private var spendingLimitLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
+    private var spendingButton = ShadowButton(title: "-", type: .secondary)
     private let toggle = GradientSwitch()
     private let separator = UIView(color: .secondaryShadow)
-    private let textView = UnEditableTextView()
     private let walletManager: WalletManager
     private let store: Store
     private var rate: Rate?
@@ -39,6 +40,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         store.subscribe(self, selector: { $0.currentRate != $1.currentRate }, callback: {
             self.rate = $0.currentRate
         })
+ 
         addSubviews()
         addConstraints()
         setData()
@@ -47,7 +49,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         didTapSpendingLimit = false
-        textView.attributedText = textViewText
+        self.spendingButton.title = spendingButtonText
     }
 
     private func addSubviews() {
@@ -56,8 +58,9 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         view.addSubview(label)
         view.addSubview(switchLabel)
         view.addSubview(toggle)
+        view.addSubview(spendingLimitLabel)
+        view.addSubview(spendingButton)
         view.addSubview(separator)
-        view.addSubview(textView)
     }
 
     private func addConstraints() {
@@ -76,30 +79,42 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         toggle.constrain([
             toggle.centerYAnchor.constraint(equalTo: switchLabel.centerYAnchor),
             toggle.trailingAnchor.constraint(equalTo: label.trailingAnchor) ])
+        spendingLimitLabel.constrain([
+            spendingLimitLabel.leadingAnchor.constraint(equalTo: label.leadingAnchor),
+            spendingLimitLabel.topAnchor.constraint(equalTo: switchLabel.bottomAnchor, constant: C.padding[4]) ])
+        spendingButton.constrain([
+            spendingButton.centerYAnchor.constraint(equalTo: spendingLimitLabel.centerYAnchor),
+            spendingButton.trailingAnchor.constraint(equalTo: label.trailingAnchor) ])
         separator.constrain([
             separator.leadingAnchor.constraint(equalTo: switchLabel.leadingAnchor),
-            separator.topAnchor.constraint(equalTo: toggle.bottomAnchor, constant: C.padding[1]),
-            separator.trailingAnchor.constraint(equalTo: toggle.trailingAnchor),
+            separator.topAnchor.constraint(equalTo: spendingButton.bottomAnchor, constant: C.padding[1]),
+            separator.trailingAnchor.constraint(equalTo: spendingButton.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: 1.0) ])
-        textView.constrain([
-            textView.leadingAnchor.constraint(equalTo: separator.leadingAnchor),
-            textView.topAnchor.constraint(equalTo: separator.bottomAnchor, constant: C.padding[2]),
-            textView.trailingAnchor.constraint(equalTo: separator.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor )])
     }
 
     private func setData() {
+         
         
-        view.backgroundColor = .white
+        spendingButton.addTarget(self, action: #selector(didTapSpendingButton), for: .touchUpInside)
+        if #available(iOS 11.0, *), let backGroundColor = UIColor(named:"lfBackgroundColor"),
+            let textColor = UIColor(named: "labelTextColor") {
+            
+            label.textColor = textColor
+            switchLabel.textColor = textColor
+            spendingLimitLabel.textColor = textColor
+            view.backgroundColor = backGroundColor
+            
+        } else {
+            label.textColor = .darkText
+            switchLabel.textColor = .darkText
+            view.backgroundColor = .white
+        }
+        
         title = LAContext.biometricType() == .face ? S.FaceIDSettings.title : S.TouchIdSettings.title
         label.text = LAContext.biometricType() == .face ? S.FaceIDSettings.label : S.TouchIdSettings.label
         switchLabel.text = LAContext.biometricType() == .face ? S.FaceIDSettings.switchLabel : S.TouchIdSettings.switchLabel
-        textView.isEditable = false
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0.0
-        textView.delegate = self
-        textView.attributedText = textViewText
-        textView.tintColor = .primaryButton
+        spendingLimitLabel.text = S.SpendingLimit.titleLabel
+        spendingButton.title = spendingButtonText
         addFaqButton()
         let hasSetToggleInitialValue = false
         store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
@@ -113,12 +128,12 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
             
             if LAContext.canUseBiometrics {
                 myself.store.perform(action: Biometrics.setIsEnabled(myself.toggle.isOn))
-                myself.textView.attributedText = myself.textViewText
+                myself.spendingButton.title = myself.spendingButtonText
             } else {
                 myself.presentCantUseBiometricsAlert()
                 myself.toggle.isOn = false
             }
-        }
+        } 
     }
 
     private func addFaqButton() {
@@ -128,29 +143,15 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
     }
-
-    private var textViewText: NSAttributedString {
-        guard let rate = rate else { return NSAttributedString(string: "") }
+  
+    private var spendingButtonText: String {
+        guard let rate = rate else { return "" }
         let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
         let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
         let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
-        let string = "\(String(format: S.TouchIdSettings.spendingLimit, amount.bits, amount.localCurrency))\n\n\(String(format: customizeText, linkText))"
-        let attributedString = NSMutableAttributedString(string: string, attributes: [
-                NSAttributedStringKey.font: UIFont.customBody(size: 13.0),
-                NSAttributedStringKey.foregroundColor: UIColor.darkText
-            ])
-        let linkAttributes = [
-                NSAttributedStringKey.font: UIFont.customMedium(size: 13.0),
-                NSAttributedStringKey.link: NSURL(string:"http://spending-limit")!]
-
-        if let range = string.range(of: linkText, options: [], range: nil, locale: nil) {
-            let from = range.lowerBound.samePosition(in: string.utf16)!
-            let to = range.upperBound.samePosition(in: string.utf16)!
-            attributedString.addAttributes(linkAttributes, range: NSRange(location: string.utf16.distance(from: string.utf16.startIndex, to: from),
-                                                                          length: string.utf16.distance(from: from, to: to)))
-        }
-
-        return attributedString
+        let string = "\(String(format: S.TouchIdSettings.limitValue, amount.bits, amount.localCurrency))"
+ //\n\n\(String(format: customizeText, linkText))"
+        return string
     }
 
     fileprivate func presentCantUseBiometricsAlert() {
@@ -164,21 +165,18 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension BiometricsSettingsViewController : UITextViewDelegate {
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+    
+    @objc func didTapSpendingButton() {
         if LAContext.canUseBiometrics {
-            guard !didTapSpendingLimit else { return false }
             didTapSpendingLimit = true
             presentSpendingLimit?()
         } else {
             presentCantUseBiometricsAlert()
         }
-        return false
+    }
+     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
+ 

@@ -251,6 +251,7 @@ enum S {
         static let unavailableAlertTitle = NSLocalizedString("TouchIdSettings.unavailableAlertTitle", value:"Touch ID Not Set Up", comment: "Touch ID unavailable alert title")
         static let unavailableAlertMessage = NSLocalizedString("TouchIdSettings.unavailableAlertMessage", value:"You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.", comment: "Touch ID unavailable alert message")
         static let spendingLimit = NSLocalizedString("TouchIdSettings.spendingLimit", value: "Spending limit: %1$@ (%2$@)", comment: "Spending Limit: b100,000 ($100)")
+        static let limitValue = NSLocalizedString("TouchIdSettings.spendingLimit", value: "%1$@ (%2$@)", comment: " ł100,000 ($100)")
         static let customizeText = NSLocalizedString("TouchIdSettings.customizeText", value: "You can customize your Touch ID spending limit from the %1$@.", comment: "You can customize your Touch ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
         static let linkText = NSLocalizedString("TouchIdSettings.linkText", value: "Touch ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
     }
@@ -263,6 +264,10 @@ enum S {
         static let unavailableAlertMessage = NSLocalizedString("FaceIDSettings.unavailableAlertMessage", value:"You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.", comment: "Face ID unavailable alert message")
         static let customizeText = NSLocalizedString("FaceIDSettings.customizeText", value: "You can customize your Face ID spending limit from the %1$@.", comment: "You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button]")
         static let linkText = NSLocalizedString("FaceIDSettings.linkText", value: "Face ID Spending Limit Screen", comment: "Link Text (see TouchIdSettings.customizeText)")
+    }
+    
+    enum SpendingLimit {
+        static let titleLabel = NSLocalizedString("SpendingLimit.title", value:"Current Spending Limit: ", comment: "Current spending limit:")
     }
 
     enum TouchIdSpendingLimit {
@@ -279,6 +284,8 @@ enum S {
         static let title = NSLocalizedString("Settings.title", value:"Settings", comment: "Settings title")
         static let wallet = NSLocalizedString("Settings.wallet", value: "Wallet", comment: "Wallet Settings section header")
         static let manage = NSLocalizedString("Settings.manage", value: "Manage", comment: "Manage settings section header")
+        static let support = NSLocalizedString("Settings.support", value: "Support", comment: "Support settings section header")
+        static let blockchain = NSLocalizedString("Settings.blockchain", value: "Blockchain", comment: "Blockchain settings section header")
         static let importTile = NSLocalizedString("Settings.importTitle", value:"Import Wallet", comment: "Import wallet label")
         static let notifications = NSLocalizedString("Settings.notifications", value:"Notifications", comment: "Notifications label")
         static let touchIdLimit = NSLocalizedString("Settings.touchIdLimit", value:"Touch ID Spending Limit", comment: "Touch ID spending limit label")
@@ -300,7 +307,7 @@ enum S {
         static let twitter = NSLocalizedString("About.twitter", value:"Twitter", comment: "About screen twitter label")
         static let reddit = NSLocalizedString("About.reddit", value:"Reddit", comment: "About screen reddit label")
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
-        static let footer = NSLocalizedString("About.footer", value:"Made by Charlie Lee (the creator of Litecoin)\n and the global Litewallet team.\n %1$@", comment: "About screen footer")
+        static let footer = NSLocalizedString("About.footer", value:"Made by the LiteWallet Team\nof the\nLitecoin Foundation\n%1$@", comment: "About screen footer")
     }
 
     enum PushNotifications {
@@ -555,7 +562,7 @@ enum S {
         static let resetTitle = NSLocalizedString("resetTitle", value: "Empty Wallet Reset", comment: "Warning Empty Wipe title")
         static let resetButton = NSLocalizedString("resetButton", value: "Yes, reset wallet", comment: "Reset walet button  title")
         static let warningTitle = NSLocalizedString("WipeWallet.warningTitle", value: "PLEASE READ!", comment: "Warning title")
-        static let warningDescription = NSLocalizedString("WipeWallet.warningDescription", value: "Your Loafwallet is empty. Reseting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo Loafwallet developers can retrieve this seed for you.", comment: "Warning description")
+        static let warningDescription = NSLocalizedString("WipeWallet.warningDescription", value: "Your LiteWallet is empty. Reseting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo LiteWallet developers can retrieve this seed for you.", comment: "Warning description")
         static let warningAlert = NSLocalizedString("WipeWallet.warningAlert", value: "DO NOT LOSE IT!", comment: "Warning Alert")
     }
 

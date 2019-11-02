@@ -11,15 +11,26 @@ import SafariServices
 
 class AboutViewController : UIViewController {
 
-    private let titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
-    private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout"))
-    private let logoBackground = GradientView()
+    private var titleLabel = UILabel(font: .customBold(size: 26.0), color: .darkText)
+    private let logo = UIImageView(image: #imageLiteral(resourceName: "coinBlueWhite"))
+    private let logoBackground = UIView()
     private let blog = AboutCell(text: S.About.blog)
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
     private let privacy = UIButton(type: .system)
     private let footer = UILabel(font: .customBody(size: 13.0), color: .secondaryGrayText)
     override func viewDidLoad() {
+        if #available(iOS 11.0, *),
+            let labelTextColor = UIColor(named:"labelTextColor"),
+        let backgroundColor = UIColor(named: "lfBackgroundColor") {
+            titleLabel.textColor = labelTextColor
+            privacy.tintColor = labelTextColor
+            view.backgroundColor = backgroundColor
+         } else {
+            privacy.tintColor = .liteWalletBlue
+            view.backgroundColor = .whiteTint
+        }
+        
         addSubviews()
         addConstraints()
         setData()
@@ -44,8 +55,8 @@ class AboutViewController : UIViewController {
         logoBackground.constrain([
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoBackground.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
-            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.3),
-            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 342.0/553.0) ])
+            logoBackground.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.2),
+            logoBackground.heightAnchor.constraint(equalTo: logoBackground.widthAnchor, multiplier: 1.0) ])
         logo.constrain(toSuperviewEdges: nil)
         blog.constrain([
             blog.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: C.padding[2]),
@@ -65,16 +76,16 @@ class AboutViewController : UIViewController {
         footer.constrain([
             footer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             footer.topAnchor.constraint(equalTo: privacy.bottomAnchor),
-            footer.heightAnchor.constraint(equalToConstant: 60)])
+            footer.heightAnchor.constraint(equalToConstant: 80)])
     }
 
     private func setData() {
-        view.backgroundColor = .whiteTint
+        
         titleLabel.text = S.About.title
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center
-        footer.numberOfLines = 3
+        footer.numberOfLines = 4
         footer.text = String(format: S.About.footer, AppVersion.string)
         logo.contentMode = .scaleAspectFill
     }
@@ -90,7 +101,7 @@ class AboutViewController : UIViewController {
             myself.presentURL(string: "https://reddit.com/r/litecoin/")
         }
         privacy.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://litecoin.com/legal/")
+            myself.presentURL(string: "http://loafwallet.org/policy.html")
         }
     }
 

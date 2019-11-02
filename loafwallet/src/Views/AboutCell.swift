@@ -16,10 +16,18 @@ class AboutCell : UIView {
         button = UIButton.icon(image: #imageLiteral(resourceName: "OpenBrowser"), accessibilityLabel: text)
         label.text = text
         super.init(frame: .zero)
+        
+        if #available(iOS 11.0, *) {
+            guard let textColor = UIColor(named: "labelTextColor") else {
+               NSLog("ERROR: Main color")
+               return
+            }
+            label.textColor = textColor
+        }
         setup()
     }
 
-    private let label = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private var label = UILabel(font: .customBody(size: 16.0), color: .darkText)
     private let separator = UIView(color: .secondaryShadow)
 
     private func setup() {

@@ -22,7 +22,6 @@ class SecurityCenterViewController : UIViewController, Subscriber {
     }
     var didTapBiometrics: (() -> Void)? {
         didSet {
-            //biometricsCell.isHighlighted = false
             biometricsCell.tap = didTapBiometrics
         }
     }

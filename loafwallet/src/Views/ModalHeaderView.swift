@@ -84,12 +84,16 @@ class ModalHeaderView : UIView {
 
     private func setColors() {
         
-        if #available(iOS 11.0, *) {
-            title.textColor = UIColor(named: "labelTextColor")
-            close.tintColor = UIColor(named: "labelTextColor")
-            faq?.tintColor = UIColor(named: "labelTextColor")
-            backgroundColor = UIColor(named: "lfBackgroundColor")
-        } else {
+        
+        
+//        if #available(iOS 11.0, *) {
+//
+//
+//            title.textColor = UIColor(named: "labelTextColor")
+//            close.tintColor = UIColor(named: "inverseTextColor")
+//            faq?.tintColor = UIColor(named: "inverseTextColor")
+//            backgroundColor = UIColor(named: "lfBackgroundColor")
+//        } else {
             backgroundColor = .white
             switch style {
             case .light:
@@ -99,7 +103,7 @@ class ModalHeaderView : UIView {
             case .dark:
                 border.backgroundColor = .secondaryShadow
             }
-        }
+      //  }
     }
 
     required init?(coder aDecoder: NSCoder) {

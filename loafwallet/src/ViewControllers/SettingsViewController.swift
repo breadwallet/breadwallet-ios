@@ -9,8 +9,7 @@ import UIKit
 import LocalAuthentication
 
 class SettingsViewController : UITableViewController, CustomTitleView {
-    //TODO: Review dark mode color scheme
-
+ 
   init(sections: [String], rows: [String: [Setting]], optionalTitle: String? = nil) {
         self.sections = sections
         if UserDefaults.isBiometricsEnabled {
@@ -38,13 +37,14 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 48.0))
          
         if #available(iOS 11.0, *) {
-            guard let textColor = UIColor(named: "labelTextColor") else {
+            guard let textColor = UIColor(named: "labelTextColor"),
+            let backGroundColor = UIColor(named: "lfBackgroundColor") else {
                 NSLog("ERROR: Custom color not found")
                 return
             }
 
-            headerView.backgroundColor = UIColor(named: "lfBackgroundColor")
-            tableView.backgroundColor = UIColor(named: "lfBackgroundColor")
+            headerView.backgroundColor = backGroundColor
+            tableView.backgroundColor = backGroundColor
             titleLabel = UILabel(font: .customBold(size: 26.0), color: textColor)
 
         } else {
@@ -81,30 +81,51 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         if let setting = rows[sections[indexPath.section]]?[indexPath.row] {
             cell.textLabel?.text = setting.title
             cell.textLabel?.font = .customBody(size: 16.0)
-            cell.textLabel?.textColor = .darkText
-
+             
             let label = UILabel(font: .customMedium(size: 14.0), color: .grayTextTint)
             label.text = setting.accessoryText?()
             label.sizeToFit()
             cell.accessoryView = label
+            
+            if #available(iOS 11.0, *),
+                let  textColor = UIColor(named: "labelTextColor") {
+                cell.textLabel?.textColor = textColor
+                label.textColor = textColor
+            } else {
+                cell.textLabel?.textColor = .darkText
+            }
         }
         return cell
     }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: 44))
-        view.backgroundColor = .whiteTint
         let label = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
+        let separator = UIView()
+        
+        if #available(iOS 11.0, *),
+            let  backgroundColor = UIColor(named: "lfBackgroundColor"),
+            let labelTextColor = UIColor(named:"labelTextColor") {
+            view.backgroundColor = backgroundColor
+            label.textColor = labelTextColor
+        } else {
+            view.backgroundColor = .whiteTint
+        }
+        
         view.addSubview(label)
         switch sections[section] {
         case "Wallet":
             label.text = S.Settings.wallet
         case "Manage":
             label.text = S.Settings.manage
+        case "Support":
+            label.text = S.Settings.support
+        case "Blockchain":
+            label.text = S.Settings.blockchain
         default:
             label.text = ""
         }
-        let separator = UIView()
+        
         separator.backgroundColor = .secondaryShadow
         view.addSubview(separator)
         separator.constrain([
