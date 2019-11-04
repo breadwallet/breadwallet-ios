@@ -202,7 +202,8 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
                             self.exchangeRateLabel.text = rate.localString(forCurrency: self.currency)
         })
         setGraphViewScrubbingCallbacks()
-        chartView.shouldHideChart = { [unowned self] in
+        chartView.shouldHideChart = { [weak self] in
+            guard let `self` = self else { return }
             self.shouldLockExpandingChart = true
             self.collapseHeader()
         }

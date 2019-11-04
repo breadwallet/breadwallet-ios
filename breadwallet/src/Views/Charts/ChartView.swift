@@ -246,7 +246,8 @@ class ChartView: UIView {
     }
     
     private func fetchHistory(forPeriod period: HistoryPeriod) {
-        Backend.apiClient.fetchHistory(forCode: currency.code, period: period, callback: { result in
+        Backend.apiClient.fetchHistory(forCode: currency.code, period: period, callback: { [weak self] result in
+            guard let `self` = self else { return }
             switch result {
             case .success(let data):
                 self.rawValues[period] = data
