@@ -11,7 +11,7 @@ import UserNotifications
 
 class PushNotificationsViewController: UIViewController, Trackable {
 
-    private let toggleLabel = UILabel(font: Theme.body1, color: Theme.primaryText)
+    private let toggleLabel = UILabel.wrapping(font: Theme.body1, color: Theme.primaryText)
     private let body = UILabel.wrapping(font: Theme.body2, color: Theme.secondaryText)
     private let toggle = UISwitch()
     private let separator = UIView()
@@ -79,15 +79,18 @@ class PushNotificationsViewController: UIViewController, Trackable {
     private func addConstraints() {
         
         toggle.constrain([
-            toggle.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
-            toggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])
+            toggle.centerYAnchor.constraint(equalTo: toggleLabel.centerYAnchor),
+            toggle.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -C.padding[2])
             ])
         
-        toggleLabel.constrain([
-            toggleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[3]),
-            toggleLabel.centerYAnchor.constraint(equalTo: toggle.centerYAnchor)
-            ])
+        toggle.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+        toggleLabel.constrain([
+            toggleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
+            toggleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: C.padding[2]),
+            toggleLabel.rightAnchor.constraint(equalTo: toggle.leftAnchor, constant: -C.padding[2])
+            ])
+        
         separator.constrain([
             separator.heightAnchor.constraint(equalToConstant: 1),
             separator.topAnchor.constraint(equalTo: toggle.bottomAnchor, constant: C.padding[2]),
