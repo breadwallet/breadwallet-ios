@@ -477,7 +477,7 @@ class ModalPresenter: Subscriber, Trackable {
             // Display Currency
             MenuItem(title: S.Settings.currency, accessoryText: {
                 let code = Store.state.defaultCurrencyCode
-                let components: [String : String] = [NSLocale.Key.currencyCode.rawValue: code]
+                let components: [String: String] = [NSLocale.Key.currencyCode.rawValue: code]
                 let identifier = Locale.identifier(fromComponents: components)
                 return Locale(identifier: identifier).currencyCode ?? ""
             }, callback: {

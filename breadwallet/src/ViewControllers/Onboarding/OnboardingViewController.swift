@@ -438,15 +438,15 @@ class OnboardingViewController: UIViewController {
             nextButtonAnimationConstraint
             ])        
         
-        topButton.tap = {
+        topButton.tap = { [unowned self] in
             self.topButtonTapped()
         }
         
-        bottomButton.tap = {
+        bottomButton.tap = { [unowned self] in
             self.bottomButtonTapped()
         }
         
-        nextButton.tap = {
+        nextButton.tap = { [unowned self] in
             self.animateToNextPage()
         }
     }

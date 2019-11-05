@@ -424,7 +424,6 @@
 		CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */; };
 		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
 		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
-		CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */; };
 		CEAA9E9B1DC2B9320066731D /* ConfirmPhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */; };
 		CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */; };
 		CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
@@ -1148,7 +1147,6 @@
 		CEAA9E901DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewPropertyAnimator+BRWAdditions.swift"; path = "src/Extensions/UIViewPropertyAnimator+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
-		CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPaperPhraseViewController.swift; path = src/ViewControllers/ConfirmPaperPhraseViewController.swift; sourceTree = "<group>"; };
 		CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPhraseView.swift; path = src/Views/ConfirmPhraseView.swift; sourceTree = "<group>"; };
 		CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Bold.otf"; path = "Fonts/CircularPro-Bold.otf"; sourceTree = "<group>"; };
 		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
@@ -1869,7 +1867,6 @@
 				CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */,
 				CE274A601FD7C902000A4E62 /* RootNavigationController.swift */,
 				CE3840E71FD590BD00437C31 /* AssetListTableView.swift */,
-				CEAA9E981DC262800066731D /* ConfirmPaperPhraseViewController.swift */,
 				CEBF32F51DDCEAF900348FC6 /* TransactionsTableViewController.swift */,
 				CEF3E8351DE60222007C0A9E /* ModalNavigationController.swift */,
 				CE9057191DFF18B2006BA848 /* ScanViewController.swift */,
@@ -3071,7 +3068,6 @@
 				CEEC708C1E95461A00EF788E /* AboutViewController.swift in Sources */,
 				CEEC708A1E945E3B00EF788E /* UnEditableTextView.swift in Sources */,
 				CE3645481E7B424D0079D0CF /* WhiteNumberPad.swift in Sources */,
-				CEAA9E991DC262800066731D /* ConfirmPaperPhraseViewController.swift in Sources */,
 				CE3840E81FD590BD00437C31 /* AssetListTableView.swift in Sources */,
 				71A3171022A6D55A0088F97C /* InAppNotificationViewController.swift in Sources */,
 				7CF5319D231EE01300E61F12 /* Base32.swift in Sources */,
