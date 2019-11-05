@@ -16,8 +16,13 @@ class HistoryPeriodButton {
         didSet {
             button.tap = {
                 self.callback?(self.button, self.historyPeriod)
+                self.historyPeriod.saveMostRecent()
             }
         }
+    }
+    
+    var hasInitialHistoryPeriod: Bool {
+        return historyPeriod == HistoryPeriod.defaultPeriod
     }
     
     init(historyPeriod: HistoryPeriod) {
