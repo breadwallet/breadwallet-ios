@@ -109,43 +109,52 @@ extension TxDetailViewModel {
     }
     
     /// The fiat exchange rate at the time of transaction
-    /// Assumes fiat currency does not change
+    /// Returns nil if no rate found or rate currency mismatches the current fiat currency
     private static func exchangeRateText(tx: Transaction) -> String? {
-        guard let rate = tx.metaData?.exchangeRate,
-            let symbol = tx.currency.state?.currentRate?.currencySymbol else { return nil }
-        
+        guard let metaData = tx.metaData,
+            let currentRate = tx.currency.state?.currentRate,
+            !metaData.exchangeRate.isZero,
+            (metaData.exchangeRateCurrency == currentRate.code || metaData.exchangeRateCurrency.isEmpty) else { return nil }
         let nf = NumberFormatter()
-        nf.currencySymbol = symbol
+        nf.currencySymbol = currentRate.currencySymbol
         nf.numberStyle = .currency
-        return nf.string(from: rate as NSNumber) ?? nil
+        return nf.string(from: metaData.exchangeRate as NSNumber) ?? nil
     }
     
     private static func tokenAmount(tx: Transaction) -> String? {
         let amount = Amount(amount: tx.amount,
                             rate: nil,
                             maximumFractionDigits: Amount.highPrecisionDigits,
-                            negative: (tx.direction == .sent))
+                            negative: (tx.direction == .sent && !tx.amount.isZero))
         return amount.description
     }
     
     /// Fiat amount at current exchange rate and at original rate at time of transaction (if available)
+    /// Returns the token transfer description for token transfer originating transactions, as first return value.
     /// Returns (currentFiatAmount, originalFiatAmount)
     private static func fiatAmounts(tx: Transaction, currentRate: Rate) -> (String, String?) {
-        if let txRate = tx.metaData?.exchangeRate {
-            let originalRate = Rate(code: currentRate.code,
-                                    name: currentRate.name,
-                                    rate: txRate,
-                                    reciprocalCode: currentRate.reciprocalCode)
-            let currentAmount = Amount(amount: tx.amount,
-                                       rate: currentRate).description
-            let originalAmount = Amount(amount: tx.amount,
-                                        rate: originalRate).description
-            return (currentAmount, originalAmount)
-        } else {
-            // no tx-time rate
-            let currentAmount = Amount(amount: tx.amount,
-                                       rate: currentRate)
-            return (currentAmount.description, nil)
+        let currentAmount = Amount(amount: tx.amount,
+                                   rate: currentRate).description
+        
+        guard let metaData = tx.metaData else { return (currentAmount, nil) }
+        
+        guard metaData.tokenTransfer.isEmpty else {
+            let tokenTransfer = String(format: S.Transaction.tokenTransfer, metaData.tokenTransfer.uppercased())
+            return (tokenTransfer, nil)
         }
+        
+        // no tx-time rate
+        guard !metaData.exchangeRate.isZero,
+            (metaData.exchangeRateCurrency == currentRate.code || metaData.exchangeRateCurrency.isEmpty) else {
+                return (currentAmount, nil)
+        }
+        
+        let originalRate = Rate(code: currentRate.code,
+                                name: currentRate.name,
+                                rate: metaData.exchangeRate,
+                                reciprocalCode: currentRate.reciprocalCode)
+        let originalAmount = Amount(amount: tx.amount,
+                                    rate: originalRate).description
+        return (currentAmount, originalAmount)
     }
 }

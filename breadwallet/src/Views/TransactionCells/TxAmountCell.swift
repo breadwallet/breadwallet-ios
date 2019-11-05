@@ -89,7 +89,7 @@ class TxAmountCell: UITableViewCell, Subscriber {
         let originalAmount = viewModel.originalFiatAmount
         
         if viewModel.status != .complete || originalAmount == nil {
-            fiatAmountLabel.attributedText = NSAttributedString(string: viewModel.fiatAmount,
+            fiatAmountLabel.attributedText = NSAttributedString(string: currentAmount,
                                                 attributes: [.font: smallFont,
                                                              .foregroundColor: fiatColor])
         } else {
