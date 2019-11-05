@@ -15,6 +15,10 @@ private extension C {
     static let detailsButtonHeight: CGFloat = 65.0
 }
 
+protocol TxDetaiViewControllerDelegate: class {
+    func txDetailDidDismiss(detailViewController: TxDetailViewController)
+}
+
 class TxDetailViewController: UIViewController, Subscriber {
     
     // MARK: - Private Vars
@@ -27,6 +31,8 @@ class TxDetailViewController: UIViewController, Subscriber {
     private let detailsButton = UIButton(type: .custom)
     private let tableView = UITableView()
     
+    private weak var txDetailDelegate: TxDetaiViewControllerDelegate?
+    
     private var containerHeightConstraint: NSLayoutConstraint!
     
     private var transaction: Transaction {
@@ -34,6 +40,7 @@ class TxDetailViewController: UIViewController, Subscriber {
             reload()
         }
     }
+    
     private var viewModel: TxDetailViewModel
     private var dataSource: TxDetailDataSource
     private var isExpanded: Bool = false
@@ -51,7 +58,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     
     // MARK: - Init
     
-    init(transaction: Transaction) {
+    init(transaction: Transaction, delegate: TxDetaiViewControllerDelegate? = nil) {
         self.transaction = transaction
         self.viewModel = TxDetailViewModel(tx: transaction)
         self.dataSource = TxDetailDataSource(viewModel: viewModel)
@@ -62,7 +69,9 @@ class TxDetailViewController: UIViewController, Subscriber {
         header.closeCallback = { [weak self] in
             self?.close()
         }
-        
+
+        self.txDetailDelegate = delegate
+
         setup()
     }
     
@@ -81,6 +90,12 @@ class TxDetailViewController: UIViewController, Subscriber {
         })
         // refresh if tx state changes
         //TODO:CRYPTO hook up refresh logic to System/Wallet tx events IOS-1162
+    }
+    
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag) {
+            self.txDetailDelegate?.txDetailDidDismiss(detailViewController: self)
+        }
     }
     
     private func setup() {

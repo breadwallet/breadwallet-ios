@@ -118,7 +118,19 @@ class SearchHeaderView: UIView {
         setup()
         hasSetup = true
     }
-
+    
+    override var isFirstResponder: Bool {
+        return searchBar.isFirstResponder
+    }
+    
+    override func resignFirstResponder() -> Bool {
+        return searchBar.resignFirstResponder()
+    }
+    
+    @discardableResult override func becomeFirstResponder() -> Bool {
+        return searchBar.becomeFirstResponder()
+    }
+    
     private func setup() {
         addSubviews()
         addFilterButtons()
