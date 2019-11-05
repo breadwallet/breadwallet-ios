@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum HistoryPeriod: CaseIterable {
+enum HistoryPeriod: String, CaseIterable {
     case day
     case week
     case month
@@ -16,7 +16,16 @@ enum HistoryPeriod: CaseIterable {
     case year
     case years
     
-    static let defaultPeriod: HistoryPeriod = .year
+    static var defaultPeriod: HistoryPeriod {
+        guard let saved = UserDefaults.lastChartHistoryPeriod, let period = HistoryPeriod(rawValue: saved) else {
+            return .year
+        }
+        return period
+    }
+    
+    func saveMostRecent() {
+        UserDefaults.lastChartHistoryPeriod = self.rawValue
+    }
     
     //DateComponentsFormatter uses 'mo' as a month abbreviation due to collision with minutes.
     //The trailing o is removed to keep the headering looking clean
