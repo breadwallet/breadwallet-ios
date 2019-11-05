@@ -206,19 +206,19 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
                 }
             }
         }
-        
-        listenForBackgroundNotification()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateWordCellAppearances(pageScrollPercent: 0)
         wordPagingView?.willAppear()
+        listenForBackgroundNotification()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         wordPagingView?.willDisappear()
+        unsubscribeNotifications()
     }
     
     override func onCloseButton() {
@@ -240,6 +240,10 @@ class WriteRecoveryKeyViewController: BaseRecoveryKeyViewController {
             NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification, object: nil, queue: nil) { [weak self] _ in
                 self?.exitWithoutPrompting()
         }
+    }
+    
+    private func unsubscribeNotifications() {
+        notificationObservers.values.forEach { NotificationCenter.default.removeObserver($0) }
     }
     
     private func setUpLabels() {

@@ -19,7 +19,7 @@ class ReScanViewController: UIViewController, Subscriber {
 
     private let system: CoreSystem
     private let wallet: Wallet
-    private let header = UILabel(font: .customBold(size: 26.0), color: .white)
+    private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .white)
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = BRDButton(title: S.ReScan.buttonTitle, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
@@ -64,7 +64,8 @@ class ReScanViewController: UIViewController, Subscriber {
     private func addConstraints() {
         header.constrain([
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]) ])
+            header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
+            header.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[2])])
         faq.constrain([
             faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             faq.centerYAnchor.constraint(equalTo: header.centerYAnchor),
