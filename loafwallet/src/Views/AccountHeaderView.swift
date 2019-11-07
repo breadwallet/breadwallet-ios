@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import Mixpanel
 
-private let largeFontSize: CGFloat = 28.0
+private let largeFontSize: CGFloat = 24.0
 private let smallFontSize: CGFloat = 13.0
 
 class AccountHeaderView : UIView, GradientDrawable, Subscriber {
@@ -24,6 +25,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             self.currentLTCValueLabel = UpdatingLabel(formatter: oneLTCPlaceholder.localFormat)
             self.secondaryBalance = UpdatingLabel(formatter: placeholderAmount.localFormat)
             self.primaryBalance = UpdatingLabel(formatter: placeholderAmount.ltcFormat)
+            self.priceTimestampLabel.text = DateFormatter.localizedString(from: rate.lastTimestamp, dateStyle: .short, timeStyle: .short)
         } else {
             self.secondaryBalance = UpdatingLabel(formatter: NumberFormatter())
             self.primaryBalance = UpdatingLabel(formatter: NumberFormatter())
@@ -40,7 +42,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let currentLTCValueLabel: UpdatingLabel
-
+    private let priceTimestampLabel = UILabel()
     private let currencyTapView = UIView()
     private let priceTapView = UIView()
     private let store: Store
@@ -107,13 +109,19 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         }
         primaryBalance.textColor = .whiteTint
         primaryBalance.font = UIFont.customBold(size: largeFontSize)
- 
+        primaryBalance.adjustsFontSizeToFitWidth = true
+        
         secondaryBalance.textColor = .whiteTint
         secondaryBalance.font = UIFont.customBold(size: largeFontSize)
-      
+        secondaryBalance.adjustsFontSizeToFitWidth = true
+
         currentLTCValueLabel.textColor = UIColor.init(red: 1, green: 1, blue: 1, alpha: 0.5)
-        currentLTCValueLabel.font = UIFont.customBold(size: largeFontSize)
-      
+        currentLTCValueLabel.font = UIFont.barloweLight(size: 18)
+        currentLTCValueLabel.adjustsFontSizeToFitWidth = true
+        priceTimestampLabel.font = UIFont.barloweLight(size: 11)
+        priceTimestampLabel.textColor = .whiteTint
+        priceTimestampLabel.adjustsFontSizeToFitWidth = true
+        
         search.setImage(#imageLiteral(resourceName: "SearchIcon"), for: .normal)
         search.tintColor = .white
 
@@ -134,6 +142,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         addSubview(primaryBalance)
         addSubview(secondaryBalance)
         addSubview(currentLTCValueLabel)
+        addSubview(priceTimestampLabel)
         addSubview(search)
         addSubview(currencyTapView)
         addSubview(priceTapView)
@@ -157,12 +166,17 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         primaryBalance.translatesAutoresizingMaskIntoConstraints = false
 
         currentLTCValueLabel.constrain([
-        currentLTCValueLabel.constraint(.firstBaseline, toView: primaryBalance, constant: 0.0),
-        currentLTCValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]-10),
+            currentLTCValueLabel.topAnchor.constraint(equalTo: search.bottomAnchor, constant: 0),
+        currentLTCValueLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[1]),
+        ])
+        
+        priceTimestampLabel.constrain([
+            priceTimestampLabel.trailingAnchor.constraint(equalTo: currentLTCValueLabel.trailingAnchor),
+            priceTimestampLabel.topAnchor.constraint(equalTo: currentLTCValueLabel.bottomAnchor)
         ])
       
         regularConstraints = [
-            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
+            primaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]),
             primaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             equals.firstBaselineAnchor.constraint(equalTo: primaryBalance.firstBaselineAnchor),
             equals.leadingAnchor.constraint(equalTo: primaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
@@ -170,7 +184,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         ]
 
         swappedConstraints = [
-            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[2]),
+            secondaryBalance.firstBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1]),
             secondaryBalance.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             equals.firstBaselineAnchor.constraint(equalTo: secondaryBalance.firstBaselineAnchor),
             equals.leadingAnchor.constraint(equalTo: secondaryBalance.trailingAnchor, constant: C.padding[1]/2.0),
@@ -180,10 +194,10 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         NSLayoutConstraint.activate(isLtcSwapped ? self.swappedConstraints : self.regularConstraints)
 
         search.constrain([
-            search.constraint(.trailing, toView: self, constant: -C.padding[2]),
-            search.topAnchor.constraint(equalTo: topAnchor, constant: 20),
-            search.constraint(.width, constant: 40.0),
-            search.constraint(.height, constant: 40.0) ])
+            search.constraint(.trailing, toView: self, constant: -C.padding[1]),
+            search.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+            search.constraint(.width, constant: 30.0),
+            search.constraint(.height, constant: 30.0) ])
             search.imageEdgeInsets = UIEdgeInsetsMake(10.0, 10.0, 10.0, 10.0)
 
         currencyTapView.constrain([
@@ -226,6 +240,11 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
                                 self.secondaryBalance.formatter = placeholderAmount.localFormat
                                 self.primaryBalance.formatter = placeholderAmount.ltcFormat
                                 self.currentLTCValueLabel.formatter = oneLTCPlaceholder.localFormat
+                                self.priceTimestampLabel.text =  DateFormatter.localizedString(from: rate.lastTimestamp, dateStyle: .short, timeStyle: .short)
+                                 
+                                Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_DULP.rawValue,
+                                                              properties: ["priceInfo" : ["price": String(format:"%2.2f USD",oneLTCPlaceholder.localAmount * 100),
+                                                                           "timestamp" : self.priceTimestampLabel.text ?? "--time--"]])
                             }
                             self.exchangeRate = $0.currentRate
                         })
@@ -258,7 +277,8 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
         guard let rate = exchangeRate else { return }
         let amount = Amount(amount: balance, rate: rate, maxDigits: store.state.maxDigits)
         let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
-
+        let timeStamp = rate.lastTimestamp
+        
         if !hasInitialized {
             let amount = Amount(amount: balance, rate: exchangeRate!, maxDigits: store.state.maxDigits)
             let singleLtcAmount = Amount(amount: 100000000, rate: rate , maxDigits: store.state.maxDigits)
@@ -268,6 +288,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             primaryBalance.setValue(amount.amountForLtcFormat)
             secondaryBalance.setValue(amount.localAmount)
             currentLTCValueLabel.setValue(singleLtcAmount.localAmount)
+            priceTimestampLabel.text = DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .short)
             if isLtcSwapped {
                 primaryBalance.transform = transform(forView: primaryBalance)
             } else {
@@ -304,7 +325,7 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
             })
             
             currentLTCValueLabel.setValue(singleLtcAmount.localAmount)
-
+            priceTimestampLabel.text = DateFormatter.localizedString(from: rate.lastTimestamp, dateStyle: .short, timeStyle: .short)
         }
     }
 
@@ -331,15 +352,16 @@ class AccountHeaderView : UIView, GradientDrawable, Subscriber {
           return
         }
         
-        var backgroundColor = UIColor.liteWalletBlue
+        var mainBackgroundColor = UIColor.liteWalletBlue
         if #available(iOS 11.0, *) {
             guard let mainColor = UIColor(named: "mainColor") else {
                 NSLog("ERROR: Main color")
                 return
             }
-            backgroundColor = mainColor
+            mainBackgroundColor = mainColor
         }
-        context.setFillColor(backgroundColor.cgColor)
+         
+        context.setFillColor(mainBackgroundColor.cgColor)
         context.fill(bounds)
     }
 

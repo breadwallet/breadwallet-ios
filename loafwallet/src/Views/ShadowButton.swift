@@ -15,7 +15,9 @@ enum ButtonType {
     case blackTransparent
     case search
     case warning
-    case boldWarning 
+    case boldWarning
+    case flatWhite
+    case flatLitecoinBlue
 }
 
 private let minTargetSize: CGFloat = 48.0
@@ -157,63 +159,75 @@ class ShadowButton: UIControl {
 
     private func setColors() {
         switch type {
+        case .flatLitecoinBlue:
+        container.backgroundColor = .liteWalletBlue
+        label.textColor = .primaryText
+        container.layer.borderColor = UIColor.white.cgColor
+        container.layer.borderWidth = 1.0
+        imageView?.tintColor = .white
+        case .flatWhite:
+        container.backgroundColor = .white
+        label.textColor = .liteWalletBlue
+        container.layer.borderColor = nil
+        container.layer.borderWidth = 0.0
+        imageView?.tintColor = .liteWalletBlue
         case .primary:
-            container.backgroundColor = .primaryButton
-            label.textColor = .primaryText
-            container.layer.borderColor = nil
-            container.layer.borderWidth = 0.0
-            shadowView.layer.shadowColor = UIColor.black.cgColor
-            shadowView.layer.shadowOpacity = 0.3
-            imageView?.tintColor = .white
+        container.backgroundColor = .primaryButton
+        label.textColor = .primaryText
+        container.layer.borderColor = nil
+        container.layer.borderWidth = 0.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.3
+        imageView?.tintColor = .white
         case .secondary:
-            container.backgroundColor = .secondaryButton
-            label.textColor = .darkText
-            container.layer.borderColor = UIColor.secondaryBorder.cgColor
-            container.layer.borderWidth = 1.0
-            shadowView.layer.shadowColor = UIColor.black.cgColor
-            shadowView.layer.shadowOpacity = 0.15
-            imageView?.tintColor = .darkText
+        container.backgroundColor = .secondaryButton
+        label.textColor = .darkText
+        container.layer.borderColor = UIColor.secondaryBorder.cgColor
+        container.layer.borderWidth = 1.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
+        imageView?.tintColor = .darkText
         case .tertiary:
-            container.backgroundColor = .secondaryButton
-            label.textColor = .grayTextTint
-            container.layer.borderColor = UIColor.secondaryBorder.cgColor
-            container.layer.borderWidth = 1.0
-            shadowView.layer.shadowColor = UIColor.black.cgColor
-            shadowView.layer.shadowOpacity = 0.15
-            imageView?.tintColor = .grayTextTint
+        container.backgroundColor = .secondaryButton
+        label.textColor = .grayTextTint
+        container.layer.borderColor = UIColor.secondaryBorder.cgColor
+        container.layer.borderWidth = 1.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
+        imageView?.tintColor = .grayTextTint
         case .blackTransparent:
-            container.backgroundColor = .clear
-            label.textColor = .darkText
-            container.layer.borderColor = UIColor.darkText.cgColor
-            container.layer.borderWidth = 1.0
-            imageView?.tintColor = .grayTextTint
-            shadowView.isHidden = true
+        container.backgroundColor = .clear
+        label.textColor = .darkText
+        container.layer.borderColor = UIColor.darkText.cgColor
+        container.layer.borderWidth = 1.0
+        imageView?.tintColor = .grayTextTint
+        shadowView.isHidden = true
         case .search:
-            label.font = UIFont.customBody(size: 13.0)
-            container.backgroundColor = .secondaryButton
-            label.textColor = .grayTextTint
-            container.layer.borderColor = UIColor.secondaryBorder.cgColor
-            container.layer.borderWidth = 1.0
-            shadowView.layer.shadowColor = UIColor.black.cgColor
-            shadowView.layer.shadowOpacity = 0.15
-            imageView?.tintColor = .grayTextTint
+        label.font = UIFont.customBody(size: 13.0)
+        container.backgroundColor = .secondaryButton
+        label.textColor = .grayTextTint
+        container.layer.borderColor = UIColor.secondaryBorder.cgColor
+        container.layer.borderWidth = 1.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
+        imageView?.tintColor = .grayTextTint
         case .warning:
-          label.font = UIFont.customBody(size: 13.0)
-          container.backgroundColor = .pink
-          label.textColor = .white
-          container.layer.borderColor = UIColor.secondaryBorder.cgColor
-          container.layer.borderWidth = 1.0
-          shadowView.layer.shadowColor = UIColor.black.cgColor
-          shadowView.layer.shadowOpacity = 0.15
-          //imageView?.tintColor = .grayTextTint
+        label.font = UIFont.customBody(size: 13.0)
+        container.backgroundColor = .pink
+        label.textColor = .white
+        container.layer.borderColor = UIColor.secondaryBorder.cgColor
+        container.layer.borderWidth = 1.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
+        //imageView?.tintColor = .grayTextTint
         case .boldWarning:
-          label.font = UIFont.customBold(size: 15.0)
-          container.backgroundColor = .pink
-          label.textColor = .white
-          container.layer.borderColor = UIColor.secondaryBorder.cgColor
-          container.layer.borderWidth = 1.0
-          shadowView.layer.shadowColor = UIColor.black.cgColor
-          shadowView.layer.shadowOpacity = 0.15
+        label.font = UIFont.customBold(size: 15.0)
+        container.backgroundColor = .pink
+        label.textColor = .white
+        container.layer.borderColor = UIColor.secondaryBorder.cgColor
+        container.layer.borderWidth = 1.0
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
         }
     }
 

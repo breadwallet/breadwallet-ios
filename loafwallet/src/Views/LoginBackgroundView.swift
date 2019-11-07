@@ -8,21 +8,21 @@
 
 import UIKit
 
-class LoginBackgroundView : UIView {
+class LoginBackgroundView : UIView, GradientDrawable {
 
     init() {
         super.init(frame: .zero)
+        self.backgroundColor = .liteWalletBlue
     }
 
     private var hasSetup = false
 
     override func layoutSubviews() {
         guard !hasSetup else { return }
-        self.backgroundColor = .liteWalletBlue
     }
- 
+    
     override func draw(_ rect: CGRect) {
-        drawGradient(rect)
+         
     }
 
     required init?(coder aDecoder: NSCoder) {

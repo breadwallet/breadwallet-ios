@@ -1,0 +1,1161 @@
+
+/* About screen website label */
+"About.blog" = "";
+
+/* About screen footer */
+"About.footer" = "";
+
+/* Privay Policy button label */
+"About.privacy" = "";
+
+/* About screen reddit label */
+"About.reddit" = "";
+
+/* Terms of Use button label */
+"About.terms" = "";
+
+/* About screen title */
+"About.title" = "";
+
+/* About screen twitter label */
+"About.twitter" = "";
+
+/* Close modal button accessibility label */
+"AccessibilityLabels.close" = "";
+
+/* Support center accessibiliy label */
+"AccessibilityLabels.faq" = "";
+
+/* Loading Wallet Message */
+"Account.loadingMessage" = "";
+
+/* Default wallet name */
+"AccountHeader.defaultWalletName" = "";
+
+/* Equals symbol */
+"AccountHeader.equals" = " = "";
+
+/* Error alert title */
+"Alert.error" = "";
+
+/* No internet alert message */
+"Alert.noInternet" = "";
+
+/* Warning alert title */
+"Alert.warning" = "";
+
+/* 'the addresses were copied'' Alert title */
+"Alerts.copiedAddressesHeader" = "";
+
+/* Addresses Copied Alert sub header */
+"Alerts.copiedAddressesSubheader" = "";
+
+/* Alert Header Label (the paper key was set) */
+"Alerts.paperKeySet" = "";
+
+/* Alert Subheader label (playfully positive) */
+"Alerts.paperKeySetSubheader" = "";
+
+/* Alert Header label (the PIN was set) */
+"Alerts.pinSet" = "";
+
+/* Send failure alert header label (the send failed to happen) */
+"Alerts.sendFailure" = "";
+
+/* Send success alert header label (confirmation that the send happened) */
+"Alerts.sendSuccess" = "";
+
+/* Send success alert subheader label (e.g. the money was sent) */
+"Alerts.sendSuccessSubheader" = "";
+
+/* JSON Serialization error message */
+"ApiClient.jsonError" = "";
+
+/* Wallet not ready error message */
+"ApiClient.notReady" = "";
+
+/* API Token error message */
+"ApiClient.tokenError" = "";
+
+/* Send BCH view body. */
+"BCH.body" = "";
+
+/* Confirm sending <$5.00> to <address>? */
+"BCH.confirmationMessage" = "";
+
+/* Confirmation alert title */
+"BCH.confirmationTitle" = "";
+
+/* Generic bch erorr message */
+"BCH.genericError" = "";
+
+/* Transaction ID copied message */
+"BCH.hashCopiedMessage" = "";
+
+/* No address error message */
+"BCH.noAddressError" = "";
+
+/* Attempted to scan unsupported qr code error message. */
+"BCH.paymentProtocolError" = "";
+
+/* BCH successfully sent alert message */
+"BCH.successMessage" = "";
+
+/* Widthdraw BCH view title */
+"BCH.title" = "";
+
+/* Tx Hash button header */
+"BCH.txHashHeader" = "";
+
+/* Approve button label */
+"BitID.approve" = "";
+
+/* <sitename> is requesting authentication using your Litecoin wallet */
+"BitID.authenticationRequest" = "";
+
+/* Deny button label */
+"BitID.deny" = "";
+
+/* BitID error alert title */
+"BitID.error" = "";
+
+/* BitID error alert messaage */
+"BitID.errorMessage" = "";
+
+/* BitID success alert title */
+"BitID.success" = "";
+
+/* BitID Authentication Request alert view title */
+"BitID.title" = "";
+
+/* buy button */
+"Button.buy" = "";
+
+/* Cancel button label */
+"Button.cancel" = "";
+
+/* Ignore button label */
+"Button.ignore" = "";
+
+/* menu button */
+"Button.menu" = "";
+
+/* No button */
+"Button.no" = "";
+
+/* OK button label */
+"Button.ok" = "";
+
+/* receive button */
+"Button.receive" = "";
+
+/* send button */
+"Button.send" = "";
+
+/* Settings button label */
+"Button.settings" = "";
+
+/* Settings button label */
+"Button.submit" = "";
+
+/* Yes button */
+"Button.yes" = "";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "";
+
+/* Coinbase buy financial details */
+"BuyCenter.coinbaseFinancialDetails" = "";
+
+/* Coinbase Title */
+"BuyCenter.CoinbaseTitle" = "";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "";
+
+/* Buy Center Title */
+"BuyCenter.title" = "";
+
+/* Camera plugin instruction */
+"CameraPlugin.centerInstruction" = "";
+
+/* Amount to Send: ($1.00) */
+"Confirmation.amountLabel" = "";
+
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "";
+
+/* Network Fee: ($1.00) */
+"Confirmation.feeLabel" = "";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "";
+
+/* eg. Processing time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingTime" = "";
+
+/* Send: (amount) */
+"Confirmation.send" = "";
+
+/* Confirmation Screen title */
+"Confirmation.title" = "";
+
+/* To: (address) */
+"Confirmation.to" = "";
+
+/* Total Cost: ($5.00) */
+"Confirmation.totalLabel" = "";
+
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "";
+
+/* Confirm paper phrase view label. */
+"ConfirmPaperPhrase.label" = "";
+
+/* Word label eg. Word #1, Word #2 */
+"ConfirmPaperPhrase.word" = "";
+
+/* as of a time or date */
+"Conjunction.asOf" = "";
+
+/* No comment provided by engineer. */
+"Copy" = "";
+
+/* Litecoin denomination picker label */
+"DefaultCurrency.bitcoinLabel" = "";
+
+/* Exchange rate label */
+"DefaultCurrency.rateLabel" = "";
+
+/* Donate Memo */
+"Donate.memo" = "";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "";
+
+/* Email unavailable alert title */
+"ErrorMessages.emailUnavailableMessage" = "";
+
+/* Email unavailable alert title */
+"ErrorMessages.emailUnavailableTitle" = "";
+
+/* Messaging unavailable alert title */
+"ErrorMessages.messagingUnavailableMessage" = "";
+
+/* Messaging unavailable alert title */
+"ErrorMessages.messagingUnavailableTitle" = "";
+
+/* You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button] */
+"FaceIDSettings.customizeText" = "";
+
+/* Face ID screen label */
+"FaceIDSettings.label" = "";
+
+/* Link Text (see TouchIdSettings.customizeText) */
+"FaceIDSettings.linkText" = "";
+
+/* Face id switch label. */
+"FaceIDSettings.switchLabel" = "";
+
+/* Face ID settings view title */
+"FaceIDSettings.title" = "";
+
+/* Face ID unavailable alert message */
+"FaceIDSettings.unavailableAlertMessage" = "";
+
+/* Face ID unavailable alert title */
+"FaceIDSettings.unavailableAlertTitle" = "";
+
+/* Face Id spending limit screen title */
+"FaceIDSpendingLimit.title" = "";
+
+/* Economy fee */
+"FeeSelector.economy" = "";
+
+/* Fee Selector economly fee description */
+"FeeSelector.economyLabel" = "";
+
+/* Warning message for economy fee */
+"FeeSelector.economyWarning" = "";
+
+/* Regular fee */
+"FeeSelector.regular" = "";
+
+/* Fee Selector regular fee description */
+"FeeSelector.regularLabel" = "";
+
+/* Fee Selector title */
+"FeeSelector.title" = "";
+
+/* Checking private key balance progress view text */
+"Import.checking" = "";
+
+/* Sweep private key confirmation message */
+"Import.confirm" = "";
+
+/* Duplicate key error message */
+"Import.Error.duplicate" = "";
+
+/* empty private key error message */
+"Import.Error.empty" = "";
+
+/* High fees error message */
+"Import.Error.highFees" = "";
+
+/* Not a valid private key error message */
+"Import.Error.notValid" = "";
+
+/* Import signing error message */
+"Import.Error.signing" = "";
+
+/* Import button label */
+"Import.importButton" = "";
+
+/* Importing wallet progress view label */
+"Import.importing" = "";
+
+/* Caption for graphics */
+"Import.leftCaption" = "";
+
+/* Import wallet intro screen message */
+"Import.message" = "";
+
+/* Enter password alert view title */
+"Import.password" = "";
+
+/* password textfield placeholder */
+"Import.passwordPlaceholder" = "";
+
+/* Caption for graphics */
+"Import.rightCaption" = "";
+
+/* Scan Private key button label */
+"Import.scan" = "";
+
+/* Import wallet success alert title */
+"Import.success" = "";
+
+/* Successfully imported wallet message body */
+"Import.SuccessBody" = "";
+
+/* Import Wallet screen title */
+"Import.title" = "";
+
+/* Unlocking Private key activity view message. */
+"Import.unlockingActivity" = "";
+
+/* Import wallet intro warning message */
+"Import.warning" = "";
+
+/* Wrong password alert message */
+"Import.wrongPassword" = "";
+
+/* Close app button */
+"JailbreakWarnings.close" = "";
+
+/* Ignore jailbreak warning button */
+"JailbreakWarnings.ignore" = "";
+
+/* Jailbreak warning message */
+"JailbreakWarnings.messageWithBalance" = "";
+
+/* Jailbreak warning message */
+"JailbreakWarnings.messageWithoutBalance" = "";
+
+/* Jailbreak warning title */
+"JailbreakWarnings.title" = "";
+
+/* Wipe wallet button */
+"JailbreakWarnings.wipe" = "";
+
+/* Location services disabled error */
+"LocationPlugin.disabled" = "";
+
+/* No permissions for location services */
+"LocationPlugin.notAuthorized" = "";
+
+/* No comment provided by engineer. */
+"Malformed URI" = "";
+
+/* Wallet creation date prefix */
+"ManageWallet.creationDatePrefix" = "";
+
+/* Manage wallet description text */
+"ManageWallet.description" = "";
+
+/* Change Wallet name textfield label */
+"ManageWallet.textFeildLabel" = "";
+
+/* Manage wallet modal title */
+"ManageWallet.title" = "";
+
+/* Buy Litecoin title */
+"MenuButton.buy" = "";
+
+/* Menu button title */
+"MenuButton.lock" = "";
+
+/* Menu button title */
+"MenuButton.security" = "";
+
+/* Menu button title */
+"MenuButton.settings" = "";
+
+/* Menu button title */
+"MenuButton.support" = "";
+
+/* button label */
+"MenuViewController.createButton" = "";
+
+/* Menu modal title */
+"MenuViewController.modalTitle" = "";
+
+/* button label */
+"MenuViewController.recoverButton" = "";
+
+/* No comment provided by engineer. */
+"No wallet" = "";
+
+/* Switch to automatic mode button label */
+"NodeSelector.automaticButton" = "";
+
+/* Node is connected label */
+"NodeSelector.connected" = "";
+
+/* Enter node ip address view body */
+"NodeSelector.enterBody" = "";
+
+/* Enter Node ip address view title */
+"NodeSelector.enterTitle" = "";
+
+/* Switch to manual mode button label */
+"NodeSelector.manualButton" = "";
+
+/* Node address label */
+"NodeSelector.nodeLabel" = "";
+
+/* Node is not connected label */
+"NodeSelector.notConnected" = "";
+
+/* Node status label */
+"NodeSelector.statusLabel" = "";
+
+/* Node Selector view title */
+"NodeSelector.title" = "";
+
+/* Bad Payment request alert title */
+"PaymentProtocol.Errors.badPaymentRequest" = "";
+
+/* Error opening payment protocol file message */
+"PaymentProtocol.Errors.corruptedDocument" = "";
+
+/* Missing certificate payment protocol error message */
+"PaymentProtocol.Errors.missingCertificate" = "";
+
+/* Request expired payment protocol error message */
+"PaymentProtocol.Errors.requestExpired" = "";
+
+/* Payment too small alert title */
+"PaymentProtocol.Errors.smallOutputError" = "";
+
+/* Amount too small error message */
+"PaymentProtocol.Errors.smallPayment" = "";
+
+/* Output too small error message. */
+"PaymentProtocol.Errors.smallTransaction" = "";
+
+/* Unsupported signature type payment protocol error message */
+"PaymentProtocol.Errors.unsupportedSignatureType" = "";
+
+/* Untrusted certificate payment protocol error message */
+"PaymentProtocol.Errors.untrustedCertificate" = "";
+
+/* Enable face ID prompt body */
+"Prompts.FaceId.body" = "";
+
+/* Enable face ID prompt title */
+"Prompts.FaceId.title" = "";
+
+/* No passcode set warning body */
+"Prompts.NoPasscode.body" = "";
+
+/* No Passcode set warning title */
+"Prompts.NoPasscode.title" = "";
+
+/* Warning about paper key. */
+"Prompts.PaperKey.body" = "";
+
+/* An action is required (You must do this action). */
+"Prompts.PaperKey.title" = "";
+
+/* Transaction rejected prompt body */
+"Prompts.RecommendRescan.body" = "";
+
+/* Transaction rejected prompt title */
+"Prompts.RecommendRescan.title" = "";
+
+/* Share data prompt body */
+"Prompts.ShareData.body" = "";
+
+/* Share data prompt title */
+"Prompts.ShareData.title" = "";
+
+/* Enable touch ID prompt body */
+"Prompts.TouchId.body" = "";
+
+/* Enable touch ID prompt title */
+"Prompts.TouchId.title" = "";
+
+/* Upgrade PIN prompt body. */
+"Prompts.UpgradePin.body" = "";
+
+/* Upgrade PIN prompt title. */
+"Prompts.UpgradePin.title" = "";
+
+/* Push notifications settings view body */
+"PushNotifications.body" = "";
+
+/* Push notifications toggle switch label */
+"PushNotifications.label" = "";
+
+/* Push notifications are off label */
+"PushNotifications.off" = "";
+
+/* Push notifications are on label */
+"PushNotifications.on" = "";
+
+/* Push notifications settings view title label */
+"PushNotifications.title" = "";
+
+/* Address copied message. */
+"Receive.copied" = "";
+
+/* Share via email button label */
+"Receive.emailButton" = "";
+
+/* Request button label */
+"Receive.request" = "";
+
+/* Share button label */
+"Receive.share" = "";
+
+/* Share via text message (SMS) */
+"Receive.textButton" = "";
+
+/* Receive modal title */
+"Receive.title" = "";
+
+/* Done button text */
+"RecoverWallet.done" = "";
+
+/* Recover wallet header */
+"RecoverWallet.header" = "";
+
+/* Reset PIN with paper key: header */
+"RecoverWallet.header_reset_pin" = "";
+
+/* Enter paper key instruction */
+"RecoverWallet.instruction" = "";
+
+/* Recover wallet intro */
+"RecoverWallet.intro" = "";
+
+/* Invalid paper key message */
+"RecoverWallet.invalid" = "";
+
+/* Previous button accessibility label */
+"RecoverWallet.leftArrow" = "";
+
+/* Next button label */
+"RecoverWallet.next" = "";
+
+/* Reset PIN with paper key: more information button. */
+"RecoverWallet.reset_pin_more_info" = "";
+
+/* Next button accessibility label */
+"RecoverWallet.rightArrow" = "";
+
+/* Recover wallet sub-header */
+"RecoverWallet.subheader" = "";
+
+/* Reset PIN with paper key: sub-header */
+"RecoverWallet.subheader_reset_pin" = "";
+
+/* No amount entered error message. */
+"RequestAnAmount.noAmount" = "";
+
+/* Request a specific amount of Litecoin */
+"RequestAnAmount.title" = "";
+
+/* Alert action button label */
+"ReScan.alertAction" = "";
+
+/* Alert message body */
+"ReScan.alertMessage" = "";
+
+/* Alert message title */
+"ReScan.alertTitle" = "";
+
+/* extimated time */
+"ReScan.body1" = "";
+
+/* Syncing explanation */
+"ReScan.body2" = "";
+
+/* Syncing explanation */
+"ReScan.body3" = "";
+
+/* Start Sync button label */
+"ReScan.buttonTitle" = "";
+
+/* Sync blockchain view footer */
+"ReScan.footer" = "";
+
+/* Sync Blockchain view header */
+"ReScan.header" = "";
+
+/* Subheader label */
+"ReScan.subheader1" = "";
+
+/* Subheader label */
+"ReScan.subheader2" = "";
+
+/* Reset walet button  title */
+"resetButton" = "";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "";
+
+/* Scan Litecoin address camera flash toggle */
+"Scanner.flashButtonLabel" = "";
+
+/* Complete filter label */
+"Search.complete" = "";
+
+/* Pending filter label */
+"Search.pending" = "";
+
+/* Received filter label */
+"Search.received" = "";
+
+/* Sent filter label */
+"Search.sent" = "";
+
+/* Face ID button title */
+"SecurityCenter.faceIdTitle" = "";
+
+/* Security Center Info */
+"SecurityCenter.info" = "";
+
+/* Paper Key button description */
+"SecurityCenter.paperKeyDescription" = "";
+
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle" = "";
+
+/* PIN button description */
+"SecurityCenter.pinDescription" = "";
+
+/* PIN button title */
+"SecurityCenter.pinTitle" = "";
+
+/* Security Center Title */
+"SecurityCenter.title" = "";
+
+/* Touch ID/FaceID button description */
+"SecurityCenter.touchIdDescription" = "";
+
+/* Touch ID button title */
+"SecurityCenter.touchIdTitle" = "";
+
+/* Send money amount label */
+"Send.amountLabel" = "";
+
+/* Balance: $4.00 */
+"Send.balance" = "";
+
+/* Camera not allowed message */
+"Send.cameraunavailableMessage" = "";
+
+/* Camera not allowed alert title */
+"Send.cameraUnavailableTitle" = "";
+
+/* Warning when sending to self. */
+"Send.containsAddress" = "";
+
+/* Could not create transaction alert title */
+"Send.creatTransactionError" = "";
+
+/* Description for sending money label */
+"Send.descriptionLabel" = "";
+
+/* Empty pasteboard error message */
+"Send.emptyPasteboard" = "";
+
+/* Network Fee: $0.01 */
+"Send.fee" = "";
+
+/* Payee identity not certified alert title. */
+"Send.identityNotCertified" = "";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "";
+
+/* Invalid address alert message */
+"Send.invalidAddressMessage" = "";
+
+/* Invalid address on pasteboard message */
+"Send.invalidAddressOnPasteboard" = "";
+
+/* Invalid address alert title */
+"Send.invalidAddressTitle" = "";
+
+/* Is rescanning error message */
+"Send.isRescanning" = "";
+
+/* Loading request activity view message */
+"Send.loadingRequest" = "";
+
+/* Empty address alert message */
+"Send.noAddress" = "";
+
+/* Emtpy amount alert message */
+"Send.noAmount" = "";
+
+/* Paste button label */
+"Send.pasteLabel" = "";
+
+/* Could not publish transaction alert title */
+"Send.publishTransactionError" = "";
+
+/* Could not load remote request error message */
+"Send.remoteRequestError" = "";
+
+/* Scan button label */
+"Send.scanLabel" = "";
+
+/* Send button label */
+"Send.sendLabel" = "";
+
+/* Send modal title */
+"Send.title" = "";
+
+/* Send money to label */
+"Send.toLabel" = "";
+
+/* Adress already used alert message - first part */
+"Send.UsedAddress.firstLine" = "";
+
+/* Adress already used alert message - second part */
+"Send.UsedAddress.secondLIne" = "";
+
+/* Adress already used alert title */
+"Send.UsedAddress.title" = "";
+
+/* About label */
+"Settings.about" = "";
+
+/* Advanced Settings title */
+"Settings.advancedTitle" = "";
+
+/* Blockchain settings section header */
+"Settings.blockchain" = "";
+
+/* Default currency label */
+"Settings.currency" = "";
+
+/* Join Early access label */
+"Settings.earlyAccess" = "";
+
+/* Are you enjoying Litewallet alert message body */
+"Settings.enjoying" = "";
+
+/* Face ID spending limit label */
+"Settings.faceIdLimit" = "";
+
+/* Import wallet label */
+"Settings.importTitle" = "";
+
+/* Manage settings section header */
+"Settings.manage" = "";
+
+/* Notifications label */
+"Settings.notifications" = "";
+
+/* Leave review button label */
+"Settings.review" = "";
+
+/* Share anonymous data label */
+"Settings.shareData" = "";
+
+/* Support settings section header */
+"Settings.support" = "";
+
+/* Sync blockchain label */
+"Settings.sync" = "";
+
+/* Settings title */
+"Settings.title" = "";
+
+/* Touch ID spending limit label */
+"Settings.touchIdLimit" = "";
+
+/* Wallet Settings section header */
+"Settings.wallet" = "";
+
+/* Start or recover another wallet menu label. */
+"Settings.wipe" = "";
+
+/* Share data view body */
+"ShareData.body" = "";
+
+/* Share data header */
+"ShareData.header" = "";
+
+/* Share data switch label. */
+"ShareData.toggleLabel" = "";
+
+/* Current spending limit: */
+"SpendingLimit.title" = "";
+
+/* button label */
+"StartPaperPhrase.againButtonTitle" = "";
+
+/* Paper key explanation text. */
+"StartPaperPhrase.body" = "";
+
+/* button label */
+"StartPaperPhrase.buttonTitle" = "";
+
+/* Argument is date */
+"StartPaperPhrase.date" = "";
+
+/* Start view message */
+"StartViewController.message" = "";
+
+/* Syncing view connectiong state header text */
+"SyncingView.connecting" = "";
+
+/* Syncing view header text */
+"SyncingView.header" = "";
+
+/* Retry button label */
+"SyncingView.retry" = "";
+
+/* Syncing view syncing state header text */
+"SyncingView.syncing" = "";
+
+/* 6 d (6 days) */
+"TimeSince.days" = "";
+
+/* 6 h (6 hours) */
+"TimeSince.hours" = "";
+
+/* 6 m (6 minutes) */
+"TimeSince.minutes" = "";
+
+/* 6 s (6 seconds) */
+"TimeSince.seconds" = "";
+
+/* You can customize your Touch ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button] */
+"TouchIdSettings.customizeText" = "";
+
+/* Touch Id screen label */
+"TouchIdSettings.label" = "";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "";
+
+/* Link Text (see TouchIdSettings.customizeText) */
+"TouchIdSettings.linkText" = "";
+
+/* Spending Limit: b100,000 ($100) */
+"TouchIdSettings.spendingLimit" = "";
+
+/* Touch id switch label. */
+"TouchIdSettings.switchLabel" = "";
+
+/* Touch ID settings view title */
+"TouchIdSettings.title" = "";
+
+/* Touch ID unavailable alert message */
+"TouchIdSettings.unavailableAlertMessage" = "";
+
+/* Touch ID unavailable alert title */
+"TouchIdSettings.unavailableAlertTitle" = "";
+
+/* Always require passcode option */
+"TouchIdSpendingLimit" = "";
+
+/* Touch ID spending limit screen body */
+"TouchIdSpendingLimit.body" = "";
+
+/* Touch Id spending limit screen title */
+"TouchIdSpendingLimit.title" = "";
+
+/* Availability status text */
+"Transaction.available" = "";
+
+/* Transaction complete label */
+"Transaction.complete" = "";
+
+/* eg. Ending balance: $50.00 */
+"Transaction.ending" = "";
+
+/* Exchange rate on date header */
+"Transaction.exchangeOnDayReceived" = "";
+
+/* Exchange rate on date header */
+"Transaction.exchangeOnDaySent" = "";
+
+/* (b600 fee) */
+"Transaction.fee" = "";
+
+/* Invalid transaction */
+"Transaction.invalid" = "";
+
+/* Timestamp label for event that just happened */
+"Transaction.justNow" = "";
+
+/* Receive status text: 'In progress: 20%' */
+"Transaction.receivedStatus" = "";
+
+/* Send status text: 'In progress: 20%' */
+"Transaction.sendingStatus" = "";
+
+/* eg. Starting balance: $50.00 */
+"Transaction.starting" = "";
+
+/* Waiting to be confirmed string */
+"Transaction.waiting" = "";
+
+/* e.g. I received money from an account. */
+"TransactionDetails.account" = "";
+
+/* Amount section header */
+"TransactionDetails.amountHeader" = "";
+
+/* Block height label */
+"TransactionDetails.blockHeightLabel" = "";
+
+/* Memo section header */
+"TransactionDetails.commentsHeader" = "";
+
+/* Empty transaction list message. */
+"TransactionDetails.emptyMessage" = "";
+
+/* [received] at <address> (received title 2/2) */
+"TransactionDetails.from" = "";
+
+/* More button title */
+"TransactionDetails.more" = "";
+
+/* Moved $5.00 */
+"TransactionDetails.moved" = "";
+
+/* Moved $5.00 */
+"TransactionDetails.movedAmountDescription" = "";
+
+/* eg. Confirmed in Block: Not Confirmed */
+"TransactionDetails.notConfirmedBlockHeightLabel" = "";
+
+/* Received $5.00 (received title 1/2) */
+"TransactionDetails.received" = "";
+
+/* Received $5.00 */
+"TransactionDetails.receivedAmountDescription" = "";
+
+/* Sent $5.00 (sent title 1/2) */
+"TransactionDetails.sent" = "";
+
+/* Sent $5.00 */
+"TransactionDetails.sentAmountDescription" = "";
+
+/* Status section header */
+"TransactionDetails.statusHeader" = "";
+
+/* Transaction Details Title */
+"TransactionDetails.title" = "";
+
+/* [sent] to <address> (sent title 2/2) */
+"TransactionDetails.to" = "";
+
+/* Transaction ID header */
+"TransactionDetails.txHashHeader" = "";
+
+/* (this transaction was) Received at this address: */
+"TransactionDirection.address" = "";
+
+/* (this transaction was) Sent to this address: */
+"TransactionDirection.to" = "";
+
+/* Disabled until date */
+"UnlockScreen.disabled" = "";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "";
+
+/* My Address button title */
+"UnlockScreen.myAddress" = "";
+
+/* Reset PIN with Paper Key button label. */
+"UnlockScreen.resetPin" = "";
+
+/* Scan button title */
+"UnlockScreen.scan" = "";
+
+/* Unlock Screen sub-header */
+"UnlockScreen.subheader" = "";
+
+/* TouchID/FaceID prompt text */
+"UnlockScreen.touchIdPrompt" = "";
+
+/* Unlock with TouchID accessibility label */
+"UnlockScreen.touchIdText" = "";
+
+/* Wallet unlocked message */
+"UnlockScreen.unlocked" = "";
+
+/* Update PIN caption text */
+"UpdatePin.caption" = "";
+
+/* PIN creation info. */
+"UpdatePin.createInstruction" = "";
+
+/* Update PIN title */
+"UpdatePin.createTitle" = "";
+
+/* Update PIN title */
+"UpdatePin.createTitleConfirm" = "";
+
+/* Enter current PIN instruction */
+"UpdatePin.enterCurrent" = "";
+
+/* Enter new PIN instruction */
+"UpdatePin.enterNew" = "";
+
+/* Re-Enter new PIN instruction */
+"UpdatePin.reEnterNew" = "";
+
+/* Update PIN failure error message. */
+"UpdatePin.setPinError" = "";
+
+/* Update PIN failure alert view title */
+"UpdatePin.setPinErrorTitle" = "";
+
+/* Update PIN title */
+"UpdatePin.updateTitle" = "";
+
+/* Authorize to copy wallet addresses alert message */
+"URLHandling.addressaddressListAlertMessage" = "";
+
+/* Authorize to copy wallet address PIN view prompt. */
+"URLHandling.addressList" = "";
+
+/* Authorize to copy wallet address alert title */
+"URLHandling.addressListAlertTitle" = "";
+
+/* Copy wallet addresses alert button label */
+"URLHandling.copy" = "";
+
+/* Verify PIN for transaction view body */
+"VerifyPin.authorize" = "";
+
+/* Verify PIN view body */
+"VerifyPin.continueBody" = "";
+
+/* Verify PIN view title */
+"VerifyPin.title" = "";
+
+/* Authorize transaction with touch id message */
+"VerifyPin.touchIdMessage" = "";
+
+/* 'No wallet' warning for watch app */
+"Watch.noWalletWarning" = "";
+
+/* Dismiss button label */
+"Webview.dismiss" = "";
+
+/* Webview loading error message */
+"Webview.errorMessage" = "";
+
+/* Updating webview message */
+"Webview.updating" = "";
+
+/* Welcome view body text */
+"Welcome.body" = "";
+
+/* Welcome view title */
+"Welcome.title" = "";
+
+/* Wipe wallet alert message */
+"WipeWallet.alertMessage" = "";
+
+/* Wipe wallet alert title */
+"WipeWallet.alertTitle" = "";
+
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "";
+
+/* Failed wipe wallet alert message */
+"WipeWallet.failedMessage" = "";
+
+/* Failed wipe wallet alert title */
+"WipeWallet.failedTitle" = "";
+
+/* Enter key to wipe wallet instruction. */
+"WipeWallet.instruction" = "";
+
+/* Start wipe wallet view message */
+"WipeWallet.startMessage" = "";
+
+/* Start wipe wallet view warning */
+"WipeWallet.startWarning" = "";
+
+/* Wipe wallet navigation item title. */
+"WipeWallet.title" = "";
+
+/* Warning Alert */
+"WipeWallet.warningAlert" = "";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "";
+
+/* Wipe wallet button title */
+"WipeWallet.wipe" = "";
+
+/* Wiping activity message */
+"WipeWallet.wiping" = "";
+
+/* Paper key instructions. */
+"WritePaperPhrase.instruction" = "";
+
+/* button label */
+"WritePaperPhrase.next" = "";
+
+/* button label */
+"WritePaperPhrase.previous" = "";
+
+/* 1 of 3 */
+"WritePaperPhrase.step" = "";

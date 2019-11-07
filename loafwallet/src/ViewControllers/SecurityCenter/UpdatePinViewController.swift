@@ -28,21 +28,19 @@ class UpdatePinViewController : UIViewController, Subscriber {
         self.phrase = phrase
         self.pinView = PinView(style: .create, length: store.state.pinLength)
         self.showsBackButton = showsBackButton
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.setPin)
         self.type = type
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK: - Private
-    private let header = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
-    private let instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
-    private let caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private var header = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
+    private var instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
+    private var caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
     private var pinView: PinView
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
+    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let spacer = UIView()
     private let store: Store
     private let walletManager: WalletManager
-    private let faq: UIButton
     private var step: Step = .verify {
         didSet {
             switch step {
@@ -93,15 +91,13 @@ class UpdatePinViewController : UIViewController, Subscriber {
         view.addSubview(instruction)
         view.addSubview(caption)
         view.addSubview(pinView)
-        view.addSubview(faq)
         view.addSubview(spacer)
     }
 
     private func addConstraints() {
         header.constrain([
             header.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
-            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.trailingAnchor.constraint(equalTo: faq.leadingAnchor, constant: -C.padding[1]) ])
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]) ])
         instruction.constrain([
             instruction.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             instruction.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
@@ -111,26 +107,15 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
             pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        if E.isIPhoneX {
+         
             addChildViewController(pinPad, layout: {
                 pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
                 pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height),
                                        pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[3])])
             })
-        } else {
-            addChildViewController(pinPad, layout: {
-                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
-                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height)])
-            })
-        }
         spacer.constrain([
             spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
             spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
-        faq.constrain([
-            faq.topAnchor.constraint(equalTo: header.topAnchor),
-            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.constraint(.height, constant: 44.0),
-            faq.constraint(.width, constant: 44.0)])
         caption.constrain([
             caption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             caption.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]),
@@ -138,8 +123,22 @@ class UpdatePinViewController : UIViewController, Subscriber {
     }
 
     private func setData() {
+        
         caption.text = S.UpdatePin.caption
-        view.backgroundColor = .whiteTint
+        view.addSubview(spacer)
+
+        header.textColor = .whiteTint
+        instruction.textColor = .whiteTint
+        caption.textColor = .whiteTint
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            } 
+            view.backgroundColor = mainColor
+        } else {
+            view.backgroundColor = .liteWalletBlue
+        }
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
         pinPad.ouputDidUpdate = { [weak self] text in

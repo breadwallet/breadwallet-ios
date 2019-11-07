@@ -95,13 +95,25 @@ class Prompt : UIView {
 
     let close = UIButton.close
     let type: PromptType
-    private let title = UILabel(font: .customBold(size: 14.0), color: .darkText)
-    private let body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
+    private var title = UILabel(font: .customBold(size: 14.0), color: .darkText)
+    private var body = UILabel.wrapping(font: .customBody(size: 13.0), color: .darkText)
 
     private func setup() {
         addSubview(title)
         addSubview(body)
         
+        if #available(iOS 11.0, *) {
+            guard let labelTextColor = UIColor(named: "labelTextColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            }
+            title.textColor = labelTextColor
+            body.textColor = labelTextColor
+        } else {
+            title.textColor = .darkText
+            body.textColor = .darkText
+        }
+         
         title.constrain([
             title.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             title.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]) ])

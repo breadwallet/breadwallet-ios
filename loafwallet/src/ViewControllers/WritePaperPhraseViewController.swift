@@ -14,8 +14,8 @@ class WritePaperPhraseViewController: UIViewController {
     private let walletManager: WalletManager
     private let pin: String
     private let label = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
-    private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 13.0))
-    private let header = RadialGradientView(backgroundColor: .pink)
+    private let stepLabel = UILabel.wrapping(font: UIFont.customMedium(size: 16.0))
+    private let header = RadialGradientView(backgroundColor: .liteWalletBlue)
     
     private lazy var phraseViews: [PhraseView] = {
         guard let phraseString = self.walletManager.seedPhrase(pin: self.pin) else { return [] }
@@ -62,6 +62,7 @@ class WritePaperPhraseViewController: UIViewController {
 
         stepLabel.text = String(format: S.WritePaperPhrase.step, 1, phraseViews.count)
         stepLabel.textAlignment = .center
+        
         stepLabel.textColor = UIColor(white: 170.0/255.0, alpha: 1.0)
 
         addSubviews()
@@ -71,10 +72,6 @@ class WritePaperPhraseViewController: UIViewController {
         NotificationCenter.default.addObserver(forName: .UIApplicationWillResignActive, object: nil, queue: nil) { [weak self] note in
             self?.dismiss(animated: true, completion: nil)
         }
-
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.writePhrase)
-        faqButton.tintColor = .white
-        navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

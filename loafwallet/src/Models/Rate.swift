@@ -13,6 +13,7 @@ struct Rate {
     let code: String
     let name: String
     let rate: Double
+    let lastTimestamp: Date
 
     var currencySymbol: String {
         if let symbol = Rate.symbolMap[code] {
@@ -49,7 +50,7 @@ struct Rate {
     }
    
     static var empty: Rate {
-        return Rate(code: "", name: "", rate: 0.0)
+        return Rate(code: "", name: "", rate: 0.0, lastTimestamp: Date())
     }
 }
 
@@ -59,7 +60,7 @@ extension Rate {
         guard let code = dictionary["code"] as? String else { return nil }
         guard let name = dictionary["name"] as? String else { return nil }
         guard let rate = dictionary["n"] as? Double else { return nil }
-        self.init(code: code, name: name, rate: rate)
+        self.init(code: code, name: name, rate: rate, lastTimestamp: Date())
     }
 
     var dictionary: [String: Any] {

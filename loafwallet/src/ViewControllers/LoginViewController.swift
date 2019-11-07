@@ -41,10 +41,10 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     //MARK: - Private
     private let store: Store
     private let backgroundView: UIView = {
-        let view = UIView()
+        var view = UIView()
         
-        var backgroundColor = UIColor.liteWalletBlue
-        view.backgroundColor = backgroundColor
+        var mainBackgroundColor = UIColor.liteWalletBlue
+        view.backgroundColor = mainBackgroundColor
         if #available(iOS 11.0, *) {
             guard let mainColor = UIColor(named: "mainColor") else {
                 NSLog("ERROR: Main color")

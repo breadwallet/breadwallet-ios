@@ -392,7 +392,9 @@ class ModalPresenter : Subscriber, Trackable {
                     let identifier = Locale.identifier(fromComponents: components)
                     return Locale(identifier: identifier).currencyCode ?? ""
                 }, callback: {
-                    guard let wm = self.walletManager else { print("NO WALLET MANAGER!"); return }
+                    guard let wm = self.walletManager else {
+                        NSLog("ERROR: NO WALLET MANAGER!")
+                        return }
                     settingsNav.pushViewController(DefaultCurrencyViewController(walletManager: wm, store: self.store), animated: true)
                 }),
                 Setting(title: S.Settings.sync, callback: {
@@ -412,7 +414,7 @@ class ModalPresenter : Subscriber, Trackable {
                 }),
             ],
             "Blockchain": [
-                Setting(title: "Advanced", callback: { [weak self] in
+                Setting(title: S.Settings.advancedTitle, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
                     let sections = ["Network"]
@@ -571,12 +573,19 @@ class ModalPresenter : Subscriber, Trackable {
             paperPhraseNavigationController.present(verify, animated: true, completion: nil)
         })
         start.navigationItem.title = S.SecurityCenter.Cells.paperKeyTitle
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperKey)
-        faqButton.tintColor = .white
-        start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
+        
+        
+        var staticColor = UIColor()
+        
+        if #available(iOS 11.0, *),
+            let tempStaticColor = UIColor(named: "staticWhiteColor") {
+            staticColor = tempStaticColor
+        } else {
+            staticColor = .whiteTint
+        }
         
         if UserDefaults.writePaperPhraseDate != nil {
-            start.addCloseNavigationItem(tintColor: .white)
+            start.addCloseNavigationItem(tintColor: staticColor)
         } else {
             start.hideCloseNavigationItem()
         }

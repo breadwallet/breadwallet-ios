@@ -1,0 +1,1164 @@
+
+/* About screen website label */
+"About.blog" = "Website";
+
+/* About screen footer */
+"About.footer" = "Made by the LiteWallet Team\nof the\nLitecoin Foundation\n%1$@";
+
+/* Privay Policy button label */
+"About.privacy" = "Privacy Policy";
+
+/* About screen reddit label */
+"About.reddit" = "Reddit";
+
+/* About screen title */
+"About.title" = "About";
+
+/* About screen twitter label */
+"About.twitter" = "Twitter";
+
+/* Close modal button accessibility label */
+"AccessibilityLabels.close" = "Close";
+
+/* Support center accessibiliy label */
+"AccessibilityLabels.faq" = "Support Center";
+
+/* Loading Wallet Message */
+"Account.loadingMessage" = "Loading Wallet";
+
+/* Default wallet name */
+"AccountHeader.defaultWalletName" = "My Litewallet";
+
+/* Equals symbol */
+"AccountHeader.equals" = " = ";
+
+/* Manage wallet button title */
+"AccountHeader.manageButtonName" = "MANAGE";
+
+/* Error alert title */
+"Alert.error" = "Error";
+
+/* No internet alert message */
+"Alert.noInternet" = "No internet connection found. Check your connection and try again.";
+
+/* Warning alert title */
+"Alert.warning" = "Warning";
+
+/* 'the addresses were copied'' Alert title */
+"Alerts.copiedAddressesHeader" = "Addresses Copied";
+
+/* Addresses Copied Alert sub header */
+"Alerts.copiedAddressesSubheader" = "All wallet addresses successfully copied.";
+
+/* Alert Header Label (the paper key was set) */
+"Alerts.paperKeySet" = "Paper Key Set";
+
+/* Alert Subheader label (playfully positive) */
+"Alerts.paperKeySetSubheader" = "Awesome!";
+
+/* Alert Header label (the PIN was set) */
+"Alerts.pinSet" = "PIN Set";
+
+/* Send failure alert header label (the send failed to happen) */
+"Alerts.sendFailure" = "Send failed";
+
+/* Send success alert header label (confirmation that the send happened) */
+"Alerts.sendSuccess" = "Send Confirmation";
+
+/* Send success alert subheader label (e.g. the money was sent) */
+"Alerts.sendSuccessSubheader" = "Money Sent!";
+
+/* JSON Serialization error message */
+"ApiClient.jsonError" = "JSON Serialization Error";
+
+/* Wallet not ready error message */
+"ApiClient.notReady" = "Wallet not ready";
+
+/* API Token error message */
+"ApiClient.tokenError" = "Unable to retrieve API token";
+
+/* Send BCH view body. */
+"BCH.body" = "Enter a destination BCH address below. All BCH in your wallet at the time of the fork (%1$@) will be sent.";
+
+/* Confirm sending <$5.00> to <address>? */
+"BCH.confirmationMessage" = "Confirm sending %1$@ to %2$@";
+
+/* Confirmation alert title */
+"BCH.confirmationTitle" = "Confirmation";
+
+/* Generic bch erorr message */
+"BCH.genericError" = "Your account does not contain any BCH, or you received BCH after the fork.";
+
+/* Transaction ID copied message */
+"BCH.hashCopiedMessage" = "Transaction ID copied";
+
+/* No address error message */
+"BCH.noAddressError" = "Please enter an address";
+
+/* Attempted to scan unsupported qr code error message. */
+"BCH.paymentProtocolError" = "Payment Protocol Requests are not supported for BCH transactions";
+
+/* BCH successfully sent alert message */
+"BCH.successMessage" = "BCH was successfully sent.";
+
+/* Widthdraw BCH view title */
+"BCH.title" = "Withdraw BCH";
+
+/* Tx Hash button header */
+"BCH.txHashHeader" = "BCH Transaction ID";
+
+/* Approve button label */
+"BitID.approve" = "Approve";
+
+/* <sitename> is requesting authentication using your Litecoin wallet */
+"BitID.authenticationRequest" = "%1$@ is requesting authentication using your Litecoin wallet";
+
+/* Deny button label */
+"BitID.deny" = "Deny";
+
+/* BitID error alert title */
+"BitID.error" = "Authentication Error";
+
+/* BitID error alert messaage */
+"BitID.errorMessage" = "Please check with the service. You may need to try again.";
+
+/* BitID success alert title */
+"BitID.success" = "Successfully Authenticated";
+
+/* BitID Authentication Request alert view title */
+"BitID.title" = "BitID Authentication Request";
+
+/* buy button */
+"Button.buy" = "buy";
+
+/* Cancel button label */
+"Button.cancel" = "Cancel";
+
+/* Ignore button label */
+"Button.ignore" = "Ignore";
+
+/* menu button */
+"Button.menu" = "menu";
+
+/* No button */
+"Button.no" = "No";
+
+/* OK button label */
+"Button.ok" = "OK";
+
+/* receive button */
+"Button.receive" = "receive";
+
+/* send button */
+"Button.send" = "send";
+
+/* Settings button label */
+"Button.settings" = "Settings";
+
+/* Settings button label */
+"Button.submit" = "Submit";
+
+/* Yes button */
+"Button.yes" = "Yes";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "• Buy gift cards\n• Refill prepaid phones\n• Steam, Amazon, Hotels.com\n• Works in 170 countries";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "Bitrefill";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "• Change Litecoin for other cryptos\n• No ID Required\n• Buy via credit card\n• Global coverage";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "Changelly";
+
+/* Coinbase buy financial details */
+"BuyCenter.coinbaseFinancialDetails" = "• Buy Litecoin\n• Available in 33 countries\n• Trade and Store your Litecoin\n• Easy for cryptocurrency novices";
+
+/* Coinbase Title */
+"BuyCenter.CoinbaseTitle" = "Coinbase";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "Buy Łitecoin";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "• Get Litecoin in 5 mins!\n• Buy Litecoin via credit card\n• Passport or State ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "Simplex";
+
+/* Buy Center Title */
+"BuyCenter.title" = "Buy Litecoin";
+
+/* Camera plugin instruction */
+"CameraPlugin.centerInstruction" = "Center your ID in the box";
+
+/* Amount to Send: ($1.00) */
+"Confirmation.amountLabel" = "Amount to Send:";
+
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "Amount to Donate:";
+
+/* Network Fee: ($1.00) */
+"Confirmation.feeLabel" = "Network Fee:";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "Processing time: These transactions will take %1$@ minutes to process.";
+
+/* eg. Processing time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingTime" = "Processing time: This transaction will take %1$@ minutes to process.";
+
+/* Send: (amount) */
+"Confirmation.send" = "Send";
+
+/* Confirmation Screen title */
+"Confirmation.title" = "Confirmation";
+
+/* To: (address) */
+"Confirmation.to" = "To";
+
+/* Total Cost: ($5.00) */
+"Confirmation.totalLabel" = "Total Cost:";
+
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "The words entered do not match your paper key. Please try again.";
+
+/* Confirm paper phrase view label. */
+"ConfirmPaperPhrase.label" = "To make sure everything was written down correctly, please enter the following words from your paper key.";
+
+/* Word label eg. Word #1, Word #2 */
+"ConfirmPaperPhrase.word" = "Word #%1$@";
+
+/* Litecoin denomination picker label */
+"DefaultCurrency.bitcoinLabel" = "Litecoin Display Unit";
+
+/* Exchange rate label */
+"DefaultCurrency.rateLabel" = "Exchange Rate";
+
+/* Donate Memo */
+"Donate.memo" = "Donation to the Litecoin Foundation";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "Tap to Donate to the Litecoin Foundation!";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "Confirm Donation";
+
+/* Email unavailable alert title */
+"ErrorMessages.emailUnavailableMessage" = "This device isn't configured to send email with the iOS mail app.";
+
+/* Email unavailable alert title */
+"ErrorMessages.emailUnavailableTitle" = "Email Unavailable";
+
+/* Messaging unavailable alert title */
+"ErrorMessages.messagingUnavailableMessage" = "This device isn't configured to send messages.";
+
+/* Messaging unavailable alert title */
+"ErrorMessages.messagingUnavailableTitle" = "Messaging Unavailable";
+
+/* You can customize your Face ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button] */
+"FaceIDSettings.customizeText" = "You can customize your Face ID spending limit from the %1$@.";
+
+/* Face ID screen label */
+"FaceIDSettings.label" = "Use your face to unlock your Litewallet and send money up to a set limit.";
+
+/* Link Text (see TouchIdSettings.customizeText) */
+"FaceIDSettings.linkText" = "Face ID Spending Limit Screen";
+
+/* Face id switch label. */
+"FaceIDSettings.switchLabel" = "Enable Face ID for Litewallet";
+
+/* Face ID settings view title */
+"FaceIDSettings.title" = "Face ID";
+
+/* Face ID unavailable alert message */
+"FaceIDSettings.unavailableAlertMessage" = "You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.";
+
+/* Face ID unavailable alert title */
+"FaceIDSettings.unavailableAlertTitle" = "Face ID Not Set Up";
+
+/* Face Id spending limit screen title */
+"FaceIDSpendingLimit.title" = "Face ID Spending Limit";
+
+/* Economy fee */
+"FeeSelector.economy" = "Economy";
+
+/* Fee Selector economly fee description */
+"FeeSelector.economyLabel" = "Estimated Delivery: 60+ minutes";
+
+/* Warning message for economy fee */
+"FeeSelector.economyWarning" = "This option is not recommended for time-sensitive transactions.";
+
+/* Regular fee */
+"FeeSelector.regular" = "Regular";
+
+/* Fee Selector regular fee description */
+"FeeSelector.regularLabel" = "Estimated Delivery: 10-30 minutes";
+
+/* Fee Selector title */
+"FeeSelector.title" = "Processing Speed";
+
+/* Checking private key balance progress view text */
+"Import.checking" = "Checking private key balance...";
+
+/* Sweep private key confirmation message */
+"Import.confirm" = "Send %1$@ from this private key into your wallet? The Litecoin network will receive a fee of %2$@.";
+
+/* Duplicate key error message */
+"Import.Error.duplicate" = "This private key is already in your wallet.";
+
+/* empty private key error message */
+"Import.Error.empty" = "This private key is empty.";
+
+/* High fees error message */
+"Import.Error.highFees" = "Transaction fees would cost more than the funds available on this private key.";
+
+/* Not a valid private key error message */
+"Import.Error.notValid" = "Not a valid private key";
+
+/* Import signing error message */
+"Import.Error.signing" = "Error signing transaction";
+
+/* Import button label */
+"Import.importButton" = "Import";
+
+/* Importing wallet progress view label */
+"Import.importing" = "Importing Wallet";
+
+/* Caption for graphics */
+"Import.leftCaption" = "Wallet to be imported";
+
+/* Import wallet intro screen message */
+"Import.message" = "Importing a wallet transfers all the money from your other wallet into your Litewallet wallet using a single transaction.";
+
+/* Enter password alert view title */
+"Import.password" = "This private key is password protected.";
+
+/* password textfield placeholder */
+"Import.passwordPlaceholder" = "password";
+
+/* Caption for graphics */
+"Import.rightCaption" = "Your Litewallet Wallet";
+
+/* Scan Private key button label */
+"Import.scan" = "Scan Private Key";
+
+/* Import wallet success alert title */
+"Import.success" = "Success";
+
+/* Successfully imported wallet message body */
+"Import.SuccessBody" = "Successfully imported wallet.";
+
+/* Import Wallet screen title */
+"Import.title" = "Import Wallet";
+
+/* Unlocking Private key activity view message. */
+"Import.unlockingActivity" = "Unlocking Key";
+
+/* Import wallet intro warning message */
+"Import.warning" = "Importing a wallet does not include transaction history or other details.";
+
+/* Wrong password alert message */
+"Import.wrongPassword" = "Wrong password, please try again.";
+
+/* Close app button */
+"JailbreakWarnings.close" = "Close";
+
+/* Ignore jailbreak warning button */
+"JailbreakWarnings.ignore" = "Ignore";
+
+/* Jailbreak warning message */
+"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Litewallet's keychain data and steal your Litecoin! Wipe this wallet immediately and restore on a secure device.";
+
+/* Jailbreak warning message */
+"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Litewallet's keychain data and steal your Litecoin. Please only use Litewallet on a non-jailbroken device.";
+
+/* Jailbreak warning title */
+"JailbreakWarnings.title" = "WARNING";
+
+/* Wipe wallet button */
+"JailbreakWarnings.wipe" = "Wipe";
+
+/* Location services disabled error */
+"LocationPlugin.disabled" = "Location services are disabled.";
+
+/* No permissions for location services */
+"LocationPlugin.notAuthorized" = "Litewallet does not have permission to access location services.";
+
+/* No comment provided by engineer. */
+"Malformed URI" = "Malformed URI";
+
+/* Wallet creation date prefix */
+"ManageWallet.creationDatePrefix" = "You created your wallet on %1$@";
+
+/* Manage wallet description text */
+"ManageWallet.description" = "Your wallet name only appears in your account transaction history and cannot be seen by anyone else.";
+
+/* Change Wallet name textfield label */
+"ManageWallet.textFeildLabel" = "Wallet Name";
+
+/* Manage wallet modal title */
+"ManageWallet.title" = "Manage Wallet";
+
+/* Buy Litecoin title */
+"MenuButton.buy" = "Buy Litecoin";
+
+/* Menu button title */
+"MenuButton.lock" = "Lock Wallet";
+
+/* Menu button title */
+"MenuButton.security" = "Security Center";
+
+/* Menu button title */
+"MenuButton.settings" = "Settings";
+
+/* Menu button title */
+"MenuButton.support" = "Support";
+
+/* button label */
+"MenuViewController.createButton" = "Create New Wallet";
+
+/* Menu modal title */
+"MenuViewController.modalTitle" = "Menu";
+
+/* button label */
+"MenuViewController.recoverButton" = "Recover Wallet";
+
+/* No comment provided by engineer. */
+"No wallet" = "No wallet";
+
+/* Switch to automatic mode button label */
+"NodeSelector.automaticButton" = "Switch to Automatic Mode";
+
+/* Node is connected label */
+"NodeSelector.connected" = "Connected";
+
+/* Enter node ip address view body */
+"NodeSelector.enterBody" = "Enter Node IP address and port (optional)";
+
+/* Enter Node ip address view title */
+"NodeSelector.enterTitle" = "Enter Node";
+
+/* Switch to manual mode button label */
+"NodeSelector.manualButton" = "Switch to Manual Mode";
+
+/* Node address label */
+"NodeSelector.nodeLabel" = "Current Primary Node";
+
+/* Node is not connected label */
+"NodeSelector.notConnected" = "Not Connected";
+
+/* Node status label */
+"NodeSelector.statusLabel" = "Node Connection Status";
+
+/* Node Selector view title */
+"NodeSelector.title" = "Litecoin Nodes";
+
+/* Bad Payment request alert title */
+"PaymentProtocol.Errors.badPaymentRequest" = "Bad Payment Request";
+
+/* Error opening payment protocol file message */
+"PaymentProtocol.Errors.corruptedDocument" = "Unsupported or corrupted document";
+
+/* Missing certificate payment protocol error message */
+"PaymentProtocol.Errors.missingCertificate" = "missing certificate";
+
+/* Request expired payment protocol error message */
+"PaymentProtocol.Errors.requestExpired" = "request expired";
+
+/* Payment too small alert title */
+"PaymentProtocol.Errors.smallOutputError" = "Couldn't make payment";
+
+/* Amount too small error message */
+"PaymentProtocol.Errors.smallPayment" = "Litecoin payments can't be less than %1$@.";
+
+/* Output too small error message. */
+"PaymentProtocol.Errors.smallTransaction" = "Litecoin transaction outputs can't be less than $@.";
+
+/* Unsupported signature type payment protocol error message */
+"PaymentProtocol.Errors.unsupportedSignatureType" = "unsupported signature type";
+
+/* Untrusted certificate payment protocol error message */
+"PaymentProtocol.Errors.untrustedCertificate" = "untrusted certificate";
+
+/* Enable face ID prompt body */
+"Prompts.FaceId.body" = "Tap here to enable Face ID";
+
+/* Enable face ID prompt title */
+"Prompts.FaceId.title" = "Enable Face ID";
+
+/* No passcode set warning body */
+"Prompts.NoPasscode.body" = "A device passcode is needed to safeguard your wallet. Go to settings and turn passcode on.";
+
+/* No Passcode set warning title */
+"Prompts.NoPasscode.title" = "Turn device passcode on";
+
+/* Warning about paper key. */
+"Prompts.PaperKey.body" = "Your Paper Key must be saved in case you ever lose or change your phone. Tap here to continue.";
+
+/* An action is required (You must do this action). */
+"Prompts.PaperKey.title" = "Action Required";
+
+/* Transaction rejected prompt body */
+"Prompts.RecommendRescan.body" = "Your wallet may be out of sync. This can often be fixed by rescanning the blockchain.";
+
+/* Transaction rejected prompt title */
+"Prompts.RecommendRescan.title" = "Transaction Rejected";
+
+/* Share data prompt body */
+"Prompts.ShareData.body" = "Help improve Litewallet by sharing your anonymous data with us";
+
+/* Share data prompt title */
+"Prompts.ShareData.title" = "Share Anonymous Data";
+
+/* Enable touch ID prompt body */
+"Prompts.TouchId.body" = "Tap here to enable Touch ID";
+
+/* Enable touch ID prompt title */
+"Prompts.TouchId.title" = "Enable Touch ID";
+
+/* Upgrade PIN prompt body. */
+"Prompts.UpgradePin.body" = "Litewallet has upgraded to using a 6-digit PIN. Tap here to upgrade.";
+
+/* Upgrade PIN prompt title. */
+"Prompts.UpgradePin.title" = "Upgrade PIN";
+
+/* Push notifications settings view body */
+"PushNotifications.body" = "Turn on notifications to receive special messages from Litewallet in the future.";
+
+/* Push notifications toggle switch label */
+"PushNotifications.label" = "Push Notifications";
+
+/* Push notifications are off label */
+"PushNotifications.off" = "Off";
+
+/* Push notifications are on label */
+"PushNotifications.on" = "On";
+
+/* Push notifications settings view title label */
+"PushNotifications.title" = "Notifications";
+
+/* Address copied message. */
+"Receive.copied" = "Copied to clipboard.";
+
+/* Share via email button label */
+"Receive.emailButton" = "Email";
+
+/* Request button label */
+"Receive.request" = "Request an Amount";
+
+/* Share button label */
+"Receive.share" = "Share";
+
+/* Share via text message (SMS) */
+"Receive.textButton" = "Text Message";
+
+/* Receive modal title */
+"Receive.title" = "Receive";
+
+/* Done button text */
+"RecoverWallet.done" = "Done";
+
+/* Recover wallet header */
+"RecoverWallet.header" = "Recover Wallet";
+
+/* Reset PIN with paper key: header */
+"RecoverWallet.header_reset_pin" = "Reset PIN";
+
+/* Enter paper key instruction */
+"RecoverWallet.instruction" = "Enter Paper Key";
+
+/* Recover wallet intro */
+"RecoverWallet.intro" = "Recover your Litewallet with your paper key.";
+
+/* Invalid paper key message */
+"RecoverWallet.invalid" = "The paper key you entered is invalid. Please double-check each word and try again.";
+
+/* Previous button accessibility label */
+"RecoverWallet.leftArrow" = "Left Arrow";
+
+/* Next button label */
+"RecoverWallet.next" = "Next";
+
+/* Reset PIN with paper key: more information button. */
+"RecoverWallet.reset_pin_more_info" = "Tap here for more information.";
+
+/* Next button accessibility label */
+"RecoverWallet.rightArrow" = "Right Arrow";
+
+/* Recover wallet sub-header */
+"RecoverWallet.subheader" = "Enter the paper key for the wallet you want to recover.";
+
+/* Reset PIN with paper key: sub-header */
+"RecoverWallet.subheader_reset_pin" = "To reset your PIN, enter the words from your paper key into the boxes below.";
+
+/* No amount entered error message. */
+"RequestAnAmount.noAmount" = "Please enter an amount first.";
+
+/* Request a specific amount of Litecoin */
+"RequestAnAmount.title" = "Request an Amount";
+
+/* Alert action button label */
+"ReScan.alertAction" = "Sync";
+
+/* Alert message body */
+"ReScan.alertMessage" = "You will not be able to send money while syncing.";
+
+/* Alert message title */
+"ReScan.alertTitle" = "Sync with Blockchain?";
+
+/* extimated time */
+"ReScan.body1" = "20-45 minutes";
+
+/* Syncing explanation */
+"ReScan.body2" = "If a transaction shows as completed on the Litecoin network but not in your Litewallet.";
+
+/* Syncing explanation */
+"ReScan.body3" = "You repeatedly get an error saying your transaction was rejected.";
+
+/* Start Sync button label */
+"ReScan.buttonTitle" = "Start Sync";
+
+/* Sync blockchain view footer */
+"ReScan.footer" = "You will not be able to send money while syncing with the blockchain.";
+
+/* Sync Blockchain view header */
+"ReScan.header" = "Sync Blockchain";
+
+/* Subheader label */
+"ReScan.subheader1" = "Estimated time";
+
+/* Subheader label */
+"ReScan.subheader2" = "When to Sync?";
+
+/* Reset walet button  title */
+"resetButton" = "Yes, reset wallet";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "Empty Wallet Reset";
+
+/* Scan Litecoin address camera flash toggle */
+"Scanner.flashButtonLabel" = "Camera Flash";
+
+/* Complete filter label */
+"Search.complete" = "complete";
+
+/* Pending filter label */
+"Search.pending" = "pending";
+
+/* Received filter label */
+"Search.received" = "received";
+
+/* Sent filter label */
+"Search.sent" = "sent";
+
+/* Face ID button title */
+"SecurityCenter.faceIdTitle" = "Face ID";
+
+/* Security Center Info */
+"SecurityCenter.info" = "Enable all security features for maximum protection.";
+
+/* Paper Key button description */
+"SecurityCenter.paperKeyDescription" = "The only way to access your Litecoin if you lose or upgrade your phone.";
+
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle" = "Paper Key";
+
+/* PIN button description */
+"SecurityCenter.pinDescription" = "Protects your Litewallet from unauthorized users.";
+
+/* PIN button title */
+"SecurityCenter.pinTitle" = "6-Digit PIN";
+
+/* Security Center Title */
+"SecurityCenter.title" = "Security Center";
+
+/* Touch ID/FaceID button description */
+"SecurityCenter.touchIdDescription" = "Conveniently unlock your Litewallet and send money up to a set limit.";
+
+/* Touch ID button title */
+"SecurityCenter.touchIdTitle" = "Touch ID";
+
+/* Send money amount label */
+"Send.amountLabel" = "Amount";
+
+/* Balance: $4.00 */
+"Send.balance" = "Balance: %1$@";
+
+/* Camera not allowed message */
+"Send.cameraunavailableMessage" = "Go to Settings to allow camera access.";
+
+/* Camera not allowed alert title */
+"Send.cameraUnavailableTitle" = "Litewallet is not allowed to access the camera";
+
+/* Warning when sending to self. */
+"Send.containsAddress" = "The destination is your own address. You cannot send to yourself.";
+
+/* Could not create transaction alert title */
+"Send.creatTransactionError" = "Could not create transaction.";
+
+/* Description for sending money label */
+"Send.descriptionLabel" = "Memo";
+
+/* Empty pasteboard error message */
+"Send.emptyPasteboard" = "Pasteboard is empty";
+
+/* Network Fee: $0.01 */
+"Send.fee" = "Network Fee: %1$@";
+
+/* Payee identity not certified alert title. */
+"Send.identityNotCertified" = "Payee identity isn't certified.";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "Insufficient Funds";
+
+/* Invalid address alert message */
+"Send.invalidAddressMessage" = "The destination address is not a valid Litecoin address.";
+
+/* Invalid address on pasteboard message */
+"Send.invalidAddressOnPasteboard" = "Pasteboard does not contain a valid Litecoin address.";
+
+/* Invalid address alert title */
+"Send.invalidAddressTitle" = "Invalid Address";
+
+/* Is rescanning error message */
+"Send.isRescanning" = "Sending is disabled during a full rescan.";
+
+/* Loading request activity view message */
+"Send.loadingRequest" = "Loading Request";
+
+/* Empty address alert message */
+"Send.noAddress" = "Please enter the recipient's address.";
+
+/* Emtpy amount alert message */
+"Send.noAmount" = "Please enter an amount to send.";
+
+/* Paste button label */
+"Send.pasteLabel" = "Paste";
+
+/* Could not publish transaction alert title */
+"Send.publishTransactionError" = "Could not publish transaction.";
+
+/* Could not load remote request error message */
+"Send.remoteRequestError" = "Could not load payment request";
+
+/* Scan button label */
+"Send.scanLabel" = "Scan";
+
+/* Send button label */
+"Send.sendLabel" = "Send";
+
+/* Send modal title */
+"Send.title" = "Send";
+
+/* Send money to label */
+"Send.toLabel" = "To";
+
+/* Adress already used alert message - first part */
+"Send.UsedAddress.firstLine" = "Litecoin addresses are intended for single use only.";
+
+/* Adress already used alert message - second part */
+"Send.UsedAddress.secondLIne" = "Re-use reduces privacy for both you and the recipient and can result in loss if the recipient doesn't directly control the address.";
+
+/* Adress already used alert title */
+"Send.UsedAddress.title" = "Address Already Used";
+
+/* About label */
+"Settings.about" = "About";
+
+/* Advanced Settings title */
+"Settings.advancedTitle" = "Advanced Settings";
+
+/* Blockchain settings section header */
+"Settings.blockchain" = "Blockchain";
+
+/* Default currency label */
+"Settings.currency" = "Display Currency";
+
+/* Join Early access label */
+"Settings.earlyAccess" = "Join Early Access";
+
+/* Are you enjoying Litewallet alert message body */
+"Settings.enjoying" = "Are you enjoying Litewallet?";
+
+/* Face ID spending limit label */
+"Settings.faceIdLimit" = "Face ID Spending Limit";
+
+/* Import wallet label */
+"Settings.importTitle" = "Import Wallet";
+
+/* Manage settings section header */
+"Settings.manage" = "Manage";
+
+/* Notifications label */
+"Settings.notifications" = "Notifications";
+
+/* Leave review button label */
+"Settings.review" = "Leave us a Review";
+
+/* Share anonymous data label */
+"Settings.shareData" = "Share Anonymous Data";
+
+/* Support settings section header */
+"Settings.support" = "Support";
+
+/* Sync blockchain label */
+"Settings.sync" = "Sync Blockchain";
+
+/* Settings title */
+"Settings.title" = "Settings";
+
+/* Touch ID spending limit label */
+"Settings.touchIdLimit" = "Touch ID Spending Limit";
+
+/* Wallet Settings section header */
+"Settings.wallet" = "Wallet";
+
+/* Start or recover another wallet menu label. */
+"Settings.wipe" = "Start/Recover Another Wallet";
+
+/* Share data view body */
+"ShareData.body" = "Help improve Litewallet by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.";
+
+/* Share data header */
+"ShareData.header" = "Share Data?";
+
+/* Share data switch label. */
+"ShareData.toggleLabel" = "Share Anonymous Data?";
+
+/* Current spending limit: */
+"SpendingLimit.title" = "Current Spending Limit: ";
+
+/* button label */
+"StartPaperPhrase.againButtonTitle" = "Write Down Paper Key Again";
+
+/* Paper key explanation text. */
+"StartPaperPhrase.body" = "Your paper key is the only way to restore your Litewallet if your phone is unavailable.\nNo one in the Litecoin Foundation team can give this paper key to you.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.\n\nPLEASE MAKE BACKUPS AND DON'T LOSE IT!";
+
+/* button label */
+"StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
+
+/* Argument is date */
+"StartPaperPhrase.date" = "You last wrote down your paper key on %1$@";
+
+/* Start view message */
+"StartViewController.message" = "The most secure and safest way to use Litecoin.";
+
+/* Syncing view connectiong state header text */
+"SyncingView.connecting" = "Connecting";
+
+/* Syncing view syncing state header text */
+"SyncingView.syncing" = "Syncing";
+
+/* 6 d (6 days) */
+"TimeSince.days" = "%1$@ d";
+
+/* 6 h (6 hours) */
+"TimeSince.hours" = "%1$@ h";
+
+/* 6 m (6 minutes) */
+"TimeSince.minutes" = "%1$@ m";
+
+/* 6 s (6 seconds) */
+"TimeSince.seconds" = "%1$@ s";
+
+/* You can customize your Touch ID Spending Limit from the [TouchIdSettings.linkText gets added here as a button] */
+"TouchIdSettings.customizeText" = "You can customize your Touch ID spending limit from the %1$@.";
+
+/* Touch Id screen label */
+"TouchIdSettings.label" = "Use your fingerprint to unlock your Litewallet and send money up to a set limit.";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "%1$@ (%2$@)";
+
+/* Link Text (see TouchIdSettings.customizeText) */
+"TouchIdSettings.linkText" = "Touch ID Spending Limit Screen";
+
+/* Spending Limit: b100,000 ($100) */
+"TouchIdSettings.spendingLimit" = "Spending limit: %1$@ (%2$@)";
+
+/* Touch id switch label. */
+"TouchIdSettings.switchLabel" = "Enable Touch ID for Litewallet";
+
+/* Touch ID settings view title */
+"TouchIdSettings.title" = "Touch ID";
+
+/* Touch ID unavailable alert message */
+"TouchIdSettings.unavailableAlertMessage" = "You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.";
+
+/* Touch ID unavailable alert title */
+"TouchIdSettings.unavailableAlertTitle" = "Touch ID Not Set Up";
+
+/* Always require passcode option */
+"TouchIdSpendingLimit" = "Always require passcode";
+
+/* Touch ID spending limit screen body */
+"TouchIdSpendingLimit.body" = "You will be asked to enter your 6-digit PIN to send any transaction over your spending limit, and every 48 hours since the last time you entered your 6-digit PIN.";
+
+/* Touch Id spending limit screen title */
+"TouchIdSpendingLimit.title" = "Touch ID Spending Limit";
+
+/* Availability status text */
+"Transaction.available" = "Available to Spend";
+
+/* Transaction complete label */
+"Transaction.complete" = "Complete";
+
+/* eg. Ending balance: $50.00 */
+"Transaction.ending" = "Ending balance: %1$@";
+
+/* Exchange rate on date header */
+"Transaction.exchangeOnDayReceived" = "Exchange rate when received:";
+
+/* Exchange rate on date header */
+"Transaction.exchangeOnDaySent" = "Exchange rate when sent:";
+
+/* (b600 fee) */
+"Transaction.fee" = "(%1$@ fee)";
+
+/* Invalid transaction */
+"Transaction.invalid" = "INVALID";
+
+/* Timestamp label for event that just happened */
+"Transaction.justNow" = "just now";
+
+/* Receive status text: 'In progress: 20%' */
+"Transaction.receivedStatus" = "In progress: %1$@";
+
+/* Send status text: 'In progress: 20%' */
+"Transaction.sendingStatus" = "In progress: %1$@";
+
+/* eg. Starting balance: $50.00 */
+"Transaction.starting" = "Starting balance: %1$@";
+
+/* Waiting to be confirmed string */
+"Transaction.waiting" = "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.";
+
+/* e.g. I received money from an account. */
+"TransactionDetails.account" = "account";
+
+/* Amount section header */
+"TransactionDetails.amountHeader" = "Amount";
+
+/* Block height label */
+"TransactionDetails.blockHeightLabel" = "Confirmed in Block";
+
+/* Memo section header */
+"TransactionDetails.commentsHeader" = "Memo";
+
+/* Empty transaction list message. */
+"TransactionDetails.emptyMessage" = "Your transactions will appear here.";
+
+/* [received] at <address> (received title 2/2) */
+"TransactionDetails.from" = "at %1$@";
+
+/* More button title */
+"TransactionDetails.more" = "More...";
+
+/* Moved $5.00 */
+"TransactionDetails.moved" = "Moved %1$@";
+
+/* Moved $5.00 */
+"TransactionDetails.movedAmountDescription" = "Moved <b>%1@</b>";
+
+/* eg. Confirmed in Block: Not Confirmed */
+"TransactionDetails.notConfirmedBlockHeightLabel" = "Not Confirmed";
+
+/* Received $5.00 (received title 1/2) */
+"TransactionDetails.received" = "Received %1$@";
+
+/* Received $5.00 */
+"TransactionDetails.receivedAmountDescription" = "Received <b>%1@</b>";
+
+/* Sent $5.00 (sent title 1/2) */
+"TransactionDetails.sent" = "Sent %1$@";
+
+/* Sent $5.00 */
+"TransactionDetails.sentAmountDescription" = "Sent <b>%1@</b>";
+
+/* Status section header */
+"TransactionDetails.statusHeader" = "Status";
+
+/* Transaction Details Title */
+"TransactionDetails.title" = "Transaction Details";
+
+/* [sent] to <address> (sent title 2/2) */
+"TransactionDetails.to" = "to %1$@";
+
+/* Transaction ID header */
+"TransactionDetails.txHashHeader" = "Litecoin Transaction ID";
+
+/* (this transaction was) Received at this address: */
+"TransactionDirection.address" = "Received at this Address";
+
+/* (this transaction was) Sent to this address: */
+"TransactionDirection.to" = "Sent to this Address";
+
+/* Disabled until date */
+"UnlockScreen.disabled" = "Disabled until: %1$@";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "Unlock with FaceID";
+
+/* My Address button title */
+"UnlockScreen.myAddress" = "My Address";
+
+/* Reset PIN with Paper Key button label. */
+"UnlockScreen.resetPin" = "Reset PIN";
+
+/* Scan button title */
+"UnlockScreen.scan" = "Scan";
+
+/* Unlock Screen sub-header */
+"UnlockScreen.subheader" = "Enter PIN";
+
+/* TouchID/FaceID prompt text */
+"UnlockScreen.touchIdPrompt" = "Unlock your Litewallet.";
+
+/* Unlock with TouchID accessibility label */
+"UnlockScreen.touchIdText" = "Unlock with TouchID";
+
+/* Wallet unlocked message */
+"UnlockScreen.unlocked" = "Wallet Unlocked";
+
+/* Update PIN caption text */
+"UpdatePin.caption" = "Remember this PIN. If you forget it, you won't be able to access your Litecoin.";
+
+/* PIN creation info. */
+"UpdatePin.createInstruction" = "Your PIN will be used to unlock your Litewallet and send money.";
+
+/* Update PIN title */
+"UpdatePin.createTitle" = "Set PIN";
+
+/* Update PIN title */
+"UpdatePin.createTitleConfirm" = "Re-Enter PIN";
+
+/* Enter current PIN instruction */
+"UpdatePin.enterCurrent" = "Enter your current PIN.";
+
+/* Enter new PIN instruction */
+"UpdatePin.enterNew" = "Enter your new PIN.";
+
+/* Re-Enter new PIN instruction */
+"UpdatePin.reEnterNew" = "Re-Enter your new PIN.";
+
+/* Update PIN failure error message. */
+"UpdatePin.setPinError" = "Sorry, could not update PIN.";
+
+/* Update PIN failure alert view title */
+"UpdatePin.setPinErrorTitle" = "Update PIN Error";
+
+/* Update PIN title */
+"UpdatePin.updateTitle" = "Update PIN";
+
+/* Authorize to copy wallet addresses alert message */
+"URLHandling.addressaddressListAlertMessage" = "Copy wallet addresses to clipboard?";
+
+/* Authorize to copy wallet address PIN view prompt. */
+"URLHandling.addressList" = "Authorize to copy wallet address to clipboard";
+
+/* Authorize to copy wallet address alert title */
+"URLHandling.addressListAlertTitle" = "Copy Wallet Addresses";
+
+/* Copy wallet addresses alert button label */
+"URLHandling.copy" = "Copy";
+
+/* Verify PIN for transaction view body */
+"VerifyPin.authorize" = "Please enter your PIN to authorize this transaction.";
+
+/* Verify PIN view body */
+"VerifyPin.continueBody" = "Please enter your PIN to continue.";
+
+/* Verify PIN view title */
+"VerifyPin.title" = "PIN Required";
+
+/* Authorize transaction with touch id message */
+"VerifyPin.touchIdMessage" = "Authorize this transaction";
+
+/* 'No wallet' warning for watch app */
+"Watch.noWalletWarning" = "Open the Litewallet iPhone app to set up your wallet.";
+
+/* Dismiss button label */
+"Webview.dismiss" = "Dismiss";
+
+/* Webview loading error message */
+"Webview.errorMessage" = "There was an error loading the content. Please try again.";
+
+/* Updating webview message */
+"Webview.updating" = "Updating...";
+
+/* Welcome view body text */
+"Welcome.body" = "Litewallet now has a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens. All coins are displayed in lites (ł). 1 Litecoin (Ł) = 1000 lites (ł).";
+
+/* Welcome view title */
+"Welcome.title" = "Welcome to Litewallet!";
+
+/* Wipe wallet alert message */
+"WipeWallet.alertMessage" = "Are you sure you want to delete this wallet?";
+
+/* Wipe wallet alert title */
+"WipeWallet.alertTitle" = "Wipe Wallet?";
+
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "Forget your seed phrase or PIN?";
+
+/* Failed wipe wallet alert message */
+"WipeWallet.failedMessage" = "Failed to wipe wallet.";
+
+/* Failed wipe wallet alert title */
+"WipeWallet.failedTitle" = "Failed";
+
+/* Enter key to wipe wallet instruction. */
+"WipeWallet.instruction" = "To start a new wallet or restore an existing wallet, you must first erase the wallet that is currently installed. To continue, enter the current wallet's Paper Key.";
+
+/* Start wipe wallet view message */
+"WipeWallet.startMessage" = "Starting or recovering another wallet allows you to access and manage a different Litewallet wallet on this device.";
+
+/* Start wipe wallet view warning */
+"WipeWallet.startWarning" = "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Paper Key.";
+
+/* Wipe wallet navigation item title. */
+"WipeWallet.title" = "Start or Recover Another Wallet";
+
+/* Warning Alert */
+"WipeWallet.warningAlert" = "DO NOT LOSE IT!";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "Your LiteWallet is empty. Reseting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo LiteWallet developers can retrieve this seed for you.";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "PLEASE READ!";
+
+/* Wipe wallet button title */
+"WipeWallet.wipe" = "Wipe";
+
+/* Wiping activity message */
+"WipeWallet.wiping" = "Wiping...";
+
+/* Paper key instructions. */
+"WritePaperPhrase.instruction" = "Write down each word in order and store it in a safe place.";
+
+/* button label */
+"WritePaperPhrase.next" = "Next";
+
+/* button label */
+"WritePaperPhrase.previous" = "Previous";
+
+/* 1 of 3 */
+"WritePaperPhrase.step" = "%1$d of %2$d";
+
+/* Terms of Use button label */
+"About.terms" = "";
+
+/* as of a time or date */
+"Conjunction.asOf" = "";
+
+/* No comment provided by engineer. */
+"Copy" = "";
+
+/* Syncing view header text */
+"SyncingView.header" = "";
+
+/* Retry button label */
+"SyncingView.retry" = "";

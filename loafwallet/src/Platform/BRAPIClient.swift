@@ -119,6 +119,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
         var key = BRKey()
         key.compressed = 1 
         if BRKeySetPrivKey(&key, keyStr) == 0 {
+          //DEV: Comment out to get tBTC
             #if DEBUG
                 fatalError("Unable to decode private key")
             #endif

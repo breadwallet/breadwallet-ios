@@ -14,22 +14,25 @@ class StartPaperPhraseViewController : UIViewController {
         self.store = store
         self.callback = callback
         let buttonTitle = UserDefaults.walletRequiresBackup ? S.StartPaperPhrase.buttonTitle : S.StartPaperPhrase.againButtonTitle
-        button = ShadowButton(title: buttonTitle, type: .primary)
+        button = ShadowButton(title: buttonTitle, type: .flatLitecoinBlue)
         super.init(nibName: nil, bundle: nil)
+        explanation.textColor = .darkText
+        footer.textColor = .secondaryGrayText
     }
 
     private let button: ShadowButton
     private let illustration = UIImageView(image: #imageLiteral(resourceName: "PaperKey"))
     private let pencil = UIImageView(image: #imageLiteral(resourceName: "Pencil"))
-    private let explanation = UILabel.wrapping(font: UIFont.customBody(size: 16.0))
+    private var explanation = UILabel.wrapping(font: UIFont.barloweMedium(size: 20.0))
     private let store: Store
-    private let header = RadialGradientView(backgroundColor: .pink, offset: 64.0)
-    private let footer = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
+    private let header = RadialGradientView(backgroundColor: .liteWalletBlue, offset: 64.0)
+    private var footer = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
     private let callback: () -> Void
 
     override func viewDidLoad() {
         view.backgroundColor = .white
         explanation.text = S.StartPaperPhrase.body
+ 
         addSubviews()
         addConstraints()
         button.tap = { [weak self] in

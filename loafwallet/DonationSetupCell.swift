@@ -48,6 +48,7 @@ class DonationSetupCell: UIView {
         addSubview(border)
          
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.numberOfLines = 2
         donateButton.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.text = S.Donate.title
  
@@ -55,13 +56,9 @@ class DonationSetupCell: UIView {
         let viewsDictionary = ["titleLabel": titleLabel, "donateButton": donateButton, "border": border]
         var viewConstraints = [NSLayoutConstraint]()
     
-        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[titleLabel]", options: [], metrics: nil, views: viewsDictionary)
+        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[titleLabel]-(2)-[donateButton(120)]-16-|", options: [], metrics: nil, views: viewsDictionary)
         viewConstraints += constraintsHorizontal
           
-        let buttonHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:[donateButton(100)]-16-|", options: [], metrics: nil, views: viewsDictionary)
-        viewConstraints += buttonHorizontal
-
-         
         let titleConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-10-[titleLabel]-10-|", options: [], metrics: nil, views: viewsDictionary)
 
         viewConstraints += titleConstraintVertical

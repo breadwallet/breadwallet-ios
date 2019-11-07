@@ -74,8 +74,12 @@ class WelcomeViewController : UIViewController, ContentBoxPresenter {
         let icon = NSTextAttachment()
         icon.image = #imageLiteral(resourceName: "Faq")
         icon.bounds = CGRect(x: 0, y: -3.0, width: body.font.pointSize, height: body.font.pointSize)
-        let range = S.Welcome.body.range(of: "(?)")
-        let nsRange = bodyText.nsRange(from: range!)
+        guard let range = S.Welcome.body.range(of: "(?)") else {
+            NSLog("ERROR: Range not found")
+            return
+        }
+    
+        let nsRange = bodyText.nsRange(from: range)
         attributedString.replaceCharacters(in: nsRange, with: NSAttributedString(attachment: icon))
         body.attributedText = attributedString
     }

@@ -10,36 +10,57 @@ import UIKit
 
 extension UIFont {
     static var header: UIFont {
-        guard let font = UIFont(name: "BarlowSemiCondensed-SemiBold", size: 17.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font
+        return UIFont(name: "CircularPro-Bold", size: 17.0) ?? UIFont.preferredFont(forTextStyle: .headline)
     }
+    
     static func customBold(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "BarlowSemiCondensed-Bold", size: size) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font
+        return UIFont(name: "CircularPro-Bold", size: size) ?? UIFont.preferredFont(forTextStyle: .headline)
     }
+    
     static func customBody(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "BarlowSemiCondensed-Regular", size: size) else { return UIFont.preferredFont(forTextStyle: .subheadline) }
-        return font
+        return UIFont(name: "CircularPro-Book", size: size)  ?? UIFont.preferredFont(forTextStyle: .subheadline)
     }
+    
     static func customMedium(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "BarlowSemiCondensed-Medium", size: size) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
+        return UIFont(name: "CircularPro-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
-    static func customLight(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "BarlowSemiCondensed-Light", size: size) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
+    
+    static func barloweBold(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-Bold", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
-    static var regularAttributes: [NSAttributedStringKey: Any] {
+    
+    static func barloweSemiBold(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-SemiBold", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+    }
+    
+    static func barloweItalic(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-Italic", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+    }
+    
+    
+    static func barloweMedium(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+    }
+    
+    static func barloweRegular(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-Regular", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+    }
+    
+    static func barloweLight(size: CGFloat) -> UIFont {
+        return UIFont(name: "BarlowSemiCondensed-Light", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+    }
+    
+    static var regularAttributes: [NSAttributedString.Key: Any] {
         return [
-            NSAttributedStringKey.font: UIFont.customBody(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.darkText
+            .font: UIFont.customBody(size: 14.0),
+            .foregroundColor: UIColor.darkText
         ]
     }
-
-    static var boldAttributes: [NSAttributedStringKey: Any] {
+    
+    static var boldAttributes: [NSAttributedString.Key: Any] {
         return [
-            NSAttributedStringKey.font: UIFont.customBold(size: 14.0),
-            NSAttributedStringKey.foregroundColor: UIColor.darkText
+            .font: UIFont.customBold(size: 14.0),
+            .foregroundColor: UIColor.darkText
         ]
     }
 }

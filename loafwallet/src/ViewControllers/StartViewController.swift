@@ -15,25 +15,23 @@ class StartViewController : UIViewController {
         self.store = store
         self.didTapRecover = didTapRecover
         self.didTapCreate = didTapCreate
-        self.faq = UIButton.buildFaqButton(store: store, articleId: ArticleIds.startView)
         super.init(nibName: nil, bundle: nil)
     }
 
     //MARK: - Private
     private let message = UILabel(font: .customMedium(size: 20.0), color: .whiteTint)
-    private let create = ShadowButton(title: S.StartViewController.createButton, type: .primary)
-    private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .secondary)
+    private let create = ShadowButton(title: S.StartViewController.createButton, type: .flatWhite)
+    private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .flatLitecoinBlue)
     private let store: Store
     private let didTapRecover: () -> Void
     private let didTapCreate: () -> Void
     private let background = LoginBackgroundView()
     private var logo: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        let image = UIImageView(image: #imageLiteral(resourceName: "coinBlueWhite"))
         image.contentMode = .scaleAspectFit
         return image
     }()
-    private var faq: UIButton
-    private let version = UILabel(font: .customMedium(size: 12), color: .whiteTint)
+    private let versionLabel = UILabel(font: .barloweMedium(size: 14), color: .transparentWhite)
 
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -48,9 +46,20 @@ class StartViewController : UIViewController {
         message.lineBreakMode = .byWordWrapping
         message.numberOfLines = 0
         message.textAlignment = .center
-        faq.tintColor = .whiteTint
-        version.text = AppVersion.string
-        version.textAlignment = .left
+        versionLabel.text = AppVersion.string
+        versionLabel.textAlignment = .right
+        message.textColor = .white
+        versionLabel.textColor = .white
+
+        if #available(iOS 11.0, *) {
+            guard let mainColor = UIColor(named: "mainColor") else {
+                NSLog("ERROR: Custom color not found")
+                return
+            }
+            view.backgroundColor = mainColor
+        } else {
+            view.backgroundColor = .liteWalletBlue
+        }
     }
 
     private func addSubviews() {
@@ -59,8 +68,7 @@ class StartViewController : UIViewController {
         view.addSubview(message)
         view.addSubview(create)
         view.addSubview(recover)
-        view.addSubview(faq)
-        view.addSubview(version)
+        view.addSubview(versionLabel)
     }
 
     private func addConstraints() {
@@ -68,14 +76,16 @@ class StartViewController : UIViewController {
         let yConstraint = NSLayoutConstraint(item: logo, attribute: .centerY, relatedBy: .equal, toItem: view, attribute: .centerY, multiplier: 0.5, constant: 0.0)
         logo.constrain([
             logo.constraint(.centerX, toView: view, constant: nil),
-            yConstraint])
+            yConstraint,
+            logo.constraint(.width, constant: 70),
+            logo.constraint(.height, constant: 70)])
         message.constrain([
-            message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            message.topAnchor.constraint(equalTo: version.bottomAnchor, constant: C.padding[3]),
-            message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            message.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            message.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[3]),
+            message.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50) ])
         recover.constrain([
             recover.constraint(.leading, toView: view, constant: C.padding[2]),
-            recover.constraint(.bottom, toView: view, constant: -C.padding[3]),
+            recover.constraint(.bottom, toView: view, constant: -60),
             recover.constraint(.trailing, toView: view, constant: -C.padding[2]),
             recover.constraint(.height, constant: C.Sizes.buttonHeight) ])
         create.constrain([
@@ -83,15 +93,11 @@ class StartViewController : UIViewController {
             create.constraint(.centerX, toView: recover, constant: nil),
             create.constraint(.width, toView: recover, constant: nil),
             create.constraint(.height, constant: C.Sizes.buttonHeight) ])
-        faq.constrain([
-            faq.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]),
-            faq.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            faq.widthAnchor.constraint(equalToConstant: 44.0),
-            faq.heightAnchor.constraint(equalToConstant: 44.0) ])
-        version.constrain([
-            version.topAnchor.constraint(equalTo: logo.bottomAnchor, constant: C.padding[2]),
-            version.constraint(.centerX, toView: view, constant: nil),
-            version.heightAnchor.constraint(equalToConstant: 20.0) ])
+        versionLabel.constrain([
+            versionLabel.constraint(.top, toView: view, constant: 30),
+            versionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            versionLabel.widthAnchor.constraint(equalToConstant: 120.0),
+            versionLabel.heightAnchor.constraint(equalToConstant: 44.0) ])
     }
 
     private func addButtonActions() {

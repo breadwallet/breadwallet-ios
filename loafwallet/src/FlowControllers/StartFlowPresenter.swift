@@ -145,11 +145,7 @@ class StartFlowPresenter : Subscriber {
         paperPhraseViewController.title = S.SecurityCenter.Cells.paperKeyTitle
         paperPhraseViewController.navigationItem.setHidesBackButton(true, animated: false)
         paperPhraseViewController.hideCloseNavigationItem() //Forces user to confirm paper-key
-
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.paperKey)
-        faqButton.tintColor = .white
-        paperPhraseViewController.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
-
+  
         navigationController?.navigationBar.titleTextAttributes = [
             NSAttributedStringKey.foregroundColor: UIColor.white,
             NSAttributedStringKey.font: UIFont.customBold(size: 17.0)

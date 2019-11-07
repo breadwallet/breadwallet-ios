@@ -121,7 +121,7 @@ open class BRBitID : NSObject {
             guard let query = url.query?.parseQueryString() else {
                 DispatchQueue.main.async {
                     completionHandler(nil, nil, NSError(domain: "", code: -1001, userInfo:
-                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "")]))
+                        [NSLocalizedDescriptionKey: NSLocalizedString("Malformed URI", comment: "Http error code")]))
                 }
                 return
             }

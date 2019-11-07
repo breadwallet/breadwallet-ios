@@ -56,6 +56,8 @@ class AccountViewController : UIViewController, Subscriber {
         self.tempLoginView = LoginViewController(store: store, isPresentedForLock: false)
         if #available(iOS 11.0, *) {
             transactionsTableView.tableView.backgroundColor = UIColor(named: "lfBackgroundColor")
+        } else {
+            
         }
         
         super.init(nibName: nil, bundle: nil)

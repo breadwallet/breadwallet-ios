@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Mixpanel
 
 let buyCellReuseIdentifier = "buyCell"
 
@@ -38,6 +39,7 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
       self.tableView.register(BuyCenterTableViewCell.self, forCellReuseIdentifier: buyCellReuseIdentifier)
       self.tableView.backgroundColor = #colorLiteral(red: 0.9529411765, green: 0.9529411765, blue: 0.9529411765, alpha: 1) // #colorLiteral(red: 0.9411764706, green: 0.9411764706, blue: 0.9411764706, alpha: 1)
       self.clearsSelectionOnViewWillAppear = false
+      Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_DTBT.rawValue, properties: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -72,9 +74,17 @@ class BuyCenterTableViewController: UITableViewController, BuyCenterTableViewCel
       let cell = tableView.dequeueReusableCell(withIdentifier: buyCellReuseIdentifier, for: indexPath) as! BuyCenterTableViewCell
       let partnerData = partnerArray[indexPath.row]
         cell.partnerLabel.text = partnerData["title"] as? String
-        cell.financialDetailsLabel.text = (partnerData["details"] as? String)! + Currency.simplexRanges()
+        
+        if let details = partnerData["details"] as? String,
+            let color = partnerData["baseColor"] as? UIColor {
+                cell.financialDetailsLabel.text = details
+                cell.frameView.backgroundColor = color
+        } else {
+                NSLog("ERROR: Unable to retrieve partner details")
+        }
+        
         cell.logoImageView.image = partnerData["logo"] as? UIImage
-        cell.frameView.backgroundColor = (partnerData["baseColor"] as? UIColor)!
+        
         cell.delegate = self
       
      return cell
