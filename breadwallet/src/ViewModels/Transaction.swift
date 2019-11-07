@@ -79,18 +79,25 @@ class Transaction {
     }
 
     var created: Date? {
-        if let confirmationTime = transfer.confirmation?.timestamp {
-            return Date(timeIntervalSince1970: TimeInterval(confirmationTime))
+        if let confirmationTimestamp = confirmationTimestamp {
+            return Date(timeIntervalSince1970: confirmationTimestamp)
         } else {
             return nil
         }
     }
+    /// Confirmation time if confirmed, or current time for pending transactions (seconds since UNIX epoch)
     var timestamp: TimeInterval {
-        if let timestamp = transfer.confirmation?.timestamp {
-            return TimeInterval(timestamp)
-        } else {
-            return Date().timeIntervalSince1970
+        return confirmationTimestamp ?? Date().timeIntervalSince1970
+    }
+
+    private var confirmationTimestamp: TimeInterval? {
+        guard let seconds = transfer.confirmation?.timestamp else { return nil }
+        let timestamp = TimeInterval(seconds)
+        guard timestamp > NSTimeIntervalSince1970 else {
+            // compensates for a legacy database migration bug (IOS-1453)
+            return timestamp + NSTimeIntervalSince1970
         }
+        return timestamp
     }
 
     var hash: String { return transfer.hash?.description ?? "" }
