@@ -24,6 +24,7 @@ public struct Amount {
     var maximumFractionDigits: Int
     var negative: Bool { return cryptoAmount.isNegative }
     var isZero: Bool { return self == Amount.zero(currency, rate: rate) }
+    internal var locale = Locale.current // for testing
 
     // MARK: - Init
 
@@ -119,7 +120,7 @@ public struct Amount {
     /// Token value in default units as Decimal number
     /// NB: Decimal can only represent maximum 38 digits wheras UInt256 can represent up to 78 digits -- it is assumed the units represented will be multiple orders of magnitude smaller than the base unit value and precision loss is acceptable.
     var tokenValue: Decimal {
-        return Decimal(string: tokenUnformattedString(in: currency.defaultUnit), locale: Locale.current) ?? Decimal.zero
+        return rawTokenFormat.number(from: tokenUnformattedString(in: currency.defaultUnit))?.decimalValue ?? Decimal.zero
     }
     
     /// Token value in default units as formatted string with currency ticker symbol suffix
@@ -165,6 +166,7 @@ public struct Amount {
     
     var tokenFormat: NumberFormatter {
         let format = NumberFormatter()
+        format.locale = locale
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
@@ -179,6 +181,7 @@ public struct Amount {
     /// formatter for raw value with maximum precision and no symbols or separators
     private var rawTokenFormat: NumberFormatter {
         let format = NumberFormatter()
+        format.locale = locale
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
@@ -219,6 +222,7 @@ public struct Amount {
     
     var localFormat: NumberFormatter {
         let format = NumberFormatter()
+        format.locale = locale
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
@@ -238,7 +242,7 @@ public struct Amount {
     
     private var commonUnitValue: Decimal? {
         let commonUnitString = cryptoAmount.string(as: currency.defaultUnit, formatter: rawTokenFormat) ?? ""
-        return Decimal(string: commonUnitString, locale: Locale.current)
+        return rawTokenFormat.number(from: commonUnitString)?.decimalValue
     }
 }
 
