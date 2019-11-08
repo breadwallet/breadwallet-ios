@@ -226,11 +226,19 @@ class CoreSystem: Subscriber, Trackable {
             mode = system.defaultMode(network: network)
         }
         print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-        let result = system.createWalletManager(network: network,
-                                                mode: mode,
-                                                addressScheme: addressScheme,
-                                                currencies: requiredTokens)
-        assert(result, "failed to create \(network) wallet manager")
+        var success = system.createWalletManager(network: network,
+                                                 mode: mode,
+                                                 addressScheme: addressScheme,
+                                                 currencies: requiredTokens)
+        if !success {
+            print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
+            system.wipe(network: network)
+            success = system.createWalletManager(network: network,
+                                                 mode: mode,
+                                                 addressScheme: addressScheme,
+                                                 currencies: requiredTokens)
+        }
+        assert(success, "failed to create \(network) wallet manager")
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
