@@ -24,8 +24,6 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
     var onPublishSuccess: (() -> Void)?
     var parentView: UIView? //ModalPresentable
-    
-    var isPresentedFromLock = false
 
     init(sender: Sender, initialRequest: PaymentRequest? = nil) {
         let currency = sender.wallet.currency
@@ -397,9 +395,6 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 case .success:
                     self.dismiss(animated: true) {
                         Store.trigger(name: .showStatusBar)
-                        if self.isPresentedFromLock {
-                            Store.trigger(name: .loginFromSend)
-                        }
                         self.onPublishSuccess?()
                     }
                     self.saveEvent("send.success")
