@@ -307,10 +307,6 @@ class ModalPresenter: Subscriber, Trackable {
                                         initialRequest: currentRequest)
         currentRequest = nil
 
-        if Store.state.isLoginRequired {
-            sendVC.isPresentedFromLock = true
-        }
-
         let root = ModalViewController(childViewController: sendVC)
         sendVC.presentScan = presentScan(parent: root, currency: currency)
         sendVC.presentVerifyPin = { [weak self, weak root] bodyText, success in
