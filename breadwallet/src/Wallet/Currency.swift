@@ -146,7 +146,7 @@ class Currency: CurrencyWithIcon {
           units: Set<BRCrypto.Unit>,
           baseUnit: BRCrypto.Unit,
           defaultUnit: BRCrypto.Unit) {
-        guard core.code.caseInsensitiveCompare(metaData.code) == .orderedSame else { return nil }
+        guard core.uid == metaData.uid else { return nil }
         self.core = core
         self.network = network
         self.metaData = metaData
