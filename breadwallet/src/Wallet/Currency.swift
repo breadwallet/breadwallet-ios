@@ -36,6 +36,10 @@ class Currency: CurrencyWithIcon {
     /// Display name (e.g. Bitcoin)
     var name: String { return metaData.name }
 
+    var cryptoCompareCode: String {
+        return metaData.alternateCode?.uppercased() ?? core.code.uppercased()
+    }
+    
     // Number of confirmations needed until a transaction is considered complete
     // eg. For bitcoin, a txn is considered complete when it has 6 confirmations
     var confirmationsUntilFinal: Int {
