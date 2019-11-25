@@ -246,6 +246,8 @@ public struct CurrencyMetaData: CurrencyWithIcon {
         return uid.rawValue.contains("__native__") ? "NATIVE" : "ERC20"
     }
 
+    var alternateCode: String?
+    
     enum CodingKeys: String, CodingKey {
         case uid = "currency_id"
         case code
@@ -254,6 +256,7 @@ public struct CurrencyMetaData: CurrencyWithIcon {
         case tokenAddress = "contract_address"
         case name
         case decimals = "scale"
+        case alternateNames = "alternate_names"
     }
 }
 
@@ -283,6 +286,10 @@ extension CurrencyMetaData: Codable {
         name = try container.decode(String.self, forKey: .name)
         tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
         decimals = try container.decode(UInt8.self, forKey: .decimals)
+        
+        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames), let code = alternateNames["cryptocompare"] {
+                alternateCode = code
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -297,6 +304,9 @@ extension CurrencyMetaData: Codable {
         try container.encode(name, forKey: .name)
         try container.encode(tokenAddress, forKey: .tokenAddress)
         try container.encode(decimals, forKey: .decimals)
+        if let alternateCode = alternateCode {
+            try container.encode(["cyrptocompare": alternateCode], forKey: .alternateNames)
+        }
     }
 }
 
