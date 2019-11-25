@@ -48,7 +48,7 @@ extension BRAPIClient {
         let group = DispatchGroup()
         for chunk in chunks {
             group.enter()
-            let codes = chunk.map({ $0.code.uppercased() })
+            let codes = chunk.map({ $0.cryptoCompareCode })
             guard let codeList = codes.joined(separator: ",").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
                 assertionFailure()
                 errorResult = .error("invalid token codes")
