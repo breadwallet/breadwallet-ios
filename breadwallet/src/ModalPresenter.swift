@@ -632,6 +632,13 @@ class ModalPresenter: Subscriber, Trackable {
                                                 _ = UserDefaults.toggleAutoEnterPIN()
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
+                
+                developerItems.append(MenuItem(title: "Connection Settings Override",
+                                               accessoryText: { UserDefaults.debugConnectionModeOverride.description },
+                                               callback: {
+                                                UserDefaults.cycleConnectionModeOverride()
+                                                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                }))
             }
             
             // For test wallets, suppresses the paper key prompt on the home screen.
