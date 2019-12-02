@@ -38,6 +38,7 @@ private let debugShouldSuppressPaperKeyPromptKey = "shouldSuppressPaperKeyPrompt
 private let debugShouldShowPaperKeyPreviewKey = "debugShouldShowPaperKeyPreviewKey"
 private let debugShowAppRatingPromptOnEnterWalletKey = "debugShowAppRatingPromptOnEnterWalletKey"
 private let debugSuppressAppRatingPromptKey = "debugSuppressAppRatingPromptKey"
+private let debugConnectionModeOverrideKey = "debugConnectionModeOverrideKey"
 private let shouldHideBRDRewardsAnimationKey = "shouldHideBRDRewardsAnimationKey"
 private let shouldHideBRDCellHighlightKey = "shouldHideBRDCellHighlightKey"
 private let debugBackendHostKey = "debugBackendHostKey"
@@ -533,6 +534,23 @@ extension UserDefaults {
 
         set {
             defaults.set(newValue, forKey: platformDebugURLKey)
+        }
+    }
+    
+    static func cycleConnectionModeOverride() {
+        let newValue = defaults.integer(forKey: debugConnectionModeOverrideKey) + 1
+        let newMode = WalletManagerModeOverride(rawValue: newValue) ?? .none
+        UserDefaults.debugConnectionModeOverride = newMode
+    }
+    
+    static var debugConnectionModeOverride: WalletManagerModeOverride {
+        get {
+            let value = defaults.integer(forKey: debugConnectionModeOverrideKey)
+            return WalletManagerModeOverride(rawValue: value) ?? .none
+        }
+        
+        set {
+            defaults.set(newValue.rawValue, forKey: debugConnectionModeOverrideKey)
         }
     }
 }

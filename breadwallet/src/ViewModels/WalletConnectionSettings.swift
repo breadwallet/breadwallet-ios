@@ -96,3 +96,31 @@ class WalletConnectionSettings {
         }
     }
 }
+
+enum WalletManagerModeOverride: Int {
+    case none
+    case api
+    case p2p
+    
+    var description: String {
+        switch self {
+        case .none:
+            return "none"
+        case .api:
+            return "api"
+        case .p2p:
+            return "p2p"
+        }
+    }
+    
+    var mode: WalletConnectionMode? {
+        switch self {
+        case .none:
+            return nil
+        case .api:
+            return .api_only
+        case .p2p:
+            return .p2p_only
+        }
+    }
+}
