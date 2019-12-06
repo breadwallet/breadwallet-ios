@@ -176,8 +176,7 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
         let string = NSMutableAttributedString(string: S.WalletConnectionSettings.explanatoryText)
         let linkRange = string.mutableString.range(of: S.WalletConnectionSettings.link)
         if linkRange.location != NSNotFound {
-            //TODO:CYRPTO - add the blog post url here once it's known
-            string.addAttribute(.link, value: NSURL(string: "https://www.brd.com")!, range: linkRange)
+            string.addAttribute(.link, value: NSURL(string: "https://www.brd.com/blog/fastsync-explained")!, range: linkRange)
         }
         explanationLabel.attributedText = string
         explanationLabel.delegate = self
