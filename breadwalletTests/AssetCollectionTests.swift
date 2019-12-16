@@ -180,6 +180,7 @@ extension CurrencyMetaData {
                   colors: (UIColor.black, UIColor.black),
                   name: "test currency",
                   tokenAddress: tokenAddress,
-                  decimals: 0)
+                  decimals: 0,
+                  alternateCode: nil)
     }
 }
