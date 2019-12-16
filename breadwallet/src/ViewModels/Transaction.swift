@@ -52,8 +52,6 @@ class Transaction {
     private let transfer: BRCrypto.Transfer
     let wallet: Wallet
 
-    var metaDataContainer: MetaDataContainer?
-
     var currency: Currency { return wallet.currency }
     var confirmations: UInt64 {
         return transfer.confirmations ?? 0
@@ -68,7 +66,6 @@ class Transaction {
 
     var targetAddress: String { return transfer.target?.sanitizedDescription ?? "" }
     var sourceAddress: String { return transfer.source?.sanitizedDescription ?? "" }
-    //TODO:CRYPTO legacy support
     var toAddress: String { return targetAddress }
     var fromAddress: String { return sourceAddress }
 
@@ -82,18 +79,25 @@ class Transaction {
     }
 
     var created: Date? {
-        if let confirmationTime = transfer.confirmation?.timestamp {
-            return Date(timeIntervalSince1970: TimeInterval(confirmationTime))
+        if let confirmationTimestamp = confirmationTimestamp {
+            return Date(timeIntervalSince1970: confirmationTimestamp)
         } else {
             return nil
         }
     }
+    /// Confirmation time if confirmed, or current time for pending transactions (seconds since UNIX epoch)
     var timestamp: TimeInterval {
-        if let timestamp = transfer.confirmation?.timestamp {
-            return TimeInterval(timestamp)
-        } else {
-            return Date().timeIntervalSince1970
+        return confirmationTimestamp ?? Date().timeIntervalSince1970
+    }
+
+    private var confirmationTimestamp: TimeInterval? {
+        guard let seconds = transfer.confirmation?.timestamp else { return nil }
+        let timestamp = TimeInterval(seconds)
+        guard timestamp > NSTimeIntervalSince1970 else {
+            // compensates for a legacy database migration bug (IOS-1453)
+            return timestamp + NSTimeIntervalSince1970
         }
+        return timestamp
     }
 
     var hash: String { return transfer.hash?.description ?? "" }
@@ -115,9 +119,53 @@ class Transaction {
             return .invalid
         }
     }
+    
+    var isPending: Bool { return status == .pending }
+    var isValid: Bool { return status != .invalid }
 
     var direction: TransferDirection {
         return transfer.direction
+    }
+    
+    // MARK: Metadata
+    
+    private(set) var metaData: TxMetaData?
+    
+    var comment: String? { return metaData?.comment }
+    
+    private var metaDataKey: String? {
+        // The hash is a hex string, it was previously converted to bytes through UInt256
+        // which resulted in a reverse-order byte array due to UInt256 being little-endian.
+        // Reverse bytes to maintain backwards-compatibility with keys derived using the old scheme.
+        guard let sha256hash = Data(hexString: hash, reversed: true)?.sha256.hexString else { return nil }
+        //TODO:CRYPTO_V2 generic tokens
+        return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
+    }
+    
+    /// Creates and stores new metadata in KV store if it does not exist
+    func createMetaData(rate: Rate? = nil,
+                        comment: String? = nil,
+                        feeRate: Double? = nil,
+                        tokenTransfer: String? = nil,
+                        kvStore: BRReplicatedKVStore) {
+        guard metaData == nil, let key = metaDataKey else { return }
+        self.metaData = TxMetaData.create(forTransaction: self,
+                                          key: key,
+                                          rate: rate,
+                                          comment: comment,
+                                          feeRate: feeRate,
+                                          tokenTransfer: tokenTransfer,
+                                          kvStore: kvStore)
+    }
+    
+    /// Updates existing metadata with comment. Creates new metadata with comment + rate if needed
+    func save(comment: String, kvStore: BRReplicatedKVStore) {
+        if let metaData = metaData, let newMetaData = metaData.save(comment: comment, kvStore: kvStore) {
+            self.metaData = newMetaData
+        } else {
+            let rate = currency.state?.currentRate
+            createMetaData(rate: rate, comment: comment, kvStore: kvStore)
+        }
     }
 
     // MARK: Init
@@ -125,41 +173,21 @@ class Transaction {
     init(transfer: BRCrypto.Transfer, wallet: Wallet, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.transfer = transfer
         self.wallet = wallet
-
+        
         if let kvStore = kvStore, let metaDataKey = metaDataKey {
-            metaDataContainer = MetaDataContainer(key: metaDataKey, kvStore: kvStore)
-            // metadata is created for outgoing transactions when they are sent
-            // incoming transactions only get metadata when they are recently confirmed to ensure
-            // a relatively recent exchange rate is applied
-            if let rate = rate,
-                status != .complete && direction == .received {
-                metaDataContainer!.createMetaData(tx: self, rate: rate)
+            // load existing metadata if found
+            self.metaData = TxMetaData(txKey: metaDataKey, store: kvStore)
+            // create metadata for incoming transactions
+            // Sender creates metadata for outgoing transactions
+            if self.metaData == nil, direction == .received {
+                // only set rate if recently confirmed to ensure a relatively recent exchange rate is applied
+                createMetaData(rate: (status == .complete) ? nil : rate, kvStore: kvStore)
             }
         }
     }
 }
 
-extension Transaction {
-
-    var metaData: TxMetaData? { return metaDataContainer?.metaData }
-    var comment: String? { return metaData?.comment }
-
-    //TODO:CRYPTO remove this dependency
-    var kvStore: BRReplicatedKVStore? { return nil }
-    var hasKvStore: Bool { return kvStore != nil }
-
-    var isPending: Bool { return status == .pending }
-    var isValid: Bool { return status != .invalid }
-
-    func createMetaData(rate: Rate, comment: String? = nil, feeRate: Double? = nil, tokenTransfer: String? = nil) {
-        metaDataContainer?.createMetaData(tx: self, rate: rate, comment: comment, feeRate: feeRate, tokenTransfer: tokenTransfer)
-    }
-
-    func saveComment(comment: String, rate: Rate) {
-        guard let metaDataContainer = metaDataContainer else { return }
-        metaDataContainer.save(comment: comment, tx: self, rate: rate)
-    }
-}
+// MARK: - Hashable
 
 extension Transaction: Hashable {
     func hash(into hasher: inout Hasher) {
@@ -167,13 +195,12 @@ extension Transaction: Hashable {
     }
 }
 
-// MARK: - Equatable support
+// MARK: - Equatable
 
 func == (lhs: Transaction, rhs: Transaction) -> Bool {
     return lhs.hash == rhs.hash &&
         lhs.status == rhs.status &&
-        lhs.comment == rhs.comment &&
-        lhs.hasKvStore == rhs.hasKvStore
+        lhs.comment == rhs.comment
 }
 
 func == (lhs: [Transaction], rhs: [Transaction]) -> Bool {
@@ -182,58 +209,4 @@ func == (lhs: [Transaction], rhs: [Transaction]) -> Bool {
 
 func != (lhs: [Transaction], rhs: [Transaction]) -> Bool {
     return !lhs.elementsEqual(rhs, by: ==)
-}
-
-// MARK: - Metadata Container
-
-/// Encapsulates the transaction metadata in the KV store
-class MetaDataContainer {
-    var metaData: TxMetaData? {
-        guard metaDataCache == nil else { return metaDataCache }
-        guard let data = TxMetaData(txKey: key, store: kvStore) else { return nil }
-        metaDataCache = data
-        return metaDataCache
-    }
-    
-    var kvStore: BRReplicatedKVStore
-    
-    private var key: String
-    private var metaDataCache: TxMetaData?
-    
-    init(key: String, kvStore: BRReplicatedKVStore) {
-        self.key = key
-        self.kvStore = kvStore
-    }
-    
-    /// Creates and stores new metadata in KV store if it does not exist
-    func createMetaData(tx: Transaction, rate: Rate, comment: String? = nil, feeRate: Double? = nil, tokenTransfer: String? = nil) {
-        guard metaData == nil else { return }
-        
-        let newData = TxMetaData(key: key,
-                                 transaction: tx,
-                                 exchangeRate: rate.rate,
-                                 exchangeRateCurrency: rate.code,
-                                 feeRate: feeRate ?? 0.0,
-                                 deviceId: UserDefaults.deviceID,
-                                 comment: comment,
-                                 tokenTransfer: tokenTransfer)
-        do {
-            _ = try kvStore.set(newData)
-        } catch let error {
-            print("could not update metadata: \(error)")
-        }
-    }
-    
-    func save(comment: String, tx: Transaction, rate: Rate) {
-        if let metaData = metaData {
-            metaData.comment = comment
-            do {
-                _ = try kvStore.set(metaData)
-            } catch let error {
-                print("could not update metadata: \(error)")
-            }
-        } else {
-            createMetaData(tx: tx, rate: rate, comment: comment)
-        }
-    }
 }

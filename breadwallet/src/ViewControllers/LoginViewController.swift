@@ -66,6 +66,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private var isResetting = false
     private let context: Context
     private var notificationObservers = [String: NSObjectProtocol]()
+    private let debugLabel = UILabel.wrapping(font: Theme.body3, color: Theme.primaryText)
     
     var isBiometricsEnabledForUnlocking: Bool {
         return self.keyMaster.isBiometricsEnabledForUnlocking
@@ -105,10 +106,8 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                             }
             })            
         }
-        Store.subscribe(self, name: .loginFromSend, callback: { [weak self] _ in
-            self?.authenticationSucceded()
-        })
         logo.tintColor = .darkBackground
+        updateDebugLabel()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -162,12 +161,17 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         view.addSubview(logoBackground)
         logoBackground.addSubview(logo)
         view.addSubview(pinPadBackground)
+        view.addSubview(debugLabel)
     }
 
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
         backgroundView.backgroundColor = Theme.primaryBackground
         pinViewContainer.constrain(toSuperviewEdges: nil)
+        debugLabel.constrain([
+            debugLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[3]),
+            debugLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2])
+        ])
         topControlTop = logoBackground.topAnchor.constraint(equalTo: view.topAnchor,
                                                             constant: C.Sizes.brdLogoHeight + C.Sizes.brdLogoTopMargin)
         logoBackground.constrain([
@@ -264,6 +268,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             self.pinView.fill(0)
             self.lockIfNeeded()
         }
+        updateDebugLabel()
     }
 
     private var shouldUseBiometrics: Bool {
@@ -347,6 +352,16 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         present(alert, animated: true, completion: nil)
     }
 
+    private func updateDebugLabel() {
+        guard E.isDebug else { return }
+        let remaining = keyMaster.pinAttemptsRemaining
+        let timestamp = keyMaster.walletDisabledUntil
+        let disabledUntil = Date(timeIntervalSince1970: timestamp)
+        let firstLine = "Attempts remaining: \(remaining)"
+        let secondLine = "Disabled until: \(disabledUntil)"
+        debugLabel.text = "\(firstLine)\n\(secondLine)"
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }

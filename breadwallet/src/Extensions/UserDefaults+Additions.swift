@@ -48,6 +48,7 @@ private let appLaunchCountAtLastRatingPromptKey = "appLaunchCountAtLastRatingPro
 private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let deviceIdKey = "BR_DEVICE_ID"
+private let savedChartHistoryPeriodKey = "savedHistoryPeriodKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -258,6 +259,15 @@ extension UserDefaults {
         }
         set {
             defaults.set(newValue, forKey: hasScannedForTokenBalancesKey)
+        }
+    }
+    
+    static var lastChartHistoryPeriod: String? {
+        get {
+            return defaults.string(forKey: savedChartHistoryPeriodKey)
+        }
+        set {
+            defaults.set(newValue, forKey: savedChartHistoryPeriodKey)
         }
     }
 }
