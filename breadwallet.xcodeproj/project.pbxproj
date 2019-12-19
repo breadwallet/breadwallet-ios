@@ -3512,7 +3512,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3549,7 +3549,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3743,7 +3743,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -3948,7 +3948,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4153,7 +4153,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4430,7 +4430,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4636,7 +4636,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -4841,7 +4841,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Modules/breadwallet-core/bitcoin",
 					"$(SRCROOT)/Modules/breadwallet-core/support",
-					"$(SRCROOT)/Modules/breadwallet-core",
+					"$(SRCROOT)/Modules/breadwallet-core/**",
 				);
 				INFOPLIST_FILE = breadwallet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
