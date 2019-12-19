@@ -193,6 +193,10 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             }
         }
         
+        if let initiallySelected = graphButtons.first(where: { return $0.hasInitialHistoryPeriod }) {
+            self.updateHistoryPeriodPillPosition(button: initiallySelected.button)
+        }
+                
         Store.subscribe(self,
                         selector: { [weak self] oldState, newState in
                             guard let `self` = self else { return false }
@@ -324,8 +328,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         headerHeight?.isActive = true
     }
     
-    private func didTap(button: UIButton) {
-        saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.axisToggle.name]))
+    private func updateHistoryPeriodPillPosition(button: UIButton) {
         historyPeriodPillX?.isActive = false
         historyPeriodPillY?.isActive = false
         historyPeriodPillX = historyPeriodPill.centerXAnchor.constraint(equalTo: button.centerXAnchor)
@@ -341,6 +344,11 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
                 $0.button.setTitleColor(Theme.tertiaryText, for: .normal)
             }
         }
+    }
+    
+    private func didTap(button: UIButton) {
+        saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.axisToggle.name]))
+        updateHistoryPeriodPillPosition(button: button)
     }
 
     override func draw(_ rect: CGRect) {

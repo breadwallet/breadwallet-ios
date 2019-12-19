@@ -62,7 +62,8 @@ protocol WalletAuthenticator {
     var pinLength: Int { get }
     var walletDisabledUntil: TimeInterval { get }
     var walletIsDisabled: Bool { get }
-
+    var pinAttemptsRemaining: Int { get }
+    
     var isBiometricsEnabledForUnlocking: Bool { get set }
     var isBiometricsEnabledForTransactions: Bool { get set }
 
@@ -914,7 +915,8 @@ struct NoAuthWalletAuthenticator: WalletAuthenticator {
     
     var pinLoginRequired: Bool { return false }
     var pinLength: Int { assertionFailure(); return 0 }
-
+    var pinAttemptsRemaining: Int { return 0 }
+    
     var walletDisabledUntil: TimeInterval { return TimeInterval() }
 
     func authenticate(withPin: String) -> Bool {

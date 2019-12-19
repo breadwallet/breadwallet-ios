@@ -47,7 +47,6 @@ enum TriggerName {
     case promptEmail
     case promptPaperKey
     case promptUpgradePin
-    case loginFromSend
     case blockModalDismissal
     case unblockModalDismissal
     case openFile(Data)
@@ -92,8 +91,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.promptPaperKey, .promptPaperKey):
         return true
     case (.promptUpgradePin, .promptUpgradePin):
-        return true
-    case (.loginFromSend, .loginFromSend):
         return true
     case (.blockModalDismissal, .blockModalDismissal):
         return true

@@ -36,6 +36,10 @@ class Currency: CurrencyWithIcon {
     /// Display name (e.g. Bitcoin)
     var name: String { return metaData.name }
 
+    var cryptoCompareCode: String {
+        return metaData.alternateCode?.uppercased() ?? core.code.uppercased()
+    }
+    
     // Number of confirmations needed until a transaction is considered complete
     // eg. For bitcoin, a txn is considered complete when it has 6 confirmations
     var confirmationsUntilFinal: Int {
@@ -146,7 +150,7 @@ class Currency: CurrencyWithIcon {
           units: Set<BRCrypto.Unit>,
           baseUnit: BRCrypto.Unit,
           defaultUnit: BRCrypto.Unit) {
-        guard core.code.caseInsensitiveCompare(metaData.code) == .orderedSame else { return nil }
+        guard core.uid == metaData.uid else { return nil }
         self.core = core
         self.network = network
         self.metaData = metaData
@@ -246,6 +250,8 @@ public struct CurrencyMetaData: CurrencyWithIcon {
         return uid.rawValue.contains("__native__") ? "NATIVE" : "ERC20"
     }
 
+    var alternateCode: String?
+    
     enum CodingKeys: String, CodingKey {
         case uid = "currency_id"
         case code
@@ -254,6 +260,7 @@ public struct CurrencyMetaData: CurrencyWithIcon {
         case tokenAddress = "contract_address"
         case name
         case decimals = "scale"
+        case alternateNames = "alternate_names"
     }
 }
 
@@ -283,6 +290,10 @@ extension CurrencyMetaData: Codable {
         name = try container.decode(String.self, forKey: .name)
         tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
         decimals = try container.decode(UInt8.self, forKey: .decimals)
+        
+        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames), let code = alternateNames["cryptocompare"] {
+                alternateCode = code
+        }
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -297,6 +308,9 @@ extension CurrencyMetaData: Codable {
         try container.encode(name, forKey: .name)
         try container.encode(tokenAddress, forKey: .tokenAddress)
         try container.encode(decimals, forKey: .decimals)
+        if let alternateCode = alternateCode {
+            try container.encode(["cyrptocompare": alternateCode], forKey: .alternateNames)
+        }
     }
 }
 

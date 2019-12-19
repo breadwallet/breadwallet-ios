@@ -57,7 +57,8 @@ class CoreDatabase {
             let blockHeight =
                 UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
             off += MemoryLayout<UInt32>.size
-            let timestamp = UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
+            var timestamp = UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
+            timestamp = (timestamp == 0) ? timestamp : timestamp + UInt32(NSTimeIntervalSince1970)
             transactions.append(System.TransactionBlob.btc(bytes: bytes, blockHeight: blockHeight, timestamp: timestamp))
         }
         
