@@ -69,6 +69,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         return makeEventName([EventContext.rewards.name, Event.banner.name])
     }
 
+    var isSearching: Bool = false
+    
     private func tableViewTopConstraintConstant(for rewardsViewState: RewardsView.State) -> CGFloat {
         return rewardsViewState == .expanded ? RewardsView.expandedSize : (RewardsView.normalSize)
     }
@@ -174,6 +176,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         searchHeaderview.isHidden = true
         searchHeaderview.didCancel = { [weak self] in
             self?.hideSearchHeaderView()
+            self?.isSearching = false
         }
         searchHeaderview.didChangeFilters = { [weak self] filters in
             self?.transactionsTableView.filters = filters
@@ -198,12 +201,31 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         })
         view.sendSubviewToBack(transactionsTableView.view)
     }
+        
+    // MARK: keyboard management
+    
+    private func hideSearchKeyboard() {
+        isSearching = searchHeaderview.isFirstResponder
+        if isSearching {
+            _ = searchHeaderview.resignFirstResponder()
+        }
+    }
+    
+    private func showSearchKeyboard() {
+        _ = searchHeaderview.becomeFirstResponder()
+    }
+    
+    // MARK: show transaction details
     
     private func didSelectTransaction(transactions: [Transaction], selectedIndex: Int) {
-        let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex])
+        let transactionDetails = TxDetailViewController(transaction: transactions[selectedIndex], delegate: self)
+        
         transactionDetails.modalPresentationStyle = .overCurrentContext
         transactionDetails.transitioningDelegate = transitionDelegate
         transactionDetails.modalPresentationCapturesStatusBarAppearance = true
+        
+        hideSearchKeyboard()
+        
         present(transactionDetails, animated: true, completion: nil)
     }
     
@@ -324,5 +346,15 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+// MARK: TxDetailDelegate
+extension AccountViewController: TxDetaiViewControllerDelegate {
+    func txDetailDidDismiss(detailViewController: TxDetailViewController) {
+        if isSearching {
+            // restore the search keyboard that we hid when the transaction details were displayed
+            searchHeaderview.becomeFirstResponder()
+        }
     }
 }

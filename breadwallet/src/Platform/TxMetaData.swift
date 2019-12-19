@@ -8,10 +8,8 @@
 
 import Foundation
 
-// MARK: - Txn Metadata
-
-// Txn metadata stores additional information about a given transaction
-open class TxMetaData: BRKVStoreObject, BRCoding {
+/// Stores additional information about a given transaction
+final class TxMetaData: BRKVStoreObject, Codable {
     var classVersion: Int = 3
     
     var blockHeight: Int = 0
@@ -23,36 +21,36 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
     var deviceId: String = ""
     var comment = ""
     var tokenTransfer = ""
-
-    required public init?(coder decoder: BRCoder) {
-        classVersion = decoder.decode("classVersion")
-        if classVersion == Int.zeroValue() {
-            //print("[BRTxMetadataObject] Unable to unarchive _TXMetadata: no version")
-            return nil
-        }
-        blockHeight = decoder.decode("bh")
-        exchangeRate = decoder.decode("er")
-        exchangeRateCurrency = decoder.decode("erc")
-        feeRate = decoder.decode("fr")
-        size = decoder.decode("s")
-        deviceId = decoder.decode("dId")
-        created = decoder.decode("c")
-        comment = decoder.decode("comment")
-        tokenTransfer = decoder.decode("tokenTransfer")
-        super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
-    }
     
-    func encode(_ coder: BRCoder) {
-        coder.encode(classVersion, key: "classVersion")
-        coder.encode(blockHeight, key: "bh")
-        coder.encode(exchangeRate, key: "er")
-        coder.encode(exchangeRateCurrency, key: "erc")
-        coder.encode(feeRate, key: "fr")
-        coder.encode(size, key: "s")
-        coder.encode(created, key: "c")
-        coder.encode(deviceId, key: "dId")
-        coder.encode(comment, key: "comment")
-        coder.encode(tokenTransfer, key: "tokenTransfer")
+    enum CodingKeys: String, CodingKey {
+        case classVersion
+        case blockHeight = "bh"
+        case exchangeRate = "er"
+        case exchangeRateCurrency = "erc"
+        case feeRate = "fr"
+        case size = "s"
+        case deviceId = "dId"
+        case created = "c"
+        case comment = "comment"
+        case tokenTransfer = "tokenTransfer"
+    }
+
+    required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        classVersion = try container.decode(Int.self, forKey: .classVersion)
+        if classVersion == Int.zeroValue() {
+            throw BRReplicatedKVStoreError.malformedData
+        }
+        blockHeight = try container.decode(Int.self, forKey: .blockHeight)
+        exchangeRate = try container.decode(Double.self, forKey: .exchangeRate)
+        exchangeRateCurrency = try container.decode(String.self, forKey: .exchangeRateCurrency)
+        feeRate = try container.decode(Double.self, forKey: .feeRate)
+        size = try container.decode(Int.self, forKey: .size)
+        deviceId = try container.decode(String.self, forKey: .deviceId)
+        created = try container.decode(Date.self, forKey: .created)
+        comment = try container.decode(String.self, forKey: .comment)
+        tokenTransfer = try container.decode(String.self, forKey: .tokenTransfer)
+        super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 
     /// Find metadata object based on the txKey
@@ -78,13 +76,13 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
     /// Create new transaction metadata
     init(key: String,
          transaction: Transaction,
-         exchangeRate: Double,
-         exchangeRateCurrency: String,
-         feeRate: Double? = nil,
+         exchangeRate: Double?,
+         exchangeRateCurrency: String?,
+         feeRate: Double?,
          deviceId: String,
-         comment: String? = nil,
-         tokenTransfer: String? = nil) {
-        print("[BRTxMetadataObject] new \(key)")
+         comment: String?,
+         tokenTransfer: String?) {
+        print("[TxMetaData] new \(key) \(transaction.created?.description ?? "now")")
         super.init(key: key,
                    version: 0,
                    lastModified: Date(),
@@ -93,30 +91,28 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
         self.blockHeight = Int(transaction.blockHeight)
         self.created = Date()
         
-        self.exchangeRate = exchangeRate
-        self.exchangeRateCurrency = exchangeRateCurrency
+        self.exchangeRate = exchangeRate ?? 0.0
+        self.exchangeRateCurrency = exchangeRateCurrency ?? ""
         self.feeRate = feeRate ?? 0
         
         self.deviceId = deviceId
         self.comment = comment ?? ""
-
-        //TODO:CRYPTO btc tx size
-//        if let transaction = transaction as? BtcTransaction {
-//            var rawTx = transaction.rawTransaction
-//            self.size = BRTransactionSize(&rawTx)
-//        }
+        
+        if transaction.currency.isBitcoinCompatible, let feeBasis = transaction.feeBasis {
+            self.size = Int(feeBasis.costFactor)
+        }
 
         self.tokenTransfer = tokenTransfer ?? ""
     }
     
     override func getData() -> Data? {
-        return BRKeyedArchiver.archivedDataWithRootObject(self)
+        return BRKeyedArchiver.archiveData(withRootObject: self)
     }
     
     override func dataWasSet(_ value: Data) {
         guard !value.isEmpty else { return }
-        guard let s: TxMetaData = BRKeyedUnarchiver.unarchiveObjectWithData(value) else {
-            print("[BRTxMetadataObject] unable to deserialise tx metadata")
+        guard let s: TxMetaData = BRKeyedUnarchiver.unarchiveObject(withData: value) else {
+            print("[TxMetaData] unable to deserialize tx metadata")
             return
         }
         blockHeight = s.blockHeight
@@ -129,20 +125,40 @@ open class TxMetaData: BRKVStoreObject, BRCoding {
         comment = s.comment
         tokenTransfer = s.tokenTransfer
     }
+    
+    // MARK: -
 
-}
-
-extension Transaction {
-    var sha256ofHash: String? {
-        // The hash is a hex string, it was previously converted to bytes through UInt256
-        // which resulted in a reverse-order byte array due to UInt256 being little-endian.
-        // Reverse bytes to maintain backwards-compatibility with keys derived using the old scheme.
-        return Data(hexString: hash, reversed: true)?.sha256.hexString
+    // swiftlint:disable:next function_parameter_count
+    static func create(forTransaction tx: Transaction,
+                       key: String,
+                       rate: Rate?,
+                       comment: String?,
+                       feeRate: Double?,
+                       tokenTransfer: String?,
+                       kvStore: BRReplicatedKVStore) -> TxMetaData {
+        let newData = TxMetaData(key: key,
+                                 transaction: tx,
+                                 exchangeRate: rate?.rate,
+                                 exchangeRateCurrency: rate?.code,
+                                 feeRate: feeRate ?? 0.0,
+                                 deviceId: UserDefaults.deviceID,
+                                 comment: comment,
+                                 tokenTransfer: tokenTransfer)
+        do {
+            _ = try kvStore.set(newData)
+        } catch let error {
+            print("[TxMetaData] could not create metadata: \(error)")
+        }
+        return newData
     }
-
-    var metaDataKey: String? {
-        guard let sha256hash = sha256ofHash else { return nil }
-        //TODO:CRYPTO_V2 generic tokens
-        return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
+    
+    func save(comment: String, kvStore: BRReplicatedKVStore) -> TxMetaData? {
+        self.comment = comment
+        do {
+            return try kvStore.set(self) as? TxMetaData
+        } catch let error {
+            print("[TxMetaData] could not update metadata: \(error)")
+            return nil
+        }
     }
 }

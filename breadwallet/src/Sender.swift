@@ -290,7 +290,8 @@ class Sender: Subscriber {
         tx.createMetaData(rate: rate,
                           comment: comment,
                           feeRate: feeRate,
-                          tokenTransfer: nil)
+                          tokenTransfer: nil,
+                          kvStore: kvStore)
 
         // for non-native token transfers, the originating transaction on the network's primary wallet captures the fee spent
         if let originatingTransfer = originatingTransfer,
@@ -301,7 +302,7 @@ class Sender: Subscriber {
                                             wallet: originatingWallet,
                                             kvStore: kvStore,
                                             rate: rate)
-            originatingTx.createMetaData(rate: rate, tokenTransfer: wallet.currency.code)
+            originatingTx.createMetaData(rate: rate, tokenTransfer: wallet.currency.code, kvStore: kvStore)
         }
     }
 }
