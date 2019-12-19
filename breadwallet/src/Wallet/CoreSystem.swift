@@ -386,6 +386,11 @@ class CoreSystem: Subscriber, Trackable {
     }
 
     func connectionMode(for currency: Currency) -> WalletConnectionMode {
+        //Develop menu connection setting override
+        if currency.isBitcoin && UserDefaults.debugConnectionModeOverride.mode != nil {
+            return UserDefaults.debugConnectionModeOverride.mode!
+        }
+        
         guard let networkCurrency = currency.tokenType == .native ? currency : currencies[currency.network.currency.uid] else {
             assertionFailure()
             return .api_only

@@ -366,8 +366,8 @@ enum S {
 
     enum WalletConnectionSettings {
         static let menuTitle = NSLocalizedString("WalletConnectionSettings.menuTitle", value:"Connection Mode", comment: "Wallet connection settings menu item title.")
-        static let viewTitle = NSLocalizedString("WalletConnectionSettings.viewTitle", value:"Fast Sync", comment: "Wallet connection settings view title")
-        static let header = NSLocalizedString("WalletConnectionSettings.header", value:"Fast Sync (pilot)", comment: "Wallet connection settings view title")
+        static let viewTitle = NSLocalizedString("WalletConnectionSettings.viewTitle", value:"Fastsync", comment: "Wallet connection settings view title")
+        static let header = NSLocalizedString("WalletConnectionSettings.header", value:"Fastsync (pilot)", comment: "Wallet connection settings view title")
         static let explanatoryText = NSLocalizedString("WalletConnectionSettings.explanatoryText", value: "Make syncing your bitcoin wallet practically instant. Learn more about how it works here.", comment: "Explanation for wallet connection setting")
         static let link = NSLocalizedString("WalletConnectionSettings.link", value: "here", comment: "Link text in explanatoryText")
         static let footerTitle = NSLocalizedString("WalletConnectionSettings.footerTitle", value:"Powered by", comment: "Connection mode switch label.")
