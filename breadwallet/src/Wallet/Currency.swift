@@ -290,9 +290,9 @@ extension CurrencyMetaData: Codable {
         name = try container.decode(String.self, forKey: .name)
         tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
         decimals = try container.decode(UInt8.self, forKey: .decimals)
-        
-        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames), let code = alternateNames["cryptocompare"] {
-                alternateCode = code
+        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames),
+            let code = alternateNames["cryptocompare"] {
+            alternateCode = code
         }
     }
 
@@ -309,7 +309,7 @@ extension CurrencyMetaData: Codable {
         try container.encode(tokenAddress, forKey: .tokenAddress)
         try container.encode(decimals, forKey: .decimals)
         if let alternateCode = alternateCode {
-            try container.encode(["cyrptocompare": alternateCode], forKey: .alternateNames)
+            try container.encode(["cryptocompare": alternateCode], forKey: .alternateNames)
         }
     }
 }
