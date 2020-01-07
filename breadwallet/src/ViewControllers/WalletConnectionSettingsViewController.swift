@@ -74,13 +74,14 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
     private func addConstraints() {
         let screenHeight: CGFloat = UIScreen.main.bounds.height
         let topMarginPercent: CGFloat = 0.08
-        let imageTopMargin: CGFloat = (screenHeight * topMarginPercent)
+        let imageTopMargin: CGFloat = E.isIPhone6 ? 8.0 : (screenHeight * topMarginPercent)
+        let containerTopMargin: CGFloat = E.isIPhone6 ? 0.0 : -C.padding[2]
         let leftRightMargin: CGFloat = 54.0
 
         mainBackground.constrain([
             mainBackground.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             mainBackground.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            mainBackground.topAnchor.constraint(equalTo: animatedBlockSetLogo.topAnchor, constant: -C.padding[2]),
+            mainBackground.topAnchor.constraint(equalTo: animatedBlockSetLogo.topAnchor, constant: containerTopMargin),
             mainBackground.bottomAnchor.constraint(equalTo: toggleSwitch.bottomAnchor, constant: C.padding[4]) ])
         
         animatedBlockSetLogo.constrain([
@@ -175,8 +176,7 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
         let string = NSMutableAttributedString(string: S.WalletConnectionSettings.explanatoryText)
         let linkRange = string.mutableString.range(of: S.WalletConnectionSettings.link)
         if linkRange.location != NSNotFound {
-            //TODO:CYRPTO - add the blog post url here once it's known
-            string.addAttribute(.link, value: NSURL(string: "https://www.brd.com")!, range: linkRange)
+            string.addAttribute(.link, value: NSURL(string: "https://www.brd.com/blog/fastsync-explained")!, range: linkRange)
         }
         explanationLabel.attributedText = string
         explanationLabel.delegate = self
