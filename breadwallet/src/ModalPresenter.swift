@@ -383,12 +383,11 @@ class ModalPresenter: Subscriber, Trackable {
         // MARK: Bitcoin Menu
         var btcItems: [MenuItem] = []
         if let btc = Currencies.btc.instance, let btcWallet = btc.wallet {
-            // Connection mode
             
-            // TODO:CRYPTO: Re-enable this menu item once fast sync is ready to deploy.
-            //btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) { [weak self] in
-            //    self?.presentConnectionModeScreen(menuNav: menuNav)
-            //})
+            // Connection mode
+            btcItems.append(MenuItem(title: S.WalletConnectionSettings.menuTitle) { [weak self] in
+                self?.presentConnectionModeScreen(menuNav: menuNav)
+            })
 
             // Rescan
             var rescan = MenuItem(title: S.Settings.sync, callback: { [unowned self] in
@@ -631,6 +630,13 @@ class ModalPresenter: Subscriber, Trackable {
                                                accessoryText: { UserDefaults.debugShouldAutoEnterPIN ? "ON" : "OFF" },
                                                callback: {
                                                 _ = UserDefaults.toggleAutoEnterPIN()
+                                                (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                }))
+                
+                developerItems.append(MenuItem(title: "Connection Settings Override",
+                                               accessoryText: { UserDefaults.debugConnectionModeOverride.description },
+                                               callback: {
+                                                UserDefaults.cycleConnectionModeOverride()
                                                 (menuNav.topViewController as? MenuViewController)?.reloadMenu()
                 }))
             }

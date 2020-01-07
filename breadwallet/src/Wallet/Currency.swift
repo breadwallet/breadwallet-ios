@@ -330,7 +330,6 @@ enum Currencies: String, CaseIterable {
     case bch
     case eth
     case brd
-    case dai
     case tusd
     
     var code: String { return rawValue }
@@ -345,8 +344,6 @@ enum Currencies: String, CaseIterable {
             uids = "ethereum-\(E.isTestnet ? "ropsten" : "mainnet"):__native__"
         case .brd:
             uids = "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
-        case .dai:
-            uids = "ethereum-mainnet:0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"
         case .tusd:
             uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
         }
