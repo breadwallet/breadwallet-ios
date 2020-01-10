@@ -12,6 +12,7 @@ import LocalAuthentication
 class BiometricsSettingsViewController : UIViewController, Subscriber {
 
     var presentSpendingLimit: (() -> Void)?
+    var didDismiss: (() -> Void)?
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager
@@ -25,6 +26,8 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
     private var switchLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private var spendingLimitLabel = UILabel(font: .customBold(size: 14.0), color: .darkText)
     private var spendingButton = ShadowButton(title: "-", type: .secondary)
+    private var dismissButton = UIButton()
+
     private let toggle = GradientSwitch()
     private let separator = UIView(color: .secondaryShadow)
     private let walletManager: WalletManager
@@ -61,6 +64,7 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         view.addSubview(spendingLimitLabel)
         view.addSubview(spendingButton)
         view.addSubview(separator)
+        view.addSubview(dismissButton)
     }
 
     private func addConstraints() {
@@ -69,6 +73,9 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         illustration.constrain([
             illustration.centerXAnchor.constraint(equalTo: header.centerXAnchor),
             illustration.centerYAnchor.constraint(equalTo: header.centerYAnchor, constant: E.isIPhoneX ? C.padding[4] : C.padding[2]) ])
+        dismissButton.constrain([
+            dismissButton.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
+            dismissButton.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2])])
         label.constrain([
             label.leadingAnchor.constraint(equalTo: header.leadingAnchor, constant: C.padding[2]),
             label.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
@@ -115,7 +122,6 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         switchLabel.text = LAContext.biometricType() == .face ? S.FaceIDSettings.switchLabel : S.TouchIdSettings.switchLabel
         spendingLimitLabel.text = S.SpendingLimit.titleLabel
         spendingButton.title = spendingButtonText
-        addFaqButton()
         let hasSetToggleInitialValue = false
         store.subscribe(self, selector: { $0.isBiometricsEnabled != $1.isBiometricsEnabled }, callback: {
             self.toggle.isOn = $0.isBiometricsEnabled
@@ -133,24 +139,16 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
                 myself.presentCantUseBiometricsAlert()
                 myself.toggle.isOn = false
             }
-        } 
-    }
-
-    private func addFaqButton() {
-        let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
-        negativePadding.width = -16.0
-        let faqButton = UIButton.buildFaqButton(store: store, articleId: ArticleIds.enableTouchId)
-        faqButton.tintColor = .white
-        navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
+        }
+        
+        dismissButton.setImage(#imageLiteral(resourceName: "Back"), for: .normal)
+        dismissButton.addTarget(self, action: #selector(didTapDismissButton), for: .touchUpInside) 
     }
   
     private var spendingButtonText: String {
         guard let rate = rate else { return "" }
         let amount = Amount(amount: walletManager.spendingLimit, rate: rate, maxDigits: store.state.maxDigits)
-        let customizeText = LAContext.biometricType() == .face ? S.FaceIDSettings.customizeText : S.TouchIdSettings.customizeText
-        let linkText = LAContext.biometricType() == .face ? S.FaceIDSettings.linkText : S.TouchIdSettings.linkText
         let string = "\(String(format: S.TouchIdSettings.limitValue, amount.bits, amount.localCurrency))"
- //\n\n\(String(format: customizeText, linkText))"
         return string
     }
 
@@ -173,6 +171,10 @@ class BiometricsSettingsViewController : UIViewController, Subscriber {
         } else {
             presentCantUseBiometricsAlert()
         }
+    }
+    
+    @objc func didTapDismissButton() {
+        didDismiss?()
     }
      
     required init?(coder aDecoder: NSCoder) {

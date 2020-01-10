@@ -20,7 +20,7 @@ class StartViewController : UIViewController {
 
     //MARK: - Private
     private let message = UILabel(font: .customMedium(size: 20.0), color: .whiteTint)
-    private let create = ShadowButton(title: S.StartViewController.createButton, type: .flatWhite)
+    private let create = ShadowButton(title: S.StartViewController.createButton, type: .flatWhite) 
     private let recover = ShadowButton(title: S.StartViewController.recoverButton, type: .flatLitecoinBlue)
     private let store: Store
     private let didTapRecover: () -> Void

@@ -70,7 +70,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         coder.encode(comment, key: "comment")
     }
     
-    /// Find metadata object based on the txHash
+    //Find metadata object based on the txHash
     public init?(txHash: UInt256, store: BRReplicatedKVStore) {
         var ver: UInt64
         var date: Date
@@ -90,7 +90,7 @@ open class TxMetaData : BRKVStoreObject, BRCoding {
         return nil
     }
 
-    /// Find metadata object based on the txKey
+    //Find metadata object based on the txKey
     public init?(txKey: String, store: BRReplicatedKVStore) {
         var ver: UInt64
         var date: Date

@@ -14,6 +14,16 @@ let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000
 
 let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
 
+
+enum MixpanelEvents: String {
+    case _20191105_AL = "APP_LAUNCHED"
+    case _20191105_VSC = "VISIT_SEND_CONTROLLER"
+    case _20191105_DSL = "DID_SEND_LTC"
+    case _20191105_DULP = "DID_UPDATE_LTC_PRICE"
+    case _20191105_EO = "ERROR_OCCURRED"
+    case _20191105_DTBT = "DID_TAP_BUY_TAB"
+}
+
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
         get {
@@ -21,7 +31,7 @@ struct Padding {
         }
     }
 }
-
+  
 struct DonationAddress {
     
     static let firstLF: String = kDonationAddress1

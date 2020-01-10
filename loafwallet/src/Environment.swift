@@ -70,3 +70,26 @@ struct E {
       return UIScreen.main.bounds.size.height
     }
 }
+
+struct EnvironmentVariables {
+    
+    static let plistDict: NSDictionary? = {
+        var dict: NSDictionary?
+               if let path = Bundle.main.path(forResource: "EnvVars", ofType: "plist") {
+                  dict = NSDictionary(contentsOfFile: path)
+               }
+        return dict
+    }()
+    
+    static var mixpanelTokenProdKey: String = EnvironmentVariables.plistVariable(name: "MXP_PROD_ENV_KEY") ?? CI.mixpanelTokenProdKey
+    static var mixpanelTokenDevKey: String = EnvironmentVariables.plistVariable(name: "MXP_DEV_ENV_KEY") ?? CI.mixpanelTokenDevKey
+    static var newRelicTokenProdKey: String = EnvironmentVariables.plistVariable(name: "NR_PROD_ENV_KEY") ?? CI.newRelicTokenProdKey
+    static var newRelicTokenDevKey: String = EnvironmentVariables.plistVariable(name: "NR_DEV_ENV_KEY") ?? CI.newRelicTokenDevKey
+
+    static func plistVariable(name: String) -> String? {
+        if let key = plistDict?[name] as? String {
+            return key
+        }
+        return nil
+    }
+}

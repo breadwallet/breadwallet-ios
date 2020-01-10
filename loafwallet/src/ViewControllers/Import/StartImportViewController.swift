@@ -100,8 +100,8 @@ class StartImportViewController : UIViewController {
         warning.text = S.Import.importWarning
 
         button.tap = { [weak self] in
-            let scan = ScanViewController(scanKeyCompletion: { address in
-                self?.didReceiveAddress(address)
+            let scan = ScanViewController(scanKeyCompletion: { keyString in
+                self?.didReceiveAddress(keyString)
             }, isValidURI: { (string) -> Bool in
                 return string.isValidPrivateKey || string.isValidBip38Key
             })
@@ -109,15 +109,17 @@ class StartImportViewController : UIViewController {
         }
     }
 
-    private func didReceiveAddress(_ address: String) {
-        if address.isValidPrivateKey {
-            if let key = BRKey(privKey: address) {
+    private func didReceiveAddress(_ addressOrKeyString: String) {
+        if addressOrKeyString.isValidPrivateKey {
+            if let key = BRKey(privKey: addressOrKeyString) {
                 checkBalance(key: key)
             }
-        } else if address.isValidBip38Key {
-            unlock(address: address, callback: { key in
+        } else if addressOrKeyString.isValidBip38Key {
+            unlock(address: addressOrKeyString, callback: { key in
                 self.checkBalance(key: key)
             })
+        } else {
+            NSLog("ERROR ADDRESS OR KEY STRING: \(addressOrKeyString)")
         }
     }
 
@@ -150,7 +152,12 @@ class StartImportViewController : UIViewController {
     private func checkBalance(key: BRKey) {
         present(balanceActivity, animated: true, completion: {
             var key = key
-            guard let address = key.address() else { return }
+            
+            guard let address = key.address() else {
+                NSLog("KEY ADDRESS: No Key Address")
+                return
+            }
+            
             let urlString = E.isTestnet ? testnetURL : mainURL
             let request = NSMutableURLRequest(url: URL(string: urlString)!,
                                               cachePolicy: .reloadIgnoringLocalCacheData,

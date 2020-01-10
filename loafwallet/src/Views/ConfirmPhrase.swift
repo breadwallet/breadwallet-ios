@@ -11,19 +11,21 @@ import UIKit
 private let circleRadius: CGFloat = 12.0
 
 class ConfirmPhrase: UIView {
-
+    
+    let word: String
     let textField = UITextField()
     var callback: (() -> Void)?
     var doneCallback: (() -> Void)?
-
+    var isEditingCallback: (() -> Void)?
+ 
     init(text: String, word: String) {
         self.word = word
         super.init(frame: CGRect())
+        self.translatesAutoresizingMaskIntoConstraints = false
         label.text = text
         setupSubviews()
     }
-
-    internal let word: String
+ 
     private let label = UILabel()
     private let separator = UIView()
     private let circle = DrawableCircle()
@@ -69,7 +71,7 @@ class ConfirmPhrase: UIView {
 
     func validate() {
         if textField.text != word {
-            textField.textColor = .cameraGuideNegative
+            textField.textColor = .cameraGuideNegative //.red
         }
     }
 
@@ -78,14 +80,12 @@ class ConfirmPhrase: UIView {
         guard textField.markedTextRange == nil else { return }
         if textField.text == word {
             circle.show()
-            if !E.isIPhone4 {
-                textField.isEnabled = false
-            }
-            callback?()
+            textField.isEnabled = false
         }
+        callback?()
     }
-
-    required init?(coder aDecoder: NSCoder) {
+     
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
@@ -97,6 +97,7 @@ extension ConfirmPhrase : UITextFieldDelegate {
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
         textField.textColor = .darkText
+        isEditingCallback?()
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

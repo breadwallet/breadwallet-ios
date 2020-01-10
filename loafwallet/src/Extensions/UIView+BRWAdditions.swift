@@ -24,7 +24,17 @@ enum Dimension {
 }
 
 extension UIView {
-
+    
+    var firstResponder: UIView? {
+        guard !isFirstResponder else { return self }
+        for subview in subviews {
+            if subview.isFirstResponder {
+                return subview
+            }
+        }
+        return nil
+    }
+    
     func constrain(toSuperviewEdges: UIEdgeInsets?) {
         guard let view = superview else { assert(false, "Superview cannot be nil when adding contraints"); return}
         translatesAutoresizingMaskIntoConstraints = false
@@ -197,4 +207,6 @@ extension UIView {
             leadingAnchor.constraint(equalTo: toView.leadingAnchor),
             topAnchor.constraint(equalTo: toView.bottomAnchor, constant: topPadding)])
     }
+    
+ 
 }

@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import StoreKit
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
+private let numberOfLitewalletLaunches = "NumberOfLitewalletLaunches"
 
 class ApplicationController : Subscriber, Trackable {
 
@@ -26,7 +28,7 @@ class ApplicationController : Subscriber, Trackable {
     private var feeUpdater: FeeUpdater?
     private let transitionDelegate: ModalTransitionDelegate
     private var kvStoreCoordinator: KVStoreCoordinator?
-    private var accountViewController: AccountViewController?
+    private var mainViewController: MainViewController?
     fileprivate var application: UIApplication?
     private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
@@ -72,321 +74,321 @@ class ApplicationController : Subscriber, Trackable {
                 }
             }
         }
-        //updateAssetBundles()
+        
         if !hasPerformedWalletDependentInitialization && didInitWallet {
             didInitWalletManager()
         }
-
     }
 
     private func setup() {
-        setupDefaults()
-        setupAppearance()
-        setupRootViewController()
-        window.makeKeyAndVisible()
-        listenForPushNotificationRequest()
-        offMainInitialization()
-        store.subscribe(self, name: .reinitWalletManager(nil), callback: {
-            guard let trigger = $0 else { return }
-            if case .reinitWalletManager(let callback) = trigger {
-                if let callback = callback {
-                    self.store.removeAllSubscriptions()
-                    self.store.perform(action: Reset())
-                    self.setup()
-                    DispatchQueue.walletQueue.async {
-                        do {
-                            self.walletManager = try WalletManager(store: self.store, dbPath: nil)
-                            let _ = self.walletManager?.wallet //attempt to initialize wallet
-                        } catch let error {
-                            assert(false, "Error creating new wallet: \(error)")
-                        }
-                        DispatchQueue.main.async {
-                            self.didInitWalletManager()
-                            callback()
-                        }
-                    }
-                }
-            }
-        })
-    }
-
-    func willEnterForeground() {
-        guard let walletManager = walletManager else { return }
-        guard !walletManager.noWallet else { return }
-        if shouldRequireLogin() {
-            store.perform(action: RequireLogin())
-        }
-        DispatchQueue.walletQueue.async {
-            walletManager.peerManager?.connect()
-        }
-        exchangeUpdater?.refresh(completion: {})
-        feeUpdater?.refresh()
-        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        walletManager.apiClient?.updateFeatureFlags()
-        if modalPresenter?.walletManager == nil {
-            modalPresenter?.walletManager = walletManager
-        }
-    }
-
-    func retryAfterIsReachable() {
-        guard let walletManager = walletManager else { return }
-        guard !walletManager.noWallet else { return }
-        DispatchQueue.walletQueue.async {
-            walletManager.peerManager?.connect()
-        }
-        exchangeUpdater?.refresh(completion: {})
-        feeUpdater?.refresh()
-        walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-        walletManager.apiClient?.updateFeatureFlags()
-        if modalPresenter?.walletManager == nil {
-            modalPresenter?.walletManager = walletManager
-        }
-    }
-
-    func didEnterBackground() {
-        if store.state.walletState.syncState == .success {
-            DispatchQueue.walletQueue.async {
-                self.walletManager?.peerManager?.disconnect()
-            }
-        }
-        //Save the backgrounding time if the user is logged in
-        if !store.state.isLoginRequired {
-            UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
-        }
-        walletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
-    }
-
-    func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        fetchCompletionHandler = completionHandler
-    }
-
-    func open(url: URL) -> Bool {
-        if let urlController = urlController {
-            return urlController.handleUrl(url)
-        } else {
-            launchURL = url
-            return false
-        }
-    }
-
-    private func didInitWalletManager() {
-        guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
-        guard let rootViewController = window.rootViewController else { return }
-        hasPerformedWalletDependentInitialization = true
-        store.perform(action: PinLength.set(walletManager.pinLength))
-        walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-        modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
-        exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
-        feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
-        startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
-        accountViewController?.walletManager = walletManager
-        defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
-        urlController = URLController(store: self.store, walletManager: walletManager)
-        if let url = launchURL {
-            _ = urlController?.handleUrl(url)
-            launchURL = nil
-        }
-
-        if UIApplication.shared.applicationState != .background {
-            if walletManager.noWallet {
-                UserDefaults.hasShownWelcome = true
-                addWalletCreationListener()
-                store.perform(action: ShowStartFlow())
-            } else {
-                modalPresenter?.walletManager = walletManager
-                DispatchQueue.walletQueue.async {
-                    walletManager.peerManager?.connect()
-                }
-                self.startDataFetchers()
-            }
-
-        //For when watch app launches app in background
-        } else {
-            DispatchQueue.walletQueue.async { [weak self] in
-                walletManager.peerManager?.connect()
-                if self?.fetchCompletionHandler != nil {
-                    self?.performBackgroundFetch()
-                }
-            }
-            exchangeUpdater?.refresh(completion: {
-                self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = self.store.state.currentRate
-            })
-        }
-    }
-
-    private func shouldRequireLogin() -> Bool {
-        let then = UserDefaults.standard.double(forKey: timeSinceLastExitKey)
-        let timeout = UserDefaults.standard.double(forKey: shouldRequireLoginTimeoutKey)
-        let now = Date().timeIntervalSince1970
-        return now - then > timeout
-    }
-
-    private func setupDefaults() {
-        if UserDefaults.standard.object(forKey: shouldRequireLoginTimeoutKey) == nil {
-            UserDefaults.standard.set(60.0*3.0, forKey: shouldRequireLoginTimeoutKey) //Default 3 min timeout
-        }
-    }
-
-    private func setupAppearance() {
-        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.font: UIFont.header]
-        //Hack to globally hide the back button text
-        UIBarButtonItem.appearance().setBackButtonTitlePositionAdjustment(UIOffsetMake(-500.0, -500.0), for: .default)
-    }
-
-    private func setupRootViewController() {
-        let didSelectTransaction: ([Transaction], Int) -> Void = { transactions, selectedIndex in
-            guard let kvStore = self.walletManager?.apiClient?.kv else { return }
-            let transactionDetails = TransactionDetailsViewController(store: self.store, transactions: transactions, selectedIndex: selectedIndex, kvStore: kvStore)
-            transactionDetails.modalPresentationStyle = .overFullScreen
-            transactionDetails.transitioningDelegate = self.transitionDelegate
-            transactionDetails.modalPresentationCapturesStatusBarAppearance = true
-            self.window.rootViewController?.present(transactionDetails, animated: true, completion: nil)
-        }
-        accountViewController = AccountViewController(store: store, didSelectTransaction: didSelectTransaction)
-        accountViewController?.sendCallback = { self.store.perform(action: RootModalActions.Present(modal: .send)) }
-        accountViewController?.buyCallback = { self.store.perform(action: RootModalActions.Present(modal: .buy)) }
-        accountViewController?.receiveCallback = { self.store.perform(action: RootModalActions.Present(modal: .receive)) }
-        accountViewController?.menuCallback = { self.store.perform(action: RootModalActions.Present(modal: .menu)) }
-        window.rootViewController = accountViewController
-    }
-
-    private func startDataFetchers() {
-        walletManager?.apiClient?.updateFeatureFlags()
-        initKVStoreCoordinator()
-        feeUpdater?.refresh()
-        defaultsUpdater?.refresh()
-        walletManager?.apiClient?.events?.up()
-        exchangeUpdater?.refresh(completion: {
-            self.watchSessionManager.walletManager = self.walletManager
-            self.watchSessionManager.rate = self.store.state.currentRate
-        })
-    }
-
-    private func addWalletCreationListener() {
-        store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
-            self.modalPresenter?.walletManager = self.walletManager
-            self.startDataFetchers()
-        })
-    }
-
-//    private func updateAssetBundles() {
-//        DispatchQueue.global(qos: .utility).async { [weak self] in
-//            guard let myself = self else { return }
-//            myself.noAuthApiClient.updateBundles { errors in
-//                for (n, e) in errors {
-//                    print("Bundle \(n) ran update. err: \(String(describing: e))")
-//                }
-//                DispatchQueue.main.async {
-//                    let _ = myself.modalPresenter?.supportCenter // Initialize support center
-//                    print("Support center disabled")
-//                }
-//            }
-//        }
-//    }
-
-    private func initKVStoreCoordinator() {
-        guard let kvStore = walletManager?.apiClient?.kv else { return }
-        guard kvStoreCoordinator == nil else { return }
-        kvStore.syncAllKeys { error in
-            print("KV finished syncing. err: \(String(describing: error))")
-            self.walletCoordinator?.kvStore = kvStore
-            self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
-            self.kvStoreCoordinator?.retreiveStoredWalletInfo()
-            self.kvStoreCoordinator?.listenForWalletChanges()
-        }
-    }
-
-    private func offMainInitialization() {
-        DispatchQueue.global(qos: .background).async {
-            let _ = Rate.symbolMap //Initialize currency symbol map
-        }
-    }
-
-    private func handleLaunchOptions(_ options: [UIApplicationLaunchOptionsKey: Any]?) {
-        if let url = options?[.url] as? URL {
-            do {
-                let file = try Data(contentsOf: url)
-                if file.count > 0 {
-                    store.trigger(name: .openFile(file))
-                }
-            } catch let error {
-                print("Could not open file at: \(url), error: \(error)")
-            }
-        }
-    }
-
-    func performBackgroundFetch() {
-        saveEvent("appController.performBackgroundFetch")
-        let group = DispatchGroup()
-        if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
-            group.enter()
-            store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
-                if self.fetchCompletionHandler != nil {
-                    if state.walletState.syncState == .success {
-                        DispatchQueue.walletConcurrentQueue.async {
-                            peerManager.disconnect()
+            setupDefaults()
+            countLaunches()
+            setupAppearance()
+            setupRootViewController()
+            window.makeKeyAndVisible()
+            listenForPushNotificationRequest()
+            offMainInitialization()
+            store.subscribe(self, name: .reinitWalletManager(nil), callback: {
+                guard let trigger = $0 else { return }
+                if case .reinitWalletManager(let callback) = trigger {
+                    if let callback = callback {
+                        self.store.removeAllSubscriptions()
+                        self.store.perform(action: Reset())
+                        self.setup()
+                        DispatchQueue.walletQueue.async {
+                            do {
+                                self.walletManager = try WalletManager(store: self.store, dbPath: nil)
+                                let _ = self.walletManager?.wallet //attempt to initialize wallet
+                            } catch let error {
+                                assert(false, "Error creating new wallet: \(error)")
+                            }
                             DispatchQueue.main.async {
-                                group.leave()
+                                self.didInitWalletManager()
+                                callback()
                             }
                         }
                     }
                 }
             })
+            
+            TransactionManager.sharedInstance.fetchTransactionData(store: self.store)
         }
 
-        group.enter()
-        Async.parallel(callbacks: [
-            { self.exchangeUpdater?.refresh(completion: $0) },
-            { self.feeUpdater?.refresh(completion: $0) },
-            { self.walletManager?.apiClient?.events?.sync(completion: $0) },
-            { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
-            ], completion: {
-                group.leave()
-        })
-
-        DispatchQueue.global(qos: .utility).async {
-            if group.wait(timeout: .now() + 25.0) == .timedOut {
-                self.saveEvent("appController.backgroundFetchFailed")
-                self.fetchCompletionHandler?(.failed)
-            } else {
-                self.saveEvent("appController.backgroundFetchNewData")
-                self.fetchCompletionHandler?(.newData)
+        func willEnterForeground() {
+            guard let walletManager = walletManager else { return }
+            guard !walletManager.noWallet else { return }
+            if shouldRequireLogin() {
+                store.perform(action: RequireLogin())
             }
-            self.fetchCompletionHandler = nil
+            DispatchQueue.walletQueue.async {
+              walletManager.peerManager?.connect()
+            }
+            exchangeUpdater?.refresh(completion: {})
+            feeUpdater?.refresh()
+            walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+            walletManager.apiClient?.updateFeatureFlags()
+            if modalPresenter?.walletManager == nil {
+                modalPresenter?.walletManager = walletManager
+            }
+        }
+
+        func retryAfterIsReachable() {
+            guard let walletManager = walletManager else { return }
+            guard !walletManager.noWallet else { return }
+            DispatchQueue.walletQueue.async {
+              walletManager.peerManager?.connect()
+            }
+            exchangeUpdater?.refresh(completion: {})
+            feeUpdater?.refresh()
+            walletManager.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+            walletManager.apiClient?.updateFeatureFlags()
+            if modalPresenter?.walletManager == nil {
+                modalPresenter?.walletManager = walletManager
+            }
+        }
+
+        func didEnterBackground() {
+            if store.state.walletState.syncState == .success {
+                DispatchQueue.walletQueue.async {
+                    self.walletManager?.peerManager?.disconnect()
+                }
+            }
+            //Save the backgrounding time if the user is logged in
+            if !store.state.isLoginRequired {
+                UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
+            }
+            walletManager?.apiClient?.kv?.syncAllKeys { print("KV finished syncing. err: \(String(describing: $0))") }
+        }
+
+        func performFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+            fetchCompletionHandler = completionHandler
+        }
+
+        func open(url: URL) -> Bool {
+            if let urlController = urlController {
+                return urlController.handleUrl(url)
+            } else {
+                launchURL = url
+                return false
+            }
+        }
+
+        private func didInitWalletManager() {
+            guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
+            guard let rootViewController = window.rootViewController else { return }
+            
+            hasPerformedWalletDependentInitialization = true
+            store.perform(action: PinLength.set(walletManager.pinLength))
+            walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
+            modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
+            exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
+            feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
+            startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
+            mainViewController?.walletManager = walletManager
+            defaultsUpdater = UserDefaultsUpdater(walletManager: walletManager)
+            urlController = URLController(store: self.store, walletManager: walletManager)
+            if let url = launchURL {
+                _ = urlController?.handleUrl(url)
+                launchURL = nil
+            }
+
+            if UIApplication.shared.applicationState != .background {
+                if walletManager.noWallet {
+                    UserDefaults.hasShownWelcome = true
+                    addWalletCreationListener()
+                    store.perform(action: ShowStartFlow())
+                } else {
+                    modalPresenter?.walletManager = walletManager
+                    DispatchQueue.walletQueue.async {
+                      walletManager.peerManager?.connect()
+                    }
+                    self.startDataFetchers()
+                }
+
+            //For when watch app launches app in background
+            } else {
+                DispatchQueue.walletQueue.async { [weak self] in
+                    walletManager.peerManager?.connect()
+                    if self?.fetchCompletionHandler != nil {
+                        self?.performBackgroundFetch()
+                    }
+                }
+                exchangeUpdater?.refresh(completion: {
+                    self.watchSessionManager.walletManager = self.walletManager
+                    self.watchSessionManager.rate = self.store.state.currentRate
+                })
+            }
+        }
+
+        private func shouldRequireLogin() -> Bool {
+            let then = UserDefaults.standard.double(forKey: timeSinceLastExitKey)
+            let timeout = UserDefaults.standard.double(forKey: shouldRequireLoginTimeoutKey)
+            let now = Date().timeIntervalSince1970
+            return now - then > timeout
+        }
+
+        private func setupDefaults() {
+            if UserDefaults.standard.object(forKey: shouldRequireLoginTimeoutKey) == nil {
+                UserDefaults.standard.set(60.0*3.0, forKey: shouldRequireLoginTimeoutKey) //Default 3 min timeout
+            }
+        }
+    
+        private func countLaunches() {
+            if var launchNumber = UserDefaults.standard.object(forKey: numberOfLitewalletLaunches) as? Int {
+                launchNumber += 1
+                UserDefaults.standard.set(NSNumber(value: launchNumber), forKey: numberOfLitewalletLaunches)
+                if launchNumber == 5 {
+                    SKStoreReviewController.requestReview()
+                }
+                
+            } else {
+                UserDefaults.standard.set(NSNumber(value: 1), forKey: numberOfLitewalletLaunches)
+            }
+        }
+     
+        private func setupAppearance() {
+            let tabBar = UITabBar.appearance()
+            tabBar.barTintColor = .liteWalletBlue
+            tabBar.unselectedItemTintColor = #colorLiteral(red: 0.7764705882, green: 0.7764705882, blue: 0.7843137255, alpha: 0.5)
+            tabBar.tintColor = .white
+        }
+
+        private func setupRootViewController() {
+            mainViewController = MainViewController(store: store)
+            window.rootViewController = mainViewController
+        }
+
+        private func startDataFetchers() {
+            walletManager?.apiClient?.updateFeatureFlags()
+            initKVStoreCoordinator()
+            feeUpdater?.refresh()
+            defaultsUpdater?.refresh()
+            walletManager?.apiClient?.events?.up()
+            exchangeUpdater?.refresh(completion: {
+                self.watchSessionManager.walletManager = self.walletManager
+                self.watchSessionManager.rate = self.store.state.currentRate
+            })
+        }
+
+        private func addWalletCreationListener() {
+            store.subscribe(self, name: .didCreateOrRecoverWallet, callback: { _ in
+                self.modalPresenter?.walletManager = self.walletManager
+                self.startDataFetchers()
+                self.mainViewController?.didUnlockLogin()
+             })
+        }
+      
+        private func initKVStoreCoordinator() {
+            guard let kvStore = walletManager?.apiClient?.kv else {
+                NSLog("kvStore not initialized")
+                return
+            }
+            
+            guard kvStoreCoordinator == nil else {
+                NSLog("kvStoreCoordinator not initialized")
+                return
+            }
+            
+            kvStore.syncAllKeys { error in
+                print("KV finished syncing. err: \(String(describing: error))")
+                self.walletCoordinator?.kvStore = kvStore
+                self.kvStoreCoordinator = KVStoreCoordinator(store: self.store, kvStore: kvStore)
+                self.kvStoreCoordinator?.retreiveStoredWalletInfo()
+                self.kvStoreCoordinator?.listenForWalletChanges()
+            }
+        }
+
+        private func offMainInitialization() {
+            DispatchQueue.global(qos: .background).async {
+                let _ = Rate.symbolMap //Initialize currency symbol map
+            }
+        }
+
+        private func handleLaunchOptions(_ options: [UIApplication.LaunchOptionsKey: Any]?) {
+            if let url = options?[.url] as? URL {
+                do {
+                    let file = try Data(contentsOf: url)
+                    if file.count > 0 {
+                        store.trigger(name: .openFile(file))
+                    }
+                } catch let error {
+                    print("Could not open file at: \(url), error: \(error)")
+                }
+            }
+        }
+
+        func performBackgroundFetch() {
+            saveEvent("appController.performBackgroundFetch")
+            let group = DispatchGroup()
+            if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
+                group.enter()
+                store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
+                    if self.fetchCompletionHandler != nil {
+                        if state.walletState.syncState == .success {
+                            DispatchQueue.walletConcurrentQueue.async {
+                                peerManager.disconnect()
+                                DispatchQueue.main.async {
+                                    group.leave()
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+
+            group.enter()
+            Async.parallel(callbacks: [
+                { self.exchangeUpdater?.refresh(completion: $0) },
+                { self.feeUpdater?.refresh(completion: $0) },
+                { self.walletManager?.apiClient?.events?.sync(completion: $0) },
+                { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
+                ], completion: {
+                    group.leave()
+            })
+
+            DispatchQueue.global(qos: .utility).async {
+                if group.wait(timeout: .now() + 25.0) == .timedOut {
+                    self.saveEvent("appController.backgroundFetchFailed")
+                    self.fetchCompletionHandler?(.failed)
+                } else {
+                    self.saveEvent("appController.backgroundFetchNewData")
+                    self.fetchCompletionHandler?(.newData)
+                }
+                self.fetchCompletionHandler = nil
+            }
+        }
+
+        func willResignActive() {
+            guard !store.state.isPushNotificationsEnabled else { return }
+            guard let pushToken = UserDefaults.pushToken else { return }
+            walletManager?.apiClient?.deletePushNotificationToken(pushToken)
         }
     }
 
-    func willResignActive() {
-        guard !store.state.isPushNotificationsEnabled else { return }
-        guard let pushToken = UserDefaults.pushToken else { return }
-        walletManager?.apiClient?.deletePushNotificationToken(pushToken)
-    }
-}
+    //MARK: - Push notifications
+    extension ApplicationController {
+        func listenForPushNotificationRequest() {
+            store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
+                //TODO: Refactor, APNS is not setup 
+                 let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
+                  self.application?.registerUserNotificationSettings(settings)
+            })
+        }
 
-//MARK: - Push notifications
-extension ApplicationController {
-    func listenForPushNotificationRequest() {
-        store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in 
-            let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
-            self.application?.registerUserNotificationSettings(settings)
-        })
-    }
+        func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
+            if !notificationSettings.types.isEmpty {
+                application.registerForRemoteNotifications()
+            }
+        }
 
-    func application(_ application: UIApplication, didRegister notificationSettings: UIUserNotificationSettings) {
-        if !notificationSettings.types.isEmpty {
-            application.registerForRemoteNotifications()
+        func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+            guard let apiClient = walletManager?.apiClient else { return }
+            guard UserDefaults.pushToken != deviceToken else { return }
+            UserDefaults.pushToken = deviceToken
+            apiClient.savePushNotificationToken(deviceToken)
+        }
+
+        func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+            print("didFailToRegisterForRemoteNotification: \(error)")
         }
     }
-
-    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        guard let apiClient = walletManager?.apiClient else { return }
-        guard UserDefaults.pushToken != deviceToken else { return }
-        UserDefaults.pushToken = deviceToken
-        apiClient.savePushNotificationToken(deviceToken)
-    }
-
-    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        print("didFailToRegisterForRemoteNotification: \(error)")
-    }
-}

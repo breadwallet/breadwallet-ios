@@ -51,7 +51,7 @@ class AboutViewController : UIViewController {
     private func addConstraints() {
         titleLabel.constrain([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            titleLabel.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor, constant: C.padding[2]) ])
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]) ])
         logoBackground.constrain([
             logoBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoBackground.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
@@ -95,10 +95,10 @@ class AboutViewController : UIViewController {
             myself.presentURL(string: "https://loafwallet.org")
         }
         twitter.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://twitter.com/LTCFoundation")
+            myself.presentURL(string: "https://twitter.com/Litewallet_App")
         }
         reddit.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://reddit.com/r/litecoin/")
+            myself.presentURL(string: "https://www.reddit.com/r/Litewallet/")
         }
         privacy.tap = strongify(self) { myself in
             myself.presentURL(string: "http://loafwallet.org/policy.html")

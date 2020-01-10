@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="BarlowSemiCondensed-Light.ttf">
+            <string>BarlowSemiCondensed-Light</string>
+        </array>
+        <array key="BarlowSemiCondensed-Medium.ttf">
+            <string>BarlowSemiCondensed-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="50" id="KGk-i7-Jjw" customClass="SyncProgressHeaderView" customModule="loafwallet" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2UC-WW-8VV">
+                        <rect key="frame" x="10" y="7" width="30" height="17"/>
+                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="14"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="g5W-Xg-6Ov">
+                        <rect key="frame" x="10" y="0.0" width="300" height="2"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="progressTintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="trackTintColor" red="0.63529411759999999" green="0.69019607839999997" blue="0.75686274509999996" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                    </progressView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0p6-wM-iJ6">
+                        <rect key="frame" x="10" y="24" width="27" height="16"/>
+                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="13"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="whiteinterditsendIcon" translatesAutoresizingMaskIntoConstraints="NO" id="7zC-fo-fkw">
+                        <rect key="frame" x="285" y="7" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="3Pw-wU-HYc"/>
+                            <constraint firstAttribute="width" constant="25" id="BCR-4f-UQs"/>
+                        </constraints>
+                    </imageView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="0p6-wM-iJ6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="2fR-oV-dJn"/>
+                    <constraint firstItem="0p6-wM-iJ6" firstAttribute="top" secondItem="2UC-WW-8VV" secondAttribute="bottom" id="2xG-ff-EOo"/>
+                    <constraint firstItem="g5W-Xg-6Ov" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="3m5-YH-B4H"/>
+                    <constraint firstAttribute="trailing" secondItem="g5W-Xg-6Ov" secondAttribute="trailing" constant="10" id="6a7-8c-FT5"/>
+                    <constraint firstItem="7zC-fo-fkw" firstAttribute="top" secondItem="g5W-Xg-6Ov" secondAttribute="bottom" constant="5" id="LlW-gM-SKb"/>
+                    <constraint firstItem="2UC-WW-8VV" firstAttribute="top" secondItem="g5W-Xg-6Ov" secondAttribute="bottom" constant="5" id="UUj-vQ-TPK"/>
+                    <constraint firstItem="g5W-Xg-6Ov" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="c1b-UA-9FS"/>
+                    <constraint firstItem="2UC-WW-8VV" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="jwW-5v-TTX"/>
+                    <constraint firstAttribute="trailing" secondItem="7zC-fo-fkw" secondAttribute="trailing" constant="10" id="tD3-gG-Oy0"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="headerLabel" destination="2UC-WW-8VV" id="Y7e-I3-5aj"/>
+                <outlet property="noSendImageView" destination="7zC-fo-fkw" id="PFv-ME-PWs"/>
+                <outlet property="progressView" destination="g5W-Xg-6Ov" id="xBw-RX-R9L"/>
+                <outlet property="timestampLabel" destination="0p6-wM-iJ6" id="1ka-Mk-rVQ"/>
+            </connections>
+            <point key="canvasLocation" x="137.68115942028987" y="91.741071428571431"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="whiteinterditsendIcon" width="31" height="31"/>
+    </resources>
+</document>

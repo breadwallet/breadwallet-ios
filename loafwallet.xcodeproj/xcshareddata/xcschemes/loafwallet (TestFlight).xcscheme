@@ -41,7 +41,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "75A2A7A31DA5934300A983D8"
+               BlueprintIdentifier = "2465873523A5AAD000A32E9E"
                BuildableName = "loafwalletTests.xctest"
                BlueprintName = "loafwalletTests"
                ReferencedContainer = "container:loafwallet.xcodeproj">
@@ -51,7 +51,7 @@
             skipped = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "75A2A7AE1DA5934300A983D8"
+               BlueprintIdentifier = "2465872523A5AAC200A32E9E"
                BuildableName = "loafwalletUITests.xctest"
                BlueprintName = "loafwalletUITests"
                ReferencedContainer = "container:loafwallet.xcodeproj">
@@ -64,6 +64,36 @@
                BlueprintIdentifier = "CEA7E67A1F09A9D2001F8C27"
                BuildableName = "Screenshots.xctest"
                BlueprintName = "Screenshots"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2465870523A496CD00A32E9E"
+               BuildableName = "LitewalletUITests.xctest"
+               BlueprintName = "LitewalletUITests"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2465871523A496D400A32E9E"
+               BuildableName = "LitewalletTests.xctest"
+               BlueprintName = "LitewalletTests"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "24470E1223A5D7C800ADDA27"
+               BuildableName = "MainNavigationIUITests.xctest"
+               BlueprintName = "MainNavigationIUITests"
                ReferencedContainer = "container:loafwallet.xcodeproj">
             </BuildableReference>
          </TestableReference>

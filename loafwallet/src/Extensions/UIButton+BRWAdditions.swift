@@ -61,4 +61,16 @@ extension UIButton {
             self?.isEnabled = true
         })
     }
+    
+    static func stylizeLitewalletBlueButton(title: String, frame: CGRect) -> UIButton {
+        
+        let button = UIButton()
+        button.frame = frame
+        button.setTitle(title, for: .normal)
+        button.layer.cornerRadius = 4.0
+        button.titleLabel?.textColor = .white
+        button.titleLabel?.font = UIFont.barloweMedium(size: 18)
+        button.clipsToBounds = true
+        return button
+    }
 }

@@ -87,7 +87,13 @@ struct PaymentRequest {
             if response.mimeType?.lowercased() == "application/litecoin-paymentrequest" {
                 completion(PaymentRequest(data: data))
             } else if response.mimeType?.lowercased() == "text/uri-list" {
-                for line in (String(data: data, encoding: .utf8)?.components(separatedBy: "\n"))! {
+                
+                guard let dataStringArray = String(data: data, encoding: .utf8)?.components(separatedBy: "\n") else {
+                    NSLog("ERROR: Data string must not be empty")
+                    return
+                }
+                
+                for line in dataStringArray {
                     if line.hasPrefix("#") { continue }
                     completion(PaymentRequest(string: line))
                     break

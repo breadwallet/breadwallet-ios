@@ -28,9 +28,9 @@ class WebViewContainer : UIViewController {
         addChildViewController(webView, layout: {
             webView.view.constrain([
                 webView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                webView.view.topAnchor.constraint(equalTo: topLayoutGuide.bottomAnchor),
+                webView.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
                 webView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                webView.view.bottomAnchor.constraint(equalTo: bottomLayoutGuide.topAnchor) ])
+                webView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) ])
         })
         addTopCorners()
     }

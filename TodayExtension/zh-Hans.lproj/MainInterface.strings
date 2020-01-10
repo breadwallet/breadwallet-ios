@@ -1,15 +1,15 @@
 
-/* Class = "UILabel"; text = "scan QR code"; ObjectID = "JgG-Ah-UZk"; */
-"JgG-Ah-UZk.text" = "";
-
-/* Class = "UILabel"; text = "receive"; ObjectID = "KJN-zr-IQB"; */
-"KJN-zr-IQB.text" = "";
-
-/* Class = "UILabel"; text = "send"; ObjectID = "QMM-JV-cTG"; */
-"QMM-JV-cTG.text" = "";
-
 /* Class = "UIButton"; normalTitle = "setup wallet"; ObjectID = "fgE-Q8-uG8"; */
-"fgE-Q8-uG8.normalTitle" = "";
+"fgE-Q8-uG8.normalTitle" = "设置钱包";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "gQm-B2-ZXE"; */
-"gQm-B2-ZXE.text" = "";
+"gQm-B2-ZXE.text" = "标签";
+
+/* Class = "UILabel"; text = "scan QR code"; ObjectID = "JgG-Ah-UZk"; */
+"JgG-Ah-UZk.text" = "扫描二维码";
+
+/* Class = "UILabel"; text = "receive"; ObjectID = "KJN-zr-IQB"; */
+"KJN-zr-IQB.text" = "接收";
+
+/* Class = "UILabel"; text = "send"; ObjectID = "QMM-JV-cTG"; */
+"QMM-JV-cTG.text" = "发送";

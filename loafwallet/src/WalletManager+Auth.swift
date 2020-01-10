@@ -130,7 +130,10 @@ extension WalletManager : WalletAuthenticator {
             return UInt64(UserDefaults.standard.double(forKey: DefaultsKey.spendLimitAmount))
         }
         set {
-            guard let wallet = self.wallet else { assert(false, "No wallet!"); return }
+            guard let wallet = self.wallet else {
+                assert(false, "No wallet!");
+                return
+            }
             do {
                 try setKeychainItem(key: KeychainKey.spendLimit, item: Int64(wallet.totalSent + newValue))
                 UserDefaults.standard.set(newValue, forKey: DefaultsKey.spendLimitAmount)
@@ -415,7 +418,7 @@ extension WalletManager : WalletAuthenticator {
     // wipe the existing wallet from the keychain
     func wipeWallet(pin: String = "forceWipe") -> Bool {
         guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
-
+ 
         do {
             lazyWallet = nil
             lazyPeerManager = nil
@@ -439,7 +442,7 @@ extension WalletManager : WalletAuthenticator {
             try setKeychainItem(key: KeychainKey.masterPubKey, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.seed, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.mnemonic, item: nil as String?, authenticated: true)
-            NotificationCenter.default.post(name: .WalletDidWipe, object: nil)
+            NotificationCenter.default.post(name: .WalletDidWipeNotification, object: nil)
             return true
         }
         catch let error {
@@ -570,7 +573,7 @@ private func setKeychainItem<T>(key: String, item: T?, authenticated: Bool = fal
         case is Data.Type:
             data = item as? Data
         case is String.Type:
-            data = CFStringCreateExternalRepresentation(secureAllocator, item as! CFString,
+            data = CFStringCreateExternalRepresentation(secureAllocator, (item as! CFString),
                                                         CFStringBuiltInEncodings.UTF8.rawValue, 0) as Data
         case is Int64.Type:
             data = CFDataCreateMutable(secureAllocator, MemoryLayout<T>.stride) as Data

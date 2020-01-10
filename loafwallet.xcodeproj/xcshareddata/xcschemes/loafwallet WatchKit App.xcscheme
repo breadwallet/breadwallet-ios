@@ -51,6 +51,36 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2465870523A496CD00A32E9E"
+               BuildableName = "LitewalletUITests.xctest"
+               BlueprintName = "LitewalletUITests"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2465871523A496D400A32E9E"
+               BuildableName = "LitewalletTests.xctest"
+               BlueprintName = "LitewalletTests"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "24470E1223A5D7C800ADDA27"
+               BuildableName = "MainNavigationIUITests.xctest"
+               BlueprintName = "MainNavigationIUITests"
+               ReferencedContainer = "container:loafwallet.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction

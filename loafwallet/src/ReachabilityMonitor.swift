@@ -31,7 +31,7 @@ class ReachabilityMonitor : Trackable {
     func notify() {
         DispatchQueue.main.async {
             self.didChange?(self.isReachable)
-            self.saveEvent(self.isReachable ? "reachability.isReachble" : "reachability.isNotReachable")
+            self.saveEvent(self.isReachable ? "reachability.isReachable" : "reachability.isNotReachable")
         }
     }
 

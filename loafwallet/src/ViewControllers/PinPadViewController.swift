@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum PinPadStyle {
+enum PinPadColorStyle {
     case white
     case clear
 }
@@ -48,7 +48,7 @@ class PinPadViewController : UICollectionViewController {
         }
     }
 
-    init(style: PinPadStyle, keyboardType: KeyboardType, maxDigits: Int) {
+    init(style: PinPadColorStyle, keyboardType: KeyboardType, maxDigits: Int) {
         self.style = style
         self.keyboardType = keyboardType
         self.maxDigits = maxDigits
@@ -72,7 +72,7 @@ class PinPadViewController : UICollectionViewController {
     }
 
     private let cellIdentifier = "CellIdentifier"
-    private let style: PinPadStyle
+    private let style: PinPadColorStyle
     private let keyboardType: KeyboardType
     private let items: [String]
     private let maxDigits: Int
@@ -82,10 +82,10 @@ class PinPadViewController : UICollectionViewController {
         case .white:
             switch keyboardType {
             case .decimalPad:
-                collectionView?.backgroundColor = .white
+                collectionView?.backgroundColor = .clear
                 collectionView?.register(WhiteDecimalPad.self, forCellWithReuseIdentifier: cellIdentifier)
             case .pinPad:
-                collectionView?.backgroundColor = .whiteTint
+                collectionView?.backgroundColor = .clear
                 collectionView?.register(WhiteNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
             }
         case .clear:
@@ -188,5 +188,202 @@ class PinPadViewController : UICollectionViewController {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
+class GenericPinPadCell : UICollectionViewCell {
+
+    var text: String? {
+        didSet {
+            if text == deleteKeyIdentifier {
+                imageView.image = #imageLiteral(resourceName: "Delete")
+                topLabel.text = ""
+                centerLabel.text = ""
+            } else {
+                imageView.image = nil
+                topLabel.text = text
+                centerLabel.text = text
+            }
+            setAppearance()
+            setSublabel()
+        }
+    }
+
+    let sublabels = [
+        "2": "ABC",
+        "3": "DEF",
+        "4": "GHI",
+        "5": "JKL",
+        "6": "MNO",
+        "7": "PORS",
+        "8": "TUV",
+        "9": "WXYZ"
+    ]
+
+    override var isHighlighted: Bool {
+        didSet {
+            guard text != "" else { return } //We don't want the blank cell to highlight
+            setAppearance()
+        }
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    internal let topLabel = UILabel(font: .customBody(size: 28.0))
+    internal let centerLabel = UILabel(font: .customBody(size: 28.0))
+    internal let sublabel = UILabel(font: .customBody(size: 11.0))
+    internal let imageView = UIImageView()
+
+    private func setup() {
+        setAppearance()
+        topLabel.textAlignment = .center
+        centerLabel.textAlignment = .center
+        sublabel.textAlignment = .center
+        addSubview(topLabel)
+        addSubview(centerLabel)
+        addSubview(sublabel)
+        addSubview(imageView)
+        imageView.contentMode = .center
+        addConstraints()
+    }
+
+    func addConstraints() {
+        imageView.constrain(toSuperviewEdges: nil)
+        centerLabel.constrain(toSuperviewEdges: nil)
+        topLabel.constrain([
+            topLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            topLabel.topAnchor.constraint(equalTo: topAnchor, constant: 2.5) ])
+        sublabel.constrain([
+            sublabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            sublabel.topAnchor.constraint(equalTo: topLabel.bottomAnchor, constant: -3.0) ])
+    }
+
+    override var isAccessibilityElement: Bool {
+        get {
+            return true
+        }
+        set { }
+    }
+
+    override var accessibilityLabel: String? {
+        get {
+            return topLabel.text
+        }
+        set { }
+    }
+
+    override var accessibilityTraits: UIAccessibilityTraits {
+        get {
+            return UIAccessibilityTraitStaticText
+        }
+        set { }
+    }
+
+    func setAppearance() {}
+    func setSublabel() {}
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+class ClearNumberPad : GenericPinPadCell {
+
+    override func setAppearance() {
+
+        if text == "0" {
+            topLabel.isHidden = true
+            centerLabel.isHidden = false
+        } else {
+            topLabel.isHidden = false
+            centerLabel.isHidden = true
+        }
+
+        topLabel.textColor = .white
+        centerLabel.textColor = .white
+        sublabel.textColor = .white
+
+        if isHighlighted {
+            backgroundColor = .transparentBlack
+        } else {
+            if text == "" || text == deleteKeyIdentifier {
+                backgroundColor = .clear
+                imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+                imageView.tintColor = .white
+            } else {
+                backgroundColor = .clear
+            }
+        }
+    }
+
+    override func setSublabel() {
+        guard let text = self.text else { return }
+        if sublabels[text] != nil {
+            sublabel.text = sublabels[text]
+        }
+    }
+}
+
+
+class WhiteDecimalPad : GenericPinPadCell {
+
+    override func setAppearance() {
+        if isHighlighted {
+            centerLabel.backgroundColor = .secondaryShadow
+            centerLabel.textColor = .darkText
+        } else {
+            centerLabel.backgroundColor = .white
+            centerLabel.textColor = .grayTextTint
+        }
+    }
+
+    override func addConstraints() {
+        centerLabel.constrain(toSuperviewEdges: nil)
+        imageView.constrain(toSuperviewEdges: nil)
+    }
+}
+
+class WhiteNumberPad : GenericPinPadCell {
+
+    override func setAppearance() {
+
+        if text == "0" {
+            topLabel.isHidden = true
+            centerLabel.isHidden = false
+        } else {
+            topLabel.isHidden = false
+            centerLabel.isHidden = true
+        }
+
+        if isHighlighted {
+            backgroundColor = .secondaryShadow
+            topLabel.textColor = .darkText
+            centerLabel.textColor = .darkText
+            sublabel.textColor = .darkText
+        } else {
+            if text == "" || text == deleteKeyIdentifier {
+                backgroundColor = .whiteTint
+                imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+                imageView.tintColor = .grayTextTint
+            } else {
+                backgroundColor = .whiteTint
+                topLabel.textColor = .grayTextTint
+                centerLabel.textColor = .grayTextTint
+                sublabel.textColor = .grayTextTint
+            }
+        }
+    }
+
+    override func setSublabel() {
+        guard let text = self.text else { return }
+        if sublabels[text] != nil {
+            sublabel.text = sublabels[text]
+        }
     }
 }

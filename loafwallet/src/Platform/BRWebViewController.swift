@@ -64,7 +64,7 @@ import WebKit
     private func getSimplexParams(appInstallDate: Date?, walletAddress: String?, currencyCode: String?, uuid: String?) -> String {
         guard let appInstallDate = appInstallDate else { return "" }
         guard let walletAddress = walletAddress else { return "" }
-        guard let currencyCode = Currency.checkSimplexFiatSupport(givenCode: currencyCode!) else { return "USD" }
+        let currencyCode = Currency.returnSimplexSupportedFiat(givenCode: currencyCode!)
         guard let uuid = uuid else { return "" }
         
         let timestamp = Int(appInstallDate.timeIntervalSince1970)
@@ -115,9 +115,8 @@ import WebKit
         webView?.backgroundColor = UIColor(red:0.98, green:0.98, blue:0.98, alpha:1.0)
         _ = webView?.load(request)
         webView?.autoresizingMask = [UIViewAutoresizing.flexibleHeight, UIViewAutoresizing.flexibleWidth]
-        if #available(iOS 11, *) {
-            webView?.scrollView.contentInsetAdjustmentBehavior = .never
-        }
+        webView?.scrollView.contentInsetAdjustmentBehavior = .never
+       
         view.addSubview(webView!)
       
         let center = NotificationCenter.default

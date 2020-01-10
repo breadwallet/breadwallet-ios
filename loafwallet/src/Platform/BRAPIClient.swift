@@ -33,13 +33,11 @@ let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 // eg "buy-bitcoin-with-cash" is a persistent name in the /me/features list
 @objc public enum BRFeatureFlags : Int, CustomStringConvertible {
     case buyLitecoin
-    case earlyAccess
     
     public var description: String {
         switch self {
         case .buyLitecoin: return "buy-litecoin";
-        case .earlyAccess: return "early-access";
-        }
+         }
     }
 }
 

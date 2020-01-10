@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="BarlowSemiCondensed-Medium.ttf">
+            <string>BarlowSemiCondensed-Medium</string>
+        </array>
+        <array key="BarlowSemiCondensed-SemiBold.ttf">
+            <string>BarlowSemiCondensed-SemiBold</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--Spend View Controller-->
+        <scene sceneID="ovc-Lp-HQd">
+            <objects>
+                <viewController storyboardIdentifier="SpendViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wNG-O7-NAJ" customClass="SpendViewController" customModule="loafwallet" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="uhd-8R-UA7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" showsHorizontalScrollIndicator="NO" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="EuW-PF-Vvj">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LDf-08-taB">
+                                        <rect key="frame" x="0.0" y="55" width="414" height="44"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Register for Litewallet Card" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sXt-5y-Vpj">
+                                                <rect key="frame" x="20" y="10" width="217" height="24"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="20"/>
+                                                <color key="textColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="Wvy-hU-ivi"/>
+                                            <constraint firstItem="sXt-5y-Vpj" firstAttribute="centerY" secondItem="LDf-08-taB" secondAttribute="centerY" id="uV4-GH-LBS"/>
+                                            <constraint firstItem="sXt-5y-Vpj" firstAttribute="leading" secondItem="LDf-08-taB" secondAttribute="leading" constant="20" id="xda-xr-oaF"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email Address / Username" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PE1-to-zlJ">
+                                        <rect key="frame" x="30" y="119" width="354" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="GyY-u1-PT4"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Uw5-5P-msa">
+                                        <rect key="frame" x="30" y="147" width="354" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="4Qf-3o-wlC"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="go2-we-YWY">
+                                        <rect key="frame" x="30" y="174" width="162" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="kpm-lD-yLf"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SDg-dH-MwL">
+                                        <rect key="frame" x="30" y="202" width="162" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="FkX-S3-xtP"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Confirm Password" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Q1R-md-CUS">
+                                        <rect key="frame" x="222" y="174" width="162" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" secureTextEntry="YES"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="0RX-4g-6mF"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qG9-pQ-fH2">
+                                        <rect key="frame" x="222" y="202" width="162" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="4cy-TE-1d8"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bui-wZ-eR4">
+                                        <rect key="frame" x="30" y="229" width="162" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="Kvh-o5-wje"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dc1-Bz-bXk">
+                                        <rect key="frame" x="30" y="257" width="162" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="7yJ-7H-Y2X"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fKS-fG-fzJ">
+                                        <rect key="frame" x="222" y="229" width="162" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="2et-yg-r2h"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GxE-21-El1">
+                                        <rect key="frame" x="222" y="257" width="162" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="4dm-1k-bNH"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Know Your Customer: SSN" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Pul-O5-dLr">
+                                        <rect key="frame" x="30" y="284" width="200" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="wwm-FE-dCd"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="g2q-Yz-A3E"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3f5-tr-3Qu">
+                                        <rect key="frame" x="30" y="312" width="200" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="dr5-Pv-Ube"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Know Your Customer: ID" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ioO-jC-ST3">
+                                        <rect key="frame" x="30" y="339" width="200" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="nyL-h0-PvR"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="ZJT-Pv-aCL"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="ID Type" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="wZD-K2-KfQ">
+                                        <rect key="frame" x="260" y="339" width="124" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="wH7-vS-gfF"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XgX-P0-zTz">
+                                        <rect key="frame" x="30" y="394" width="354" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="zJI-zn-xWZ"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="shS-Vf-a29">
+                                        <rect key="frame" x="30" y="422" width="354" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="4GV-hb-Ras"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="City" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TCa-d2-Qpw">
+                                        <rect key="frame" x="30" y="449" width="200" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="fuv-yL-PjJ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="SIq-1l-nja"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Awc-SM-eZg">
+                                        <rect key="frame" x="30" y="477" width="200" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="Q6n-rq-XXG"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="State" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tcC-LC-dgN">
+                                        <rect key="frame" x="260" y="449" width="124" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="70P-iV-0tq"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0T0-ij-HxB">
+                                        <rect key="frame" x="260" y="477" width="124" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="Ce7-cE-iws"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Country" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jsn-9K-bZN">
+                                        <rect key="frame" x="30" y="504" width="200" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="200" id="XhY-bt-rdk"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="rN6-7o-XcN"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fxu-bJ-SIu">
+                                        <rect key="frame" x="30" y="532" width="200" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="tad-Cw-Amo"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Post code" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FSp-QQ-BzQ">
+                                        <rect key="frame" x="260" y="504" width="124" height="20"/>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="alphabet"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="GbS-He-FYc"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WbL-6T-a1k">
+                                        <rect key="frame" x="260" y="532" width="124" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="dtU-3V-qLg"/>
+                                        </constraints>
+                                    </view>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Mobile number" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Cp0-mW-AT8">
+                                        <rect key="frame" x="30" y="559" width="180" height="20"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="180" id="i7j-M9-f1h"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="phonePad" enablesReturnKeyAutomatically="YES" textContentType="tel"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="wNG-O7-NAJ" id="eRI-UG-1dg"/>
+                                        </connections>
+                                    </textField>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mq-gh-Z3N">
+                                        <rect key="frame" x="30" y="587" width="180" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="xkt-Wf-DLd"/>
+                                        </constraints>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uzl-R1-t2A">
+                                        <rect key="frame" x="30" y="737.5" width="354" height="50"/>
+                                        <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="Vlw-Pd-j8b"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                        <state key="normal" title="Register">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="registerAction:" destination="wNG-O7-NAJ" eventType="touchUpInside" id="7hk-LG-tyj"/>
+                                        </connections>
+                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OLT-oU-OaO">
+                                        <rect key="frame" x="30" y="367" width="200" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="ReT-oo-miR"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9wZ-GF-VWc" customClass="UITextField">
+                                        <rect key="frame" x="260" y="367" width="124" height="0.5"/>
+                                        <color key="backgroundColor" red="0.65090787409999995" green="0.6621127725" blue="0.66606998439999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="0.5" id="S1o-Mu-ILg"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="LDf-08-taB" secondAttribute="trailing" id="2RG-ix-6XE"/>
+                                    <constraint firstItem="9wZ-GF-VWc" firstAttribute="leading" secondItem="wZD-K2-KfQ" secondAttribute="leading" id="2Xm-b4-Sso"/>
+                                    <constraint firstItem="9wZ-GF-VWc" firstAttribute="trailing" secondItem="wZD-K2-KfQ" secondAttribute="trailing" id="2cx-dF-V1R"/>
+                                    <constraint firstItem="3f5-tr-3Qu" firstAttribute="top" secondItem="Pul-O5-dLr" secondAttribute="bottom" constant="8" id="3b1-1X-oGC"/>
+                                    <constraint firstItem="Awc-SM-eZg" firstAttribute="trailing" secondItem="TCa-d2-Qpw" secondAttribute="trailing" id="3nl-65-cQ8"/>
+                                    <constraint firstItem="WbL-6T-a1k" firstAttribute="top" secondItem="FSp-QQ-BzQ" secondAttribute="bottom" constant="8" id="5CA-4B-kFV"/>
+                                    <constraint firstItem="Pul-O5-dLr" firstAttribute="top" secondItem="Bui-wZ-eR4" secondAttribute="bottom" constant="35" id="62o-xG-pRC"/>
+                                    <constraint firstItem="PE1-to-zlJ" firstAttribute="top" secondItem="LDf-08-taB" secondAttribute="bottom" constant="20" id="6b4-5a-Hr3"/>
+                                    <constraint firstItem="Cp0-mW-AT8" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="6io-Sl-kmn"/>
+                                    <constraint firstItem="jsn-9K-bZN" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="6y5-ol-j1x"/>
+                                    <constraint firstItem="TCa-d2-Qpw" firstAttribute="top" secondItem="XgX-P0-zTz" secondAttribute="bottom" constant="35" id="89H-gb-7Sm"/>
+                                    <constraint firstItem="tcC-LC-dgN" firstAttribute="leading" secondItem="TCa-d2-Qpw" secondAttribute="trailing" constant="30" id="8Mg-n1-pEg"/>
+                                    <constraint firstItem="Uw5-5P-msa" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="96d-3G-mjs"/>
+                                    <constraint firstItem="GxE-21-El1" firstAttribute="trailing" secondItem="fKS-fG-fzJ" secondAttribute="trailing" id="9Ox-9m-BUz"/>
+                                    <constraint firstAttribute="trailing" secondItem="tcC-LC-dgN" secondAttribute="trailing" constant="30" id="9qi-jJ-vTw"/>
+                                    <constraint firstItem="LDf-08-taB" firstAttribute="top" secondItem="EuW-PF-Vvj" secondAttribute="top" constant="55" id="9rm-pa-JhR"/>
+                                    <constraint firstItem="OLT-oU-OaO" firstAttribute="top" secondItem="ioO-jC-ST3" secondAttribute="bottom" constant="8" id="A1q-rq-mZ8"/>
+                                    <constraint firstItem="wZD-K2-KfQ" firstAttribute="top" secondItem="ioO-jC-ST3" secondAttribute="top" id="Aaw-IT-L5W"/>
+                                    <constraint firstItem="Bui-wZ-eR4" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="Aci-De-OWd"/>
+                                    <constraint firstItem="GxE-21-El1" firstAttribute="top" secondItem="fKS-fG-fzJ" secondAttribute="bottom" constant="8" id="BuI-pW-WLf"/>
+                                    <constraint firstItem="3f5-tr-3Qu" firstAttribute="leading" secondItem="Pul-O5-dLr" secondAttribute="leading" id="C4l-K8-hQe"/>
+                                    <constraint firstItem="WbL-6T-a1k" firstAttribute="trailing" secondItem="FSp-QQ-BzQ" secondAttribute="trailing" id="CHV-h1-R3B"/>
+                                    <constraint firstItem="qG9-pQ-fH2" firstAttribute="leading" secondItem="Q1R-md-CUS" secondAttribute="leading" id="Efn-u4-iiR"/>
+                                    <constraint firstItem="Q1R-md-CUS" firstAttribute="top" secondItem="go2-we-YWY" secondAttribute="top" id="F1f-j9-92n"/>
+                                    <constraint firstItem="SDg-dH-MwL" firstAttribute="top" secondItem="go2-we-YWY" secondAttribute="bottom" constant="8" id="Hdr-04-8PO"/>
+                                    <constraint firstItem="qG9-pQ-fH2" firstAttribute="top" secondItem="go2-we-YWY" secondAttribute="bottom" constant="8" id="HiG-hV-C8k"/>
+                                    <constraint firstItem="0T0-ij-HxB" firstAttribute="top" secondItem="tcC-LC-dgN" secondAttribute="bottom" constant="8" id="Ilx-c8-5mU"/>
+                                    <constraint firstAttribute="trailing" secondItem="PE1-to-zlJ" secondAttribute="trailing" constant="30" id="L3w-0D-KTy"/>
+                                    <constraint firstItem="PE1-to-zlJ" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="Lps-x7-Cw0"/>
+                                    <constraint firstItem="OLT-oU-OaO" firstAttribute="trailing" secondItem="ioO-jC-ST3" secondAttribute="trailing" id="ODR-sc-cb2"/>
+                                    <constraint firstItem="1mq-gh-Z3N" firstAttribute="trailing" secondItem="Cp0-mW-AT8" secondAttribute="trailing" id="OS1-GW-8DY"/>
+                                    <constraint firstItem="fxu-bJ-SIu" firstAttribute="trailing" secondItem="jsn-9K-bZN" secondAttribute="trailing" id="OnE-TT-NXU"/>
+                                    <constraint firstItem="1mq-gh-Z3N" firstAttribute="top" secondItem="Cp0-mW-AT8" secondAttribute="bottom" constant="8" id="PVG-3D-722"/>
+                                    <constraint firstItem="XgX-P0-zTz" firstAttribute="top" secondItem="ioO-jC-ST3" secondAttribute="bottom" constant="35" id="Pji-H5-wb7"/>
+                                    <constraint firstItem="uzl-R1-t2A" firstAttribute="top" secondItem="1mq-gh-Z3N" secondAttribute="bottom" constant="150" id="Pl3-XV-yhD"/>
+                                    <constraint firstItem="fKS-fG-fzJ" firstAttribute="leading" secondItem="Bui-wZ-eR4" secondAttribute="trailing" constant="30" id="RZ5-rL-Uki"/>
+                                    <constraint firstItem="qG9-pQ-fH2" firstAttribute="trailing" secondItem="Q1R-md-CUS" secondAttribute="trailing" id="S1J-US-4GP"/>
+                                    <constraint firstItem="0T0-ij-HxB" firstAttribute="leading" secondItem="tcC-LC-dgN" secondAttribute="leading" id="SKG-YU-JaX"/>
+                                    <constraint firstItem="dc1-Bz-bXk" firstAttribute="leading" secondItem="Bui-wZ-eR4" secondAttribute="leading" id="VsK-ss-5Ha"/>
+                                    <constraint firstItem="Q1R-md-CUS" firstAttribute="width" secondItem="go2-we-YWY" secondAttribute="width" id="W1Y-P1-gd8"/>
+                                    <constraint firstItem="fxu-bJ-SIu" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="WHj-iG-OZQ"/>
+                                    <constraint firstItem="dc1-Bz-bXk" firstAttribute="trailing" secondItem="Bui-wZ-eR4" secondAttribute="trailing" id="XQn-dB-jFC"/>
+                                    <constraint firstItem="Uw5-5P-msa" firstAttribute="top" secondItem="PE1-to-zlJ" secondAttribute="bottom" constant="8" id="Y9Z-CD-QL8"/>
+                                    <constraint firstItem="FSp-QQ-BzQ" firstAttribute="centerY" secondItem="jsn-9K-bZN" secondAttribute="centerY" id="Z1U-5I-0kJ"/>
+                                    <constraint firstItem="shS-Vf-a29" firstAttribute="leading" secondItem="XgX-P0-zTz" secondAttribute="leading" id="Z4z-U3-BGP"/>
+                                    <constraint firstItem="tcC-LC-dgN" firstAttribute="centerY" secondItem="TCa-d2-Qpw" secondAttribute="centerY" id="ZjA-mx-jHz"/>
+                                    <constraint firstItem="9wZ-GF-VWc" firstAttribute="top" secondItem="wZD-K2-KfQ" secondAttribute="bottom" constant="8" id="aFd-11-eBz"/>
+                                    <constraint firstItem="fKS-fG-fzJ" firstAttribute="width" secondItem="Bui-wZ-eR4" secondAttribute="width" id="aVb-v1-9ET"/>
+                                    <constraint firstItem="OLT-oU-OaO" firstAttribute="leading" secondItem="ioO-jC-ST3" secondAttribute="leading" id="abh-k6-bz8"/>
+                                    <constraint firstItem="fKS-fG-fzJ" firstAttribute="top" secondItem="Bui-wZ-eR4" secondAttribute="top" id="bRb-nb-OzC"/>
+                                    <constraint firstItem="3f5-tr-3Qu" firstAttribute="trailing" secondItem="Pul-O5-dLr" secondAttribute="trailing" id="btf-Na-Rt4"/>
+                                    <constraint firstItem="1mq-gh-Z3N" firstAttribute="leading" secondItem="Cp0-mW-AT8" secondAttribute="leading" id="byj-n1-YYI"/>
+                                    <constraint firstItem="fxu-bJ-SIu" firstAttribute="leading" secondItem="jsn-9K-bZN" secondAttribute="leading" id="c5Q-Z1-ndg"/>
+                                    <constraint firstItem="Awc-SM-eZg" firstAttribute="top" secondItem="TCa-d2-Qpw" secondAttribute="bottom" constant="8" id="c6R-qL-wip"/>
+                                    <constraint firstAttribute="trailing" secondItem="Uw5-5P-msa" secondAttribute="trailing" constant="30" id="cGK-Mg-53h"/>
+                                    <constraint firstItem="Awc-SM-eZg" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="cmE-pR-RrD"/>
+                                    <constraint firstItem="jsn-9K-bZN" firstAttribute="top" secondItem="TCa-d2-Qpw" secondAttribute="bottom" constant="35" id="dCR-lM-qyM"/>
+                                    <constraint firstItem="XgX-P0-zTz" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="dei-Bf-EcI"/>
+                                    <constraint firstItem="shS-Vf-a29" firstAttribute="top" secondItem="XgX-P0-zTz" secondAttribute="bottom" constant="8" id="eUQ-jB-ALG"/>
+                                    <constraint firstItem="Pul-O5-dLr" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="esM-Px-jYl"/>
+                                    <constraint firstItem="SDg-dH-MwL" firstAttribute="trailing" secondItem="go2-we-YWY" secondAttribute="trailing" id="fgb-ft-t0z"/>
+                                    <constraint firstAttribute="trailing" secondItem="wZD-K2-KfQ" secondAttribute="trailing" constant="30" id="fza-76-RlU"/>
+                                    <constraint firstItem="TCa-d2-Qpw" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="gas-0X-KK7"/>
+                                    <constraint firstItem="0T0-ij-HxB" firstAttribute="trailing" secondItem="tcC-LC-dgN" secondAttribute="trailing" id="hEE-cA-BcY"/>
+                                    <constraint firstItem="wZD-K2-KfQ" firstAttribute="leading" secondItem="ioO-jC-ST3" secondAttribute="trailing" constant="30" id="hEP-Ce-fzA"/>
+                                    <constraint firstItem="go2-we-YWY" firstAttribute="top" secondItem="PE1-to-zlJ" secondAttribute="bottom" constant="35" id="imM-U1-ql8"/>
+                                    <constraint firstItem="ioO-jC-ST3" firstAttribute="top" secondItem="Pul-O5-dLr" secondAttribute="bottom" constant="35" id="jH8-DL-M0j"/>
+                                    <constraint firstItem="FSp-QQ-BzQ" firstAttribute="leading" secondItem="jsn-9K-bZN" secondAttribute="trailing" constant="30" id="jwk-S7-gsP"/>
+                                    <constraint firstAttribute="bottom" secondItem="uzl-R1-t2A" secondAttribute="bottom" constant="150" id="kMs-yy-UIF"/>
+                                    <constraint firstItem="uzl-R1-t2A" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="kbq-t3-879"/>
+                                    <constraint firstAttribute="trailing" secondItem="fKS-fG-fzJ" secondAttribute="trailing" constant="30" id="lja-eg-yIs"/>
+                                    <constraint firstAttribute="trailing" secondItem="Q1R-md-CUS" secondAttribute="trailing" constant="30" id="n4b-Wo-yFP"/>
+                                    <constraint firstItem="SDg-dH-MwL" firstAttribute="leading" secondItem="go2-we-YWY" secondAttribute="leading" id="nhS-TO-KUP"/>
+                                    <constraint firstItem="WbL-6T-a1k" firstAttribute="leading" secondItem="FSp-QQ-BzQ" secondAttribute="leading" id="o9k-SH-H9u"/>
+                                    <constraint firstItem="Cp0-mW-AT8" firstAttribute="top" secondItem="jsn-9K-bZN" secondAttribute="bottom" constant="35" id="pci-gw-C5h"/>
+                                    <constraint firstItem="LDf-08-taB" firstAttribute="centerX" secondItem="EuW-PF-Vvj" secondAttribute="centerX" id="smV-vd-Yv5"/>
+                                    <constraint firstItem="Awc-SM-eZg" firstAttribute="leading" secondItem="TCa-d2-Qpw" secondAttribute="leading" id="su8-ds-Za7"/>
+                                    <constraint firstAttribute="trailing" secondItem="XgX-P0-zTz" secondAttribute="trailing" constant="30" id="sy1-oE-gRS"/>
+                                    <constraint firstItem="GxE-21-El1" firstAttribute="leading" secondItem="fKS-fG-fzJ" secondAttribute="leading" id="uka-XW-iiA"/>
+                                    <constraint firstItem="go2-we-YWY" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="utf-1b-vzG"/>
+                                    <constraint firstAttribute="trailing" secondItem="FSp-QQ-BzQ" secondAttribute="trailing" constant="30" id="w2K-Ed-BE4"/>
+                                    <constraint firstItem="Q1R-md-CUS" firstAttribute="leading" secondItem="go2-we-YWY" secondAttribute="trailing" constant="30" id="wPE-2P-sqg"/>
+                                    <constraint firstItem="ioO-jC-ST3" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" constant="30" id="xJp-Zu-csx"/>
+                                    <constraint firstItem="fxu-bJ-SIu" firstAttribute="top" secondItem="jsn-9K-bZN" secondAttribute="bottom" constant="8" id="xKk-aa-SsI"/>
+                                    <constraint firstItem="Bui-wZ-eR4" firstAttribute="top" secondItem="go2-we-YWY" secondAttribute="bottom" constant="35" id="xO0-er-pNS"/>
+                                    <constraint firstAttribute="trailing" secondItem="uzl-R1-t2A" secondAttribute="trailing" constant="30" id="xsn-Rk-98O"/>
+                                    <constraint firstItem="dc1-Bz-bXk" firstAttribute="top" secondItem="Bui-wZ-eR4" secondAttribute="bottom" constant="8" id="zMX-zL-qAV"/>
+                                    <constraint firstItem="shS-Vf-a29" firstAttribute="trailing" secondItem="XgX-P0-zTz" secondAttribute="trailing" id="zah-dS-wlv"/>
+                                    <constraint firstItem="LDf-08-taB" firstAttribute="leading" secondItem="EuW-PF-Vvj" secondAttribute="leading" id="zd2-g8-ZQn"/>
+                                </constraints>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="EuW-PF-Vvj" secondAttribute="trailing" id="0oq-3b-gTm"/>
+                            <constraint firstItem="EuW-PF-Vvj" firstAttribute="leading" secondItem="uhd-8R-UA7" secondAttribute="leading" id="95y-TW-88A"/>
+                            <constraint firstAttribute="bottom" secondItem="EuW-PF-Vvj" secondAttribute="bottom" id="J4N-N8-6mJ"/>
+                            <constraint firstItem="EuW-PF-Vvj" firstAttribute="top" secondItem="uhd-8R-UA7" secondAttribute="top" id="one-PA-7ss"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Dgn-5C-x53"/>
+                    </view>
+                    <connections>
+                        <outlet property="addressTextField" destination="XgX-P0-zTz" id="wLC-RI-gOU"/>
+                        <outlet property="cityTextField" destination="TCa-d2-Qpw" id="dmn-vl-25K"/>
+                        <outlet property="confirmPasswordTextField" destination="Q1R-md-CUS" id="r5d-Lk-d1p"/>
+                        <outlet property="countryTextField" destination="jsn-9K-bZN" id="Egd-hM-7ko"/>
+                        <outlet property="emailTextField" destination="PE1-to-zlJ" id="dOR-or-l93"/>
+                        <outlet property="firstNameTextField" destination="Bui-wZ-eR4" id="F4w-0j-EMt"/>
+                        <outlet property="kycCustomerIDTextField" destination="ioO-jC-ST3" id="EfJ-p8-nMd"/>
+                        <outlet property="kycIDTypeTextField" destination="wZD-K2-KfQ" id="PBG-Ta-mdh"/>
+                        <outlet property="kycSSNTextField" destination="Pul-O5-dLr" id="uca-k2-Ogy"/>
+                        <outlet property="lastNameTextField" destination="fKS-fG-fzJ" id="DIY-Js-VZY"/>
+                        <outlet property="mobileTextField" destination="Cp0-mW-AT8" id="khD-JV-j2O"/>
+                        <outlet property="passwordTextField" destination="go2-we-YWY" id="rFd-Ti-ZvY"/>
+                        <outlet property="postalCodeTextField" destination="FSp-QQ-BzQ" id="Nsb-CR-weq"/>
+                        <outlet property="registerButton" destination="uzl-R1-t2A" id="Vja-6k-pBJ"/>
+                        <outlet property="scrollView" destination="EuW-PF-Vvj" id="9Vz-Oi-ee9"/>
+                        <outlet property="stateTextField" destination="tcC-LC-dgN" id="EzM-Xn-8Iz"/>
+                        <outlet property="titleLabel" destination="sXt-5y-Vpj" id="zgO-1e-Kl8"/>
+                        <outlet property="titleView" destination="LDf-08-taB" id="tOy-1B-MfI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mZa-tg-HdH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-14.492753623188406" y="191.51785714285714"/>
+        </scene>
+        <!--Card View Controller-->
+        <scene sceneID="qbu-qO-KXT">
+            <objects>
+                <viewController storyboardIdentifier="CardViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="iSl-ol-FLq" customClass="CardViewController" customModule="loafwallet" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="J3l-GF-uZL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sjV-6j-D56">
+                                <rect key="frame" x="77.5" y="410" width="259" height="162"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blockcardPlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="LGr-pV-FOB">
+                                        <rect key="frame" x="0.0" y="0.0" width="259" height="162"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="162" id="cup-A6-kHM"/>
+                                            <constraint firstAttribute="width" constant="259" id="nPZ-qK-V67"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uxb-Gi-FSd">
+                                        <rect key="frame" x="10" y="121" width="239" height="14"/>
+                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="12"/>
+                                        <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.2666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vtG-G2-cU3">
+                                        <rect key="frame" x="10" y="138" width="239" height="14"/>
+                                        <fontDescription key="fontDescription" name="Menlo-Bold" family="Menlo" pointSize="12"/>
+                                        <color key="textColor" red="0.27450980390000002" green="0.27450980390000002" blue="0.2666666667" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="vtG-G2-cU3" secondAttribute="bottom" constant="10" id="1GV-fM-jNk"/>
+                                    <constraint firstItem="vtG-G2-cU3" firstAttribute="leading" secondItem="sjV-6j-D56" secondAttribute="leading" constant="10" id="D5Z-dd-Sia"/>
+                                    <constraint firstItem="uxb-Gi-FSd" firstAttribute="leading" secondItem="sjV-6j-D56" secondAttribute="leading" constant="10" id="IqL-KE-rIg"/>
+                                    <constraint firstAttribute="width" constant="259" id="Mgm-A5-Mb2"/>
+                                    <constraint firstAttribute="bottom" secondItem="LGr-pV-FOB" secondAttribute="bottom" id="Y0c-um-r9s"/>
+                                    <constraint firstAttribute="trailing" secondItem="vtG-G2-cU3" secondAttribute="trailing" constant="10" id="f94-bC-IiV"/>
+                                    <constraint firstItem="vtG-G2-cU3" firstAttribute="top" secondItem="uxb-Gi-FSd" secondAttribute="bottom" constant="3" id="fa8-Hj-cQx"/>
+                                    <constraint firstItem="LGr-pV-FOB" firstAttribute="top" secondItem="sjV-6j-D56" secondAttribute="top" id="joy-aJ-lMg"/>
+                                    <constraint firstAttribute="trailing" secondItem="uxb-Gi-FSd" secondAttribute="trailing" constant="10" id="nRR-fs-HMx"/>
+                                    <constraint firstItem="LGr-pV-FOB" firstAttribute="leading" secondItem="sjV-6j-D56" secondAttribute="leading" id="wIa-I8-kn0"/>
+                                    <constraint firstAttribute="trailing" secondItem="LGr-pV-FOB" secondAttribute="trailing" id="xdr-jS-xhj"/>
+                                    <constraint firstAttribute="height" constant="162" id="z9O-RN-Bo1"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timestamp:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0fI-Uj-xUZ">
+                                <rect key="frame" x="20" y="124" width="120" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="xjd-0k-CDT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jvz-el-9i5">
+                                <rect key="frame" x="20" y="155" width="120" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="jrE-H7-qIT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TR9-j2-dm9">
+                                <rect key="frame" x="20" y="186" width="120" height="23"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="120" id="fsS-av-gxq"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" cocoaTouchSystemColor="lightTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Timestamp:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIe-dH-WVs">
+                                <rect key="frame" x="145" y="124" width="249" height="23"/>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5bJ-9m-uZe">
+                                <rect key="frame" x="145" y="155" width="249" height="23"/>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lht-sB-ZZh">
+                                <rect key="frame" x="145" y="186" width="249" height="23"/>
+                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="19"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="hIe-dH-WVs" firstAttribute="leading" secondItem="0fI-Uj-xUZ" secondAttribute="trailing" constant="5" id="1Nq-LA-oVb"/>
+                            <constraint firstItem="hmk-ts-H9e" firstAttribute="trailing" secondItem="5bJ-9m-uZe" secondAttribute="trailing" constant="20" id="2uN-vp-m2U"/>
+                            <constraint firstItem="sjV-6j-D56" firstAttribute="centerX" secondItem="J3l-GF-uZL" secondAttribute="centerX" id="7PQ-ax-gGm"/>
+                            <constraint firstItem="0fI-Uj-xUZ" firstAttribute="leading" secondItem="hmk-ts-H9e" secondAttribute="leading" constant="20" id="9Up-s0-3Zr"/>
+                            <constraint firstItem="TR9-j2-dm9" firstAttribute="leading" secondItem="hmk-ts-H9e" secondAttribute="leading" constant="20" id="CVF-3R-kxo"/>
+                            <constraint firstItem="hmk-ts-H9e" firstAttribute="bottom" secondItem="sjV-6j-D56" secondAttribute="bottom" constant="290" id="FEr-ZI-oFB"/>
+                            <constraint firstItem="hmk-ts-H9e" firstAttribute="trailing" secondItem="hIe-dH-WVs" secondAttribute="trailing" constant="20" id="JDa-as-fqr"/>
+                            <constraint firstItem="5bJ-9m-uZe" firstAttribute="top" secondItem="hIe-dH-WVs" secondAttribute="bottom" constant="8" id="Kz1-0E-Ono"/>
+                            <constraint firstItem="lht-sB-ZZh" firstAttribute="top" secondItem="5bJ-9m-uZe" secondAttribute="bottom" constant="8" id="L6b-dG-JOj"/>
+                            <constraint firstItem="TR9-j2-dm9" firstAttribute="top" secondItem="Jvz-el-9i5" secondAttribute="bottom" constant="8" id="LQh-yM-E29"/>
+                            <constraint firstItem="lht-sB-ZZh" firstAttribute="leading" secondItem="TR9-j2-dm9" secondAttribute="trailing" constant="5" id="Ncj-Fl-Ert"/>
+                            <constraint firstItem="hIe-dH-WVs" firstAttribute="top" secondItem="0fI-Uj-xUZ" secondAttribute="top" id="Ov8-Zb-Akt"/>
+                            <constraint firstItem="0fI-Uj-xUZ" firstAttribute="top" secondItem="hmk-ts-H9e" secondAttribute="top" constant="80" id="PqN-wf-IXK"/>
+                            <constraint firstItem="5bJ-9m-uZe" firstAttribute="leading" secondItem="Jvz-el-9i5" secondAttribute="trailing" constant="5" id="Q3h-at-0Zj"/>
+                            <constraint firstItem="Jvz-el-9i5" firstAttribute="leading" secondItem="hmk-ts-H9e" secondAttribute="leading" constant="20" id="aAY-up-iLX"/>
+                            <constraint firstItem="Jvz-el-9i5" firstAttribute="top" secondItem="0fI-Uj-xUZ" secondAttribute="bottom" constant="8" id="aDh-VC-mWy"/>
+                            <constraint firstItem="lht-sB-ZZh" firstAttribute="top" secondItem="5bJ-9m-uZe" secondAttribute="bottom" constant="8" id="rMm-n4-32p"/>
+                            <constraint firstItem="hmk-ts-H9e" firstAttribute="trailing" secondItem="lht-sB-ZZh" secondAttribute="trailing" constant="20" id="s4i-aR-w57"/>
+                            <constraint firstItem="5bJ-9m-uZe" firstAttribute="top" secondItem="hIe-dH-WVs" secondAttribute="bottom" constant="8" id="tuu-nK-ZdD"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hmk-ts-H9e"/>
+                    </view>
+                    <connections>
+                        <outlet property="blockcardImageView" destination="LGr-pV-FOB" id="4jj-RP-mFl"/>
+                        <outlet property="bottomVerticalConstraint" destination="FEr-ZI-oFB" id="wNJ-j1-QIV"/>
+                        <outlet property="cardBackgroundView" destination="sjV-6j-D56" id="hC2-Ys-mse"/>
+                        <outlet property="demoIDLabel" destination="5bJ-9m-uZe" id="MvL-EE-q0a"/>
+                        <outlet property="demoTimestampLabel" destination="hIe-dH-WVs" id="ybf-Zk-PF0"/>
+                        <outlet property="demoVersionLabel" destination="lht-sB-ZZh" id="fp4-u7-mYJ"/>
+                        <outlet property="firstnameLabel" destination="uxb-Gi-FSd" id="XdQ-po-ta8"/>
+                        <outlet property="lastnameLabel" destination="vtG-G2-cU3" id="9sT-uz-scm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4qa-Yf-cuI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="763.768115942029" y="191.51785714285714"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="blockcardPlaceholder" width="337" height="212.66667175292969"/>
+    </resources>
+</document>

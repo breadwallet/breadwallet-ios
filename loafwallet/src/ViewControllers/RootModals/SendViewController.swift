@@ -37,7 +37,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
         self.donationCell = DonationSetupCell(store: store, wantsToDonate: true)
         
-        Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_VSC.rawValue)
+        Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_VSC.rawValue)
 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -57,7 +57,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private let addressCell = AddressCell()
     private let descriptionCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let donationCell: DonationSetupCell
-    private var sendButton = ShadowButton(title: S.Send.sendLabel, type: .primary)
+    private var sendButton = ShadowButton(title: S.Send.sendLabel, type: .flatLitecoinBlue)  
     private let currency: ShadowButton
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var pinPadHeightConstraint: NSLayoutConstraint?
@@ -73,9 +73,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     override func viewDidLoad() {
         
         if #available(iOS 11.0, *) {
-            guard let mainColor = UIColor(named: "mainColor"),
-                let textColor = UIColor(named: "labelTextColor"),
-                let backgroundColor = UIColor(named: "lfBackgroundColor") else {
+            guard let backgroundColor = UIColor(named: "lfBackgroundColor") else {
                NSLog("ERROR: Main color")
                return
             }
@@ -298,6 +296,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             })
         }
         confirm.cancelCallback = {
+            self.wantsToDonate = false
             confirm.dismiss(animated: true, completion: {
                 self.sender.transaction = nil
             })
@@ -369,7 +368,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         myself.onPublishSuccess?()
                     })
                     self?.saveEvent("send.success")
-                    Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_DSL.rawValue)
+                    Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_DSL.rawValue)
 
                 case .creationError(let message):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)

@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "Reddit";
 
-/* Terms of Use button label */
-"About.terms" = "Nutzungsbedingungen";
-
 /* About screen title */
 "About.title" = "Info";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mein Litewallet";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "VERWALTEN";
@@ -164,6 +158,9 @@
 /* Yes button */
 "Button.yes" = "Ja";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "Kaufen";
+
 /* Bitrefill buy financial details */
 "BuyCenter.bitrefillFinancialDetails" = "Vergessen Sie Ihre Startphrase oder PIN?";
 
@@ -175,12 +172,6 @@
 
 /* Changelly Title */
 "BuyCenter.changellyTitle" = "Changelly";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "•  Kaufen Sie Litecoin\n • Erhältlich in 33 Ländern\n • Handeln und lagern Sie Ihre Litecoin\n • Einfach für Kryptowährungsanfänger";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "Coinbase";
 
 /* Buy Modal Title */
 "BuyCenter.ModalTitle" = "Kaufen Sie Łitecoin";
@@ -196,6 +187,9 @@
 
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Zentriere deinen Ausweis im Rechteck";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "Austauschdetails:";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Betrag, welcher versendet werden soll:";
@@ -215,6 +209,12 @@
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "Senden";
 
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "GEBÜHR:";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "ADRESSE";
+
 /* Confirmation Screen title */
 "Confirmation.title" = "Bestätigung";
 
@@ -233,8 +233,17 @@
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Wort #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "ab";
+
+/* No comment provided by engineer. */
+"Copy" = "Kopieren";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "Litecoin-Anzeigeeinheit";
+
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "Wählen:";
 
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Wechselkurs";
@@ -301,6 +310,9 @@
 
 /* Fee Selector title */
 "FeeSelector.title" = "Verarbeitungsgeschwindigkeit";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "GESCHICHTE";
 
 /* Checking private key balance progress view text */
 "Import.checking" = "Das Privatschlüsselguthaben wird überprüft …";
@@ -485,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "Nicht vertrauenswürdiges Zertifikat";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "DISMISS";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -497,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Aktivieren Sie den Gerät-Passcode";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "Fortsetzen";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "Ihr Paper-Key muss für den Fall, dass Sie Ihr Telefon verlieren oder wechseln, gespeichert werden. Tippen Sie hier, um fortzufahren.";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "Stornieren";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "Aktivieren";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Maßnahme erforderlich";
@@ -508,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transaktion abgelehnt";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "Litewallet nutzt mittlerweile eine 6-stellige PIN. Hier antippen, um upzugraden.";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "PIN upgraden";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "Tragen Sie zur Verbesserung von Litewallet bei, indem Sie Ihre anonymen Daten mit uns teilen";
@@ -520,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "Touch ID aktivieren";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Litewallet nutzt mittlerweile eine 6-stellige PIN. Hier antippen, um upzugraden.";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "PIN upgraden";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Schalten Sie Benachrichtigungen ein, um in Zukunft besondere Meldungen von Litewallet zu erhalten.";
@@ -541,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Benachrichtigungen";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "ERHALTEN";
 
 /* Address copied message. */
 "Receive.copied" = "In die Zwischenablage kopiert.";
@@ -689,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "Guthaben: %1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "SENDEN";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Rufe die Einstellungen auf, um den Zugriff auf die Kamera zu erlauben.";
 
@@ -791,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "Wallet importieren";
 
+/* Languages label */
+"Settings.languages" = "Sprachen";
+
 /* Manage settings section header */
 "Settings.manage" = "Verwalten";
 
@@ -848,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "Die sicherste Option zur Nutzung von Litecoin.";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "Verbindung wird hergestellt ...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "Erneut scannen ...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "Erfolg!";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "Synchronisierung läuft ...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Verbindet";
-
-/* Syncing view header text */
-"SyncingView.header" = "Synchronisation läuft";
-
-/* Retry button label */
-"SyncingView.retry" = "Erneut versuchen";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synchronisiert";
@@ -908,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch-ID-Ausgabenlimit";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "Betrag Detail:";
+
 /* Availability status text */
 "Transaction.available" = "Verfügbar für Ausgaben";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "Block:";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "Memo:";
+
 /* Transaction complete label */
 "Transaction.complete" = "Abgeschlossen";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "Transaktionsendbetrag Detail";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "Endguthaben: %1$@";
@@ -941,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Startguthaben: %1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "Einzelheiten zum Transaktionsstartbetrag";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tk ID:";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Bestätigung ausstehend. Einige Händler fordern eine Bestätigung, um Transaktionen abzuschließen. Voraussichtliche Dauer: 1–2 Stunden.";
 
@@ -962,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "an %1$@";
 
-/* More button title */
-"TransactionDetails.more" = "Mehr …";
+/* Less button title */
+"TransactionDetails.less" = "Weniger";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "%1$@ bewegt";
@@ -974,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "Nicht bestätigt";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "ab";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "%1$@ erhalten";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "Erhalten <b>%1@</b>";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "ADRESSE ERHALTEN";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@ gesendet";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "Gesendet <b>%1@</b>";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "Tk ID:";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "Status";
@@ -1007,6 +1073,9 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "Deaktiviert bis: %1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "Pin eingeben";
+
 /* Unlock with FaceID accessibility label */
 "UnlockScreen.faceIdText" = "Entsperren mit FaceID";
 
@@ -1018,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "Scannen";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PIN eingeben";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "Entsperre dein Litewallet.";
@@ -1156,9 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d von %2$d";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";

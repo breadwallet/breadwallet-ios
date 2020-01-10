@@ -20,7 +20,7 @@ extension LAContext {
         if LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
             return true
         } else {
-            if error?.code == LAError.touchIDNotAvailable.rawValue {
+            if error?.code == LAError.biometryNotAvailable.rawValue {
                 return false
             } else {
                 return true

@@ -28,9 +28,6 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "My Litewallet";
 
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
-
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "MANAGE";
 
@@ -172,17 +169,11 @@
 /* Changelly Title */
 "BuyCenter.changellyTitle" = "Changelly";
 
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "• Buy Litecoin\n• Available in 33 countries\n• Trade and Store your Litecoin\n• Easy for cryptocurrency novices";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "Coinbase";
-
 /* Buy Modal Title */
 "BuyCenter.ModalTitle" = "Buy Łitecoin";
 
 /* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "• Use ID or Passport\n• Buy Litecoin via credit card\n• Buy with USD or EUR";
+"BuyCenter.simplexFinancialDetails" = "• Get Litecoin in 5 mins!\n• Buy Litecoin via credit card\n• Passport or State ID";
 
 /* Simplex Title */
 "BuyCenter.simplexTitle" = "Simplex";
@@ -488,13 +479,13 @@
 "Prompts.FaceId.title" = "Enable Face ID";
 
 /* No passcode set warning body */
-"Prompts.NoPasscode.body" = "A device passcode is needed to safeguard your wallet. Go to settings and turn passcode on.";
+"Prompts.NoPasscode.body" = "A device passcode is needed to safeguard your wallet.";
 
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Turn device passcode on";
 
 /* Warning about paper key. */
-"Prompts.PaperKey.body" = "Your Paper Key must be saved in case you ever lose or change your phone. Tap here to continue.";
+"Prompts.PaperKey.body" = "Your Paper Key must be kept in a safe place. It is the only way modify or restore your Litewallet or transfer your Litecoin. Please write it down.";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
@@ -518,10 +509,10 @@
 "Prompts.TouchId.title" = "Enable Touch ID";
 
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Litewallet has upgraded to using a 6-digit PIN. Tap here to upgrade.";
+"Prompts.SetPin.body" = "Litewallet requires a 6-digit PIN. Please set and store your PIN in a safe place.";
 
 /* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "Upgrade PIN";
+"Prompts.SetPin.title" = "Set PIN";
 
 /* Push notifications settings view body */
 "PushNotifications.body" = "Turn on notifications to receive special messages from Litewallet in the future.";
@@ -952,9 +943,6 @@
 /* [received] at <address> (received title 2/2) */
 "TransactionDetails.from" = "at %1$@";
 
-/* More button title */
-"TransactionDetails.more" = "More...";
-
 /* Moved $5.00 */
 "TransactionDetails.moved" = "Moved %1$@";
 
@@ -1008,9 +996,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "Scan";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Enter PIN";
 
 /* TouchID/FaceID prompt text */
 "UnlockScreen.touchIdPrompt" = "Unlock your Litewallet.";
@@ -1088,7 +1073,7 @@
 "Webview.updating" = "Updating...";
 
 /* Welcome view body text */
-"Welcome.body" = "Litewallet now has a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens. All coins are displayed in lites (ł). 1 Litecoin (Ł) = 1000 lites (ł).";
+"Welcome.body" = "Litewallet now has a brand new look and some new features.\n\nAll coins are displayed in lites (ł). 1 Litecoin (Ł) = 1000 lites (ł).";
 
 /* Welcome view title */
 "Welcome.title" = "Welcome to Litewallet!";
@@ -1124,7 +1109,7 @@
 "WipeWallet.warningAlert" = "DO NOT LOSE IT!";
 
 /* Warning description */
-"WipeWallet.warningDescription" = "Your LiteWallet is empty. Reseting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo LiteWallet developers can retrieve this seed for you.";
+"WipeWallet.warningDescription" = "Your LiteWallet is empty. Resetting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo LiteWallet developers can retrieve this seed for you.";
 
 /* Warning title */
 "WipeWallet.warningTitle" = "PLEASE READ!";
@@ -1148,7 +1133,91 @@
 "WritePaperPhrase.step" = "%1$d of %2$d";
 
 /* as of a time or date */
-"Conjunction.asOf" = "";
+"Conjunction.asOf" = "as of";
 
 /* No comment provided by engineer. */
-"Copy" = "";
+"Copy" = "Copy";
+
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "BUY";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "Exchange details:";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "FEE:";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "ADDRESS:";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "HISTORY";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "RECEIVE";
+
+/* Send Bar Item Title */
+"Send.barItemTitle" = "SEND";
+
+/* Less button title */
+"TransactionDetails.less" = "Less...";
+
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "as of";
+
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "RECEIVE ADDRESS";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "TXID:";
+
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "Enter PIN";
+
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "Amount Detail:";
+
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "Block:";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "Memo:";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID:";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "Transaction end amount detail";
+
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "Transaction starting amount detail";
+
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "Connecting...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "Success!";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "Syncing...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "Rescanning...";
+
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "Continue";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "Cancel";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "Enable";
+
+/* Dismiss button. */
+"Prompts.dismiss" = "DISMISS";
+
+/* Languages label */
+"Settings.languages" = "Languages";
+
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "Choose:";

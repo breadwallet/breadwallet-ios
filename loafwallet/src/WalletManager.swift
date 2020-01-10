@@ -41,7 +41,7 @@ extension NSNotification.Name {
     public static let WalletTxRejectedNotification = NSNotification.Name("WalletTxRejected")
     public static let WalletSyncStartedNotification = NSNotification.Name("WalletSyncStarted")
     public static let WalletSyncStoppedNotification = NSNotification.Name("WalletSyncStopped")
-    public static let WalletDidWipe = NSNotification.Name("WalletDidWipe")
+    public static let WalletDidWipeNotification = NSNotification.Name("WalletDidWipe")
 }
 
 private func SafeSqlite3ColumnBlob<T>(statement: OpaquePointer, iCol: Int32) -> UnsafePointer<T>? {
@@ -53,6 +53,8 @@ private func SafeSqlite3ColumnBlob<T>(statement: OpaquePointer, iCol: Int32) -> 
 // After instantiating a WalletManager object, call myWalletManager.peerManager.connect() to begin syncing.
 
 class WalletManager : BRWalletListener, BRPeerManagerListener {
+    
+
     internal var didInitWallet = false
     internal let dbPath: String
     internal var db: OpaquePointer? = nil
@@ -62,6 +64,17 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
     internal let store: Store
     var masterPubKey = BRMasterPubKey()
     var earliestKeyTime: TimeInterval = 0
+    
+    static let sharedInstance : WalletManager = {
+        var instance: WalletManager?
+        do {
+            instance = try WalletManager(store: Store(), dbPath: nil)
+        } catch {
+            NSLog("ERROR: Instance of WalletManager not initialized")
+        }
+        return instance!
+    }()
+
 
     var wallet: BRWallet? {
         guard self.masterPubKey != BRMasterPubKey() else { return nil }
@@ -128,6 +141,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
     lazy var allWords: Set<String> = {
         var set: Set<String> = Set()
+        
         Bundle.main.localizations.forEach { lang in
             if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
                 if let words = NSArray(contentsOfFile: path) as? [NSString] {

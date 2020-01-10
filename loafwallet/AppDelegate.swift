@@ -27,7 +27,7 @@ import UIKit
 import LocalAuthentication
 import Mixpanel
 
-
+@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private var window: UIWindow? {
@@ -35,16 +35,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     let applicationController = ApplicationController()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool { 
         var mixpanelToken = ""
         #if Debug || Testflight
-             mixpanelToken = K.mixpanelTokenDevelopment
-        #else
-             mixpanelToken = K.mixpanelTokenProduction
+        mixpanelToken = EnvironmentVariables.mixpanelTokenDevKey
+         #else
+             mixpanelToken = EnvironmentVariables.mixpanelTokenProdKey
         #endif
         Mixpanel.initialize(token: mixpanelToken)
-        Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_AL.rawValue, properties: ["app details":["VERSION": AppVersion.string]])
+        Mixpanel.mainInstance().track(event: 
+            
+            MixpanelEvents._20191105_AL.rawValue, properties: ["app details":["VERSION": AppVersion.string]])
         
         UIView.swizzleSetFrame()
         applicationController.launch(application: application, options: launchOptions)
@@ -91,5 +92,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return applicationController.open(url: url)
     }
 
+    func application(_ application: UIApplication, shouldSaveApplicationState coder: NSCoder) -> Bool {
+       return true
+    }
+    
+    func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
+        return true
+    }
 }
 

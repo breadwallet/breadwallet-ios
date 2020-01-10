@@ -9,19 +9,18 @@
 import Foundation
 import UIKit
 
-class Partner {
-  
-  class func dataArray() -> [[String:AnyObject]] {
-    let simplexDictionary =
-      ["title":S.BuyCenter.Cells.simplexTitle as AnyObject,
-       "details":S.BuyCenter.Cells.simplexFinancialDetails,
-       "logo":UIImage(named: "simplexLogo") ?? " ",
-       "baseColor":#colorLiteral(red: 0.4156862745, green: 0.4274509804, blue: 0.4431372549, alpha: 1)] as [String : AnyObject]
+struct Partner {
     
-    
+    let logo: UIImage
+    let headerTitle: String
+    let details: String
+     
+    static func partnerDataArray() -> [Partner] {
+        let simplex = Partner(logo: UIImage(named: "simplexLogo")!, headerTitle: S.BuyCenter.Cells.simplexTitle, details: S.BuyCenter.Cells.simplexFinancialDetails)
+        return [simplex]
+    }
+     
 //TODO: Uncomment as integration progresses, kcw-grunt
-
-    
 //    let coinbaseDictionary =
 //      ["title":S.BuyCenter.Cells.coinbaseTitle as AnyObject,
 //       "details":S.BuyCenter.Cells.coinbaseFinancialDetails,
@@ -38,8 +37,4 @@ class Partner {
 //       "details":S.BuyCenter.Cells.bitrefillFinancialDetails,
 //       "logo":UIImage(named:"bitrefillLogo") ?? " ",
 //       "baseColor":#colorLiteral(red: 0.2235294118, green: 0.5490196078, blue: 0.9333333333, alpha: 1)] as [String : AnyObject]
- 
-    return [simplexDictionary]
-  }
-  
 }

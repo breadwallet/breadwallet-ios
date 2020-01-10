@@ -44,9 +44,8 @@ class StartFlowPresenter : Subscriber {
         store.lazySubscribe(self,
                         selector: { $0.isLoginRequired != $1.isLoginRequired },
                         callback: { self.handleLoginRequiredChange(state: $0) }) //TODO - this should probably be in modal presenter
-        store.subscribe(self, name: .lock, callback: { _ in
-            self.presentLoginFlow(isPresentedForLock: true)
-        })
+        store.subscribe(self, name: .lock,
+                        callback: { _ in self.presentLoginFlow(isPresentedForLock: true) })
     }
 
     private func handleStartFlowChange(state: State) {
@@ -70,7 +69,7 @@ class StartFlowPresenter : Subscriber {
     private func presentStartFlow() {
         let startViewController = StartViewController(store: store,
                                                       didTapCreate: { [weak self] in
-                                                        self?.pushPinCreationViewControllerForNewWallet()
+            self?.pushPinCreationViewControllerForNewWallet()
         },
                                                       didTapRecover: { [weak self] in
             guard let myself = self else { return }
@@ -163,15 +162,21 @@ class StartFlowPresenter : Subscriber {
     }
 
     private func pushConfirmPaperPhraseViewController(pin: String) {
-        let confirmViewController = ConfirmPaperPhraseViewController(store: store, walletManager: walletManager, pin: pin, callback: { [weak self] in
-            guard let myself = self else { return }
-            myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
-                self?.store.perform(action: HideStartFlow())
-            })))
-        })
-        confirmViewController.title = S.SecurityCenter.Cells.paperKeyTitle
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.pushViewController(confirmViewController, animated: true)
+         
+        let confirmVC = UIStoryboard.init(name: "Phrase", bundle: nil).instantiateViewController(withIdentifier: "ConfirmPaperPhraseViewController") as? ConfirmPaperPhraseViewController
+            confirmVC?.store = self.store
+            confirmVC?.walletManager = self.walletManager
+            confirmVC?.pin = pin
+            confirmVC?.didCompleteConfirmation = { [weak self] in
+                guard let myself = self else { return }
+                myself.store.perform(action: Alert.Show(.paperKeySet(callback: {
+                    self?.store.perform(action: HideStartFlow())
+                })))
+            }
+            navigationController?.navigationBar.tintColor = .white
+        if let confirmVC = confirmVC {
+            navigationController?.pushViewController(confirmVC, animated: true)
+        }
     }
 
     private func presentLoginFlow(isPresentedForLock: Bool) {

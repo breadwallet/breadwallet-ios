@@ -24,7 +24,7 @@ class PhoneWCSessionManager : NSObject {
     }
 
     func listenForSeedChange() {
-        NotificationCenter.default.addObserver(forName: .WalletDidWipe, object: nil, queue: nil, using: { _ in
+        NotificationCenter.default.addObserver(forName: .WalletDidWipeNotification, object: nil, queue: nil, using: { _ in
             self.session.sendMessage([AW_SESSION_RESPONSE_KEY: "didWipe"], replyHandler: nil, errorHandler: nil)
         })
     }

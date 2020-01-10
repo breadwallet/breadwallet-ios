@@ -11,6 +11,12 @@ import BRCore
 
 //Ideally this would be a struct, but it needs to be a class to allow
 //for lazy variables
+
+struct TransactionStatusTuple {
+    var percentageString: String
+    var units: Int
+}
+
 class Transaction {
 
     //MARK: - Public
@@ -102,7 +108,38 @@ class Transaction {
 
         return "\(amountString)\n\n\(startingString)\n\(endingString)\n\n\(exchangeRateInfo)"
     }
-
+    
+    func amountDetailsAmountString(isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+        let feeAmount = Amount(amount: fee, rate: rate, maxDigits: maxDigits)
+        let feeString = direction == .sent ? String(format: S.Transaction.fee, "\(feeAmount.string(isLtcSwapped: isLtcSwapped))") : ""
+        return "\(direction.sign)\(Amount(amount: satoshis, rate: rate, maxDigits: maxDigits).string(isLtcSwapped: isLtcSwapped)) \(feeString)"
+    }
+    
+    func amountDetailsStartingBalanceString(isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+        return String(format: S.Transaction.starting, "\(Amount(amount: startingBalance, rate: rate, maxDigits: maxDigits).string(isLtcSwapped: isLtcSwapped))")
+    }
+    
+    func amountDetailsEndingBalanceString(isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+        return  String(format: String(format: S.Transaction.ending, "\(Amount(amount: balanceAfter, rate: rate, maxDigits: maxDigits).string(isLtcSwapped: isLtcSwapped))"))
+    }
+    
+    func amountExchangeString(isLtcSwapped: Bool, rate: Rate, rates: [Rate], maxDigits: Int) -> String {
+        var exchangeRateInfo = ""
+        if let metaData = metaData, let currentRate = rates.filter({ $0.code.lowercased() == metaData.exchangeRateCurrency.lowercased() }).first {
+            let difference = (currentRate.rate - metaData.exchangeRate)/metaData.exchangeRate*100.0
+            let prefix = difference > 0.0 ? "+" : "-"
+            let nf = NumberFormatter()
+            nf.currencySymbol = currentRate.currencySymbol
+            nf.numberStyle = .currency
+            if let rateString = nf.string(from: metaData.exchangeRate as NSNumber) {
+                ///TODO: Decide the usefulness of the rate percentage or a better way to describe it
+                let secondLine = "\(rateString)/LTC \(prefix)\(String(format: "%.2f", difference))%"
+                exchangeRateInfo = "\(secondLine)"
+            }
+        }
+        return  exchangeRateInfo
+    }
+    
     let direction: TransactionDirection
     let status: String
     let timestamp: Int
@@ -244,6 +281,12 @@ class Transaction {
         let date = Date(timeIntervalSince1970: Double(timestamp))
         return Transaction.longDateFormatter.string(from: date)
     }
+    
+    var shortTimestamp: String {
+        guard timestamp > 0 else { return wallet.transactionIsValid(tx) ? S.Transaction.justNow : "" }
+        let date = Date(timeIntervalSince1970: Double(timestamp))
+        return Transaction.shortDateFormatter.string(from: date)
+    }
 
     var rawTransaction: BRTransaction {
         return tx.pointee
@@ -256,6 +299,12 @@ class Transaction {
     static let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
+        return df
+    }()
+    
+    static let shortDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("MMM d, h:mm a")
         return df
     }()
 

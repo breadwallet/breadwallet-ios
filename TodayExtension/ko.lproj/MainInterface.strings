@@ -1,15 +1,15 @@
 
-/* Class = "UILabel"; text = "scan QR code"; ObjectID = "JgG-Ah-UZk"; */
-"JgG-Ah-UZk.text" = "";
-
-/* Class = "UILabel"; text = "receive"; ObjectID = "KJN-zr-IQB"; */
-"KJN-zr-IQB.text" = "";
-
-/* Class = "UILabel"; text = "send"; ObjectID = "QMM-JV-cTG"; */
-"QMM-JV-cTG.text" = "";
-
 /* Class = "UIButton"; normalTitle = "setup wallet"; ObjectID = "fgE-Q8-uG8"; */
-"fgE-Q8-uG8.normalTitle" = "";
+"fgE-Q8-uG8.normalTitle" = "설정 지갑";
 
 /* Class = "UILabel"; text = "Label"; ObjectID = "gQm-B2-ZXE"; */
-"gQm-B2-ZXE.text" = "";
+"gQm-B2-ZXE.text" = "상표";
+
+/* Class = "UILabel"; text = "scan QR code"; ObjectID = "JgG-Ah-UZk"; */
+"JgG-Ah-UZk.text" = "QR 코드 스캔";
+
+/* Class = "UILabel"; text = "receive"; ObjectID = "KJN-zr-IQB"; */
+"KJN-zr-IQB.text" = "받다";
+
+/* Class = "UILabel"; text = "send"; ObjectID = "QMM-JV-cTG"; */
+"QMM-JV-cTG.text" = "보내다";

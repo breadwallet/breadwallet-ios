@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "Reddit";
 
-/* Terms of Use button label */
-"About.terms" = "Användarvillkor";
-
 /* About screen title */
 "About.title" = "Om";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mitt Litewallet";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "HANTERA";
@@ -131,6 +125,9 @@
 /* BitID Authentication Request alert view title */
 "BitID.title" = "BitId autentiseringsförfrågan";
 
+/* buy button */
+"Button.buy" = "köpa";
+
 /* Cancel button label */
 "Button.cancel" = "Avbryt";
 
@@ -161,20 +158,62 @@
 /* Yes button */
 "Button.yes" = "Ja";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "KÖPA";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "• Köp presentkort \n • Fyll på förbetalda telefoner \n • Steam, Amazon, Hotels.com \n • Fungerar i 170 länder";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "Bitrefill";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "• Byt Litecoin för andra kryptor \n • Ingen ID krävs \n • Köp via kreditkort \n • Global täckning";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "Changelly";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "Köp Litecoin";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "• Skaffa Litecoin inom 5 minuter! \n • Köp Litecoin via kreditkort \n • Pass eller statligt ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "Simplex";
+
+/* Buy Center Title */
+"BuyCenter.title" = "Köp Litecoin";
+
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centrera ditt ID i boxen";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "Byt information:";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Belopp att skicka:";
 
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "Belopp att donera:";
+
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Nätverks-avgift";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "Bearbetningstid: Dessa transaktioner tar %1$@ minuter att behandla.";
 
 /* eg. Processing time: This transaction will take 10-30 minutes to process. */
 "Confirmation.processingTime" = "Bearbetningstid: Denna transaktion kommer att ta %1$@ minuter att bearbeta.";
 
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "Skicka";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "AVGIFT:";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "ADRESS:";
 
 /* Confirmation Screen title */
 "Confirmation.title" = "Bekräftelse";
@@ -185,17 +224,38 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Total kostnad:";
 
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "De angivna orden matchar inte din pappersnyckel. Var god försök igen.";
+
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "Ange följande ord från din ordnyckel, för att vara säker på att allt skrevs korrekt.";
 
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Ord #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "från och med";
+
+/* No comment provided by engineer. */
+"Copy" = "Kopia";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "Litecoin visningsenhet";
 
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "Välja:";
+
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Växelkurs";
+
+/* Donate Memo */
+"Donate.memo" = "Donation till Litecoin Foundation";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "Tryck för att donera till Litecoin Foundation!";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "Bekräfta donation";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att skicka e-post med post-appen i iOS.";
@@ -250,6 +310,9 @@
 
 /* Fee Selector title */
 "FeeSelector.title" = "Bearbetningshastighet";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "HISTORIA";
 
 /* Checking private key balance progress view text */
 "Import.checking" = "Kontrollerar privat nyckelsaldo...";
@@ -338,6 +401,9 @@
 /* No permissions for location services */
 "LocationPlugin.notAuthorized" = "Litewallet har inte rätt att utnyttja platstjänster";
 
+/* No comment provided by engineer. */
+"Malformed URI" = "Felaktig URI";
+
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "Du skapade din plånbok på %1$@";
 
@@ -373,6 +439,9 @@
 
 /* button label */
 "MenuViewController.recoverButton" = "Återupprätta plånbok";
+
+/* No comment provided by engineer. */
+"No wallet" = "Ingen plånbok";
 
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Byt till automatiskt läge";
@@ -428,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "opålitligt certifikat";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "AVFÄRDA";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -440,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Aktivera enhets-lösenord";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "Fortsätta";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "Din pappersnyckel måste sparas ifall du skulle förlora eller byta ut din telefon. Tryck här för att fortsätta.";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "Annullera";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "Gör det möjligt";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Åtgärd krävs";
@@ -451,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transaktionen avslogs";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "Litewallet har uppgraderat till att använda 6-siffrig PIN-kod. Klicka här för att uppgradera.";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "Uppgradera PIN-kod";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "Hjälp till att förbättra Litewallet genom att dela dina anonyma data med oss";
@@ -463,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "Aktivera Touch ID";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Litewallet har uppgraderat till att använda 6-siffrig PIN-kod. Klicka här för att uppgradera.";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "Uppgradera PIN-kod";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Slå på aviseringar för att få särskilda meddelanden från Litewallet i framtiden.";
@@ -484,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Meddelanden";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "MOTTA";
 
 /* Address copied message. */
 "Receive.copied" = "Kopierad till urklipp.";
@@ -578,6 +662,12 @@
 /* Subheader label */
 "ReScan.subheader2" = "När ska man synka?";
 
+/* Reset walet button  title */
+"resetButton" = "Ja, återställ plånboken";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "Återställ tom tom plånbok";
+
 /* Scan Litecoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Kamerablixt";
 
@@ -626,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "Saldo: %1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "SKICKA";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Gå till Inställningar för att ge tillgång till kameran.";
 
@@ -649,6 +742,9 @@
 
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "Betalningsmottagaren är inte certifierad.";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "otillräckliga medel";
 
 /* Invalid address alert message */
 "Send.invalidAddressMessage" = "Mottagaradressen är inte en giltig Litecoin-adress.";
@@ -707,6 +803,9 @@
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Avancerade inställningar";
 
+/* Blockchain settings section header */
+"Settings.blockchain" = "blockchain";
+
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Visa valuta";
 
@@ -722,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "Importera plånbok";
 
+/* Languages label */
+"Settings.languages" = "språk";
+
 /* Manage settings section header */
 "Settings.manage" = "Hantera";
 
@@ -733,6 +835,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Dela anonyma uppgifter";
+
+/* Support settings section header */
+"Settings.support" = "Stöd";
 
 /* Sync blockchain label */
 "Settings.sync" = "Synka blockkedja";
@@ -758,6 +863,9 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Dela anonyma uppgifter?";
 
+/* Current spending limit: */
+"SpendingLimit.title" = "Nuvarande utgiftsgräns: ";
+
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv ner ordnyckel på nytt";
 
@@ -773,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "Det säkraste och tryggaste sättet att använda Litecoin.";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "Ansluter...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "Omscanning ...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "Framgång!";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "Synkronisera ...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Ansluter";
-
-/* Syncing view header text */
-"SyncingView.header" = "Synkar";
-
-/* Retry button label */
-"SyncingView.retry" = "Försök igen";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Synkroniserar";
@@ -802,6 +916,9 @@
 
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Använd ditt fingeravtryck för att låsa upp Litewallet och skicka pengar upp till en inställd gräns.";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "%1$@ (%2$@)";
 
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Sida för utgiftsgräns i Touch ID";
@@ -830,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch ID utnyttjandegräns";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "Byt information:";
+
 /* Availability status text */
 "Transaction.available" = "Tillgängligt att utnyttja";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "Blockera:";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "PM:";
+
 /* Transaction complete label */
 "Transaction.complete" = "Avsluta";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "Transaktionssluttbeloppdetalj";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "Utgående saldo: %1$@";
@@ -863,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Ingående saldo: %1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "Detaljer för transaktionsstartbelopp";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID:";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Väntar på bekräftelse. Vissa handlare kräver bekräftelse för att slutföra en transaktion. Uppskattad tid: 1-2 timmar.";
 
@@ -884,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "på %1$@";
 
-/* More button title */
-"TransactionDetails.more" = "Mer...";
+/* Less button title */
+"TransactionDetails.less" = "Mindre";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "Flyttade %1$@";
@@ -896,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "Inte bekräftad";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "från och med";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "Mottog %1$@";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "Tog emot <b>%1@</b>";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "FÅ ADDRESS";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Skickade %1$@";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "Skickade <b>%1@</b>";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "Tx ID:";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "Status";
@@ -929,6 +1073,12 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "Inaktiverad till: %1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "Ange PIN-koden";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "Lås upp med FaceID";
+
 /* My Address button title */
 "UnlockScreen.myAddress" = "Min adress";
 
@@ -937,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "Läs av";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "Ange PIN-kod";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "Lås upp Litewallet.";
@@ -1028,6 +1175,9 @@
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Rensa plånbok?";
 
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "Glömt din fröfras eller PIN-kod?";
+
 /* Failed wipe wallet alert message */
 "WipeWallet.failedMessage" = "Rensning av plånboken misslyckades.";
 
@@ -1046,6 +1196,15 @@
 /* Wipe wallet navigation item title. */
 "WipeWallet.title" = "Starta eller hämta en annan plånbok";
 
+/* Warning Alert */
+"WipeWallet.warningAlert" = "FÖRLORA DET INTE!";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "Din LiteWallet är tom. Återställning kommer att ta bort den gamla privata nyckeln och torka av appdata. \n\n Efter återställningen, var beredd att spela in de nya 12 orden och hålla dem på en mycket säker plats. \n\n Inga LiteWallet-utvecklare kan hämta detta frö åt dig.";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "VÄNLIGEN LÄS!";
+
 /* Wipe wallet button title */
 "WipeWallet.wipe" = "Rensa";
 
@@ -1063,102 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d av %2$d";
-
-/* buy button */
-"Button.buy" = "";
-
-/* Bitrefill buy financial details */
-"BuyCenter.bitrefillFinancialDetails" = "";
-
-/* Bitrefill Title */
-"BuyCenter.BitrefillTitle" = "";
-
-/* Changelly buy financial details */
-"BuyCenter.changellyFinancialDetails" = "";
-
-/* Changelly Title */
-"BuyCenter.changellyTitle" = "";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "";
-
-/* Buy Modal Title */
-"BuyCenter.ModalTitle" = "";
-
-/* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "";
-
-/* Simplex Title */
-"BuyCenter.simplexTitle" = "";
-
-/* Buy Center Title */
-"BuyCenter.title" = "";
-
-/* Amount to Donate: ($1.00) */
-"Confirmation.donateLabel" = "";
-
-/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
-"Confirmation.processingAndDonationTime" = "";
-
-/* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";
-
-/* Donate Memo */
-"Donate.memo" = "";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "";
-
-/* No comment provided by engineer. */
-"Malformed URI" = "";
-
-/* No comment provided by engineer. */
-"No wallet" = "";
-
-/* Reset walet button  title */
-"resetButton" = "";
-
-/* Warning Empty Wipe title */
-"resetTitle" = "";
-
-/* Insufficient funds error */
-"Send.insufficientFunds" = "";
-
-/* Blockchain settings section header */
-"Settings.blockchain" = "";
-
-/* Support settings section header */
-"Settings.support" = "";
-
-/* Current spending limit: */
-"SpendingLimit.title" = "";
-
-/*  ł100,000 ($100) */
-"TouchIdSettings.limitValue" = "";
-
-/* Unlock with FaceID accessibility label */
-"UnlockScreen.faceIdText" = "";
-
-/* Warning if user lost phrase */
-"WipeWallet.emptyWallet" = "";
-
-/* Warning Alert */
-"WipeWallet.warningAlert" = "";
-
-/* Warning description */
-"WipeWallet.warningDescription" = "";
-
-/* Warning title */
-"WipeWallet.warningTitle" = "";

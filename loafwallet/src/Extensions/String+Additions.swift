@@ -7,9 +7,19 @@
 //
 
 import UIKit
+import Foundation
 import BRCore
-
+ 
 extension String {
+    
+    var isValidPrivateKey: Bool {
+        return BRPrivKeyIsValid(self) != 0
+    }
+
+    var isValidBip38Key: Bool {
+        return BRBIP38KeyIsValid(self) != 0
+    }
+    
     var isValidAddress: Bool {
         guard lengthOfBytes(using: .utf8) > 0 else { return false }
         return BRAddressIsValid(self) != 0
@@ -18,7 +28,7 @@ extension String {
     var isValidBCHAddress: Bool {
         return isValidAddress
     }
-
+      
     var sanitized: String {
         return applyingTransform(.toUnicodeName, reverse: false) ?? ""
     }

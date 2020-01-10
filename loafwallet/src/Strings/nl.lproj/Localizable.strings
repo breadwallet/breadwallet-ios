@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "Reddit";
 
-/* Terms of Use button label */
-"About.terms" = "Gebruikersvoorwaarden";
-
 /* About screen title */
 "About.title" = "Over";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mijn Litewallet";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "BEHEREN";
@@ -131,6 +125,9 @@
 /* BitID Authentication Request alert view title */
 "BitID.title" = "BitID Authenticatieverzoek";
 
+/* buy button */
+"Button.buy" = "kopen";
+
 /* Cancel button label */
 "Button.cancel" = "Annuleren";
 
@@ -161,20 +158,62 @@
 /* Yes button */
 "Button.yes" = "Ja";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "KOPEN";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "• Cadeaubonnen kopen \n • Prepaid-telefoons bijvullen \n • Steam, Amazon, Hotels.com \n • Werkt in 170 landen";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "Bitrefill";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "• Litecoin wijzigen voor andere crypto's \n • Geen ID vereist \n • Kopen via creditcard \n • Wereldwijde dekking";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "Changelly";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "Koop Litecoin";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "• Krijg Litecoin in 5 minuten! \n • Koop Litecoin via creditcard \n • Paspoort of staat ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "Simplex";
+
+/* Buy Center Title */
+"BuyCenter.title" = "Koop Litecoin";
+
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centreer je ID in het vak";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "Uitwisselingsgegevens:";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Bedrag om te Versturen:";
 
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "Te doneren bedrag:";
+
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Netwerkkosten:";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "Verwerkingstijd: het verwerken van deze transacties duurt %1$@ minuten.";
 
 /* eg. Processing time: This transaction will take 10-30 minutes to process. */
 "Confirmation.processingTime" = "Verwerkingstijd: Deze transactie zal %1$@ minuten kosten om te verwerken.";
 
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "Versturen";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "VERGOEDING:";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "ADRES:";
 
 /* Confirmation Screen title */
 "Confirmation.title" = "Bevestiging";
@@ -185,17 +224,38 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Totale Prijs:";
 
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "De ingevoerde woorden komen niet overeen met uw papieren sleutel. Probeer het opnieuw.";
+
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "Voer de volgende woorden in van je papieren sleutel om te verzekeren dat alles correct is opgeschreven.";
 
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Woord #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "vanaf";
+
+/* No comment provided by engineer. */
+"Copy" = "Kopiëren";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "Litecoin-eenheid";
 
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "Kiezen:";
+
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Wisselkoers";
+
+/* Donate Memo */
+"Donate.memo" = "Donatie aan de Litecoin Foundation";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "Tik om te doneren aan de Litecoin Foundation!";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "Bevestig donatie";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
@@ -250,6 +310,9 @@
 
 /* Fee Selector title */
 "FeeSelector.title" = "Verwerkingssnelheid";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "GESCHIEDENIS";
 
 /* Checking private key balance progress view text */
 "Import.checking" = "Persoonlijke sleutel balans checken...";
@@ -338,6 +401,9 @@
 /* No permissions for location services */
 "LocationPlugin.notAuthorized" = "Litewallet heeft geen toestemming om locatievoorzieningen te gebruiken.";
 
+/* No comment provided by engineer. */
+"Malformed URI" = "Misvormde URI";
+
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "Je hebt je portemonnee gecreëerd op %1$@";
 
@@ -373,6 +439,9 @@
 
 /* button label */
 "MenuViewController.recoverButton" = "Portemonnee Herstellen";
+
+/* No comment provided by engineer. */
+"No wallet" = "Geen portemonnee";
 
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Omschakelen naar automatische modus";
@@ -428,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "niet-vertrouwd certificaat";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "VERWERPEN";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -440,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "Zet pascode voor apparaat aan";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "Doorgaan met";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "Uw Papiersleutel moet opgeslagen worden voor het geval dat u uw telefoon ooit verliest of vervangt. Klik hier om door te gaan.";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "annuleren";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "Inschakelen";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Actie Vereist";
@@ -451,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transactie Geweigerd";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "Litewallet is geüpgrade naar een 6-cijferige PIN. Tik hier om te upgraden.";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "PIN Upgraden";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "Help ons bij het verbeteren van Litewallet door je anonieme data met ons te delen";
@@ -463,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "Touch ID Inschakelen";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Litewallet is geüpgrade naar een 6-cijferige PIN. Tik hier om te upgraden.";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "PIN Upgraden";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "Zet notificaties aan om in de toekomst speciale berichten van Litewallet te ontvangen.";
@@ -484,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Notificaties";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "TE ONTVANGEN";
 
 /* Address copied message. */
 "Receive.copied" = "Gekopieerd naar plakbord.";
@@ -578,6 +662,12 @@
 /* Subheader label */
 "ReScan.subheader2" = "Wanneer Synchroniseren?";
 
+/* Reset walet button  title */
+"resetButton" = "Ja, portemonnee opnieuw instellen";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "Lege portemonnee resetten";
+
 /* Scan Litecoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Camera Flits";
 
@@ -626,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "Balans: %1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "STUREN";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Ga naar Instellingen om camera gebruik toe te staan.";
 
@@ -649,6 +742,9 @@
 
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "Begunstigde is niet gecertifcieerd.";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "onvoldoende middelen";
 
 /* Invalid address alert message */
 "Send.invalidAddressMessage" = "Het bestemmingsadres is geen geldig Litecoin-adres.";
@@ -707,6 +803,9 @@
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Geavanceerde instellingen";
 
+/* Blockchain settings section header */
+"Settings.blockchain" = "blockchain";
+
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Toon valuta";
 
@@ -722,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "Importeer Portemonnee";
 
+/* Languages label */
+"Settings.languages" = "talen";
+
 /* Manage settings section header */
 "Settings.manage" = "Beheer";
 
@@ -733,6 +835,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Deel Anonieme Data";
+
+/* Support settings section header */
+"Settings.support" = "Ondersteuning";
 
 /* Sync blockchain label */
 "Settings.sync" = "Synchroniseer Blockchain";
@@ -758,6 +863,9 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonieme Data Delen?";
 
+/* Current spending limit: */
+"SpendingLimit.title" = "Huidige bestedingslimiet: ";
+
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
 
@@ -773,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "De veiligste en betrouwbaarste manier om Litecoin te gebruiken.";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "Verbinden...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "Opnieuw scannen ...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "Succes!";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "Synchroniseren ...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Aan het verbinden";
-
-/* Syncing view header text */
-"SyncingView.header" = "Synchroniseren";
-
-/* Retry button label */
-"SyncingView.retry" = "Opnieuw proberen";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Aan het synchroniseren";
@@ -802,6 +916,9 @@
 
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Gebruik je vingerafdruk om je Litewallet te ontgrendelen en geld tot een ingestelde limiet te versturen.";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "%1$@ (%2$@)";
 
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch-ID uitgavenlimietscherm";
@@ -830,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch ID Bestedingslimiet";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "Uitwisselingsgegevens: ";
+
 /* Availability status text */
 "Transaction.available" = "Beschikbaar om te besteden";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "Blok:";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "Memo: ";
+
 /* Transaction complete label */
 "Transaction.complete" = "Compleet";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "Detail eindbedrag transactie";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "Eindbalans: %1$@";
@@ -863,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Startbalans: %1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "Transactie startbedrag detail";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID:";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Wachtend op bevestiging. Sommige handelaren willen bevestiging om een transactie af te roden. Geschatte tijd: 1-2 uur.";
 
@@ -884,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "op %1$@";
 
-/* More button title */
-"TransactionDetails.more" = "Meer...";
+/* Less button title */
+"TransactionDetails.less" = "Minder";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "%1$@ verplaatst";
@@ -896,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "Niet bevestigd";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "vanaf";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "Ontvangen %1$@";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "Ontvangen <b>%1@</b>";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "ONTVANG ADRES";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Verstuurd %1$@";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "Verstuurd <b>%1@</b>";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "Tx ID:";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "Status";
@@ -929,6 +1073,12 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "Uitgeschakeld tot: %1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "Voer Pin-code in";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "Ontgrendel met FaceID";
+
 /* My Address button title */
 "UnlockScreen.myAddress" = "Mijn Adres";
 
@@ -937,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "Scannen";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PIN Invoeren";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "Ontgrendel je Litewallet.";
@@ -1028,6 +1175,9 @@
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Portomonnee wissen?";
 
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "Vergeet uw startzin of pincode?";
+
 /* Failed wipe wallet alert message */
 "WipeWallet.failedMessage" = "Wissen van portomonnee niet gelukt";
 
@@ -1046,6 +1196,15 @@
 /* Wipe wallet navigation item title. */
 "WipeWallet.title" = "Start of herstel een anderen portomonnee";
 
+/* Warning Alert */
+"WipeWallet.warningAlert" = "VERLIES HET NIET!";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "Uw LiteWallet is leeg. Door te resetten, wordt de oude privésleutel verwijderd en worden de app-gegevens gewist. \n\n Na de reset moet u de nieuwe 12 woorden opnemen en op een zeer veilige plaats bewaren.  \n\n Geen LiteWallet-ontwikkelaars kunnen deze seed voor u ophalen.";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "GELIEVE TE LEZEN!";
+
 /* Wipe wallet button title */
 "WipeWallet.wipe" = "Wissen";
 
@@ -1063,102 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d van %2$d";
-
-/* buy button */
-"Button.buy" = "";
-
-/* Bitrefill buy financial details */
-"BuyCenter.bitrefillFinancialDetails" = "";
-
-/* Bitrefill Title */
-"BuyCenter.BitrefillTitle" = "";
-
-/* Changelly buy financial details */
-"BuyCenter.changellyFinancialDetails" = "";
-
-/* Changelly Title */
-"BuyCenter.changellyTitle" = "";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "";
-
-/* Buy Modal Title */
-"BuyCenter.ModalTitle" = "";
-
-/* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "";
-
-/* Simplex Title */
-"BuyCenter.simplexTitle" = "";
-
-/* Buy Center Title */
-"BuyCenter.title" = "";
-
-/* Amount to Donate: ($1.00) */
-"Confirmation.donateLabel" = "";
-
-/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
-"Confirmation.processingAndDonationTime" = "";
-
-/* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";
-
-/* Donate Memo */
-"Donate.memo" = "";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "";
-
-/* No comment provided by engineer. */
-"Malformed URI" = "";
-
-/* No comment provided by engineer. */
-"No wallet" = "";
-
-/* Reset walet button  title */
-"resetButton" = "";
-
-/* Warning Empty Wipe title */
-"resetTitle" = "";
-
-/* Insufficient funds error */
-"Send.insufficientFunds" = "";
-
-/* Blockchain settings section header */
-"Settings.blockchain" = "";
-
-/* Support settings section header */
-"Settings.support" = "";
-
-/* Current spending limit: */
-"SpendingLimit.title" = "";
-
-/*  ł100,000 ($100) */
-"TouchIdSettings.limitValue" = "";
-
-/* Unlock with FaceID accessibility label */
-"UnlockScreen.faceIdText" = "";
-
-/* Warning if user lost phrase */
-"WipeWallet.emptyWallet" = "";
-
-/* Warning Alert */
-"WipeWallet.warningAlert" = "";
-
-/* Warning description */
-"WipeWallet.warningDescription" = "";
-
-/* Warning title */
-"WipeWallet.warningTitle" = "";

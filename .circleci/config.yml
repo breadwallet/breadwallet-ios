@@ -1,51 +1,39 @@
-# .circleci/config.yml
+# iOS CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/ios-migrating-from-1-2/ for more details
+#
 version: 2
 jobs:
-  build-and-test:
+  build:
+
+    # Specify the Xcode version to use
     macos:
-      xcode: "9.0"
-    working_directory: /Users/distiller/project
-    environment:
-      FL_OUTPUT_DIR: output
-      FASTLANE_LANE: test
-    shell: /bin/bash --login -o pipefail
+      xcode: "11.3.0"
+
     steps:
       - checkout
-      - run: bundle install
+
+      # Install CocoaPods
       - run:
-          name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
-      - store_artifacts:
-          path: output
+          name: Install CocoaPods
+          command: pod install
+
+      # Build the app and run tests
+      - run:
+          name: Build and run tests
+          command: fastlane scan
+          environment:
+            SCAN_DEVICE: iPhone 8
+            SCAN_SCHEME: loafwallet
+
+      # Collect XML test results data to show in the UI,
+      # and save the same XML files under test-results folder
+      # in the Artifacts tab
       - store_test_results:
-          path: output/scan
-
-  dev:
-    macos:
-      xcode: "9.0"
-    working_directory: /Users/distiller/project
-    environment:
-      FL_OUTPUT_DIR: output
-      FASTLANE_LANE: dev
-    shell: /bin/bash --login -o pipefail
-    steps:
-      - checkout
-      - run: bundle install
-      - run:
-          name: Fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
+          path: test_output/report.xml
       - store_artifacts:
-          path: output
-
-workflows:
-  version: 2
-  build-test-dev:
-    jobs:
-      - build-and-test
-      - dev:
-          filters:
-            branches:
-              only: development
-          requires:
-            - build-and-test
-
+          path: /tmp/test-results
+          destination: scan-test-results
+      - store_artifacts:
+          path: ~/Library/Logs/scan
+          destination: scan-logs

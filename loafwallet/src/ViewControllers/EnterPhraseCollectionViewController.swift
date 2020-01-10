@@ -17,7 +17,10 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
     var height: CGFloat {
         return itemHeight * 4.0
     }
-
+    #if Debug || Testflight
+    //let mockPhraseString = MockSeeds.mockPhraseModelX
+    #endif
+    
     init(walletManager: WalletManager) {
         self.walletManager = walletManager
         let layout = UICollectionViewFlowLayout()
@@ -73,7 +76,13 @@ class EnterPhraseCollectionViewController : UICollectionViewController {
             self?.becomeFirstResponder(atIndex: indexPath.row - 1)
         }
         enterPhraseCell.didTapDone = { [weak self] in
-            guard let phrase = self?.phrase else { return }
+            guard let phrase = self?.phrase else {
+                NSLog("Phrase not initialized")
+                return
+            }
+            #if Debug || Testflight
+                //phrase = MockSeeds.mockPhraseModelX
+            #endif
             self?.didFinishPhraseEntry?(phrase)
         }
         enterPhraseCell.isWordValid = { [weak self] word in

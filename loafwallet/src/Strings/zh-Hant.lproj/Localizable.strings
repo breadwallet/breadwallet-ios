@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "Reddit";
 
-/* Terms of Use button label */
-"About.terms" = "使用規定";
-
 /* About screen title */
 "About.title" = "關於";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "我的 Litewallet";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "管理";
@@ -131,6 +125,9 @@
 /* BitID Authentication Request alert view title */
 "BitID.title" = "要求認證比特 ID";
 
+/* buy button */
+"Button.buy" = "購買";
+
 /* Cancel button label */
 "Button.cancel" = "取消";
 
@@ -161,20 +158,62 @@
 /* Yes button */
 "Button.yes" = "要";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "購買";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "•購買禮品卡 \n •為預付費電話充值 \n •Steam，Amazon，Hotels.com \n •在170個國家/地區工作";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "Bitrefill";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "•將Litecoin更改為其他加密貨幣 \n •無需ID \n •通過信用卡購買 \n •全球覆蓋";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "Changelly";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "購買萊特幣";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "•5分鐘內獲得Litecoin！\n •通過信用卡購買Litecoin \n •護照或州ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "Simplex";
+
+/* Buy Center Title */
+"BuyCenter.title" = "購買萊特幣";
+
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "將您的 ID 在方塊置中";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "交易所詳情：";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "寄送金額：";
 
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "捐款金額：";
+
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "網絡費：";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "處理時間：這些交易將花費 ％1$@ 分鐘來處理。";
 
 /* eg. Processing time: This transaction will take 10-30 minutes to process. */
 "Confirmation.processingTime" = "處理時間：此交易將花費 %1$@ 分鐘進行處理。";
 
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "寄送";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "費用：";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "地址：";
 
 /* Confirmation Screen title */
 "Confirmation.title" = "確認";
@@ -185,17 +224,38 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "總計：";
 
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "輸入的單詞與您的紙鍵不匹配。請再試一遍。";
+
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "要確保每項資料都正確寫下，請從紙上金鑰輸入下列字組。";
 
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "字組 #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "作為";
+
+/* No comment provided by engineer. */
+"Copy" = "複製";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "萊特幣顯示單位";
 
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "選擇:";
+
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "匯率";
+
+/* Donate Memo */
+"Donate.memo" = "捐贈給萊特幣基金會";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "點擊捐贈給萊特幣基金會！";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "確認捐贈";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "本裝置並非設定來以 iOS 郵件應用程式傳送電子郵件。";
@@ -250,6 +310,9 @@
 
 /* Fee Selector title */
 "FeeSelector.title" = "處理速度";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "歷史";
 
 /* Checking private key balance progress view text */
 "Import.checking" = "正在檢查私密金鑰餘額…";
@@ -338,6 +401,9 @@
 /* No permissions for location services */
 "LocationPlugin.notAuthorized" = "Litewallet 沒有存取定位服務的權限。";
 
+/* No comment provided by engineer. */
+"Malformed URI" = "URI格式錯誤";
+
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "您在 %1$@ 建立了電子錢包";
 
@@ -373,6 +439,9 @@
 
 /* button label */
 "MenuViewController.recoverButton" = "復原電子錢包";
+
+/* No comment provided by engineer. */
+"No wallet" = "沒有錢包";
 
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "切換至自動模式";
@@ -428,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "不受信任的憑證";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "解僱";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -440,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "開啟裝置密碼。";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "繼續";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "必須儲存紙上金鑰，以防萬一您遺失或換電話。點選這裡來繼續。";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "取消";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "啟用";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要採取動作";
@@ -451,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "交易被拒";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "Litewallet 已經升級至 6 位數 PIN 碼。請點這裡升級。";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "升級 PIN 碼";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "和我們分享您的匿名資料來協助改善 Litewallet";
@@ -463,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "啟用 Touch ID";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Litewallet 已經升級至 6 位數 PIN 碼。請點這裡升級。";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "升級 PIN 碼";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "開啟通知，好在未來收到 Litewallet 的特別訊息。";
@@ -484,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "通知";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "接收";
 
 /* Address copied message. */
 "Receive.copied" = "已複製至剪貼簿。";
@@ -578,6 +662,12 @@
 /* Subheader label */
 "ReScan.subheader2" = "什麼時候該進行同步？";
 
+/* Reset walet button  title */
+"resetButton" = "是的，重置錢包";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "空錢包重置";
+
 /* Scan Litecoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "相機閃光";
 
@@ -626,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "餘額：%1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "發送";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "請至「設定」允許存取相機。";
 
@@ -649,6 +742,9 @@
 
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "受款人身分未經認證。";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "不充足的資金";
 
 /* Invalid address alert message */
 "Send.invalidAddressMessage" = "目的地址不是一個有效的萊特幣地址。";
@@ -707,6 +803,9 @@
 /* Advanced Settings title */
 "Settings.advancedTitle" = "進階設定";
 
+/* Blockchain settings section header */
+"Settings.blockchain" = "區塊鏈";
+
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "顯示貨幣";
 
@@ -722,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "匯入電子錢包";
 
+/* Languages label */
+"Settings.languages" = "語言能力";
+
 /* Manage settings section header */
 "Settings.manage" = "管理";
 
@@ -733,6 +835,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名資料";
+
+/* Support settings section header */
+"Settings.support" = "支持";
 
 /* Sync blockchain label */
 "Settings.sync" = "與區塊鏈同步";
@@ -758,6 +863,9 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "分享匿名資料？";
 
+/* Current spending limit: */
+"SpendingLimit.title" = "當前支出限額：";
+
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "再寫一次紙本金鑰";
 
@@ -773,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "使用萊特幣最安全、最有保障的方式。";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "正在連線...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "重新掃描中...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "成功！";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "同步中...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "正在連線";
-
-/* Syncing view header text */
-"SyncingView.header" = "正在同步";
-
-/* Retry button label */
-"SyncingView.retry" = "重試";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "正在同步";
@@ -802,6 +916,9 @@
 
 /* Touch Id screen label */
 "TouchIdSettings.label" = "以您的指紋解鎖 Litewallet，並在設定好的限額內寄送款項。";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "%1$@ (%2$@)";
 
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch ID 支出限額畫面";
@@ -830,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch ID 花費上限";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "交易所詳情：";
+
 /* Availability status text */
 "Transaction.available" = "可花用";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "塊：";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "備忘錄：";
+
 /* Transaction complete label */
 "Transaction.complete" = "完成";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "交易結束金額明細";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "最終餘額：%1$@";
@@ -863,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "開始餘額：%1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "交易開始金額明細";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID:";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "正在等待確認。部分商家要求確認完成交易。預估時間：1-2 小時。";
 
@@ -884,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "於 %1$@";
 
-/* More button title */
-"TransactionDetails.more" = "更多……";
+/* Less button title */
+"TransactionDetails.less" = "減";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "已轉移 %1$@";
@@ -896,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "未確認";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "作為";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "已收取 %1$@";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "已收到 <b>%1@</b>";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "接收地址";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "已送出 %1$@";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "已寄出 <b>%1@</b>";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "Tx ID:";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "狀態";
@@ -929,6 +1073,12 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "關閉至：%1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "輸入密碼";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "使用FaceID解鎖";
+
 /* My Address button title */
 "UnlockScreen.myAddress" = "我的地址";
 
@@ -937,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "掃描";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "輸入 PIN 碼";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "解鎖您的 Litewallet。";
@@ -1028,6 +1175,9 @@
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "抹除錢包？";
 
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "忘記您的種子短語或PIN碼嗎？";
+
 /* Failed wipe wallet alert message */
 "WipeWallet.failedMessage" = "抹除錢包失敗。";
 
@@ -1046,6 +1196,15 @@
 /* Wipe wallet navigation item title. */
 "WipeWallet.title" = "開啟或復原其他錢包";
 
+/* Warning Alert */
+"WipeWallet.warningAlert" = "不要失去它！";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "您的LiteWallet是空的。重置將刪除舊的私鑰並擦除應用程序數據。\n \n 重置後，請準備好記錄新的12個單詞並將其保存在非常安全的位置。\n \n 沒有LiteWallet開發人員可以為您獲取此種子。";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "請閱讀！";
+
 /* Wipe wallet button title */
 "WipeWallet.wipe" = "抹除";
 
@@ -1063,102 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$d 之 %1$d";
-
-/* buy button */
-"Button.buy" = "";
-
-/* Bitrefill buy financial details */
-"BuyCenter.bitrefillFinancialDetails" = "";
-
-/* Bitrefill Title */
-"BuyCenter.BitrefillTitle" = "";
-
-/* Changelly buy financial details */
-"BuyCenter.changellyFinancialDetails" = "";
-
-/* Changelly Title */
-"BuyCenter.changellyTitle" = "";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "";
-
-/* Buy Modal Title */
-"BuyCenter.ModalTitle" = "";
-
-/* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "";
-
-/* Simplex Title */
-"BuyCenter.simplexTitle" = "";
-
-/* Buy Center Title */
-"BuyCenter.title" = "";
-
-/* Amount to Donate: ($1.00) */
-"Confirmation.donateLabel" = "";
-
-/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
-"Confirmation.processingAndDonationTime" = "";
-
-/* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";
-
-/* Donate Memo */
-"Donate.memo" = "";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "";
-
-/* No comment provided by engineer. */
-"Malformed URI" = "";
-
-/* No comment provided by engineer. */
-"No wallet" = "";
-
-/* Reset walet button  title */
-"resetButton" = "";
-
-/* Warning Empty Wipe title */
-"resetTitle" = "";
-
-/* Insufficient funds error */
-"Send.insufficientFunds" = "";
-
-/* Blockchain settings section header */
-"Settings.blockchain" = "";
-
-/* Support settings section header */
-"Settings.support" = "";
-
-/* Current spending limit: */
-"SpendingLimit.title" = "";
-
-/*  ł100,000 ($100) */
-"TouchIdSettings.limitValue" = "";
-
-/* Unlock with FaceID accessibility label */
-"UnlockScreen.faceIdText" = "";
-
-/* Warning if user lost phrase */
-"WipeWallet.emptyWallet" = "";
-
-/* Warning Alert */
-"WipeWallet.warningAlert" = "";
-
-/* Warning description */
-"WipeWallet.warningDescription" = "";
-
-/* Warning title */
-"WipeWallet.warningTitle" = "";

@@ -45,8 +45,7 @@ class AddressCell : UIView {
     private func setupViews() {
         
         if #available(iOS 11.0, *) {
-            guard let mainColor = UIColor(named: "mainColor"),
-                let textColor = UIColor(named: "labelTextColor") else {
+            guard let textColor = UIColor(named: "labelTextColor") else {
                NSLog("ERROR: Main color")
                return
             }

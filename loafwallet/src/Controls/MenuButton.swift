@@ -33,19 +33,10 @@ class MenuButton : UIControl {
 
     override var isHighlighted: Bool {
         didSet {
-             
             if isHighlighted {
-                if #available(iOS 11.0, *) {
-                    backgroundColor = UIColor(named: "buttonSelectionColor")
-                } else {
-                    backgroundColor = .secondaryButton
-                }
+                backgroundColor = .litecoinSilver
             } else {
-                if #available(iOS 11.0, *) {
-                   backgroundColor = UIColor(named: "buttonSelectionColor")
-                } else {
-                   backgroundColor = .white
-                }
+                backgroundColor = .white
             } 
         }
     }

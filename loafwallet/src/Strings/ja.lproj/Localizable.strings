@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "Reddit（レディット）";
 
-/* Terms of Use button label */
-"About.terms" = "利用規約";
-
 /* About screen title */
 "About.title" = "概要";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "マイブレッド";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "管理";
@@ -131,6 +125,9 @@
 /* BitID Authentication Request alert view title */
 "BitID.title" = "BitID認証リクエスト";
 
+/* buy button */
+"Button.buy" = "購入";
+
 /* Cancel button label */
 "Button.cancel" = "キャンセル";
 
@@ -161,20 +158,62 @@
 /* Yes button */
 "Button.yes" = "はい";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "購入";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "•ギフトカードを購入\n•プリペイド電話を補充\n•Steam、Amazon、Hotels.com \n•170か国で利用可能";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "ビットリフィル";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "•他の暗号のLitecoinを変更  \n•IDは不要\n•クレジットカードで購入 \n•グローバルな補償範囲";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "Changelly";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "Litecoin を購入する";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "•5分でLitecoinを入手！\n •クレジットカードでLitecoinを購入 \n•パスポートまたは州ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "シンプレックス";
+
+/* Buy Center Title */
+"BuyCenter.title" = "Litecoin を購入する";
+
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "ご自身のIDをこのボックス内で中央に配置してください";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "交換の詳細：";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "送金する数量：";
 
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "寄付金額：";
+
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "ネットワーク手数料：";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "処理時間：これらのトランザクションの処理には ％1$@ 分かかります。";
 
 /* eg. Processing time: This transaction will take 10-30 minutes to process. */
 "Confirmation.processingTime" = "処理時間：このトランザクションは完了までに%1$@分かかる見込みです。";
 
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "送金する";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "費用：";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "住所：";
 
 /* Confirmation Screen title */
 "Confirmation.title" = "承認";
@@ -185,17 +224,38 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "費用合計：";
 
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "入力した単語は、紙のキーと一致しません。もう一度お試しください";
+
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "すべてが正しく書き留められていることを確認するため、紙の鍵に記入した下記のフレーズを入力してください。";
 
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "フレーズ #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "の時点で";
+
+/* No comment provided by engineer. */
+"Copy" = "コピー";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "リテコインの表示単位";
 
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "選ぶ:";
+
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "為替レート";
+
+/* Donate Memo */
+"Donate.memo" = "ライトコイン財団への寄付";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "ライトコイン財団に寄付してください";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "寄付を確認する";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "この端末は、iOSのメールアプリを使用してメールを送信する設定がされていません。";
@@ -251,6 +311,9 @@
 /* Fee Selector title */
 "FeeSelector.title" = "処理速度";
 
+/* History Bar Item Title */
+"History.barItemTitle" = "歴史";
+
 /* Checking private key balance progress view text */
 "Import.checking" = "秘密鍵の残高確認中...";
 
@@ -286,6 +349,9 @@
 
 /* Enter password alert view title */
 "Import.password" = "この秘密鍵はパスワードで保護されています。";
+
+/* password textfield placeholder */
+"Import.passwordPlaceholder" = "パスワード";
 
 /* Caption for graphics */
 "Import.rightCaption" = "あなたの\nブレッドの\nウォレット";
@@ -335,6 +401,9 @@
 /* No permissions for location services */
 "LocationPlugin.notAuthorized" = "ブレッドは位置情報サービスへのアクセスが許可されていません。";
 
+/* No comment provided by engineer. */
+"Malformed URI" = "不正なURI";
+
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "あなたは%1$@でご自身のウォレットを作成しました";
 
@@ -370,6 +439,9 @@
 
 /* button label */
 "MenuViewController.recoverButton" = "ウォレットを復元";
+
+/* No comment provided by engineer. */
+"No wallet" = "財布なし";
 
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "自動モードに切り替える";
@@ -425,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "信頼できない証明書";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "退出させる";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -437,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "端末のパスコードをオンにする";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "継続する";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "携帯電話の紛失時や変更時に備えて、お客様のペーパーキーは必ず保管しておいてください。続けるにはここをタップしてください。";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "キャンセル";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "有効にする";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "アクションが要求されました";
@@ -448,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "トランザクションが拒否されました";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "ブレッドは6桁のPINコード使用にアップグレードされました。こちらをタップして更新してください。";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "PINコードを更新する";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "匿名のデータを共有してLitewalletの機能向上に役立てる";
@@ -460,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "Touch IDを有効化する";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "ブレッドは6桁のPINコード使用にアップグレードされました。こちらをタップして更新してください。";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "PINコードを更新する";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "今後、Litewalletからの特別なメッセージを受け取るために通知をオンにしてください。";
@@ -481,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "通知";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "受信する";
 
 /* Address copied message. */
 "Receive.copied" = "クリップボードにコピーされました。";
@@ -575,6 +662,12 @@
 /* Subheader label */
 "ReScan.subheader2" = "いつ同期しますか?";
 
+/* Reset walet button  title */
+"resetButton" = "はい、ウォレットをリセットします";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "空のウォレットのリセット";
+
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "カメラのフラッシュ";
 
@@ -623,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "残高: %1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "送信";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "設定画面へ移動し、カメラへのアクセス許可をしてください。";
 
@@ -646,6 +742,9 @@
 
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "受取人の本人確認が行われていません。";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "資金不足";
 
 /* Invalid address alert message */
 "Send.invalidAddressMessage" = "送金先のアドレスが無効なリテコインアドレスです。";
@@ -704,6 +803,9 @@
 /* Advanced Settings title */
 "Settings.advancedTitle" = "詳細設定";
 
+/* Blockchain settings section header */
+"Settings.blockchain" = "ブロックチェーン";
+
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "表示される通貨";
 
@@ -719,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "ウォレットをインポート";
 
+/* Languages label */
+"Settings.languages" = "言語";
+
 /* Manage settings section header */
 "Settings.manage" = "管理";
 
@@ -730,6 +835,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "匿名データをシェアする";
+
+/* Support settings section header */
+"Settings.support" = "サポート";
 
 /* Sync blockchain label */
 "Settings.sync" = "ブロックチェーン同期";
@@ -755,6 +863,9 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "匿名データをシェアしますか?";
 
+/* Current spending limit: */
+"SpendingLimit.title" = "現在の支出制限：";
+
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "紙の鍵をもう一度書き留めてください";
 
@@ -770,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "最も安全にリテコインを使う手段。";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "接続しています...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "再スキャンしています...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "成功";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "同期しています...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "接続中";
-
-/* Syncing view header text */
-"SyncingView.header" = "同期中";
-
-/* Retry button label */
-"SyncingView.retry" = "再試行";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "同期中";
@@ -799,6 +916,9 @@
 
 /* Touch Id screen label */
 "TouchIdSettings.label" = "設定された限度額以下の送金を行う場合には、指紋を使ってご自身のブレッドのロックを解除してください。";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "%1$@ (%2$@)";
 
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch ID利用限度額画面";
@@ -827,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch IDの利用限度額";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "取引金額の詳細";
+
 /* Availability status text */
 "Transaction.available" = "利用可能";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "ブロック：";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "メモ：";
+
 /* Transaction complete label */
 "Transaction.complete" = "完了";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "取引終了額の詳細";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "期末残高: %1$@";
@@ -860,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "期首残高: %1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "取引開始額の詳細";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID:";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "認証を待っています。トランザクションの完了に認証を必要とする販売者もいます。推定時間: 1-2時間。";
 
@@ -881,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "%1$@で";
 
-/* More button title */
-"TransactionDetails.more" = "もっと見る...";
+/* Less button title */
+"TransactionDetails.less" = "もっと少なく";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "%1$@を移動させました";
@@ -893,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "未承認";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "の時点で";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "%1$@を受け取りました";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "<b>%1@</b>を受け取りました";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "受信アドレス";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@を送金しました";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "<b>%1@</b>を送金しました";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "Tx ID:";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "ステータス";
@@ -926,6 +1073,12 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "以下まで無効: %1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "PINを入力してください";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "FaceID でロック解除";
+
 /* My Address button title */
 "UnlockScreen.myAddress" = "マイアドレス";
 
@@ -934,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "スキャン";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PINコードを入力してください";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "ブレッドのロックを解除してください。";
@@ -1025,6 +1175,9 @@
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "ウォレットを消去しますか？";
 
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "シードフレーズまたはPINを忘れましたか？";
+
 /* Failed wipe wallet alert message */
 "WipeWallet.failedMessage" = "ウォレットを消去できませんでした。";
 
@@ -1043,6 +1196,15 @@
 /* Wipe wallet navigation item title. */
 "WipeWallet.title" = "別のウォレットを作成、または復元する";
 
+/* Warning Alert */
+"WipeWallet.warningAlert" = "負けないでください！";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "LiteWalletは空です。リセットすると、古い秘密キーが削除され、アプリのデータが消去されます。\n\n リセット後、新しい12単語を記録して非常に安全な場所に保管する準備をしてください。\n \n LiteWallet開発者はこのシードを取得できません";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "読んでください！";
+
 /* Wipe wallet button title */
 "WipeWallet.wipe" = "消去";
 
@@ -1060,105 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$dの%1$d";
-
-/* buy button */
-"Button.buy" = "";
-
-/* Bitrefill buy financial details */
-"BuyCenter.bitrefillFinancialDetails" = "";
-
-/* Bitrefill Title */
-"BuyCenter.BitrefillTitle" = "";
-
-/* Changelly buy financial details */
-"BuyCenter.changellyFinancialDetails" = "";
-
-/* Changelly Title */
-"BuyCenter.changellyTitle" = "";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "";
-
-/* Buy Modal Title */
-"BuyCenter.ModalTitle" = "";
-
-/* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "";
-
-/* Simplex Title */
-"BuyCenter.simplexTitle" = "";
-
-/* Buy Center Title */
-"BuyCenter.title" = "";
-
-/* Amount to Donate: ($1.00) */
-"Confirmation.donateLabel" = "";
-
-/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
-"Confirmation.processingAndDonationTime" = "";
-
-/* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";
-
-/* Donate Memo */
-"Donate.memo" = "";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "";
-
-/* password textfield placeholder */
-"Import.passwordPlaceholder" = "";
-
-/* No comment provided by engineer. */
-"Malformed URI" = "";
-
-/* No comment provided by engineer. */
-"No wallet" = "";
-
-/* Reset walet button  title */
-"resetButton" = "";
-
-/* Warning Empty Wipe title */
-"resetTitle" = "";
-
-/* Insufficient funds error */
-"Send.insufficientFunds" = "";
-
-/* Blockchain settings section header */
-"Settings.blockchain" = "";
-
-/* Support settings section header */
-"Settings.support" = "";
-
-/* Current spending limit: */
-"SpendingLimit.title" = "";
-
-/*  ł100,000 ($100) */
-"TouchIdSettings.limitValue" = "";
-
-/* Unlock with FaceID accessibility label */
-"UnlockScreen.faceIdText" = "";
-
-/* Warning if user lost phrase */
-"WipeWallet.emptyWallet" = "";
-
-/* Warning Alert */
-"WipeWallet.warningAlert" = "";
-
-/* Warning description */
-"WipeWallet.warningDescription" = "";
-
-/* Warning title */
-"WipeWallet.warningTitle" = "";

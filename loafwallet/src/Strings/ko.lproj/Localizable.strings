@@ -11,9 +11,6 @@
 /* About screen reddit label */
 "About.reddit" = "레딧";
 
-/* Terms of Use button label */
-"About.terms" = "이용 약관";
-
 /* About screen title */
 "About.title" = "관련 사항";
 
@@ -31,9 +28,6 @@
 
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "나의 Litewallet";
-
-/* Equals symbol */
-"AccountHeader.equals" = " = ";
 
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "관리하기";
@@ -131,6 +125,9 @@
 /* BitID Authentication Request alert view title */
 "BitID.title" = "BitID 인증 요청";
 
+/* buy button */
+"Button.buy" = "구입";
+
 /* Cancel button label */
 "Button.cancel" = "취소";
 
@@ -161,20 +158,62 @@
 /* Yes button */
 "Button.yes" = "예";
 
+/* Buy Bar Item Title */
+"BuyCenter.barItemTitle" = "구입";
+
+/* Bitrefill buy financial details */
+"BuyCenter.bitrefillFinancialDetails" = "• 기프트 카드 구매 \n • 선불 전화 리필 \n • Steam, Amazon, Hotels.com \ n • 170 개국에서 작동";
+
+/* Bitrefill Title */
+"BuyCenter.BitrefillTitle" = "비트 리필";
+
+/* Changelly buy financial details */
+"BuyCenter.changellyFinancialDetails" = "다른 암호화를 위해 Litecoin 변경 \n • ID 불필요 \n • 신용 카드로 구매 \ n • 글로벌 범위";
+
+/* Changelly Title */
+"BuyCenter.changellyTitle" = "체인지";
+
+/* Buy Modal Title */
+"BuyCenter.ModalTitle" = "Łitecoin 구매";
+
+/* Simplex buy financial details */
+"BuyCenter.simplexFinancialDetails" = "5 분 안에 Litecoin을 받으십시오! \n • 신용 카드를 통해 Litecoin을 구매하십시오 \n • 여권 또는 주 ID";
+
+/* Simplex Title */
+"BuyCenter.simplexTitle" = "심플 렉스";
+
+/* Buy Center Title */
+"BuyCenter.title" = "Litecoin 구매";
+
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "박스안에 귀하의 ID를 중앙에 두세요";
+
+/* $53.09/L + 1.07% */
+"Confirmation.amountDetailLabel" = "교환 내용";
 
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "보낼 금액:";
 
+/* Amount to Donate: ($1.00) */
+"Confirmation.donateLabel" = "기부 금액";
+
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "네트워크 수수료:";
+
+/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
+"Confirmation.processingAndDonationTime" = "처리 시간 :이 거래는 % 1 $ @ 분이 소요됩니다.";
 
 /* eg. Processing time: This transaction will take 10-30 minutes to process. */
 "Confirmation.processingTime" = "처리 시간: 이 트랜잭션을 처리하는 데 %1$@분이 걸립니다.";
 
 /* Label for "send" button on final confirmation screen */
 "Confirmation.send" = "보내기";
+
+/* Short Network Fee: ($1.00) */
+"Confirmation.shortFeeLabel" = "회비";
+
+/* Address label */
+"Confirmation.staticAddressLabel" = "주소";
 
 /* Confirmation Screen title */
 "Confirmation.title" = "확정";
@@ -185,17 +224,38 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "총 금액:";
 
+/* Confirm paper phrase error message */
+"ConfirmPaperPhrase.error" = "입력 한 단어가 종이 키와 일치하지 않습니다. 다시 시도하십시오";
+
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "모든 것이 정확하게 적혀 있는지 확인하기 위해, 귀하의 종이 열쇠로부터 다음의 단어들을 입력해 주세요.";
 
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "단어 #%1$@";
 
+/* as of a time or date */
+"Conjunction.asOf" = "현재";
+
+/* No comment provided by engineer. */
+"Copy" = "부";
+
 /* Litecoin denomination picker label */
 "DefaultCurrency.bitcoinLabel" = "Litecoin Display Unit";
 
+/* Label to pick fiat */
+"DefaultCurrency.chooseFiatLabel" = "고르다:";
+
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "환율";
+
+/* Donate Memo */
+"Donate.memo" = "라이트 코인 재단에 기부";
+
+/* Donate to the Litecoin Foundation */
+"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요";
+
+/* Donate Confirmation */
+"Donate.title.confirmation" = "기부 확인";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
@@ -250,6 +310,9 @@
 
 /* Fee Selector title */
 "FeeSelector.title" = "처리 속도";
+
+/* History Bar Item Title */
+"History.barItemTitle" = "역사";
 
 /* Checking private key balance progress view text */
 "Import.checking" = "개인 열쇠 잔고 확인 중...";
@@ -338,6 +401,9 @@
 /* No permissions for location services */
 "LocationPlugin.notAuthorized" = "Litewallet가 위치 서비스 접속 권한이 없습니다.";
 
+/* No comment provided by engineer. */
+"Malformed URI" = "잘못된 URI";
+
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "귀하께서는 %1$@ 에 지갑을 만들었습니다";
 
@@ -373,6 +439,9 @@
 
 /* button label */
 "MenuViewController.recoverButton" = "지갑 복구하기";
+
+/* No comment provided by engineer. */
+"No wallet" = "지갑 없음";
 
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "자동 모드로 전환";
@@ -428,6 +497,9 @@
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "신용할 수 없는 증명서";
 
+/* Dismiss button. */
+"Prompts.dismiss" = "DISMISS";
+
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "PLACEHOLDER";
 
@@ -440,8 +512,17 @@
 /* No Passcode set warning title */
 "Prompts.NoPasscode.title" = "기기 비밀번호 설정";
 
+/* Affirm button title. */
+"Prompts.PaperKey.affirm" = "계속하다";
+
 /* Warning about paper key. */
 "Prompts.PaperKey.body" = "귀하의 종이 열쇠는 귀하의 핸드폰일 잃어버리거나 바꿀 경우에 대비해 저장되어야만 합니다. 계속하시려면 여기를 탭 하세요.";
+
+/* Cancel button. */
+"Prompts.PaperKey.cancel" = "취소";
+
+/* Enable button. */
+"Prompts.PaperKey.enable" = "사용";
 
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "조치 필요함";
@@ -451,6 +532,12 @@
 
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "거래 거절됨";
+
+/* Upgrade PIN prompt body. */
+"Prompts.SetPin.body" = "6자리 PIN을 사용하도록 브레드가 업그레이드되었습니다. 업그레이드하려면 여기를 탭하세요.";
+
+/* Upgrade PIN prompt title. */
+"Prompts.SetPin.title" = "PIN 업그레이드";
 
 /* Share data prompt body */
 "Prompts.ShareData.body" = "Litewallet가 발전할 수 있도록 익명 데이터를 공유해주십시오";
@@ -463,12 +550,6 @@
 
 /* Enable touch ID prompt title */
 "Prompts.TouchId.title" = "Touch ID 켜";
-
-/* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "6자리 PIN을 사용하도록 브레드가 업그레이드되었습니다. 업그레이드하려면 여기를 탭하세요.";
-
-/* Upgrade PIN prompt title. */
-"Prompts.UpgradePin.title" = "PIN 업그레이드";
 
 /* Notifications will be added later but users can set their preferences now, which is why we specify "in the future". */
 "PushNotifications.body" = "알림을 켜두시면, 향후 브레드의 특별 메시지를 수신할 수 있습니다.";
@@ -484,6 +565,9 @@
 
 /* Push notifications settings view title label */
 "PushNotifications.title" = "알림";
+
+/* Receive Bar Item Title */
+"Receive.barItemTitle" = "받다";
 
 /* Address copied message. */
 "Receive.copied" = "클립보드에 복사되었습니다.";
@@ -578,6 +662,12 @@
 /* Subheader label */
 "ReScan.subheader2" = "동기화는 언제 해야 합니까?";
 
+/* Reset walet button  title */
+"resetButton" = "예, 지갑 재설정";
+
+/* Warning Empty Wipe title */
+"resetTitle" = "빈 지갑 재설정";
+
 /* Scan Litecoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "카메라 플래시";
 
@@ -626,6 +716,9 @@
 /* Balance: $4.00 */
 "Send.balance" = "잔액: %1$@";
 
+/* Send Bar Item Title */
+"Send.barItemTitle" = "보내다";
+
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "설정에서 카메라 액세스를 허가해 주세요.";
 
@@ -649,6 +742,9 @@
 
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "인증되지 않은 수취인입니다.";
+
+/* Insufficient funds error */
+"Send.insufficientFunds" = "부족한 자금";
 
 /* Invalid address alert message */
 "Send.invalidAddressMessage" = "해당 수취인 주소는 Litecoin에서 유효하지 않은 주소입니다.";
@@ -707,6 +803,9 @@
 /* Advanced Settings title */
 "Settings.advancedTitle" = "고급 설정";
 
+/* Blockchain settings section header */
+"Settings.blockchain" = "블록 체인";
+
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "통화 보기";
 
@@ -722,6 +821,9 @@
 /* Import wallet label */
 "Settings.importTitle" = "지갑 내보내기";
 
+/* Languages label */
+"Settings.languages" = "언어";
+
 /* Manage settings section header */
 "Settings.manage" = "관리";
 
@@ -733,6 +835,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "익명 데이터 공유";
+
+/* Support settings section header */
+"Settings.support" = "지원하다";
 
 /* Sync blockchain label */
 "Settings.sync" = "블록체인 동기화";
@@ -758,6 +863,9 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "익명 데이터를 공유하시겠습니까?";
 
+/* Current spending limit: */
+"SpendingLimit.title" = "현재 지출 한도";
+
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "페이퍼 키를 다시 쓰기";
 
@@ -773,14 +881,20 @@
 /* Start view message */
 "StartViewController.message" = "Litecoin을 사용하는 가장 안정되고 안전한 방법.";
 
+/* Syncing view connection state header text */
+"SyncingHeader.connecting" = "연결 중 ...";
+
+/* Rescanning header success state header text */
+"SyncingHeader.rescan" = "다시 스캔하는 중 ...";
+
+/* Syncing header success state header text */
+"SyncingHeader.success" = "성공!";
+
+/* Syncing view syncing state header text */
+"SyncingHeader.syncing" = "동기화 중 ...";
+
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "연결 중";
-
-/* Syncing view header text */
-"SyncingView.header" = "동기화 중";
-
-/* Retry button label */
-"SyncingView.retry" = "다시 시도";
 
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "동기화 중";
@@ -802,6 +916,9 @@
 
 /* Touch Id screen label */
 "TouchIdSettings.label" = "지문을 사용하여 브레드의 보안을 해제하고 설정된 금액으로 송금할 수 있습니다.";
+
+/*  ł100,000 ($100) */
+"TouchIdSettings.limitValue" = "% 1 $ @ (% 2 $ @)";
 
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "터치 ID 지불 한도 화면";
@@ -830,11 +947,23 @@
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch ID 지출 한도";
 
+/* Static amount Label */
+"Transaction.amountDetailLabel" = "금액 세부 정보";
+
 /* Availability status text */
 "Transaction.available" = "지출 가능";
 
+/* Static blockHeight Label */
+"Transaction.blockHeightLabel" = "블록:";
+
+/* Static comment Label */
+"Transaction.commentLabel" = "메모:";
+
 /* Transaction complete label */
 "Transaction.complete" = "완료";
+
+/* Static end amount Label */
+"Transaction.endAmountDetailLabel" = "거래 종료 금액 세부 정보";
 
 /* eg. Ending balance: $50.00 */
 "Transaction.ending" = "기말 잔액: %1$@";
@@ -863,6 +992,12 @@
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "기초 잔액: %1$@";
 
+/* Static starting amount Label */
+"Transaction.startingAmountDetailLabel" = "거래 시작 금액 세부 정보";
+
+/* Static TX iD Label */
+"Transaction.txIDLabel" = "Tx ID :";
+
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "확인 대기 중. 일부 판매자는 트랜잭션을 완료하기 위해 확인을 요구합니다. 예상 소요 시간: 1~2시간.";
 
@@ -884,8 +1019,8 @@
 /* "Received [$5] at [which of my addresses]" => This is the "at [which of my addresses]" part. */
 "TransactionDetails.from" = "%1$@에서";
 
-/* More button title */
-"TransactionDetails.more" = "그 이상...";
+/* Less button title */
+"TransactionDetails.less" = "적게";
 
 /* Moved $5.00 (as in "I moved $5 to another location") */
 "TransactionDetails.moved" = "%1$@ 이동함";
@@ -896,17 +1031,26 @@
 /* eg. Confirmed in Block: Not Confirmed */
 "TransactionDetails.notConfirmedBlockHeightLabel" = "확인되지 않음";
 
+/* Prefix for price */
+"TransactionDetails.priceTimeStampPrefix" = "현재";
+
 /* "Received [$5] at [which of my addresses]" => This is the "Received [$5]" part. */
 "TransactionDetails.received" = "%1$@ 받음";
 
 /* Received $5.00 */
 "TransactionDetails.receivedAmountDescription" = "<b>%1@</b> 수신됨";
 
+/* RECEIVE LTCTitle */
+"TransactionDetails.receivedModalTitle" = "수신 주소";
+
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@ 보냄";
 
 /* Sent $5.00 */
 "TransactionDetails.sentAmountDescription" = "<b>%1@</b> 전송됨";
+
+/* Label for TXID */
+"TransactionDetails.staticTXLabel" = "TXID :";
 
 /* Status section header */
 "TransactionDetails.statusHeader" = "상태";
@@ -929,6 +1073,12 @@
 /* Disabled until date */
 "UnlockScreen.disabled" = "다음 기간까지 비활성화됨: %1$@";
 
+/* Unlock Screen sub-header */
+"UnlockScreen.enterPin" = "PIN을 입력하십시오";
+
+/* Unlock with FaceID accessibility label */
+"UnlockScreen.faceIdText" = "FaceID로 잠금 해제";
+
 /* My Address button title */
 "UnlockScreen.myAddress" = "내 주소";
 
@@ -937,9 +1087,6 @@
 
 /* Scan button title */
 "UnlockScreen.scan" = "스캔";
-
-/* Unlock Screen sub-header */
-"UnlockScreen.subheader" = "PIN 입력";
 
 /* TouchID prompt text */
 "UnlockScreen.touchIdPrompt" = "Litewallet의 잠금을 해제하세요.";
@@ -1028,6 +1175,9 @@
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "월렛을 초기화할까요?";
 
+/* Warning if user lost phrase */
+"WipeWallet.emptyWallet" = "시드 문구 나 PIN을 잊어 버리셨습니까?";
+
 /* Failed wipe wallet alert message */
 "WipeWallet.failedMessage" = "월렛 초기화가 실패함.";
 
@@ -1046,6 +1196,15 @@
 /* Wipe wallet navigation item title. */
 "WipeWallet.title" = "다른 월렛을 시작 또는 복원";
 
+/* Warning Alert */
+"WipeWallet.warningAlert" = "그것을 잃지 마십시오!";
+
+/* Warning description */
+"WipeWallet.warningDescription" = "LiteWallet이 비어 있습니다. 재설정하면 이전 개인 키가 삭제되고 앱 데이터가 지워집니다. \n \n 초기화 후 새 12 개 단어를 기록하고 매우 안전한 곳에 보관하십시오. \n \n LiteWallet 개발자는이 시드를 검색 할 수 없습니다.";
+
+/* Warning title */
+"WipeWallet.warningTitle" = "읽어주세요!";
+
 /* Wipe wallet button title */
 "WipeWallet.wipe" = "초기화";
 
@@ -1063,102 +1222,3 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%2$d의 %1$d";
-
-/* buy button */
-"Button.buy" = "";
-
-/* Bitrefill buy financial details */
-"BuyCenter.bitrefillFinancialDetails" = "";
-
-/* Bitrefill Title */
-"BuyCenter.BitrefillTitle" = "";
-
-/* Changelly buy financial details */
-"BuyCenter.changellyFinancialDetails" = "";
-
-/* Changelly Title */
-"BuyCenter.changellyTitle" = "";
-
-/* Coinbase buy financial details */
-"BuyCenter.coinbaseFinancialDetails" = "";
-
-/* Coinbase Title */
-"BuyCenter.CoinbaseTitle" = "";
-
-/* Buy Modal Title */
-"BuyCenter.ModalTitle" = "";
-
-/* Simplex buy financial details */
-"BuyCenter.simplexFinancialDetails" = "";
-
-/* Simplex Title */
-"BuyCenter.simplexTitle" = "";
-
-/* Buy Center Title */
-"BuyCenter.title" = "";
-
-/* Amount to Donate: ($1.00) */
-"Confirmation.donateLabel" = "";
-
-/* eg. Processing with Donation time: This transaction will take 10-30 minutes to process. */
-"Confirmation.processingAndDonationTime" = "";
-
-/* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "";
-
-/* as of a time or date */
-"Conjunction.asOf" = "";
-
-/* No comment provided by engineer. */
-"Copy" = "";
-
-/* Donate Memo */
-"Donate.memo" = "";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "";
-
-/* No comment provided by engineer. */
-"Malformed URI" = "";
-
-/* No comment provided by engineer. */
-"No wallet" = "";
-
-/* Reset walet button  title */
-"resetButton" = "";
-
-/* Warning Empty Wipe title */
-"resetTitle" = "";
-
-/* Insufficient funds error */
-"Send.insufficientFunds" = "";
-
-/* Blockchain settings section header */
-"Settings.blockchain" = "";
-
-/* Support settings section header */
-"Settings.support" = "";
-
-/* Current spending limit: */
-"SpendingLimit.title" = "";
-
-/*  ł100,000 ($100) */
-"TouchIdSettings.limitValue" = "";
-
-/* Unlock with FaceID accessibility label */
-"UnlockScreen.faceIdText" = "";
-
-/* Warning if user lost phrase */
-"WipeWallet.emptyWallet" = "";
-
-/* Warning Alert */
-"WipeWallet.warningAlert" = "";
-
-/* Warning description */
-"WipeWallet.warningDescription" = "";
-
-/* Warning title */
-"WipeWallet.warningTitle" = "";

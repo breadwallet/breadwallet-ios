@@ -1,7 +1,7 @@
 //
 //  LoginViewController.swift
 //  breadwallet
-//
+//  Modified by Kerry Washington
 //  Created by Adrian Corscadden on 2017-01-19.
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
@@ -13,6 +13,10 @@ import LocalAuthentication
 private let biometricsSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
 
+protocol LoginViewControllerDelegate {
+    func didUnlockLogin()
+}
+
 class LoginViewController : UIViewController, Subscriber, Trackable {
 
     //MARK: - Public
@@ -23,6 +27,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         }
     }
     var shouldSelfDismiss = false
+    
     init(store: Store, isPresentedForLock: Bool, walletManager: WalletManager? = nil) {
         self.store = store
         self.walletManager = walletManager
@@ -40,35 +45,18 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     //MARK: - Private
     private let store: Store
-    private let backgroundView: UIView = {
-        var view = UIView()
-        
-        var mainBackgroundColor = UIColor.liteWalletBlue
-        view.backgroundColor = mainBackgroundColor
-        if #available(iOS 11.0, *) {
-            guard let mainColor = UIColor(named: "mainColor") else {
-                NSLog("ERROR: Main color")
-                return view
-            }
-            view.backgroundColor = mainColor
-        }
-        return view
-    }()
-        
-//        
-//        
-//        = LoginBackgroundView()
-    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
+    private let backgroundView = LoginBackgroundView()
+    private let pinPadViewController = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let pinViewContainer = UIView()
     private var pinView: PinView?
-    private let addressButton = SegmentedButton(title: S.UnlockScreen.myAddress, type: .left)
-    private let scanButton = SegmentedButton(title: S.UnlockScreen.scan, type: .right)
     private let isPresentedForLock: Bool
     private let disabledView: WalletDisabledView
     private let activityView = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
     private let wipeBannerButton = UIButton()
+    var delegate: LoginViewControllerDelegate?
+    
     private var logo: UIImageView = {
-        let image = UIImageView(image: #imageLiteral(resourceName: "Logo"))
+        let image = UIImageView(image: #imageLiteral(resourceName: "coinBlueWhite"))
         image.contentMode = .scaleAspectFit
         return image
     }()
@@ -84,44 +72,15 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         button.accessibilityLabel = LAContext.biometricType() == .face ? S.UnlockScreen.faceIdText : S.UnlockScreen.touchIdText
         return button
     }()
-    private let subheader = UILabel(font: .customBody(size: 16.0), color: .white)
+    private let enterPINLabel = UILabel(font: .barloweBold(size: 17), color: .white)
     private var pinPadBottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
-    private let pinPadBackground: UIView = {
-        
-        let view = UIView()
-        var backgroundColor = UIColor.liteWalletBlue
-        view.backgroundColor = backgroundColor
-        if #available(iOS 11.0, *) {
-            guard let mainColor = UIColor(named: "mainColor") else {
-                NSLog("ERROR: Main color")
-                return view
-            }
-            view.backgroundColor = mainColor
-        }
-        return view
-    }()
-    private let topControlContainer: UIView = {
-        let view = UIView()
-        view.layer.borderColor = UIColor.white.cgColor
-        view.layer.borderWidth = 1.0
-        view.layer.cornerRadius = 5.0
-        view.layer.masksToBounds = true
-        let separator = UIView()
-        view.addSubview(separator)
-        separator.backgroundColor = .white
-        separator.constrain([
-            separator.topAnchor.constraint(equalTo: view.topAnchor),
-            separator.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            separator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            separator.widthAnchor.constraint(equalToConstant: 1.0) ])
-        return view
-    }()
+    private var pinPadBackground = UIView()
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
-    private let version = UILabel(font: .customMedium(size: 12), color: .whiteTint)
+    private let versionLabel = UILabel(font: .barloweLight(size: 14), color: .transparentWhite)
     private var isWalletEmpty = false
   
     override func viewDidLoad() {
@@ -153,8 +112,8 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             nc.viewControllers = [recover]
             nc.navigationBar.tintColor = .darkText
             nc.navigationBar.titleTextAttributes = [
-                NSAttributedStringKey.foregroundColor: UIColor.darkText,
-                NSAttributedStringKey.font: UIFont.customBold(size: 17.0)
+                NSAttributedString.Key.foregroundColor: UIColor.darkText,
+                NSAttributedString.Key.font: UIFont.customBold(size: 17.0)
             ]
             nc.setClearNavbar()
             nc.navigationBar.isTranslucent = false
@@ -162,7 +121,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             nc.viewControllers = [recover]
             self?.present(nc, animated: true, completion: nil)
         }
-        store.subscribe(self, name: .loginFromSend, callback: {_ in 
+        store.subscribe(self, name: .loginFromSend, callback: {_ in
             self.authenticationSucceded()
         })
       
@@ -201,25 +160,33 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private func addPinView() {
         guard let pinView = pinView else { return }
         pinViewContainer.addSubview(pinView)
-        view.addSubview(subheader)
+        
         pinView.constrain([
-            pinView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: E.isIPhone4 ? -C.padding[2] : 0.0),
-            pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
-            pinView.widthAnchor.constraint(equalToConstant: pinView.width),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-        subheader.constrain([
-            subheader.bottomAnchor.constraint(equalTo: pinView.topAnchor, constant: -C.padding[1]),
-            subheader.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+            pinView.centerYAnchor.constraint(equalTo: pinPadViewController.view.topAnchor, constant: -90),
+        pinView.centerXAnchor.constraint(equalTo: pinViewContainer.centerXAnchor),
+        pinView.widthAnchor.constraint(equalToConstant: pinView.width),
+        pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+        
+        enterPINLabel.constrain([
+            enterPINLabel.topAnchor.constraint(equalTo: pinView.topAnchor, constant: -60),
+            enterPINLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor) ])
+       
+        logo.constrain([
+            logo.topAnchor.constraint(equalTo: view.topAnchor, constant: 70),
+            logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logo.constraint(.height, constant: 70),
+            logo.constraint(.width, constant: 70) ])
+        
     }
 
     private func addSubviews() {
         view.addSubview(backgroundView)
         view.addSubview(pinViewContainer)
-        view.addSubview(topControlContainer)
-        topControlContainer.addSubview(addressButton)
-        topControlContainer.addSubview(scanButton)
         view.addSubview(logo)
-        view.addSubview(version)
+        view.addSubview(versionLabel)
+        view.addSubview(enterPINLabel)
+
+        pinPadBackground.backgroundColor = .clear
         if walletManager != nil {
             view.addSubview(pinPadBackground)
         } else {
@@ -230,49 +197,29 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private func addConstraints() {
         backgroundView.constrain(toSuperviewEdges: nil)
         if walletManager != nil {
-            addChildViewController(pinPad, layout: {
-                pinPadBottom = pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant:  -10.0)
-                pinPad.view.constrain([
-                    pinPad.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                    pinPad.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            addChildViewController(pinPadViewController, layout: {
+                pinPadBottom = pinPadViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -60)
+                pinPadViewController.view.constrain([
+                    pinPadViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                    pinPadViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                     pinPadBottom,
-                    pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height) ])
+                    pinPadViewController.view.heightAnchor.constraint(equalToConstant: pinPadViewController.height) ])
             })
         }
         pinViewContainer.constrain(toSuperviewEdges: nil)
 
-        topControlTop = topControlContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: deviceTopConstraintConstant())
-        topControlContainer.constrain([
-            topControlTop,
-            topControlContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            topControlContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            topControlContainer.heightAnchor.constraint(equalToConstant: topControlHeight) ])
-        addressButton.constrain([
-            addressButton.leadingAnchor.constraint(equalTo: topControlContainer.leadingAnchor),
-            addressButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
-            addressButton.trailingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
-            addressButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
-        scanButton.constrain([
-            scanButton.leadingAnchor.constraint(equalTo: topControlContainer.centerXAnchor),
-            scanButton.topAnchor.constraint(equalTo: topControlContainer.topAnchor),
-            scanButton.trailingAnchor.constraint(equalTo: topControlContainer.trailingAnchor),
-            scanButton.bottomAnchor.constraint(equalTo: topControlContainer.bottomAnchor) ])
-
-        logo.constrain([
-            logo.topAnchor.constraint(equalTo: topControlContainer.bottomAnchor, constant: C.padding[8]),
-            logo.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logo.heightAnchor.constraint(equalTo: logo.widthAnchor, multiplier: C.Sizes.logoAspectRatio),
-            logo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.35) ])
-        version.constrain([
-            version.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            version.topAnchor.constraint(equalTo:logo.bottomAnchor, constant: C.padding[2]),
-            version.heightAnchor.constraint(equalToConstant: 14)])
+        versionLabel.constrain([
+            versionLabel.constraint(.top, toView: view, constant: 30),
+            versionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            versionLabel.widthAnchor.constraint(equalToConstant: 120.0),
+            versionLabel.heightAnchor.constraint(equalToConstant: 44.0) ])
+        
         if walletManager != nil {
             pinPadBackground.constrain([
-                pinPadBackground.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
-                pinPadBackground.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
-                pinPadBackground.topAnchor.constraint(equalTo: pinPad.view.topAnchor),
-                pinPadBackground.bottomAnchor.constraint(equalTo: pinPad.view.bottomAnchor) ])
+                pinPadBackground.leadingAnchor.constraint(equalTo: pinPadViewController.view.leadingAnchor),
+                pinPadBackground.trailingAnchor.constraint(equalTo: pinPadViewController.view.trailingAnchor),
+                pinPadBackground.topAnchor.constraint(equalTo: pinPadViewController.view.topAnchor),
+                pinPadBackground.bottomAnchor.constraint(equalTo: pinPadViewController.view.bottomAnchor) ])
         } else {
             activityView.constrain([
                 activityView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -280,12 +227,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             activityView.startAnimating()
         }
       
-        subheader.text = S.UnlockScreen.subheader
-        version.text = AppVersion.string
-        version.textAlignment = .center
-
-        addressButton.addTarget(self, action: #selector(addressTapped), for: .touchUpInside)
-        scanButton.addTarget(self, action: #selector(scanTapped), for: .touchUpInside)
+        enterPINLabel.text = S.UnlockScreen.enterPIN
+        versionLabel.text = AppVersion.string
+        versionLabel.textAlignment = .right
     }
   
     private func deviceTopConstraintConstant() -> CGFloat {
@@ -301,26 +245,26 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
       return C.padding[1] + CGFloat(constant)
     }
     private func addWipeWalletView() {
-      
-      if isWalletEmpty {
-        view.addSubview(wipeBannerButton)
-        wipeBannerButton.translatesAutoresizingMaskIntoConstraints = true
-        wipeBannerButton.backgroundColor = UIColor.gray
-        wipeBannerButton.adjustsImageWhenHighlighted = true
         
-        wipeBannerButton.constrain([
-          wipeBannerButton.topAnchor.constraint(equalTo:version.bottomAnchor, constant: 5),
-          wipeBannerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-          wipeBannerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-          wipeBannerButton.heightAnchor.constraint(equalToConstant: 30)])
+        if isWalletEmpty {
+            view.addSubview(wipeBannerButton)
+            wipeBannerButton.translatesAutoresizingMaskIntoConstraints = true
+            wipeBannerButton.backgroundColor = .clear
+            wipeBannerButton.adjustsImageWhenHighlighted = true
+            
+            wipeBannerButton.constrain([
+               wipeBannerButton.bottomAnchor.constraint(equalTo:pinPadViewController.view.topAnchor, constant: -20),
+                wipeBannerButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                wipeBannerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                wipeBannerButton.heightAnchor.constraint(equalToConstant: 40)])
+            
+            wipeBannerButton.setTitle(S.WipeWallet.emptyWallet, for: .normal)
+            wipeBannerButton.titleLabel?.font = .barloweBold(size: 17)
+            wipeBannerButton.addTarget(self, action: #selector(wipeTapped), for: .touchUpInside)
+        } else {
+            wipeBannerButton.removeFromSuperview()
+        }
         
-        wipeBannerButton.setTitle(S.WipeWallet.emptyWallet, for: .normal)
-        wipeBannerButton.titleLabel?.font = UIFont.customBody(size: 14)
-        wipeBannerButton.addTarget(self, action: #selector(wipeTapped), for: .touchUpInside)
-      } else {
-        wipeBannerButton.removeFromSuperview()
-      }
-      
     }
     private func addBiometricsButton() {
         guard shouldUseBiometrics else { return }
@@ -330,16 +274,16 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             biometrics.widthAnchor.constraint(equalToConstant: biometricsSize),
             biometrics.heightAnchor.constraint(equalToConstant: biometricsSize),
             biometrics.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            biometrics.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]) ])
+            biometrics.bottomAnchor.constraint(equalTo: pinPadViewController.view.topAnchor, constant: -C.padding[2]) ])
     }
-
+  
     private func addPinPadCallback() {
-        pinPad.ouputDidUpdate = { [weak self] pin in
+        pinPadViewController.ouputDidUpdate = { [weak self] pin in
             guard let myself = self else { return }
             guard let pinView = self?.pinView else { return }
             let attemptLength = pin.utf8.count
             pinView.fill(attemptLength)
-            self?.pinPad.isAppendingDisabled = attemptLength < myself.store.state.pinLength ? false : true
+            self?.pinPadViewController.isAppendingDisabled = attemptLength < myself.store.state.pinLength ? false : true
             if attemptLength == myself.store.state.pinLength {
                 self?.authenticate(pin: pin)
             }
@@ -354,7 +298,6 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
           isWalletEmpty = false
         }
       }
-      
     }
 
     private func authenticate(pin: String) {
@@ -366,13 +309,17 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     private func authenticationSucceded() {
         saveEvent("login.success")
-        let label = UILabel(font: subheader.font)
+        let label = UILabel(font: enterPINLabel.font)
         label.textColor = .white
         label.text = S.UnlockScreen.unlocked
-        label.alpha = 0.0
         let lock = UIImageView(image: #imageLiteral(resourceName: "unlock"))
-        lock.alpha = 0.0
-
+        lock.transform = .init(scaleX: 0.6, y: 0.6)
+         
+        if let _pinView = self.pinView {
+            enterPINLabel.removeFromSuperview()
+            _pinView.removeFromSuperview()
+        }
+        
         view.addSubview(label)
         view.addSubview(lock)
 
@@ -383,17 +330,23 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             lock.topAnchor.constraint(equalTo: label.bottomAnchor, constant: C.padding[1]),
             lock.centerXAnchor.constraint(equalTo: label.centerXAnchor) ])
         view.layoutIfNeeded()
-
-        UIView.spring(0.6, animations: {
-            self.pinPadBottom?.constant = self.pinPad.height
+  
+        self.logo.alpha = 0.0
+        self.wipeBannerButton.alpha = 1.0
+        
+        UIView.spring(0.6, delay: 0.4, animations: {
+            self.pinPadBottom?.constant = self.pinPadViewController.height
             self.topControlTop?.constant = -100.0
-            lock.alpha = 1.0
-            label.alpha = 1.0
-            self.logo.alpha = 0.0
-            self.subheader.alpha = 0.0
+             
+            lock.alpha = 0.0
+            label.alpha = 0.0
+            self.wipeBannerButton.alpha = 0.0
+            self.enterPINLabel.alpha = 0.0
             self.pinView?.alpha = 0.0
+            
             self.view.layoutIfNeeded()
         }) { completion in
+            self.delegate?.didUnlockLogin()
             if self.shouldSelfDismiss {
                 self.dismiss(animated: true, completion: nil)
             }
@@ -405,11 +358,11 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private func authenticationFailed() {
         saveEvent("login.failed")
         guard let pinView = pinView else { return }
-        pinPad.view.isUserInteractionEnabled = false
+        pinPadViewController.view.isUserInteractionEnabled = false
         pinView.shake { [weak self] in
-            self?.pinPad.view.isUserInteractionEnabled = true
+            self?.pinPadViewController.view.isUserInteractionEnabled = true
         }
-        pinPad.clear()
+        pinPadViewController.clear()
         DispatchQueue.main.asyncAfter(deadline: .now() + pinView.shakeDuration) { [weak self] in
             pinView.fill(0)
             self?.lockIfNeeded()
@@ -429,19 +382,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
             }
         })
     }
-
-    @objc func addressTapped() {
-        store.perform(action: RootModalActions.Present(modal: .loginAddress))
-    }
-
-    @objc func scanTapped() {
-        store.perform(action: RootModalActions.Present(modal: .loginScan))
-    }
-  
+ 
     @objc func wipeTapped() {
       store.perform(action: RootModalActions.Present(modal: .wipeEmptyWallet))
-      
-
     }
 
     private func lockIfNeeded() {
@@ -456,7 +399,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
                 disabledView.setTimeLabel(string: String(format: S.UnlockScreen.disabled, df.string(from: disabledUntilDate)))
 
-                pinPad.view.isUserInteractionEnabled = false
+                pinPadViewController.view.isUserInteractionEnabled = false
                 unlockTimer?.invalidate()
                 unlockTimer = Timer.scheduledTimer(timeInterval: unlockInterval, target: self, selector: #selector(LoginViewController.unlock), userInfo: nil, repeats: false)
 
@@ -467,7 +410,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
                     disabledView.show()
                 }
             } else {
-                pinPad.view.isUserInteractionEnabled = true
+                pinPadViewController.view.isUserInteractionEnabled = true
                 disabledView.hide { [weak self] in
                     self?.disabledView.removeFromSuperview()
                     self?.setNeedsStatusBarAppearanceUpdate()
@@ -484,8 +427,9 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
 
     @objc private func unlock() {
         saveEvent("login.unlocked")
-        subheader.pushNewText(S.UnlockScreen.subheader)
-        pinPad.view.isUserInteractionEnabled = true
+        self.delegate?.didUnlockLogin()
+        enterPINLabel.pushNewText(S.UnlockScreen.enterPIN)
+        pinPadViewController.view.isUserInteractionEnabled = true
         unlockTimer = nil
         disabledView.hide { [weak self] in
             self?.disabledView.removeFromSuperview()
@@ -505,3 +449,4 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

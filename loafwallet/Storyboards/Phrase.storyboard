@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Confirm Paper Phrase View Controller-->
+        <scene sceneID="hZy-AQ-ylQ">
+            <objects>
+                <tableViewController storyboardIdentifier="ConfirmPaperPhraseViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="n9g-4b-ALh" customClass="ConfirmPaperPhraseViewController" customModule="loafwallet" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="h6F-n2-6tX">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="N57-7f-Fob">
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="128"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="leading" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ers-X3-F0t">
+                                    <rect key="frame" x="20" y="10" width="40" height="40"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="40" id="4tT-rj-gsV"/>
+                                        <constraint firstAttribute="height" constant="40" id="6FV-8T-oOH"/>
+                                    </constraints>
+                                    <state key="normal" image="whiteleftarrow">
+                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
+                                    </state>
+                                </button>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CQb-VL-NIS">
+                                    <rect key="frame" x="107" y="10" width="200" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="200" id="QmR-wb-oGR"/>
+                                        <constraint firstAttribute="height" constant="30" id="vrd-u2-kFv"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6D-qZ-6g0">
+                                    <rect key="frame" x="20" y="60" width="374" height="58"/>
+                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="r6D-qZ-6g0" firstAttribute="top" secondItem="ers-X3-F0t" secondAttribute="bottom" constant="10" id="8aL-dy-FaW"/>
+                                <constraint firstAttribute="height" constant="128" id="FNa-3Q-AOs"/>
+                                <constraint firstItem="r6D-qZ-6g0" firstAttribute="leading" secondItem="N57-7f-Fob" secondAttribute="leading" constant="20" id="OND-PV-PIS"/>
+                                <constraint firstAttribute="bottom" secondItem="r6D-qZ-6g0" secondAttribute="bottom" constant="10" id="PPm-Ey-Fk7"/>
+                                <constraint firstItem="CQb-VL-NIS" firstAttribute="centerX" secondItem="N57-7f-Fob" secondAttribute="centerX" id="Pfb-pi-8a1"/>
+                                <constraint firstItem="r6D-qZ-6g0" firstAttribute="centerX" secondItem="N57-7f-Fob" secondAttribute="centerX" id="dtm-Jq-HBG"/>
+                                <constraint firstAttribute="trailing" secondItem="r6D-qZ-6g0" secondAttribute="trailing" constant="20" id="n8D-Lb-vwE"/>
+                                <constraint firstItem="CQb-VL-NIS" firstAttribute="top" secondItem="N57-7f-Fob" secondAttribute="top" constant="10" id="oa0-dj-kLF"/>
+                                <constraint firstItem="ers-X3-F0t" firstAttribute="leading" secondItem="N57-7f-Fob" secondAttribute="leading" constant="20" id="uHW-tQ-oZs"/>
+                                <constraint firstItem="ers-X3-F0t" firstAttribute="top" secondItem="N57-7f-Fob" secondAttribute="top" constant="10" id="vka-20-0UI"/>
+                            </constraints>
+                        </view>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="p1g-xX-RH1">
+                            <rect key="frame" x="0.0" y="424" width="414" height="128"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="C5P-tU-kKu">
+                                    <rect key="frame" x="20" y="39" width="374" height="50"/>
+                                    <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="vFY-YJ-r9h"/>
+                                    </constraints>
+                                    <state key="normal" title="Button"/>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="128" id="38a-OY-xXa"/>
+                                <constraint firstItem="C5P-tU-kKu" firstAttribute="leading" secondItem="p1g-xX-RH1" secondAttribute="leading" constant="20" id="QXE-0w-IeU"/>
+                                <constraint firstItem="C5P-tU-kKu" firstAttribute="centerY" secondItem="p1g-xX-RH1" secondAttribute="centerY" id="ZaW-3I-YY8"/>
+                                <constraint firstItem="C5P-tU-kKu" firstAttribute="centerX" secondItem="p1g-xX-RH1" secondAttribute="centerX" id="hD5-UO-Nyc"/>
+                                <constraint firstAttribute="trailing" secondItem="C5P-tU-kKu" secondAttribute="trailing" constant="20" id="khH-x1-jRU"/>
+                            </constraints>
+                        </view>
+                        <sections>
+                            <tableViewSection id="zsA-D5-vbv">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="XJ7-LS-mgU" customClass="ConfirmPhraseTableViewCell" customModule="loafwallet" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="156" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XJ7-LS-mgU" id="1W1-jK-cMX">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="gzG-fx-3iu" customClass="ConfirmPhraseTableViewCell" customModule="loafwallet" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="216" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gzG-fx-3iu" id="hn3-2L-Wze">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="ROU-0X-P9H" customClass="ConfirmPhraseTableViewCell" customModule="loafwallet" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="276" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ROU-0X-P9H" id="LGn-Sc-xqO">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="60" id="0qg-cc-Dbu" customClass="ConfirmPhraseTableViewCell" customModule="loafwallet" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="336" width="414" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="0qg-cc-Dbu" id="pOV-t8-mEA">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="n9g-4b-ALh" id="fFe-PM-Qho"/>
+                            <outlet property="delegate" destination="n9g-4b-ALh" id="wRF-dS-mi8"/>
+                        </connections>
+                    </tableView>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="backButton" destination="ers-X3-F0t" id="xzK-EU-oxh"/>
+                        <outlet property="firstWordCell" destination="XJ7-LS-mgU" id="s2J-3u-eJG"/>
+                        <outlet property="footerView" destination="p1g-xX-RH1" id="KL1-Ql-aVY"/>
+                        <outlet property="fourthWordCell" destination="0qg-cc-Dbu" id="MRG-Vj-fJU"/>
+                        <outlet property="headerDescriptionLabel" destination="r6D-qZ-6g0" id="ylc-Va-tXT"/>
+                        <outlet property="headerTitleLabel" destination="CQb-VL-NIS" id="SMA-RG-Saf"/>
+                        <outlet property="headerView" destination="N57-7f-Fob" id="ug9-OI-VvZ"/>
+                        <outlet property="secondWordCell" destination="gzG-fx-3iu" id="7FA-Ja-3ha"/>
+                        <outlet property="submitButton" destination="C5P-tU-kKu" id="DV8-cA-8hi"/>
+                        <outlet property="thirdWordCell" destination="ROU-0X-P9H" id="Iti-ia-5kt"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Org-HS-4Si" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="863.768115942029" y="54.910714285714285"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="whiteleftarrow" width="100" height="100"/>
+    </resources>
+</document>
