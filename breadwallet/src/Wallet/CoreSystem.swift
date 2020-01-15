@@ -217,13 +217,13 @@ class CoreSystem: Subscriber, Trackable {
         if currency.isBitcoin {
             addressScheme = UserDefaults.hasOptedInSegwit ? .btcSegwit : .btcLegacy
         } else {
-            addressScheme = system.defaultAddressScheme(network: network)
+            addressScheme = network.defaultAddressScheme
         }
 
         var mode = self.connectionMode(for: currency)
-        if !system.supportsMode(network: network, mode) {
+        if !network.supportsMode(mode) {
             assertionFailure("invalid wallet manager mode \(mode) for \(network.currency.code)")
-            mode = system.defaultMode(network: network)
+            mode = network.defaultMode
         }
         print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
         var success = system.createWalletManager(network: network,
@@ -373,11 +373,11 @@ class CoreSystem: Subscriber, Trackable {
     // MARK: Connection Mode
 
     func isModeSupported(_ mode: WalletConnectionMode, for network: Network) -> Bool {
-        return system?.supportsMode(network: network, mode) ?? false
+        return network.supportsMode(mode)
     }
 
     func setConnectionMode(_ mode: WalletConnectionMode, forWalletManager wm: WalletManager) {
-        guard let system = self.system, system.supportsMode(network: wm.network, mode) else { return assertionFailure() }
+        guard wm.network.supportsMode(mode) else { return assertionFailure() }
         queue.async {
             wm.disconnect()
             wm.mode = mode
