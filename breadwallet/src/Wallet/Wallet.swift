@@ -191,7 +191,7 @@ class Wallet {
 
 extension Wallet {
     func handleWalletEvent(_ event: WalletEvent) {
-        //print("[SYS] \(currency.code) wallet event: \(event)")
+        print("[SYS] \(currency.code) wallet event: \(event)")
         switch event {
             
         case .transferAdded:
@@ -201,8 +201,8 @@ extension Wallet {
         case .transferDeleted:
             break
         case .transferSubmitted:
-            assertionFailure("this is working now, remove the hack in handleTransferEvent")
-
+            //assertionFailure("this is working now, remove the hack in handleTransferEvent")
+            break
         case .balanceUpdated(let amount):
             DispatchQueue.main.async {
                 Store.perform(action: WalletChange(self.currency).setBalance(Amount(cryptoAmount: amount, currency: self.currency)))
@@ -218,7 +218,7 @@ extension Wallet {
     }
 
     func handleTransferEvent(_ event: TransferEvent, transfer: BRCrypto.Transfer) {
-        //print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
+        print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
         switch event {
         case .created:
             publishEvent(.transferAdded(transfer: transfer))
@@ -239,7 +239,7 @@ extension Wallet {
         }
         if case .changed(_, let new) = event, case .failed(_) = new {
             //TODO:CRYPTO workaround needed because transferSubmitted is never received
-            publishEvent(.transferSubmitted(transfer: transfer, success: false))
+            //publishEvent(.transferSubmitted(transfer: transfer, success: false))
         }
     }
 }

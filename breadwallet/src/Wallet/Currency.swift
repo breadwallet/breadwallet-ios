@@ -331,6 +331,7 @@ enum Currencies: String, CaseIterable {
     case eth
     case brd
     case tusd
+    case xrp
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -346,6 +347,8 @@ enum Currencies: String, CaseIterable {
             uids = "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
         case .tusd:
             uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
+        case .xrp:
+            uids = "ripple-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
         }
         return CurrencyId(rawValue: uids)
     }
