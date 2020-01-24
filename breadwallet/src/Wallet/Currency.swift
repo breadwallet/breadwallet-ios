@@ -112,6 +112,9 @@ class Currency: CurrencyWithIcon {
         if isEthereumCompatible {
             return "ethereum"
         }
+        if uid == Currencies.xrp.uid {
+            return "xrpl"
+        }
         return nil
     }
 
