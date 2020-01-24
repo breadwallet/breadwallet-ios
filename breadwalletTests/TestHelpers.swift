@@ -16,6 +16,8 @@ let testWalletSecAttrService = "com.brd.testnetQA.tests"
 typealias CoreCurrency = BRCrypto.Currency
 typealias AppCurrency = breadwallet.Currency
 
+private let networks = Network.installBuiltins()
+
 struct TestCurrencies {
     private static let btcMetaData = Data("""
 {
@@ -92,21 +94,9 @@ struct TestCurrencies {
     static var btc: AppCurrency {
         let btc = CoreCurrency(uids: Currencies.btc.uid.rawValue, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
-        let BTC_SATOSHI = BRCrypto.Unit (currency: btc, uids: "BTC-SAT",  name: "Satoshi", symbol: "SAT")
-        let BTC_BTC = BRCrypto.Unit (currency: btc, uids: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
-        let associations = Network.Association (baseUnit: BTC_SATOSHI,
-                                                defaultUnit: BTC_BTC,
-                                                units: Set (arrayLiteral: BTC_SATOSHI, BTC_BTC))
-        let fee = NetworkFee (timeIntervalInMilliseconds: 30 * 1000,
-                              pricePerCostFactor: BRCrypto.Amount.create(integer: 1000, unit: BTC_SATOSHI))
-        let network = Network (uids: "bitcoin-mainnet",
-                               name: "bitcoin-name",
-                               isMainnet: true,
-                               currency: btc,
-                               height: 100000,
-                               associations: [btc:associations],
-                               fees: [fee],
-                               confirmationsUntilFinal: 6)
+        let network = networks.first(where: { $0.uids == "bitcoin-mainnet" })!
+        let BTC_SATOSHI = BRCrypto.Unit(currency: btc, code: "BTC-SAT", name: "Satoshi", symbol: "SAT")
+        let BTC_BTC = BRCrypto.Unit (currency: btc, code: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
         return AppCurrency(core: btc,
                            network: network,
                            metaData: metaData,
@@ -118,21 +108,9 @@ struct TestCurrencies {
     static var bch: AppCurrency {
         let bch = CoreCurrency(uids: Currencies.bch.uid.rawValue, name: "Bitcoin Cash", code: Currencies.bch.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: bchMetaData)
-        let BCH_SATOSHI = BRCrypto.Unit (currency: bch, uids: "BCH-SAT",  name: "Satoshi", symbol: "SAT")
-        let BCH_BCH = BRCrypto.Unit (currency: bch, uids: "BCH-BTC",  name: "Bitcoin Cash", symbol: "BCH", base: BCH_SATOSHI, decimals: 8)
-        let associations = Network.Association (baseUnit: BCH_SATOSHI,
-                                                defaultUnit: BCH_BCH,
-                                                units: Set (arrayLiteral: BCH_SATOSHI, BCH_BCH))
-        let fee = NetworkFee (timeIntervalInMilliseconds: 30 * 1000,
-                              pricePerCostFactor: BRCrypto.Amount.create(integer: 1000, unit: BCH_SATOSHI))
-        let network = Network (uids: "bitcoin-cash-mainnet",
-                               name: "bitcoin-cash-name",
-                               isMainnet: true,
-                               currency: bch,
-                               height: 100000,
-                               associations: [bch:associations],
-                               fees: [fee],
-                               confirmationsUntilFinal: 6)
+        let BCH_SATOSHI = BRCrypto.Unit (currency: bch, code: "BCH-SAT",  name: "Satoshi", symbol: "SAT")
+        let BCH_BCH = BRCrypto.Unit (currency: bch, code: "BCH-BTC",  name: "Bitcoin Cash", symbol: "BCH", base: BCH_SATOSHI, decimals: 8)
+        let network = networks.first(where: { $0.uids == "bitcoincash-mainnet" })!
         return AppCurrency(core: bch,
                            network: network,
                            metaData: metaData,
@@ -144,31 +122,10 @@ struct TestCurrencies {
     static var eth: AppCurrency {
         let eth = CoreCurrency(uids: Currencies.eth.uid.rawValue, name: "Ethereum", code: Currencies.eth.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
-        let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
-        let ETH_GWEI = BRCrypto.Unit (currency: eth, uids: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
-        let ETH_ETHER = BRCrypto.Unit (currency: eth, uids: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
-        let ETH_associations = Network.Association (baseUnit: ETH_WEI,
-                                                    defaultUnit: ETH_ETHER,
-                                                    units: Set (arrayLiteral: ETH_WEI, ETH_GWEI, ETH_ETHER))
-        let brd = CoreCurrency (uids: Currencies.brd.uid.rawValue, name: "BRD Token", code: Currencies.brd.code, type: "erc20", issuer: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
-        
-        let brd_brdi = BRCrypto.Unit (currency: brd, uids: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
-        let brd_brd  = BRCrypto.Unit (currency: brd, uids: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)
-        
-        let BRD_associations = Network.Association (baseUnit: brd_brdi,
-                                                    defaultUnit: brd_brd,
-                                                    units: Set (arrayLiteral: brd_brdi, brd_brd))
-        let fee = NetworkFee (timeIntervalInMilliseconds: 1000,
-                              pricePerCostFactor: Amount.create(double: 2.0, unit: ETH_GWEI))
-        
-        let network = Network (uids: "ethereum-mainnet",
-                               name: "ethereum-name",
-                               isMainnet: true,
-                               currency: eth,
-                               height: 100000,
-                               associations: [eth:ETH_associations, brd:BRD_associations],
-                               fees: [fee],
-                               confirmationsUntilFinal: 3)
+        let ETH_WEI = BRCrypto.Unit (currency: eth, code: "ETH-WEI", name: "WEI", symbol: "wei")
+        let ETH_GWEI = BRCrypto.Unit (currency: eth, code: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
+        let ETH_ETHER = BRCrypto.Unit (currency: eth, code: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
+        let network = networks.first(where: { $0.uids == "ethereum-mainnet" })!
         return AppCurrency(core: eth,
                            network: network,
                            metaData: metaData,
@@ -178,33 +135,11 @@ struct TestCurrencies {
     }
     
     static var brd: AppCurrency {
-        let eth = CoreCurrency(uids: Currencies.eth.uid.rawValue, name: "Ethereum", code: Currencies.eth.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: brdMetaData)
-        let ETH_WEI = BRCrypto.Unit (currency: eth, uids: "ETH-WEI", name: "WEI", symbol: "wei")
-        let ETH_GWEI = BRCrypto.Unit (currency: eth, uids: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
-        let ETH_ETHER = BRCrypto.Unit (currency: eth, uids: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
-        let ETH_associations = Network.Association (baseUnit: ETH_WEI,
-                                                    defaultUnit: ETH_ETHER,
-                                                    units: Set (arrayLiteral: ETH_WEI, ETH_GWEI, ETH_ETHER))
         let brd = CoreCurrency (uids: Currencies.brd.uid.rawValue, name: "BRD Token", code: Currencies.brd.code, type: "erc20", issuer: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
-        
-        let brd_brdi = BRCrypto.Unit (currency: brd, uids: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
-        let brd_brd  = BRCrypto.Unit (currency: brd, uids: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)
-        
-        let BRD_associations = Network.Association (baseUnit: brd_brdi,
-                                                    defaultUnit: brd_brd,
-                                                    units: Set (arrayLiteral: brd_brdi, brd_brd))
-        let fee = NetworkFee (timeIntervalInMilliseconds: 1000,
-                              pricePerCostFactor: Amount.create(double: 2.0, unit: ETH_GWEI))
-        
-        let network = Network (uids: "ethereum-mainnet",
-                               name: "ethereum-name",
-                               isMainnet: true,
-                               currency: eth,
-                               height: 100000,
-                               associations: [eth:ETH_associations, brd:BRD_associations],
-                               fees: [fee],
-                               confirmationsUntilFinal: 3)
+        let brd_brdi = BRCrypto.Unit (currency: brd, code: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
+        let brd_brd  = BRCrypto.Unit (currency: brd, code: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)
+        let network = networks.first(where: { $0.uids == "ethereum-mainnet" })!
         return AppCurrency(core: brd,
                            network: network,
                            metaData: metaData,
