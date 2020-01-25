@@ -89,10 +89,9 @@ class WalletConnectionSettings {
     }
 
     private func sanitize(currency: Currency) {
-        if let wm = currency.wallet?.manager,
-            let modeValue = walletInfo.connectionModes[currency.uid],
+        if let modeValue = walletInfo.connectionModes[currency.uid],
             let mode = WalletConnectionMode(serialization: modeValue),
-            !system.isModeSupported(mode, for: wm.network) {
+            !system.isModeSupported(mode, for: currency.network) {
             // replace unsupported mode with default
             walletInfo.connectionModes[currency.uid] = nil
         }
