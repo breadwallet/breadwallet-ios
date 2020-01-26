@@ -113,8 +113,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 #endif
         }
-       
-        FirebaseApp.configure()
+        
+        if EnvironmentVariables.shouldRunFirebase {
+            FirebaseApp.configure()
+        }
     }
 }
 

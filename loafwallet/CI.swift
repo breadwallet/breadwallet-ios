@@ -11,4 +11,6 @@ import Foundation
 struct CI {
     static var mixpanelProdToken:    String = "$(MXP_PROD_ENV)"
     static var mixpanelDevToken:     String = "$(MXP_DEV_ENV)"
+    static var shouldRunFirebase = false
+
 }
