@@ -33,7 +33,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
-
+        tagCell = AttributeCell()
+        
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -48,6 +49,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
     private let amountView: AmountViewController
     private let addressCell: AddressCell
+    private let tagCell: AttributeCell?
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
     private let currencyBorder = UIView(color: .secondaryShadow)
@@ -93,10 +95,23 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
+        var addressGroupBottom: NSLayoutYAxisAnchor
+        if currency.uid == Currencies.xrp.uid, let tagCell = tagCell {
+            view.addSubview(tagCell)
+            tagCell.constrain([
+                tagCell.leadingAnchor.constraint(equalTo: addressCell.leadingAnchor),
+                tagCell.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
+                tagCell.trailingAnchor.constraint(equalTo: addressCell.trailingAnchor),
+                tagCell.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight)])
+            addressGroupBottom = tagCell.bottomAnchor
+        } else {
+            addressGroupBottom = addressCell.bottomAnchor
+        }
+        
         addChildViewController(amountView, layout: {
             amountView.view.constrain([
                 amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                amountView.view.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
+                amountView.view.topAnchor.constraint(equalTo: addressGroupBottom),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
@@ -180,7 +195,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if isFirstResponder {
                 self?.memoCell.textView.resignFirstResponder()
                 self?.addressCell.textField.resignFirstResponder()
+                self?.tagCell?.textField.resignFirstResponder()
             }
+        }
+        
+        tagCell?.didBeginEditing = { [weak self] in
+            self?.amountView.closePinPad()
         }
     }
     
@@ -282,7 +302,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         return handleValidationResult(sender.createTransaction(address: address,
                                                         amount: amount,
                                                         feeBasis: feeBasis,
-                                                        comment: memoCell.textView.text))
+                                                        comment: memoCell.textView.text,
+                                                        destinationTag: tagCell?.address))
     }
     
     private func handleValidationResult(_ result: SenderValidationResult, protocolRequest: PaymentProtocolRequest? = nil) -> Bool {

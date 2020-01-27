@@ -122,12 +122,12 @@ class Sender: Subscriber {
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?) -> SenderValidationResult {
+    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, destinationTag: String? = nil) -> SenderValidationResult {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount)
         guard case .ok = result else { return result }
 
-        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
+        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, destinationTag: destinationTag) {
         case .success(let transfer):
             self.comment = comment
             self.transfer = transfer

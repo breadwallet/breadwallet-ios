@@ -415,6 +415,7 @@
 		CE97710D216FF20F00B9F621 /* SegwitEnabledView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE97710C216FF20F00B9F621 /* SegwitEnabledView.swift */; };
 		CEA0471120FD1B9B00F2694A /* PigeonCrypto.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA0471020FD1B9B00F2694A /* PigeonCrypto.swift */; };
 		CEA05CC31F21B53C00D850F0 /* FeeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA05CC21F21B53C00D850F0 /* FeeSelector.swift */; };
+		CEA2480023DE819D00B18BC6 /* AttributeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA247FF23DE819D00B18BC6 /* AttributeCell.swift */; };
 		CEA362681E00EE320061FC0E /* CameraGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA362671E00EE320061FC0E /* CameraGuideView.swift */; };
 		CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA362691E01150D0061FC0E /* CGContext+Additions.swift */; };
 		CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */; };
@@ -1136,6 +1137,7 @@
 		CEA0470E20FD073C00F2694A /* PigeonTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PigeonTest.swift; sourceTree = "<group>"; };
 		CEA0471020FD1B9B00F2694A /* PigeonCrypto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonCrypto.swift; path = src/Pigeon/PigeonCrypto.swift; sourceTree = "<group>"; };
 		CEA05CC21F21B53C00D850F0 /* FeeSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeSelector.swift; path = src/ViewControllers/FeeSelector.swift; sourceTree = "<group>"; };
+		CEA247FF23DE819D00B18BC6 /* AttributeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AttributeCell.swift; path = src/Views/SendViewCells/AttributeCell.swift; sourceTree = "<group>"; };
 		CEA362671E00EE320061FC0E /* CameraGuideView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraGuideView.swift; path = src/Views/CameraGuideView.swift; sourceTree = "<group>"; };
 		CEA362691E01150D0061FC0E /* CGContext+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGContext+Additions.swift"; path = "src/Extensions/CGContext+Additions.swift"; sourceTree = "<group>"; };
 		CEA7E6751F057D77001F8C27 /* WalletInfoTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletInfoTest.swift; sourceTree = "<group>"; };
@@ -2205,6 +2207,7 @@
 				CECCE5B11E04B00D00D99448 /* SendCell.swift */,
 				CECCE5AD1E04AD6300D99448 /* AddressCell.swift */,
 				CECCE5AF1E04AD7600D99448 /* DescriptionSendCell.swift */,
+				CEA247FF23DE819D00B18BC6 /* AttributeCell.swift */,
 			);
 			name = SendViewCells;
 			sourceTree = "<group>";
@@ -2981,6 +2984,7 @@
 				CEF7D94622CE6AC000939D19 /* HistoryPeriodButton.swift in Sources */,
 				CEEC70831E90C07C00EF788E /* MenuItem.swift in Sources */,
 				CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */,
+				CEA2480023DE819D00B18BC6 /* AttributeCell.swift in Sources */,
 				7CBD578F2107EB560042C388 /* PairedWalletData.swift in Sources */,
 				CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */,
 				7C6FD3F4213F205400EFF35F /* InboxMetaData.swift in Sources */,

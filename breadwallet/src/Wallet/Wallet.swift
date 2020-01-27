@@ -124,14 +124,27 @@ class Wallet {
 
     // MARK: Sending
 
-    func createTransfer(to address: String, amount: Amount, feeBasis: TransferFeeBasis) -> CreateTransferResult {
+    func createTransfer(to address: String,
+                        amount: Amount,
+                        feeBasis: TransferFeeBasis,
+                        destinationTag: String? = nil) -> CreateTransferResult {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
-        guard let transfer = core.createTransfer(target: target, amount: amount.cryptoAmount, estimatedFeeBasis: feeBasis) else {
+        guard let transfer = core.createTransfer(target: target,
+                                                 amount: amount.cryptoAmount,
+                                                 estimatedFeeBasis: feeBasis,
+                                                 attributes: attributes(forDestinationTag: destinationTag)) else {
             return .failure(.invalidAmountOrFee)
         }
         return .success(transfer)
+    }
+    
+    private func attributes(forDestinationTag tag: String?) -> Set<TransferAttribute>? {
+        guard let tag = tag else { return nil }
+        guard let destinationTag = core.transferAttributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
+        destinationTag.value = tag
+        return Set([destinationTag])
     }
     
     func createTransfer(forProtocolRequest protoReq: PaymentProtocolRequest, feeBasis: TransferFeeBasis) -> CreateTransferResult {
