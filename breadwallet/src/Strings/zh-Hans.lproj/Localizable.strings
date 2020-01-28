@@ -274,6 +274,14 @@
 "FeeSelector.title" = "处理速度";
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "选择图像源";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "请用指纹解锁 Bread 并在设定限额下汇钱。";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "使用指纹汇款";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "指纹";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "使用指纹解锁BRD";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "管理";
 /* Home screen menu button to buy some bitcoin */
@@ -396,6 +404,8 @@
 "Modal.PaperKeySkip.Button.IllDoItLater" = "稍后进行";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "注意";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "自动";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "切换到自动模式";
 /* Node is connected label */
@@ -406,6 +416,8 @@
 "NodeSelector.enterBody" = "输入节点 IP 地址和端口（可选）";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "输入节点";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "无效的节点";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "切换到手动模式";
 /* Node address label */
@@ -532,6 +544,8 @@
 "PushNotifications.on" = "开启";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "敬请保持同步";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "无法更新推送通知设置";
 /* Google play review prompt body */
 "RateAppPrompt.Body.Android" = "如果您喜欢我们的应用程式，请花点时间对其进行评分并给我们一个评论。";
 /* Google play review prompt, revivew button */
@@ -634,6 +648,10 @@
 "RecoveryKeyFlow.unlinkWalletSubtext" = "要启用新钱包,请取消您的设备与当前设置的钱包间的关联。";
 /* Warning displayed when the user starts the process of unlinking a wallet */
 "RecoveryKeyFlow.unlinkWalletWarning" = "必须恢复钱包才能重新获得访问权限。";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "取消钱包与此设备的关联。";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "通过从设备中擦除当前钱包来启动新钱包。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "记下您的密钥";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -853,6 +871,8 @@
 "Settings.wallet" = "钱包";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "取消与此设备的链接";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "取消钱包与此设备的关联。";
 /* Share data view body */
 "ShareData.body" = "同我们分享您的匿名数据来帮助改善 BRD。这不包括任何财务信息。我们尊重您的财务隐私。";
 /* Share data header */
@@ -1024,6 +1044,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "燃料上限";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "燃料价格";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "隐藏详细信息";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "初始化";
 /* More button title */
@@ -1058,7 +1080,7 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.statusHeader" = "状态";
 /* Transaction Details Title */
 "TransactionDetails.title" = "交易详情";
-/* Hide Details button */
+/* Transaction Details Title - Failed */
 "TransactionDetails.titleFailed" = "隐藏详细信息";
 /* Transaction Details Title - Internal */
 "TransactionDetails.titleInternal" = "内部";
@@ -1136,6 +1158,23 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN 码为必填项";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "授权此交易";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "您确定要关闭Fastsync吗？";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "几乎立即同步您的比特币钱包。在此处了解有关其工作原理的更多信息。";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "供电";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync（试点）";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "这里";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "连接方式";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "关掉";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "打开 BRD iPhone app 以设置您的钱包。";
 /* Dismiss button label */
