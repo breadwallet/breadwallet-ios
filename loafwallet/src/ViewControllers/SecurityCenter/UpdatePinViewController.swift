@@ -6,8 +6,8 @@
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
-import UIKit
 import LocalAuthentication
+import UIKit
 
 enum UpdatePinType {
     case creationNoPhrase
@@ -15,9 +15,9 @@ enum UpdatePinType {
     case update
 }
 
-class UpdatePinViewController : UIViewController, Subscriber {
+class UpdatePinViewController: UIViewController, Subscriber {
+    // MARK: - Public
 
-    //MARK: - Public
     var setPinSuccess: ((String) -> Void)?
     var resetFromDisabledSuccess: (() -> Void)?
     var resetFromDisabledWillSucceed: (() -> Void)?
@@ -32,7 +32,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
         super.init(nibName: nil, bundle: nil)
     }
 
-    //MARK: - Private
+    // MARK: - Private
+
     private var header = UILabel.wrapping(font: .customBold(size: 26.0), color: .darkText)
     private var instruction = UILabel.wrapping(font: .customBody(size: 14.0), color: .darkText)
     private var caption = UILabel.wrapping(font: .customBody(size: 13.0), color: .secondaryGrayText)
@@ -64,6 +65,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
             }
         }
     }
+
     private var currentPin: String?
     private var newPin: String?
     private var phrase: String?
@@ -71,6 +73,7 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private var isCreatingPin: Bool {
         return type != .update
     }
+
     private let newPinLength = 6
     private let showsBackButton: Bool
 
@@ -98,33 +101,39 @@ class UpdatePinViewController : UIViewController, Subscriber {
         header.constrain([
             header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
             header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+        ])
         instruction.constrain([
             instruction.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             instruction.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
-            instruction.trailingAnchor.constraint(equalTo: header.trailingAnchor) ])
+            instruction.trailingAnchor.constraint(equalTo: header.trailingAnchor),
+        ])
         pinView.constrain([
             pinView.centerYAnchor.constraint(equalTo: spacer.centerYAnchor),
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
-         
-            addChildViewController(pinPad, layout: {
-                pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
-                pinPad.view.constrain([pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height),
-                                       pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[3])])
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize),
+        ])
+
+        addChildViewController(pinPad, layout: {
+            pinPad.view.constrainBottomCorners(sidePadding: 0.0, bottomPadding: 0.0)
+            pinPad.view.constrain([
+                pinPad.view.heightAnchor.constraint(equalToConstant: pinPad.height),
+                pinPad.view.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -C.padding[3]),
+            ])
             })
         spacer.constrain([
             spacer.topAnchor.constraint(equalTo: instruction.bottomAnchor),
-            spacer.bottomAnchor.constraint(equalTo: caption.topAnchor) ])
+            spacer.bottomAnchor.constraint(equalTo: caption.topAnchor),
+        ])
         caption.constrain([
             caption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             caption.bottomAnchor.constraint(equalTo: pinPad.view.topAnchor, constant: -C.padding[2]),
-            caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+        ])
     }
 
     private func setData() {
-        
         caption.text = S.UpdatePin.caption
         view.addSubview(spacer)
 
@@ -135,20 +144,20 @@ class UpdatePinViewController : UIViewController, Subscriber {
             guard let mainColor = UIColor(named: "mainColor") else {
                 NSLog("ERROR: Custom color not found")
                 return
-            } 
+            }
             view.backgroundColor = mainColor
         } else {
             view.backgroundColor = .liteWalletBlue
         }
         header.text = isCreatingPin ? S.UpdatePin.createTitle : S.UpdatePin.updateTitle
         instruction.text = isCreatingPin ? S.UpdatePin.createInstruction : S.UpdatePin.enterCurrent
-        
+
         pinPad.ouputDidUpdate = { [weak self] text in
             guard let step = self?.step else { return }
             switch step {
             case .verify:
                 self?.didUpdateForCurrent(pin: text)
-            case .new :
+            case .new:
                 self?.didUpdateForNew(pin: text)
             case .confirmNew:
                 self?.didUpdateForConfirmNew(pin: text)
@@ -225,7 +234,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
             pinView.centerYAnchor.constraint(equalTo: spacer.centerYAnchor),
             pinView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinView.widthAnchor.constraint(equalToConstant: pinView.width),
-            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize) ])
+            pinView.heightAnchor.constraint(equalToConstant: pinView.itemSize),
+        ])
     }
 
     private func pushNewStep(_ newStep: Step) {
