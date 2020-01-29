@@ -97,7 +97,8 @@ class UpdatePinViewController : UIViewController, Subscriber {
     private func addConstraints() {
         header.constrain([
             header.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: C.padding[2]),
-            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]) ])
+            header.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            header.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
         instruction.constrain([
             instruction.leadingAnchor.constraint(equalTo: header.leadingAnchor),
             instruction.topAnchor.constraint(equalTo: header.bottomAnchor, constant: C.padding[2]),
