@@ -155,7 +155,7 @@
 /* Click this button to sell an asset */
 "Button.sell" = "Продать";
 /* send button */
-"Button.send" = "отправить";
+"Button.send" = "Отправить";
 /* Settings button label */
 "Button.settings" = "Настройки";
 /* Setup button label */
