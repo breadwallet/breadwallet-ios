@@ -482,7 +482,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         addressCell.isEditable = false
         addressCell.hideActionButtons()
         amountView.isEditable = false
-        sender.displayPaymentProtocolResponse = { self.showAlert(title: S.Import.success, message: $0) }
+        sender.displayPaymentProtocolResponse = { [weak self] in
+            self?.showAlert(title: S.Import.success, message: $0)
+        }
     }
     
     private func handleZeroAmountPaymentProtocolRequest(_ protoReq: PaymentProtocolRequest) {
@@ -514,7 +516,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         let message = String(format: S.Send.insufficientGasMessage, feeAmount.description)
 
         let alertController = UIAlertController(title: S.Send.insufficientGasTitle, message: message, preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { _ in
+        alertController.addAction(UIAlertAction(title: S.Button.yes, style: .default, handler: { [weak self] _ in
+            guard let `self` = self else { return }
             Store.trigger(name: .showCurrency(self.sender.wallet.feeCurrency))
         }))
         alertController.addAction(UIAlertAction(title: S.Button.no, style: .cancel, handler: nil))
