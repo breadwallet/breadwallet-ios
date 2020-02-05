@@ -196,6 +196,7 @@ extension Currency {
     var isEthereum: Bool { return uid == Currencies.eth.uid }
     var isERC20Token: Bool { return tokenType == .erc20 }
     var isBRDToken: Bool { return uid == Currencies.brd.uid }
+    var isXRP: Bool { return uid == Currencies.xrp.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }

@@ -57,6 +57,10 @@ class Wallet {
     }
     
     func feeForLevel(level: FeeLevel) -> NetworkFee {
+        if fees.count == 1 {
+            return fees.first!
+        }
+        
         //Find nearest NetworkFee for FeeLevel
         let target = level.preferredTime(forCurrency: currency)
         guard let result = fees.enumerated().min(by: { abs($0.1.time - target) < abs($1.1.time - target) }) else {
@@ -70,13 +74,7 @@ class Wallet {
                              fee: FeeLevel,
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
-        
-        let networkFee: NetworkFee
-        if fees.count == 1 {
-            networkFee = fees.first!
-        } else {
-            networkFee = feeForLevel(level: fee)
-        }
+        let networkFee = feeForLevel(level: fee)
         core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)
@@ -84,6 +82,22 @@ class Wallet {
             }
             completion(feeBasis)
         })
+    }
+    
+    public func estimateLimitMaximum (address: String,
+                                      fee: FeeLevel,
+                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+        let networkFee = feeForLevel(level: fee)
+        core.estimateLimitMaximum(target: target, fee: networkFee, completion: completion)
+    }
+    
+    public func estimateLimitMinimum (address: String,
+                                      fee: FeeLevel,
+                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+        let networkFee = feeForLevel(level: fee)
+        core.estimateLimitMinimum(target: target, fee: networkFee, completion: completion)
     }
     
     func updateNetworkFees() {

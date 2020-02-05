@@ -69,6 +69,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     private var balance: Amount
+    private var maximum: Amount? {
+        didSet {
+            sender.maximum = maximum
+        }
+    }
     private var amount: Amount? {
         didSet {
             updateFees()
@@ -159,6 +164,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             guard let text = text else { return }
             guard self.currency.isValidAddress(text) else { return }
             self.updateFees()
+            self.updateLimits()
         }
     }
 
@@ -216,6 +222,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         guard let amount = amount else { return }
         guard let fee = feeSelection else { return }
         sender.estimateFee(address: address, amount: amount, tier: fee) { self.handleFeeEstimationResult($0) }
+        updateLimits()
     }
     
     private func handleFeeEstimationResult(_ basis: TransferFeeBasis?) {
@@ -225,8 +232,32 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    private func updateLimits() {
+        guard currency.isXRP else { return }
+        guard let address = address else { return }
+        guard let fee = feeSelection else { return }
+        sender.estimateLimitMaximum(address: address, fee: fee, completion: { [weak self] result in
+            switch result {
+            case .success(let maximumAmount):
+                DispatchQueue.main.async {
+                    self?.maximum = Amount(cryptoAmount: maximumAmount, currency: self!.currency)
+                    self?.amountView.updateBalanceLabel()
+                }
+            case .failure(let error):
+                print("[LIMIT] error: \(error)")
+            }
+        })
+    }
+    
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
+        let balanceAmount: Amount
+        if currency.isXRP {
+            guard let maximum = self.maximum else { return (nil, nil) }
+            balanceAmount = maximum
+        } else {
+            balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
+        }
+        
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -239,7 +270,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
 
-            if feeAmount.currency == currency && (balance >= feeAmount) && amount > (balance - feeAmount) {
+            if feeAmount.currency == currency && (balanceAmount >= feeAmount) && amount > (balanceAmount - feeAmount) {
                 color = .cameraGuideNegative
             }
         }
