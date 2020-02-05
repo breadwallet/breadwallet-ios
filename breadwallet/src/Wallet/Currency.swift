@@ -102,25 +102,25 @@ class Currency: CurrencyWithIcon {
     
     // MARK: URI
 
-    var urlScheme: String? {
+    var urlSchemes: [String]? {
         if isBitcoin {
-            return "bitcoin"
+            return ["bitcoin"]
         }
         if isBitcoinCash {
-            return E.isTestnet ? "bchtest" : "bitcoincash"
+            return E.isTestnet ? ["bchtest"] : ["bitcoincash"]
         }
         if isEthereumCompatible {
-            return "ethereum"
+            return ["ethereum"]
         }
-        if uid == Currencies.xrp.uid {
-            return "xrpl"
+        if isXRP {
+            return ["xrpl", "xrp", "ripple"]
         }
         return nil
     }
 
     /// Returns a transfer URI with the given address
     func addressURI(_ address: String) -> String? {
-        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
         if isERC20Token, let tokenAddress = tokenAddress {
             //This is a non-standard uri format to maintain backwards compatibility with old versions of BRD
             return "\(scheme):\(address)?tokenaddress=\(tokenAddress)"

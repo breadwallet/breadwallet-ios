@@ -220,7 +220,7 @@ class ModalPresenter: Subscriber, Trackable {
         case .sendForRequest(let request):
             return makeSendView(forRequest: request)
         case .receive(let currency):
-            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlScheme != nil))
+            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes?.first != nil))
         case .loginScan:
             presentLoginScan()
             return nil

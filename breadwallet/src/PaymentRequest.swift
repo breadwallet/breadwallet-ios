@@ -35,7 +35,7 @@ private func formatUrl(_ url: NSURL, forCurrency currency: Currency) -> NSURL? {
     guard url.host == nil else { return nil }
     
     //make sure it's the right url Scheme
-    guard url.scheme == currency.urlScheme else { return nil }
+    guard currency.urlSchemes?.contains(url.scheme ?? "") == true else { return nil }
     
     //convert url to a format that can be parsed by NSURL
     //eg. bitcoin:12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu -> bitcoin://12A1MyfXbW6RhdRAZEqofac5jCQQjwEPBu
