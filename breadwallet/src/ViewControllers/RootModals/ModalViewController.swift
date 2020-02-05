@@ -99,12 +99,12 @@ class ModalViewController: UIViewController, Subscriber {
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.addTarget(self, action: #selector(didTap))
         view.addGestureRecognizer(tapGestureRecognizer)
-        Store.subscribe(self, name: .blockModalDismissal, callback: { _ in
-            self.tapGestureRecognizer.isEnabled = false
+        Store.subscribe(self, name: .blockModalDismissal, callback: { [weak self] _ in
+            self?.tapGestureRecognizer.isEnabled = false
         })
 
-        Store.subscribe(self, name: .unblockModalDismissal, callback: { _ in
-            self.tapGestureRecognizer.isEnabled = true
+        Store.subscribe(self, name: .unblockModalDismissal, callback: { [weak self] _ in
+            self?.tapGestureRecognizer.isEnabled = true
         })
         addTopCorners()
         header.closeCallback = { [weak self] in
