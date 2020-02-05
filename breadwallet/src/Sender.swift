@@ -51,7 +51,7 @@ class Sender: Subscriber {
     private var comment: String?
     private var transfer: BRCrypto.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
-    var maximum: Amount? = nil
+    var maximum: Amount?
     
     var displayPaymentProtocolResponse: ((String) -> Void)?
     

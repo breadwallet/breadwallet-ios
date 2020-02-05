@@ -179,7 +179,7 @@ extension Currency: Hashable {
 extension Currency {
     
     func isValidAddress(_ address: String) -> Bool {
-        return network.addressFor(address) != nil
+        return Address.create(string: address, network: network) != nil
     }
 
     /// Ticker code for support pages
