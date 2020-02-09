@@ -253,7 +253,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         let balanceAmount: Amount
         if currency.isXRP {
             guard let maximum = self.maximum else { return (nil, nil) }
-            balanceAmount = maximum
+            balanceAmount = Amount(amount: maximum, rate: rate, minimumFractionDigits: 0)
         } else {
             balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
         }
