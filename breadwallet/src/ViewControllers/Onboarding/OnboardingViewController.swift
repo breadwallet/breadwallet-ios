@@ -270,6 +270,64 @@ class OnboardingViewController: UIViewController {
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -(offset))
             ])
+        
+    }
+    
+    private func animateIcons(metaData: [CurrencyId: CurrencyMetaData]?) {
+        guard let metaData = metaData else {
+            Backend.apiClient.getCurrencyMetaData { [weak self] currencyMetaData in
+                DispatchQueue.main.async {
+                    self?.animateIcons(metaData: currencyMetaData)
+                }
+            }
+            return
+        }
+        
+        let iconCount = 40
+        let iconSize: CGFloat = 40
+        let duration = 8.0
+        let maxDelay = 15.0
+        
+        var imageViews = [UIImageView]()
+        let currencies: [CurrencyMetaData] = Array(Array(metaData.values).sorted { return $0.isPreferred && !$1.isPreferred }[..<iconCount])
+        for currency in currencies {
+            
+            //Add icon
+            let imageView = UIImageView(image: currency.imageNoBackground)
+            imageViews.append(imageView)
+            imageView.frame = CGRect(x: logoImageView.frame.midX - iconSize/2.0,
+                                     y: logoImageView.frame.midY - iconSize/2.0,
+                                     width: iconSize,
+                                     height: iconSize)
+            self.view.addSubview(imageView)
+            self.view.sendSubviewToBack(imageView)
+            imageView.alpha = 0.0
+            imageView.tintColor = .white
+            
+            let delay = Double(CGFloat.random(min: 0.0, max: CGFloat(maxDelay)))
+            
+            //Fade in Icon
+            UIView.animate(withDuration: 0.3, delay: delay, options: [], animations: {
+                imageView.alpha = 0.1
+            }, completion: { _ in
+                
+                //Animate icon on hypotenuse
+                UIView.animate(withDuration: duration, animations: {
+                    let angle = CGFloat.random(min: 0, max: 360.0) * .pi / 180.0
+                    let hypotenuse: CGFloat = 700.0
+                    imageView.frame = imageView.frame.offsetBy(dx: cos(angle) * hypotenuse, dy: sin(angle) * hypotenuse)
+                    imageView.transform = CGAffineTransform(rotationAngle: .pi * CGFloat.random(min: -5.0, max: 5.0))
+                }, completion: { _ in
+                    imageView.alpha = 0.0
+                    imageView.removeFromSuperview()
+                })
+            })
+        }
+        
+        //Repeat
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration + maxDelay, execute: { [weak self] in
+            self?.animateIcons(metaData: metaData)
+        })
     }
     
     private func setUpPages() {
@@ -600,6 +658,8 @@ class OnboardingViewController: UIViewController {
         
         UIView.animate(withDuration: duration * 2.0, delay: delay * 3.0, options: .curveEaseInOut, animations: { 
             self.logoImageView.alpha = 1
+        }, completion: { [weak self] _ in
+            self?.animateIcons(metaData: nil)
         })
     }
         
