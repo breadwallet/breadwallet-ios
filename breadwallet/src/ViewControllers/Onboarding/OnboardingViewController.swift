@@ -283,9 +283,9 @@ class OnboardingViewController: UIViewController {
             return
         }
         
-        let iconCount = 40
+        let iconCount = 20
         let iconSize: CGFloat = 40
-        let duration = 8.0
+        let duration = 10.0
         let maxDelay = 15.0
         
         var imageViews = [UIImageView]()
@@ -308,7 +308,7 @@ class OnboardingViewController: UIViewController {
             
             //Fade in Icon
             UIView.animate(withDuration: 0.3, delay: delay, options: [], animations: {
-                imageView.alpha = 0.1
+                imageView.alpha = 0.2
             }, completion: { _ in
                 
                 //Animate icon on hypotenuse
