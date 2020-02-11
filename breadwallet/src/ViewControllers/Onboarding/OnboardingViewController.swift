@@ -270,6 +270,54 @@ class OnboardingViewController: UIViewController {
             logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -(offset))
             ])
+        
+    }
+    
+    private func animate() {
+        Backend.apiClient.getCurrencyMetaData { [weak self] currencyMetaData in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                var imageViews = [UIImageView]()
+                let currencies: [CurrencyMetaData] = Array(Array(currencyMetaData.values).sorted { return $0.isPreferred && !$1.isPreferred }[..<50])
+                for val in currencies {
+                    let imageView = UIImageView(image: val.imageNoBackground)
+                    imageViews.append(imageView)
+                    let imageViewSize: CGFloat = 40.0
+                    imageView.frame = CGRect(x: self.logoImageView.frame.midX - imageViewSize/2.0,
+                                             y: self.logoImageView.frame.midY - imageViewSize/2.0,
+                                             width: imageViewSize,
+                                             height: imageViewSize)
+                    self.view.addSubview(imageView)
+                    self.view.sendSubviewToBack(imageView)
+                    imageView.alpha = 0.0
+                    imageView.tintColor = .white
+                }
+
+                let totalDuration = 20.0
+                UIView.animateKeyframes(withDuration: totalDuration, delay: 0.0, options: [], animations: {
+                    imageViews.forEach { image in
+                        //let start = Double(CGFloat.random(min: 0.0, max: 20.0))
+                        let duration = 0.4
+                        let relativeStart = Double(CGFloat.random(min: 0.0, max: 0.8))
+                        
+                        UIView.addKeyframe(withRelativeStartTime: relativeStart, relativeDuration: duration/4.0, animations: {
+                            image.alpha = 0.1
+                        })
+                        
+                        print("[animation]: \(relativeStart), \(duration)")
+                        UIView.addKeyframe(withRelativeStartTime: relativeStart, relativeDuration: duration, animations: {
+                            let angle = CGFloat.random(min: 0, max: 360.0) * .pi / 180.0
+                            let hypotenuse: CGFloat = 700.0
+                            image.frame = image.frame.offsetBy(dx: cos(angle) * hypotenuse, dy: sin(angle) * hypotenuse)
+                            image.transform = CGAffineTransform(rotationAngle: .pi * CGFloat.random(min: -3.0, max: 3.0))
+                        })
+                    }
+                }, completion: { _ in
+                    imageViews.forEach { $0.alpha = 0.0 }
+                    self.animate()
+                })
+            }
+        }
     }
     
     private func setUpPages() {
@@ -600,6 +648,8 @@ class OnboardingViewController: UIViewController {
         
         UIView.animate(withDuration: duration * 2.0, delay: delay * 3.0, options: .curveEaseInOut, animations: { 
             self.logoImageView.alpha = 1
+        }, completion: { [weak self] _ in
+            self?.animate()
         })
     }
         
