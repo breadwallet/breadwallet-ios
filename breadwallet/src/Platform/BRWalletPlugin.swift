@@ -258,7 +258,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                             return
                         }
                         
-                        let result = sender.createTransaction(address: toAddress, amount: amount, feeBasis: transferFeeBasis, comment: comment)
+                        let destinationTag: String? = json["destinationTag"] as? String
+                        let result = sender.createTransaction(address: toAddress,
+                                                              amount: amount,
+                                                              feeBasis: transferFeeBasis,
+                                                              comment: comment,
+                                                              destinationTag: destinationTag)
                         guard case .ok = result else {
                             request.queue.async { asyncResp.provide(500, json: ["error": "tx-error"]) }
                             return
