@@ -307,20 +307,20 @@ class OnboardingViewController: UIViewController {
             let delay = Double(CGFloat.random(min: 0.0, max: CGFloat(maxDelay)))
             
             //Fade in Icon
-            UIView.animate(withDuration: 0.3, delay: delay, options: [], animations: {
+            UIView.animate(withDuration: 1.5, delay: delay, animations: {
                 imageView.alpha = 0.2
+            })
+            
+            //Animate icon on hypotenuse
+            UIView.animate(withDuration: duration, delay: delay, animations: {
+                let angle = CGFloat.random(min: 0, max: 360.0) * .pi / 180.0
+                let hypotenuse: CGFloat = 700.0
+                imageView.frame = imageView.frame.offsetBy(dx: cos(angle) * hypotenuse, dy: sin(angle) * hypotenuse)
+                let rotationAngle: CGFloat = Bool.random() ? .pi / -1.1 : .pi
+                imageView.transform = imageView.transform.rotated(by: rotationAngle)
             }, completion: { _ in
-                
-                //Animate icon on hypotenuse
-                UIView.animate(withDuration: duration, animations: {
-                    let angle = CGFloat.random(min: 0, max: 360.0) * .pi / 180.0
-                    let hypotenuse: CGFloat = 700.0
-                    imageView.frame = imageView.frame.offsetBy(dx: cos(angle) * hypotenuse, dy: sin(angle) * hypotenuse)
-                    imageView.transform = CGAffineTransform(rotationAngle: .pi * CGFloat.random(min: -5.0, max: 5.0))
-                }, completion: { _ in
-                    imageView.alpha = 0.0
-                    imageView.removeFromSuperview()
-                })
+                imageView.alpha = 0.0
+                imageView.removeFromSuperview()
             })
         }
         
