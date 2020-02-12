@@ -85,6 +85,7 @@ class OnboardingViewController: UIViewController {
     let headingLabelAnimationOffset: CGFloat = 60
     let subheadingLabelAnimationOffset: CGFloat = 30
     let headingSubheadingMargin: CGFloat = 22
+    private var iconImageViews = [UIImageView]()
     
     var headingInset: CGFloat {
         if E.isIPhone6OrSmaller {
@@ -274,6 +275,7 @@ class OnboardingViewController: UIViewController {
     }
     
     private func animateIcons(metaData: [CurrencyId: CurrencyMetaData]?) {
+        guard pageIndex == 0 else { return }
         guard let metaData = metaData else {
             Backend.apiClient.getCurrencyMetaData { [weak self] currencyMetaData in
                 DispatchQueue.main.async {
@@ -288,13 +290,12 @@ class OnboardingViewController: UIViewController {
         let duration = 10.0
         let maxDelay = 15.0
         
-        var imageViews = [UIImageView]()
         let currencies: [CurrencyMetaData] = Array(Array(metaData.values).sorted { return $0.isPreferred && !$1.isPreferred }[..<iconCount])
         for currency in currencies {
             
             //Add icon
             let imageView = UIImageView(image: currency.imageNoBackground)
-            imageViews.append(imageView)
+            iconImageViews.append(imageView)
             imageView.frame = CGRect(x: logoImageView.frame.midX - iconSize/2.0,
                                      y: logoImageView.frame.midY - iconSize/2.0,
                                      width: iconSize,
@@ -327,6 +328,13 @@ class OnboardingViewController: UIViewController {
         //Repeat
         DispatchQueue.main.asyncAfter(deadline: .now() + duration + maxDelay, execute: { [weak self] in
             self?.animateIcons(metaData: metaData)
+        })
+    }
+    
+    private func hideStarburstIcons() {
+        iconImageViews.forEach { $0.layer.removeAllAnimations() }
+        UIView.animate(withDuration: 0.1, animations: { [weak self] in
+            self?.iconImageViews.forEach { $0.alpha = 0.0 }
         })
     }
     
@@ -687,6 +695,10 @@ class OnboardingViewController: UIViewController {
         let nextHeadingConstraint = headingConstraints[nextIndex]
         
         let fadeInOffsetFactor = fadeInOffsetFactors[nextIndex]
+        
+        if nextIndex == 1 {
+            hideStarburstIcons()
+        }
         
         UIView.animateKeyframes(withDuration: pageAnimationDuration, delay: delay, 
                                 options: .calculationModeCubic, animations: { [weak self] in
