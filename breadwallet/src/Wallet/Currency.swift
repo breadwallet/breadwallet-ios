@@ -102,22 +102,25 @@ class Currency: CurrencyWithIcon {
     
     // MARK: URI
 
-    var urlScheme: String? {
+    var urlSchemes: [String]? {
         if isBitcoin {
-            return "bitcoin"
+            return ["bitcoin"]
         }
         if isBitcoinCash {
-            return E.isTestnet ? "bchtest" : "bitcoincash"
+            return E.isTestnet ? ["bchtest"] : ["bitcoincash"]
         }
         if isEthereumCompatible {
-            return "ethereum"
+            return ["ethereum"]
+        }
+        if isXRP {
+            return ["xrpl", "xrp", "ripple"]
         }
         return nil
     }
 
     /// Returns a transfer URI with the given address
     func addressURI(_ address: String) -> String? {
-        guard let scheme = urlScheme, isValidAddress(address) else { return nil }
+        guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
         if isERC20Token, let tokenAddress = tokenAddress {
             //This is a non-standard uri format to maintain backwards compatibility with old versions of BRD
             return "\(scheme):\(address)?tokenaddress=\(tokenAddress)"
@@ -176,7 +179,7 @@ extension Currency: Hashable {
 extension Currency {
     
     func isValidAddress(_ address: String) -> Bool {
-        return network.addressFor(address) != nil
+        return Address.create(string: address, network: network) != nil
     }
 
     /// Ticker code for support pages
@@ -193,6 +196,7 @@ extension Currency {
     var isEthereum: Bool { return uid == Currencies.eth.uid }
     var isERC20Token: Bool { return tokenType == .erc20 }
     var isBRDToken: Bool { return uid == Currencies.brd.uid }
+    var isXRP: Bool { return uid == Currencies.xrp.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
@@ -331,6 +335,7 @@ enum Currencies: String, CaseIterable {
     case eth
     case brd
     case tusd
+    case xrp
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -346,6 +351,8 @@ enum Currencies: String, CaseIterable {
             uids = "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
         case .tusd:
             uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
+        case .xrp:
+            uids = "ripple-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
         }
         return CurrencyId(rawValue: uids)
     }

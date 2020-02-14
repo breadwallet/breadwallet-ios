@@ -33,7 +33,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
-
+        tagCell = AttributeCell()
+        
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -48,6 +49,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
     private let amountView: AmountViewController
     private let addressCell: AddressCell
+    private let tagCell: AttributeCell?
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
     private let currencyBorder = UIView(color: .secondaryShadow)
@@ -67,6 +69,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     private var balance: Amount
+    private var maximum: Amount? {
+        didSet {
+            sender.maximum = maximum
+        }
+    }
     private var amount: Amount? {
         didSet {
             updateFees()
@@ -93,10 +100,23 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
+        var addressGroupBottom: NSLayoutYAxisAnchor
+        if currency.uid == Currencies.xrp.uid, let tagCell = tagCell {
+            view.addSubview(tagCell)
+            tagCell.constrain([
+                tagCell.leadingAnchor.constraint(equalTo: addressCell.leadingAnchor),
+                tagCell.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
+                tagCell.trailingAnchor.constraint(equalTo: addressCell.trailingAnchor),
+                tagCell.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight)])
+            addressGroupBottom = tagCell.bottomAnchor
+        } else {
+            addressGroupBottom = addressCell.bottomAnchor
+        }
+        
         addChildViewController(amountView, layout: {
             amountView.view.constrain([
                 amountView.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                amountView.view.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
+                amountView.view.topAnchor.constraint(equalTo: addressGroupBottom),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
 
@@ -144,6 +164,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             guard let text = text else { return }
             guard self.currency.isValidAddress(text) else { return }
             self.updateFees()
+            self.updateLimits()
         }
     }
 
@@ -180,7 +201,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if isFirstResponder {
                 self?.memoCell.textView.resignFirstResponder()
                 self?.addressCell.textField.resignFirstResponder()
+                self?.tagCell?.textField.resignFirstResponder()
             }
+        }
+        
+        tagCell?.didBeginEditing = { [weak self] in
+            self?.amountView.closePinPad()
         }
     }
     
@@ -196,6 +222,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         guard let amount = amount else { return }
         guard let fee = feeSelection else { return }
         sender.estimateFee(address: address, amount: amount, tier: fee) { self.handleFeeEstimationResult($0) }
+        updateLimits()
     }
     
     private func handleFeeEstimationResult(_ basis: TransferFeeBasis?) {
@@ -205,8 +232,32 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    private func updateLimits() {
+        guard currency.isXRP else { return }
+        guard let address = address else { return }
+        guard let fee = feeSelection else { return }
+        sender.estimateLimitMaximum(address: address, fee: fee, completion: { [weak self] result in
+            switch result {
+            case .success(let maximumAmount):
+                DispatchQueue.main.async {
+                    self?.maximum = Amount(cryptoAmount: maximumAmount, currency: self!.currency)
+                    self?.amountView.updateBalanceLabel()
+                }
+            case .failure(let error):
+                print("[LIMIT] error: \(error)")
+            }
+        })
+    }
+    
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
+        let balanceAmount: Amount
+        if currency.isXRP {
+            guard let maximum = self.maximum else { return (nil, nil) }
+            balanceAmount = Amount(amount: maximum, rate: rate, minimumFractionDigits: 0)
+        } else {
+            balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
+        }
+        
         let balanceText = balanceAmount.description
         let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
@@ -219,7 +270,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
 
-            if feeAmount.currency == currency && (balance >= feeAmount) && amount > (balance - feeAmount) {
+            if feeAmount.currency == currency && (balanceAmount >= feeAmount) && amount > (balanceAmount - feeAmount) {
                 color = .cameraGuideNegative
             }
         }
@@ -282,7 +333,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         return handleValidationResult(sender.createTransaction(address: address,
                                                         amount: amount,
                                                         feeBasis: feeBasis,
-                                                        comment: memoCell.textView.text))
+                                                        comment: memoCell.textView.text,
+                                                        destinationTag: tagCell?.address))
     }
     
     private func handleValidationResult(_ result: SenderValidationResult, protocolRequest: PaymentProtocolRequest? = nil) -> Bool {

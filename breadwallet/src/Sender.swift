@@ -51,6 +51,7 @@ class Sender: Subscriber {
     private var comment: String?
     private var transfer: BRCrypto.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
+    var maximum: Amount?
     
     var displayPaymentProtocolResponse: ((String) -> Void)?
     
@@ -92,6 +93,18 @@ class Sender: Subscriber {
     func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis?) -> Void) {
         wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
     }
+    
+    public func estimateLimitMaximum (address: String,
+                                      fee: FeeLevel,
+                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+        wallet.estimateLimitMaximum(address: address, fee: fee, completion: completion)
+    }
+    
+    public func estimateLimitMinimum (address: String,
+                                      fee: FeeLevel,
+                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+        wallet.estimateLimitMinimum(address: address, fee: fee, completion: completion)
+    }
 
     private func validate(address: String, amount: Amount) -> SenderValidationResult {
         guard wallet.currency.isValidAddress(address) else { return .invalidAddress }
@@ -112,7 +125,9 @@ class Sender: Subscriber {
 //            }
 //        }
 
-        if let balance = wallet.currency.state?.balance {
+        if let maximum = maximum {
+            guard amount <= maximum else { return .insufficientFunds }
+        } else if let balance = wallet.currency.state?.balance {
             guard amount <= balance else { return .insufficientFunds }
         }
         if wallet.feeCurrency != wallet.currency {
@@ -122,12 +137,12 @@ class Sender: Subscriber {
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?) -> SenderValidationResult {
+    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, destinationTag: String? = nil) -> SenderValidationResult {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount)
         guard case .ok = result else { return result }
 
-        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis) {
+        switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, destinationTag: destinationTag) {
         case .success(let transfer):
             self.comment = comment
             self.transfer = transfer

@@ -32,7 +32,7 @@ extension TxViewModel {
     
     // BTC does not have "from" address, only "sent to" or "received at"
     var displayAddress: String {
-        if tx.currency.isEthereumCompatible {
+        if !tx.currency.isBitcoinCompatible {
             if direction == .sent {
                 return tx.toAddress
             } else {

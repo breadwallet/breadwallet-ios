@@ -37,7 +37,6 @@ class WalletConnectionSettings {
         case Currencies.eth.uid:
             return .api_only
         default:
-            assertionFailure()
             return .api_only
         }
     }
