@@ -155,7 +155,7 @@
 /* Click this button to sell an asset */
 "Button.sell" = "Verkoop";
 /* send button */
-"Button.send" = "versturen";
+"Button.send" = "Versturen";
 /* Settings button label */
 "Button.settings" = "Instellingen";
 /* Setup button label */
@@ -274,6 +274,14 @@
 "FeeSelector.title" = "Verwerkingssnelheid";
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "Selecteer Afbeeldingsbron";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "Gebruik je vingerafdruk om je Bread te ontgrendelen en geld tot een ingestelde limiet te versturen.";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "Gebruik vingerafdruk om geld te verzenden";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "Vingerafdruk";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "Gebruik de vingerafdruk om BRD te ontgrendelen";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Beheerder";
 /* Home screen menu button to buy some bitcoin */
@@ -396,6 +404,8 @@
 "Modal.PaperKeySkip.Button.IllDoItLater" = "Ik doe dit later";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "Attentie";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "Automatisch";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Omschakelen naar automatische modus";
 /* Node is connected label */
@@ -406,6 +416,8 @@
 "NodeSelector.enterBody" = "Voer het IP-adres en de poort (optioneel) van de node in";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "Node invoeren";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "Ongeldige knoop";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "Omschakelen naar handmatige modus";
 /* Node address label */
@@ -532,6 +544,8 @@
 "PushNotifications.on" = "Aan";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Blijf op de hoogte";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "Bijwerken van instellingen voor pushmeldingen is mislukt";
 /* Google play review prompt body */
 "RateAppPrompt.Body.Android" = "Als u van onze app houdt, neem dan even de tijd om deze te beoordelen en ons een beoordeling te geven.";
 /* Google play review prompt, revivew button */
@@ -634,6 +648,10 @@
 "RecoveryKeyFlow.unlinkWalletSubtext" = "Begin met een nieuwe wallet door uw apparaat te ontkoppelen van de momenteel geïnstalleerde wallet.";
 /* Warning displayed when the user starts the process of unlinking a wallet */
 "RecoveryKeyFlow.unlinkWalletWarning" = "Wallet moet hersteld worden om toegang te verkrijgen.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "Ontkoppel uw wallet van dit apparaat.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "Start een nieuwe portefeuille door de huidige portefeuille van uw apparaat te wissen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Noteer uw code";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -853,6 +871,8 @@
 "Settings.wallet" = "Portemonnee";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Ontkoppelen van dit toestel";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "Ontkoppel uw wallet van dit apparaat.";
 /* Share data view body */
 "ShareData.body" = "Help om BRD te verbeteren door je anonieme data met ons te delen. Dit bevat geen financiële informatie. We respecteren je financiële privacy.";
 /* Share data header */
@@ -1024,6 +1044,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gaslimiet";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gasprijs";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "Details verbergen";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "Gestart";
 /* More button title */
@@ -1058,7 +1080,7 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.statusHeader" = "Status";
 /* Transaction Details Title */
 "TransactionDetails.title" = "Transactie Details";
-/* Hide Details button */
+/* Transaction Details Title - Failed */
 "TransactionDetails.titleFailed" = "Details verbergen";
 /* Transaction Details Title - Internal */
 "TransactionDetails.titleInternal" = "Intern";
@@ -1075,7 +1097,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "Totaal";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "Transactie-ID";
+"TransactionDetails.txHashHeader" = "Bitcoin Transactie-ID";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "Ontvangen op dit adres";
 /* (this transaction was) Sent to this address: */
@@ -1136,6 +1158,23 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN Vereist";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autoriseer deze transactie";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Weet u zeker dat u Fastsync wilt uitschakelen?";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "Maak het synchroniseren van uw bitcoin portemonnee vrijwel direct mogelijk. Lees hier meer over hoe het werkt.";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "Aangedreven door";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync (piloot)";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "hier";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "Verbindingsmodus";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "Uitschakelen";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "Open de BRD iPhone app om je portemonnee in te stellen.";
 /* Dismiss button label */

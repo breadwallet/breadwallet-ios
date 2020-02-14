@@ -220,7 +220,7 @@ class ModalPresenter: Subscriber, Trackable {
         case .sendForRequest(let request):
             return makeSendView(forRequest: request)
         case .receive(let currency):
-            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlScheme != nil))
+            return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes?.first != nil))
         case .loginScan:
             presentLoginScan()
             return nil
@@ -664,7 +664,7 @@ class ModalPresenter: Subscriber, Trackable {
             }))
 
             // Shows a preview of the paper key.
-            if let paperKey = keyStore.seedPhrase(pin: "111111") {
+            if UserDefaults.debugShouldAutoEnterPIN, let paperKey = keyStore.seedPhrase(pin: "111111") {
                 let words = paperKey.components(separatedBy: " ")
                 let timestamp = (try? keyStore.loadAccount().map { $0.timestamp }.get()) ?? Date.zeroValue()
                 let preview = "\(words[0]) \(words[1])... (\(DateFormatter.mediumDateFormatter.string(from: timestamp))"

@@ -274,6 +274,14 @@
 "FeeSelector.title" = "Processing Speed";
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "Select Image Source";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "Use your fingerprint to unlock your BRD app and send transactions.";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "Use fingerprint to send money";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "Fingerprint";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "Use fingerprint to unlock BRD";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
 /* Home screen menu button to buy some bitcoin */
@@ -396,6 +404,8 @@
 "Modal.PaperKeySkip.Button.IllDoItLater" = "I'll do it later";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "Attention";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "Automatic";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Switch to Automatic Mode";
 /* Node is connected label */
@@ -406,6 +416,8 @@
 "NodeSelector.enterBody" = "Enter Node IP address and port (optional)";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "Enter Node";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "Invalid Node";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "Switch to Manual Mode";
 /* Node address label */
@@ -532,6 +544,8 @@
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Stay in the Loop";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "Failed to update push notifications settings";
 /* Google play review prompt body */
 "RateAppPrompt.Body.Android" = "If you love our app, please take a moment to rate it and give us a review.";
 /* Google play review prompt, revivew button */
@@ -634,6 +648,10 @@
 "RecoveryKeyFlow.unlinkWalletSubtext" = "Start a new wallet by unlinking your device from the currently installed wallet.";
 /* Warning displayed when the user starts the process of unlinking a wallet */
 "RecoveryKeyFlow.unlinkWalletWarning" = "Wallet must be recovered to regain access.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "Wipe your wallet from this device.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "Start a new wallet by wiping the current wallet from your device.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Write down your key";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -853,6 +871,8 @@
 "Settings.wallet" = "Wallets";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Unlink from this device";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "Wipe wallet from this device";
 /* Share data view body */
 "ShareData.body" = "Help improve BRD by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.";
 /* Share data header */
@@ -1024,6 +1044,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas Limit";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas Price";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "Hide Details";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "Initialized";
 /* More button title */
@@ -1136,6 +1158,23 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN Required";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Authorize this transaction";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Are you sure you want to turn off Fastsync?";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "Make syncing your bitcoin wallet practically instant. Learn more about how it works here.";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "Powered by";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync (pilot)";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "here";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "Connection Mode";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "Turn Off";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "Open the BRD iPhone app to set up your wallet.";
 /* Dismiss button label */
@@ -1157,7 +1196,7 @@ eg. 182930 (45061 confirmations) */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Failed";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "To start a new wallet or restore an existing wallet, you must first erase the wallet that is currently installed. To continue, enter the current wallet's Paper Key.";
+"WipeWallet.instruction" = "Please enter your recovery key to wipe this wallet from your device.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Starting or recovering another wallet allows you to access and manage a different BRD wallet on this device.";
 /* Start wipe wallet view warning */
