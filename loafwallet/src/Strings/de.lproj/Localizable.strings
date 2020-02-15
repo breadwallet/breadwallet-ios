@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "VERWALTEN";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Lokaler Korruptionsfehler";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Ihre lokale Datenbank ist beschädigt. Gehen Sie zu Einstellungen> Blockchain: Einstellungen> Datenbank löschen, um sie zu aktualisieren";
+
 /* Error alert title */
 "Alert.error" = "Fehler";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "Sprachen";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Umgebung:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet-Version:";
+
 /* Manage settings section header */
 "Settings.manage" = "Verwalten";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Übermittle anonyme Nutzungsdaten";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Unterstützung";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Willkommen bei Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Datenbank löschen";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Sind Sie sicher, dass Sie dieses Wallet löschen möchten?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Wallet löschen?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Datenbank löschen";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Dadurch wird die Datenbank gelöscht, die PIN und der Ausdruck bleiben jedoch erhalten. Bestätigen Sie Ihre vorhandene PIN und warten Sie, bis die Synchronisierung mit der neuen Datenbank abgeschlossen ist";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Löschen und synchronisieren";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Vergessen Sie Ihre Startphrase oder PIN?";

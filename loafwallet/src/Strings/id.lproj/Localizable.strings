@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "MENGATUR";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Hapus Database";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Ini menghapus basis data tetapi tetap menggunakan PIN dan frasa. Konfirmasikan PIN Anda yang ada, seed dan tunggu untuk menyinkronkan ke db baru";
+
 /* Error alert title */
 "Alert.error" = "Kesalahan";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "Bahasa";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Lingkungan Hidup:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Versi litewallet:";
+
 /* Manage settings section header */
 "Settings.manage" = "Mengelola";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Bagikan Data Anonim";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Sosial";
 
 /* Support settings section header */
 "Settings.support" = "Dukung";
@@ -1169,11 +1184,23 @@
 /* Welcome view title */
 "Welcome.title" = "Selamat datang di Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Kesalahan Korupsi Lokal";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Yakin ingin menghapus dompet ini?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Hapus Dompet?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Hapus basis data";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Basis data lokal Anda rusak. Buka Pengaturan> Blockchain: Pengaturan> Hapus Basis Data untuk menyegarkan";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Hapus & Sinkronkan";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Lupakan frasa atau PIN awal Anda?";

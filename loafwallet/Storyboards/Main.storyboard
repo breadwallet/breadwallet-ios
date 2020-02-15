@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -31,7 +31,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tabBar contentMode="redraw" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j3Z-Gw-zod">
-                                <rect key="frame" x="0.0" y="638" width="414" height="49"/>
+                                <rect key="frame" x="0.0" y="589" width="414" height="98"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <viewLayoutGuide key="safeArea" id="TzC-tl-jAG"/>
                                 <items>
@@ -91,7 +91,7 @@
                                 <viewLayoutGuide key="safeArea" id="81g-U6-NOG"/>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="euD-bi-teC">
-                                <rect key="frame" x="0.0" y="60" width="414" height="578"/>
+                                <rect key="frame" x="0.0" y="60" width="414" height="529"/>
                                 <viewLayoutGuide key="safeArea" id="spi-yc-QnP"/>
                                 <connections>
                                     <segue destination="0H7-tx-uMf" kind="embed" id="RDN-fw-P5V"/>
@@ -135,7 +135,7 @@
             <objects>
                 <viewController id="0H7-tx-uMf" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="z4T-ui-Ve5">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="578"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="529"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.20539733769999999" green="0.36322331429999999" blue="0.61663442850000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <viewLayoutGuide key="safeArea" id="UuX-cb-qOU"/>

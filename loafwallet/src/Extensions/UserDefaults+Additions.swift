@@ -23,6 +23,7 @@ private let customNodeIPKey = "customNodeIPKey"
 private let customNodePortKey = "customNodePortKey"
 private let hasPromptedShareDataKey = "hasPromptedShareDataKey"
 private let hasShownWelcomeKey = "hasShownWelcomeKey"
+private let didSeeTransactionCorruption = "DidSeeTransactionCorruption"
 
 extension UserDefaults {
 
@@ -34,6 +35,17 @@ extension UserDefaults {
             return defaults.bool(forKey: isBiometricsEnabledKey)
         }
         set { defaults.set(newValue, forKey: isBiometricsEnabledKey) }
+    }
+    
+    
+    static var didSeeCorruption: Bool {
+        get {
+            guard defaults.object(forKey: didSeeTransactionCorruption) != nil else {
+                return false
+            }
+            return defaults.bool(forKey: didSeeTransactionCorruption)
+        }
+        set { defaults.set(newValue, forKey: didSeeTransactionCorruption) }
     }
 
     static var defaultCurrencyCode: String {
@@ -139,6 +151,7 @@ extension UserDefaults {
 
 //MARK: - Wallet Requires Backup
 extension UserDefaults {
+    
     static var legacyWalletNeedsBackup: Bool? {
         guard defaults.object(forKey: legacyWalletNeedsBackupKey) != nil else {
             return nil

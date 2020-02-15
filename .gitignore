@@ -69,3 +69,4 @@ Screenshots/shots
 *.xcscheme
 /scripts/env-vars.sh
 /loafwallet/EnvVars.plist
+GoogleService-Info.plist

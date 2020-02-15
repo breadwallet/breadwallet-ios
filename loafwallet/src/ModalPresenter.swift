@@ -382,8 +382,24 @@ class ModalPresenter : Subscriber, Trackable {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Support", "Blockchain"]
-        var rows = [
+        let sections = ["About", "Wallet", "Manage", "Support", "Blockchain"]
+        let rows = [
+            "About": [Setting(title: S.Settings.litewalletVersion, accessoryText: { [weak self] in
+                        return AppVersion.string
+                        }, callback: {}),
+                      Setting(title: S.Settings.litewalletEnvironment, accessoryText: { [weak self] in
+                        var envName = ""
+                        #if Debug || Testflight
+                            envName = EnvironmentVariables.EnvironmentName.debug.rawValue
+                         #else
+                            envName = EnvironmentVariables.EnvironmentName.release.rawValue
+                        #endif
+                        return envName
+                      }, callback: {}),
+                      Setting(title: S.Settings.socialLinks, callback: {
+                          settingsNav.pushViewController(AboutViewController(), animated: true)
+                      })
+            ],
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
@@ -451,25 +467,28 @@ class ModalPresenter : Subscriber, Trackable {
             "Support": [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(store: self.store), animated: true)
-                }),
-                Setting(title: S.Settings.about, callback: {
-                    settingsNav.pushViewController(AboutViewController(), animated: true)
-                }),
+                })
             ],
             "Blockchain": [
                 Setting(title:S.Settings.advancedTitle, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
                     let sections = ["Network"]
-                    let advancedSettings = [
-                        "Network": [
-                            Setting(title: "Litecoin Nodes", callback: {
-                                let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
-                                settingsNav.pushViewController(nodeSelector, animated: true)
+                    var networkRows = [Setting]()
+                    networkRows = [Setting(title: "Litecoin Nodes", callback: {
+                        let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
+                        settingsNav.pushViewController(nodeSelector, animated: true)
+                    })]
+                    
+                    if UserDefaults.didSeeCorruption {
+                        networkRows.append(
+                            Setting(title: S.WipeWallet.deleteDatabase, callback: {
+                                self?.deleteDatabase()
                             })
-                        ]
-                    ]
+                        )
+                    }
 
+                    let advancedSettings = ["Network": networkRows]
                     let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
                     settingsNav.pushViewController(advancedSettingsVC, animated: true)
                 })
@@ -625,8 +644,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
  
 
-    func wipeWallet() {
-         
+    private func wipeWallet() {
         let group = DispatchGroup()
         let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
@@ -663,6 +681,41 @@ class ModalPresenter : Subscriber, Trackable {
         }))
         topViewController?.present(alert, animated: true, completion: nil)
     }
+    
+    private func deleteDatabase() {
+        let group = DispatchGroup()
+        let alert = UIAlertController(title: S.WipeWallet.alertDeleteTitle, message:  S.WipeWallet.deleteMessageTitle, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: S.WipeWallet.deleteSync, style: .default, handler: { _ in
+            self.topViewController?.dismiss(animated: true, completion: {
+                let activity = BRActivityViewController(message: S.WipeWallet.wiping)
+                self.topViewController?.present(activity, animated: true, completion: nil)
+                
+                group.enter()
+                DispatchQueue.walletQueue.async {
+                    self.walletManager?.peerManager?.disconnect()
+                    group.leave()
+                }
+               
+                group.notify(queue: .main) {
+                    if let canForceWipeWallet = (self.walletManager?.deleteWalletDatabase(pin: "forceWipe")),
+                        canForceWipeWallet {
+                       self.store.trigger(name: .reinitWalletManager({
+                         activity.dismiss(animated: true, completion: {
+                            UserDefaults.didSeeCorruption = false
+                         })
+                       }))
+                    } else {
+                       let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
+                       failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
+                       self.topViewController?.present(failure, animated: true, completion: nil)
+                    }
+                }
+            })
+        }))
+        topViewController?.present(alert, animated: true, completion: nil)
+    }
+    
  
     private func handleFile(_ file: Data) {
         if let request = PaymentProtocolRequest(data: file) {

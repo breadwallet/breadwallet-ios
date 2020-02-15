@@ -9,8 +9,6 @@
 import Foundation
 
 struct CI {
-    static var mixpanelTokenProdKey:    String = "$(MXP_PROD_ENV_KEY)"
-    static var mixpanelTokenDevKey:     String = "$(MXP_DEV_ENV_KEY)"
-    static var newRelicTokenProdKey:    String = "$(NR_PROD_ENV_KEY)"
-    static var newRelicTokenDevKey:     String = "$(NR_DEV_ENV_KEY)"
+    static var mixpanelProdToken:    String = "$(MXP_PROD_ENV)"
+    static var mixpanelDevToken:     String = "$(MXP_DEV_ENV)"
 }

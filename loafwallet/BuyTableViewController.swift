@@ -26,10 +26,7 @@ class BuyTableViewController: UITableViewController {
             vcWKVC.partnerPrefixString = "_simplex"
             vcWKVC.currencyCode = currencyCode
             addChildViewController(vcWKVC)
-            UIView.transition(with: self.view, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.view.addSubview(vcWKVC.view)
-            }, completion: nil)
-            
+            self.view.addSubview(vcWKVC.view)
             vcWKVC.didMove(toParentViewController: self)
             
             vcWKVC.didDismissChildView = { [weak self] in
@@ -38,8 +35,7 @@ class BuyTableViewController: UITableViewController {
                 vcWKVC.view.removeFromSuperview()
                 vcWKVC.removeFromParentViewController()
             }
-        }
-        else {
+        }  else {
             NSLog("ERROR: Storyboard not initialized")
         }
     }

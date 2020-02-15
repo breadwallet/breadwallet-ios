@@ -26,6 +26,7 @@
 import UIKit
 import LocalAuthentication
 import Mixpanel
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -36,17 +37,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let applicationController = ApplicationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool { 
-        var mixpanelToken = ""
+        var mixpanelToken = EnvironmentVariables.mixpanelProdToken
         #if Debug || Testflight
-        mixpanelToken = EnvironmentVariables.mixpanelTokenDevKey
-         #else
-             mixpanelToken = EnvironmentVariables.mixpanelTokenProdKey
+            mixpanelToken = EnvironmentVariables.mixpanelDevToken
         #endif
         Mixpanel.initialize(token: mixpanelToken)
-        Mixpanel.mainInstance().track(event: 
-            
-            MixpanelEvents._20191105_AL.rawValue, properties: ["app details":["VERSION": AppVersion.string]])
+        Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_AL.rawValue,
+                                 properties: ["app details":["VERSION": AppVersion.string]])
         
+        setFirebaseConfiguration()
         UIView.swizzleSetFrame()
         applicationController.launch(application: application, options: launchOptions)
         return true
@@ -80,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationController.application(application, didRegister: notificationSettings)
     }
 
-  func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         applicationController.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
     }
 
@@ -98,6 +97,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, shouldRestoreApplicationState coder: NSCoder) -> Bool {
         return true
+    }
+    
+    private func setFirebaseConfiguration() {
+        
+        if let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist") {
+                var dict = NSDictionary(contentsOfFile: path)
+
+                #if Debug || Testflight
+                    if let debugPath = Bundle.main.path(forResource: "GoogleService-iOS-Beta-Info", ofType: "plist") {
+                        dict = NSDictionary(contentsOfFile: debugPath)
+                        if dict?.write(toFile: path, atomically: true) == nil {
+                            NSLog("ERROR: Debug/Beta Firebase not applied")
+                        }
+                    }
+                #endif
+        }
+       
+        FirebaseApp.configure()
     }
 }
 

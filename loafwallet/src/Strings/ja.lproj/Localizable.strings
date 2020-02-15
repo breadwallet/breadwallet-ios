@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "管理";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "ローカル破損エラー";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "ローカルデータベースが破損しています。 [設定]> [ブロックチェーン：設定]> [データベースの削除]に移動して更新します";
+
 /* Error alert title */
 "Alert.error" = "エラー";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "言語";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "環境：";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewalletバージョン：";
+
 /* Manage settings section header */
 "Settings.manage" = "管理";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "匿名データをシェアする";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "ソーシャル";
 
 /* Support settings section header */
 "Settings.support" = "サポート";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Litewalletへようこそ！";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "データベースを削除";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "本当にこのウォレットを削除しますか？";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "ウォレットを消去しますか？";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "データベースを削除";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "これにより、データベースは削除されますが、PINとフレーズは保持されます。既存のPINを確認してシードし、新しいデータベースへの同期が完了するまで待ちます";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "削除と同期";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "シードフレーズまたはPINを忘れましたか？";

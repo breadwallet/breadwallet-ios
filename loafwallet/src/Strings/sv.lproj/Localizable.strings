@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "HANTERA";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Lokalt korruptionsfel";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Detta raderar databasen men behåller PIN-koden och frasen. Bekräfta din befintliga PIN-kod, frö och vänta på att synkronisera till den nya db";
+
 /* Error alert title */
 "Alert.error" = "Fel";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "språk";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Miljö:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
 /* Manage settings section header */
 "Settings.manage" = "Hantera";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Dela anonyma uppgifter";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Stöd";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Välkommen till Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Radera databas";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Är du säker på att du vill ta bort den här plånboken.";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Rensa plånbok?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Ta bort databasen";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Din lokala databas är skadad. Gå till Inställningar> Blockchain: Inställningar> Ta bort databas för att uppdatera";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Radera & synkronisera";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Glömt din fröfras eller PIN-kod?";

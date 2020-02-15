@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "管理";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "本地腐敗錯誤";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "您的本地數據庫已損壞。轉到設置>區塊鏈：設置>刪除數據庫以刷新";
+
 /* Error alert title */
 "Alert.error" = "錯誤";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "語言能力";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "環境：";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet版本：";
+
 /* Manage settings section header */
 "Settings.manage" = "管理";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名資料";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "社會的";
 
 /* Support settings section header */
 "Settings.support" = "支持";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "歡迎使用 Litewallet！";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "刪除數據庫";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "確定要刪除此錢包嗎？";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "抹除錢包？";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "刪除數據庫";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "這將刪除數據庫，但保留PIN和短語。確認您現有的PIN碼，種子並等待同步到新數據庫";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "刪除並同步";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "忘記您的種子短語或PIN碼嗎？";

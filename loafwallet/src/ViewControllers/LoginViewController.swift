@@ -8,7 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-
+import FirebaseCrashlytics
 
 private let biometricsSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0

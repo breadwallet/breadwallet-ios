@@ -28,6 +28,7 @@ import UIKit
 import LocalAuthentication
 import BRCore
 import sqlite3
+import Mixpanel
 
 private let WalletSecAttrService = "com.litecoin.loafwallet"
 private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
@@ -59,7 +60,7 @@ extension WalletManager : WalletAuthenticator {
         if !UIApplication.shared.isProtectedDataAvailable {
             throw NSError(domain: NSOSStatusErrorDomain, code: Int(errSecNotAvailable))
         }
-
+        
         if try keychainItem(key: KeychainKey.seed) as Data? != nil { // upgrade from old keychain scheme
             let seedPhrase: String? = try keychainItem(key: KeychainKey.mnemonic)
             var seed = UInt512()
@@ -451,6 +452,34 @@ extension WalletManager : WalletAuthenticator {
         }
     }
     
+   func deleteWalletDatabase(pin: String = "forceWipe") -> Bool {
+       guard pin == "forceWipe" || authenticate(pin: pin) else { return false }
+
+       do {
+           lazyWallet = nil
+           lazyPeerManager = nil
+           if db != nil { sqlite3_close(db) }
+           db = nil
+           didInitWallet = false
+           earliestKeyTime = 0
+           if let bundleId = Bundle.main.bundleIdentifier {
+               UserDefaults.standard.removePersistentDomain(forName: bundleId)
+           }
+           try BRAPIClient(authenticator: self).kv?.rmdb()
+           try? FileManager.default.removeItem(atPath: dbPath)
+           try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+           NotificationCenter.default.post(name: .DidDeleteWalletDBNotification, object: nil)
+           return true
+       }
+       catch let error {
+           print("Wipe wallet error: \(error)")
+           return false
+       }
+   }
+    
+    
+    
+    
     // key used for authenticated API calls
     var apiAuthKey: String? {
         return autoreleasepool {
@@ -515,6 +544,7 @@ extension WalletManager : WalletAuthenticator {
     private struct DefaultsKey {
         public static let spendLimitAmount = "SPEND_LIMIT_AMOUNT"
         public static let pinUnlockTime = "PIN_UNLOCK_TIME"
+
     }
     
     private func signTx(_ tx: BRTxRef, forkId: Int = 0) -> Bool {
@@ -522,12 +552,22 @@ extension WalletManager : WalletAuthenticator {
             do {
                 var seed = UInt512()
                 defer { seed = UInt512() }
-                guard let wallet = wallet else { return false }
-                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
+                guard let wallet = wallet else {
+                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_WNI.rawValue)
+                    return false
+                }
+                guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else {
+                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_PNI.rawValue)
+                    return false
+                }
+                
                 BRBIP39DeriveKey(&seed, phrase, nil)
                 return wallet.signTransaction(tx, forkId: forkId, seed: &seed)
             }
-            catch { return false }
+            catch {
+                Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_UTST.rawValue)
+                return false
+            }
         }
     }
 }

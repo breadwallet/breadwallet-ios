@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "УПРАВЛЕНИЕ";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Ошибка локальной коррупции";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Ваша локальная база данных повреждена. Перейдите в Настройки> Блокчейн: Настройки> Удалить базу данных, чтобы обновить";
+
 /* Error alert title */
 "Alert.error" = "Ошибка";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "Языки";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Окружающая среда:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet версия:";
+
 /* Manage settings section header */
 "Settings.manage" = "Управление";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Поделиться анонимными данными";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Социальная";
 
 /* Support settings section header */
 "Settings.support" = "Служба поддержки";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Добро пожаловать в Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Удалить базу данных";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Вы действительно хотите удалить этот кошелек?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Удалить кошелек?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Удалить базу данных";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Это удаляет базу данных, но сохраняет PIN-код и фразу. Подтвердите свой существующий PIN-код, начните и ждите, чтобы синхронизировать синхронизацию с новым БД";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Удалить и синхронизировать";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Забыли свою начальную фразу или PIN-код?";

@@ -37,6 +37,13 @@ struct E {
             return false
         #endif
     }()
+    static let isRelease: Bool = {
+        #if Release
+            return true
+        #else
+            return false
+        #endif
+    }()
     static let isScreenshots: Bool = {
         #if Screenshots
             return true
@@ -81,15 +88,18 @@ struct EnvironmentVariables {
         return dict
     }()
     
-    static var mixpanelTokenProdKey: String = EnvironmentVariables.plistVariable(name: "MXP_PROD_ENV_KEY") ?? CI.mixpanelTokenProdKey
-    static var mixpanelTokenDevKey: String = EnvironmentVariables.plistVariable(name: "MXP_DEV_ENV_KEY") ?? CI.mixpanelTokenDevKey
-    static var newRelicTokenProdKey: String = EnvironmentVariables.plistVariable(name: "NR_PROD_ENV_KEY") ?? CI.newRelicTokenProdKey
-    static var newRelicTokenDevKey: String = EnvironmentVariables.plistVariable(name: "NR_DEV_ENV_KEY") ?? CI.newRelicTokenDevKey
+    static var mixpanelProdToken: String = EnvironmentVariables.plistVariable(name: "MXP_PROD_ENV") ?? CI.mixpanelProdToken
+    static var mixpanelDevToken: String = EnvironmentVariables.plistVariable(name: "MXP_DEV_ENV") ?? CI.mixpanelDevToken
 
     static func plistVariable(name: String) -> String? {
         if let key = plistDict?[name] as? String {
             return key
         }
         return nil
+    }
+    
+    enum EnvironmentName: String {
+        case debug      = "Debug"
+        case release    = "Release"
     }
 }
