@@ -27,8 +27,7 @@ import Foundation
 import UIKit
 import LocalAuthentication
 import BRCore
-import sqlite3
-import Mixpanel
+import sqlite3 
 
 private let WalletSecAttrService = "com.litecoin.loafwallet"
 private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970

@@ -8,8 +8,7 @@
 
 import Foundation
 import UIKit
-import BRCore
-import Mixpanel
+import BRCore 
  
 enum SendResult {
     case success

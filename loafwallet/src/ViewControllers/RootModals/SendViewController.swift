@@ -8,8 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
-import Mixpanel
+import BRCore 
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 

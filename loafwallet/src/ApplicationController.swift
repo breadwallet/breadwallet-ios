@@ -8,8 +8,7 @@
 
 import UIKit
 import StoreKit
-import Mixpanel
-
+ 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 private let numberOfLitewalletLaunches = "NumberOfLitewalletLaunches"

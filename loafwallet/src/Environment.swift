@@ -79,18 +79,6 @@ struct E {
 }
 
 struct EnvironmentVariables {
-    
-    static let plistDict: NSDictionary? = {
-        var dict: NSDictionary?
-               if let path = Bundle.main.path(forResource: "EnvVars", ofType: "plist") {
-                  dict = NSDictionary(contentsOfFile: path)
-               }
-        return dict
-    }()
-    
-    static var mixpanelProdToken: String = EnvironmentVariables.plistVariable(name: "MXP_PROD_ENV") ?? CI.mixpanelProdToken
-    static var mixpanelDevToken: String = EnvironmentVariables.plistVariable(name: "MXP_DEV_ENV") ?? CI.mixpanelDevToken
-    
     static var shouldRunFirebase: Bool = EnvironmentVariables.plistVariable(name: "RUN_FIREBASE") ?? CI.shouldRunFirebase
 
     static func plistVariable(name: String) -> String? {

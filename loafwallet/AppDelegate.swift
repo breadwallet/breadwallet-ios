@@ -24,8 +24,7 @@
 //  THE SOFTWARE.
 
 import UIKit
-import LocalAuthentication
-import Mixpanel
+import LocalAuthentication 
 import Firebase
 
 @UIApplicationMain

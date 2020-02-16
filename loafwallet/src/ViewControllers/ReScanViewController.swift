@@ -6,8 +6,7 @@
 //  Copyright © 2017 breadwallet LLC. All rights reserved.
 //
 
-import UIKit
-import Mixpanel
+import UIKit 
 
 class ReScanViewController : UIViewController, Subscriber {
 
