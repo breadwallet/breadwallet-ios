@@ -480,13 +480,14 @@ class ModalPresenter : Subscriber, Trackable {
                         settingsNav.pushViewController(nodeSelector, animated: true)
                     })]
                     
-                    if UserDefaults.didSeeCorruption {
-                        networkRows.append(
-                            Setting(title: S.WipeWallet.deleteDatabase, callback: {
-                                self?.deleteDatabase()
-                            })
-                        )
-                    }
+// TODO: Develop this feature for issues with the TXID
+//                    if UserDefaults.didSeeCorruption {
+//                        networkRows.append(
+//                            Setting(title: S.WipeWallet.deleteDatabase, callback: {
+//                                self?.deleteDatabase()
+//                            })
+//                        )
+//                    }
 
                     let advancedSettings = ["Network": networkRows]
                     let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
@@ -681,41 +682,6 @@ class ModalPresenter : Subscriber, Trackable {
         }))
         topViewController?.present(alert, animated: true, completion: nil)
     }
-    
-    private func deleteDatabase() {
-        let group = DispatchGroup()
-        let alert = UIAlertController(title: S.WipeWallet.alertDeleteTitle, message:  S.WipeWallet.deleteMessageTitle, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: S.WipeWallet.deleteSync, style: .default, handler: { _ in
-            self.topViewController?.dismiss(animated: true, completion: {
-                let activity = BRActivityViewController(message: S.WipeWallet.wiping)
-                self.topViewController?.present(activity, animated: true, completion: nil)
-                
-                group.enter()
-                DispatchQueue.walletQueue.async {
-                    self.walletManager?.peerManager?.disconnect()
-                    group.leave()
-                }
-               
-                group.notify(queue: .main) {
-                    if let canForceWipeWallet = (self.walletManager?.deleteWalletDatabase(pin: "forceWipe")),
-                        canForceWipeWallet {
-                       self.store.trigger(name: .reinitWalletManager({
-                         activity.dismiss(animated: true, completion: {
-                            UserDefaults.didSeeCorruption = false
-                         })
-                       }))
-                    } else {
-                       let failure = UIAlertController(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage, preferredStyle: .alert)
-                       failure.addAction(UIAlertAction(title: S.Button.ok, style: .default, handler: nil))
-                       self.topViewController?.present(failure, animated: true, completion: nil)
-                    }
-                }
-            })
-        }))
-        topViewController?.present(alert, animated: true, completion: nil)
-    }
-    
  
     private func handleFile(_ file: Data) {
         if let request = PaymentProtocolRequest(data: file) {

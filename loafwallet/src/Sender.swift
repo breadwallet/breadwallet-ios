@@ -93,7 +93,7 @@ class Sender {
             let group = DispatchGroup()
             group.enter()
              DispatchQueue.walletQueue.async {
-                if !self.walletManager.signTransaction(tx, pin: pin) {
+                if self.walletManager.signTransaction(tx, pin: pin) {
                     self.publish(completion: completion)
                     success = true
                 }
