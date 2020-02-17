@@ -11,7 +11,8 @@ def shared_pods
   pod 'SwiftyJSON', '~> 4.0'
   pod 'CryptoSwift', '~> 1.0'
   pod 'Firebase/Crashlytics'
-  pod 'Firebase/Analytics'
+  pod 'FirebaseAnalytics', '~> 6.2'
+
   # add after v2.6.0 pod 'SwiftLint'
 end
 

@@ -39,12 +39,7 @@ extension UserDefaults {
     
     
     static var didSeeCorruption: Bool {
-        get {
-            guard defaults.object(forKey: didSeeTransactionCorruption) != nil else {
-                return false
-            }
-            return defaults.bool(forKey: didSeeTransactionCorruption)
-        }
+        get { return defaults.bool(forKey: didSeeTransactionCorruption) }
         set { defaults.set(newValue, forKey: didSeeTransactionCorruption) }
     }
 

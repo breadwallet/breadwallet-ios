@@ -101,7 +101,7 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 30.0)
             if result == .timedOut {
-                let properties: [String: Any] = ["ERROR_TX":"\(tx.txHash)","ERROR_BLOCKHEIGHT": "\(tx.blockHeight)"]
+                let properties: [String: String] = ["ERROR_TX":"\(tx.txHash)","ERROR_BLOCKHEIGHT": "\(tx.blockHeight)"]
                 LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
 
                 let alert = UIAlertController(title: S.Alert.corruptionError, message: S.Alert.corruptionMessage, preferredStyle: .alert)
