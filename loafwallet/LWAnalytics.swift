@@ -11,7 +11,7 @@ import FirebaseAnalytics
 
 class LWAnalytics {
     
-    class func logEventWithParameters(itemName: CustomEvent, properties:[String: String]?) {
+    class func logEventWithParameters(itemName: CustomEvent, properties:[String: String]? = nil) {
         var parameters = [
         AnalyticsParameterItemID: "id-\(itemName.hashValue)",
         AnalyticsParameterItemName: itemName.rawValue,

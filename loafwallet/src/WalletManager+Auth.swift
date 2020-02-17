@@ -554,11 +554,11 @@ extension WalletManager : WalletAuthenticator {
                 var seed = UInt512()
                 defer { seed = UInt512() }
                 guard let wallet = wallet else {
-                    LWAnalytics.logEventWithParameters(itemName:._20200111_WNI, properties: nil)
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_WNI)
                     return false
                 }
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else {
-                    LWAnalytics.logEventWithParameters(itemName:._20200111_PNI, properties: nil)
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_PNI)
                     return false
                 }
                 
@@ -566,7 +566,7 @@ extension WalletManager : WalletAuthenticator {
                 return wallet.signTransaction(tx, forkId: forkId, seed: &seed)
             }
             catch {
-                LWAnalytics.logEventWithParameters(itemName:._20200111_UTST, properties: nil)
+                LWAnalytics.logEventWithParameters(itemName:._20200111_UTST)
                 return false
             }
         }

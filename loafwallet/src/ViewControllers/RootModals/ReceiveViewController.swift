@@ -26,7 +26,7 @@ class ReceiveViewController : UIViewController, Subscriber, Trackable {
         self.wallet = wallet
         self.isRequestAmountVisible = isRequestAmountVisible
         self.store = store
-        LWAnalytics.logEventWithParameters(itemName: ._20202116_VRC, properties: nil)
+        LWAnalytics.logEventWithParameters(itemName: ._20202116_VRC)
         super.init(nibName: nil, bundle: nil)
     }
 

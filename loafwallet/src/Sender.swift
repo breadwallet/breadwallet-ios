@@ -145,15 +145,15 @@ class Sender {
     private func setMetaData() {
         
         guard let rate = rate else {
-            LWAnalytics.logEventWithParameters(itemName:._20200111_RNI, properties: nil)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_RNI)
             return
         }
         guard let tx = transaction else {
-            LWAnalytics.logEventWithParameters(itemName:._20200111_TNI, properties: nil)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_TNI)
             return
         }
         guard let feePerKb = feePerKb else {
-            LWAnalytics.logEventWithParameters(itemName:._20200111_FNI, properties: nil)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_FNI)
             return
         }
         
