@@ -29,9 +29,7 @@
 #import "UIImage+Utils.h"
 #import <NotificationCenter/NotificationCenter.h>
 #define SCAN_URL @"loaf://x-callback-url/scanqr"
-#define OPEN_URL @"loaf://"
- 
-
+#define OPEN_URL @"loaf://" 
 @interface BRTodayViewController () <NCWidgetProviding>
 
 @property (nonatomic, weak) IBOutlet UIImageView *qrImage, *qrOverlay, *scanOverlay;
@@ -47,11 +45,12 @@
 @end
 
 @implementation BRTodayViewController
-//TODO: TO REFACTOR TO SWIFT to add Mixpanel test point
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+   //TODO: TO REFACTOR TO SWIFT to add Firebase event test points
    // Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_VSC.rawValue)
+<<<<<<< Updated upstream
 //    Mixpanel *mixpanel = [Mixpanel sharedInstance];
 //    [mixpanel track:@"Plan selected"
 //         properties:@{ @"Plan": @"Premium" }];
@@ -59,6 +58,11 @@
     //
   //  _ = LWAnalytics.init(itemName: ._20191105_VSC, properties: nil)
 
+=======
+   // Mixpanel *mixpanel = [Mixpanel sharedInstance];
+   // [mixpanel track:@"Plan selected"
+   // properties:@{ @"Plan": @"Premium" }];
+>>>>>>> Stashed changes
     
     if ([[self.extensionContext class] instancesRespondToSelector:@selector(widgetLargestAvailableDisplayMode)]) {
         self.extensionContext.widgetLargestAvailableDisplayMode = NCWidgetDisplayModeExpanded;

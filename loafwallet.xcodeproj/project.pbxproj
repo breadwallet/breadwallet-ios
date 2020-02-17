@@ -142,7 +142,6 @@
 		24D5F26F225A5BEA00225462 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D5F26D225A5BEA00225462 /* ContainerViewController.swift */; };
 		24D91D0B2166923E0077A619 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24D91D0A2166923E0077A619 /* UserNotifications.framework */; };
 		24DFCE6823B89CDE001F17F8 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24DFCE6723B89CDE001F17F8 /* Settings.storyboard */; };
-		24E179E923BA9FC700F928D9 /* CI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E179E823BA9FC700F928D9 /* CI.swift */; };
 		3E5D426C13A8F4B4B8DA5AF3 /* Pods_loafwalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AEB7C06FE9706FC71D63B8B5 /* Pods_loafwalletTests.framework */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
@@ -914,7 +913,6 @@
 		24D91D0A2166923E0077A619 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		24D91D0D2166A5480077A619 /* TestnetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestnetData.swift; sourceTree = "<group>"; };
 		24DFCE6723B89CDE001F17F8 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
-		24E179E823BA9FC700F928D9 /* CI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CI.swift; sourceTree = "<group>"; };
 		2CF8845B661B040CA0780C35 /* Pods_LitewalletUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LitewalletUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		42C95DFC249600E4FF4BB7BF /* Pods-loafwallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.release.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.release.xcconfig"; sourceTree = "<group>"; };
 		43EB895625E57A3652F2CDA7 /* Pods-loafwallet.testflight.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.testflight.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.testflight.xcconfig"; sourceTree = "<group>"; };
@@ -3574,7 +3572,6 @@
 			children = (
 				CEE20C351EA5B4620086F724 /* Constants.swift */,
 				CEBF292F1EF9D76F005C330A /* Environment.swift */,
-				24E179E823BA9FC700F928D9 /* CI.swift */,
 				CEE20C331EA5B4550086F724 /* ArticleIds.swift */,
 				CE3D4C581EF743EF0016B1C8 /* Functions.swift */,
 			);
@@ -4620,7 +4617,6 @@
 				CEEC70811E90C04700EF788E /* SeparatorCell.swift in Sources */,
 				CE20C8FE1DBB133A00C8397A /* SimpleRedux.swift in Sources */,
 				22122B721F0B8996000E9AB9 /* BRAPIClient+Events.swift in Sources */,
-				24E179E923BA9FC700F928D9 /* CI.swift in Sources */,
 				CE4B6C201E233C2C00CF935B /* UITableView+Additions.swift in Sources */,
 				CE760EDC1E561DF900EFAC2B /* SecurityCenterViewController.swift in Sources */,
 				CEEC70861E94397D00EF788E /* UserDefaults+Additions.swift in Sources */,
