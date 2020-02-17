@@ -17,11 +17,9 @@ class LWAnalytics {
         AnalyticsParameterItemName: itemName.rawValue,
         AnalyticsParameterContentType: "cont"]
         
-        if let properties = properties {
-            for (key, value) in properties {
-                parameters[key] = value
-            }
-        }
+        properties?.forEach({ key, value in
+            parameters[key] = value
+        })
         
         Analytics.logEvent(itemName.rawValue, parameters: parameters)
     }
