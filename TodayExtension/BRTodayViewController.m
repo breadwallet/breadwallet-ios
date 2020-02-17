@@ -50,19 +50,11 @@
     [super viewDidLoad];
    //TODO: TO REFACTOR TO SWIFT to add Firebase event test points
    // Mixpanel.mainInstance().track(event: K.MixpanelEvents._20191105_VSC.rawValue)
-<<<<<<< Updated upstream
-//    Mixpanel *mixpanel = [Mixpanel sharedInstance];
-//    [mixpanel track:@"Plan selected"
-//         properties:@{ @"Plan": @"Premium" }];
-    //Mixpanel
-    //
-  //  _ = LWAnalytics.init(itemName: ._20191105_VSC, properties: nil)
-
-=======
    // Mixpanel *mixpanel = [Mixpanel sharedInstance];
    // [mixpanel track:@"Plan selected"
    // properties:@{ @"Plan": @"Premium" }];
->>>>>>> Stashed changes
+   // Mixpanel
+   //  _ = LWAnalytics.init(itemName: ._20191105_VSC, properties: nil)
     
     if ([[self.extensionContext class] instancesRespondToSelector:@selector(widgetLargestAvailableDisplayMode)]) {
         self.extensionContext.widgetLargestAvailableDisplayMode = NCWidgetDisplayModeExpanded;
