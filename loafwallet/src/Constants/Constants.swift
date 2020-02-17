@@ -80,4 +80,4 @@ struct AppVersion {
     static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     static let versionNumber = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     static let string = "v." + versionNumber! + " (\(buildNumber!))"
-}
+} 
