@@ -8,7 +8,6 @@ use_frameworks!
 #Shared Cocopods
 def shared_pods
   pod 'Alamofire', '~> 4.7'
-  pod 'Mixpanel-swift'  
   pod 'SwiftyJSON', '~> 4.0'
   pod 'CryptoSwift', '~> 1.0'
   pod 'Firebase/Crashlytics'

@@ -171,8 +171,9 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil
             ) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
-            Mixpanel.mainInstance().track(event: MixpanelEvents._20200112_ERR.rawValue,
-                properties: ["sql3":["ERROR_MESSAGE":String(cString: sqlite3_errmsg(db)),"ERROR_CODE": sqlite3_errcode(db)]])
+            let properties: [String : Any] = ["ERROR_MESSAGE":String(cString: sqlite3_errmsg(db)),"ERROR_CODE": sqlite3_errcode(db)]
+            LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
+
             #if DEBUG
                 throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db),
                                                      description: String(cString: sqlite3_errmsg(db)))
@@ -323,8 +324,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
             guard sqlite3_errcode(self.db) == SQLITE_OK else {
                 print(String(cString: sqlite3_errmsg(self.db)))
-                Mixpanel.mainInstance().track(event: MixpanelEvents._20200112_ERR.rawValue,
-                                              properties: ["sql3":["ERROR_MESSAGE":String(cString: sqlite3_errmsg(self.db)),"ERROR_CODE": sqlite3_errcode(self.db)]])
+                let properties: [String : Any] = ["ERROR_MESSAGE":String(cString: sqlite3_errmsg(self.db)),"ERROR_CODE": sqlite3_errcode(self.db)]
+                LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
                 return
             }
             

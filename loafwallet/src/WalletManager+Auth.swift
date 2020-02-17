@@ -27,7 +27,9 @@ import Foundation
 import UIKit
 import LocalAuthentication
 import BRCore
-import sqlite3 
+import sqlite3
+import FirebaseAnalytics
+
 
 private let WalletSecAttrService = "com.litecoin.loafwallet"
 private let BIP39CreationTime = TimeInterval(BIP39_CREATION_TIME) - NSTimeIntervalSince1970
@@ -552,11 +554,11 @@ extension WalletManager : WalletAuthenticator {
                 var seed = UInt512()
                 defer { seed = UInt512() }
                 guard let wallet = wallet else {
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_WNI.rawValue)
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_WNI, properties: nil)
                     return false
                 }
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else {
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_PNI.rawValue)
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_PNI, properties: nil)
                     return false
                 }
                 
@@ -564,7 +566,7 @@ extension WalletManager : WalletAuthenticator {
                 return wallet.signTransaction(tx, forkId: forkId, seed: &seed)
             }
             catch {
-                Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_UTST.rawValue)
+                LWAnalytics.logEventWithParameters(itemName:._20200111_UTST, properties: nil)
                 return false
             }
         }

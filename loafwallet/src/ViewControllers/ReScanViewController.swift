@@ -80,7 +80,8 @@ class ReScanViewController : UIViewController, Subscriber {
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
         alert.addAction(UIAlertAction(title: S.ReScan.alertAction, style: .default, handler: { _ in
             self.store.trigger(name: .rescan)
-            Mixpanel.mainInstance().track(event: MixpanelEvents._20200112_DSR.rawValue)
+            LWAnalytics.logEventWithParameters(itemName: ._20200112_DSR, properties: nil)
+            
             self.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)

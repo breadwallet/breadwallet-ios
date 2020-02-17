@@ -101,10 +101,9 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 30.0)
             if result == .timedOut {
-                
-                Mixpanel.mainInstance().track(event: MixpanelEvents._20200112_ERR.rawValue,
-                properties: ["txerror":["ERROR_TX":"\(tx.txHash)","ERROR_BLOCKHEIGHT": "\(tx.blockHeight)"]])
-                
+                let properties: [String: Any] = ["ERROR_TX":"\(tx.txHash)","ERROR_BLOCKHEIGHT": "\(tx.blockHeight)"]
+                LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
+
                 let alert = UIAlertController(title: S.Alert.corruptionError, message: S.Alert.corruptionMessage, preferredStyle: .alert)
           
                 UserDefaults.didSeeCorruption = true
@@ -146,15 +145,15 @@ class Sender {
     private func setMetaData() {
         
         guard let rate = rate else {
-            Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_RNI.rawValue)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_RNI, properties: nil)
             return
         }
         guard let tx = transaction else {
-           Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_TNI.rawValue)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_TNI, properties: nil)
             return
         }
         guard let feePerKb = feePerKb else {
-            Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_FNI.rawValue)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_FNI, properties: nil)
             return
         }
         
@@ -167,7 +166,7 @@ class Sender {
         do {
             let _ = try kvStore.set(metaData)
         } catch let error {
-            Mixpanel.mainInstance().track(event: "ERROR: could not update metadata:\(String(describing: error))")
+            LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: ["error": String(describing: error)])
         }
         store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
     }

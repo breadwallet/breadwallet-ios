@@ -390,9 +390,9 @@ class ModalPresenter : Subscriber, Trackable {
                       Setting(title: S.Settings.litewalletEnvironment, accessoryText: { [weak self] in
                         var envName = ""
                         #if Debug || Testflight
-                            envName = EnvironmentVariables.EnvironmentName.debug.rawValue
+                            envName = "Debug"
                          #else
-                            envName = EnvironmentVariables.EnvironmentName.release.rawValue
+                            envName = "Release"
                         #endif
                         return envName
                       }, callback: {}),

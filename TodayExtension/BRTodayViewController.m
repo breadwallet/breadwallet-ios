@@ -30,6 +30,7 @@
 #import <NotificationCenter/NotificationCenter.h>
 #define SCAN_URL @"loaf://x-callback-url/scanqr"
 #define OPEN_URL @"loaf://"
+ 
 
 @interface BRTodayViewController () <NCWidgetProviding>
 
@@ -55,6 +56,9 @@
 //    [mixpanel track:@"Plan selected"
 //         properties:@{ @"Plan": @"Premium" }];
     //Mixpanel
+    //
+  //  _ = LWAnalytics.init(itemName: ._20191105_VSC, properties: nil)
+
     
     if ([[self.extensionContext class] instancesRespondToSelector:@selector(widgetLargestAvailableDisplayMode)]) {
         self.extensionContext.widgetLargestAvailableDisplayMode = NCWidgetDisplayModeExpanded;

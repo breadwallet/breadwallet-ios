@@ -35,8 +35,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
         self.donationCell = DonationSetupCell(store: store, wantsToDonate: true)
-        
-        Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_VSC.rawValue)
+        LWAnalytics.logEventWithParameters(itemName:._20191105_VSC, properties: nil)
 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -367,8 +366,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         myself.onPublishSuccess?()
                     })
                     self?.saveEvent("send.success")
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_DSL.rawValue)
-
+                    LWAnalytics.logEventWithParameters(itemName:._20191105_DSL, properties: nil)
+                    
                 case .creationError(let message):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
                     self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])

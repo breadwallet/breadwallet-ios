@@ -240,7 +240,7 @@ class ApplicationController : Subscriber, Trackable {
                 UserDefaults.standard.set(NSNumber(value: launchNumber), forKey: numberOfLitewalletLaunches)
                 if launchNumber == 5 {
                     SKStoreReviewController.requestReview()
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200125_DSRR.rawValue)
+                    LWAnalytics.logEventWithParameters(itemName:._20200125_DSRR, properties: nil)
                 }
                 
             } else {
@@ -324,7 +324,8 @@ class ApplicationController : Subscriber, Trackable {
             let group = DispatchGroup()
             if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
                 group.enter()
-                Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_DEDG.rawValue)
+                LWAnalytics.logEventWithParameters(itemName:._20200111_DEDG, properties: nil)
+
                 store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
                     if self.fetchCompletionHandler != nil {
                         if state.walletState.syncState == .success {
@@ -332,7 +333,7 @@ class ApplicationController : Subscriber, Trackable {
                                 peerManager.disconnect()
                                 self.saveEvent("appController.peerDisconnect")
                                 DispatchQueue.main.async {
-                                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_DLDG.rawValue)
+                                    LWAnalytics.logEventWithParameters(itemName:._20200111_DLDG, properties: nil)
                                     group.leave()
                                 }
                             }
@@ -342,14 +343,14 @@ class ApplicationController : Subscriber, Trackable {
             }
 
             group.enter()
-            Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_DEDG.rawValue)
+            LWAnalytics.logEventWithParameters(itemName:._20200111_DEDG, properties: nil)
             Async.parallel(callbacks: [
                 { self.exchangeUpdater?.refresh(completion: $0) },
                 { self.feeUpdater?.refresh(completion: $0) },
                 { self.walletManager?.apiClient?.events?.sync(completion: $0) },
                 { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
                 ], completion: {
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20200111_DLDG.rawValue)
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_DLDG, properties: nil)
                     group.leave()
             })
 

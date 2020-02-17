@@ -76,20 +76,4 @@ struct E {
     static var screenHeight: CGFloat {
       return UIScreen.main.bounds.size.height
     }
-}
-
-struct EnvironmentVariables {
-    static var shouldRunFirebase: Bool = EnvironmentVariables.plistVariable(name: "RUN_FIREBASE") ?? CI.shouldRunFirebase
-
-    static func plistVariable(name: String) -> String? {
-        if let key = plistDict?[name] as? String {
-            return key
-        }
-        return nil
-    }
-    
-    enum EnvironmentName: String {
-        case debug      = "Debug"
-        case release    = "Release"
-    }
-}
+} 
