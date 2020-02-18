@@ -17,9 +17,9 @@ class LWAnalytics {
         AnalyticsParameterItemName: itemName.rawValue,
         AnalyticsParameterContentType: "cont"]
         
-        properties?.forEach({ key, value in
+        properties?.forEach { key, value in
             parameters[key] = value
-        })
+        }
         
         Analytics.logEvent(itemName.rawValue, parameters: parameters)
     }
