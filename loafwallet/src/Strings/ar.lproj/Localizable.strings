@@ -824,6 +824,12 @@
 /* Languages label */
 "Settings.languages" = "Languages";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Environment:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
 /* Manage settings section header */
 "Settings.manage" = "Manage";
 
@@ -835,6 +841,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Share Anonymous Data";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Support";
@@ -1222,3 +1231,21 @@
 
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d of %2$d";
+
+/* Corruption Error alert title */
+"Alert.corruptionError" = "";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "";
+
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "";

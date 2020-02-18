@@ -26,7 +26,7 @@
 import Foundation
 import SystemConfiguration
 import BRCore
-import sqlite3
+import sqlite3 
 
 internal let SQLITE_STATIC = unsafeBitCast(0, to: sqlite3_destructor_type.self)
 internal let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
@@ -42,6 +42,8 @@ extension NSNotification.Name {
     public static let WalletSyncStartedNotification = NSNotification.Name("WalletSyncStarted")
     public static let WalletSyncStoppedNotification = NSNotification.Name("WalletSyncStopped")
     public static let WalletDidWipeNotification = NSNotification.Name("WalletDidWipe")
+    public static let DidDeleteWalletDBNotification = NSNotification.Name("DidDeleteDatabase")
+
 }
 
 private func SafeSqlite3ColumnBlob<T>(statement: OpaquePointer, iCol: Int32) -> UnsafePointer<T>? {
@@ -169,6 +171,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
             SQLITE_OPEN_FULLMUTEX | SQLITE_OPEN_CREATE | SQLITE_OPEN_READWRITE, nil
             ) != SQLITE_OK {
             print(String(cString: sqlite3_errmsg(db)))
+            let properties: [String : String] = ["ERROR_MESSAGE":String(cString: sqlite3_errmsg(db)),"ERROR_CODE": String(describing: sqlite3_errcode(db))]
+            LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
 
             #if DEBUG
                 throw WalletManagerError.sqliteError(errorCode: sqlite3_errcode(db),
@@ -320,6 +324,8 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
             guard sqlite3_errcode(self.db) == SQLITE_OK else {
                 print(String(cString: sqlite3_errmsg(self.db)))
+                let properties: [String : String] = ["ERROR_MESSAGE":String(cString: sqlite3_errmsg(self.db)),"ERROR_CODE": String(describing: sqlite3_errcode(self.db))]
+                LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
                 return
             }
             
@@ -427,6 +433,7 @@ class WalletManager : BRWalletListener, BRPeerManagerListener {
 
                 guard sqlite3_step(sql) == SQLITE_ROW else {
                     print(String(cString: sqlite3_errmsg(self.db)))
+                    
                     sqlite3_exec(self.db, "rollback", nil, nil, nil)
                     return
                 }

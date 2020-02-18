@@ -86,6 +86,9 @@ class SettingsViewController : UITableViewController, CustomTitleView {
             label.text = setting.accessoryText?()
             label.sizeToFit()
             cell.accessoryView = label
+            if sections[indexPath.section] == "About" {
+                cell.selectionStyle = .none
+            }
             
             if #available(iOS 11.0, *),
                 let  textColor = UIColor(named: "labelTextColor") {
@@ -114,6 +117,8 @@ class SettingsViewController : UITableViewController, CustomTitleView {
         
         view.addSubview(label)
         switch sections[section] {
+        case "About":
+            label.text = S.Settings.about
         case "Wallet":
             label.text = S.Settings.wallet
         case "Manage":

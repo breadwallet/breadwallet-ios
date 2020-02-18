@@ -54,6 +54,9 @@ enum S {
         static let warning = NSLocalizedString("Alert.warning", value: "**Warning**", comment: "Warning alert title")
         static let error = NSLocalizedString("Alert.error", value: "**Error**", comment: "Error alert title")
         static let noInternet = NSLocalizedString("Alert.noInternet", value: "**No internet connection found. Check your connection and try again.**", comment: "No internet alert message")
+        static let corruptionError = NSLocalizedString("Alert.corruptionError", value: "**Database Corruption Error**", comment: "Corruption Error alert title")
+        static let corruptionMessage = NSLocalizedString("Alert.corruptionMessage", value: "**Your local database is corrupted. Go to Settings > Blockchain: Settings > Delete Database to refresh**", comment: "Corruption Error alert title")
+        
     }
 
     enum Scanner {
@@ -316,7 +319,9 @@ enum S {
         static let advancedTitle = NSLocalizedString("Settings.advancedTitle", value: "**Advanced Settings**", comment: "Advanced Settings title")
         static let faceIdLimit = NSLocalizedString("Settings.faceIdLimit", value: "**Face ID Spending Limit**", comment: "Face ID spending limit label")
         static let languages = NSLocalizedString("Settings.languages", value: "**Languages**", comment: "Languages label")
-
+        static let litewalletVersion = NSLocalizedString("Settings.litewallet.version", value: "**Litewallet Version:**", comment: "Litewallet version")
+        static let litewalletEnvironment = NSLocalizedString("Settings.litewallet.environment", value: "**Litewallet Environment:**", comment: "Litewallet environment")
+        static let socialLinks = NSLocalizedString("Settings.socialLinks", value: "**Social Links:**", comment: "Litewallet Social links")
     }
 
     enum About {
@@ -595,6 +600,13 @@ enum S {
         static let warningTitle = NSLocalizedString("WipeWallet.warningTitle", value: "**PLEASE READ!**", comment: "Warning title")
         static let warningDescription = NSLocalizedString("WipeWallet.warningDescription", value: "**Your LiteWallet is empty. Resetting will delete the old private key and wipe the app data.\n\nAfter the reset, be prepared to record the new 12 words and keep them in a very secure place.\n\nNo LiteWallet developers can retrieve this seed for you.**", comment: "Warning description")
         static let warningAlert = NSLocalizedString("WipeWallet.warningAlert", value: "**DO NOT LOSE IT!**", comment: "Warning Alert")
+        static let deleteDatabase = NSLocalizedString("WipeWallet.deleteDatabase", value: "**Delete database**", comment: "Delete db")
+        static let alertDeleteTitle = NSLocalizedString("WipeWallet.alertDeleteTitle", value: "**Delet Database**", comment: "Delete database title")
+        static let deleteMessageTitle = NSLocalizedString("WipeWallet.deleteMessageTitle", value: "**This deletes the database but retains the PIN and phrase. You will be asked to confirm your existing PIN, seed and will re-sync the new db**", comment: "Delete database message")
+        static let deleteSync = NSLocalizedString("WipeWallet.deleteSync", value: "**Delete & Sync**", comment: "Delete and sync")
+
+
+
     }
 
     enum FeeSelector {

@@ -1221,3 +1221,30 @@
 
 /* Label to pick fiat */
 "DefaultCurrency.chooseFiatLabel" = "Choose:";
+
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Environment:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Delete Database";
+
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Delete Database";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "This deletes the database but retains the PIN and phrase. Confirm your existing PIN, seed and wait to compelete syncing to the new db";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Delete & Sync";
+
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Local Corruption Error";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Your local database is corrupted. Go to Settings > Blockchain: Settings > Delete Database to refresh";

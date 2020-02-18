@@ -8,8 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-import BRCore
-import Mixpanel
+import BRCore 
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -36,8 +35,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
         self.donationCell = DonationSetupCell(store: store, wantsToDonate: true)
-        
-        Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_VSC.rawValue)
+        LWAnalytics.logEventWithParameters(itemName:._20191105_VSC)
 
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: .UIKeyboardWillShow, object: nil)
@@ -368,8 +366,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         myself.onPublishSuccess?()
                     })
                     self?.saveEvent("send.success")
-                    Mixpanel.mainInstance().track(event: MixpanelEvents._20191105_DSL.rawValue)
-
+                    LWAnalytics.logEventWithParameters(itemName:._20191105_DSL)
+                    
                 case .creationError(let message):
                     self?.showAlert(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
                     self?.saveEvent("send.publishFailed", attributes: ["errorMessage": message])

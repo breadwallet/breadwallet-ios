@@ -8,7 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-
+import FirebaseCrashlytics
 
 private let biometricsSize: CGFloat = 32.0
 private let topControlHeight: CGFloat = 32.0
@@ -106,6 +106,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
                 }
                 updatePin.resetFromDisabledSuccess = {
                     self?.authenticationSucceded()
+                    LWAnalytics.logEventWithParameters(itemName: ._20200217_DLWP)
                 }
             }))
             recover.addCloseNavigationItem()
@@ -305,6 +306,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         guard !E.isScreenshots else { return authenticationSucceded() }
         guard walletManager.authenticate(pin: pin) else { return authenticationFailed() }
         authenticationSucceded()
+        LWAnalytics.logEventWithParameters(itemName: ._20200217_DLWP)
     }
 
     private func authenticationSucceded() {
@@ -379,6 +381,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         walletManager?.authenticate(biometricsPrompt: S.UnlockScreen.touchIdPrompt, completion: { result in
             if result == .success {
                 self.authenticationSucceded()
+                LWAnalytics.logEventWithParameters(itemName: ._20200217_DLWB)
             }
         })
     }

@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "ADMINISTRER";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Lokal korruptionsfejl";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Lokal korruptionsfejl";
+
 /* Error alert title */
 "Alert.error" = "Fejl";
 
@@ -824,6 +830,12 @@
 /* Languages label */
 "Settings.languages" = "Sprog";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Miljø:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
 /* Manage settings section header */
 "Settings.manage" = "Administrer";
 
@@ -835,6 +847,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Del anonyme data";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Support";
@@ -1169,11 +1184,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Velkommen til Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Slet database";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Er du sikker på at du vil slette denne wallet?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Slet wallet?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Slet database";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Dette sletter databasen, men bevarer PIN-koden og sætningen. Bekræft din eksisterende PIN-kode, udsæd, og vent på at synkronisere med den nye db";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Slet & synkroniser";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Glem din frø sætning eller pinkode?";

@@ -65,13 +65,17 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         self.transactions = TransactionManager.sharedInstance.transactions
         self.rate = TransactionManager.sharedInstance.rate
         tableView.backgroundColor = .liteWalletBlue
-        
-        self.syncingHeaderView = Bundle.main.loadNibNamed("SyncProgressHeaderView",
-        owner: self,
-        options: nil)?.first as? SyncProgressHeaderView
+        initSyncingHeaderView(completion: {})
         attemptShowPrompt()
     }
     
+    private func initSyncingHeaderView(completion: @escaping () -> Void) {
+        self.syncingHeaderView = Bundle.main.loadNibNamed("SyncProgressHeaderView",
+        owner: self,
+        options: nil)?.first as? SyncProgressHeaderView
+        completion()
+    }
+     
     private func addSubscriptions() {
         
         guard let store = self.store else {
@@ -103,25 +107,31 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
          
         store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
-        store.subscribe(self, name:.showStatusBar) { (didShowStatusBar) in
-           self.reload() //May fix where the action view persists after confirming pin
-        }
+            store.subscribe(self, name:.showStatusBar) { (didShowStatusBar) in
+               self.reload() //May fix where the action view persists after confirming pin
+            }
                             
-        if state.walletState.isRescanning {
-            self.syncingHeaderView?.isRescanning = state.walletState.isRescanning
-            self.syncingHeaderView?.noSendImageView.alpha = 1.0
-            self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
-            self.shouldBeSyncing = true
-        } else if state.walletState.syncProgress > 0.95 {
-            self.shouldBeSyncing = false
-            self.syncingHeaderView = nil
-        } else {
-            self.shouldBeSyncing = true
-            self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
-            self.syncingHeaderView?.headerMessage = state.walletState.syncState
-            self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
-            self.syncingHeaderView?.noSendImageView.alpha = 0.0
-        }
+            if state.walletState.isRescanning {
+                 self.initSyncingHeaderView(completion: {
+                    self.syncingHeaderView?.isRescanning = state.walletState.isRescanning
+                    self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
+                    self.syncingHeaderView?.headerMessage = state.walletState.syncState
+                    self.syncingHeaderView?.noSendImageView.alpha = 1.0
+                    self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
+                    self.shouldBeSyncing = true
+                 })
+            } else if state.walletState.syncProgress > 0.95 {
+                self.shouldBeSyncing = false
+                self.syncingHeaderView = nil
+            } else {
+                self.initSyncingHeaderView(completion: {
+                    self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
+                    self.syncingHeaderView?.headerMessage = state.walletState.syncState
+                    self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
+                    self.syncingHeaderView?.noSendImageView.alpha = 0.0
+                    self.shouldBeSyncing = true
+                })
+            }
         self.reload()
         })
         

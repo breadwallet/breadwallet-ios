@@ -8,10 +8,11 @@
 
 import UIKit
 import StoreKit
-
+ 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
 private let shouldRequireLoginTimeoutKey = "ShouldRequireLoginTimeoutKey"
 private let numberOfLitewalletLaunches = "NumberOfLitewalletLaunches"
+ 
 
 class ApplicationController : Subscriber, Trackable {
 
@@ -239,6 +240,7 @@ class ApplicationController : Subscriber, Trackable {
                 UserDefaults.standard.set(NSNumber(value: launchNumber), forKey: numberOfLitewalletLaunches)
                 if launchNumber == 5 {
                     SKStoreReviewController.requestReview()
+                    LWAnalytics.logEventWithParameters(itemName:._20200125_DSRR)
                 }
                 
             } else {
@@ -322,12 +324,16 @@ class ApplicationController : Subscriber, Trackable {
             let group = DispatchGroup()
             if let peerManager = walletManager?.peerManager, peerManager.syncProgress(fromStartHeight: peerManager.lastBlockHeight) < 1.0 {
                 group.enter()
+                LWAnalytics.logEventWithParameters(itemName:._20200111_DEDG)
+
                 store.lazySubscribe(self, selector: { $0.walletState.syncState != $1.walletState.syncState }, callback: { state in
                     if self.fetchCompletionHandler != nil {
                         if state.walletState.syncState == .success {
                             DispatchQueue.walletConcurrentQueue.async {
                                 peerManager.disconnect()
+                                self.saveEvent("appController.peerDisconnect")
                                 DispatchQueue.main.async {
+                                    LWAnalytics.logEventWithParameters(itemName:._20200111_DLDG)
                                     group.leave()
                                 }
                             }
@@ -337,12 +343,14 @@ class ApplicationController : Subscriber, Trackable {
             }
 
             group.enter()
+            LWAnalytics.logEventWithParameters(itemName:._20200111_DEDG)
             Async.parallel(callbacks: [
                 { self.exchangeUpdater?.refresh(completion: $0) },
                 { self.feeUpdater?.refresh(completion: $0) },
                 { self.walletManager?.apiClient?.events?.sync(completion: $0) },
                 { self.walletManager?.apiClient?.updateFeatureFlags(); $0() }
                 ], completion: {
+                    LWAnalytics.logEventWithParameters(itemName:._20200111_DLDG)
                     group.leave()
             })
 

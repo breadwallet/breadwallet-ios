@@ -382,8 +382,22 @@ class ModalPresenter : Subscriber, Trackable {
         guard let top = topViewController else { return }
         guard let walletManager = self.walletManager else { return }
         let settingsNav = UINavigationController()
-        let sections = ["Wallet", "Manage", "Support", "Blockchain"]
-        var rows = [
+        let sections = ["About", "Wallet", "Manage", "Support", "Blockchain"]
+        let rows = [
+            "About": [Setting(title: S.Settings.litewalletVersion, accessoryText: { [weak self] in
+                        return AppVersion.string
+                        }, callback: {}),
+                      Setting(title: S.Settings.litewalletEnvironment, accessoryText: { [weak self] in
+                        var envName = "Release"
+                        #if Debug || Testflight
+                            envName = "Debug" 
+                        #endif
+                        return envName
+                      }, callback: {}),
+                      Setting(title: S.Settings.socialLinks, callback: {
+                          settingsNav.pushViewController(AboutViewController(), animated: true)
+                      })
+            ],
             "Wallet": [Setting(title: S.Settings.importTile, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
@@ -451,25 +465,29 @@ class ModalPresenter : Subscriber, Trackable {
             "Support": [
                 Setting(title: S.Settings.shareData, callback: {
                     settingsNav.pushViewController(ShareDataViewController(store: self.store), animated: true)
-                }),
-                Setting(title: S.Settings.about, callback: {
-                    settingsNav.pushViewController(AboutViewController(), animated: true)
-                }),
+                })
             ],
             "Blockchain": [
                 Setting(title:S.Settings.advancedTitle, callback: { [weak self] in
                     guard let myself = self else { return }
                     guard let walletManager = myself.walletManager else { return }
                     let sections = ["Network"]
-                    let advancedSettings = [
-                        "Network": [
-                            Setting(title: "Litecoin Nodes", callback: {
-                                let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
-                                settingsNav.pushViewController(nodeSelector, animated: true)
-                            })
-                        ]
-                    ]
+                    var networkRows = [Setting]()
+                    networkRows = [Setting(title: "Litecoin Nodes", callback: {
+                        let nodeSelector = NodeSelectorViewController(walletManager: walletManager)
+                        settingsNav.pushViewController(nodeSelector, animated: true)
+                    })]
+                    
+// TODO: Develop this feature for issues with the TXID
+//                    if UserDefaults.didSeeCorruption {
+//                        networkRows.append(
+//                            Setting(title: S.WipeWallet.deleteDatabase, callback: {
+//                                self?.deleteDatabase()
+//                            })
+//                        )
+//                    }
 
+                    let advancedSettings = ["Network": networkRows]
                     let advancedSettingsVC = SettingsViewController(sections: sections, rows: advancedSettings, optionalTitle: S.Settings.advancedTitle)
                     settingsNav.pushViewController(advancedSettingsVC, animated: true)
                 })
@@ -625,8 +643,7 @@ class ModalPresenter : Subscriber, Trackable {
     }
  
 
-    func wipeWallet() {
-         
+    private func wipeWallet() {
         let group = DispatchGroup()
         let alert = UIAlertController(title: S.WipeWallet.alertTitle, message: S.WipeWallet.alertMessage, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))

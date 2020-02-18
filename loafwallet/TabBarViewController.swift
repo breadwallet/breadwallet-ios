@@ -87,7 +87,7 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
             viewControllers.append(controller)
         }
         
-        self.updateTimer = Timer.scheduledTimer(withTimeInterval: 120.0, repeats: true) { timer in
+        self.updateTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
             self.setBalances()
         }
         
@@ -227,20 +227,8 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
                         callback: { state in
                             if let balance = state.walletState.balance {
                                 self.balance = balance
+                                self.setBalances()
                             } })
-        
-        //        store.subscribe(self, name: TriggerName, callback: <#T##(TriggerName?) -> Void#>)
-        //
-        //        guard let currentRate = rates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { completion(); return }
-        //        self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: rates))
-        //        completion()
-        //
-        //
-        //
-        //        ExchangeRates.setRates(currentRate:
-        //            store.subscribe(self,
-        //                            selector: { $0.walletState.name != $1.walletState.name },
-        //                            callback: { self.name.text = $0.walletState.name })
     }
     
     private func setBalances() {

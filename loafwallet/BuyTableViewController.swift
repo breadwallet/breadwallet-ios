@@ -23,13 +23,10 @@ class BuyTableViewController: UITableViewController {
     @IBAction func didTapSimplex(_ sender: Any) {
         
         if let vcWKVC = UIStoryboard.init(name: "Buy", bundle: nil).instantiateViewController(withIdentifier: "BuyWKWebViewController") as? BuyWKWebViewController {
-            vcWKVC.partnerPrefixString = "_simplex"
+            vcWKVC.partnerPrefixString = PartnerPrefix.simplex.rawValue
             vcWKVC.currencyCode = currencyCode
             addChildViewController(vcWKVC)
-            UIView.transition(with: self.view, duration: 0.5, options: .transitionCrossDissolve, animations: {
-                self.view.addSubview(vcWKVC.view)
-            }, completion: nil)
-            
+            self.view.addSubview(vcWKVC.view)
             vcWKVC.didMove(toParentViewController: self)
             
             vcWKVC.didDismissChildView = { [weak self] in
@@ -38,8 +35,7 @@ class BuyTableViewController: UITableViewController {
                 vcWKVC.view.removeFromSuperview()
                 vcWKVC.removeFromParentViewController()
             }
-        }
-        else {
+        }  else {
             NSLog("ERROR: Storyboard not initialized")
         }
     }
