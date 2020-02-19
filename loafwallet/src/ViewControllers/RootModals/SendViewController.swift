@@ -184,6 +184,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 return
     
             }
+            
+            dynamicDonate.store = self.store
+            
             dynamicDonate.providesPresentationContextTransitionStyle = true
             dynamicDonate.definesPresentationContext = true
             dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext

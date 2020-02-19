@@ -89,12 +89,20 @@ class PinPadViewController : UICollectionViewController {
                 collectionView?.register(WhiteNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
             }
         case .clear:
-            collectionView?.backgroundColor = .clear
-
-            if keyboardType == .pinPad {
+//            collectionView?.backgroundColor = .clear
+//
+//            if keyboardType == .pinPad {
+//                collectionView?.register(ClearNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
+//            } else {
+//                assert(false, "Invalid cell")
+//            }
+            switch keyboardType {
+            case .decimalPad:
+                collectionView?.backgroundColor = .clear
+                collectionView?.register(ClearDecimalPad.self, forCellWithReuseIdentifier: cellIdentifier)
+            case .pinPad:
+                collectionView?.backgroundColor = .clear
                 collectionView?.register(ClearNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
-            } else {
-                assert(false, "Invalid cell")
             }
         }
         collectionView?.delegate = self
@@ -330,6 +338,27 @@ class ClearNumberPad : GenericPinPadCell {
     }
 }
 
+class ClearDecimalPad : GenericPinPadCell {
+
+    override func setAppearance() {
+
+        centerLabel.backgroundColor = .clear
+        imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+
+        if isHighlighted {
+            centerLabel.textColor = .grayTextTint
+            imageView.tintColor = .grayTextTint
+        } else {
+            centerLabel.textColor = .white
+            imageView.tintColor = .white
+        }
+    }
+
+    override func addConstraints() {
+        centerLabel.constrain(toSuperviewEdges: nil)
+        imageView.constrain(toSuperviewEdges: nil)
+    }
+}
 
 class WhiteDecimalPad : GenericPinPadCell {
 
