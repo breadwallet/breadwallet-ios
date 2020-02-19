@@ -19,7 +19,7 @@ class BCashTransactionViewController : UIViewController {
     private let store: Store
     private let txHash = UIButton(type: .system)
     private let txHashHeader = UILabel(font: .customBold(size: 14.0), color: .grayTextTint)
-    private let verifyPinTransitionDelegate = PinTransitioningDelegate()
+    private let verifyPinTransitionDelegate = TransitioningDelegate()
 
     init(walletManager: WalletManager, store: Store) {
         self.walletManager = walletManager

@@ -10,20 +10,21 @@ import UIKit
 
 private let duration: TimeInterval = 0.4
 
-class PinTransitioningDelegate : NSObject , UIViewControllerTransitioningDelegate {
+class TransitioningDelegate : NSObject , UIViewControllerTransitioningDelegate {
 
     var shouldShowMaskView = true
 
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return PresentPinAnimator(shouldShowMaskView: shouldShowMaskView)
+        return PresentGenericAnimator(shouldShowMaskView: shouldShowMaskView)
     }
 
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DismissPinAnimator()
+        return DismissGenericAnimator()
     }
 }
+ 
 
-class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class PresentGenericAnimator : NSObject, UIViewControllerAnimatedTransitioning {
 
     init(shouldShowMaskView: Bool) {
         self.shouldShowMaskView = shouldShowMaskView
@@ -75,7 +76,7 @@ class PresentPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
     }
 }
 
-class DismissPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
+class DismissGenericAnimator : NSObject, UIViewControllerAnimatedTransitioning {
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return duration
     }
@@ -100,3 +101,6 @@ class DismissPinAnimator : NSObject, UIViewControllerAnimatedTransitioning {
         })
     }
 }
+
+
+

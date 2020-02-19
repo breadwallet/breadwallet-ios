@@ -70,6 +70,8 @@
 		240A89B6235F7280005E2A2F /* DonationSetupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 240A89B4235F7280005E2A2F /* DonationSetupCell.swift */; };
 		2427342D2381C21800E2D22F /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2427342B2381C21800E2D22F /* MainViewController.swift */; };
 		24306797238F3DF900EBEA99 /* BartyCrouch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24306796238F3DF900EBEA99 /* BartyCrouch.swift */; };
+		2430A80D23FCCB47002463B5 /* DynamicDonation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2430A80C23FCCB47002463B5 /* DynamicDonation.storyboard */; };
+		2430A80F23FCCE1A002463B5 /* DynamicDonationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2430A80E23FCCE1A002463B5 /* DynamicDonationViewController.swift */; };
 		24313C752381E73200A83F69 /* TransactionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24313C732381E73200A83F69 /* TransactionManager.swift */; };
 		24313C782381E8F100A83F69 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24313C762381E8F100A83F69 /* TabBarViewController.swift */; };
 		24313C7B23820BC200A83F69 /* SendLTCViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24313C7923820BC200A83F69 /* SendLTCViewController.swift */; };
@@ -819,6 +821,8 @@
 		24306796238F3DF900EBEA99 /* BartyCrouch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BartyCrouch.swift; sourceTree = "<group>"; };
 		24306799238F479500EBEA99 /* id */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = id; path = id.lproj/Localizable.strings; sourceTree = "<group>"; };
 		2430679B238F5A2900EBEA99 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2430A80C23FCCB47002463B5 /* DynamicDonation.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DynamicDonation.storyboard; sourceTree = "<group>"; };
+		2430A80E23FCCE1A002463B5 /* DynamicDonationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicDonationViewController.swift; sourceTree = "<group>"; };
 		24313C732381E73200A83F69 /* TransactionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionManager.swift; sourceTree = "<group>"; };
 		24313C762381E8F100A83F69 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		24313C7923820BC200A83F69 /* SendLTCViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendLTCViewController.swift; sourceTree = "<group>"; };
@@ -2330,6 +2334,7 @@
 				24313C9323824F5700A83F69 /* Transactions.storyboard */,
 				24DFCE6723B89CDE001F17F8 /* Settings.storyboard */,
 				24AF00FC221B331D00FF636F /* WarningConfirmation.storyboard */,
+				2430A80C23FCCB47002463B5 /* DynamicDonation.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -3310,6 +3315,7 @@
 				1BEA7DDA2142CAA00081602F /* WebViewContainer.swift */,
 				24AF00FF221B349100FF636F /* WarningConfirmationViewController.swift */,
 				24D5F26D225A5BEA00225462 /* ContainerViewController.swift */,
+				2430A80E23FCCE1A002463B5 /* DynamicDonationViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -4076,6 +4082,7 @@
 				CE473D7C1F042F1E00C0ACFD /* coinflip.aiff in Resources */,
 				CE5E6C9A1EB9135000A476DB /* Icon.xcassets in Resources */,
 				24D5F25022599C0B00225462 /* BarlowSemiCondensed-Light.ttf in Resources */,
+				2430A80D23FCCB47002463B5 /* DynamicDonation.storyboard in Resources */,
 				2494037F23AE0C7100369261 /* SyncProgressHeaderView.xib in Resources */,
 				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
 				24313C9F23824F5800A83F69 /* Animate.storyboard in Resources */,
@@ -4440,6 +4447,7 @@
 				CEE0EF521EBD14B60018DB36 /* PinTransitioningDelegate.swift in Sources */,
 				CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */,
 				754AE0BC1DFE8A46007FD001 /* BRCore.swift in Sources */,
+				2430A80F23FCCE1A002463B5 /* DynamicDonationViewController.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
 				24306797238F3DF900EBEA99 /* BartyCrouch.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,

@@ -64,7 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
-    private let confirmTransitioningDelegate = PinTransitioningDelegate()
+    private let confirmTransitioningDelegate = TransitioningDelegate()
     private var feeType: Fee?
     private var wantsToDonate = false
     
@@ -179,7 +179,38 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         donationCell.didTapToDonate = {
             self.wantsToDonate = true
-            self.sendTapped()
+ 
+            guard let dynamicDonate = UIStoryboard.init(name: "DynamicDonation", bundle: nil).instantiateViewController(withIdentifier: "DynamicDonation") as? DynamicDonationViewController else {
+                return
+    
+            }
+            dynamicDonate.providesPresentationContextTransitionStyle = true
+            dynamicDonate.definesPresentationContext = true
+            dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+            dynamicDonate.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+            
+            dynamicDonate.successCallback = {
+               dynamicDonate.dismiss(animated: true, completion: {
+                self.send()
+               })
+            }
+            dynamicDonate.cancelCallback = {
+               self.wantsToDonate = false
+               dynamicDonate.dismiss(animated: true, completion: {
+                   self.sender.transaction = nil
+               })
+            }
+            
+            
+    //        receiveLTCtoAddressModal.dismissQRModalAction = { [unowned self] in
+    //            self.dismiss(animated: true, completion: nil)
+    //        }
+            self.present(dynamicDonate, animated: true) {
+    //             receiveLTCtoAddressModal.receiveModalTitleLabel.text = S.TransactionDetails.receiveModaltitle
+    //             receiveLTCtoAddressModal.addressLabel.text = addressString
+    //             receiveLTCtoAddressModal.qrImageView.image = qrImage
+             }
+            
         }
         
         amountView.didShowFiat = { isLTCSwapped in
@@ -252,7 +283,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
         }
-         
+
         if sender.transaction == nil {
             guard let address = wantsToDonate ? DonationAddress.firstLF :
             addressCell.address else {
@@ -281,12 +312,12 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 return showAlert(title: S.Alert.error, message: S.Send.createTransactionError, buttonLabel: S.Button.ok)
             }
         }
-        
+
         guard let amount = wantsToDonate ? Satoshis(rawValue: UInt64(kDonationAmount)) : amount else {
             NSLog("ERROR: Amount not set")
             return
         }
-          
+
         let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics, isDonation: self.wantsToDonate)
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
@@ -304,6 +335,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         confirm.modalPresentationStyle = .overFullScreen
         confirm.modalPresentationCapturesStatusBarAppearance = true
         present(confirm, animated: true, completion: nil)
+
+        
+
+        
         return
     }
 

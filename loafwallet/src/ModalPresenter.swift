@@ -31,7 +31,7 @@ class ModalPresenter : Subscriber, Trackable {
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
-    private let verifyPinTransitionDelegate = PinTransitioningDelegate()
+    private let verifyPinTransitionDelegate = TransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
 
     private var currentRequest: PaymentRequest?
