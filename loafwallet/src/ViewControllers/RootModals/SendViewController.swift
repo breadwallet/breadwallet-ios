@@ -180,40 +180,38 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         donationCell.didTapToDonate = {
             self.wantsToDonate = true
  
-            guard let dynamicDonate = UIStoryboard.init(name: "DynamicDonation", bundle: nil).instantiateViewController(withIdentifier: "DynamicDonation") as? DynamicDonationViewController else {
-                return
-    
+            if let dynamicDonate = UIStoryboard.init(name: "DynamicDonation", bundle: nil).instantiateViewController(withIdentifier: "DynamicDonation") as? DynamicDonationViewController {
+                 
+                dynamicDonate.store = self.store
+                dynamicDonate.feeType = self.feeType ?? .regular
+                dynamicDonate.balance = self.balance
+                dynamicDonate.selectedRate = self.amountView.selectedRate
+                dynamicDonate.isUsingBiometrics = self.sender.canUseBiometrics 
+                dynamicDonate.providesPresentationContextTransitionStyle = true
+                dynamicDonate.definesPresentationContext = true
+                dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
+                dynamicDonate.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+                
+                dynamicDonate.successCallback = {
+                    dynamicDonate.dismiss(animated: true, completion: {
+                        self.send()
+                    })
+                }
+                dynamicDonate.cancelCallback = {
+                    self.wantsToDonate = false
+                    dynamicDonate.dismiss(animated: true, completion: {
+                        self.sender.transaction = nil
+                    })
+                }
+                self.present(dynamicDonate, animated: true) {
+                    //        receiveLTCtoAddressModal.dismissQRModalAction = { [unowned self] in
+                    //            self.dismiss(animated: true, completion: nil)
+                    //        }
+                    //             receiveLTCtoAddressModal.receiveModalTitleLabel.text = S.TransactionDetails.receiveModaltitle
+                    //             receiveLTCtoAddressModal.addressLabel.text = addressString
+                    //             receiveLTCtoAddressModal.qrImageView.image = qrImage
+                 }
             }
-            
-            dynamicDonate.store = self.store
-            
-            dynamicDonate.providesPresentationContextTransitionStyle = true
-            dynamicDonate.definesPresentationContext = true
-            dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-            dynamicDonate.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
-            
-            dynamicDonate.successCallback = {
-               dynamicDonate.dismiss(animated: true, completion: {
-                self.send()
-               })
-            }
-            dynamicDonate.cancelCallback = {
-               self.wantsToDonate = false
-               dynamicDonate.dismiss(animated: true, completion: {
-                   self.sender.transaction = nil
-               })
-            }
-            
-            
-    //        receiveLTCtoAddressModal.dismissQRModalAction = { [unowned self] in
-    //            self.dismiss(animated: true, completion: nil)
-    //        }
-            self.present(dynamicDonate, animated: true) {
-    //             receiveLTCtoAddressModal.receiveModalTitleLabel.text = S.TransactionDetails.receiveModaltitle
-    //             receiveLTCtoAddressModal.addressLabel.text = addressString
-    //             receiveLTCtoAddressModal.qrImageView.image = qrImage
-             }
-            
         }
         
         amountView.didShowFiat = { isLTCSwapped in
