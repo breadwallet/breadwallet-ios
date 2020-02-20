@@ -38,7 +38,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RvI-0J-Lsy">
-                                                <rect key="frame" x="149" y="12" width="37" height="20.5"/>
+                                                <rect key="frame" x="146.5" y="12" width="42" height="20"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -57,19 +57,19 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oes-Oi-f6G">
                                                 <rect key="frame" x="0.0" y="0.0" width="115" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" name="headerTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y4E-IJ-mGS">
                                                 <rect key="frame" x="0.0" y="18.5" width="115" height="18"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" name="headerTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1YF-Dp-JoU">
                                                 <rect key="frame" x="0.0" y="36.5" width="115" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" name="headerTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -119,10 +119,10 @@
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="FBV-9s-JyZ">
-                                        <rect key="frame" x="20" y="51" width="295" height="18"/>
+                                        <rect key="frame" x="20" y="51" width="295" height="17.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHp-CC-pGF">
-                                                <rect key="frame" x="0.0" y="0.0" width="40" height="18"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="17.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="Oxu-6q-ZcN"/>
                                                 </constraints>
@@ -131,7 +131,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TyS-do-QEw">
-                                                <rect key="frame" x="46" y="0.0" width="249" height="18"/>
+                                                <rect key="frame" x="46" y="0.0" width="249" height="17.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -139,10 +139,10 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gTo-J7-KkV">
-                                        <rect key="frame" x="20" y="75" width="295" height="18"/>
+                                        <rect key="frame" x="20" y="74.5" width="295" height="17.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tlz-4Q-6Nb">
-                                                <rect key="frame" x="0.0" y="0.0" width="40" height="18"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="17.5"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="zw2-tr-xKu"/>
                                                 </constraints>
@@ -151,7 +151,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="azH-lL-34c">
-                                                <rect key="frame" x="46" y="0.0" width="249" height="18"/>
+                                                <rect key="frame" x="46" y="0.0" width="249" height="17.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -159,7 +159,7 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWJ-UH-xkO">
-                                        <rect key="frame" x="20" y="103" width="295" height="40"/>
+                                        <rect key="frame" x="20" y="102" width="295" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="wMn-jq-wqX"/>
                                         </constraints>
