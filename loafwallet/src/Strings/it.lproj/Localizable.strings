@@ -258,7 +258,7 @@
 "Donate.memo" = "Donazione alla Fondazione Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tocca per donare alla Fondazione Litecoin!";
+"Donate.title" = "Tocca per donare alla Fondazione Litecoin %@";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Conferma donazione";

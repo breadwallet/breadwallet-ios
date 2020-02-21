@@ -34,7 +34,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         self.initialRequest = initialRequest
         self.currency = ShadowButton(title: S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits), type: .tertiary)
         amountView = AmountViewController(store: store, isPinPadExpandedAtLaunch: false)
-        self.donationCell = DonationSetupCell(store: store, wantsToDonate: true)
+        self.donationCell = DonationSetupCell(store: store, wantsToDonate: true, isLTCSwapped: store.state.isLtcSwapped)
         LWAnalytics.logEventWithParameters(itemName:._20191105_VSC)
 
         super.init(nibName: nil, bundle: nil)
@@ -174,9 +174,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 self?.addressCell.textField.resignFirstResponder()
             }
         }
-        
-        donationCell.isLTCSwapped = store.state.isLtcSwapped
-        
+          
         donationCell.didTapToDonate = {
             self.wantsToDonate = true
  
@@ -215,17 +213,19 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
         
         amountView.didShowFiat = { isLTCSwapped in
+//            print("\(kDonationAmountInDouble) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits))
+//            print(String(format:"%.2f", self.store.state.currentRate!.rate * kDonationAmountInDouble) + " \(self.store.state.currentRate!.rate.code)(\(rate.currencySymbol))")
             
-            var donationText = ""
-            if isLTCSwapped {
-                donationText = "\(kDonationAmountInDouble) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
-            } else {
-                if let rate  = self.store.state.currentRate {
-                    donationText = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
-                }
-            }
-              
-            self.donationCell.donateButton?.title = donationText
+//            var donationText = ""
+//            if isLTCSwapped {
+//                donationText = "\(kDonationAmountInDouble) " + S.Symbols.currencyButtonTitle(maxDigits: self.store.state.maxDigits)
+//            } else {
+//                if let rate  = self.store.state.currentRate {
+//                    donationText = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
+//                }
+//            }
+            guard let fiatSymbol = self.store.state.currentRate?.currencySymbol else { return }
+            self.donationCell.donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "(Ł)":"(\(fiatSymbol))")
         }
     }
 

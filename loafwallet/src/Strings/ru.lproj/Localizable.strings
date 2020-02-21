@@ -258,7 +258,7 @@
 "Donate.memo" = "Пожертвование в фонд Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Нажмите, чтобы пожертвовать в фонд Litecoin!";
+"Donate.title" = "Нажмите, чтобы пожертвовать в фонд Litecoin %@";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Подтвердите Пожертвование";
