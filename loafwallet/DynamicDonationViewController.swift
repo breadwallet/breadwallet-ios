@@ -147,9 +147,17 @@ class DynamicDonationViewController: UIViewController, Subscriber {
              guard let myself = self else { return }
             myself.amountToDonateLabel.text = text
             myself.sendAmountLabel.text = text
+            myself.totalCostLabel.text = String(myself.balance - UInt64(text)!)
+            myself.walletManager.
+        
+            
         }
         
         keyboardVC.didUpdateFrameWidth = { [weak self] frame in
+            
+            
+            
+            
         guard let myself = self else { return }
             myself.firstColumnConstraint.constant = frame.width
             myself.lastColumnConstraint.constant = frame.width
