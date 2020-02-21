@@ -263,6 +263,9 @@
 /* Donate Confirmation */
 "Donate.title.confirmation" = "確認捐贈";
 
+/* Donate to the articles */
+"Donate.toThe" = "捐贈給";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "本裝置並非設定來以 iOS 郵件應用程式傳送電子郵件。";
 

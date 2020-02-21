@@ -263,6 +263,9 @@
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Konfirmasi Sumbangan";
 
+/* Donate to the articles */
+"Donate.toThe" = "Donasi ke";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Perangkat ini tidak dikonfigurasikan untuk mengirim email dengan aplikasi surat iOS.";
 

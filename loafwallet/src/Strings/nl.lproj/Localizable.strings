@@ -263,6 +263,9 @@
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Bevestig donatie";
 
+/* Donate articles to the */
+"Donate.toThe" = "Doneer aan de";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
 

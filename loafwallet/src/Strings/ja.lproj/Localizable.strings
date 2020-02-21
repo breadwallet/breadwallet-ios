@@ -263,6 +263,9 @@
 /* Donate Confirmation */
 "Donate.title.confirmation" = "寄付を確認する";
 
+/* Donate articles to the */
+"Donate.toThe" = "に寄付する";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "この端末は、iOSのメールアプリを使用してメールを送信する設定がされていません。";
 

@@ -9,14 +9,12 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 900000 //UInt64
+let kDonationAmount: UInt64 = 18000000 //UInt64
 let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
-
-let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
-
+  
 enum LWDonationAddress: String {
     case litwalletHardware = "Litewallet Hardware Fundraiser"
-    case generalLitecoinFoundation = "General Litecoin Foundation"
+    case generalLitecoinFoundation = "Litecoin Foundation"
   
     static let allValues = [litwalletHardware, generalLitecoinFoundation]
 
@@ -58,11 +56,6 @@ struct Padding {
     }
 }
   
-struct DonationAddress {
-    
-    static let firstLF: String = kDonationAddress1
-}
-
 struct C {
     static let padding = Padding()
     struct Sizes {

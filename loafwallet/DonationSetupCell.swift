@@ -13,7 +13,7 @@ class DonationSetupCell: UIView {
     
     static let defaultHeight: CGFloat = 72.0
 
-    init(store: Store, wantsToDonate: Bool, isLTCSwapped: Bool) {
+    init(store: Store, isLTCSwapped: Bool) {
        self.store = store
        self.isLTCSwapped = isLTCSwapped
        donateButton = ShadowButton(title: S.Donate.title, type: .tertiary)

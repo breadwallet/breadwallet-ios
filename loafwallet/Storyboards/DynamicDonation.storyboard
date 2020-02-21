@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -38,7 +37,7 @@
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="44"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RvI-0J-Lsy">
-                                                <rect key="frame" x="146.5" y="12" width="42" height="20"/>
+                                                <rect key="frame" x="149" y="12" width="37" height="20.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -56,20 +55,20 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oes-Oi-f6G">
                                                 <rect key="frame" x="0.0" y="0.0" width="115" height="18.5"/>
-                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <color key="textColor" name="headerTextColor"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="14"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y4E-IJ-mGS">
                                                 <rect key="frame" x="0.0" y="18.5" width="115" height="18"/>
-                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <color key="textColor" name="headerTextColor"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="14"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1YF-Dp-JoU">
                                                 <rect key="frame" x="0.0" y="36.5" width="115" height="18.5"/>
-                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="14"/>
-                                                <color key="textColor" name="headerTextColor"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="14"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
@@ -83,7 +82,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eoc-hA-9c0">
                                                 <rect key="frame" x="0.0" y="0.0" width="160" height="18.5"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Regular" family="Barlow Semi Condensed" pointSize="15"/>
-                                                <nil key="textColor"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="trx-2Q-JId">
@@ -119,19 +118,19 @@
                                         </constraints>
                                     </view>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="FBV-9s-JyZ">
-                                        <rect key="frame" x="20" y="51" width="295" height="17.5"/>
+                                        <rect key="frame" x="20" y="51" width="295" height="18"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RHp-CC-pGF">
-                                                <rect key="frame" x="0.0" y="0.0" width="40" height="17.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="Oxu-6q-ZcN"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="15"/>
-                                                <color key="textColor" name="headerTextColor"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="15"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TyS-do-QEw">
-                                                <rect key="frame" x="46" y="0.0" width="249" height="17.5"/>
+                                                <rect key="frame" x="46" y="0.0" width="249" height="18"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -139,19 +138,19 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="gTo-J7-KkV">
-                                        <rect key="frame" x="20" y="74.5" width="295" height="17.5"/>
+                                        <rect key="frame" x="20" y="75" width="295" height="18"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tlz-4Q-6Nb">
-                                                <rect key="frame" x="0.0" y="0.0" width="40" height="17.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="40" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="40" id="zw2-tr-xKu"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="15"/>
-                                                <color key="textColor" name="headerTextColor"/>
+                                                <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="15"/>
+                                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="azH-lL-34c">
-                                                <rect key="frame" x="46" y="0.0" width="249" height="17.5"/>
+                                                <rect key="frame" x="46" y="0.0" width="249" height="18"/>
                                                 <fontDescription key="fontDescription" name="BarlowSemiCondensed-Medium" family="Barlow Semi Condensed Medium" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -159,12 +158,12 @@
                                         </subviews>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BWJ-UH-xkO">
-                                        <rect key="frame" x="20" y="102" width="295" height="40"/>
+                                        <rect key="frame" x="20" y="103" width="295" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="wMn-jq-wqX"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="BarlowSemiCondensed-Light" family="Barlow Semi Condensed Light" pointSize="15"/>
-                                        <color key="textColor" name="headerTextColor"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
@@ -233,7 +232,10 @@
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yif-En-f5e">
-                                <rect key="frame" x="0.0" y="305" width="375" height="109"/>
+                                <rect key="frame" x="0.0" y="290" width="375" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="ZD0-lZ-9GM"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="4L6-ri-0TJ" id="mYJ-xT-e3U"/>
                                     <outlet property="delegate" destination="4L6-ri-0TJ" id="WJO-iI-Ryd"/>
@@ -245,14 +247,13 @@
                             <constraint firstItem="9Ag-cL-ia7" firstAttribute="top" secondItem="70Q-7d-CSA" secondAttribute="bottom" constant="10" id="2on-yw-ZzT"/>
                             <constraint firstItem="rZp-QC-9DI" firstAttribute="trailing" secondItem="70Q-7d-CSA" secondAttribute="trailing" id="CdP-vf-XBm"/>
                             <constraint firstItem="rZp-QC-9DI" firstAttribute="trailing" secondItem="yin-PI-eyn" secondAttribute="trailing" constant="20" id="CyJ-EF-YAf"/>
-                            <constraint firstItem="Yif-En-f5e" firstAttribute="top" secondItem="yin-PI-eyn" secondAttribute="bottom" constant="20" id="IEk-Ri-XdI"/>
                             <constraint firstItem="yin-PI-eyn" firstAttribute="centerX" secondItem="1CG-eb-6fg" secondAttribute="centerX" id="MmE-cI-NIJ"/>
                             <constraint firstItem="Yif-En-f5e" firstAttribute="trailing" secondItem="rZp-QC-9DI" secondAttribute="trailing" id="N6I-Pp-WYo"/>
-                            <constraint firstItem="vyl-CF-sv5" firstAttribute="top" secondItem="Yif-En-f5e" secondAttribute="bottom" constant="8" id="Osm-GI-Ar7"/>
                             <constraint firstItem="yin-PI-eyn" firstAttribute="top" secondItem="rZp-QC-9DI" secondAttribute="top" constant="10" id="VOw-fF-8qj"/>
                             <constraint firstItem="yin-PI-eyn" firstAttribute="leading" secondItem="rZp-QC-9DI" secondAttribute="leading" constant="20" id="aH0-Wl-wEj"/>
                             <constraint firstItem="9Ag-cL-ia7" firstAttribute="top" secondItem="vyl-CF-sv5" secondAttribute="bottom" constant="10" id="bNz-d5-19u"/>
                             <constraint firstItem="rZp-QC-9DI" firstAttribute="trailing" secondItem="9Ag-cL-ia7" secondAttribute="trailing" id="dDP-0o-sS1"/>
+                            <constraint firstItem="Yif-En-f5e" firstAttribute="top" secondItem="yin-PI-eyn" secondAttribute="bottom" constant="5" id="deE-Zp-52i"/>
                             <constraint firstItem="vyl-CF-sv5" firstAttribute="leading" secondItem="rZp-QC-9DI" secondAttribute="leading" id="pgL-Iv-dVj"/>
                             <constraint firstItem="9Ag-cL-ia7" firstAttribute="leading" secondItem="rZp-QC-9DI" secondAttribute="leading" id="tX0-zl-tdN"/>
                             <constraint firstItem="9Ag-cL-ia7" firstAttribute="bottom" secondItem="rZp-QC-9DI" secondAttribute="bottom" constant="-10" id="xae-wX-iqO"/>
@@ -286,9 +287,4 @@
             <point key="canvasLocation" x="-109.59999999999999" y="-86.806596701649184"/>
         </scene>
     </scenes>
-    <resources>
-        <namedColor name="headerTextColor">
-            <color red="0.63921568627450975" green="0.6588235294117647" blue="0.67843137254901964" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-    </resources>
 </document>

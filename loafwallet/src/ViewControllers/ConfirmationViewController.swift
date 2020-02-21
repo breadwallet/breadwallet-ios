@@ -167,7 +167,6 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         amountLabel.text = displayAmount.combinedDescription
         toLabel.text = S.Confirmation.to
-        address.text = self.isDonation ? DonationAddress.firstLF : addressText
         address.lineBreakMode = .byTruncatingMiddle
         switch feeType {
         case .regular:

@@ -1248,3 +1248,6 @@
 
 /* Corruption Error alert title */
 "Alert.corruptionMessage" = "Your local database is corrupted. Go to Settings > Blockchain: Settings > Delete Database to refresh";
+
+/* Donate articles to the */
+"Donate.toThe" = "Donate to the";
