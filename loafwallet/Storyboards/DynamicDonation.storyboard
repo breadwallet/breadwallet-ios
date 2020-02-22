@@ -199,10 +199,10 @@
                                 <rect key="frame" x="0.0" y="407" width="375" height="250"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQe-Gh-hEo">
-                                        <rect key="frame" x="30" y="10" width="30" height="30"/>
+                                        <rect key="frame" x="20" y="10" width="40" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="Fdv-MI-v5L"/>
-                                            <constraint firstAttribute="width" constant="30" id="fXs-cO-Gib"/>
+                                            <constraint firstAttribute="height" constant="40" id="Fdv-MI-v5L"/>
+                                            <constraint firstAttribute="width" constant="40" id="fXs-cO-Gib"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="20"/>
                                         <state key="normal" title="-">
@@ -210,10 +210,10 @@
                                         </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KOy-xT-rjv">
-                                        <rect key="frame" x="315" y="10" width="30" height="30"/>
+                                        <rect key="frame" x="315" y="10" width="40" height="40"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="LKk-gZ-OVG"/>
-                                            <constraint firstAttribute="width" constant="30" id="exb-Vc-yDo"/>
+                                            <constraint firstAttribute="height" constant="40" id="LKk-gZ-OVG"/>
+                                            <constraint firstAttribute="width" constant="40" id="exb-Vc-yDo"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="20"/>
                                         <state key="normal" title="+">
@@ -221,16 +221,16 @@
                                         </state>
                                     </button>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-vR-la8">
-                                        <rect key="frame" x="68" y="10" width="239" height="31"/>
+                                        <rect key="frame" x="68" y="15" width="239" height="31"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </slider>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="xUb-vR-la8" firstAttribute="leading" secondItem="zQe-Gh-hEo" secondAttribute="trailing" constant="10" id="0Rc-9n-Rzy"/>
-                                    <constraint firstAttribute="trailing" secondItem="KOy-xT-rjv" secondAttribute="trailing" constant="30" id="1EQ-JG-vHC"/>
+                                    <constraint firstAttribute="trailing" secondItem="KOy-xT-rjv" secondAttribute="trailing" constant="20" id="1EQ-JG-vHC"/>
                                     <constraint firstItem="xUb-vR-la8" firstAttribute="centerY" secondItem="zQe-Gh-hEo" secondAttribute="centerY" id="B22-XD-8RK"/>
                                     <constraint firstItem="zQe-Gh-hEo" firstAttribute="top" secondItem="9Ag-cL-ia7" secondAttribute="top" constant="10" id="CVs-Wn-8gv"/>
-                                    <constraint firstItem="zQe-Gh-hEo" firstAttribute="leading" secondItem="9Ag-cL-ia7" secondAttribute="leading" constant="30" id="CWf-fV-FDU"/>
+                                    <constraint firstItem="zQe-Gh-hEo" firstAttribute="leading" secondItem="9Ag-cL-ia7" secondAttribute="leading" constant="20" id="CWf-fV-FDU"/>
                                     <constraint firstItem="KOy-xT-rjv" firstAttribute="leading" secondItem="xUb-vR-la8" secondAttribute="trailing" constant="10" id="E2Q-0k-DfC"/>
                                     <constraint firstItem="KOy-xT-rjv" firstAttribute="top" secondItem="9Ag-cL-ia7" secondAttribute="top" constant="10" id="RZI-eK-J0r"/>
                                     <constraint firstItem="KOy-xT-rjv" firstAttribute="centerY" secondItem="zQe-Gh-hEo" secondAttribute="centerY" id="klU-KN-KPY"/>
