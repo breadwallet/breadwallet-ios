@@ -17,7 +17,6 @@ struct TxDetailViewModel: TxViewModel {
     let fiatAmount: String
     let originalFiatAmount: String?
     let exchangeRate: String?
-    let transactionHash: String
     let tx: Transaction
     
     // Ethereum-specific fields
@@ -68,6 +67,10 @@ struct TxDetailViewModel: TxViewModel {
             }
         }
     }
+    
+    var transactionHash: String {
+        return currency.isEthereumCompatible ? tx.hash : tx.hash.removing(prefix: "0x")
+    }
 }
 
 extension TxDetailViewModel {
@@ -79,7 +82,6 @@ extension TxDetailViewModel {
         fiatAmount = fiatAmounts.0
         originalFiatAmount = fiatAmounts.1
         exchangeRate = TxDetailViewModel.exchangeRateText(tx: tx)
-        transactionHash = tx.hash
         self.tx = tx
 
         if tx.direction == .sent {
