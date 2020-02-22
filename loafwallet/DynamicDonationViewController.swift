@@ -92,8 +92,6 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         view.addSubview(blurEffectView)
         view.sendSubview(toBack: blurEffectView)
         
-        
-            
         dialogTitle.text = S.Donate.titleConfirmation
         staticSendLabel.text = S.Confirmation.send
         staticAmountToDonateLabel.text = S.Confirmation.donateLabel
@@ -109,13 +107,15 @@ class DynamicDonationViewController: UIViewController, Subscriber {
             timeText = "5+"
         }
         processingTimeLabel.text = String(format: S.Confirmation.processingAndDonationTime, timeText)
- 
+        setupButtonLayouts()
+    }
+   
+    
+    private func setupButtonLayouts() {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         sendButton.translatesAutoresizingMaskIntoConstraints = false
         buttonsView.addSubview(cancelButton)
         buttonsView.addSubview(sendButton)
-        
-     //   pickerHeaderLabel.text = "Choose:"//S.Donate.choose
         
         let viewsDictionary = ["cancelButton": cancelButton, "sendButton": sendButton]
         var viewConstraints = [NSLayoutConstraint]()
@@ -124,48 +124,13 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         viewConstraints += constraintsHorizontal
         
         let cancelConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[cancelButton]-|", options: [], metrics: nil, views: viewsDictionary)
-
         viewConstraints += cancelConstraintVertical
         
         let sendConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[sendButton]-|", options: [], metrics: nil, views: viewsDictionary)
-
+        
         viewConstraints += sendConstraintVertical
-        
         NSLayoutConstraint.activate(viewConstraints)
-        
-        let keyboardVC = PinPadViewController(style: .clear, keyboardType: .decimalPad, maxDigits: store.state.maxDigits)
-        self.addChildViewController(keyboardVC, layout: {
-            containerView.addSubview(keyboardVC.view)
-            keyboardVC.view.constrain([
-                keyboardVC.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-                keyboardVC.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-                keyboardVC.view.heightAnchor.constraint(equalToConstant: containerView.frame.height) ])
-        })
-         
-        
-        keyboardVC.ouputDidUpdate = { [weak self] text in
-             guard let myself = self else { return }
-            myself.amountToDonateLabel.text = text
-            myself.sendAmountLabel.text = text
-            myself.totalCostLabel.text = String(myself.balance - UInt64(text)!)
-            myself.walletManager.
-        
-            
-        }
-        
-        keyboardVC.didUpdateFrameWidth = { [weak self] frame in
-            
-            
-            
-            
-        guard let myself = self else { return }
-            myself.firstColumnConstraint.constant = frame.width
-            myself.lastColumnConstraint.constant = frame.width
-            myself.view.layoutIfNeeded()
-        }
-         
     }
-    
     
     private func configureDataAndFunction() {
           

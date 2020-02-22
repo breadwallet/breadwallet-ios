@@ -179,7 +179,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         donationCell.didTapToDonate = {
  
             if let dynamicDonate = UIStoryboard.init(name: "DynamicDonation", bundle: nil).instantiateViewController(withIdentifier: "DynamicDonation") as? DynamicDonationViewController {
-                 
+                if #available(iOS 13.0, *) {
+                    dynamicDonate.isModalInPresentation = true
+                }
+                
                 dynamicDonate.store = self.store
                 dynamicDonate.feeType = self.feeType ?? .regular
                 dynamicDonate.walletManager = self.walletManager
