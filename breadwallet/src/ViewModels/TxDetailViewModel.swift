@@ -68,6 +68,10 @@ struct TxDetailViewModel: TxViewModel {
             }
         }
     }
+    
+    var destinationTag: String? {
+        return tx.destinationTag
+    }
 }
 
 extension TxDetailViewModel {
