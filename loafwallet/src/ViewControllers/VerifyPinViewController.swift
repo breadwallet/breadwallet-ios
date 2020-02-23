@@ -32,11 +32,12 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
     let effect = UIBlurEffect(style: .dark)
     let contentBox = UIView()
     private let callback: VerifyPinCallback
-    private let pinPad = PinPadViewController(style: .white, keyboardType: .pinPad, maxDigits: 0)
+    private let pinPad = PinPadViewController(style: .clear, keyboardType: .pinPad, maxDigits: 0)
     private let titleLabel = UILabel(font: .customBold(size: 17.0), color: .white)
     private let body = UILabel(font: .customBody(size: 14.0), color: .white)
     private let pinView: PinView
     private let toolbar = UIView(color: .whiteTint)
+    private let toolbarBorder = UIView(color: .whiteTint)
     private let cancel = UIButton(type: .system)
     private let bodyText: String
     private let pinLength: Int
@@ -49,6 +50,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
 
     private func addSubviews() {
         view.addSubview(contentBox)
+        view.addSubview(toolbarBorder)
         view.addSubview(toolbar)
         toolbar.addSubview(cancel)
 
@@ -88,6 +90,11 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         cancel.constrain([
             cancel.centerYAnchor.constraint(equalTo: toolbar.centerYAnchor),
             cancel.trailingAnchor.constraint(equalTo: toolbar.trailingAnchor, constant: -C.padding[2]) ])
+        toolbarBorder.constrain([
+            toolbarBorder.leadingAnchor.constraint(equalTo: pinPad.view.leadingAnchor),
+            toolbarBorder.bottomAnchor.constraint(equalTo: toolbar.topAnchor),
+            toolbarBorder.trailingAnchor.constraint(equalTo: pinPad.view.trailingAnchor),
+            toolbarBorder.heightAnchor.constraint(equalToConstant: 1.0) ])
     }
 
     private func setupSubviews() {
@@ -99,6 +106,8 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
         contentBox.layer.shadowOpacity = 0.15
         contentBox.layer.shadowRadius = 4.0
         contentBox.layer.shadowOffset = .zero
+        
+        toolbar.backgroundColor = .clear
 
         titleLabel.text = S.VerifyPin.title
         body.text = bodyText
@@ -126,6 +135,7 @@ class VerifyPinViewController : UIViewController, ContentBoxPresenter {
             self?.dismiss(animated: true, completion: nil)
         }
         cancel.setTitle(S.Button.cancel, for: .normal)
+        cancel.tintColor = .white
         view.backgroundColor = .clear
     }
 
