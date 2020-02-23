@@ -19,7 +19,6 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     @IBOutlet weak var dialogTitle: UILabel!
     
     @IBOutlet weak var staticSendLabel: UILabel!
-    @IBOutlet weak var staticToLabel: UILabel!
     @IBOutlet weak var processingTimeLabel: UILabel!
     
     @IBOutlet weak var sendAmountLabel: UILabel!
@@ -28,17 +27,14 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     @IBOutlet weak var staticAmountToDonateLabel: UILabel!
     @IBOutlet weak var staticNetworkFeeLabel: UILabel!
     @IBOutlet weak var staticTotalCostLabel: UILabel!
-    @IBOutlet weak var amountToDonateLabel: UILabel!
-    
- 
+     
     @IBOutlet weak var networkFeeLabel: UILabel!
     @IBOutlet weak var totalCostLabel: UILabel!
     @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var containerView: UIView!
-    
-    @IBOutlet weak var firstColumnConstraint: NSLayoutConstraint!
-    @IBOutlet weak var lastColumnConstraint: NSLayoutConstraint!
-    @IBOutlet weak var accountPickerView: UIPickerView! 
+    @IBOutlet weak var accountPickerView: UIPickerView!
+    @IBOutlet weak var donationSlider: UISlider!
+    @IBOutlet weak var donationValueLabel: UILabel!
     
     var cancelButton = ShadowButton(title: S.Button.cancel, type: .secondary)
     var sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
@@ -48,15 +44,12 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     var store: Store?
     var feeType: Fee?
-//    var feeAmount: Satoshis?
-    var sender: Sender?
-    var walletManager: WalletManager?
+    var senderClass: Sender?
     var selectedRate: Rate?
     var minimumFractionDigits: Int = 2
     var isUsingBiometrics: Bool = false
     var balance: UInt64 = 0
     var donationAmount = kDonationAmount
-    var initialDonation = kDonationAmountInDouble//Satoshis(rawValue: UInt64(kDonationAmountInDouble))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,13 +59,6 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        guard let store = store else {return}
-        
-        guard let fiatSymbol = store.state.currentRate?.currencySymbol else { return }
-        let suffix = String(format: " %@", store.state.isLtcSwapped ? "(\(fiatSymbol))":"(Ł)")
-         
-        self.amountToDonateLabel.text = String(describing: donationAmount) + suffix
     }
     
     private func configureViews() {
@@ -93,20 +79,26 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         view.sendSubview(toBack: blurEffectView)
         
         dialogTitle.text = S.Donate.titleConfirmation
-        staticSendLabel.text = S.Confirmation.send
+        staticSendLabel.text = S.Confirmation.staticAddressLabel.capitalizingFirstLetter()
         staticAmountToDonateLabel.text = S.Confirmation.donateLabel
-        staticToLabel.text = S.Confirmation.to
         staticNetworkFeeLabel.text = S.Confirmation.feeLabel
         staticTotalCostLabel.text = S.Confirmation.totalLabel
         donationAddressLabel.text = LWDonationAddress.litwalletHardware.address
-        staticToLabel.text = S.Confirmation.to
-        // LWAnalytics.logEventWithParameters(itemName:._20191105_VSC)
-
+ 
         var timeText = "2.5-5"
         if feeType == .economy {
             timeText = "5+"
         }
         processingTimeLabel.text = String(format: S.Confirmation.processingAndDonationTime, timeText)
+        
+        donationSlider.setValue(Float(kDonationAmount/balance), animated: true)
+        donationSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
+        donationSlider.minimumValue = Float(Double(kDonationAmount)/Double(balance))
+        donationSlider.maximumValue = 1.0
+        
+        donationValueLabel.text = String(format:"%5.5f",(Double(kDonationAmount) / Double(100000000))) + " Ł" + "\n\(selectedRate?.rate ?? 0.0)"
+        let amount = Satoshis(rawValue: UInt64(kDonationAmount))
+        updateDonationLabels(donationAmount: amount)
         setupButtonLayouts()
     }
    
@@ -140,10 +132,9 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         sendButton.tap = strongify(self) { myself in
           myself.successCallback?()
         }
-        
          
         guard let store = store else {
-          print("XXX store past Guard")
+          print("ERROR: Store not initialized")
             return
         }
         
@@ -151,89 +142,61 @@ class DynamicDonationViewController: UIViewController, Subscriber {
                         callback: {
                             if let balance = $0.walletState.balance {
                                 self.balance = balance
-                                //self.walletManager?.wallet?.feeForTxSize(<#T##size: Int##Int#>)
                             }
         })
-
-        
-           
- 
-
-        
-//        guard let balance = balance else {
-//          print("XXX balance past Guard")
-//            return
-//        }
-//
-        guard let feeType = feeType else {
-          print("XXX feeType past Guard")
-            return
+    }
+    
+    private func maxAmountLessFees() -> Float {
+        var adjustedBalance = Float(Double(balance))
+        if let sender = senderClass {
+            let maxFee = sender.feeForTx(amount: balance)
+            adjustedBalance = Float(Double(balance) - Double(maxFee))
         }
+        return adjustedBalance
+    }
+    
+    private func updateDonationLabels(donationAmount: Satoshis) {
         
-//        guard let feeAmount = feeAmount else {
-//          print("XXX feeAmount past Guard")
-//            return
-//        }
-//        guard let selectedRate = selectedRate else {
-//            
-//          print("XXX selectedRate past Guard")
-//            return
-//        }
-        guard let sender = sender else {
-           print("XXX feeType past Sender")
-             return
-         }
+        guard let sender = senderClass else {return}
+        guard let state = store?.state else {return}
         
-    //    let balance = sender.transaction.
-        
-         
-        
-        guard let fiatSymbol = store.state.currentRate?.currencySymbol else { return }
-        let suffix = String(format: " %@", store.state.isLtcSwapped ? "(Ł)":"(\(fiatSymbol))")
-         
-        self.amountToDonateLabel.text = String(describing: kDonationAmount) + suffix
-       
-        self.sendAmountLabel.text = String(format: "Amount %@", store.state.isLtcSwapped ? "(Ł)":"(\(fiatSymbol))")
-        self.networkFeeLabel.text = String(format: "Network %@", store.state.isLtcSwapped ? "(Ł)":"(\(fiatSymbol))")
-        
-//        isUsingBiometrics
-//        let displayAmount = DisplayAmount(amount: amount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-//        let displayFee = DisplayAmount(amount: feeAmount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-//        let displayTotal = DisplayAmount(amount: amount + feeAmount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-//
-//        networkFeeLabel.text = displayFee.description
-//        totalCostLabel.text = displayTotal.description
-       // amountLabel.text = displayAmount.combinedDescription
-        //address.text = self.isDonation ? DonationAddress.firstLF : addressText
-        
-//        networkFeeLabel.text =  DisplayAmount(amount: feeAmount, state: store.state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-//         DisplayAmount(amount: Satoshis(rawValue: feeType), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
-//       
-            
-//        sendLabel.text = isDonation ? S.Confirmation.donateLabel :
-//        S.Confirmation.amountLabel
-//        send.text = displayAmount.description
-//        feeLabel.text = S.Confirmation.feeLabel
-//        fee.text = displayFee.description
-//
-//        totalLabel.text = S.Confirmation.totalLabel
-//        total.text = displayTotal.description
-        
-  
-        
+        sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
+        let feeAmount = sender.feeForTx(amount: donationAmount.rawValue)
+        networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
+        totalCostLabel.text = DisplayAmount(amount: donationAmount + Satoshis(rawValue: feeAmount), state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
+    }
+ 
+    @objc func sliderDidChange() {
+        let newDonationValue = donationSlider.value*maxAmountLessFees()
+        updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
+        let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
+        donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
     }
     
     @IBAction func reduceDonationAction(_ sender: Any) {
-        // amountToDonateLabel.text = String(describing: donationAmount -= 10000)
-       
+          if donationSlider.value >= Float(kDonationAmount/balance) {
+            let newValue = donationSlider.value - Float(Double(1000000)/Double(balance))
+            if newValue >= donationSlider.minimumValue {
+                donationSlider.setValue(newValue, animated: true)
+                let newDonationValue = donationSlider.value*maxAmountLessFees()
+                updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
+                let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
+                donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
+            }
+        }
     }
     
     @IBAction func increaseDonationAction(_ sender: Any) {
-       // amountToDonateLabel.text = String(describing: donationAmount += 10000)
+            let newValue = donationSlider.value + Float( Double(1000000)/Double(balance))
+            if newValue <= 1.0 {
+                donationSlider.setValue(newValue, animated: true)
+                let newDonationValue = donationSlider.value*maxAmountLessFees()
+                updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
+                let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
+                donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
+            }
     }
-    
 }
-
 
 extension DynamicDonationViewController: UIPickerViewDataSource, UIPickerViewDelegate {
    

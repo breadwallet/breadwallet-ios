@@ -184,10 +184,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 }
                 
                 dynamicDonate.store = self.store
-                dynamicDonate.feeType = self.feeType ?? .regular
-                dynamicDonate.walletManager = self.walletManager
                 dynamicDonate.selectedRate = self.amountView.selectedRate
-                dynamicDonate.sender = self.sender
+                dynamicDonate.senderClass = self.sender
+                dynamicDonate.balance = self.balance
                 dynamicDonate.providesPresentationContextTransitionStyle = true
                 dynamicDonate.definesPresentationContext = true
                 dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
