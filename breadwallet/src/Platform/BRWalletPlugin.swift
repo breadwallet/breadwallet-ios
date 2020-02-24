@@ -190,6 +190,55 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
         }
         
+        // GET /_wallet/maxlimit
+        //
+        // Request body: application/json
+        // {
+        //      "currency": "eth",
+        //      "toAddress": "0x123.."
+        // }
+        //
+        // Response body: application/json
+        // {
+        //      "numerator":"1000",
+        //      "denominator":"100000"
+        // }
+        router.post("_wallet/maxlimit") { (request, _) -> BRHTTPResponse in
+            let asyncResp = BRHTTPResponse(async: request)
+            guard let data = request.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: Any],
+                let toAddress = json["toAddress"] as? String,
+                let currencyCode = json["currency"] as? String,
+                let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
+                currency.isValidAddress(toAddress) else {
+                    asyncResp.provide(400, json: ["error": "params-error"])
+                    return asyncResp
+            }
+            
+            guard let wallet = Store.state[currency]?.wallet else { return BRHTTPResponse(request: request, code: 500) }
+            
+            wallet.estimateLimitMaximum(address: toAddress, fee: .priority, completion: { result in
+                switch result {
+                case .success(let maximumAmount):
+                    let amount = Amount(cryptoAmount: maximumAmount, currency: currency)
+                    let numerator = amount.tokenUnformattedString(in: currency.baseUnit)
+                    let denominator = Amount(tokenString: "1", currency: currency, unit: currency.defaultUnit).tokenUnformattedString(in: currency.baseUnit)
+                    request.queue.async {
+                        asyncResp.provide(200, json: [
+                            "numerator": numerator,
+                            "denominator": denominator
+                        ])
+                    }
+                case .failure(let error):
+                    request.queue.async {
+                        asyncResp.provide(500, json: ["error": "estimateLimitMaximum error: \(error)"])
+                    }
+                }
+            })
+            return asyncResp
+        }
+        
         // POST /_wallet/transaction
         //
         // Creates and optionally sends a transaction
