@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 import BRCore 
+import FirebaseAnalytics
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -113,6 +114,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         callback: {
                             if let balance = $0.walletState.balance {
                                 self.balance = balance
+                                self.donationCell.donateButton.isEnabled = (balance >= (kDonationAmount * 2)) ? true : false
                             }
         })
         walletManager.wallet?.feePerKb = store.state.fees.regular
@@ -175,7 +177,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             guard let fiatSymbol = self.store.state.currentRate?.currencySymbol else { return }
             self.donationCell.donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "(Ł)":"(\(fiatSymbol))")
         }
-          
+ 
         donationCell.didTapToDonate = {
  
             if let dynamicDonate = UIStoryboard.init(name: "DynamicDonation", bundle: nil).instantiateViewController(withIdentifier: "DynamicDonation") as? DynamicDonationViewController {
@@ -188,15 +190,22 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 dynamicDonate.balance = self.balance
                 dynamicDonate.providesPresentationContextTransitionStyle = true
                 dynamicDonate.definesPresentationContext = true
-                dynamicDonate.modalPresentationStyle = UIModalPresentationStyle.overCurrentContext
-                dynamicDonate.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
+                dynamicDonate.modalPresentationStyle = .fullScreen
+                dynamicDonate.modalTransitionStyle = .crossDissolve
                 
                 dynamicDonate.successCallback = {
-                    self.sender.createTransaction(amount: dynamicDonate.finalDonationAmount.rawValue, to: dynamicDonate.finalDonationAddress)
-                    self.descriptionCell.textView.text = dynamicDonate.finalDonationMemo
-                    dynamicDonate.dismiss(animated: true, completion: {
-                         self.send()
-                    })
+                    if self.sender.createTransaction(amount: dynamicDonate.finalDonationAmount.rawValue, to: dynamicDonate.finalDonationAddress) {
+                        self.descriptionCell.textView.text = dynamicDonate.finalDonationMemo
+                            dynamicDonate.dismiss(animated: true, completion: {
+                             self.send()
+                                
+                                let properties: [String: String] = ["PLATFORM":"iOS",
+                                                                    "DONATION_ACCOUNT": dynamicDonate.finalDonationMemo,
+                                                                    "DONATION_AMOUNT": String(describing: dynamicDonate.finalDonationAmount.rawValue)]
+                                
+                                LWAnalytics.logEventWithParameters(itemName: ._20200223_DD, properties: properties)
+                        })
+                    }
                 }
                 dynamicDonate.cancelCallback = {
                      dynamicDonate.dismiss(animated: true, completion: {
