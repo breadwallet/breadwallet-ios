@@ -183,8 +183,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                     dynamicDonate.isModalInPresentation = true
                 }
                 
-                dynamicDonate.store = self.store
-                dynamicDonate.selectedRate = self.amountView.selectedRate
+                dynamicDonate.store = self.store 
                 dynamicDonate.senderClass = self.sender
                 dynamicDonate.balance = self.balance
                 dynamicDonate.providesPresentationContextTransitionStyle = true
@@ -193,8 +192,10 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                 dynamicDonate.modalTransitionStyle = UIModalTransitionStyle.crossDissolve
                 
                 dynamicDonate.successCallback = {
+                    self.sender.createTransaction(amount: dynamicDonate.finalDonationAmount.rawValue, to: dynamicDonate.finalDonationAddress)
+                    self.descriptionCell.textView.text = dynamicDonate.finalDonationMemo
                     dynamicDonate.dismiss(animated: true, completion: {
-                        self.send()
+                         self.send()
                     })
                 }
                 dynamicDonate.cancelCallback = {

@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
+import SceneKit
 
 
 class DynamicDonationViewController: UIViewController, Subscriber {
@@ -38,7 +39,9 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     var cancelButton = ShadowButton(title: S.Button.cancel, type: .secondary)
     var sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
-    
+    ///isBiometrics
+    ////
+    ////
     var successCallback: (() -> Void)?
     var cancelCallback: (() -> Void)?
     
@@ -49,8 +52,19 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     var minimumFractionDigits: Int = 2
     var isUsingBiometrics: Bool = false
     var balance: UInt64 = 0
-    var donationAmount = kDonationAmount
-    
+    var finalDonationAmount = Satoshis(rawValue: kDonationAmount)
+    var finalDonationAddress = LWDonationAddress.litwalletHardware.address
+    var finalDonationMemo = LWDonationAddress.litwalletHardware.rawValue
+
+    let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
+    let impactFeedbackGenerator: (
+        light: UIImpactFeedbackGenerator,
+        medium: UIImpactFeedbackGenerator,
+        heavy: UIImpactFeedbackGenerator) = (
+            UIImpactFeedbackGenerator(style: .light),
+            UIImpactFeedbackGenerator(style: .medium),
+            UIImpactFeedbackGenerator(style: .heavy)
+    )
     override func viewDidLoad() {
         super.viewDidLoad()
         configureViews()
@@ -67,7 +81,10 @@ class DynamicDonationViewController: UIViewController, Subscriber {
             NSLog("ERROR: Store must not be nil")
             return
         }
-        
+        selectionFeedbackGenerator.prepare()
+        impactFeedbackGenerator.light.prepare()
+        impactFeedbackGenerator.medium.prepare()
+        impactFeedbackGenerator.heavy.prepare()
         dialogView.layer.cornerRadius = 6.0
         dialogView.layer.masksToBounds = true
         
@@ -85,23 +102,18 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         staticTotalCostLabel.text = S.Confirmation.totalLabel
         donationAddressLabel.text = LWDonationAddress.litwalletHardware.address
  
-        var timeText = "2.5-5"
-        if feeType == .economy {
-            timeText = "5+"
-        }
+        let timeText = "2.5-5"
         processingTimeLabel.text = String(format: S.Confirmation.processingAndDonationTime, timeText)
         
         donationSlider.setValue(Float(kDonationAmount/balance), animated: true)
         donationSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
         donationSlider.minimumValue = Float(Double(kDonationAmount)/Double(balance))
         donationSlider.maximumValue = 1.0
-        
-        donationValueLabel.text = String(format:"%5.5f",(Double(kDonationAmount) / Double(100000000))) + " Ł" + "\n\(selectedRate?.rate ?? 0.0)"
+         
         let amount = Satoshis(rawValue: UInt64(kDonationAmount))
         updateDonationLabels(donationAmount: amount)
         setupButtonLayouts()
     }
-   
     
     private func setupButtonLayouts() {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
@@ -134,7 +146,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         }
          
         guard let store = store else {
-          print("ERROR: Store not initialized")
+            NSLog("ERROR: Store not initialized")
             return
         }
         
@@ -157,43 +169,55 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     private func updateDonationLabels(donationAmount: Satoshis) {
         
-        guard let sender = senderClass else {return}
-        guard let state = store?.state else {return}
+        guard let sender = senderClass else {
+            NSLog("ERROR: Sender not initialized")
+            return
+        }
+        guard let state = store?.state else {
+            NSLog("ERROR: State not initialized")
+            return
+        }
         
-        sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
+        let addressEnum = LWDonationAddress.allValues[accountPickerView.selectedRow(inComponent: 0)]
+        
+        self.finalDonationAmount = donationAmount
+        self.finalDonationAddress = addressEnum.address
+        self.finalDonationMemo = addressEnum.rawValue
+        sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
         let feeAmount = sender.feeForTx(amount: donationAmount.rawValue)
-        networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
-        totalCostLabel.text = DisplayAmount(amount: donationAmount + Satoshis(rawValue: feeAmount), state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits).description
+        networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
+        totalCostLabel.text = DisplayAmount(amount: donationAmount + Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
+        donationValueLabel.text = totalCostLabel.text
     }
  
     @objc func sliderDidChange() {
         let newDonationValue = donationSlider.value*maxAmountLessFees()
         updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
-        let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
-        donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
+        selectionFeedbackGenerator.selectionChanged()
+
     }
     
     @IBAction func reduceDonationAction(_ sender: Any) {
+        impactFeedbackGenerator.light.impactOccurred()
+
           if donationSlider.value >= Float(kDonationAmount/balance) {
             let newValue = donationSlider.value - Float(Double(1000000)/Double(balance))
             if newValue >= donationSlider.minimumValue {
                 donationSlider.setValue(newValue, animated: true)
                 let newDonationValue = donationSlider.value*maxAmountLessFees()
                 updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
-                let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
-                donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
             }
         }
     }
     
     @IBAction func increaseDonationAction(_ sender: Any) {
+        impactFeedbackGenerator.heavy.impactOccurred()
+
             let newValue = donationSlider.value + Float( Double(1000000)/Double(balance))
             if newValue <= 1.0 {
                 donationSlider.setValue(newValue, animated: true)
                 let newDonationValue = donationSlider.value*maxAmountLessFees()
                 updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
-                let newDonationFloatValue = donationSlider.value*Float(Double(balance))/Float(Double(100000000))
-                donationValueLabel.text = String(format:"%5.5f",newDonationFloatValue) + " Ł"
             }
     }
 }

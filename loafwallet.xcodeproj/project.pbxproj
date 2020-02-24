@@ -2181,6 +2181,13 @@
 			path = libbz2;
 			sourceTree = "<group>";
 		};
+		2412367B24035B7F00FFA499 /* Emitters */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Emitters;
+			sourceTree = "<group>";
+		};
 		24306795238F3DDF00EBEA99 /* BartyCrouch */ = {
 			isa = PBXGroup;
 			children = (
@@ -3132,6 +3139,7 @@
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CE30F0E41EB27821004B8EE5 /* Watch */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
+				2412367B24035B7F00FFA499 /* Emitters */,
 				CE20C8EF1DBAF6D300C8397A /* ViewControllers */,
 				CE20C90F1DBE5B5100C8397A /* Views */,
 				CEBF33021DDE177F00348FC6 /* ViewModels */,
