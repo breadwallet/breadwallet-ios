@@ -183,28 +183,28 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9Ag-cL-ia7">
                                 <rect key="frame" x="0.0" y="482" width="375" height="175"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQe-Gh-hEo">
-                                        <rect key="frame" x="20" y="10" width="40" height="40"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zQe-Gh-hEo">
+                                        <rect key="frame" x="20" y="10" width="30" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="Fdv-MI-v5L"/>
-                                            <constraint firstAttribute="width" constant="40" id="fXs-cO-Gib"/>
+                                            <constraint firstAttribute="height" constant="30" id="Fdv-MI-v5L"/>
+                                            <constraint firstAttribute="width" constant="30" id="fXs-cO-Gib"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="20"/>
-                                        <state key="normal" title="-">
+                                        <size key="titleShadowOffset" width="1" height="1"/>
+                                        <state key="normal" image="whiteDownArrowCutout">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
                                             <action selector="reduceDonationAction:" destination="4L6-ri-0TJ" eventType="touchUpInside" id="Acy-i7-6Xa"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KOy-xT-rjv">
-                                        <rect key="frame" x="315" y="10" width="40" height="40"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KOy-xT-rjv">
+                                        <rect key="frame" x="325" y="10" width="30" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="LKk-gZ-OVG"/>
-                                            <constraint firstAttribute="width" constant="40" id="exb-Vc-yDo"/>
+                                            <constraint firstAttribute="height" constant="30" id="LKk-gZ-OVG"/>
+                                            <constraint firstAttribute="width" constant="30" id="exb-Vc-yDo"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" name="BarlowSemiCondensed-SemiBold" family="Barlow Semi Condensed SemiBold" pointSize="20"/>
-                                        <state key="normal" title="+">
+                                        <size key="titleShadowOffset" width="1" height="1"/>
+                                        <state key="normal" image="whiteUpArrowCutout">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
@@ -212,7 +212,7 @@
                                         </connections>
                                     </button>
                                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="xUb-vR-la8">
-                                        <rect key="frame" x="68" y="15" width="239" height="31"/>
+                                        <rect key="frame" x="58" y="10" width="259" height="31"/>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </slider>
                                 </subviews>
@@ -261,12 +261,13 @@
                         <outlet property="accountPickerView" destination="Yif-En-f5e" id="Ebz-b4-dFS"/>
                         <outlet property="buttonsView" destination="J59-6C-7GM" id="tXK-7j-QVG"/>
                         <outlet property="containerView" destination="9Ag-cL-ia7" id="WLG-K6-PsB"/>
+                        <outlet property="decreaseDonationButton" destination="zQe-Gh-hEo" id="9YR-jm-Dun"/>
                         <outlet property="dialogTitle" destination="RvI-0J-Lsy" id="N3O-9D-EX8"/>
-                        <outlet property="dialogTopAnchorConstraint" destination="VOw-fF-8qj" id="dfm-AL-r4G"/>
                         <outlet property="dialogView" destination="yin-PI-eyn" id="cgE-nN-hR7"/>
                         <outlet property="donationAddressLabel" destination="azH-lL-34c" id="OkQ-B0-liV"/>
                         <outlet property="donationSlider" destination="xUb-vR-la8" id="K5A-PH-fYO"/>
                         <outlet property="donationValueLabel" destination="eQf-Mj-gVb" id="pUT-dv-8wA"/>
+                        <outlet property="increaseDonationButton" destination="KOy-xT-rjv" id="Jqa-q2-Itv"/>
                         <outlet property="networkFeeLabel" destination="trx-2Q-JId" id="Q3d-XZ-gb8"/>
                         <outlet property="processingTimeLabel" destination="BWJ-UH-xkO" id="ScN-kI-QpS"/>
                         <outlet property="sendAmountLabel" destination="eoc-hA-9c0" id="DdR-Hj-Lkd"/>
@@ -282,4 +283,8 @@
             <point key="canvasLocation" x="-109.59999999999999" y="-86.806596701649184"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="whiteDownArrowCutout" width="40" height="40"/>
+        <image name="whiteUpArrowCutout" width="40" height="40"/>
+    </resources>
 </document>

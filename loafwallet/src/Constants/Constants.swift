@@ -45,7 +45,9 @@ enum CustomEvent: String {
     case _20200112_DSR = "DID_START_RESYNC"
     case _20200125_DSRR = "DID_SHOW_REVIEW_REQUEST"
     case _20200217_DLWP = "DID_LOGIN_WITH_PIN"
-    case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"  
+    case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"
+    case _20200223_DD = "DID_DONATE"
+
 }
   
 struct Padding {

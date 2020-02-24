@@ -15,8 +15,6 @@ import SceneKit
 class DynamicDonationViewController: UIViewController, Subscriber {
 
     @IBOutlet weak var dialogView: UIView!
-    @IBOutlet weak var dialogTopAnchorConstraint: NSLayoutConstraint!
-    
     @IBOutlet weak var dialogTitle: UILabel!
     
     @IBOutlet weak var staticSendLabel: UILabel!
@@ -36,6 +34,9 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     @IBOutlet weak var accountPickerView: UIPickerView!
     @IBOutlet weak var donationSlider: UISlider!
     @IBOutlet weak var donationValueLabel: UILabel!
+    @IBOutlet weak var decreaseDonationButton: UIButton!
+    @IBOutlet weak var increaseDonationButton: UIButton!
+    
     
     var cancelButton = ShadowButton(title: S.Button.cancel, type: .secondary)
     var sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
@@ -109,7 +110,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         donationSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
         donationSlider.minimumValue = Float(Double(kDonationAmount)/Double(balance))
         donationSlider.maximumValue = 1.0
-         
+        
         let amount = Satoshis(rawValue: UInt64(kDonationAmount))
         updateDonationLabels(donationAmount: amount)
         setupButtonLayouts()
