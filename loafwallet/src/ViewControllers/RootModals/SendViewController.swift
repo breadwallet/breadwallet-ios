@@ -134,7 +134,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         addressCell.paste.addTarget(self, action: #selector(SendViewController.pasteTapped), for: .touchUpInside)
         addressCell.scan.addTarget(self, action: #selector(SendViewController.scanTapped), for: .touchUpInside)
         sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-         
+        donationCell.donateButton.isEnabled = false
+        
         descriptionCell.didReturn = { textView in
             textView.resignFirstResponder()
         }
@@ -199,11 +200,11 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                             dynamicDonate.dismiss(animated: true, completion: {
                              self.send()
                                 
-                                let properties: [String: String] = ["PLATFORM":"iOS",
-                                                                    "DONATION_ACCOUNT": dynamicDonate.finalDonationMemo,
-                                                                    "DONATION_AMOUNT": String(describing: dynamicDonate.finalDonationAmount.rawValue)]
-                                
-                                LWAnalytics.logEventWithParameters(itemName: ._20200223_DD, properties: properties)
+                             let properties: [String: String] = ["PLATFORM":"iOS",
+                                                                "DONATION_ACCOUNT": dynamicDonate.finalDonationMemo,
+                                                                "DONATION_AMOUNT": String(describing: dynamicDonate.finalDonationAmount.rawValue)]
+                            
+                             LWAnalytics.logEventWithParameters(itemName: ._20200223_DD, properties: properties)
                         })
                     }
                 }
@@ -212,8 +213,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                         self.sender.transaction = nil
                     })
                 }
-                self.present(dynamicDonate, animated: true, completion: nil)
-
+                self.present(dynamicDonate, animated: true, completion: nil) 
             }
         }
     }

@@ -9,11 +9,11 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 1800000 //UInt64
+let kDonationAmount: UInt64 = 1800000
 let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
   
 enum LWDonationAddress: String {
-    case litwalletHardware = "Litewallet Hardware Fundraiser"
+    case litwalletHardware = "Litewallet Hardware Fundraiser" //TODO: Remove after fundraiser goal is acheived in 2020
     case generalLitecoinFoundation = "Litecoin Foundation"
   
     static let allValues = [litwalletHardware, generalLitecoinFoundation]
@@ -47,7 +47,7 @@ enum CustomEvent: String {
     case _20200217_DLWP = "DID_LOGIN_WITH_PIN"
     case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"
     case _20200223_DD = "DID_DONATE"
-
+    case _20200225_DCD = "DID_CANCEL_DONATE" 
 }
   
 struct Padding {

@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
-import SceneKit
+import FirebaseAnalytics
 
 
 class DynamicDonationViewController: UIViewController, Subscriber {
@@ -60,10 +60,8 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     let selectionFeedbackGenerator = UISelectionFeedbackGenerator()
     let impactFeedbackGenerator: (
         light: UIImpactFeedbackGenerator,
-        medium: UIImpactFeedbackGenerator,
         heavy: UIImpactFeedbackGenerator) = (
             UIImpactFeedbackGenerator(style: .light),
-            UIImpactFeedbackGenerator(style: .medium),
             UIImpactFeedbackGenerator(style: .heavy)
     )
     override func viewDidLoad() {
@@ -78,13 +76,8 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     private func configureViews() {
         
-        guard let store = self.store else {
-            NSLog("ERROR: Store must not be nil")
-            return
-        }
         selectionFeedbackGenerator.prepare()
         impactFeedbackGenerator.light.prepare()
-        impactFeedbackGenerator.medium.prepare()
         impactFeedbackGenerator.heavy.prepare()
         dialogView.layer.cornerRadius = 6.0
         dialogView.layer.masksToBounds = true
@@ -141,6 +134,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
           
         cancelButton.tap = strongify(self) { myself in
           myself.cancelCallback?()
+          LWAnalytics.logEventWithParameters(itemName: ._20200225_DCD)
         }
         donateButton.tap = strongify(self) { myself in
           myself.successCallback?()
@@ -179,11 +173,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
             return
         }
         
-        let addressEnum = LWDonationAddress.allValues[accountPickerView.selectedRow(inComponent: 0)]
-        
         self.finalDonationAmount = donationAmount
-        self.finalDonationAddress = addressEnum.address
-        self.finalDonationMemo = addressEnum.rawValue
         sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
         let feeAmount = sender.feeForTx(amount: donationAmount.rawValue)
         networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
@@ -242,5 +232,7 @@ extension DynamicDonationViewController: UIPickerViewDataSource, UIPickerViewDel
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         self.donationAddressLabel.text = LWDonationAddress.allValues[row].address
+        self.finalDonationAddress = LWDonationAddress.allValues[row].address
+        self.finalDonationMemo = LWDonationAddress.allValues[row].rawValue
     }
 }

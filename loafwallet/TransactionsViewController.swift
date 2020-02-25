@@ -21,7 +21,8 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     var shouldBeSyncing: Bool = false
     var syncingHeaderView : SyncProgressHeaderView?
     var shouldShowPrompt = true
-    
+    private let addressPopout = InViewAlert(type: .primary)
+
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -313,23 +314,9 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
             return TransactionTableViewCellv2()
         }
          
-        let identity: CGAffineTransform = .identity
-
-        if let wasSelected = wasSelected,
-            wasSelected {
-           let newAlpha = 1.0
-           UIView.animate(withDuration: 0.1, delay: 0.0, animations: {
-               cell.expandCardView.alpha = CGFloat(newAlpha)
-               cell.dropArrowImageView.transform = identity.rotated(by: π)
-           })
-       } else {
-           let newAlpha = 0.0
-           UIView.animate(withDuration: 0.1, delay: 0.0, animations: {
-               cell.expandCardView.alpha = CGFloat(newAlpha)
-               cell.dropArrowImageView.transform = identity.rotated(by: -4.0*π/2.0)
-           })
-       }
-        
+        cell.copyAddressAction = { (address) in
+            UIPasteboard.general.string = address
+        }
         
         if let transaction = transaction {
             if transaction.direction == .received {
