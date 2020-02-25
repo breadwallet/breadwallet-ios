@@ -21,7 +21,6 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     var shouldBeSyncing: Bool = false
     var syncingHeaderView : SyncProgressHeaderView?
     var shouldShowPrompt = true
-    private let addressPopout = InViewAlert(type: .primary)
 
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
@@ -80,7 +79,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     private func addSubscriptions() {
         
         guard let store = self.store else {
-            NSLog("ERROR: Store not passed")
+            NSLog("ERROR: Store not initialized")
             return
         }
          
@@ -308,7 +307,9 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     }
       
     private func configureTransactionCell(transaction:Transaction?, wasSelected: Bool?, indexPath: IndexPath) -> TransactionTableViewCellv2 {
-         
+        
+        //TODO: Polish animation based on 'wasSelected'
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionTVC2", for: indexPath) as? TransactionTableViewCellv2 else {
             NSLog("ERROR: No cell found")
             return TransactionTableViewCellv2()
