@@ -266,6 +266,9 @@
 /* Donate articles to the */
 "Donate.toThe" = "Пожертвовать";
 
+/* Donate */
+"Donate.word" = "жертвовать";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
 

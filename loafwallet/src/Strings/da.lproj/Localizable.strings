@@ -266,6 +266,9 @@
 /* Donate articles to the */
 "Donate.toThe" = "Doner til";
 
+/* Donate */
+"Donate.word" = "Doner";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende e-mail med iOS mailappen.";
 

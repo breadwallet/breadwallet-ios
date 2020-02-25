@@ -1251,3 +1251,6 @@
 
 /* Donate articles to the */
 "Donate.toThe" = "Donate to the";
+
+/* Donate */
+"Donate.word" = "Donate";

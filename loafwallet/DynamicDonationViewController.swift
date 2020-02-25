@@ -33,14 +33,14 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var accountPickerView: UIPickerView!
     @IBOutlet weak var donationSlider: UISlider!
-    @IBOutlet weak var donationValueLabel: UILabel!
     @IBOutlet weak var decreaseDonationButton: UIButton!
     @IBOutlet weak var increaseDonationButton: UIButton!
+    @IBOutlet weak var donationValueLabel: UILabel!
     
     
     var cancelButton = ShadowButton(title: S.Button.cancel, type: .secondary)
-    var sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
-    ///isBiometrics
+    var donateButton = ShadowButton(title: S.Donate.word, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
+     ///isBiometrics
     ////
     ////
     var successCallback: (() -> Void)?
@@ -110,7 +110,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         donationSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
         donationSlider.minimumValue = Float(Double(kDonationAmount)/Double(balance))
         donationSlider.maximumValue = 1.0
-        
+          
         let amount = Satoshis(rawValue: UInt64(kDonationAmount))
         updateDonationLabels(donationAmount: amount)
         setupButtonLayouts()
@@ -118,20 +118,20 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     
     private func setupButtonLayouts() {
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
-        sendButton.translatesAutoresizingMaskIntoConstraints = false
+        donateButton.translatesAutoresizingMaskIntoConstraints = false
         buttonsView.addSubview(cancelButton)
-        buttonsView.addSubview(sendButton)
+        buttonsView.addSubview(donateButton)
         
-        let viewsDictionary = ["cancelButton": cancelButton, "sendButton": sendButton]
+        let viewsDictionary = ["cancelButton": cancelButton, "donateButton": donateButton]
         var viewConstraints = [NSLayoutConstraint]()
     
-        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[cancelButton(160)]-10-[sendButton(160)]-10-|", options: [], metrics: nil, views: viewsDictionary)
+        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-10-[cancelButton(170)]-8-[donateButton(170)]-10-|", options: [], metrics: nil, views: viewsDictionary)
         viewConstraints += constraintsHorizontal
         
         let cancelConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[cancelButton]-|", options: [], metrics: nil, views: viewsDictionary)
         viewConstraints += cancelConstraintVertical
         
-        let sendConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[sendButton]-|", options: [], metrics: nil, views: viewsDictionary)
+        let sendConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-[donateButton]-|", options: [], metrics: nil, views: viewsDictionary)
         
         viewConstraints += sendConstraintVertical
         NSLayoutConstraint.activate(viewConstraints)
@@ -142,7 +142,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         cancelButton.tap = strongify(self) { myself in
           myself.cancelCallback?()
         }
-        sendButton.tap = strongify(self) { myself in
+        donateButton.tap = strongify(self) { myself in
           myself.successCallback?()
         }
          
@@ -195,7 +195,6 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         let newDonationValue = donationSlider.value*maxAmountLessFees()
         updateDonationLabels(donationAmount: Satoshis(rawValue: UInt64(newDonationValue)))
         selectionFeedbackGenerator.selectionChanged()
-
     }
     
     @IBAction func reduceDonationAction(_ sender: Any) {
@@ -237,9 +236,7 @@ extension DynamicDonationViewController: UIPickerViewDataSource, UIPickerViewDel
         let title = S.Donate.toThe + " " + LWDonationAddress.allValues[row].rawValue
         let label = UILabel()
         label.textAlignment = .center
-        label.shadowColor = .black
-        label.shadowOffset = CGSize(width: 1, height: 1)
-        label.attributedText = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.barloweRegular(size: 17), NSAttributedString.Key.foregroundColor: UIColor.white])
+        label.attributedText = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.barloweRegular(size: 17), NSAttributedString.Key.foregroundColor: UIColor.black])
         return label
     }
     

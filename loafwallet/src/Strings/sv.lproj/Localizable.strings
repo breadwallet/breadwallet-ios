@@ -266,6 +266,9 @@
 /* Donate to the articles */
 "Donate.toThe" = "Donera till";
 
+/* Donate */
+"Donate.word" = "Donera";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att skicka e-post med post-appen i iOS.";
 

@@ -266,6 +266,9 @@
 /* Donate to the articles */
 "Donate.toThe" = "에 기부";
 
+/* Donate */
+"Donate.word" = "기부";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
 

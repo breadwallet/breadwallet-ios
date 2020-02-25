@@ -266,6 +266,9 @@
 /* Donate to the articles */
 "Donate.toThe" = "捐赠给";
 
+/* Donate */
+"Donate.word" = "捐";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
 

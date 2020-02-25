@@ -266,6 +266,9 @@
 /* Donate to the articles */
 "Donate.toThe" = "Donate to the";
 
+/* Donate */
+"Donate.word" = "Donate";
+
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "This device isn't configured to send email with the iOS mail app.";
 
