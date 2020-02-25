@@ -36,7 +36,7 @@ class DonationSetupCell: UIView {
         donateButton.addTarget(self, action: #selector(donateToLF), for: .touchUpInside)
         
         guard let fiatSymbol = store.state.currentRate?.currencySymbol else { return }
-        donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "(\(fiatSymbol))":"(Ł)")
+        donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "\(fiatSymbol)":"Ł")
         
         let viewsDictionary = ["donateButton": donateButton, "border": border]
         var viewConstraints = [NSLayoutConstraint]()

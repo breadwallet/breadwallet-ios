@@ -176,7 +176,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         }
         amountView.didShowFiat = { isLTCSwapped in
             guard let fiatSymbol = self.store.state.currentRate?.currencySymbol else { return }
-            self.donationCell.donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "(Ł)":"(\(fiatSymbol))")
+            self.donationCell.donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "Ł":"\(fiatSymbol)")
         }
  
         donationCell.didTapToDonate = {

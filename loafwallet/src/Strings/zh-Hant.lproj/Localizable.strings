@@ -258,7 +258,7 @@
 "Donate.memo" = "捐贈給萊特幣基金會";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "點擊捐贈給萊特幣基金會 %@";
+"Donate.title" = "點擊捐贈給萊特幣基金會 (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "確認捐贈";

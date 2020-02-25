@@ -68,10 +68,6 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         configureDataAndFunction()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
     private func configureViews() {
         
         selectionFeedbackGenerator.prepare()

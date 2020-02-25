@@ -258,7 +258,7 @@
 "Donate.memo" = "ライトコイン財団への寄付";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "ライトコイン財団に寄付してください %@";
+"Donate.title" = "ライトコイン財団に寄付してください (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "寄付を確認する";

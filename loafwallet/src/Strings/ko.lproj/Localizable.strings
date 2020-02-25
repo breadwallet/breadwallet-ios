@@ -258,7 +258,7 @@
 "Donate.memo" = "라이트 코인 재단에 기부";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요 %@";
+"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요 (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "기부 확인";
