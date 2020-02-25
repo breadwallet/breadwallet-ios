@@ -89,9 +89,8 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         staticNetworkFeeLabel.text = S.Confirmation.feeLabel
         staticTotalCostLabel.text = S.Confirmation.totalLabel
         donationAddressLabel.text = LWDonationAddress.litwalletHardware.address
- 
-        let timeText = "2.5-5"
-        processingTimeLabel.text = String(format: S.Confirmation.processingAndDonationTime, timeText)
+  
+        processingTimeLabel.text = String(format: S.Confirmation.processingAndDonationTime, "2.5-5")
         
         donationSlider.setValue(Float(kDonationAmount/balance), animated: true)
         donationSlider.addTarget(self, action: #selector(sliderDidChange), for: .valueChanged)
