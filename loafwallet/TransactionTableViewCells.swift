@@ -42,8 +42,7 @@ class TransactionTableViewCellv2 : UITableViewCell, Subscriber {
     @IBOutlet weak var qrBackgroundView: UIView!
     
     var didReceiveLitecoin: Bool?
-    var showQRModalAction: (() -> ())?
-    var copyAddressAction: ((String) -> ())?
+    var showQRModalAction: (() -> ())? 
     var expandCell: (() -> Bool)?
     var isExpanded: Bool = false
     private var timer: Timer? = nil
@@ -61,8 +60,12 @@ class TransactionTableViewCellv2 : UITableViewCell, Subscriber {
     }
     
     @IBAction func didTapCopy(_ sender: Any) {
-        guard let transactionAddress = transaction?.toAddress else {return}
-        copyAddressAction?(transactionAddress)
+        guard let transactionAddress = transaction?.toAddress else {
+            NSLog("ERROR: Address not set")
+            return
+        }
+        
+        UIPasteboard.general.string = transactionAddress
     }
     
     //MARK: - Public

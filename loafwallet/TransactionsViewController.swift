@@ -313,11 +313,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionTVC2", for: indexPath) as? TransactionTableViewCellv2 else {
             NSLog("ERROR: No cell found")
             return TransactionTableViewCellv2()
-        }
-         
-        cell.copyAddressAction = { (address) in
-            UIPasteboard.general.string = address
-        }
+        } 
         
         if let transaction = transaction {
             if transaction.direction == .received {
