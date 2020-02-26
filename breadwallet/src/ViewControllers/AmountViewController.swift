@@ -274,7 +274,8 @@ class AmountViewController: UIViewController, Trackable {
 
     func updateBalanceLabel() {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
-            balanceLabel.attributedText = balance
+            //If balance is nil, the balance label still needs some text for the bottom padding
+            balanceLabel.attributedText = balance ?? NSAttributedString(string: " ")
             feeLabel.attributedText = fee
             balanceLabel.isHidden = cursor.isHidden
         }
