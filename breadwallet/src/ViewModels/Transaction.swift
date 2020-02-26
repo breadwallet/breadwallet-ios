@@ -167,6 +167,11 @@ class Transaction {
             createMetaData(rate: rate, comment: comment, kvStore: kvStore)
         }
     }
+    
+    var destinationTag: String? {
+        guard let destinationTag = transfer.attributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
+        return destinationTag.value
+    }
 
     // MARK: Init
 
