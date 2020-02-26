@@ -20,9 +20,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
         self.minimumFractionDigits = minimumFractionDigits
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
-        self.isDonation = isDonation
         
-        self.header = self.isDonation ? ModalHeaderView(title: S.Donate.titleConfirmation, style: .dark, showCloseButton: false) : ModalHeaderView(title: S.Confirmation.title, style: .dark)
+        self.header = ModalHeaderView(title: S.Confirmation.title, style: .dark)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -34,7 +33,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let minimumFractionDigits: Int?
     private let addressText: String
     private let isUsingBiometrics: Bool
-    private let isDonation: Bool
+    
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
     let blurView = UIVisualEffectView()
@@ -167,7 +166,6 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         amountLabel.text = displayAmount.combinedDescription
         toLabel.text = S.Confirmation.to
-        address.text = self.isDonation ? DonationAddress.firstLF : addressText
         address.lineBreakMode = .byTruncatingMiddle
         switch feeType {
         case .regular:
@@ -176,8 +174,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             processingTime.text = String(format: S.Confirmation.processingTime, "5+")
         }
 
-        sendLabel.text = isDonation ? S.Confirmation.donateLabel :
-        S.Confirmation.amountLabel
+        sendLabel.text = S.Confirmation.amountLabel
         send.text = displayAmount.description
         feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description

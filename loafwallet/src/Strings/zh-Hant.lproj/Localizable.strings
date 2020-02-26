@@ -258,10 +258,16 @@
 "Donate.memo" = "捐贈給萊特幣基金會";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "點擊捐贈給萊特幣基金會！";
+"Donate.title" = "點擊捐贈給萊特幣基金會 (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "確認捐贈";
+
+/* Donate to the articles */
+"Donate.toThe" = "捐贈給";
+
+/* Donate */
+"Donate.word" = "捐";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "本裝置並非設定來以 iOS 郵件應用程式傳送電子郵件。";

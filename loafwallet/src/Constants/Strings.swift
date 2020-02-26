@@ -578,9 +578,11 @@ enum S {
     }
     
     enum Donate {
-        static let title = NSLocalizedString("Donate.title", value: "**Donate to the Litecoin Foundation!**", comment: "Donate to the Litecoin Foundation")
+        static let title = NSLocalizedString("Donate.title", value: "**Donate to the Litecoin Foundation! %@**", comment: "Donate to the Litecoin Foundation")
         static let titleConfirmation = NSLocalizedString("Donate.title.confirmation", value: "**Confirm Donation**", comment: "Donate Confirmation")
         static let memo = NSLocalizedString("Donate.memo", value: "**Donation to the Litecoin Foundation**", comment: "Donate Memo")
+        static let toThe = NSLocalizedString("Donate.toThe", value: "**Donate to the**", comment: "Donate articles to the")
+        static let word = NSLocalizedString("Donate.word", value: "**Donate**", comment: "Donate")
     }
 
     enum WipeWallet {

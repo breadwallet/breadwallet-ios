@@ -259,10 +259,16 @@
 "Donate.memo" = "Doação para a Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Toque para doar para a Litecoin Foundation!";
+"Donate.title" = "Toque para doar para a Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Confirmar Doação";
+
+/* Donate to the articles */
+"Donate.toThe" = "Doe para o";
+
+/* Donate */
+"Donate.word" = "Doar";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo não está configurado para enviar emails com a app Mail do iOS.";

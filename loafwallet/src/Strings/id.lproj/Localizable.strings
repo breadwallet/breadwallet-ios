@@ -258,10 +258,16 @@
 "Donate.memo" = "Sumbangan untuk Yayasan Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Ketuk untuk Menyumbang ke Yayasan Litecoin!";
+"Donate.title" = "Ketuk untuk Menyumbang ke Yayasan Litecoin (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Konfirmasi Sumbangan";
+
+/* Donate to the articles */
+"Donate.toThe" = "Donasi ke";
+
+/* Donate */
+"Donate.word" = "Menyumbangkan";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Perangkat ini tidak dikonfigurasikan untuk mengirim email dengan aplikasi surat iOS.";

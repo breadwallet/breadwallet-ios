@@ -25,7 +25,8 @@ class PinPadViewController : UICollectionViewController {
     let currencyDecimalSeparator = NumberFormatter().currencyDecimalSeparator ?? "."
     var isAppendingDisabled = false
     var ouputDidUpdate: ((String) -> Void)?
-
+    var didUpdateFrameWidth: ((CGRect) -> Void)?
+    
     var height: CGFloat {
         switch keyboardType {
         case .decimalPad:
@@ -36,7 +37,7 @@ class PinPadViewController : UICollectionViewController {
     }
 
     var currentOutput = ""
-
+      
     func clear() {
         isAppendingDisabled = false
         currentOutput = ""
@@ -89,12 +90,13 @@ class PinPadViewController : UICollectionViewController {
                 collectionView?.register(WhiteNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
             }
         case .clear:
-            collectionView?.backgroundColor = .clear
-
-            if keyboardType == .pinPad {
+            switch keyboardType {
+            case .decimalPad:
+                collectionView?.backgroundColor = .clear
+                collectionView?.register(ClearDecimalPad.self, forCellWithReuseIdentifier: cellIdentifier)
+            case .pinPad:
+                collectionView?.backgroundColor = .clear
                 collectionView?.register(ClearNumberPad.self, forCellWithReuseIdentifier: cellIdentifier)
-            } else {
-                assert(false, "Invalid cell")
             }
         }
         collectionView?.delegate = self
@@ -115,6 +117,11 @@ class PinPadViewController : UICollectionViewController {
         let item = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath)
         guard let pinPadCell = item as? GenericPinPadCell else { return item }
         pinPadCell.text = items[indexPath.item]
+        
+        //produces a frame for lining up other subviews
+        if indexPath.item == 0 {
+             didUpdateFrameWidth?(collectionView.convert(pinPadCell.frame, to: self.view))
+        }
         return pinPadCell
     }
 
@@ -134,7 +141,6 @@ class PinPadViewController : UICollectionViewController {
                 currentOutput = currentOutput + item
             }
         }
-
         ouputDidUpdate?(currentOutput)
     }
 
@@ -330,6 +336,27 @@ class ClearNumberPad : GenericPinPadCell {
     }
 }
 
+class ClearDecimalPad : GenericPinPadCell {
+
+    override func setAppearance() {
+
+        centerLabel.backgroundColor = .clear
+        imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
+
+        if isHighlighted {
+            centerLabel.textColor = .grayTextTint
+            imageView.tintColor = .grayTextTint
+        } else {
+            centerLabel.textColor = .white
+            imageView.tintColor = .white
+        }
+    }
+
+    override func addConstraints() {
+        centerLabel.constrain(toSuperviewEdges: nil)
+        imageView.constrain(toSuperviewEdges: nil)
+    }
+}
 
 class WhiteDecimalPad : GenericPinPadCell {
 

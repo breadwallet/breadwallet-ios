@@ -23,7 +23,7 @@ class MainViewController : UIViewController, Subscriber, LoginViewControllerDele
     private let loginView: LoginViewController
     private let tempLoginView: LoginViewController
     private let loginTransitionDelegate = LoginTransitionDelegate()
-    private let welcomeTransitingDelegate = PinTransitioningDelegate()
+    private let welcomeTransitingDelegate = TransitioningDelegate()
     
     private var loadingTimer: Timer?
     private var didEndLoading = false

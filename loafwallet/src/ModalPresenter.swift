@@ -31,7 +31,7 @@ class ModalPresenter : Subscriber, Trackable {
     private let modalTransitionDelegate: ModalTransitionDelegate
     private let messagePresenter = MessageUIPresenter()
     private let securityCenterNavigationDelegate = SecurityCenterNavigationDelegate()
-    private let verifyPinTransitionDelegate = PinTransitioningDelegate()
+    private let verifyPinTransitionDelegate = TransitioningDelegate()
     private let noAuthApiClient: BRAPIClient
 
     private var currentRequest: PaymentRequest?
@@ -299,7 +299,7 @@ class ModalPresenter : Subscriber, Trackable {
         guard let walletManager = walletManager else { return nil }
         guard let kvStore = walletManager.apiClient?.kv else { return nil }
  
-        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store), donationSender: Sender(walletManager: walletManager, kvStore: kvStore, store: store),  walletManager: walletManager, initialRequest: currentRequest)
+        let sendVC = SendViewController(store: store, sender: Sender(walletManager: walletManager, kvStore: kvStore, store: store),  walletManager: walletManager, initialRequest: currentRequest)
         currentRequest = nil
 
         if store.state.isLoginRequired {

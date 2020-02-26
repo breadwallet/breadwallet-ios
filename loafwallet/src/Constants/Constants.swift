@@ -9,12 +9,23 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 900000 //UInt64
+let kDonationAmount: UInt64 = 1800000
 let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
+  
+enum LWDonationAddress: String {
+    case litwalletHardware = "Litewallet Hardware Fundraiser" //TODO: Remove after fundraiser goal is acheived in 2020
+    case generalLitecoinFoundation = "Litecoin Foundation"
+  
+    static let allValues = [litwalletHardware, generalLitecoinFoundation]
 
-let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
-
-
+      var address: String {
+          switch self {
+          case .litwalletHardware:          return "MVRj1whQ8hqcpffjRxLLCJG1mD27V9YygY"
+          case .generalLitecoinFoundation:  return "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
+          }
+      }
+}
+  
 enum CustomEvent: String {
     case _20191105_AL = "APP_LAUNCHED"
     case _20191105_VSC = "VISIT_SEND_CONTROLLER"
@@ -34,7 +45,9 @@ enum CustomEvent: String {
     case _20200112_DSR = "DID_START_RESYNC"
     case _20200125_DSRR = "DID_SHOW_REVIEW_REQUEST"
     case _20200217_DLWP = "DID_LOGIN_WITH_PIN"
-    case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"  
+    case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"
+    case _20200223_DD = "DID_DONATE"
+    case _20200225_DCD = "DID_CANCEL_DONATE" 
 }
   
 struct Padding {
@@ -45,11 +58,6 @@ struct Padding {
     }
 }
   
-struct DonationAddress {
-    
-    static let firstLF: String = kDonationAddress1
-}
-
 struct C {
     static let padding = Padding()
     struct Sizes {

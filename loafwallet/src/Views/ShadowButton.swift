@@ -165,6 +165,8 @@ class ShadowButton: UIControl {
         container.layer.borderColor = UIColor.white.cgColor
         container.layer.borderWidth = 1.0
         imageView?.tintColor = .white
+        shadowView.layer.shadowColor = UIColor.black.cgColor
+        shadowView.layer.shadowOpacity = 0.15
         case .flatWhite:
         container.backgroundColor = .white
         label.textColor = .liteWalletBlue

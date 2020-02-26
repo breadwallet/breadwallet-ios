@@ -13,63 +13,42 @@ class DonationSetupCell: UIView {
     
     static let defaultHeight: CGFloat = 72.0
 
-    init(store: Store, wantsToDonate: Bool) {
+    init(store: Store, isLTCSwapped: Bool) {
        self.store = store
-       var buttonText = ""
-        
-        if let rate  = store.state.currentRate, store.state.isLtcSwapped {
-            buttonText = String(format:"%.2f", rate.rate * kDonationAmountInDouble) + " \(rate.code)(\(rate.currencySymbol))"
-        } else {
-            buttonText = "\(kDonationAmountInDouble) "  + S.Symbols.currencyButtonTitle(maxDigits: store.state.maxDigits)
-        }
-         
-        donateButton = ShadowButton(title: buttonText, type: .tertiary)
- 
+       self.isLTCSwapped = isLTCSwapped
+       donateButton = ShadowButton(title: S.Donate.title, type: .tertiary)
        super.init(frame: .zero)
        setupViews()
     }
     
     let border = UIView(color: .secondaryShadow)
-    private var titleLabel = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
-    var isLTCSwapped: Bool?
-    var donateButton: ShadowButton?
+    var isLTCSwapped: Bool
+    var donateButton = ShadowButton(title: S.Donate.title, type: .tertiary)
     var didTapToDonate:(() -> ())?
     private let store: Store
 
     private func setupViews() {
         
-        guard  let donateButton = donateButton else {
-            NSLog("ERROR: Donate button not initialized")
-            return
-        }
-         
-        addSubview(titleLabel)
         addSubview(donateButton)
         addSubview(border)
-         
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.numberOfLines = 2
+        
         donateButton.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.text = S.Donate.title
- 
-         donateButton.addTarget(self, action: #selector(donateToLF), for: .touchUpInside)
-        let viewsDictionary = ["titleLabel": titleLabel, "donateButton": donateButton, "border": border]
+        donateButton.addTarget(self, action: #selector(donateToLF), for: .touchUpInside)
+        
+        guard let fiatSymbol = store.state.currentRate?.currencySymbol else { return }
+        donateButton.title = String(format: S.Donate.title, isLTCSwapped ? "\(fiatSymbol)":"Ł")
+        
+        let viewsDictionary = ["donateButton": donateButton, "border": border]
         var viewConstraints = [NSLayoutConstraint]()
     
-        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-16-[titleLabel]-(2)-[donateButton(120)]-16-|", options: [], metrics: nil, views: viewsDictionary)
+        let constraintsHorizontal = NSLayoutConstraint.constraints(withVisualFormat: "H:|-25-[donateButton(190)]-25-|", options: [], metrics: nil, views: viewsDictionary)
         viewConstraints += constraintsHorizontal
-          
-        let titleConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-10-[titleLabel]-10-|", options: [], metrics: nil, views: viewsDictionary)
-
-        viewConstraints += titleConstraintVertical
         
         let descriptionConstraintVertical = NSLayoutConstraint.constraints(withVisualFormat: "V:|-16-[donateButton]-16-|", options: [], metrics: nil, views: viewsDictionary)
 
         viewConstraints += descriptionConstraintVertical
-            
         border.constrainBottomCorners(height: 1.0)
-
-         NSLayoutConstraint.activate(viewConstraints)
+        NSLayoutConstraint.activate(viewConstraints)
     }
      
     @objc func donateToLF() {

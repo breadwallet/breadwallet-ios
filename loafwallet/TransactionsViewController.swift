@@ -21,7 +21,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     var shouldBeSyncing: Bool = false
     var syncingHeaderView : SyncProgressHeaderView?
     var shouldShowPrompt = true
-    
+
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -79,7 +79,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     private func addSubscriptions() {
         
         guard let store = self.store else {
-            NSLog("ERROR - Store not passed")
+            NSLog("ERROR: Store not initialized")
             return
         }
          
@@ -87,14 +87,6 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
                        callback: { state in
            self.allTransactions = state.walletState.transactions
            self.reload()
-        })
-        
-        store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
-            if $0.isLoadingTransactions {
-               
-            } else {
-                 
-            }
         })
 
         store.subscribe(self, selector: { $0.isLtcSwapped != $1.isLtcSwapped },
@@ -190,7 +182,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     private func attemptShowPrompt() {
         guard let walletManager = walletManager else { return }
         guard let store = self.store else {
-            NSLog("ERROR - Store not passed")
+            NSLog("ERROR: Store not initialized")
             return
         }
          
@@ -208,8 +200,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
             currentPromptType = nil
         }
     }
-     
-     
+      
     private func reload() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -277,11 +268,12 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          
-          if hasExtraSection && indexPath.section == 0 {
+        if hasExtraSection && indexPath.section == 0 {
             return configurePromptCell(promptType: currentPromptType, indexPath: indexPath)
         } else {
             let transaction = transactions[indexPath.row]
-            return configureTransactionCell(transaction:transaction, indexPath: indexPath)
+            let selectedIndex = selectedIndexes[indexPath] as? Bool
+            return configureTransactionCell(transaction: transaction, wasSelected: selectedIndex ?? false, indexPath: indexPath)
         }
     }
     
@@ -291,8 +283,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
             NSLog("ERROR No cell found")
             return PromptTableViewCell()
         }
-        
-        
+         
         cell.type = promptType
         cell.titleLabel.text = promptType?.title
         cell.bodyLabel.text = promptType?.body
@@ -315,12 +306,14 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
       
-    private func configureTransactionCell(transaction:Transaction?, indexPath: IndexPath) -> TransactionTableViewCellv2 {
-         
+    private func configureTransactionCell(transaction:Transaction?, wasSelected: Bool?, indexPath: IndexPath) -> TransactionTableViewCellv2 {
+        
+        //TODO: Polish animation based on 'wasSelected'
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionTVC2", for: indexPath) as? TransactionTableViewCellv2 else {
-            NSLog("ERROR No cell found")
+            NSLog("ERROR: No cell found")
             return TransactionTableViewCellv2()
-        }
+        } 
         
         if let transaction = transaction {
             if transaction.direction == .received {

@@ -258,10 +258,16 @@
 "Donate.memo" = "Donatie aan de Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tik om te doneren aan de Litecoin Foundation!";
+"Donate.title" = "Tik om te doneren aan de Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Bevestig donatie";
+
+/* Donate articles to the */
+"Donate.toThe" = "Doneer aan de";
+
+/* Donate */
+"Donate.word" = "schenken";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";

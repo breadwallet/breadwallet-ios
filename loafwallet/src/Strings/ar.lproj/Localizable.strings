@@ -1238,6 +1238,12 @@
 /* Corruption Error alert title */
 "Alert.corruptionMessage" = "";
 
+/* Donate Memo */
+"Donate.toThe" = "";
+
+/* Donate */
+"Donate.word" = "";
+
 /* Delete database title */
 "WipeWallet.alertDeleteTitle" = "";
 

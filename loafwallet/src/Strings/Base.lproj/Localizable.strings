@@ -230,7 +230,7 @@
 "Donate.memo" = "Donation to the Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tap to Donate to the Litecoin Foundation!";
+"Donate.title" = "Donate to the Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Confirm Donation";
@@ -1248,3 +1248,9 @@
 
 /* Corruption Error alert title */
 "Alert.corruptionMessage" = "Your local database is corrupted. Go to Settings > Blockchain: Settings > Delete Database to refresh";
+
+/* Donate articles to the */
+"Donate.toThe" = "Donate to the";
+
+/* Donate */
+"Donate.word" = "Donate";
