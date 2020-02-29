@@ -70,11 +70,7 @@ open class BRAPIClient : NSObject, URLSessionDelegate, URLSessionTaskDelegate, B
     var proto = "https"
     
     // host is the server(s) on which the API is hosted
-    #if Testflight || Debug
-    var host = "api.loafwallet.org" // GitHub Pages currently doesn't support more than one domain per repo
-    #else
     var host = "api.loafwallet.org"
-    #endif
     
     // isFetchingAuth is set to true when a request is currently trying to renew authentication (the token)
     // it is useful because fetching auth is not idempotent and not reentrant, so at most one auth attempt

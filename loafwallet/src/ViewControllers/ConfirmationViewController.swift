@@ -48,8 +48,8 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private let payLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
     private let toLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let amountLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
-    private let address = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let amountLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    private let address = UILabel(font: .customBody(size: 14.0), color: .darkText)
 
     private let processingTime = UILabel.wrapping(font: .customBody(size: 14.0), color: .grayTextTint)
     private let sendLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
@@ -159,14 +159,15 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             NSLog("ERROR: Header not initialized")
             return
         }
-
+        
         let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
         let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
 
         amountLabel.text = displayAmount.combinedDescription
         toLabel.text = S.Confirmation.to
-        address.lineBreakMode = .byTruncatingMiddle
+        address.text = self.addressText
+        
         switch feeType {
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, "2.5-5")
@@ -176,6 +177,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
         sendLabel.text = S.Confirmation.amountLabel
         send.text = displayAmount.description
+        
         feeLabel.text = S.Confirmation.feeLabel
         fee.text = displayFee.description
 
