@@ -61,6 +61,7 @@ struct PaymentRequest {
     var remoteRequest: URL?
     var paymentProtocolRequest: PaymentProtocolRequest?
     var r: URL?
+    var destinationTag: String?
     
     init?(string: String, currency: Currency) {
         self.currency = currency
@@ -118,6 +119,10 @@ struct PaymentRequest {
                 case "tokenaddress":
                     if value.lowercased() != currency.tokenAddress?.lowercased() {
                         return nil
+                    }
+                case "dt":
+                    if Int(value) != nil {
+                        destinationTag = value
                     }
                 default:
                     print("Unknown Key found: \(param.name)")
