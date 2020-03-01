@@ -90,6 +90,24 @@ struct TestCurrencies {
       "currency_id": "ethereum-mainnet:0x558ec3152e2eb2174905cd19aea4e34a23de9ad6"
     }
     """.utf8)
+    
+        private static let xrpMetaData = Data("""
+    {
+        "code": "XRP",
+        "name": "XRP",
+        "scale": 6,
+        "is_supported": true,
+        "contract_address": "",
+        "sale_address": "",
+        "contract_info": {},
+        "colors": [
+            "#282e34",
+            "#282e34"
+        ],
+        "type": "",
+        "currency_id": "ripple-mainnet:__native__"
+    }
+    """.utf8)
 
     static var btc: AppCurrency {
         let btc = CoreCurrency(uids: Currencies.btc.uid.rawValue, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
@@ -146,6 +164,19 @@ struct TestCurrencies {
                            units: Set([brd_brdi, brd_brd]),
                            baseUnit: brd_brdi,
                            defaultUnit: brd_brdi)!
+    }
+    
+    static var xrp: AppCurrency {
+        let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: xrpMetaData)
+        let xrp = CoreCurrency (uids: Currencies.xrp.uid.rawValue, name: "XRP", code: Currencies.xrp.code, type: "native", issuer: nil)
+        let xrp_xrp = BRCrypto.Unit (currency: xrp, code: "XRP", name: "XRP", symbol: "XRP")
+        let network = networks.first(where: { $0.uids == "ripple-mainnet" })!
+        return AppCurrency(core: xrp,
+                           network: network,
+                           metaData: metaData,
+                           units: Set([xrp_xrp]),
+                           baseUnit: xrp_xrp,
+                           defaultUnit: xrp_xrp)!
     }
 }
 
