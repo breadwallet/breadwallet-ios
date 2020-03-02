@@ -53,12 +53,14 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
     private let messageUIPresenter = MessageUIPresenter()
 
     private var notificationObservers = [String: NSObjectProtocol]()
+    private var system: CoreSystem?
     
-    init(bundleName: String, mountPoint: String = "/", walletAuthenticator: TransactionAuthenticator) {
+    init(bundleName: String, mountPoint: String = "/", walletAuthenticator: TransactionAuthenticator, system: CoreSystem? = nil) {
         wkProcessPool = WKProcessPool()
         self.bundleName = bundleName
         self.mountPoint = mountPoint
         self.walletAuthenticator = walletAuthenticator
+        self.system = system
         super.init(nibName: nil, bundle: nil)
         if debugOverBonjour {
             setupBonjour()
@@ -300,7 +302,9 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
         router.plugin(BRCameraPlugin(fromViewController: self))
         
         // wallet plugin provides access to the wallet
-        router.plugin(BRWalletPlugin(walletAuthenticator: walletAuthenticator))
+        if let system = system {
+            router.plugin(BRWalletPlugin(walletAuthenticator: walletAuthenticator, system: system))
+        }
         
         // link plugin which allows opening links to other apps
         router.plugin(BRLinkPlugin(fromViewController: self))
