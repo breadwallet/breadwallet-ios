@@ -1244,6 +1244,15 @@
 /* Donate */
 "Donate.word" = "";
 
+/* Luxury fee */
+"FeeSelector.luxury" = "";
+
+/* Fee Selector economly fee description */
+"FeeSelector.luxuryLabel" = "";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "";
+
 /* Delete database title */
 "WipeWallet.alertDeleteTitle" = "";
 

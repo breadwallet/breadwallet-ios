@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "經濟";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "預估送達：60 幾分鐘";
+"FeeSelector.economyLabel" = "預估送達：10 幾分鐘";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "此選項不建議用於時效性的交易。";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "豪華";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "預計送達時間：2.5 - 5 分鐘";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "儘管您要支付一定的費用，但此選項實際上可以保證您接受交易。";
 
 /* Regular fee */
 "FeeSelector.regular" = "標準";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "預估送達：10-30 分鐘";
+"FeeSelector.regularLabel" = "預計送達時間：2.5 - 5+ 分鐘";
 
 /* Fee Selector title */
 "FeeSelector.title" = "處理速度";

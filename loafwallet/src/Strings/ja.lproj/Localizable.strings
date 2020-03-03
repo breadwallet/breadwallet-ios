@@ -314,11 +314,20 @@
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "このオプションは速く送金を済ませたい方にはお勧めしません。";
 
+/* Luxury fee */
+"FeeSelector.luxury" = "ぜいたく";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "配達予定日：2.5 - 5 分";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "このオプションは、プレミアムを支払っていますが、トランザクションの受け入れを事実上保証します。";
+
 /* Regular fee */
 "FeeSelector.regular" = "レギュラー";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "想定される送金時間：10～30分";
+"FeeSelector.regularLabel" = "配達予定日：2.5 - 5+ 分";
 
 /* Fee Selector title */
 "FeeSelector.title" = "処理速度";

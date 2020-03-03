@@ -314,11 +314,20 @@
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Diese Option wird nicht für zeitkritische Transaktionen empfohlen.";
 
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxus";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Voraussichtliche Lieferzeit: 2,5 - 5 Minuten";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Diese Option garantiert praktisch die Annahme Ihrer Transaktion, obwohl Sie eine Prämie zahlen.";
+
 /* Regular fee */
 "FeeSelector.regular" = "Regulär";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Voraussichtliche Transaktionsdauer: 10-30 Minuten";
+"FeeSelector.regularLabel" = "Voraussichtliche Lieferzeit: 2,5 - 5+ Minuten";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Verarbeitungsgeschwindigkeit";

@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Ekonomi";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Beräknad leveranstid: 60+ minuter";
+"FeeSelector.economyLabel" = "Beräknad leveranstid: 10+ minuter";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Detta alternativ rekommenderas inte för tidskänsliga transaktioner.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Lyx";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Uppskattad leverans: 2,5 - 5 minuter";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Detta alternativ garanterar praktiskt taget accept av din transaktion även om du betalar en premie.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Vanlig";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Beräknad leveranstid: 10-30 minuter";
+"FeeSelector.regularLabel" = "Uppskattad leverans: 2,5 - 5+ minuter";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Bearbetningshastighet";

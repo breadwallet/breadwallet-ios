@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Экономия";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Ориентировочная доставка: 60+ минут";
+"FeeSelector.economyLabel" = "Ориентировочная доставка: 10+ минут";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Этот параметр не рекомендуется для транзакций, чувствительных с точки зрения времени.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "люкс";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Ориентировочная доставка: 2,5 - 5 минут";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Эта опция фактически гарантирует принятие вашей транзакции, хотя вы платите премию.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Обычна сумма";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Ориентировочная доставка: 10-30 минут";
+"FeeSelector.regularLabel" = "Ориентировочная доставка: 2,5 - 5+ минут";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Скорость обработки";

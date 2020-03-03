@@ -293,7 +293,7 @@
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
-		CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */; };
+		CE124CFC1E68932C00DFA146 /* FeeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFB1E68932C00DFA146 /* FeeManager.swift */; };
 		CE124CFE1E68F57700DFA146 /* Async.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFD1E68F57700DFA146 /* Async.swift */; };
 		CE124D001E69170900DFA146 /* SyncingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CFF1E69170900DFA146 /* SyncingView.swift */; };
 		CE1280F61EEA855C00D27649 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1280F51EEA855C00D27649 /* Date+Additions.swift */; };
@@ -324,8 +324,6 @@
 		CE3D4C571EF5D5740016B1C8 /* ReachabilityMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */; };
 		CE3D4C591EF743EF0016B1C8 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D4C581EF743EF0016B1C8 /* Functions.swift */; };
 		CE44BA1B1F33BFC500392A1A /* NodeSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */; };
-		CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */; };
-		CE44BA1F1F353AB200392A1A /* WalletManager+BCash.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */; };
 		CE45C1F91E74B400002C3847 /* ManageWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */; };
 		CE45C1FB1E74F89C002C3847 /* WalletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */; };
 		CE45C1FD1E7650F5002C3847 /* KVStoreCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */; };
@@ -372,7 +370,6 @@
 		CE92F9F01DED0C790046B516 /* PresentModalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */; };
 		CE92F9F41DED59E80046B516 /* UIView+AnimationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */; };
 		CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */; };
-		CEA05CC31F21B53C00D850F0 /* FeeSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA05CC21F21B53C00D850F0 /* FeeSelector.swift */; };
 		CEA362681E00EE320061FC0E /* CameraGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA362671E00EE320061FC0E /* CameraGuideView.swift */; };
 		CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA362691E01150D0061FC0E /* CGContext+Additions.swift */; };
 		CEAA9E8F1DC074410066731D /* StartPaperPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */; };
@@ -1572,7 +1569,7 @@
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE0FC0F91F72417500E7C626 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TransactionDirection.swift; path = src/ViewModels/TransactionDirection.swift; sourceTree = "<group>"; };
-		CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeUpdater.swift; path = src/FeeUpdater.swift; sourceTree = "<group>"; };
+		CE124CFB1E68932C00DFA146 /* FeeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeManager.swift; path = src/FeeManager.swift; sourceTree = "<group>"; };
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
 		CE124CFF1E69170900DFA146 /* SyncingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncingView.swift; path = src/Views/SyncingView.swift; sourceTree = "<group>"; };
 		CE1280F51EEA855C00D27649 /* Date+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Date+Additions.swift"; path = "src/Extensions/Date+Additions.swift"; sourceTree = "<group>"; };
@@ -1613,8 +1610,6 @@
 		CE3D4C561EF5D5740016B1C8 /* ReachabilityMonitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReachabilityMonitor.swift; path = src/ReachabilityMonitor.swift; sourceTree = "<group>"; };
 		CE3D4C581EF743EF0016B1C8 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Functions.swift; path = src/Constants/Functions.swift; sourceTree = "<group>"; };
 		CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NodeSelectorViewController.swift; path = src/ViewControllers/NodeSelectorViewController.swift; sourceTree = "<group>"; };
-		CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BCashTransactionViewController.swift; path = src/ViewControllers/BCashTransactionViewController.swift; sourceTree = "<group>"; };
-		CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+BCash.swift"; path = "src/WalletManager+BCash.swift"; sourceTree = "<group>"; };
 		CE45C1F81E74B400002C3847 /* ManageWalletViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletViewController.swift; path = src/ViewControllers/RootModals/ManageWalletViewController.swift; sourceTree = "<group>"; };
 		CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WalletInfo.swift; path = src/Platform/WalletInfo.swift; sourceTree = "<group>"; };
 		CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KVStoreCoordinator.swift; path = src/KVStoreCoordinator.swift; sourceTree = "<group>"; };
@@ -1666,7 +1661,6 @@
 		CE92F9EF1DED0C790046B516 /* PresentModalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PresentModalAnimator.swift; path = src/ViewControllers/ViewControllerTransitions/PresentModalAnimator.swift; sourceTree = "<group>"; };
 		CE92F9F31DED59E80046B516 /* UIView+AnimationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIView+AnimationAdditions.swift"; path = "src/Extensions/UIView+AnimationAdditions.swift"; sourceTree = "<group>"; };
 		CE92F9F51DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewControllerContextTransitioning+BRAdditions.swift"; path = "src/Extensions/UIViewControllerContextTransitioning+BRAdditions.swift"; sourceTree = "<group>"; };
-		CEA05CC21F21B53C00D850F0 /* FeeSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeeSelector.swift; path = src/ViewControllers/FeeSelector.swift; sourceTree = "<group>"; };
 		CEA362671E00EE320061FC0E /* CameraGuideView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CameraGuideView.swift; path = src/Views/CameraGuideView.swift; sourceTree = "<group>"; };
 		CEA362691E01150D0061FC0E /* CGContext+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGContext+Additions.swift"; path = "src/Extensions/CGContext+Additions.swift"; sourceTree = "<group>"; };
 		CEAA9E8E1DC074410066731D /* StartPaperPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartPaperPhraseViewController.swift; path = src/ViewControllers/StartPaperPhraseViewController.swift; sourceTree = "<group>"; };
@@ -3113,12 +3107,11 @@
 				754AE0BB1DFE8A46007FD001 /* BRCore.swift */,
 				75519F331DC7D20500EDF66C /* WalletManager.swift */,
 				7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */,
-				CE44BA1E1F353AB200392A1A /* WalletManager+BCash.swift */,
 				CE4B6C191E219CA600CF935B /* WalletCoordinator.swift */,
 				CEE659E61F65A936001FF29D /* RetryTimer.swift */,
 				CE8CD8DC1E2D9EF200785E02 /* Sender.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
-				CE124CFB1E68932C00DFA146 /* FeeUpdater.swift */,
+				CE124CFB1E68932C00DFA146 /* FeeManager.swift */,
 				CED82D4D1E575A5500507A9B /* _main.swift */,
 				CE45C1FC1E7650F5002C3847 /* KVStoreCoordinator.swift */,
 				CEC6F8441E886723000795B8 /* PaymentRequest.swift */,
@@ -3306,10 +3299,8 @@
 				CEEE92F01EBA7CBA00B7AC9C /* RequestAmountViewController.swift */,
 				CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */,
 				CEC4CF061F0C48DD00E5C82E /* StartWipeWalletViewController.swift */,
-				CEA05CC21F21B53C00D850F0 /* FeeSelector.swift */,
 				CE8644241F2C160200033129 /* ConfirmationViewController.swift */,
 				CE44BA1A1F33BFC500392A1A /* NodeSelectorViewController.swift */,
-				CE44BA1C1F35102D00392A1A /* BCashTransactionViewController.swift */,
 				CEE659E81F664C73001FF29D /* WelcomeViewController.swift */,
 				1B3F74211FFB106200CCA50C /* BiometricsSettingsViewController.swift */,
 				1B3F74221FFB106200CCA50C /* BiometricsSpendingLimitViewController.swift */,
@@ -4469,7 +4460,6 @@
 				2228734D1E916F7C0044BA15 /* BRAPIClient+Features.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
-				CE44BA1D1F35102D00392A1A /* BCashTransactionViewController.swift in Sources */,
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
 				CE5F21DB1E4A93A500C47B8E /* LoginTransitionDelegate.swift in Sources */,
 				CEE659E91F664C73001FF29D /* WelcomeViewController.swift in Sources */,
@@ -4480,7 +4470,6 @@
 				CE4B6C1A1E219CA600CF935B /* WalletCoordinator.swift in Sources */,
 				240A89B6235F7280005E2A2F /* DonationSetupCell.swift in Sources */,
 				CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */,
-				CEA05CC31F21B53C00D850F0 /* FeeSelector.swift in Sources */,
 				CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */,
 				1B3F74231FFB106200CCA50C /* BiometricsSettingsViewController.swift in Sources */,
 				CEC4CF071F0C48DD00E5C82E /* StartWipeWalletViewController.swift in Sources */,
@@ -4491,7 +4480,7 @@
 				CEA362681E00EE320061FC0E /* CameraGuideView.swift in Sources */,
 				CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */,
 				24016D9023F913C1006A6791 /* LWAnalytics.swift in Sources */,
-				CE124CFC1E68932C00DFA146 /* FeeUpdater.swift in Sources */,
+				CE124CFC1E68932C00DFA146 /* FeeManager.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
 				24AF0101221B349100FF636F /* WarningConfirmationViewController.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
@@ -4585,7 +4574,6 @@
 				CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */,
 				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
 				CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */,
-				CE44BA1F1F353AB200392A1A /* WalletManager+BCash.swift in Sources */,
 				CE8F0AE31EB91BB500AA7642 /* SearchHeaderView.swift in Sources */,
 				22A9A9551DF61945000F0016 /* BRTar.swift in Sources */,
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
@@ -5016,7 +5004,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = loafwallet/loafwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5047,7 +5035,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				IBSC_MODULE = loafwallet_WatchKit_Extension;
@@ -5218,7 +5206,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet WatchKit Extension/Info.plist";
@@ -5242,7 +5230,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
@@ -5264,7 +5252,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
@@ -5629,7 +5617,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet WatchKit Extension/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5653,7 +5641,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				IBSC_MODULE = loafwallet_WatchKit_Extension;
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet WatchKit App/Info.plist";
@@ -5676,7 +5664,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = loafwallet/loafwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SRCROOT)/**",
@@ -5704,7 +5692,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -5725,7 +5713,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -5827,7 +5815,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = loafwallet/loafwallet.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -5858,7 +5846,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				IBSC_MODULE = loafwallet_WatchKit_Extension;
@@ -5879,7 +5867,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet WatchKit Extension/Info.plist";
@@ -5903,7 +5891,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = TodayExtension/TodayExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = TodayExtension/Info.plist;
@@ -5925,7 +5913,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = ZV7987N2ZC;
 				INFOPLIST_FILE = NotificationServiceExtension/Info.plist;
