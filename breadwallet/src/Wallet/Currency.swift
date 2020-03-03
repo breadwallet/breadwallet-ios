@@ -179,6 +179,10 @@ extension Currency: Hashable {
 extension Currency {
     
     func isValidAddress(_ address: String) -> Bool {
+        //TODO:CRYPTO - workaround for CORE-843
+        if (address == "unknown" || address.isEmpty) && isXRP {
+            return false
+        }
         return Address.create(string: address, network: network) != nil
     }
 
