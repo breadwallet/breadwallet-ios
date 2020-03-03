@@ -47,7 +47,10 @@ enum CustomEvent: String {
     case _20200217_DLWP = "DID_LOGIN_WITH_PIN"
     case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"
     case _20200223_DD = "DID_DONATE"
-    case _20200225_DCD = "DID_CANCEL_DONATE" 
+    case _20200225_DCD = "DID_CANCEL_DONATE"
+    case _20200301_DUDFPK = "DID_USE_DEFAULT_FEE_PER_KB"
+
+    
 }
   
 struct Padding {

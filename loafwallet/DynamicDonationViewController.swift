@@ -45,7 +45,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     var cancelCallback: (() -> Void)?
     
     var store: Store?
-    var feeType: Fee?
+    var feeType: FeeType?
     var senderClass: Sender?
     var selectedRate: Rate?
     var minimumFractionDigits: Int = 2

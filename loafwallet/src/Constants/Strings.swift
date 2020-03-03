@@ -613,11 +613,16 @@ enum S {
 
     enum FeeSelector {
         static let title = NSLocalizedString("FeeSelector.title", value: "**Processing Speed**", comment: "Fee Selector title")
-        static let regularLabel = NSLocalizedString("FeeSelector.regularLabel", value: "**Estimated Delivery: 10-30 minutes**", comment: "Fee Selector regular fee description")
-        static let economyLabel = NSLocalizedString("FeeSelector.economyLabel", value: "**Estimated Delivery: 60+ minutes**", comment: "Fee Selector economly fee description")
+        static let regularLabel = NSLocalizedString("FeeSelector.regularLabel", value: "**Estimated Delivery: 2.5 - 5+ minutes**", comment: "Fee Selector regular fee description")
+        static let economyLabel = NSLocalizedString("FeeSelector.economyLabel", value: "**Estimated Delivery: ~10 minutes**", comment: "Fee Selector economy fee description")
+        static let luxuryLabel = NSLocalizedString("FeeSelector.luxuryLabel", value: "**Delivery: 2.5 - 5+  minutes**", comment: "Fee Selector luxury fee description")
         static let economyWarning = NSLocalizedString("FeeSelector.economyWarning", value: "**This option is not recommended for time-sensitive transactions.**", comment: "Warning message for economy fee")
+        static let luxuryMessage = NSLocalizedString("FeeSelector.luxuryMessage", value: "**This option virtually guarantees acceptance of your transaction while you pay a premium.**", comment: "Message for luxury fee")
+
         static let regular = NSLocalizedString("FeeSelector.regular", value: "**Regular**", comment: "Regular fee")
         static let economy = NSLocalizedString("FeeSelector.economy", value: "**Economy**", comment: "Economy fee")
+        static let luxury = NSLocalizedString("FeeSelector.luxury", value: "**Luxury**", comment: "Luxury fee")
+
     }
 
     enum Confirmation {
