@@ -477,6 +477,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if request.label != nil {
                 memoCell.content = request.label
             }
+            if request.destinationTag != nil {
+                tagCell?.setContent(request.destinationTag)
+            }
         case .remote:
             let loadingView = BRActivityViewController(message: S.Send.loadingRequest)
             present(loadingView, animated: true, completion: nil)
