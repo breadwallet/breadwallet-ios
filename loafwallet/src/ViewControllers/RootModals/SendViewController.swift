@@ -64,7 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = TransitioningDelegate()
-    private var feeType: Fee?
+    private var feeType: FeeType?
  
     override func viewDidLoad() {
         
@@ -155,15 +155,17 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
         }
-        amountView.didUpdateFee = strongify(self) { myself, fee in
+        amountView.didUpdateFee = strongify(self) { myself, feeType in
             guard let wallet = myself.walletManager.wallet else { return }
-            myself.feeType = fee
+            myself.feeType = feeType
             let fees = myself.store.state.fees
-            switch fee {
+            switch feeType {
             case .regular:
                 wallet.feePerKb = fees.regular
             case .economy:
                 wallet.feePerKb = fees.economy
+            case .luxury:
+                wallet.feePerKb = fees.luxury
             }
             myself.amountView.updateBalanceLabel()
         }
@@ -304,6 +306,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         guard let amount = amount else { return }
         let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                  self.send()
