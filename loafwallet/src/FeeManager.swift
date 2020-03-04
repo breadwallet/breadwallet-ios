@@ -3,7 +3,7 @@
 //  litewallet
 //
 //  Created by Kerry Washington on 2/29/20.
-//  Copyright © 2019 Litecoin Foundation. All rights reserved.
+//  Copyright © 2020 Litecoin Foundation. All rights reserved.
 
 import Foundation
 import UIKit
@@ -107,9 +107,9 @@ class FeeSelector : UIView {
     }
 
     private let store: Store
-    private let header = UILabel(font: .barloweMedium(size: 16.0), color: .darkText)
-    private let subheader = UILabel(font: .barloweRegular(size: 14.0), color: .grayTextTint)
-    private let feeMessageLabel = UILabel.wrapping(font: .barloweSemiBold(size: 14.0), color: .red)
+    private let header = UILabel(font: .barlowMedium(size: 16.0), color: .darkText)
+    private let subheader = UILabel(font: .barlowRegular(size: 14.0), color: .grayTextTint)
+    private let feeMessageLabel = UILabel.wrapping(font: .barlowSemiBold(size: 14.0), color: .red)
     private let control = UISegmentedControl(items: [S.FeeSelector.regular, S.FeeSelector.economy, S.FeeSelector.luxury])
     private var bottomConstraint: NSLayoutConstraint?
 
@@ -123,9 +123,11 @@ class FeeSelector : UIView {
         
         header.constrain([
             header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+            header.trailingAnchor.constraint(equalTo: trailingAnchor, constant: C.padding[2]),
             header.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]) ])
         subheader.constrain([
             subheader.leadingAnchor.constraint(equalTo: header.leadingAnchor),
+            subheader.trailingAnchor.constraint(equalTo: trailingAnchor, constant: C.padding[2]),
             subheader.topAnchor.constraint(equalTo: header.bottomAnchor) ])
 
         bottomConstraint = feeMessageLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])
@@ -161,6 +163,7 @@ class FeeSelector : UIView {
                 myself.didUpdateFee?(.regular)
                 myself.subheader.text = S.FeeSelector.regularLabel
                 myself.feeMessageLabel.text = ""
+                LWAnalytics.logEventWithParameters(itemName: ._20200112_ERR, properties: ["FEE_MANAGER":"DID_USE_DEFAULT"])
             }
         }
 
