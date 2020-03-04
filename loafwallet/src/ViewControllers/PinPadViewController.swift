@@ -19,6 +19,8 @@ enum KeyboardType {
 }
 
 let deleteKeyIdentifier = "del"
+let kDecimalPadItemHeight: CGFloat = 48.0
+let kPinPadItemHeight: CGFloat = 54.0
 
 class PinPadViewController : UICollectionViewController {
 
@@ -30,9 +32,9 @@ class PinPadViewController : UICollectionViewController {
     var height: CGFloat {
         switch keyboardType {
         case .decimalPad:
-            return 48.0*4.0
+            return kDecimalPadItemHeight * 4.0 //for four rows tall
         case .pinPad:
-            return 54.0*4.0
+            return kPinPadItemHeight * 4.0 //for four rows tall
         }
     }
 
@@ -59,14 +61,17 @@ class PinPadViewController : UICollectionViewController {
         layout.minimumLineSpacing = 1.0
         layout.minimumInteritemSpacing = 1.0
         layout.sectionInset = .zero
-
+        
+        //This value caused havoc (=1.0) on the iPad UI as the margins were previously too small. And items would be truncated
+        let itemWidthWithMargin = screenWidth/3.0 - 2.0
+     
         switch keyboardType {
         case .decimalPad:
             items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", currencyDecimalSeparator, "0", deleteKeyIdentifier]
-            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 48.0 - 1.0)
+            layout.itemSize = CGSize(width: itemWidthWithMargin, height: kDecimalPadItemHeight - 1.0)
         case .pinPad:
             items = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", deleteKeyIdentifier]
-            layout.itemSize = CGSize(width: screenWidth/3.0 - 2.0/3.0, height: 54.0 - 0.5)
+            layout.itemSize = CGSize(width: itemWidthWithMargin, height: kPinPadItemHeight - 0.5)
         }
 
         super.init(collectionViewLayout: layout)
@@ -318,12 +323,11 @@ class ClearNumberPad : GenericPinPadCell {
         if isHighlighted {
             backgroundColor = .transparentBlack
         } else {
+            backgroundColor = .clear
+            
             if text == "" || text == deleteKeyIdentifier {
-                backgroundColor = .clear
                 imageView.image = imageView.image?.withRenderingMode(.alwaysTemplate)
                 imageView.tintColor = .white
-            } else {
-                backgroundColor = .clear
             }
         }
     }
