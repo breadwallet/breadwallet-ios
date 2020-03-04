@@ -87,10 +87,7 @@ class ConfirmPaperPhraseViewController : UITableViewController {
     }
  
     private func setupSubViews() {
-        let radiantView = RadialGradientView(backgroundColor: .liteWalletBlue, offset: 0)
-        radiantView.frame = headerView.frame
-        headerView.addSubview(radiantView)
-        headerView.sendSubview(toBack: radiantView)
+        headerView.backgroundColor = .liteWalletBlue 
         headerTitleLabel.font = UIFont.barloweBold(size: 18.0)
         headerDescriptionLabel.font = UIFont.barloweRegular(size: 14.0)
         
