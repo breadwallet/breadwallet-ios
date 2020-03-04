@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import BRCore
+import FirebaseAnalytics
  
 extension String {
     
@@ -128,11 +129,23 @@ extension String {
     }
     
     func replacingZeroFeeWithOneCent() -> String {
+       
+        guard self.count > 3 else {
+            LWAnalytics.logEventWithParameters(itemName: ._20200112_ERR, properties: ["ERROR":"STRING_ISSUE"])
+            return self
+        }
+        
         let range = self.index(self.endIndex, offsetBy: -3)..<self.endIndex
         return self.replacingOccurrences(of: ".00", with: ".01", options: .literal, range: range)
     }
     
     func combinedFeeReplacingZeroFeeWithOneCent() -> String {
+        
+        guard self.count > 4 else {
+            LWAnalytics.logEventWithParameters(itemName: ._20200112_ERR, properties: ["ERROR":"STRING_ISSUE"])
+            return self
+        }
+        
         let range = self.index(self.endIndex, offsetBy: -4)..<self.endIndex
         return self.replacingOccurrences(of: ".00)", with: ".01)", options: .literal, range: range)
     }
