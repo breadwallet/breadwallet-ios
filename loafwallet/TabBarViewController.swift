@@ -40,7 +40,7 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
     private let smallFontSize: CGFloat = 12.0
     private var hasInitialized = false
     private let dateFormatter = DateFormatter()
-    private let equalsLabel = UILabel(font: .barloweMedium(size: 12), color: .whiteTint)
+    private let equalsLabel = UILabel(font: .barlowMedium(size: 12), color: .whiteTint)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private let currencyTapView = UIView()
@@ -134,8 +134,8 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
             view?.textColor = .white
         }
  
-        primaryLabel.font = UIFont.barloweSemiBold(size: largeFontSize)
-        secondaryLabel.font = UIFont.barloweSemiBold(size: largeFontSize)
+        primaryLabel.font = UIFont.barlowSemiBold(size: largeFontSize)
+        secondaryLabel.font = UIFont.barlowSemiBold(size: largeFontSize)
         
         equalsLabel.text = "="
         headerView.addSubview(primaryLabel)

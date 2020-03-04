@@ -46,19 +46,19 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let cancel = ShadowButton(title: S.Button.cancel, type: .flatWhiteBorder)
     private let sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
 
-    private let payLabel = UILabel(font: .barloweLight(size: 15.0), color: .grayTextTint)
-    private let toLabel = UILabel(font: .barloweLight(size: 15.0), color: .grayTextTint)
-    private let amountLabel = UILabel(font: .barloweRegular(size: 15.0), color: .darkText)
-    private let address = UILabel(font: .barloweRegular(size: 15.0), color: .darkText)
+    private let payLabel = UILabel(font: .barlowLight(size: 15.0), color: .grayTextTint)
+    private let toLabel = UILabel(font: .barlowLight(size: 15.0), color: .grayTextTint)
+    private let amountLabel = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let address = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
 
-    private let processingTime = UILabel.wrapping(font: .barloweLight(size: 14.0), color: .grayTextTint)
-    private let sendLabel = UILabel(font: .barloweLight(size: 14.0), color: .darkGray)
-    private let feeLabel = UILabel(font: .barloweLight(size: 14.0), color: .darkGray)
-    private let totalLabel = UILabel(font: .barloweLight(size: 14.0), color: .darkGray)
+    private let processingTime = UILabel.wrapping(font: .barlowLight(size: 14.0), color: .grayTextTint)
+    private let sendLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
+    private let feeLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
+    private let totalLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
 
-    private let send = UILabel(font: .barloweRegular(size: 15.0), color: .darkText)
-    private let fee = UILabel(font: .barloweRegular(size: 15.0), color: .darkText)
-    private let total = UILabel(font: .barloweMedium(size: 15.0), color: .darkText)
+    private let send = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let fee = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let total = UILabel(font: .barlowMedium(size: 15.0), color: .darkText)
 
     override func viewDidLoad() {
          

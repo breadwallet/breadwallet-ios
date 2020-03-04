@@ -218,7 +218,7 @@ extension DynamicDonationViewController: UIPickerViewDataSource, UIPickerViewDel
         let title = S.Donate.toThe + " " + LWDonationAddress.allValues[row].rawValue
         let label = UILabel()
         label.textAlignment = .center
-        label.attributedText = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.barloweRegular(size: 17), NSAttributedString.Key.foregroundColor: UIColor.black])
+        label.attributedText = NSAttributedString(string: title, attributes: [NSAttributedString.Key.font : UIFont.barlowRegular(size: 17), NSAttributedString.Key.foregroundColor: UIColor.black])
         return label
     }
     

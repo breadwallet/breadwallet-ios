@@ -72,7 +72,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
         button.accessibilityLabel = LAContext.biometricType() == .face ? S.UnlockScreen.faceIdText : S.UnlockScreen.touchIdText
         return button
     }()
-    private let enterPINLabel = UILabel(font: .barloweBold(size: 17), color: .white)
+    private let enterPINLabel = UILabel(font: .barlowBold(size: 17), color: .white)
     private var pinPadBottom: NSLayoutConstraint?
     private var topControlTop: NSLayoutConstraint?
     private var unlockTimer: Timer?
@@ -80,7 +80,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
     private var hasAttemptedToShowBiometrics = false
     private let lockedOverlay = UIVisualEffectView()
     private var isResetting = false
-    private let versionLabel = UILabel(font: .barloweLight(size: 14), color: .transparentWhite)
+    private let versionLabel = UILabel(font: .barlowLight(size: 14), color: .transparentWhite)
     private var isWalletEmpty = false
   
     override func viewDidLoad() {
@@ -260,7 +260,7 @@ class LoginViewController : UIViewController, Subscriber, Trackable {
                 wipeBannerButton.heightAnchor.constraint(equalToConstant: 40)])
             
             wipeBannerButton.setTitle(S.WipeWallet.emptyWallet, for: .normal)
-            wipeBannerButton.titleLabel?.font = .barloweBold(size: 17)
+            wipeBannerButton.titleLabel?.font = .barlowBold(size: 17)
             wipeBannerButton.addTarget(self, action: #selector(wipeTapped), for: .touchUpInside)
         } else {
             wipeBannerButton.removeFromSuperview()

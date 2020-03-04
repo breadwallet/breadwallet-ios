@@ -397,7 +397,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         messageLabel.textColor = .litecoinGray
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
-        messageLabel.font = UIFont.barloweMedium(size: 20)
+        messageLabel.font = UIFont.barlowMedium(size: 20)
         messageLabel.sizeToFit()
         self.tableView.backgroundView = messageLabel
         self.tableView.separatorStyle = .none
