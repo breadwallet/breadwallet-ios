@@ -47,8 +47,7 @@ class DynamicDonationViewController: UIViewController, Subscriber {
     var store: Store?
     var feeType: FeeType?
     var senderClass: Sender?
-    var selectedRate: Rate?
-    var minimumFractionDigits: Int = 2
+    var selectedRate: Rate? 
     var isUsingBiometrics: Bool = false
     var balance: UInt64 = 0
     var finalDonationAmount = Satoshis(rawValue: kDonationAmount)
@@ -167,10 +166,10 @@ class DynamicDonationViewController: UIViewController, Subscriber {
         }
         
         self.finalDonationAmount = donationAmount
-        sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
+        sendAmountLabel.text = DisplayAmount(amount: donationAmount, state: state, selectedRate: state.currentRate, minimumFractionDigits: 2).combinedDescription
         let feeAmount = sender.feeForTx(amount: donationAmount.rawValue)
-        networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
-        totalCostLabel.text = DisplayAmount(amount: donationAmount + Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: minimumFractionDigits).combinedDescription
+        networkFeeLabel.text = DisplayAmount(amount:Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: 2).combinedDescription.combinedFeeReplacingZeroFeeWithOneCent()
+        totalCostLabel.text = DisplayAmount(amount: donationAmount + Satoshis(rawValue: feeAmount), state: state, selectedRate: state.currentRate, minimumFractionDigits: 2).combinedDescription
         donationValueLabel.text = totalCostLabel.text
     }
  

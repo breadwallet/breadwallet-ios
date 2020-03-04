@@ -10,22 +10,25 @@ import UIKit
 import FirebaseAnalytics
  
 // this is the default that matches the mobile-api if the server is unavailable
-fileprivate let defaultEconomyFeePerKB: UInt64 = 2500 // From legacy minimum. default min is 1000 as on
+fileprivate let defaultEconomyFeePerKB: UInt64 = 2500 // From legacy minimum. default min is 1000 as Litecoin Core version v0.17.1 
 fileprivate let defaultRegularFeePerKB: UInt64 = 25000
 fileprivate let defaultLuxuryFeePerKB: UInt64 = 66746
 fileprivate let defaultTimestamp: UInt64 = 1583015199122
 
-struct Fees {
+struct Fees: Equatable {
     let luxury: UInt64
     let regular: UInt64
     let economy: UInt64
     let timestamp: UInt64
     
-    static var defaultFees: Fees {
-        return Fees(luxury: defaultLuxuryFeePerKB, regular: defaultRegularFeePerKB, economy: defaultRegularFeePerKB, timestamp: defaultTimestamp)
+    static var usingDefaultValues: Fees {
+        return Fees(luxury: defaultLuxuryFeePerKB,
+                    regular: defaultRegularFeePerKB,
+                    economy: defaultEconomyFeePerKB,
+                    timestamp: defaultTimestamp)
     }
 }
-
+ 
 enum FeeType {
     case regular
     case economy
@@ -37,14 +40,12 @@ class FeeUpdater : Trackable {
     //MARK: - Private
     private let walletManager: WalletManager
     private let store: Store
-    private let feeKey = "FEE_PER_KB"
-    private let txFeePerKb: UInt64 = 1000
     private lazy var minFeePerKB: UInt64 = {
-        return Fees.defaultFees.economy
+        return Fees.usingDefaultValues.economy
     }()
-    private let maxFeePerKB = Fees.defaultFees.luxury
+    private let maxFeePerKB = Fees.usingDefaultValues.luxury
     private var timer: Timer?
-    private let feeUpdateInterval: TimeInterval = 15
+    private let feeUpdateInterval: TimeInterval = 15 //meet Nyquist for api server interval (30)
     
     //MARK: - Public
     init(walletManager: WalletManager, store: Store) {
@@ -56,17 +57,17 @@ class FeeUpdater : Trackable {
         walletManager.apiClient?.feePerKb { newFees, error in
             
             guard error == nil else {
-                let properties: [String : String] = ["ERROR_MESSAGE":String(describing: error),"ERROR_TYPE":self.feeKey]
+                let properties: [String : String] = ["ERROR_MESSAGE":String(describing: error),"ERROR_TYPE":"FEE_PER_KB"]
                 LWAnalytics.logEventWithParameters(itemName: ._20200112_ERR, properties: properties)
                 completion();
                 return
             }
             
-            guard newFees.luxury < self.maxFeePerKB && newFees.economy > self.minFeePerKB else {
+            if newFees == Fees.usingDefaultValues {
                 LWAnalytics.logEventWithParameters(itemName: ._20200301_DUDFPK)
                 self.saveEvent("wallet.didUseDefaultFeePerKB")
-                return
             }
+            
             self.store.perform(action: UpdateFees.set(newFees))
             completion()
         }
@@ -106,9 +107,9 @@ class FeeSelector : UIView {
     }
 
     private let store: Store
-    private let header = UILabel(font: .customMedium(size: 16.0), color: .darkText)
-    private let subheader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let feeMessageLabel = UILabel.wrapping(font: .customBody(size: 14.0), color: .red)
+    private let header = UILabel(font: .barloweMedium(size: 16.0), color: .darkText)
+    private let subheader = UILabel(font: .barloweRegular(size: 14.0), color: .grayTextTint)
+    private let feeMessageLabel = UILabel.wrapping(font: .barloweSemiBold(size: 14.0), color: .red)
     private let control = UISegmentedControl(items: [S.FeeSelector.regular, S.FeeSelector.economy, S.FeeSelector.luxury])
     private var bottomConstraint: NSLayoutConstraint?
 
@@ -120,8 +121,6 @@ class FeeSelector : UIView {
         
         control.tintColor = .liteWalletBlue
         
-        
-
         header.constrain([
             header.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             header.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]) ])

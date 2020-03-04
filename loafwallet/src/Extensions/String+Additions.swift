@@ -126,4 +126,14 @@ extension String {
     mutating func capitalizeFirstLetter() {
       self = self.capitalizingFirstLetter()
     }
+    
+    func replacingZeroFeeWithOneCent() -> String {
+        let range = self.index(self.endIndex, offsetBy: -3)..<self.endIndex
+        return self.replacingOccurrences(of: ".00", with: ".01", options: .literal, range: range)
+    }
+    
+    func combinedFeeReplacingZeroFeeWithOneCent() -> String {
+        let range = self.index(self.endIndex, offsetBy: -4)..<self.endIndex
+        return self.replacingOccurrences(of: ".00)", with: ".01)", options: .literal, range: range)
+    }
 }

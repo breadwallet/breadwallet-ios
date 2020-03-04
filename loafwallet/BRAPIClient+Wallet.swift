@@ -15,7 +15,7 @@ extension BRAPIClient {
         let req = URLRequest(url: url("/fee-per-kb"))
         let task = self.dataTaskWithRequest(req) { (data, response, err) -> Void in
             //TODO: Refactor when mobile-api v0.4.0 is in prod
-            let staticFees = Fees.defaultFees
+            let staticFees = Fees.usingDefaultValues
             handler(staticFees, nil)
         }
         task.resume()
