@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Økonomi";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Forventet leveringstid: 60+ minutter";
+"FeeSelector.economyLabel" = "Forventet leveringstid: 10+ minutter";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Denne mulighed er ikke anbefalet for tidsfølsomme transaktioner.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luksus";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Anslået levering: 2,5 - 5 minutter";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Denne mulighed garanterer næsten accept af din transaktion, selvom du betaler en præmie.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Almindelig";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Forventet leveringstid: 10-30 minutter";
+"FeeSelector.regularLabel" = "Anslået levering: 2,5 - 5+ minutter";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Behandlingshastighed";

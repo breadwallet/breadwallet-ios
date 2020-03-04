@@ -64,7 +64,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
     private var didIgnoreIdentityNotCertified = false
     private let initialRequest: PaymentRequest?
     private let confirmTransitioningDelegate = TransitioningDelegate()
-    private var feeType: Fee?
+    private var feeType: FeeType?
  
     override func viewDidLoad() {
         
@@ -78,6 +78,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
             view.backgroundColor = .white
         }
         
+        // set as regular at didLoad
+        walletManager.wallet?.feePerKb = store.state.fees.regular
+
         view.addSubview(addressCell)
         view.addSubview(donationCell)
         view.addSubview(descriptionCell)
@@ -117,7 +120,6 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                                 self.donationCell.donateButton.isEnabled = (balance >= (kDonationAmount * 2)) ? true : false
                             }
         })
-        walletManager.wallet?.feePerKb = store.state.fees.regular
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -155,16 +157,17 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         amountView.didUpdateAmount = { [weak self] amount in
             self?.amount = amount
         }
-        amountView.didUpdateFee = strongify(self) { myself, fee in
-            guard let wallet = myself.walletManager.wallet else { return }
-            myself.feeType = fee
-            let fees = myself.store.state.fees
-            switch fee {
-            case .regular:
-                wallet.feePerKb = fees.regular
-            case .economy:
-                wallet.feePerKb = fees.economy
-            }
+        amountView.didUpdateFee = strongify(self) { myself, feeType in
+           
+                myself.feeType = feeType
+                let fees = myself.store.state.fees
+            
+                switch feeType {
+                case .regular: myself.walletManager.wallet?.feePerKb = fees.regular
+                case .economy:  myself.walletManager.wallet?.feePerKb = fees.economy
+                case .luxury: myself.walletManager.wallet?.feePerKb = fees.luxury
+                }
+
             myself.amountView.updateBalanceLabel()
         }
 
@@ -229,8 +232,9 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
         
         if let amount = amount, amount > 0 {
             let fee = sender.feeForTx(amount: amount.rawValue)
-            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 0)
-            let feeText = feeAmount.description
+            let feeAmount = DisplayAmount(amount: Satoshis(rawValue: fee), state: store.state, selectedRate: rate, minimumFractionDigits: 2)
+                 
+            let feeText = feeAmount.description.replacingZeroFeeWithOneCent()
             feeOutput = String(format: S.Send.fee, feeText)
             if (balance >= fee) && amount.rawValue > (balance - fee) {
                 color = .cameraGuideNegative
@@ -304,6 +308,7 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
 
         guard let amount = amount else { return }
         let confirm = ConfirmationViewController(amount: amount, fee: Satoshis(sender.fee), feeType: feeType ?? .regular, state: store.state, selectedRate: amountView.selectedRate, minimumFractionDigits: amountView.minimumFractionDigits, address: addressCell.address ?? "", isUsingBiometrics: sender.canUseBiometrics)
+        
         confirm.successCallback = {
             confirm.dismiss(animated: true, completion: {
                  self.send()

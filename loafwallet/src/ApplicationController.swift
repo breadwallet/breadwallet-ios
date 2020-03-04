@@ -367,9 +367,6 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         func willResignActive() {
-            guard !store.state.isPushNotificationsEnabled else { return }
-            guard let pushToken = UserDefaults.pushToken else { return }
-            walletManager?.apiClient?.deletePushNotificationToken(pushToken)
         }
     }
 
@@ -377,9 +374,6 @@ class ApplicationController : Subscriber, Trackable {
     extension ApplicationController {
         func listenForPushNotificationRequest() {
             store.subscribe(self, name: .registerForPushNotificationToken, callback: { _ in
-                //TODO: Refactor, APNS is not setup 
-                 let settings = UIUserNotificationSettings(types: [.badge, .sound, .alert], categories: nil)
-                  self.application?.registerUserNotificationSettings(settings)
             })
         }
 
@@ -390,10 +384,6 @@ class ApplicationController : Subscriber, Trackable {
         }
 
         func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-            guard let apiClient = walletManager?.apiClient else { return }
-            guard UserDefaults.pushToken != deviceToken else { return }
-            UserDefaults.pushToken = deviceToken
-            apiClient.savePushNotificationToken(deviceToken)
         }
 
         func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {

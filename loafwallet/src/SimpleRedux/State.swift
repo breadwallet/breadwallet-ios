@@ -46,7 +46,7 @@ extension State {
                         isPushNotificationsEnabled: UserDefaults.pushToken != nil,
                         isPromptingBiometrics: false,
                         pinLength: 6,
-                        fees: Fees.defaultFees )
+                        fees: Fees.usingDefaultValues )
     }
 }
 

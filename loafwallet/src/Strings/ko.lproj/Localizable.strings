@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "경제";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "예상 배송 시간: 60분 이상";
+"FeeSelector.economyLabel" = "예상 배송 시간: 10분 이상";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "이 옵션은 시간에 민감한 거래에는 추천하지 않습니다.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "사치";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "배송 예정 시간 : 2.5 - 5 분";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "이 옵션은 귀하가 보험료를 지불하더라도 사실상 거래 수락을 보장합니다.";
 
 /* Regular fee */
 "FeeSelector.regular" = "일반";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "예상 배송 시간: 10-30분";
+"FeeSelector.regularLabel" = "배송 예정 시간 : 2.5 - 5+ 분";
 
 /* Fee Selector title */
 "FeeSelector.title" = "처리 속도";

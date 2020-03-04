@@ -11,7 +11,7 @@ import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: Fee, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, isDonation: Bool = false) {
+    init(amount: Satoshis, fee: Satoshis, feeType: FeeType, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, isDonation: Bool = false) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -27,7 +27,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
     private let amount: Satoshis
     private let feeAmount: Satoshis
-    private let feeType: Fee
+    private let feeType: FeeType
     private let state: State
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?
@@ -43,22 +43,22 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     var cancelCallback: (() -> Void)?
 
     private var header: ModalHeaderView?
-    private let cancel = ShadowButton(title: S.Button.cancel, type: .secondary)
-    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .primary, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
+    private let cancel = ShadowButton(title: S.Button.cancel, type: .flatWhiteBorder)
+    private let sendButton = ShadowButton(title: S.Confirmation.send, type: .flatLitecoinBlue, image: (LAContext.biometricType() == .face ? #imageLiteral(resourceName: "FaceId") : #imageLiteral(resourceName: "TouchId")))
 
-    private let payLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let toLabel = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let amountLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
-    private let address = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let payLabel = UILabel(font: .barlowLight(size: 15.0), color: .grayTextTint)
+    private let toLabel = UILabel(font: .barlowLight(size: 15.0), color: .grayTextTint)
+    private let amountLabel = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let address = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
 
-    private let processingTime = UILabel.wrapping(font: .customBody(size: 14.0), color: .grayTextTint)
-    private let sendLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let feeLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let totalLabel = UILabel(font: .customMedium(size: 14.0), color: .darkText)
+    private let processingTime = UILabel.wrapping(font: .barlowLight(size: 14.0), color: .grayTextTint)
+    private let sendLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
+    private let feeLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
+    private let totalLabel = UILabel(font: .barlowLight(size: 14.0), color: .darkGray)
 
-    private let send = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let fee = UILabel(font: .customBody(size: 14.0), color: .darkText)
-    private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
+    private let send = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let fee = UILabel(font: .barlowRegular(size: 15.0), color: .darkText)
+    private let total = UILabel(font: .barlowMedium(size: 15.0), color: .darkText)
 
     override func viewDidLoad() {
          
@@ -159,27 +159,30 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
             NSLog("ERROR: Header not initialized")
             return
         }
-
-        let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-        let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: minimumFractionDigits)
-
-        amountLabel.text = displayAmount.combinedDescription
-        toLabel.text = S.Confirmation.to
-        address.lineBreakMode = .byTruncatingMiddle
+         
         switch feeType {
+        case .luxury:
+            processingTime.text = String(format: S.Confirmation.processingTime, "2.5-5")
         case .regular:
             processingTime.text = String(format: S.Confirmation.processingTime, "2.5-5")
         case .economy:
             processingTime.text = String(format: S.Confirmation.processingTime, "5+")
         }
+        
+        let displayAmount = DisplayAmount(amount: amount, state: state, selectedRate: selectedRate, minimumFractionDigits: 2)
+        let displayFee = DisplayAmount(amount: feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: 2)
+        let displayTotal = DisplayAmount(amount: amount + feeAmount, state: state, selectedRate: selectedRate, minimumFractionDigits: 2)
 
-        sendLabel.text = S.Confirmation.amountLabel
-        send.text = displayAmount.description
+        toLabel.text = S.Confirmation.to
         feeLabel.text = S.Confirmation.feeLabel
-        fee.text = displayFee.description
-
+        sendLabel.text = S.Confirmation.amountLabel
         totalLabel.text = S.Confirmation.totalLabel
+        
+        amountLabel.text = displayAmount.combinedDescription
+        address.text = self.addressText
+        
+        send.text = displayAmount.description
+        fee.text = displayFee.description.replacingZeroFeeWithOneCent()
         total.text = displayTotal.description
 
         cancel.tap = strongify(self) { myself in

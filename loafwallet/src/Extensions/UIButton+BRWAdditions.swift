@@ -69,7 +69,7 @@ extension UIButton {
         button.setTitle(title, for: .normal)
         button.layer.cornerRadius = 4.0
         button.titleLabel?.textColor = .white
-        button.titleLabel?.font = UIFont.barloweMedium(size: 18)
+        button.titleLabel?.font = UIFont.barlowMedium(size: 18)
         button.clipsToBounds = true
         return button
     }

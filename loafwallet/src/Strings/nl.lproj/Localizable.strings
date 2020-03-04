@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Enonomy";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Geschatte Bezorgingstijd: 60+ minuten";
+"FeeSelector.economyLabel" = "Geschatte Bezorgingstijd: 10+ minuten";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Deze optie wordt niet aangeraden voor tijdgevoelige transacties.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxe";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Verwachte levertijd: 2,5 - 5 minuten";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Deze optie garandeert vrijwel acceptatie van uw transactie, hoewel u een premie betaalt.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Normaal";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Geschatte Bezorgingstijd: 10-30 minuten";
+"FeeSelector.regularLabel" = "Verwachte levertijd: 2,5 - 5+ minuten";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Verwerkingssnelheid";

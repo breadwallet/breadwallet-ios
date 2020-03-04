@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Ekonomi";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Perkiraan Pengiriman: 60+ menit";
+"FeeSelector.economyLabel" = "Perkiraan Pengiriman: 10+ menit";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Pilihan ini tidak disarankan untuk transaksi yang sensitif terhadap waktu.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Kemewahan";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Estimasi Pengiriman: 2,5 - 5 menit";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Opsi ini secara virtual menjamin penerimaan transaksi Anda meskipun Anda membayar premi.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Tetap";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Perkiraan Pengiriman: 10-30 menit";
+"FeeSelector.regularLabel" = "Estimasi Pengiriman: 2,5 - 5+ menit";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Kecepatan pemrosesan";

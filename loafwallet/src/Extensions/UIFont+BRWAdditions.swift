@@ -25,28 +25,28 @@ extension UIFont {
         return UIFont(name: "CircularPro-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
-    static func barloweBold(size: CGFloat) -> UIFont {
+    static func barlowBold(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-Bold", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
-    static func barloweSemiBold(size: CGFloat) -> UIFont {
+    static func barlowSemiBold(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-SemiBold", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
-    static func barloweItalic(size: CGFloat) -> UIFont {
+    static func barlowItalic(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-Italic", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
     
-    static func barloweMedium(size: CGFloat) -> UIFont {
+    static func barlowMedium(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
-    static func barloweRegular(size: CGFloat) -> UIFont {
+    static func barlowRegular(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-Regular", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
-    static func barloweLight(size: CGFloat) -> UIFont {
+    static func barlowLight(size: CGFloat) -> UIFont {
         return UIFont(name: "BarlowSemiCondensed-Light", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     

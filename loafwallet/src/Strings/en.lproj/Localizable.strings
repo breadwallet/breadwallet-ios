@@ -309,16 +309,25 @@
 "FeeSelector.economy" = "Economy";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Estimated Delivery: 60+ minutes";
+"FeeSelector.economyLabel" = "Estimated Delivery: 10+ minutes";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "This option is not recommended for time-sensitive transactions.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxury";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Estimated Delivery: 2.5 - 5 minutes";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "This option virtually guarantees acceptance of your transaction though you are paying a premium.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Regular";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Estimated Delivery: 10-30 minutes";
+"FeeSelector.regularLabel" = "Estimated Delivery: 2.5 - 5+ minutes";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Processing Speed";
