@@ -34,7 +34,7 @@ class ModalHeaderView : UIView {
      
 
     //MARK - Private
-    private let title = UILabel(font: .customBold(size: 17.0))
+    private let title = UILabel(font: .barloweSemiBold(size: 17.0))
     private let close = UIButton.close
     private let border = UIView()
     private let buttonSize: CGFloat = 44.0

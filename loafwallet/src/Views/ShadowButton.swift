@@ -17,6 +17,7 @@ enum ButtonType {
     case warning
     case boldWarning
     case flatWhite
+    case flatWhiteBorder
     case flatLitecoinBlue
 }
 
@@ -172,6 +173,12 @@ class ShadowButton: UIControl {
         label.textColor = .liteWalletBlue
         container.layer.borderColor = nil
         container.layer.borderWidth = 0.0
+        imageView?.tintColor = .liteWalletBlue
+        case .flatWhiteBorder:
+        container.backgroundColor = .white
+        label.textColor = .liteWalletBlue
+        container.layer.borderColor = UIColor.liteWalletBlue.cgColor
+        container.layer.borderWidth = 1.0
         imageView?.tintColor = .liteWalletBlue
         case .primary:
         container.backgroundColor = .primaryButton
