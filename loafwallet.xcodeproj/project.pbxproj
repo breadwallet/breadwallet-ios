@@ -129,6 +129,7 @@
 		24B8FAD72162B6FB00A155B1 /* bitrefill_index.html in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FAD62162B6FB00A155B1 /* bitrefill_index.html */; };
 		24B8FADC2162D29100A155B1 /* general.css in Resources */ = {isa = PBXBuildFile; fileRef = 24B8FADB2162D29100A155B1 /* general.css */; };
 		24B8FADF2163C4D400A155B1 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24B8FADE2163C4D400A155B1 /* Currency.swift */; };
+		24BA90C62410129E001E3825 /* FeeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA90C52410129E001E3825 /* FeeSelectorView.swift */; };
 		24D5F23822599C0B00225462 /* BarlowSemiCondensed-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F22522599C0900225462 /* BarlowSemiCondensed-Italic.ttf */; };
 		24D5F23922599C0B00225462 /* BarlowSemiCondensed-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F22522599C0900225462 /* BarlowSemiCondensed-Italic.ttf */; };
 		24D5F23B22599C0B00225462 /* BarlowSemiCondensed-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 24D5F22622599C0A00225462 /* BarlowSemiCondensed-Bold.ttf */; };
@@ -901,6 +902,7 @@
 		24B9621723BA66CC00ECD938 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		24B9621923BA66CE00ECD938 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/MainInterface.strings"; sourceTree = "<group>"; };
 		24B9621B23BA66CF00ECD938 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainInterface.strings; sourceTree = "<group>"; };
+		24BA90C52410129E001E3825 /* FeeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeeSelectorView.swift; sourceTree = "<group>"; };
 		24D5F22522599C0900225462 /* BarlowSemiCondensed-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BarlowSemiCondensed-Italic.ttf"; path = "loafwallet/Fonts/BarlowSemiCondensed-Italic.ttf"; sourceTree = SOURCE_ROOT; };
 		24D5F22622599C0A00225462 /* BarlowSemiCondensed-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BarlowSemiCondensed-Bold.ttf"; path = "loafwallet/Fonts/BarlowSemiCondensed-Bold.ttf"; sourceTree = SOURCE_ROOT; };
 		24D5F22D22599C0A00225462 /* BarlowSemiCondensed-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "BarlowSemiCondensed-Light.ttf"; path = "loafwallet/Fonts/BarlowSemiCondensed-Light.ttf"; sourceTree = SOURCE_ROOT; };
@@ -3372,6 +3374,7 @@
 		CE20C90F1DBE5B5100C8397A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				24BA90C52410129E001E3825 /* FeeSelectorView.swift */,
 				240A89B4235F7280005E2A2F /* DonationSetupCell.swift */,
 				CE6BCF5C1EE9E89A0029849C /* CustomTitleView.swift */,
 				CED341321EF5A5C00014912A /* InAppAlert.swift */,
@@ -4633,6 +4636,7 @@
 				CE6DCC271E6108D50044257B /* EnterPhraseCell.swift in Sources */,
 				CE760EDD1E561DF900EFAC2B /* UpdatePinViewController.swift in Sources */,
 				22A9A9481DF61945000F0016 /* BRBitID.swift in Sources */,
+				24BA90C62410129E001E3825 /* FeeSelectorView.swift in Sources */,
 				CE9057181DFF0FA8006BA848 /* String+Additions.swift in Sources */,
 				CED341331EF5A5C00014912A /* InAppAlert.swift in Sources */,
 				CE47A8E01F7DA54000FF35BA /* UIScreen+Additions.swift in Sources */,
