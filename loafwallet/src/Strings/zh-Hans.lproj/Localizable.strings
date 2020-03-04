@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "管理";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "本地腐败错误";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "您的本地数据库已损坏。转到设置>区块链：设置>删除数据库以刷新";
+
 /* Error alert title */
 "Alert.error" = "错误";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "捐赠给莱特币基金会";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "点击捐赠给莱特币基金会！";
+"Donate.title" = "点击捐赠给莱特币基金会 (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "确认捐赠";
+
+/* Donate to the articles */
+"Donate.toThe" = "捐赠给";
+
+/* Donate */
+"Donate.word" = "捐";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "经济";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "预计交付时间：60 分钟以上";
+"FeeSelector.economyLabel" = "预计交付时间：10 分钟以上";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "对于有时效性的交易，不推荐使用此选项。";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "豪华";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "预计送达时间：2.5 - 5 分钟";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "尽管您要支付一定的费用，但此选项实际上可以保证您接受交易。";
 
 /* Regular fee */
 "FeeSelector.regular" = "常规";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "预计交付时间：10-30 分钟";
+"FeeSelector.regularLabel" = "预计送达时间：2.5 - 5+ 分钟";
 
 /* Fee Selector title */
 "FeeSelector.title" = "处理速度";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "语言能力";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "环境：";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet版本：";
+
 /* Manage settings section header */
 "Settings.manage" = "管理";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名数据";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "社会的";
 
 /* Support settings section header */
 "Settings.support" = "支持";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "欢迎使用Litewallet！";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "删除数据库";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "您确认要删除此钱包吗？";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "擦除钱包吗？";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "删除数据库";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "这将删除数据库，但保留PIN和短语。确认您现有的PIN码，种子并等待同步到新数据库";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "删除并同步";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "忘记您的种子词组或PIN吗？";

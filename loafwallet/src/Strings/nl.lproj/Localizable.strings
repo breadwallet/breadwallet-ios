@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "BEHEREN";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Lokale corruptiefout";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Uw lokale database is beschadigd. Ga naar Instellingen> Blockchain: Instellingen> Verwijder database om te vernieuwen";
+
 /* Error alert title */
 "Alert.error" = "Error";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "Donatie aan de Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tik om te doneren aan de Litecoin Foundation!";
+"Donate.title" = "Tik om te doneren aan de Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Bevestig donatie";
+
+/* Donate articles to the */
+"Donate.toThe" = "Doneer aan de";
+
+/* Donate */
+"Donate.word" = "schenken";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Dit apparaat is niet geconfigureerd om e-mails te sturen via de iOS Mail app.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "Enonomy";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Geschatte Bezorgingstijd: 60+ minuten";
+"FeeSelector.economyLabel" = "Geschatte Bezorgingstijd: 10+ minuten";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Deze optie wordt niet aangeraden voor tijdgevoelige transacties.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxe";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Verwachte levertijd: 2,5 - 5 minuten";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Deze optie garandeert vrijwel acceptatie van uw transactie, hoewel u een premie betaalt.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Normaal";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Geschatte Bezorgingstijd: 10-30 minuten";
+"FeeSelector.regularLabel" = "Verwachte levertijd: 2,5 - 5+ minuten";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Verwerkingssnelheid";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "talen";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Milieu:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet-versie:";
+
 /* Manage settings section header */
 "Settings.manage" = "Beheer";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Deel Anonieme Data";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Sociaal";
 
 /* Support settings section header */
 "Settings.support" = "Ondersteuning";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Welkom bij Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Database verwijderen";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Weet je zeker dat je deze portomonnee wilt verwijderen?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Portomonnee wissen?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Verwijder database";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Hiermee wordt de database verwijderd, maar worden de pincode en zinsdeel behouden. Bevestig uw bestaande pincode, start en wacht om te synchroniseren met de nieuwe DB";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Verwijderen en synchroniseren";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Vergeet uw startzin of pincode?";

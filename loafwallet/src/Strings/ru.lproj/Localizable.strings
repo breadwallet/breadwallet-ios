@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "УПРАВЛЕНИЕ";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Ошибка локальной коррупции";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Ваша локальная база данных повреждена. Перейдите в Настройки> Блокчейн: Настройки> Удалить базу данных, чтобы обновить";
+
 /* Error alert title */
 "Alert.error" = "Ошибка";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "Пожертвование в фонд Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Нажмите, чтобы пожертвовать в фонд Litecoin!";
+"Donate.title" = "Нажмите, чтобы пожертвовать в фонд Litecoin (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Подтвердите Пожертвование";
+
+/* Donate articles to the */
+"Donate.toThe" = "Пожертвовать";
+
+/* Donate */
+"Donate.word" = "жертвовать";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "Экономия";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Ориентировочная доставка: 60+ минут";
+"FeeSelector.economyLabel" = "Ориентировочная доставка: 10+ минут";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Этот параметр не рекомендуется для транзакций, чувствительных с точки зрения времени.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "люкс";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Ориентировочная доставка: 2,5 - 5 минут";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Эта опция фактически гарантирует принятие вашей транзакции, хотя вы платите премию.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Обычна сумма";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Ориентировочная доставка: 10-30 минут";
+"FeeSelector.regularLabel" = "Ориентировочная доставка: 2,5 - 5+ минут";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Скорость обработки";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "Языки";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Окружающая среда:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet версия:";
+
 /* Manage settings section header */
 "Settings.manage" = "Управление";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Поделиться анонимными данными";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Социальная";
 
 /* Support settings section header */
 "Settings.support" = "Служба поддержки";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Добро пожаловать в Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Удалить базу данных";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Вы действительно хотите удалить этот кошелек?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Удалить кошелек?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Удалить базу данных";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Это удаляет базу данных, но сохраняет PIN-код и фразу. Подтвердите свой существующий PIN-код, начните и ждите, чтобы синхронизировать синхронизацию с новым БД";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Удалить и синхронизировать";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Забыли свою начальную фразу или PIN-код?";

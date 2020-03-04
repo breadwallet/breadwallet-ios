@@ -21,7 +21,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     var shouldBeSyncing: Bool = false
     var syncingHeaderView : SyncProgressHeaderView?
     var shouldShowPrompt = true
-    
+
     private var transactions: [Transaction] = []
     private var allTransactions: [Transaction] = [] {
         didSet {
@@ -65,17 +65,21 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         self.transactions = TransactionManager.sharedInstance.transactions
         self.rate = TransactionManager.sharedInstance.rate
         tableView.backgroundColor = .liteWalletBlue
-        
-        self.syncingHeaderView = Bundle.main.loadNibNamed("SyncProgressHeaderView",
-        owner: self,
-        options: nil)?.first as? SyncProgressHeaderView
+        initSyncingHeaderView(completion: {})
         attemptShowPrompt()
     }
     
+    private func initSyncingHeaderView(completion: @escaping () -> Void) {
+        self.syncingHeaderView = Bundle.main.loadNibNamed("SyncProgressHeaderView",
+        owner: self,
+        options: nil)?.first as? SyncProgressHeaderView
+        completion()
+    }
+     
     private func addSubscriptions() {
         
         guard let store = self.store else {
-            NSLog("ERROR - Store not passed")
+            NSLog("ERROR: Store not initialized")
             return
         }
          
@@ -83,14 +87,6 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
                        callback: { state in
            self.allTransactions = state.walletState.transactions
            self.reload()
-        })
-        
-        store.subscribe(self, selector: { $0.isLoadingTransactions != $1.isLoadingTransactions }, callback: {
-            if $0.isLoadingTransactions {
-               
-            } else {
-                 
-            }
         })
 
         store.subscribe(self, selector: { $0.isLtcSwapped != $1.isLtcSwapped },
@@ -103,25 +99,31 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
          
         store.subscribe(self, selector: { $0.walletState.syncProgress != $1.walletState.syncProgress },
                         callback: { state in
-        store.subscribe(self, name:.showStatusBar) { (didShowStatusBar) in
-           self.reload() //May fix where the action view persists after confirming pin
-        }
+            store.subscribe(self, name:.showStatusBar) { (didShowStatusBar) in
+               self.reload() //May fix where the action view persists after confirming pin
+            }
                             
-        if state.walletState.isRescanning {
-            self.syncingHeaderView?.isRescanning = state.walletState.isRescanning
-            self.syncingHeaderView?.noSendImageView.alpha = 1.0
-            self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
-            self.shouldBeSyncing = true
-        } else if state.walletState.syncProgress > 0.95 {
-            self.shouldBeSyncing = false
-            self.syncingHeaderView = nil
-        } else {
-            self.shouldBeSyncing = true
-            self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
-            self.syncingHeaderView?.headerMessage = state.walletState.syncState
-            self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
-            self.syncingHeaderView?.noSendImageView.alpha = 0.0
-        }
+            if state.walletState.isRescanning {
+                 self.initSyncingHeaderView(completion: {
+                    self.syncingHeaderView?.isRescanning = state.walletState.isRescanning
+                    self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
+                    self.syncingHeaderView?.headerMessage = state.walletState.syncState
+                    self.syncingHeaderView?.noSendImageView.alpha = 1.0
+                    self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
+                    self.shouldBeSyncing = true
+                 })
+            } else if state.walletState.syncProgress > 0.95 {
+                self.shouldBeSyncing = false
+                self.syncingHeaderView = nil
+            } else {
+                self.initSyncingHeaderView(completion: {
+                    self.syncingHeaderView?.progress = CGFloat(state.walletState.syncProgress)
+                    self.syncingHeaderView?.headerMessage = state.walletState.syncState
+                    self.syncingHeaderView?.timestamp = state.walletState.lastBlockTimestamp
+                    self.syncingHeaderView?.noSendImageView.alpha = 0.0
+                    self.shouldBeSyncing = true
+                })
+            }
         self.reload()
         })
         
@@ -180,7 +182,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     private func attemptShowPrompt() {
         guard let walletManager = walletManager else { return }
         guard let store = self.store else {
-            NSLog("ERROR - Store not passed")
+            NSLog("ERROR: Store not initialized")
             return
         }
          
@@ -198,8 +200,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
             currentPromptType = nil
         }
     }
-     
-     
+      
     private func reload() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -267,11 +268,12 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
          
-          if hasExtraSection && indexPath.section == 0 {
+        if hasExtraSection && indexPath.section == 0 {
             return configurePromptCell(promptType: currentPromptType, indexPath: indexPath)
         } else {
             let transaction = transactions[indexPath.row]
-            return configureTransactionCell(transaction:transaction, indexPath: indexPath)
+            let selectedIndex = selectedIndexes[indexPath] as? Bool
+            return configureTransactionCell(transaction: transaction, wasSelected: selectedIndex ?? false, indexPath: indexPath)
         }
     }
     
@@ -281,8 +283,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
             NSLog("ERROR No cell found")
             return PromptTableViewCell()
         }
-        
-        
+         
         cell.type = promptType
         cell.titleLabel.text = promptType?.title
         cell.bodyLabel.text = promptType?.body
@@ -305,12 +306,14 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
       
-    private func configureTransactionCell(transaction:Transaction?, indexPath: IndexPath) -> TransactionTableViewCellv2 {
-         
+    private func configureTransactionCell(transaction:Transaction?, wasSelected: Bool?, indexPath: IndexPath) -> TransactionTableViewCellv2 {
+        
+        //TODO: Polish animation based on 'wasSelected'
+        
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionTVC2", for: indexPath) as? TransactionTableViewCellv2 else {
-            NSLog("ERROR No cell found")
+            NSLog("ERROR: No cell found")
             return TransactionTableViewCellv2()
-        }
+        } 
         
         if let transaction = transaction {
             if transaction.direction == .received {
@@ -394,7 +397,7 @@ class TransactionsViewController: UIViewController, UITableViewDelegate, UITable
         messageLabel.textColor = .litecoinGray
         messageLabel.numberOfLines = 0
         messageLabel.textAlignment = .center
-        messageLabel.font = UIFont.barloweMedium(size: 20)
+        messageLabel.font = UIFont.barlowMedium(size: 20)
         messageLabel.sizeToFit()
         self.tableView.backgroundView = messageLabel
         self.tableView.separatorStyle = .none

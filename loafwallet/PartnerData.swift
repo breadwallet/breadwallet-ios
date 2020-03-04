@@ -9,6 +9,11 @@
 import Foundation
 import UIKit
 
+
+enum PartnerPrefix: String {
+    case simplex = "_simplex"
+}
+ 
 struct Partner {
     
     let logo: UIImage

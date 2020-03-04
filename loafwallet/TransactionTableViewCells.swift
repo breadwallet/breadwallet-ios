@@ -34,14 +34,15 @@ class TransactionTableViewCellv2 : UITableViewCell, Subscriber {
     @IBOutlet weak var cardView: UIView!
     @IBOutlet weak var staticBackgroundView: UIView! 
     @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var copyButton: UIButton!
+    
     
     @IBOutlet weak var dropArrowImageView: UIImageView!
     @IBOutlet weak var expandCardView: UIView!
     @IBOutlet weak var qrBackgroundView: UIView!
     
     var didReceiveLitecoin: Bool?
-    var showQRModalAction: (() -> ())?
-    ///https://fluffy.es/handling-button-tap-inside-uitableviewcell-without-using-tag/
+    var showQRModalAction: (() -> ())? 
     var expandCell: (() -> Bool)?
     var isExpanded: Bool = false
     private var timer: Timer? = nil
@@ -57,7 +58,16 @@ class TransactionTableViewCellv2 : UITableViewCell, Subscriber {
             target?.updateTimestamp()
         }
     }
-     
+    
+    @IBAction func didTapCopy(_ sender: Any) {
+        guard let transactionAddress = transaction?.toAddress else {
+            NSLog("ERROR: Address not set")
+            return
+        }
+        
+        UIPasteboard.general.string = transactionAddress
+    }
+    
     //MARK: - Public
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -175,7 +185,7 @@ class TransactionTableViewCellv2 : UITableViewCell, Subscriber {
            qrModalButton.isHidden = true
        }
    }
-    
+ 
     override func setSelected(_ selected: Bool, animated: Bool) {
         
 

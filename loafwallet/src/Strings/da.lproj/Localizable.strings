@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "ADMINISTRER";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Lokal korruptionsfejl";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Lokal korruptionsfejl";
+
 /* Error alert title */
 "Alert.error" = "Fejl";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "Donation til Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tryk for at donere til Litecoin Foundation!";
+"Donate.title" = "Tryk for at donere til Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Bekræft donation";
+
+/* Donate articles to the */
+"Donate.toThe" = "Doner til";
+
+/* Donate */
+"Donate.word" = "Doner";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Denne enhed er ikke konfigureret til at sende e-mail med iOS mailappen.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "Økonomi";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Forventet leveringstid: 60+ minutter";
+"FeeSelector.economyLabel" = "Forventet leveringstid: 10+ minutter";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Denne mulighed er ikke anbefalet for tidsfølsomme transaktioner.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luksus";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Anslået levering: 2,5 - 5 minutter";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Denne mulighed garanterer næsten accept af din transaktion, selvom du betaler en præmie.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Almindelig";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Forventet leveringstid: 10-30 minutter";
+"FeeSelector.regularLabel" = "Anslået levering: 2,5 - 5+ minutter";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Behandlingshastighed";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "Sprog";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Miljø:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
 /* Manage settings section header */
 "Settings.manage" = "Administrer";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Del anonyme data";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Support";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Velkommen til Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Slet database";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Er du sikker på at du vil slette denne wallet?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Slet wallet?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Slet database";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Dette sletter databasen, men bevarer PIN-koden og sætningen. Bekræft din eksisterende PIN-kode, udsæd, og vent på at synkronisere med den nye db";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Slet & synkroniser";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Glem din frø sætning eller pinkode?";

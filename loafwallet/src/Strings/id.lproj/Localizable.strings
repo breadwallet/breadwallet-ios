@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "MENGATUR";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Hapus Database";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Ini menghapus basis data tetapi tetap menggunakan PIN dan frasa. Konfirmasikan PIN Anda yang ada, seed dan tunggu untuk menyinkronkan ke db baru";
+
 /* Error alert title */
 "Alert.error" = "Kesalahan";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "Sumbangan untuk Yayasan Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Ketuk untuk Menyumbang ke Yayasan Litecoin!";
+"Donate.title" = "Ketuk untuk Menyumbang ke Yayasan Litecoin (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Konfirmasi Sumbangan";
+
+/* Donate to the articles */
+"Donate.toThe" = "Donasi ke";
+
+/* Donate */
+"Donate.word" = "Menyumbangkan";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Perangkat ini tidak dikonfigurasikan untuk mengirim email dengan aplikasi surat iOS.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "Ekonomi";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Perkiraan Pengiriman: 60+ menit";
+"FeeSelector.economyLabel" = "Perkiraan Pengiriman: 10+ menit";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Pilihan ini tidak disarankan untuk transaksi yang sensitif terhadap waktu.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Kemewahan";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Estimasi Pengiriman: 2,5 - 5 menit";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Opsi ini secara virtual menjamin penerimaan transaksi Anda meskipun Anda membayar premi.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Tetap";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Perkiraan Pengiriman: 10-30 menit";
+"FeeSelector.regularLabel" = "Estimasi Pengiriman: 2,5 - 5+ menit";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Kecepatan pemrosesan";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "Bahasa";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Lingkungan Hidup:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Versi litewallet:";
+
 /* Manage settings section header */
 "Settings.manage" = "Mengelola";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Bagikan Data Anonim";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Sosial";
 
 /* Support settings section header */
 "Settings.support" = "Dukung";
@@ -1169,11 +1199,23 @@
 /* Welcome view title */
 "Welcome.title" = "Selamat datang di Litewallet!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Kesalahan Korupsi Lokal";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Yakin ingin menghapus dompet ini?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Hapus Dompet?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Hapus basis data";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Basis data lokal Anda rusak. Buka Pengaturan> Blockchain: Pengaturan> Hapus Basis Data untuk menyegarkan";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Hapus & Sinkronkan";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Lupakan frasa atau PIN awal Anda?";

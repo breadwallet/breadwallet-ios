@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "관리하기";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "로컬 손상 오류";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "데이터베이스는 삭제되지만 PIN과 문구는 유지됩니다. 기존 PIN을 확인하고 시드하고 새 DB와의 동기화를 기다립니다.";
+
 /* Error alert title */
 "Alert.error" = "오류";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "라이트 코인 재단에 기부";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요";
+"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요 (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "기부 확인";
+
+/* Donate to the articles */
+"Donate.toThe" = "에 기부";
+
+/* Donate */
+"Donate.word" = "기부";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "경제";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "예상 배송 시간: 60분 이상";
+"FeeSelector.economyLabel" = "예상 배송 시간: 10분 이상";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "이 옵션은 시간에 민감한 거래에는 추천하지 않습니다.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "사치";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "배송 예정 시간 : 2.5 - 5 분";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "이 옵션은 귀하가 보험료를 지불하더라도 사실상 거래 수락을 보장합니다.";
 
 /* Regular fee */
 "FeeSelector.regular" = "일반";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "예상 배송 시간: 10-30분";
+"FeeSelector.regularLabel" = "배송 예정 시간 : 2.5 - 5+ 분";
 
 /* Fee Selector title */
 "FeeSelector.title" = "처리 속도";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "언어";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "환경:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "라이트 월렛 버전 :";
+
 /* Manage settings section header */
 "Settings.manage" = "관리";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "익명 데이터 공유";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "사회적인";
 
 /* Support settings section header */
 "Settings.support" = "지원하다";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Litewallet에 환영합니다!";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "데이터베이스 삭제";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "정말 이 월렛을 삭제할까요?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "월렛을 초기화할까요?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "데이터베이스 삭제";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "로컬 데이터베이스가 손상되었습니다. 설정> 블록 체인 : 설정> 데이터베이스 삭제로 이동하여 새로 고침";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "삭제 및 동기화";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "시드 문구 나 PIN을 잊어 버리셨습니까?";

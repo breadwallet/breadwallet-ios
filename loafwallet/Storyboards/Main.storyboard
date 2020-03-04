@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina5_5" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -234,14 +235,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mwK-Ce-wah"/>
                     </view>
-                    <connections>
-                        <outlet property="biometricsButton" destination="HyL-Cs-n43" id="bRG-nD-AZJ"/>
-                        <outlet property="enterPINLabel" destination="WKP-YB-Aes" id="Fuz-cX-6ZH"/>
-                        <outlet property="forgotPINButton" destination="d6F-wL-DDW" id="plG-fn-cqD"/>
-                        <outlet property="logoImageView" destination="YcX-wl-Nus" id="TeY-nx-0Ca"/>
-                        <outlet property="pinView" destination="8rj-zC-nyS" id="crk-Wg-d3m"/>
-                        <outlet property="versionLabel" destination="9m2-oO-Qgp" id="Xem-71-d91"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LH5-zJ-Ju2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -332,7 +325,35 @@
                     <view key="view" contentMode="scaleToFill" id="VQn-6m-PXg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="KRp-4w-Qg0">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="200"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="bGe-zJ-eDm">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="k8d-vy-3zg">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="BRT-LS-Lvj">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="4Kg-Nc-6TY" firstAttribute="trailing" secondItem="KRp-4w-Qg0" secondAttribute="trailing" id="9Bg-qk-ufc"/>
+                            <constraint firstItem="4Kg-Nc-6TY" firstAttribute="bottom" secondItem="KRp-4w-Qg0" secondAttribute="bottom" id="azz-kE-hb0"/>
+                            <constraint firstItem="KRp-4w-Qg0" firstAttribute="top" secondItem="4Kg-Nc-6TY" secondAttribute="top" id="hSo-UD-PcI"/>
+                            <constraint firstItem="KRp-4w-Qg0" firstAttribute="leading" secondItem="4Kg-Nc-6TY" secondAttribute="leading" id="qnz-Mx-T8Q"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="4Kg-Nc-6TY"/>
                     </view>
                 </viewController>

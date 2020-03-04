@@ -31,7 +31,7 @@ class StartViewController : UIViewController {
         image.contentMode = .scaleAspectFit
         return image
     }()
-    private let versionLabel = UILabel(font: .barloweMedium(size: 14), color: .transparentWhite)
+    private let versionLabel = UILabel(font: .barlowMedium(size: 14), color: .transparentWhite)
 
     override func viewDidLoad() {
         view.backgroundColor = .white

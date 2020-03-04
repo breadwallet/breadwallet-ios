@@ -9,21 +9,50 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 900000 //UInt64
+let kDonationAmount: UInt64 = 1800000
 let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
+  
+enum LWDonationAddress: String {
+    case litwalletHardware = "Litewallet Hardware Fundraiser" //TODO: Remove after fundraiser goal is acheived in 2020
+    case generalLitecoinFoundation = "Litecoin Foundation"
+  
+    static let allValues = [litwalletHardware, generalLitecoinFoundation]
 
-let kDonationAddress1 = "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
-
-
-enum MixpanelEvents: String {
+      var address: String {
+          switch self {
+          case .litwalletHardware:          return "MVRj1whQ8hqcpffjRxLLCJG1mD27V9YygY"
+          case .generalLitecoinFoundation:  return "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
+          }
+      }
+}
+  
+enum CustomEvent: String {
     case _20191105_AL = "APP_LAUNCHED"
     case _20191105_VSC = "VISIT_SEND_CONTROLLER"
+    case _20202116_VRC = "VISIT_RECEIVE_CONTROLLER"
     case _20191105_DSL = "DID_SEND_LTC"
-    case _20191105_DULP = "DID_UPDATE_LTC_PRICE"
-    case _20191105_EO = "ERROR_OCCURRED"
+    case _20191105_DULP = "DID_UPDATE_LTC_PRICE" 
     case _20191105_DTBT = "DID_TAP_BUY_TAB"
-}
+    case _20200111_DEDG = "DID_ENTER_DISPATCH_GROUP"
+    case _20200111_DLDG = "DID_LEAVE_DISPATCH_GROUP"
+    case _20200111_RNI = "RATE_NOT_INITIALIZED"
+    case _20200111_FNI = "FEEPERKB_NOT_INITIALIZED"
+    case _20200111_TNI = "TRANSACTION_NOT_INITIALIZED"
+    case _20200111_WNI = "WALLET_NOT_INITIALIZED"
+    case _20200111_PNI = "PHRASE_NOT_INITIALIZED"
+    case _20200111_UTST = "UNABLE_TO_SIGN_TRANSACTION"
+    case _20200112_ERR = "ERROR"
+    case _20200112_DSR = "DID_START_RESYNC"
+    case _20200125_DSRR = "DID_SHOW_REVIEW_REQUEST"
+    case _20200217_DLWP = "DID_LOGIN_WITH_PIN"
+    case _20200217_DLWB = "DID_LOGIN_WITH_BIOMETRICS"
+    case _20200223_DD = "DID_DONATE"
+    case _20200225_DCD = "DID_CANCEL_DONATE"
+    case _20200301_DUDFPK = "DID_USE_DEFAULT_FEE_PER_KB"
 
+    
+}
+  
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
         get {
@@ -32,11 +61,6 @@ struct Padding {
     }
 }
   
-struct DonationAddress {
-    
-    static let firstLF: String = kDonationAddress1
-}
-
 struct C {
     static let padding = Padding()
     struct Sizes {
@@ -67,4 +91,4 @@ struct AppVersion {
     static let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
     static let versionNumber = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     static let string = "v." + versionNumber! + " (\(buildNumber!))"
-}
+} 

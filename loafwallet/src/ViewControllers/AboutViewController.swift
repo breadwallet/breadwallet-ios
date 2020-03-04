@@ -81,7 +81,7 @@ class AboutViewController : UIViewController {
 
     private func setData() {
         
-        titleLabel.text = S.About.title
+        titleLabel.text = S.Settings.socialLinks
         privacy.setTitle(S.About.privacy, for: .normal)
         privacy.titleLabel?.font = UIFont.customBody(size: 13.0)
         footer.textAlignment = .center

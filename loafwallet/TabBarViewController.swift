@@ -40,7 +40,7 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
     private let smallFontSize: CGFloat = 12.0
     private var hasInitialized = false
     private let dateFormatter = DateFormatter()
-    private let equalsLabel = UILabel(font: .barloweMedium(size: 12), color: .whiteTint)
+    private let equalsLabel = UILabel(font: .barlowMedium(size: 12), color: .whiteTint)
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private let currencyTapView = UIView()
@@ -87,7 +87,7 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
             viewControllers.append(controller)
         }
         
-        self.updateTimer = Timer.scheduledTimer(withTimeInterval: 120.0, repeats: true) { timer in
+        self.updateTimer = Timer.scheduledTimer(withTimeInterval: 30.0, repeats: true) { timer in
             self.setBalances()
         }
         
@@ -134,8 +134,8 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
             view?.textColor = .white
         }
  
-        primaryLabel.font = UIFont.barloweSemiBold(size: largeFontSize)
-        secondaryLabel.font = UIFont.barloweSemiBold(size: largeFontSize)
+        primaryLabel.font = UIFont.barlowSemiBold(size: largeFontSize)
+        secondaryLabel.font = UIFont.barlowSemiBold(size: largeFontSize)
         
         equalsLabel.text = "="
         headerView.addSubview(primaryLabel)
@@ -227,26 +227,15 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
                         callback: { state in
                             if let balance = state.walletState.balance {
                                 self.balance = balance
+                                self.setBalances()
                             } })
-        
-        //        store.subscribe(self, name: TriggerName, callback: <#T##(TriggerName?) -> Void#>)
-        //
-        //        guard let currentRate = rates.first( where: { $0.code == self.store.state.defaultCurrencyCode }) else { completion(); return }
-        //        self.store.perform(action: ExchangeRates.setRates(currentRate: currentRate, rates: rates))
-        //        completion()
-        //
-        //
-        //
-        //        ExchangeRates.setRates(currentRate:
-        //            store.subscribe(self,
-        //                            selector: { $0.walletState.name != $1.walletState.name },
-        //                            callback: { self.name.text = $0.walletState.name })
     }
     
     private func setBalances() {
-        guard let rate = exchangeRate else { return }
-        guard let store = self.store else { return }
-        guard let isLTCSwapped = self.isLtcSwapped else { return }
+        guard let rate = exchangeRate, let store = self.store, let isLTCSwapped = self.isLtcSwapped else {
+            NSLog("ERROR: Rate, Store not initialized")
+            return
+        }
         guard let primaryLabel = self.primaryBalanceLabel,
             let secondaryLabel = self.secondaryBalanceLabel else {
                 NSLog("ERROR: Price labels not initialized")
@@ -275,41 +264,24 @@ class TabBarViewController: UIViewController, Subscriber, Trackable, UITabBarDel
             if secondaryLabel.isHidden {
                 secondaryLabel.isHidden = false
             }
-              
-            primaryLabel.setValueAnimated(amount.amountForLtcFormat, completion: { [weak self] in
-                guard let myself = self else { return }
-                guard let isLTCSwapped = myself.isLtcSwapped else { return }
-                guard let primaryLabel = myself.primaryBalanceLabel else {
-                        NSLog("ERROR: Price label not initialized")
-                        return
-                }
-
-                if !isLTCSwapped {
-                    primaryLabel.transform = .identity
-                } else {
-                    primaryLabel.transform = myself.transform(forView: primaryLabel)
-                }
-            })
-              
-            secondaryLabel.setValueAnimated(amount.localAmount, completion: { [weak self] in
-                guard let myself = self else { return }
-                guard let isLTCSwapped = myself.isLtcSwapped else { return }
-                guard let secondaryLabel = myself.secondaryBalanceLabel else {
-                        NSLog("ERROR: Price label not initialized")
-                        return
-                }
-                if isLTCSwapped {
-                    secondaryLabel.transform = .identity
-                } else {
-                    secondaryLabel.transform = myself.transform(forView: secondaryLabel)
-                }
-            })
+        }
+        
+        primaryLabel.setValue(amount.amountForLtcFormat)
+        secondaryLabel.setValue(amount.localAmount)
+        
+        if !isLTCSwapped {
+            primaryLabel.transform = .identity
+            secondaryLabel.transform = transform(forView: secondaryLabel)
+        } else {
+            secondaryLabel.transform = .identity
+            primaryLabel.transform = transform(forView: primaryLabel)
         }
         
         self.timeStampLabel.text = S.TransactionDetails.priceTimeStampLabel + " " + dateFormatter.string(from: Date())
         let fiatRate = Double(round(100*rate.rate)/100)
         let formattedFiatString = String(format: "%.02f", fiatRate)
         self.currentLTCPriceLabel.text = Currency.getSymbolForCurrencyCode(code: rate.code)! + formattedFiatString
+       
     }
    
     private func transform(forView: UIView) ->  CGAffineTransform {

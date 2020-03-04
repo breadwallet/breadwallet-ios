@@ -40,7 +40,7 @@ class AmountViewController : UIViewController, Trackable {
             fullRefresh()
         }
     }
-    var didUpdateFee: ((Fee) -> Void)? {
+    var didUpdateFee: ((FeeType) -> Void)? {
         didSet {
             feeSelector.didUpdateFee = didUpdateFee
         }
@@ -59,7 +59,7 @@ class AmountViewController : UIViewController, Trackable {
     private let store: Store
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
-    var minimumFractionDigits = 0
+    var minimumFractionDigits = 2
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
     private var feeSelectorHeight: NSLayoutConstraint?
@@ -382,10 +382,4 @@ class AmountViewController : UIViewController, Trackable {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension Fees : Equatable {}
-
-func ==(lhs: Fees, rhs: Fees) -> Bool {
-    return lhs.regular == rhs.regular && lhs.economy == rhs.economy
 }

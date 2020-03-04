@@ -230,7 +230,7 @@
 "Donate.memo" = "Donation to the Litecoin Foundation";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Tap to Donate to the Litecoin Foundation!";
+"Donate.title" = "Donate to the Litecoin Foundation (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Confirm Donation";
@@ -274,8 +274,8 @@
 /* Economy fee */
 "FeeSelector.economy" = "Economy";
 
-/* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Estimated Delivery: 60+ minutes";
+/* Fee Selector economy fee description */
+"FeeSelector.economyLabel" = "Estimated Delivery: 10+ minutes";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "This option is not recommended for time-sensitive transactions.";
@@ -284,7 +284,7 @@
 "FeeSelector.regular" = "Regular";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Estimated Delivery: 10-30 minutes";
+"FeeSelector.regularLabel" = "Estimated Delivery: 2.5 - 5+ minutes";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Processing Speed";
@@ -1221,3 +1221,45 @@
 
 /* Label to pick fiat */
 "DefaultCurrency.chooseFiatLabel" = "Choose:";
+
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Environment:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Litewallet version:";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Delete Database";
+
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Delete Database";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "This deletes the database but retains the PIN and phrase. Confirm your existing PIN, seed and wait to compelete syncing to the new db";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Delete & Sync";
+
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Local Corruption Error";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Your local database is corrupted. Go to Settings > Blockchain: Settings > Delete Database to refresh";
+
+/* Donate articles to the */
+"Donate.toThe" = "Donate to the";
+
+/* Donate */
+"Donate.word" = "Donate";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxury";
+
+/* Fee Selector economy fee description */
+"FeeSelector.luxuryLabel" = "Estimated Delivery: 2.5 - 5+ minutes";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "This option virtually guarantees acceptance of your transaction though you are paying a premium.";

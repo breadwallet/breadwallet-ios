@@ -32,6 +32,12 @@
 /* Manage wallet button title */
 "AccountHeader.manageButtonName" = "GÉRER";
 
+/* Corruption Error alert title */
+"Alert.corruptionError" = "Erreur de corruption locale";
+
+/* Corruption Error alert title */
+"Alert.corruptionMessage" = "Votre base de données locale est corrompue. Accédez à Paramètres> Blockchain: Paramètres> Supprimer la base de données pour actualiser";
+
 /* Error alert title */
 "Alert.error" = "Erreur";
 
@@ -252,10 +258,16 @@
 "Donate.memo" = "Don à la Fondation Litecoin";
 
 /* Donate to the Litecoin Foundation */
-"Donate.title" = "Faites un don à la Fondation Litecoin!";
+"Donate.title" = "Faites un don à la Fondation Litecoin (%@)";
 
 /* Donate Confirmation */
 "Donate.title.confirmation" = "Confirmer le don";
+
+/* Donate articles to the */
+"Donate.toThe" = "Faire un don à";
+
+/* Donate */
+"Donate.word" = "Faire un don";
 
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Cet appareil n'est pas configuré pour envoyer un e-mail avec l'application e-mail pour iOS.";
@@ -297,16 +309,25 @@
 "FeeSelector.economy" = "Économie";
 
 /* Fee Selector economly fee description */
-"FeeSelector.economyLabel" = "Livraison estimée : 60 minutes ou +";
+"FeeSelector.economyLabel" = "Livraison estimée : 10 minutes ou +";
 
 /* Warning message for economy fee */
 "FeeSelector.economyWarning" = "Cette option n'est pas recommandée pour les transactions dont les délais sont cruciaux.";
+
+/* Luxury fee */
+"FeeSelector.luxury" = "Luxe";
+
+/* Fee Selector luxury fee description */
+"FeeSelector.luxuryLabel" = "Livraison estimée: 2.5 - 5 minutes";
+
+/* Message for luxury fee */
+"FeeSelector.luxuryMessage" = "Cette option garantit pratiquement l'acceptation de votre transaction même si vous payez une prime.";
 
 /* Regular fee */
 "FeeSelector.regular" = "Régulier";
 
 /* Fee Selector regular fee description */
-"FeeSelector.regularLabel" = "Livraison estimée : 10 à 30 minutes";
+"FeeSelector.regularLabel" = "Livraison estimée: 2.5 - 5+ minutes";
 
 /* Fee Selector title */
 "FeeSelector.title" = "Vitesse de traitement";
@@ -824,6 +845,12 @@
 /* Languages label */
 "Settings.languages" = "Les langues";
 
+/* Litewallet environment */
+"Settings.litewallet.environment" = "Environnement:";
+
+/* Litewallet version */
+"Settings.litewallet.version" = "Version Litewallet:";
+
 /* Manage settings section header */
 "Settings.manage" = "Gérer";
 
@@ -835,6 +862,9 @@
 
 /* Share anonymous data label */
 "Settings.shareData" = "Partager des données anonymes";
+
+/* Litewallet Social links */
+"Settings.socialLinks" = "Social";
 
 /* Support settings section header */
 "Settings.support" = "Soutien";
@@ -1169,11 +1199,23 @@
 /* Top title of welcome screen */
 "Welcome.title" = "Bienvenue chez Litewallet !";
 
+/* Delete database title */
+"WipeWallet.alertDeleteTitle" = "Supprimer la base de données";
+
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Souhaitez-vous vraiment supprimer ce portefeuille ?";
 
 /* Wipe wallet alert title */
 "WipeWallet.alertTitle" = "Effacer le portefeuille ?";
+
+/* Delete db */
+"WipeWallet.deleteDatabase" = "Supprimer la base de données";
+
+/* Delete database message */
+"WipeWallet.deleteMessageTitle" = "Cela supprime la base de données mais conserve le code PIN et la phrase. Confirmez votre code PIN existant, amorcez et attendez la fin de la synchronisation avec la nouvelle base de données";
+
+/* Delete and sync */
+"WipeWallet.deleteSync" = "Supprimer et synchroniser";
 
 /* Warning if user lost phrase */
 "WipeWallet.emptyWallet" = "Oubliez les graines ou le NIP?";

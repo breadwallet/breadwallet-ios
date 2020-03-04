@@ -8,8 +8,8 @@
 
 import Foundation
 import UIKit
-import BRCore
-
+import BRCore 
+ 
 enum SendResult {
     case success
     case creationError(String)
@@ -92,7 +92,7 @@ class Sender {
             var success = false
             let group = DispatchGroup()
             group.enter()
-            DispatchQueue.walletQueue.async {
+             DispatchQueue.walletQueue.async {
                 if self.walletManager.signTransaction(tx, pin: pin) {
                     self.publish(completion: completion)
                     success = true
@@ -101,7 +101,12 @@ class Sender {
             }
             let result = group.wait(timeout: .now() + 30.0)
             if result == .timedOut {
-                let alert = UIAlertController(title: "Error", message: "Did not sign tx within timeout", preferredStyle: .alert)
+                let properties: [String: String] = ["ERROR_TX":"\(tx.txHash)","ERROR_BLOCKHEIGHT": "\(tx.blockHeight)"]
+                LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: properties)
+
+                let alert = UIAlertController(title: S.Alert.corruptionError, message: S.Alert.corruptionMessage, preferredStyle: .alert)
+          
+                UserDefaults.didSeeCorruption = true
                 alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
                 self.topViewController?.present(alert, animated: true, completion: nil)
                 return false
@@ -138,7 +143,20 @@ class Sender {
     }
 
     private func setMetaData() {
-        guard let rate = rate, let tx = transaction, let feePerKb = feePerKb else { print("Incomplete tx metadata"); return }
+        
+        guard let rate = rate else {
+            LWAnalytics.logEventWithParameters(itemName:._20200111_RNI)
+            return
+        }
+        guard let tx = transaction else {
+            LWAnalytics.logEventWithParameters(itemName:._20200111_TNI)
+            return
+        }
+        guard let feePerKb = feePerKb else {
+            LWAnalytics.logEventWithParameters(itemName:._20200111_FNI)
+            return
+        }
+        
         let metaData = TxMetaData(transaction: tx.pointee,
                                   exchangeRate: rate.rate,
                                   exchangeRateCurrency: rate.code,
@@ -148,7 +166,7 @@ class Sender {
         do {
             let _ = try kvStore.set(metaData)
         } catch let error {
-            print("could not update metadata: \(error)")
+            LWAnalytics.logEventWithParameters(itemName:._20200112_ERR, properties: ["error": String(describing: error)])
         }
         store.trigger(name: .txMemoUpdated(tx.pointee.txHash.description))
     }
