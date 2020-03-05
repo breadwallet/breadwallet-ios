@@ -22,8 +22,6 @@
 "AccessibilityLabels.faq" = "Справочный центр";
 /* Account balance */
 "Account.balance" = "Баланс";
-/* Delisted token alert banner message */
-"Account.delistedToken" = "Регистрация этого токена была отменена из-за того, что эмитент решил прекратить поддержку ERC20. \n\nВероятно, вы все равно можете отправлять эти токены на другую платформу. Для получения дополнительной информации посетите нашу страницу поддержки.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ за %2$@";
 /* Loading Wallet Message */
@@ -38,18 +36,10 @@
 "Alert.keystore.generic.android" = "Имеется проблема с хранилищем ключей в вашей ОС Android, обратитесь по адресу: support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Ваши зашифрованные данные приложения BRD были недавно аннулированы, так как была отключена блокировка экрана вашего устройства Android.";
-/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому ваши данные BRD следует стереть путем удаления приложения.\n\nНе волнуйтесь, ваши средства в безопасности! Переустановите приложение и восстановите свой кошелек с помощью бумажного ключа.";
-/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому данные вашего приложения BRD необходимо стереть. \nНе волнуйтесь, ваши средства в безопасности! Восстановите свой кошелек, используя бумажный ключ.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Ошибка хранилища ключей Android";
 /* No internet alert message */
 "Alert.noInternet" = "Интернет-подключение не обнаружено. Проверьте подключение и повторите попытку.";
-/* General error message */
-"Alert.somethingWentWrong" = "Что-то пошло не так. Повторите попытку.";
-/* Request timed out error message */
-"Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";
 /* Warning alert title */
 "Alert.warning" = "Предупреждение";
 /* 'the addresses were copied'' Alert title */
@@ -122,52 +112,30 @@
 "Button.buy" = "Купить";
 /* Cancel button label */
 "Button.cancel" = "Отменить";
-/* Confirm button title */
-"Button.confirm" = "Подтвердить";
-/* Button label to open a email compose window with our support email in the to field. */
-"Button.contactSupport.android" = "Связаться со службой поддержки";
 /* prompt continue button */
 "Button.continueAction" = "Продолжить";
 /* prompt dismiss button */
 "Button.dismiss" = "Отменить";
-/* Done button title */
-"Button.done" = "Готово";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Главная";
 /* Ignore button label */
 "Button.ignore" = "Игнорировать";
-/* Maybe Later button label */
-"Button.maybeLater" = "Может быть, позже";
 /* menu button */
 "Button.menu" = "Меню";
-/* More information button */
-"Button.moreInfo" = "Подробнее";
 /* No button */
 "Button.no" = "Нет";
 /* OK button label */
 "Button.ok" = "ОК";
-/* Open Settings button */
-"Button.openSettings" = "Открыть Настройки";
 /* receive button */
 "Button.receive" = "Получить";
-/* Button label to open Security Settings. */
-"Button.securitySettings.android" = "Настройки безопасности";
 /* Click this button to sell an asset */
 "Button.sell" = "Продать";
 /* send button */
 "Button.send" = "Отправить";
 /* Settings button label */
 "Button.settings" = "Настройки";
-/* Setup button label */
-"Button.setup" = "Настроить";
-/* Skip button title */
-"Button.skip" = "Пропустить";
 /* Settings button label */
 "Button.submit" = "Отправить";
-/* Button label to uninstall the app. */
-"Button.uninstall.android" = "Удалить";
-/* Button label to wipe the user's application data. */
-"Button.wipe.android" = "Стереть";
 /* Yes button */
 "Button.yes" = "Да";
 /* Camera plugin instruction */
@@ -176,8 +144,6 @@
 "Confirmation.amountLabel" = "Сумма для отправки:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Комиссия сети:";
-/* Network Fee: (ETH) */
-"Confirmation.feeLabelETH" = "Комиссия сети (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Время обработки: Эта транзакция должна быть завершена через %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -210,14 +176,6 @@
 "DefaultCurrency.rateLabel" = "Обменный курс";
 /* The wallet is disabled. */
 "Disabled.title" = "Кошелек отключен";
-/* Share address by e-mail subject */
-"Email.address_subject" = "%1$s Адрес";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
 /* Email unavailable alert title */
@@ -232,8 +190,6 @@
 "ErrorMessages.touchIdFailed.android" = "Отпечаток пальца не идентифицирован. Повторите попытку.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Вы можете индивидуально настроить ваш лимит расходов Face ID от %1$@.";
-/* Text describing the purpose of the Face ID settings in the BRD app. */
-"FaceIDSettings.explanatoryText" = "Используйте Face ID, чтобы разблокировать приложение BRD и отправить деньги.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Используйте ваше лицо, чтобы разблокировать ваш BRD и отправить деньги в соответствии с установленным лимитом.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -242,14 +198,10 @@
 "FaceIDSettings.switchLabel" = "Включить Face ID для BRD";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
-/* Text label for a toggle that enables Face ID for sending money. */
-"FaceIDSettings.transactionsTitleText" = "Включите Face ID для отправки денег";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Вы не настроили Face ID на данном устройстве. Перейдите в Настройки->Face ID и Секретный код, чтобы настроить его сейчас.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID не настроена";
-/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
-"FaceIDSettings.unlockTitleText" = "Включите Face ID, чтобы разблокировать BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Лимит расходов Face ID";
 /* Economy fee */
@@ -262,40 +214,18 @@
 "FeeSelector.estimatedDeliver" = "Ожидаемое исполнение: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 минут";
-/* Priority fee */
-"FeeSelector.priority" = "Приоритет";
-/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
-"FeeSelector.priorityTime" = "10-30 минут";
 /* Regular fee */
 "FeeSelector.regular" = "Обычна сумма";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
 "FeeSelector.regularTime" = "10-60 минут";
 /* Fee Selector title */
 "FeeSelector.title" = "Скорость обработки";
-/* Label for the Android file chooser when we need to prompt the user to select an image file. */
-"FileChooser.selectImageSource.android" = "Выберите источник изображения";
-/* Fingerprint authentication settings screen description */
-"FingerprintSettings.description" = "Используйте свой отпечаток пальца для разблокировки приложения BRD и отправки транзакций.";
-/* Switch label to enable fingerprint authentication to send money */
-"FingerprintSettings.sendMoney" = "Используйте отпечаток пальца, чтобы отправить деньги";
-/* Fingerprint authentication settings sceen title */
-"FingerprintSettings.title" = "Отпечаток пальца";
-/* Switch label to enable fingerprint authentication to unlock BRD app */
-"FingerprintSettings.unlockApp" = "Используйте отпечатки пальцев для разблокировки BRD";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Админ";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Купить";
-/* home screen toolbar 'Buy & Sell' button */
-"HomeScreen.buyAndSell" = "Купить и продать";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Меню";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Кошельки";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "итого активов";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Обмен";
 /* Checking private key balance progress view text */
 "Import.checking" = "Проверяем баланс по персональному ключу...";
 /* Sweep private key confirmation message */
@@ -343,27 +273,15 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Игнорировать";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
+"JailbreakWarnings.messageWithBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\
+ Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны! Немедленно очистите ваш кошелек и восстановите его на безопасном устройстве.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\n Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны. Пожалуйста, используйте BRD только на устройствах с не снятыми с файловой системы ограничениями.";
+"JailbreakWarnings.messageWithoutBalance" = "БЕЗОПАСНОСТЬ УСТРОЙСТВА ПОДВЕРГНУТА РИСКУ\
+ Какое-либо приложение по снятию ограничений с файловой системы может получить доступ к данным цепочки ключей  BRD и украсть ваши биткойны. Пожалуйста, используйте BRD только на устройствах с не снятыми с файловой системы ограничениями.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "ПРЕДУПРЕЖДЕНИЕ";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Очистить";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Одобрить";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Отклонить";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Это приложение способно:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Прикрепить Кошелек";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Сервисы определения местоположения отключены.";
 /* No permissions for location services */
@@ -380,10 +298,6 @@
 "MenuButton.addWallet" = "Добавить кошелек";
 /* Menu button title */
 "MenuButton.lock" = "Заблокировать кошелек";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Управлять кошельками";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Сканировать QR код";
 /* Menu button title */
 "MenuButton.security" = "Центр безопасности";
 /* Menu button title */
@@ -396,16 +310,6 @@
 "MenuViewController.modalTitle" = "Меню";
 /* button label */
 "MenuViewController.recoverButton" = "Восстановить кошелек";
-/* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Бумажный ключ будет необходим, чтобы открыть ваш кошелек, если вы измените настройки безопасности на вашем телефоне.\n\nВы уверены, что хотите настроить бумажный ключ позже?";
-/* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Продолжить настройку";
-/* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "Я сделаю это позже";
-/* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Внимание";
-/* Node selection mode is automatic */
-"NodeSelector.automatic" = "Автоматический";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Переключиться в автоматический режим";
 /* Node is connected label */
@@ -416,8 +320,6 @@
 "NodeSelector.enterBody" = "Ввести IP-адрес и порт узла (необязательно)";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "Ввести узел";
-/* Entered invalid node address at the node selection screen */
-"NodeSelector.invalid" = "Недействительный узло";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "Переключиться в ручной режим";
 /* Node address label */
@@ -428,34 +330,6 @@
 "NodeSelector.statusLabel" = "Состояние подключения узла";
 /* Node Selector view title */
 "NodeSelector.title" = "Биткойн-узлы";
-/* Onboarding screen 'I'll browse first' button */
-"Onboarding.browseFirst" = "Я сначала прогляну";
-/* Onboarding screen 'Buy some coin' button */
-"Onboarding.buyCoin" = "Купить немного монет";
-/* Onboarding screen 'Get started' (create new wallet) button */
-"Onboarding.getStarted" = "Начать";
-/* Onboarding screen 'Next' button */
-"Onboarding.next" = "Далее";
-/* Onboarding screen restore an existing wallet. */
-"Onboarding.restoreWallet" = "Восстановить кошелек";
-/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
-"Onboarding.skip" = "Пропустить";
-/* Onboarding screen Page 4 title */
-"OnboardingPageFour.title" = "Начинайте инвестировать уже сегодня всего с 50 долларами США!";
-/* Onboarding screen Page 1 title */
-"OnboardingPageOne.title" = "Добро пожаловать в ваш новый глобальный кошелек!";
-/* Onboarding screen Page 3 subtitle */
-"OnboardingPageThree.subtitle" = "Инвестируйте и диверсифицируйте c BRD, просто и безопасно.";
-/* Onboarding screen Page 3 title */
-"OnboardingPageThree.title" = "Покупайте и торгуйте биткойном, токенами и прочими цифровыми валютами.";
-/* Onboarding screen Page 2 subtitle */
-"OnboardingPageTwo.subtitle" = "Под нашей защитой находятся активы общей суммой более 6 миллиардов долларов США.";
-/* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Присоединяйтесь к миллионам людей по всему миру, которые доверяют BRD.";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Подтверждение";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Неверный запрос на совершение платежа";
 /* Error opening payment protocol file message */
@@ -474,18 +348,6 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "неподдерживаемый тип подписи";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "недостоверный сертификат";
-/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
-"Prompts.Email.body" = "Станьте первым, кто получит существенную поддержку и обновления продукта";
-/* Placeholder text for an email address text field. */
-"Prompts.Email.placeholder" = "введите ваш адрес электронной почты";
-/* Body text that is shown when the user successfully subscribes to email updates. */
-"Prompts.Email.successBody" = "Вы успешно подписались на получение обновлений";
-/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
-"Prompts.Email.successFootnote" = "Мы ценим вашу непрерывную поддержку";
-/* Title that is shown when the user successfully subscribes to email updates. */
-"Prompts.Email.successTitle" = "Спасибо!";
-/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
-"Prompts.Email.title" = "Войти в узкий круг";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Нажмите \"Продолжить\", чтобы включить Идентификацию по лицу";
 /* Enable face ID prompt title */
@@ -500,8 +362,6 @@
 "Prompts.NoScreenLock.title.android" = "Блокировка экрана отключена";
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "Ваш бумажный ключ нужно сохранить на случай, если вы потеряете или смените свой телефон.";
-/* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Создайте бумажный ключ на случай, если вы потеряете или смените ваш телефон. Ключ будет также необходим, если вы измените настройки безопасности на вашем телефоне.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Необходимо совершить действие";
 /* Transaction rejected prompt body */
@@ -528,14 +388,6 @@
 "Prompts.UpgradePin.title" = "Обновить PIN-код";
 /* Body text for the push notifications prompt. */
 "PushNotifications.body" = "Включите push-уведомления и первыми узнавайте о новых функциях и специальных предложениях.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Уведомления Отключены";
-/* Body text when push notifications are disabled. */
-"PushNotifications.disabledBody" = "Включите уведомления, чтобы получать спецпредложения и новости от BRD.";
-/* Body text when push notifications are enabled. */
-"PushNotifications.enabledBody" = "Вы получаете спецпредложения и новости от BRD.";
-/* Instructions to enable push notifications for BRD in the phone's system settings. */
-"PushNotifications.enableInstructions" = "Похоже, уведомления отключены. Перейдите в настройки, чтобы включить уведомления от BRD.";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Получать Push-уведомления";
 /* Push notifications are off label */
@@ -544,16 +396,6 @@
 "PushNotifications.on" = "Включено";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Оставайтесь в курсе событий";
-/* Push notifications settings failed to update settings on the back end */
-"PushNotifications.updateFailed" = "Не удалось обновить настройки push-уведомлений";
-/* Google play review prompt body */
-"RateAppPrompt.Body.Android" = "Если вам понравилось наше приложение, уделите минутку, чтобы оценить его и написать нам отзыв.";
-/* Google play review prompt, revivew button */
-"RateAppPrompt.Button.Dismiss.Android" = "Нет, спасибо";
-/* Google play review prompt, dismiss button */
-"RateAppPrompt.Button.RateApp.Android" = "Оцените BRD";
-/* Google play review prompt title */
-"RateAppPrompt.Title.Android" = "Оцените BRD";
 /* Address copied message. */
 "Receive.copied" = "Скопировано в буфер обмена.";
 /* Share via email button label */
@@ -590,78 +432,6 @@
 "RecoverWallet.subheader" = "Введите бумажный ключ для кошелька, который вы хотите восстановить.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "Для сброса PIN-кода введите слова из вашего бумажного ключа в расположенные ниже поля.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryInputError" = "Вы неверно ввели слово. Пожалуйста, повторите попытку.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Почти готово! Введите следующие слова из вашего ключа восстановления.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Подтверждение ключа восстановления";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Введите ключ восстановления";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Пожалуйста, введите ваш ключ восстановления, чтобы отвязать этот кошелек от вашего устройства.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Вы уверены, что хотите выполнить настройку ключа восстановления позже?";
-/* Title for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Настроить позже";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Сгенерировать ключ восстановления";
-/* Subtext for the recovery key landing page. */
-"RecoveryKeyFlow.generateKeyExplanation" = "Ключ необходим, чтобы вернуть ваши средства, если вы смените или потеряете ваш телефон.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Сгенерируйте приватный ключ восстановления";
-/* Title for a button that takes the user to the wallet after setting up the recovery key. */
-"RecoveryKeyFlow.goToWalletButtonTitle" = "Перейти к кошельку";
-/* Hint text for recovery key intro page, e.g., Step 2 */
-"RecoveryKeyFlow.howItWorksStep" = "Как это работает — Шаг %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Некоторые из введенных вами слов не совпадают с вашим ключом восстановления. Пожалуйста, повторите попытку.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.keepSecure" = "Держите его в безопасности";
-/* Informs the user that the recovery is only required for recovering a wallet. */
-"RecoveryKeyFlow.keyUseHint" = "Ваш ключ необходим только для восстановления, а не для повседневного доступа к кошельку.";
-/* Reminds the user not to take screenshots or email the recovery key words */
-"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "В целях безопасности не делайте скриншот этих слов и не отправляйте их по электронной почте";
-/* Recommends that the user avoids capturing the paper key with a screenshot */
-"RecoveryKeyFlow.noScreenshotsRecommendation" = "Запишите ваш ключ на бумаге и подтвердите его. В целях безопасности не рекомендуется делать скриншоты.";
-/* Title displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWallet" = "Восстановление кошелька";
-/* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Пожалуйста, введите ключ восстановления кошелька, который вы хотите восстановить.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.relaxBuyTrade" = "Расслабьтесь, покупайте и торгуйте";
-/* Reminds the user to write down the recovery key words. */
-"RecoveryKeyFlow.rememberToWriteDownReminder" = "Не забудьте записать эти слова. Вернитесь к предыдущему шагу, если вы забыли это сделать.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Пожалуйста, введите ваш ключ восстановления, чтобы сбросить ваш PIN-код.";
-/* Assures the user that BRD will keep the user's funds secure. */
-"RecoveryKeyFlow.securityAssurance" = "Покупайте и торгуйте, зная, что ваши средства защищены лучшей системой безопасности и конфиденциальности в этой сфере.";
-/* Recommends that the user stores the recovery key in a secure location */
-"RecoveryKeyFlow.storeSecurelyRecommendation" = "Храните ваш ключ в безопасном месте. Только с помощью него вы сможете восстановить ваш кошелек. BRD не хранит его копию.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Поздравляем! Вы закончили настройку ключа восстановления.";
-/* Subtitle for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successSubheading" = "Теперь вы готовы вносить депозит, торговать и покупать криптовалюту из вашего кошелька BRD.";
-/* Title displayed to the user on the intro screen when unlinking a wallet */
-"RecoveryKeyFlow.unlinkWallet" = "Отвяжите ваш кошелек от этого устройства.";
-/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
-"RecoveryKeyFlow.unlinkWalletSubtext" = "Создайте новый кошелек, отвязав ваше устройство от текущего кошелька.";
-/* Warning displayed when the user starts the process of unlinking a wallet */
-"RecoveryKeyFlow.unlinkWalletWarning" = "Чтобы вернуть доступ, необходимо восстановить кошелек.";
-/* Title displayed to the user on the intro screen when wiping a wallet */
-"RecoveryKeyFlow.wipeWallet" = "Отвяжите ваш кошелек от этого устройства.";
-/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
-"RecoveryKeyFlow.wipeWalletSubtext" = "Запустите новый кошелек, протерев текущий кошелек с устройства.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.writeItDown" = "Запишите ваш ключ";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Запишите ваш ключ восстановления еще раз";
-/* Subtitle for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Запишите эти слова по порядку.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Ваш ключ восстановления";
-/* Title for the step number when the user pages through the recovery words */
-"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ из %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Сначала введите сумму.";
 /* Request a specific amount of bitcoin */
@@ -688,12 +458,6 @@
 "ReScan.subheader1" = "Примерное время";
 /* Subheader label */
 "ReScan.subheader2" = "Когда синхронизировать?";
-/* Rewards view expanded body. */
-"RewardsView.expandedBody" = "Узнайте как сэкономить на комиссионных обменах и открыть будущие бонусы.";
-/* Rewards view expanded title. */
-"RewardsView.expandedTitle" = "Представляем Бонусы BRD.";
-/* Rewards view title */
-"RewardsView.normalTitle" = "Бонусы";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Вспышка камеры";
 /* Complete filter label */
@@ -713,8 +477,6 @@
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Бумажный ключ";
-/* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Бумажный ключ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Защищает ваш BRD от несанкционированных пользователей.";
 /* PIN button title */
@@ -725,18 +487,6 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Аутентификация по отпечаткам пальцев";
-/* Segwit enabled confirmation title */
-"Segwit.ConfirmationConfirmationTitle" = "Вы активировали SegWit!";
-/* Segwit enabled confirmation description */
-"Segwit.ConfirmationInstructionsDescription" = "Благодарим вас за продвижение биткоина.";
-/* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "Поддержка SegWit еще является бета-функцией.\nС момента активации функции SegWit ее нельзя будет отключить. Вы сможете найти унаследованный адрес в Настройках. \nНекоторые услуги третьей стороны, включая крипто-трейдинг, могут быть недоступными для пользователей, которые активировали SegWit. В случае крайней необходимости, вы сможете генерировать унаследованный адрес, зайдя в Preferences (Параметры) > Bitcoin Settings (Настройки биткоина). \nВ будущем обновлении SegWit будет автоматически активирована для всех пользователей.";
-/* Segwit extra confirmation title. */
-"Segwit.ConfirmChoiceLayout" = "Активация SegWit является необратимой функцией. Вы уверены, что хотите продолжить?";
-/* Segwit enableButton */
-"Segwit.Enable" = "Активировать";
-/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
-"Segwit.HomeButton" = "На главный экран";
 /* Send money amount label */
 "Send.amountLabel" = "Сумма";
 /* Balance: $4.00 */
@@ -799,8 +549,6 @@
 "Send.scanLabel" = "Сканировать";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Отправить";
-/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
-"Send.sendMaximum" = "Отправить максимальную сумму?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Отправить";
 /* Send money to label */
@@ -817,10 +565,6 @@
 "Settings.advanced" = "Расширенные";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Расширенные настройки";
-/* ATM map menu item title explaining that it's a feature only available in the USA */
-"Settings.atmMapMenuItemSubtitle" = "Доступно только в США";
-/* ATM map menu item title */
-"Settings.atmMapMenuItemTitle" = "Карта крипто-банкоматов";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Отображать валюту";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -829,8 +573,6 @@
 "Settings.currencySettings" = "Настройки валюты";
 /* Join Early access label */
 "Settings.earlyAccess" = "Присоединитесь к пользователям с ранним доступом";
-/* Enable segwit. */
-"Settings.EnableSegwit" = "Активировать Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Нравится ли вам использовать BRD?";
 /* Face ID spending limit label */
@@ -841,16 +583,12 @@
 "Settings.manage" = "Управление";
 /* Notifications label */
 "Settings.notifications" = "Уведомления";
-/* Section header for "other settings". */
-"Settings.other" = "Другие";
 /* Preferences settings section header */
 "Settings.preferences" = "Параметры";
 /* Tap here to reset the list of currencies to the default settings. */
 "Settings.resetCurrencies" = "Восстановить валюту по умолчанию";
 /* Leave review button label */
 "Settings.review" = "Оставьте свой отзыв";
-/* Rewards menu item */
-"Settings.rewards" = "Вознаграждения";
 /* Share anonymous data label */
 "Settings.shareData" = "Поделиться анонимными данными";
 /* Sync blockchain label */
@@ -861,18 +599,10 @@
 "Settings.touchIdLimit" = "Лимит на расходы Touch ID";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Расходный лимит с аутентификацией по отпечаткам пальцев";
-/* View legacy address (old format). */
-"Settings.ViewLegacyAddress" = "Просмотреть унаследованный адрес";
-/* Receive Bitcoin instructions */
-"Settings.ViewLegacyAddressReceiveDescription" = "Отправляйте на этот адрес только биткоин (BTC). Любые другие активы, отправленные на этот адрес, будут безвозвратно потеряны.";
-/* Receive Bitcoin */
-"Settings.ViewLegacyAddressReceiveTitle" = "Получить биткоин";
 /* Wallet Settings section header */
 "Settings.wallet" = "Кошелек";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Отвязать от этого устройства";
-/* Wipe/delete your wallet from the current device. */
-"Settings.wipe.android" = "Отвяжите ваш кошелек от этого устройства.";
 /* Share data view body */
 "ShareData.body" = "Помогите нам улучшить BRD, поделившись своими анонимными данными. Такие данные не включают какую-либо финансовую информацию. Мы уважаем вашу финансовую конфиденциальность.";
 /* Share data header */
@@ -882,31 +612,26 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Выписать бумажный ключ снова";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш BRD-кошелек в случае потери, кражи, поломки или замены вашего телефона.\n\nМы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
-/* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Бумажный ключ — это единственный способ восстановить ваш кошелек BRD в случае, если ваш телефон окажется утерян, украден, сломан или обновлен.\n\nБумажный ключ будет также необходим, если вы измените настройки безопасности на вашем устройстве.\n\nМы покажем вам список слов, которые необходимо записать на бумаге и хранить в безопасном месте.";
+"StartPaperPhrase.body" = "Бумажный ключ – это единственный способ восстановить ваш BRD-кошелек в случае потери, кражи, поломки или замены вашего телефона.\
+\
+Мы покажем вам список слов, которые необходимо записать на листе бумаги и хранить в надежном месте.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Вы выписывали свой бумажный ключ в последний раз \n%1$@";
+"StartPaperPhrase.date" = "Вы выписывали свой бумажный ключ в последний раз \
+%1$@";
 /* button label */
 "StartViewController.createButton" = "Создать новый кошелек";
 /* Start view message */
 "StartViewController.message" = "Самый надежный и безопасный способ использования биткойна.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Восстановить кошелек";
-/* Syncing view done syncing state header text */
-"SyncingView.activity" = "Активность";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Соединение";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "Ошибка синхронизации";
 /* Syncing view header text */
 "SyncingView.header" = "Синхронизация";
 /* Retry button label */
 "SyncingView.retry" = "Повторить";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Синхронизация";
 /* 6 d (6 days) */
@@ -937,8 +662,6 @@
 "TouchIdSettings.disabledWarning.body.android" = "Вы не включили аутентификацию по отпечаткам пальцев на данном устройстве. Перейдите в \"Настройки\" -> \"Безопасность\", чтобы настроить аутентификацию по отпечаткам пальцев.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Аутентификация по отпечаткам пальцев не включена";
-/* Text that describes the purpose of the Touch ID settings in the BRD app. */
-"TouchIdSettings.explanatoryText" = "Используйте Touch ID, чтобы разблокировать приложение BRD и отправить деньги.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Используйте отпечатки ваших пальцев для разблокирования BRD-кошелька и отправки сумм, не превышающих ваш лимит на расходы.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -953,14 +676,10 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Аутентификация по отпечаткам пальцев";
-/* Text label for a toggle that enables Touch ID for sending money. */
-"TouchIdSettings.transactionsTitleText" = "Включить Touch ID для отправки денег";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Вы не задали функцию Touch ID на этом устройстве. Перейдите в \"Настройки\"->\"Touch ID и Код доступа\", чтобы задать ее сейчас.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Функция Touch ID не задана";
-/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
-"TouchIdSettings.unlockTitleText" = "Включите Touch ID, чтобы разблокировать BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Всегда требовать код доступа к устройству";
 /* Touch ID spending limit screen body */
@@ -1017,8 +736,6 @@
 "TransactionDetails.amountHeader" = "Сумма";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ при получении, %2$@ сейчас";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Подтверждено в блоке";
 /* Memo section header */
@@ -1027,9 +744,6 @@
 "TransactionDetails.commentsPlaceholder" = "Добавить заметку...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Завершить";
-/* Block height and confirmations label
-eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "Подтверждений/-ия";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Ваши транзакции будут отображаться здесь.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1044,8 +758,6 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Лимит газа";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Стоимость газа";
-/* Hide Details button */
-"TransactionDetails.hideDetails" = "Скрыть подробности";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "Инициировано";
 /* More button title */
@@ -1097,7 +809,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "Всего";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "ID биткоин-транзакции";
+"TransactionDetails.txHashHeader" = "Детали транзакции";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "Получено на адрес:";
 /* (this transaction was) Sent to this address: */
@@ -1158,23 +870,6 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "Необходим PIN-код";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Разрешить эту транзакцию";
-/* Turn off fast sync confirmation question */
-"WalletConnectionSettings.confirmation" = "Вы уверены, что хотите отключить Fastsync?";
-/* Explanation for wallet connection setting */
-"WalletConnectionSettings.explanatoryText" = "Сделайте синхронизацию вашего биткойн-кошелька практически мгновенно. Узнайте больше о том, как это работает здесь.";
-/* Connection mode switch label. */
-"WalletConnectionSettings.footerTitle" = "Движимый";
-/* Wallet connection settings view title */
-"WalletConnectionSettings.header" = "Fastsync (пилот)";
-/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
-"WalletConnectionSettings.link" = "здесь";
-/* WalletConnectionSettiongs
-Wallet connection settings menu item title. */
-"WalletConnectionSettings.menuTitle" = "Режим подключения";
-/* Turn off fast sync button label */
-"WalletConnectionSettings.turnOff" = "Выключить";
-/* Wallet connection settings view title */
-"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "Запустите BRD-приложение для iPhone, чтобы настроить ваш кошелек.";
 /* Dismiss button label */
@@ -1184,7 +879,9 @@ Wallet connection settings menu item title. */
 /* Updating webview message */
 "Webview.updating" = "Идет обновление...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet сменил свое название на BRD и обзавелся новым дизайном и функциями.\n\nЕсли вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
+"Welcome.body" = "Breadwallet сменил свое название на BRD и обзавелся новым дизайном и функциями.\
+\
+Если вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
 /* Top title of welcome screen */
 "Welcome.title" = "Добро пожаловать в BRD!";
 /* Wipe wallet alert message */
@@ -1215,3 +912,331 @@ Wallet connection settings menu item title. */
 "WritePaperPhrase.previous" = "Назад";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li из %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Другие";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Управлять кошельками";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Меню";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Купить";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Обмен";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Сканировать QR код";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "Ошибка синхронизации";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Синхронизированно до %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Уведомления Отключены";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Похоже, уведомления отключены. Перейдите в настройки, чтобы включить уведомления от BRD.";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Одобрить";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Отклонить";
+/* Link Wallet view title */
+"LinkWallet.title" = "Прикрепить Кошелек";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Примечание: взаимодействуйте ТОЛЬКО с этим приложением, когда находитесь на одном из следующих доменов";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Это приложение способно:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "Внешние приложения не могут отправлять деньги без согласия с этого устройства";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Защищенная Оплата Покупок";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Подтверждение";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Отправить %1$@, чтобы купить %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Запросить %1$@ информацию об учётной записи";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Запросить %1$@ вызов смарт-контракта";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Запросить %1$@ платёж";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ когда отправлено, %2$@ сейчас";
+/* Request timed out error message */
+"Alert.timedOut" = "Истекло время запроса. Проверьте подключение и повторите попытку.";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Регистрация этого токена была отменена из-за того, что эмитент решил прекратить поддержку ERC20. \
+\
+Вероятно, вы все равно можете отправлять эти токены на другую платформу. Для получения дополнительной информации посетите нашу страницу поддержки.";
+/* General error message */
+"Alert.somethingWentWrong" = "Что-то пошло не так. Повторите попытку.";
+/* More information button */
+"Button.moreInfo" = "Подробнее";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Войти в узкий круг";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Станьте первым, кто получит существенную поддержку и обновления продукта";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "введите ваш адрес электронной почты";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Спасибо!";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Вы успешно подписались на получение обновлений";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Мы ценим вашу непрерывную поддержку";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Просмотреть унаследованный адрес";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Получить биткоин";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Отправляйте на этот адрес только биткоин (BTC). Любые другие активы, отправленные на этот адрес, будут безвозвратно потеряны.";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Активировать Segwit";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "Активация SegWit является необратимой функцией. Вы уверены, что хотите продолжить?";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Вы активировали SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Благодарим вас за продвижение биткоина.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "Поддержка SegWit еще является бета-функцией.\
+С момента активации функции SegWit ее нельзя будет отключить. Вы сможете найти унаследованный адрес в Настройках. \
+Некоторые услуги третьей стороны, включая крипто-трейдинг, могут быть недоступными для пользователей, которые активировали SegWit. В случае крайней необходимости, вы сможете генерировать унаследованный адрес, зайдя в Preferences (Параметры) > Bitcoin Settings (Настройки биткоина). \
+В будущем обновлении SegWit будет автоматически активирована для всех пользователей.";
+/* Segwit enableButton */
+"Segwit.Enable" = "Активировать";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Отправить максимальную сумму?";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Добро пожаловать в ваш новый глобальный кошелек!";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "Под нашей защитой находятся активы общей суммой более 6 миллиардов долларов США.";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Присоединяйтесь к миллионам людей по всему миру, которые доверяют BRD.";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Инвестируйте и диверсифицируйте c BRD, просто и безопасно.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Покупайте и торгуйте биткойном, токенами и прочими цифровыми валютами.";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Начинайте инвестировать уже сегодня всего с 50 долларами США!";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "Я сначала прогляну";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Купить немного монет";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "Начать";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Далее";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Восстановить кошелек";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Пропустить";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Комиссия сети (ETH):";
+/* Rewards menu item */
+"Settings.rewards" = "Вознаграждения";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "На главный экран";
+/* Rewards view title */
+"RewardsView.normalTitle" = "Бонусы";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "Представляем Бонусы BRD.";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "Узнайте как сэкономить на комиссионных обменах и открыть будущие бонусы.";
+/* Maybe Later button label */
+"Button.maybeLater" = "Может быть, позже";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "Подтверждений/-ия";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Настройки безопасности";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Связаться со службой поддержки";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Стереть";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Удалить";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому данные вашего приложения BRD необходимо стереть. \
+Не волнуйтесь, ваши средства в безопасности! Восстановите свой кошелек, используя бумажный ключ.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Мы не можем продолжить, потому что ваши настройки блокировки экрана были изменены (например, пароль отключен, отпечатки пальцев изменены). В целях безопасности Android навсегда заблокировал ваше хранилище ключей. Поэтому ваши данные BRD следует стереть путем удаления приложения.\
+\
+Не волнуйтесь, ваши средства в безопасности! Переустановите приложение и восстановите свой кошелек с помощью бумажного ключа.";
+/* Confirm button title */
+"Button.confirm" = "Подтвердить";
+/* Done button title */
+"Button.done" = "Готово";
+/* Skip button title */
+"Button.skip" = "Пропустить";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Сгенерируйте приватный ключ восстановления";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Запишите ваш ключ восстановления еще раз";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "Ключ необходим, чтобы вернуть ваши средства, если вы смените или потеряете ваш телефон.";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "Как это работает — Шаг %1$@";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Запишите ваш ключ";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Держите его в безопасности";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Расслабьтесь, покупайте и торгуйте";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Запишите ваш ключ на бумаге и подтвердите его. В целях безопасности не рекомендуется делать скриншоты.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Храните ваш ключ в безопасном месте. Только с помощью него вы сможете восстановить ваш кошелек. BRD не хранит его копию.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Покупайте и торгуйте, зная, что ваши средства защищены лучшей системой безопасности и конфиденциальности в этой сфере.";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Сгенерировать ключ восстановления";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "Ваш ключ необходим только для восстановления, а не для повседневного доступа к кошельку.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Ваш ключ восстановления";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Запишите эти слова по порядку.";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ из %2$@";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "В целях безопасности не делайте скриншот этих слов и не отправляйте их по электронной почте";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Не забудьте записать эти слова. Вернитесь к предыдущему шагу, если вы забыли это сделать.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Подтверждение ключа восстановления";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Почти готово! Введите следующие слова из вашего ключа восстановления.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "Вы неверно ввели слово. Пожалуйста, повторите попытку.";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Перейти к кошельку";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Поздравляем! Вы закончили настройку ключа восстановления.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "Теперь вы готовы вносить депозит, торговать и покупать криптовалюту из вашего кошелька BRD.";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Некоторые из введенных вами слов не совпадают с вашим ключом восстановления. Пожалуйста, повторите попытку.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Отвяжите ваш кошелек от этого устройства.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Создайте новый кошелек, отвязав ваше устройство от текущего кошелька.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Восстановление кошелька";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Пожалуйста, введите ключ восстановления кошелька, который вы хотите восстановить.";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Введите ключ восстановления";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Пожалуйста, введите ваш ключ восстановления, чтобы отвязать этот кошелек от вашего устройства.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "Чтобы вернуть доступ, необходимо восстановить кошелек.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Пожалуйста, введите ваш ключ восстановления, чтобы сбросить ваш PIN-код.";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Настроить позже";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Вы уверены, что хотите выполнить настройку ключа восстановления позже?";
+/* Open Settings button */
+"Button.openSettings" = "Открыть Настройки";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Включите уведомления, чтобы получать спецпредложения и новости от BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Вы получаете спецпредложения и новости от BRD.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "Бумажный ключ — это единственный способ восстановить ваш кошелек BRD в случае, если ваш телефон окажется утерян, украден, сломан или обновлен.\
+\
+Бумажный ключ будет также необходим, если вы измените настройки безопасности на вашем устройстве.\
+\
+Мы покажем вам список слов, которые необходимо записать на бумаге и хранить в безопасном месте.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Создайте бумажный ключ на случай, если вы потеряете или смените ваш телефон. Ключ будет также необходим, если вы измените настройки безопасности на вашем телефоне.";
+/* Setup button label */
+"Button.setup" = "Настроить";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Внимание";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "Бумажный ключ будет необходим, чтобы открыть ваш кошелек, если вы измените настройки безопасности на вашем телефоне.\
+\
+Вы уверены, что хотите настроить бумажный ключ позже?";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Я сделаю это позже";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Продолжить настройку";
+/* Priority fee */
+"FeeSelector.priority" = "Приоритет";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10-30 минут";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "Оцените BRD";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "Если вам понравилось наше приложение, уделите минутку, чтобы оценить его и написать нам отзыв.";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "Оцените BRD";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "Нет, спасибо";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "Доступно только в США";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "Карта крипто-банкоматов";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "Активность";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s Адрес";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "Выберите источник изображения";
+/* home screen toolbar 'Buy & Sell' button */
+"HomeScreen.buyAndSell" = "Купить и продать";
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle.android" = "Бумажный ключ";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Используйте Face ID, чтобы разблокировать приложение BRD и отправить деньги.";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Включите Face ID для отправки денег";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Включите Face ID, чтобы разблокировать BRD";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Используйте Touch ID, чтобы разблокировать приложение BRD и отправить деньги.";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Включить Touch ID для отправки денег";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Включите Touch ID, чтобы разблокировать BRD";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "Скрыть подробности";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "Режим подключения";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync (пилот)";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "Сделайте синхронизацию вашего биткойн-кошелька практически мгновенно. Узнайте больше о том, как это работает здесь.";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "здесь";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "Движимый";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Вы уверены, что хотите отключить Fastsync?";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "Выключить";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "Отпечаток пальца";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "Используйте свой отпечаток пальца для разблокировки приложения BRD и отправки транзакций.";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "Используйте отпечатки пальцев для разблокировки BRD";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "Используйте отпечаток пальца, чтобы отправить деньги";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "Отвяжите ваш кошелек от этого устройства.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "Отвяжите ваш кошелек от этого устройства.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "Запустите новый кошелек, протерев текущий кошелек с устройства.";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "Автоматический";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "Недействительный узло";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "Не удалось обновить настройки push-уведомлений";
+/* Optional Destination Tag label */
+"Send.destinationTag_optional" = "Тег назначения (необязательно)";
+/* Required Destination Tag label */
+"Send.destinationTag_required" = "Метка назначения (обязательно)";
