@@ -414,7 +414,8 @@ class ApplicationController: Subscriber, Trackable {
     private func createBuyScreen() -> BRWebViewController {
         let buyScreen = BRWebViewController(bundleName: C.webBundle,
                                             mountPoint: "/buy",
-                                            walletAuthenticator: keyStore)
+                                            walletAuthenticator: keyStore,
+                                            system: coreSystem)
         buyScreen.startServer()
         buyScreen.preload()
         
