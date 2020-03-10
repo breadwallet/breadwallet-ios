@@ -107,6 +107,11 @@ class Transaction {
         case .created, .signed, .submitted, .pending:
             return .pending
         case .included:
+            
+            guard transfer.confirmation?.error == nil else {
+                return .invalid
+            }
+            
             switch Int(confirmations) {
             case 0:
                 return .pending
