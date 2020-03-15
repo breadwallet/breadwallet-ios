@@ -844,8 +844,7 @@ extension KeyStore: KeyMaster {
             if let bundleId = Bundle.main.bundleIdentifier {
                 UserDefaults.standard.removePersistentDomain(forName: bundleId)
             }
-            assert(Backend.kvStore != nil || E.isRunningTests)
-            try Backend.kvStore?.rmdb()
+            try BRReplicatedKVStore.rmdb()
             try? FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
             try setKeychainItem(key: KeychainKey.systemAccount, item: nil as Data?)
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as String?)

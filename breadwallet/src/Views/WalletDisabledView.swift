@@ -41,13 +41,18 @@ class WalletDisabledView: UIView {
             reset.tap = didTapReset
         }
     }
+    
+    var didCompleteWipeGesture: (() -> Void)?
 
     private let label = UILabel(font: Theme.body1, color: Theme.primaryText)
     private let faq: UIButton
     private let blur: UIVisualEffectView
     private let reset = BRDButton(title: S.UnlockScreen.resetPin, type: .primary)
     private let effect = UIBlurEffect(style: .regular)
-
+    private let gr = UITapGestureRecognizer()
+    private var tapCount = 0
+    private let tapWipeCount = 12
+    
     private func setup() {
         addSubviews()
         addConstraints()
@@ -76,6 +81,16 @@ class WalletDisabledView: UIView {
 
     private func setData() {
         label.textAlignment = .center
+        label.addGestureRecognizer(gr)
+        label.isUserInteractionEnabled = true
+        gr.addTarget(self, action: #selector(didTap))
+    }
+    
+    @objc private func didTap() {
+        tapCount += 1
+        if tapCount == tapWipeCount {
+            didCompleteWipeGesture?()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
