@@ -42,6 +42,8 @@ class ExchangeUpdater: Subscriber {
                 
                 let fiatCode = Store.state.defaultCurrencyCode
                 let rate = Rate(code: fiatCode, name: $0.name, rate: info.price, reciprocalCode: $0.code)
+                //Cache result for next launch
+                UserDefaults.setCurrentRateData(newValue: rate.dictionary, forCode: $0.code)
                 Store.perform(action: WalletChange($0).setExchangeRate(rate))
             }
         }
