@@ -48,7 +48,8 @@ enum HistoryPeriod: String, CaseIterable {
     }
     
     func urlForCode(code: String) -> URL {
-        let tsym = Store.state.defaultCurrencyCode.uppercased()
+        let shouldUseUSD = BRAPIClient.shouldUseUSDRate(currencyCodes: [code.uppercased()])
+        let tsym = shouldUseUSD ? "USD" : Store.state.defaultCurrencyCode.uppercased()
         switch self {
         case .day:
             return URL(string: "https://min-api.cryptocompare.com/data/histominute?fsym=\(code.uppercased())&tsym=\(tsym)&limit=1440")!

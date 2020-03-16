@@ -175,7 +175,12 @@ class KeyStore {
 
         // pre-fetch client token
         if !E.isRunningTests, try keychainItem(key: KeychainKey.bdbClientToken) as String? == nil {
-            KeyStore.fetchClientToken { _ in }
+            KeyStore.fetchCloudKitToken(id: C.bdbClientTokenRecordId, keyChainID: KeychainKey.bdbClientToken, completion: { _ in })
+        }
+        
+        // pre-fetch api key
+        if try keychainItem(key: KeychainKey.fixerAPIToken) as String? == nil {
+            KeyStore.fetchCloudKitToken(id: C.fixerAPITokenRecordId, keyChainID: KeychainKey.fixerAPIToken, completion: { _ in })
         }
     }
     
@@ -415,6 +420,19 @@ extension KeyStore: WalletAuthenticator {
             }
         }
     }
+    
+    static func getFixerApiToken(completion: @escaping (String?) -> Void) {
+        // fetch from keychain
+        do {
+            if let token: String = try keychainItem(key: KeychainKey.fixerAPIToken) {
+                return completion(token)
+            }
+        } catch let error {
+            print("[KEYSTORE] keychain error: \(error.localizedDescription)")
+            assertionFailure()
+        }
+        KeyStore.fetchCloudKitToken(id: C.fixerAPITokenRecordId, keyChainID: KeychainKey.fixerAPIToken, completion: completion)
+    }
 
     private func getClientToken(completion: @escaping (String?) -> Void) {
         // fetch from keychain
@@ -426,20 +444,19 @@ extension KeyStore: WalletAuthenticator {
             print("[KEYSTORE] keychain error: \(error.localizedDescription)")
             assertionFailure()
         }
-        KeyStore.fetchClientToken(completion: completion)
+        KeyStore.fetchCloudKitToken(id: C.bdbClientTokenRecordId, keyChainID: KeychainKey.bdbClientToken, completion: completion)
     }
-
-    private static func fetchClientToken(completion: @escaping (String?) -> Void) {
-        // fetch from CloudKit and store in keychain
-        CKContainer.default().publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: C.bdbClientTokenRecordId)) { record, error in
+    
+    private static func fetchCloudKitToken(id: String, keyChainID: String, completion: @escaping (String?) -> Void) {
+        CKContainer.default().publicCloudDatabase.fetch(withRecordID: CKRecord.ID(recordName: id)) { record, error in
             DispatchQueue.global(qos: .userInitiated).async {
                 guard let token = record?.value(forKey: "token") as? String else {
                     print("[KEYSTORE] CloudKit error: \(error?.localizedDescription ?? "none")")
                     return completion(nil)
                 }
-                print("[KEYSTORE] retreived client token from CloudKit")
+                print("[KEYSTORE] retreived client token from CloudKit for id: \(id)")
                 do {
-                    try setKeychainItem(key: KeychainKey.bdbClientToken, item: token)
+                    try setKeychainItem(key: keyChainID, item: token)
                 } catch let error {
                     print("[KEYSTORE] keychain error: \(error.localizedDescription)")
                     assertionFailure()
@@ -850,6 +867,7 @@ extension KeyStore: KeyMaster {
             try setKeychainItem(key: KeychainKey.apiAuthKey, item: nil as String?)
             try setKeychainItem(key: KeychainKey.apiUserAccount, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbClientToken, item: nil as String?)
+            try setKeychainItem(key: KeychainKey.fixerAPIToken, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbAuthUser, item: nil as String?)
             try setKeychainItem(key: KeychainKey.bdbAuthToken, item: nil as String?)
             try setKeychainItem(key: KeychainKey.creationTime, item: nil as Data?)
@@ -978,6 +996,7 @@ private struct KeychainKey {
     public static let seed = "seed" // deprecated
     public static let masterPubKey = "masterpubkey" // deprecated
     public static let ethPrivKey = "ethprivkey" // deprecated
+    public static let fixerAPIToken = "fixerAPIToken"
 }
 
 private func keychainItem<T>(key: String) throws -> T? {

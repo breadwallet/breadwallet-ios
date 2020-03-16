@@ -92,6 +92,8 @@ public enum Event: String {
     case enable
     case disable
     
+    case fixerFetch
+    
     var name: String { return rawValue }
 }
 
