@@ -9,9 +9,9 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
-typealias WalletConnectionMode = BRCrypto.WalletManagerMode
+typealias WalletConnectionMode = WalletKit.WalletManagerMode
 
 /// View model for the WalletConnectionSettingsViewController and WalletInfo.connectionModes model
 class WalletConnectionSettings {

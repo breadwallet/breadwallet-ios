@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 /// Representation of a transaction
 protocol TxViewModel {

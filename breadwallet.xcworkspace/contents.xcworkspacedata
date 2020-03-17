@@ -4,7 +4,4 @@
    <FileRef
       location = "group:breadwallet.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Modules/breadwallet-core/Swift/BRCore.xcodeproj">
-   </FileRef>
 </Workspace>

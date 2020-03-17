@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 import UIKit
 
 // swiftlint:disable type_body_length
@@ -280,7 +280,7 @@ class CoreSystem: Subscriber, Trackable {
     }
 
     /// Adds a Wallet model for the Core Wallet if it is enabled in the asset collection.
-    private func addWallet(_ coreWallet: BRCrypto.Wallet) -> Wallet? {
+    private func addWallet(_ coreWallet: WalletKit.Wallet) -> Wallet? {
         guard let assetCollection = assetCollection,
             let currency = currencies[coreWallet.currency.uid],
             wallets[coreWallet.currency.uid] == nil else {
@@ -301,7 +301,7 @@ class CoreSystem: Subscriber, Trackable {
     }
     
     /// Triggered by Core wallet deleted event -- normally never triggered
-    private func removeWallet(_ coreWallet: BRCrypto.Wallet) {
+    private func removeWallet(_ coreWallet: WalletKit.Wallet) {
         guard wallets[coreWallet.currency.uid] != nil else { return assertionFailure() }
         wallets[coreWallet.currency.uid] = nil
         updateWalletStates()
@@ -483,7 +483,7 @@ class CoreSystem: Subscriber, Trackable {
         }
     }
     
-    private func coreWallet(_ currencyId: CurrencyId) -> BRCrypto.Wallet? {
+    private func coreWallet(_ currencyId: CurrencyId) -> WalletKit.Wallet? {
         return system?.wallets.first(where: { $0.currency.uid == currencyId })
     }
     
@@ -572,7 +572,7 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
+    func handleManagerEvent(system: System, manager: WalletKit.WalletManager, event: WalletManagerEvent) {
         //print("[SYS] \(manager.network) manager event: \(event)")
         switch event {
         case .created:
@@ -669,7 +669,7 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
+    func handleWalletEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, event: WalletEvent) {
         //print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
         switch event {
         case .created:
@@ -692,7 +692,7 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
+    func handleTransferEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, transfer: Transfer, event: TransferEvent) {
         guard let wallet = self.wallets[wallet.currency.uid] else { return }
         print("[SYS] \(manager.network) transfer \(event): \(wallet.currency.code) \(transfer.hash?.description.truncateMiddle() ?? "")")
         wallet.handleTransferEvent(event, transfer: transfer)

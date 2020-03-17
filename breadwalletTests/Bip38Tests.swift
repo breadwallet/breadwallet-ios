@@ -9,7 +9,7 @@
 import XCTest
 
 @testable import breadwallet
-import BRCrypto
+import WalletKit
 
 class Bip38Tests: XCTestCase {
 

@@ -9,7 +9,7 @@
 import XCTest
 @testable import breadwallet
 
-import BRCrypto
+import WalletKit
 
 private let testPrivKey = "a1a8cae79e17cb4ddb4fb6871fcc87f3ee5cbb1049a168657d2c3493d79bfa16"
 private let testPrivKey2 = "a1a8cae79e17cb4ddb4fb6871fcc87f3ee5cbb1049a168657d2c3493d79bfa17"

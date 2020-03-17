@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 enum QRCode: Equatable {
     case paymentRequest(PaymentRequest)

@@ -9,7 +9,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 import SafariServices
 
 class WalletConnectionSettingsViewController: UIViewController, Trackable {

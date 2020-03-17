@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 import UserNotifications
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"

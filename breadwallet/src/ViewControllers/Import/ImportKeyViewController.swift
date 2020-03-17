@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 /**
  *  Screen that allows the user to scan a QR code corresponding to a private key.
@@ -248,7 +248,7 @@ class ImportKeyViewController: UIViewController, Subscriber {
         }
     }
     
-    private func handleEstimateFeeError(_ error: BRCrypto.Wallet.FeeEstimationError) {
+    private func handleEstimateFeeError(_ error: WalletKit.Wallet.FeeEstimationError) {
         switch error {
         case .InsufficientFunds:
             showErrorMessage(S.Send.insufficientFunds)

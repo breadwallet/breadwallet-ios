@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import BRCrypto
+import WalletKit
 
 enum SendResult {
     case success(hash: String?, rawTx: String?)
@@ -49,7 +49,7 @@ class Sender: Subscriber {
     private let authenticator: TransactionAuthenticator
     
     private var comment: String?
-    private var transfer: BRCrypto.Transfer?
+    private var transfer: WalletKit.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
     var maximum: Amount?
     var minimum: Amount?
@@ -97,13 +97,13 @@ class Sender: Subscriber {
     
     public func estimateLimitMaximum (address: String,
                                       fee: FeeLevel,
-                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+                                      completion: @escaping WalletKit.Wallet.EstimateLimitHandler) {
         wallet.estimateLimitMaximum(address: address, fee: fee, completion: completion)
     }
     
     public func estimateLimitMinimum (address: String,
                                       fee: FeeLevel,
-                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
+                                      completion: @escaping WalletKit.Wallet.EstimateLimitHandler) {
         wallet.estimateLimitMinimum(address: address, fee: fee, completion: completion)
     }
 

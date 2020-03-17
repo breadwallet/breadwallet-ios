@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 import UIKit
 
 protocol CurrencyWithIcon {
@@ -15,7 +15,7 @@ protocol CurrencyWithIcon {
     var colors: (UIColor, UIColor) { get }
 }
 
-typealias CurrencyUnit = BRCrypto.Unit
+typealias CurrencyUnit = WalletKit.Unit
 typealias CurrencyId = Identifier<Currency>
 
 /// Combination of the Core Currency model and its metadata properties
@@ -26,8 +26,8 @@ class Currency: CurrencyWithIcon {
         case unknown
     }
 
-    private let core: BRCrypto.Currency
-    let network: BRCrypto.Network
+    private let core: WalletKit.Currency
+    let network: WalletKit.Network
 
     /// Unique identifier from BlockchainDB
     var uid: CurrencyId { assert(core.uid == metaData.uid); return metaData.uid }
@@ -165,12 +165,12 @@ class Currency: CurrencyWithIcon {
 
     // MARK: Init
 
-    init?(core: BRCrypto.Currency,
-          network: BRCrypto.Network,
+    init?(core: WalletKit.Currency,
+          network: WalletKit.Network,
           metaData: CurrencyMetaData,
-          units: Set<BRCrypto.Unit>,
-          baseUnit: BRCrypto.Unit,
-          defaultUnit: BRCrypto.Unit) {
+          units: Set<WalletKit.Unit>,
+          baseUnit: WalletKit.Unit,
+          defaultUnit: WalletKit.Unit) {
         guard core.uid == metaData.uid else { return nil }
         self.core = core
         self.network = network
@@ -384,6 +384,6 @@ enum Currencies: String, CaseIterable {
     var instance: Currency? { return state?.currency }
 }
 
-extension BRCrypto.Currency {
+extension WalletKit.Currency {
     var uid: CurrencyId { return CurrencyId(rawValue: uids) }
 }

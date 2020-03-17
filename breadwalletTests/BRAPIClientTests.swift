@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import breadwallet
-import BRCrypto
+import WalletKit
 
 // This test will test against the live API at api.breadwallet.com
 class BRAPIClientTests: XCTestCase {

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 let π: CGFloat = .pi
 

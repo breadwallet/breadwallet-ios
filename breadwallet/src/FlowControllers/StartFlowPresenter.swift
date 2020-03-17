@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 typealias LoginCompletionHandler = ((Account) -> Void)
 

@@ -8,7 +8,7 @@
 
 import Foundation
 import SQLite3
-import BRCrypto
+import WalletKit
 
 enum CoreDatabaseError: Error {
     case sqliteError(errorCode: Int32, description: String)

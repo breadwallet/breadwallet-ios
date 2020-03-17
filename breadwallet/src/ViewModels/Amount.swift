@@ -7,11 +7,11 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
-typealias CryptoAmount = BRCrypto.Amount
+typealias CryptoAmount = WalletKit.Amount
 
-/// View model for representing the BRCrypto.Amount model
+/// View model for representing the WalletKit.Amount model
 /// with extended currency, fiat conversion and formatting information
 public struct Amount {
     static let normalPrecisionDigits = 5
@@ -39,7 +39,7 @@ public struct Amount {
         self.cryptoAmount = CryptoAmount.create(string: cryptoAmount.string(),
                                                 negative: cryptoAmount.isNegative,
                                                 unit: cryptoAmount.unit.base)
-            ?? BRCrypto.Amount.create(integer: 0, unit: cryptoAmount.unit.base)
+            ?? WalletKit.Amount.create(integer: 0, unit: cryptoAmount.unit.base)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits
@@ -55,7 +55,7 @@ public struct Amount {
         self.cryptoAmount = CryptoAmount.create(string: amount.cryptoAmount.string(),
                                                 negative: negative,
                                                 unit: amount.currency.baseUnit)
-            ?? BRCrypto.Amount.create(integer: 0, unit: amount.currency.baseUnit)
+            ?? WalletKit.Amount.create(integer: 0, unit: amount.currency.baseUnit)
         self.rate = rate ?? amount.rate
         self.minimumFractionDigits = minimumFractionDigits ?? amount.minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits ?? amount.maximumFractionDigits
@@ -73,7 +73,7 @@ public struct Amount {
         self.cryptoAmount = CryptoAmount.create(string: tokenString.usDecimalString(fromLocale: locale),
                                                 negative: negative,
                                                 unit: unit)
-            ?? BRCrypto.Amount.create(integer: 0, unit: currency.baseUnit)
+            ?? WalletKit.Amount.create(integer: 0, unit: currency.baseUnit)
         self.currency = currency
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
@@ -93,7 +93,7 @@ public struct Amount {
         if negative {
             decimal *= -1.0
         }
-        self.cryptoAmount = BRCrypto.Amount.create(double: decimal.doubleValue, unit: currency.defaultUnit)
+        self.cryptoAmount = WalletKit.Amount.create(double: decimal.doubleValue, unit: currency.defaultUnit)
         self.rate = rate
         self.minimumFractionDigits = minimumFractionDigits
         self.maximumFractionDigits = maximumFractionDigits

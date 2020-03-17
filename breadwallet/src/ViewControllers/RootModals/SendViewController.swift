@@ -8,7 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-import BRCrypto
+import WalletKit
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
@@ -538,12 +538,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         estimateFeeForRequest(paymentProtocolRequest) { self.handleProtoReqFeeEstimation(paymentProtocolRequest, result: $0) }
     }
     
-    func estimateFeeForRequest(_ protoReq: PaymentProtocolRequest, completion: @escaping (Result<TransferFeeBasis, BRCrypto.Wallet.FeeEstimationError>) -> Void) {
-        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeLevel)
+    func estimateFeeForRequest(_ protoReq: PaymentProtocolRequest, completion: @escaping (Result<TransferFeeBasis, WalletKit.Wallet.FeeEstimationError>) -> Void) {
+        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeSelection ?? .regular)
         protoReq.estimateFee(fee: networkFee, completion: completion)
     }
     
-    private func handleProtoReqFeeEstimation(_ protoReq: PaymentProtocolRequest, result: Result<TransferFeeBasis, BRCrypto.Wallet.FeeEstimationError>) {
+    private func handleProtoReqFeeEstimation(_ protoReq: PaymentProtocolRequest, result: Result<TransferFeeBasis, WalletKit.Wallet.FeeEstimationError>) {
         switch result {
         case .success(let transferFeeBasis):
             DispatchQueue.main.async {

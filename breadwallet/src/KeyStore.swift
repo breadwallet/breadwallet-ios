@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
-import BRCrypto
+import WalletKit
 import CloudKit
 
 private var WalletSecAttrService: String {
@@ -91,8 +91,8 @@ extension WalletAuthenticator {
 
 /// Protocol for signing transactions
 protocol TransactionAuthenticator: WalletAuthenticator {
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin: String) -> Bool
-    func signAndSubmit(transfer: BRCrypto.Transfer,
+    func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet, withPin: String) -> Bool
+    func signAndSubmit(transfer: WalletKit.Transfer,
                        wallet: Wallet,
                        withBiometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void)
@@ -681,12 +681,12 @@ extension KeyStore: WalletAuthenticator {
 
 extension KeyStore: TransactionAuthenticator {
 
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin pin: String) -> Bool {
+    func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet, withPin pin: String) -> Bool {
         guard authenticate(withPin: pin) else { return false }
         return signAndSubmit(transfer: transfer, wallet: wallet)
     }
     
-    func signAndSubmit(transfer: BRCrypto.Transfer,
+    func signAndSubmit(transfer: WalletKit.Transfer,
                        wallet: Wallet,
                        withBiometricsPrompt biometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void) {
@@ -701,7 +701,7 @@ extension KeyStore: TransactionAuthenticator {
         }
     }
     
-    private func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet) -> Bool {
+    private func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet) -> Bool {
         return autoreleasepool {
             do {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }

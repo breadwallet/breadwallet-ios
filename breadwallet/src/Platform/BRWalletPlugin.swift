@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 // swiftlint:disable cyclomatic_complexity
 

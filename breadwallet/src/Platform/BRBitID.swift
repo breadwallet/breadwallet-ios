@@ -8,7 +8,7 @@
 
 import Foundation
 import Security
-import BRCrypto
+import WalletKit
 
 open class BRBitID: NSObject {
     static let SCHEME = "bitid"

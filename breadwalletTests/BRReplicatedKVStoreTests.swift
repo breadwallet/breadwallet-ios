@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import breadwallet
-import BRCrypto
+import WalletKit
 
 class BRReplicatedKVStoreTestAdapter: BRRemoteKVStoreAdaptor {
     let testCase: XCTestCase

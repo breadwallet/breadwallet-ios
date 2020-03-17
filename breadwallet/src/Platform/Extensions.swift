@@ -9,7 +9,7 @@
 import Foundation
 import libbz2
 import UIKit
-import BRCrypto
+import WalletKit
 
 // MARK: -
 

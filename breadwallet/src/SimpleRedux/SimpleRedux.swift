@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 // swiftlint:disable legacy_hashing
 
