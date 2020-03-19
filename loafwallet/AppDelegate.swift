@@ -30,15 +30,13 @@ import Firebase
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    private var window: UIWindow? {
-        return applicationController.window
-    }
+    var window: UIWindow?
     let applicationController = ApplicationController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         setFirebaseConfiguration()
         UIView.swizzleSetFrame()
-        applicationController.launch(application: application, options: launchOptions)
+        applicationController.launch(application: application, window: self.window, options: launchOptions)
         LWAnalytics.logEventWithParameters(itemName:._20191105_AL)
         return true
     }
