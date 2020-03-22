@@ -115,8 +115,6 @@
 		7C54FF9E2165866A007BF3EF /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* currencies.json */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C6628392107B8D600ABCD10 /* PigeonExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6628382107B8D600ABCD10 /* PigeonExchange.swift */; };
-		7C662B0C222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */; };
-		7C662B0D222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B7222B5F3B00DE2C2B /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C662B0F222F6E800008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C662B10222F6E820008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
@@ -338,6 +336,7 @@
 		CE1280F61EEA855C00D27649 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1280F51EEA855C00D27649 /* Date+Additions.swift */; };
 		CE1D84B61EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1D84B51EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift */; };
 		CE1E5F261EF083A600BD0F72 /* ImportKeyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E5F251EF083A600BD0F72 /* ImportKeyViewController.swift */; };
+		CE1E69312423D34000DF8177 /* CreateAccountFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E69302423D34000DF8177 /* CreateAccountFooterView.swift */; };
 		CE1E7A9A20938DFD00C86BB7 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1E7A9920938DFD00C86BB7 /* MenuButton.swift */; };
 		CE20C8F21DBAF71500C8397A /* ApplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F11DBAF71500C8397A /* ApplicationController.swift */; };
 		CE20C8F61DBAF77D00C8397A /* UIViewController+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */; };
@@ -671,7 +670,6 @@
 			files = (
 				754AE0B71DFCA870007FD001 /* libbz2.framework in Embed Frameworks */,
 				7CD03E8623429F580084F00F /* SwiftProtobuf.framework in Embed Frameworks */,
-				7C662B0D222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1048,6 +1046,7 @@
 		CE1280F51EEA855C00D27649 /* Date+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Date+Additions.swift"; path = "src/Extensions/Date+Additions.swift"; sourceTree = "<group>"; };
 		CE1D84B51EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBarButtonItem+Additions.swift"; path = "src/Extensions/UIBarButtonItem+Additions.swift"; sourceTree = "<group>"; };
 		CE1E5F251EF083A600BD0F72 /* ImportKeyViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ImportKeyViewController.swift; path = src/ViewControllers/Import/ImportKeyViewController.swift; sourceTree = "<group>"; };
+		CE1E69302423D34000DF8177 /* CreateAccountFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CreateAccountFooterView.swift; path = src/Views/CreateAccountFooterView.swift; sourceTree = "<group>"; };
 		CE1E7A9920938DFD00C86BB7 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MenuButton.swift; path = src/Views/MenuButton.swift; sourceTree = "<group>"; };
 		CE20C8F11DBAF71500C8397A /* ApplicationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ApplicationController.swift; path = src/ApplicationController.swift; sourceTree = "<group>"; };
 		CE20C8F51DBAF77D00C8397A /* UIViewController+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIViewController+BRWAdditions.swift"; path = "src/Extensions/UIViewController+BRWAdditions.swift"; sourceTree = "<group>"; };
@@ -1261,7 +1260,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
-				7C662B0C222F515F0008814C /* ../$(BRCORE_CONFIGURATION)-$(PLATFORM_NAME)/BRCrypto.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
@@ -2020,6 +2018,7 @@
 				CEEC70891E945E3B00EF788E /* UnEditableTextView.swift */,
 				CEE20C2C1EA288FA0086F724 /* UpdatingLabel.swift */,
 				CE5E6C931EB7964900A476DB /* WalletDisabledView.swift */,
+				CE1E69302423D34000DF8177 /* CreateAccountFooterView.swift */,
 				3A611A0D23257354004B8E36 /* BlockSetAnimation */,
 				CEF3E8301DE554F1007C0A9E /* AnimatedIcons */,
 				3A93890422A303040081FCF9 /* Charts */,
@@ -3014,6 +3013,7 @@
 				CEC4CF091F0C84AB00E5C82E /* UIViewController+Alerts.swift in Sources */,
 				CE12289D20D3695400EC6F81 /* MotionGradientView.swift in Sources */,
 				7141BB5D2249543600F7ECF2 /* InfoView.swift in Sources */,
+				CE1E69312423D34000DF8177 /* CreateAccountFooterView.swift in Sources */,
 				7C787AE421ED8BB40017EA7E /* SimpleRedux.swift in Sources */,
 				CE27F9591E2C8EA300F7F7F2 /* Amount.swift in Sources */,
 				CE1280F61EEA855C00D27649 /* Date+Additions.swift in Sources */,

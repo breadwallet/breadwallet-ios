@@ -977,12 +977,12 @@ class ModalPresenter: Subscriber, Trackable {
     
     private func showAccountView(currency: Currency, animated: Bool, completion: (() -> Void)?) {
         let pushAccountView = {
-            guard let nc = self.topViewController?.navigationController as? RootNavigationController,
-                nc.viewControllers.count == 1 else { return }
-            guard let wallet = self.system.wallet(for: currency) else { return }
-            let accountViewController = AccountViewController(wallet: wallet)
-            nc.pushViewController(accountViewController, animated: animated)
-            completion?()
+//            guard let nc = self.topViewController?.navigationController as? RootNavigationController,
+//                nc.viewControllers.count == 1 else { return }
+//            guard let wallet = self.system.wallet(for: currency) else { return }
+//            let accountViewController = AccountViewController(wallet: wallet)
+//            nc.pushViewController(accountViewController, animated: animated)
+//            completion?()
         }
         
         if let accountVC = topViewController as? AccountViewController {

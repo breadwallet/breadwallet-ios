@@ -381,14 +381,15 @@ class ApplicationController: Subscriber, Trackable {
                                        navigationController: UINavigationController) {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
-            guard let wallet = self.coreSystem.wallet(for: currency) else { return }
+            //guard let wallet = self.coreSystem.wallet(for: currency) else { return }
             
             if currency.isBRDToken, UserDefaults.shouldShowBRDRewardsAnimation {
                 let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
                 self.saveEvent(name, attributes: ["currency": currency.code])
             }
             
-            let accountViewController = AccountViewController(wallet: wallet)
+            let wallet = self.coreSystem.wallet(for: currency)
+            let accountViewController = AccountViewController(currency: currency, wallet: wallet)
             navigationController.pushViewController(accountViewController, animated: true)
         }
         

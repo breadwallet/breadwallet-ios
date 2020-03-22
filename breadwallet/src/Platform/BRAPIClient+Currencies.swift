@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public enum APIResult<ResultType: Codable> {
     case success(ResultType)
@@ -119,9 +120,21 @@ extension BRAPIClient {
 
 // Converts an array of CurrencyMetaData to a dictionary keyed on uid
 private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([CurrencyId: CurrencyMetaData]) -> Void) {
-    let currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
+    var currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
         dict[token.uid] = token
     })
+    
+    let hedera = CurrencyMetaData(uid: "hedera-mainnet:__native__",
+                                  code: "HBAR",
+                                  isSupported: true,
+                                  colors: (UIColor.fromHex("2D84EB"), UIColor.fromHex("8259EF")),
+                                  name: "Hedera",
+                                  tokenAddress: nil,
+                                  decimals: 8,
+                                  alternateCode: nil)
+    
+    currencyMetaData["hedera-mainnet:__native__"] = hedera
+    
     print("[CurrencyList] tokens updated: \(currencies.count) tokens")
     completion(currencyMetaData)
 }

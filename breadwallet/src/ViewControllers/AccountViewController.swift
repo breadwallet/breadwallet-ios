@@ -11,17 +11,22 @@ import UIKit
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
-    var currency: Currency { return wallet.currency }
+    var currency: Currency// { return wallet.currency }
     
-    init(wallet: Wallet) {
+    init(currency: Currency, wallet: Wallet?) {
         self.wallet = wallet
-        self.headerView = AccountHeaderView(currency: wallet.currency)
-        self.footerView = AccountFooterView(currency: wallet.currency)
+        self.currency = currency
+        self.headerView = AccountHeaderView(currency: currency)
+        self.footerView = AccountFooterView(currency: currency)
+        self.createFooter = CreateAccountFooterView(currency: currency)
+        
         self.searchHeaderview = SearchHeaderView()
         super.init(nibName: nil, bundle: nil)
-        self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: { [unowned self] (transactions, index) in
-            self.didSelectTransaction(transactions: transactions, selectedIndex: index)
-        })
+        if let wallet = wallet {
+           self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: { [unowned self] (transactions, index) in
+               self.didSelectTransaction(transactions: transactions, selectedIndex: index)
+           })
+        }
 
         footerView.sendCallback = { [unowned self] in
             Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
@@ -40,12 +45,14 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     // MARK: - Private
-    private let wallet: Wallet
+    private let wallet: Wallet?
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
+    private let createFooter: CreateAccountFooterView
     private var footerHeightConstraint: NSLayoutConstraint?
+    private var createFooterHeightConstraint: NSLayoutConstraint?
     private let transitionDelegate = ModalTransitionDelegate(type: .transactionDetail)
-    private var transactionsTableView: TransactionsTableViewController!
+    private var transactionsTableView: TransactionsTableViewController?
     private let searchHeaderview: SearchHeaderView
     private let headerContainer = UIView()
     private var loadingTimer: Timer?
@@ -95,10 +102,10 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         if shouldShowRewardsView {
             addRewardsView()
         }
-        transactionsTableView.didScrollToYOffset = { [unowned self] offset in
+        transactionsTableView?.didScrollToYOffset = { [unowned self] offset in
             self.headerView.setOffset(offset)
         }
-        transactionsTableView.didStopScrolling = { [unowned self] in
+        transactionsTableView?.didStopScrolling = { [unowned self] in
             self.headerView.didStopScrolling()
         }
     }
@@ -121,6 +128,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         footerHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
+        createFooterHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
     }
     
     // MARK: -
@@ -142,6 +150,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         headerContainer.addSubview(headerView)
         headerContainer.addSubview(searchHeaderview)
         view.addSubview(footerView)
+        view.addSubview(createFooter)
     }
 
     private func addConstraints() {
@@ -161,6 +170,13 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             footerView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
             footerView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
             footerHeightConstraint ])
+        
+        createFooterHeightConstraint = createFooter.heightAnchor.constraint(equalToConstant: AccountFooterView.height)
+        createFooter.constrain([
+            createFooter.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            createFooter.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -C.padding[1]),
+            createFooter.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: C.padding[1]),
+            createFooterHeightConstraint ])
     }
 
     private func addSubscriptions() {
@@ -179,27 +195,37 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             self?.isSearching = false
         }
         searchHeaderview.didChangeFilters = { [weak self] filters in
-            self?.transactionsTableView.filters = filters
+            self?.transactionsTableView?.filters = filters
         }
         headerView.setHostContentOffset = { [weak self] offset in
-            self?.transactionsTableView.tableView.contentOffset.y = offset
+            self?.transactionsTableView?.tableView.contentOffset.y = offset
         }
+        
+        if wallet != nil {
+            createFooter.isHidden = true
+        }
+        
+//        if wallet.manager.account.isInitialized(onNetwork: wallet.manager.network) {
+//            createFooter.isHidden = true
+//        }
     }
     
     private func addTransactionsView() {
-        // Store this constraint so it can be easily updated later when showing/hiding the rewards view.
-        tableViewTopConstraint = transactionsTableView.view.topAnchor.constraint(equalTo: headerView.bottomAnchor)
-        
-        transactionsTableView.view.backgroundColor = .clear
-        view.backgroundColor = .white
-        addChildViewController(transactionsTableView, layout: {
-            transactionsTableView.view.constrain([
-                tableViewTopConstraint,
-                transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
-                transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-                transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
-        })
-        view.sendSubviewToBack(transactionsTableView.view)
+        if let transactionsTableView = transactionsTableView {
+           // Store this constraint so it can be easily updated later when showing/hiding the rewards view.
+           tableViewTopConstraint = transactionsTableView.view.topAnchor.constraint(equalTo: headerView.bottomAnchor)
+           
+           transactionsTableView.view.backgroundColor = .clear
+           view.backgroundColor = .white
+           addChildViewController(transactionsTableView, layout: {
+               transactionsTableView.view.constrain([
+                   tableViewTopConstraint,
+                   transactionsTableView.view.bottomAnchor.constraint(equalTo: footerView.topAnchor),
+                   transactionsTableView.view.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                   transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
+           })
+           view.sendSubviewToBack(transactionsTableView.view)
+        }
     }
         
     // MARK: keyboard management

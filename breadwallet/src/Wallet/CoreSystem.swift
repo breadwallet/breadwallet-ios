@@ -232,13 +232,13 @@ class CoreSystem: Subscriber, Trackable {
                                                  currencies: requiredTokens)
         if !success {
             print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
-            system.wipe(network: network)
-            success = system.createWalletManager(network: network,
-                                                 mode: mode,
-                                                 addressScheme: addressScheme,
-                                                 currencies: requiredTokens)
+//            system.wipe(network: network)
+//            success = system.createWalletManager(network: network,
+//                                                 mode: mode,
+//                                                 addressScheme: addressScheme,
+//                                                 currencies: requiredTokens)
         }
-        assert(success, "failed to create \(network) wallet manager")
+        //assert(success, "failed to create \(network) wallet manager")
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
@@ -284,7 +284,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let assetCollection = assetCollection,
             let currency = currencies[coreWallet.currency.uid],
             wallets[coreWallet.currency.uid] == nil else {
-                assertionFailure()
+                //assertionFailure()
                 return nil
         }
 
