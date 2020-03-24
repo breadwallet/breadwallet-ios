@@ -4,3 +4,6 @@
 [submodule "Modules/walletkit-swift"]
 	path = Modules/walletkit-swift
 	url = git@github.com:blockset-corp/walletkit-swift.git
+[submodule "Modules/walletkit"]
+	path = Modules/walletkit
+	url = git@github.com:blockset-corp/walletkit.git

@@ -50,6 +50,7 @@
 		22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431331DF89DFE0017CAEA /* BRCoderTests.swift */; };
 		22C431361DF8A6DF0017CAEA /* BRAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */; };
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
+		3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A0C6087242A5CC900F0FBC2 /* WalletKit */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328C225301D60043EBA4 /* PriceChangeView.swift */; };
 		3A36328F2253E53E0043EBA4 /* BRAPIClient+History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */; };
@@ -433,7 +434,6 @@
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
 		CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */; };
-		CEB2A45F24207F76005ED8F8 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = CEB2A45E24207F76005ED8F8 /* WalletKit */; };
 		CEB7A98420FE76D600368AF9 /* PigeonMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB7A98320FE76D600368AF9 /* PigeonMessages.swift */; };
 		CEB909F51E5FE63D001804DC /* EnterPhraseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB909F41E5FE63D001804DC /* EnterPhraseViewController.swift */; };
 		CEB909F71E5FE654001804DC /* EnterPhraseCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB909F61E5FE654001804DC /* EnterPhraseCollectionViewController.swift */; };
@@ -744,6 +744,7 @@
 		22C431331DF89DFE0017CAEA /* BRCoderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRCoderTests.swift; sourceTree = "<group>"; };
 		22C431351DF8A6DF0017CAEA /* BRAPIClientTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BRAPIClientTests.swift; sourceTree = "<group>"; };
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bonjour.swift; path = src/Platform/Bonjour.swift; sourceTree = "<group>"; };
+		3A0C6086242A5CBF00F0FBC2 /* WalletKitSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WalletKitSwift; path = Modules/walletkit/WalletKitSwift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3A36328C225301D60043EBA4 /* PriceChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChangeView.swift; path = src/Views/PriceChangeView.swift; sourceTree = "<group>"; };
 		3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+History.swift"; path = "src/Platform/BRAPIClient+History.swift"; sourceTree = "<group>"; };
@@ -1159,7 +1160,6 @@
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
 		CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SegmentedButton.swift; path = src/Controls/SegmentedButton.swift; sourceTree = "<group>"; };
-		CEB2A45024207F63005ED8F8 /* walletkit-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "walletkit-swift"; path = "Modules/walletkit-swift"; sourceTree = "<group>"; };
 		CEB7A98320FE76D600368AF9 /* PigeonMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonMessages.swift; path = src/Pigeon/PigeonMessages.swift; sourceTree = "<group>"; };
 		CEB909F41E5FE63D001804DC /* EnterPhraseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhraseViewController.swift; path = src/ViewControllers/EnterPhraseViewController.swift; sourceTree = "<group>"; };
 		CEB909F61E5FE654001804DC /* EnterPhraseCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnterPhraseCollectionViewController.swift; path = src/ViewControllers/EnterPhraseCollectionViewController.swift; sourceTree = "<group>"; };
@@ -1261,9 +1261,9 @@
 			files = (
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
+				3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
-				CEB2A45F24207F76005ED8F8 /* WalletKit in Frameworks */,
 				22A9A9601DF61FD8000F0016 /* CoreLocation.framework in Frameworks */,
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
 				7CD03E8523429F580084F00F /* SwiftProtobuf.framework in Frameworks */,
@@ -1601,7 +1601,7 @@
 		75B6F52F1DA71DCC0031A93F /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				CEB2A45024207F63005ED8F8 /* walletkit-swift */,
+				3A0C6086242A5CBF00F0FBC2 /* WalletKitSwift */,
 				7CD03E6B23429EB50084F00F /* SwiftProtobuf.xcodeproj */,
 				22A9A9971DF63426000F0016 /* libbz2 */,
 				75FEFD1F1DAEE7A400203D3A /* sqlite3 */,
@@ -2343,7 +2343,7 @@
 			);
 			name = breadwallet;
 			packageProductDependencies = (
-				CEB2A45E24207F76005ED8F8 /* WalletKit */,
+				3A0C6087242A5CC900F0FBC2 /* WalletKit */,
 			);
 			productName = breadwallet;
 			productReference = 75A2A7901DA5934300A983D8 /* breadwallet.app */;
@@ -5066,7 +5066,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CEB2A45E24207F76005ED8F8 /* WalletKit */ = {
+		3A0C6087242A5CC900F0FBC2 /* WalletKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WalletKit;
 		};
