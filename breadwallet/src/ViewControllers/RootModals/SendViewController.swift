@@ -453,9 +453,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 case .creationError(let message):
                     self.showAlert(title: S.Alerts.sendFailure, message: message, buttonLabel: S.Button.ok)
                     self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
-                case .publishFailure(let error):
-                    self.showAlert(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
-                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(error.message) (\(error.code))"])
+                case .publishFailure(let code, let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(message) (\(code))", buttonLabel: S.Button.ok)
+                    self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(message) (\(code))"])
                 case .insufficientGas(let rpcErrorMessage):
                     self.showInsufficientGasError()
                     self.saveEvent("send.publishFailed", attributes: ["errorMessage": rpcErrorMessage])

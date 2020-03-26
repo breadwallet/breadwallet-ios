@@ -735,7 +735,7 @@ extension WalletManagerEvent: CustomStringConvertible {
             return "walletDeleted(\(wallet.currency.code))"
         case .syncStarted:
             return "syncStarted"
-        case .syncProgress(let percentComplete):
+        case .syncProgress(_, let percentComplete):
             return "syncProgress(\(percentComplete))"
         case .syncEnded(let reason):
             return "syncEnded(\(reason))"
