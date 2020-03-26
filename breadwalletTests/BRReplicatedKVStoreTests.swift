@@ -109,7 +109,7 @@ class BRReplicatedKVStoreTest: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        try! store.rmdb()
+        try! BRReplicatedKVStore.rmdb()
         store = nil
     }
     

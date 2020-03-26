@@ -56,7 +56,7 @@ class AssetCollectionTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        try! client?.kv?.rmdb()
+        try! BRReplicatedKVStore.rmdb()
         keyStore.destroy()
         clearKeychain()
     }

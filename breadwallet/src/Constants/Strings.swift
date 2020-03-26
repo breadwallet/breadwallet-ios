@@ -139,6 +139,7 @@ enum S {
         static let disabled = NSLocalizedString("UnlockScreen.disabled", value:"Disabled until: %1$@", comment: "Disabled until date")
         static let resetPin = NSLocalizedString("UnlockScreen.resetPin", value:"Reset PIN", comment: "Reset PIN with Paper Key button label.")
         static let faceIdText = NSLocalizedString("UnlockScreen.faceIdText", value:"Unlock with FaceID", comment: "Unlock with FaceID accessibility label")
+        static let wipePrompt = NSLocalizedString("UnlockScreen.wipePrompt", value:"Are you sure you would like to wipe this wallet?", comment: "Wipe wallet prompt")
     }
 
     enum Transaction {

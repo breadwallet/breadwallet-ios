@@ -29,7 +29,25 @@ enum PriceHistoryResult {
     case unavailable
 }
 
+struct FixerResult: Codable {
+    var rates: [String: Double]
+}
+
 extension BRAPIClient {
+ 
+    static func shouldUseUSDRate(currencyCodes: [String]) -> Bool {
+        let code = Store.state.defaultCurrencyCode
+        if C.fixerFiatCurrencies.contains(code.uppercased()) {
+            return true
+        }
+        var cyrptoCodeFound = false
+        currencyCodes.forEach {
+            if C.fixerCryptoCurrencies.contains($0.uppercased()) {
+                cyrptoCodeFound = true
+            }
+        }
+        return cyrptoCodeFound
+    }
     
     // Fetches price information relative to the user's default fiat currency for the given crypto currencies,
     // including the 24-hour price change, the current fiat price, and fiat percent change, e.g., +13% ($100)
@@ -39,7 +57,9 @@ extension BRAPIClient {
         // requests are batched to ensure the length is not exceeded
         let chunkSize = 50
         let chunks = currencies.chunked(by: chunkSize)
-        let currentCode = Store.state.defaultCurrencyCode
+        
+        let shouldUseUSDRate = BRAPIClient.shouldUseUSDRate(currencyCodes: currencies.map { $0.cryptoCompareCode })
+        let currentCode = shouldUseUSDRate ? "USD" : Store.state.defaultCurrencyCode
         
         var combinedResults: [String: FiatPriceInfo] = [:]
         var errorResult: FiatPriceInfoResult?
@@ -86,7 +106,11 @@ extension BRAPIClient {
             if let errorResult = errorResult {
                 handler(errorResult)
             } else {
-                handler(.success(combinedResults))
+                self.convertFor(info: combinedResults) { foo in
+                    DispatchQueue.main.async {
+                        handler(.success(foo))
+                    }
+                }
             }
         }
     }
@@ -105,8 +129,10 @@ extension BRAPIClient {
                 do {
                     let response = try decoder.decode(HistoryResponseContainer.self, from: data)
                     let reduced = reduceDataSize(array: response.Data, byFactor: period.reductionFactor)
-                    DispatchQueue.main.async {
-                        callback(.success(reduced))
+                    self.convertFor(code: forCode, data: reduced) { history in
+                        DispatchQueue.main.async {
+                            callback(.success(history))
+                        }
                     }
                 } catch {
                     DispatchQueue.main.async {
@@ -116,6 +142,57 @@ extension BRAPIClient {
             }
         }).resume()
     }
+
+    func convertFor(code: String, data: [PriceDataPoint], callback: @escaping (([PriceDataPoint]) -> Void)) {
+        guard BRAPIClient.shouldUseUSDRate(currencyCodes: [code]) else { return callback(data) }
+        self.fetchFiatRate { rate in
+            let result = data.map {
+                //Convert from USD
+                return PriceDataPoint(time: $0.time, close: $0.close * rate)
+            }
+            callback(result)
+        }
+        
+    }
+    
+    func convertFor(info: [String: FiatPriceInfo], callback: @escaping ([String: FiatPriceInfo]) -> Void) {
+        guard BRAPIClient.shouldUseUSDRate(currencyCodes: Array(info.keys)) else { return callback(info) }
+        self.fetchFiatRate { rate in
+            let prices = self.convert(info: info, withRate: rate)
+            callback(prices)
+        }
+    }
+    
+    func fetchFiatRate(_ callback: @escaping (Double) -> Void) {
+        KeyStore.getFixerApiToken { [weak self] token in
+            guard let `self` = self else { return }
+            guard let token = token else { return }
+            let code = Store.state.defaultCurrencyCode
+            let url = URL(string: "http://data.fixer.io/api/latest?access_key=\(token)&base=USD&symbols=\(code)")!
+            self.saveEvent(Event.fixerFetch.name)
+            URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
+                guard let data = data else { print("error: \(error!)"); return }
+                do {
+                    let result = try JSONDecoder().decode(FixerResult.self, from: data)
+                    if let rate = result.rates[code] {
+                        callback(rate)
+                    }
+                } catch let e {
+                    print("JSON decoding error: \(e)")
+                }
+            }).resume()
+        }
+    }
+    
+    //Converts from USD
+    func convert(info: [String: FiatPriceInfo], withRate rate: Double) -> [String: FiatPriceInfo] {
+        return info.mapValues {
+            return FiatPriceInfo(changePercentage24Hrs: $0.changePercentage24Hrs,
+                                 change24Hrs: $0.change24Hrs * rate,
+                                 price: $0.price * rate)
+        }
+    }
+
 }
 
 //Reduces the size of an array by a factor.

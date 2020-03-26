@@ -111,9 +111,6 @@ class ModalPresenter: Subscriber, Trackable {
                 self?.showLightWeightAlert(message: message)
             }
         })
-        Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
-            self?.wipeWalletNoPrompt()
-        })
         Store.subscribe(self, name: .showCurrency(nil), callback: { [weak self] in
             guard let trigger = $0 else { return }
             if case .showCurrency(let currency?) = trigger {
@@ -878,35 +875,6 @@ class ModalPresenter: Subscriber, Trackable {
                                                             })
         }
         topViewController?.present(alert, animated: true, completion: nil)
-    }
-
-    // do not call directly, instead use wipeWalletNoPrompt trigger so other subscribers are notified
-    private func wipeWalletNoPrompt() {
-        self.alertPresenter = nil
-        
-        let activity = BRActivityViewController(message: S.WipeWallet.wiping)
-        self.topViewController?.present(activity, animated: true, completion: nil)
-        let success = keyStore.wipeWallet()
-        guard success else { // unexpected error writing to keychain
-            activity.dismiss(animated: true)
-            self.topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
-            return
-        }
-        
-        self.system.shutdown {
-            DispatchQueue.main.async {
-                Backend.disconnectWallet()
-                Store.perform(action: Reset())
-                activity.dismiss(animated: true) { [weak self] in
-                    // cleanup all views before triggering reset to onboarding
-                    guard let menuNav = self?.menuNavController,
-                        let rootNav = self?.window.rootViewController as? UINavigationController else { preconditionFailure() }
-                    menuNav.viewControllers.removeAll()
-                    rootNav.viewControllers.removeAll()
-                    Store.trigger(name: .didWipeWallet)
-                }
-            }
-        }
     }
     
     private func presentKeyImport(wallet: Wallet, scanResult: QRCode? = nil) {
