@@ -127,7 +127,7 @@ private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([C
     let hedera = CurrencyMetaData(uid: "hedera-mainnet:__native__",
                                   code: "HBAR",
                                   isSupported: true,
-                                  colors: (UIColor.fromHex("2D84EB"), UIColor.fromHex("8259EF")),
+                                  colors: (UIColor.fromHex("8259EF"), UIColor.fromHex("8259EF")),
                                   name: "Hedera",
                                   tokenAddress: nil,
                                   decimals: 8,
