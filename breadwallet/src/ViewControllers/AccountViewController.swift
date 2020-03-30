@@ -22,11 +22,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         
         self.searchHeaderview = SearchHeaderView()
         super.init(nibName: nil, bundle: nil)
-        if let wallet = wallet {
-           self.transactionsTableView = TransactionsTableViewController(wallet: wallet, didSelectTransaction: { [unowned self] (transactions, index) in
+        self.transactionsTableView = TransactionsTableViewController(currency: currency,
+                                                                     wallet: wallet,
+                                                                     didSelectTransaction: { [unowned self] (transactions, index) in
                self.didSelectTransaction(transactions: transactions, selectedIndex: index)
-           })
-        }
+        })
 
         footerView.sendCallback = { [unowned self] in
             Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
@@ -203,6 +203,32 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         
         if wallet != nil {
             createFooter.isHidden = true
+        }
+        
+        createFooter.didTapCreate = { [weak self] in
+            
+            let alert = UIAlertController(title: "Confirm Account Creation",
+                                          message: "Only create a Hedera account if you intend on storing HBAR in your wallet.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Not Now", style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: "Create Account", style: .default, handler: { _ in
+                let activity = BRActivityViewController(message: "Creating Account")
+                self?.present(activity, animated: true, completion: nil)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+                    
+                    activity.dismiss(animated: true, completion: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
+                            UIView.animate(withDuration: 0.5, animations: {
+                                self?.createFooter.alpha = 0.0
+                            })
+                            })
+                    })
+                    
+                })
+            }))
+        
+            self?.present(alert, animated: true, completion: nil)
+            
         }
         
 //        if wallet.manager.account.isInitialized(onNetwork: wallet.manager.network) {

@@ -99,9 +99,12 @@ class SyncingHeaderView: UIView, Subscriber {
     private func updateText() {
         switch syncState {
         case .connecting:
-            date.text = S.SyncingView.connecting
-            lineLoadingView.isHidden = false
-            syncIndicator.isHidden = false
+//            date.text = S.SyncingView.connecting
+//            lineLoadingView.isHidden = false
+//            syncIndicator.isHidden = false
+            date.text = ""
+            lineLoadingView.isHidden = true
+            syncIndicator.isHidden = true
         case .syncing:
             lineLoadingView.isHidden = false
             syncIndicator.isHidden = false

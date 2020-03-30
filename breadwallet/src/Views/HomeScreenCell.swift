@@ -87,9 +87,9 @@ class HomeScreenCell: UITableViewCell, Subscriber {
                             guard let syncState = state[viewModel.currency]?.syncState else { return }
                             self.syncIndicator.syncState = syncState
                             switch syncState {
-                            case .connecting, .failed, .syncing:
+                            case .failed, .syncing:
                                 self.isSyncIndicatorVisible = true
-                            case .success:
+                            case .success, .connecting:
                                 self.isSyncIndicatorVisible = false
                             }
         })
