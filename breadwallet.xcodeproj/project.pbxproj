@@ -116,9 +116,6 @@
 		7C54FF9E2165866A007BF3EF /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* currencies.json */; };
 		7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C5AC8A5203B93D3001B221E /* TxListCell.swift */; };
 		7C6628392107B8D600ABCD10 /* PigeonExchange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6628382107B8D600ABCD10 /* PigeonExchange.swift */; };
-		7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
-		7C662B0F222F6E800008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
-		7C662B10222F6E820008814C /* libCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C4D64B5222B4DC700DE2C2B /* libCore.a */; };
 		7C67B6362056FB13006487BE /* BRAPIClient+Currencies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C67B6352056FB13006487BE /* BRAPIClient+Currencies.swift */; };
 		7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB01FEB21580028ABFA /* TxDetailDataSource.swift */; };
 		7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6ACCB31FEB34470028ABFA /* TxLabelCell.swift */; };
@@ -1276,7 +1273,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C662B0E222F6E7E0008814C /* libCore.a in Frameworks */,
 				CEE218BC2102719F00399231 /* SwiftProtobuf.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1285,7 +1281,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C662B0F222F6E800008814C /* libCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1293,7 +1288,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7C662B10222F6E820008814C /* libCore.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
