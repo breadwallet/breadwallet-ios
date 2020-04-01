@@ -38,7 +38,7 @@ class AmountViewController: UIViewController, Trackable {
     var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
     var didUpdateAmount: ((Amount?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
-
+    var didTapMax: (() -> Void)?
     var currentOutput: String {
         return amountLabel.text ?? ""
     }
@@ -82,7 +82,7 @@ class AmountViewController: UIViewController, Trackable {
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
-    private let balanceLabel = UILabel()
+    private let balanceLabel = UIButton(type: .system)
     private let feeLabel = UILabel()
     private let tapView = UIView()
     private let feeSelector: FeeSelector
@@ -192,6 +192,8 @@ class AmountViewController: UIViewController, Trackable {
             myself.toggleCurrency()
         }
         let gr = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        gr.delegate = self
+        gr.cancelsTouchesInView = false
         tapView.addGestureRecognizer(gr)
         tapView.isUserInteractionEnabled = true
 
@@ -207,6 +209,12 @@ class AmountViewController: UIViewController, Trackable {
                 feeSelector.heightAnchor.constraint(equalToConstant: 0)])
         }
         
+        balanceLabel.addTarget(self, action: #selector(didTapBalance), for: .touchUpInside)
+        balanceLabel.isUserInteractionEnabled = true
+    }
+
+    @objc private func didTapBalance() {
+        print("[GR] did tap balance")
     }
     
     override func viewDidLayoutSubviews() {
@@ -275,7 +283,7 @@ class AmountViewController: UIViewController, Trackable {
     func updateBalanceLabel() {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
             //If balance is nil, the balance label still needs some text for the bottom padding
-            balanceLabel.attributedText = balance ?? NSAttributedString(string: " ")
+            balanceLabel.setAttributedTitle(balance ?? NSAttributedString(string: " "), for: .normal)
             feeLabel.attributedText = fee
             balanceLabel.isHidden = cursor.isHidden
         }
@@ -337,5 +345,16 @@ class AmountViewController: UIViewController, Trackable {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension AmountViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        let location = touch.location(in: tapView)
+        if balanceLabel.frame.contains(location) {
+            didTapMax?()
+            return false
+        }
+        return true
     }
 }

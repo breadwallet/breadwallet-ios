@@ -208,6 +208,27 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         tagCell?.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
+        
+        amountView.didTapMax = { [weak self] in
+            guard let `self` = self else { return }
+            guard let address = self.address else { return }
+            guard let fee = self.feeSelection else { return }
+            self.sender.estimateLimitMaximum(address: address, fee: fee, completion: { result in
+                switch result {
+                case .success(let max):
+                    DispatchQueue.main.async {
+                         self.handleMax(amount: max)
+                     }
+                case .failure(let error):
+                    self.showErrorMessage("Could not estimate max")
+                }
+            })
+        }
+    }
+    
+    private func handleMax(amount: BRCrypto.Amount) {
+        let amount = Amount(cryptoAmount: amount, currency: currency)
+        amountView.forceUpdateAmount(amount: amount)
     }
     
     private func updateFees() {
