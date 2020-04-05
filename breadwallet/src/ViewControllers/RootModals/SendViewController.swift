@@ -24,7 +24,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
     var onPublishSuccess: (() -> Void)?
     var parentView: UIView? //ModalPresentable
-
+    
     init(sender: Sender, initialRequest: PaymentRequest? = nil) {
         let currency = sender.wallet.currency
         self.currency = currency
@@ -63,7 +63,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var paymentProtocolRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    private var feeSelection: FeeLevel? = .regular {
+    private var feeLevel: FeeLevel = .regular {
         didSet {
             updateFees()
         }
@@ -76,6 +76,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     private var amount: Amount? {
         didSet {
+            if amount != maximum {
+                isSendingMax = false
+            }
             updateFees()
         }
     }
@@ -88,7 +91,16 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private var currentFeeBasis: TransferFeeBasis?
-
+    private var isSendingMax = false {
+        didSet {
+            if isSendingMax {
+                amountView.balanceLabel.isUserInteractionEnabled = false
+            } else {
+                amountView.balanceLabel.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
@@ -193,8 +205,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             self?.amount = amount
         }
         amountView.didUpdateFee = strongify(self) { myself, feeLevel in
-            guard myself.currency.isBitcoinCompatible else { return }
-            myself.feeSelection = feeLevel
+            myself.feeLevel = feeLevel
         }
         
         amountView.didChangeFirstResponder = { [weak self] isFirstResponder in
@@ -209,18 +220,17 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             self?.amountView.closePinPad()
         }
         
-        amountView.didTapMax = { [weak self] in
-            guard let `self` = self else { return }
-            guard let address = self.address else { return }
-            guard let fee = self.feeSelection else { return }
-            self.sender.estimateLimitMaximum(address: address, fee: fee, completion: { result in
+        amountView.didTapMax = strongify(self) { myself in
+            myself.isSendingMax = true
+            guard let address = myself.address else { return }
+            myself.sender.estimateLimitMaximum(address: address, fee: myself.feeLevel, completion: { result in
                 switch result {
                 case .success(let max):
                     DispatchQueue.main.async {
-                         self.handleMax(amount: max)
+                         myself.handleMax(amount: max)
                      }
                 case .failure(let error):
-                    self.showErrorMessage("Could not estimate max")
+                    myself.showErrorMessage("Could not estimate max: \(error)")
                 }
             })
         }
@@ -241,8 +251,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         guard let address = address else { return }
         guard let amount = amount else { return }
-        guard let fee = feeSelection else { return }
-        sender.estimateFee(address: address, amount: amount, tier: fee) { self.handleFeeEstimationResult($0) }
+        sender.estimateFee(address: address, amount: amount, tier: feeLevel) { self.handleFeeEstimationResult($0) }
         updateLimits()
     }
     
@@ -254,15 +263,14 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func updateLimits() {
-        guard currency.isXRP else { return }
         guard let address = address else { return }
-        guard let fee = feeSelection else { return }
-        sender.estimateLimitMaximum(address: address, fee: fee, completion: { [weak self] result in
+        sender.estimateLimitMaximum(address: address, fee: feeLevel, completion: { [weak self] result in
             switch result {
             case .success(let maximumAmount):
                 DispatchQueue.main.async {
                     self?.maximum = Amount(cryptoAmount: maximumAmount, currency: self!.currency)
                     self?.amountView.updateBalanceLabel()
+                    self?.amountView.balanceLabel.isUserInteractionEnabled = true
                 }
             case .failure(let error):
                 print("[LIMIT] error: \(error)")
@@ -271,18 +279,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
-        let balanceAmount: Amount
-        if currency.isXRP {
-            guard let maximum = self.maximum else { return (nil, nil) }
-            balanceAmount = Amount(amount: maximum, rate: rate, minimumFractionDigits: 0)
-        } else {
-            balanceAmount = Amount(amount: balance, rate: rate, minimumFractionDigits: 0)
-        }
+        //Use maximum if available, otherwise use balance
+        let balanceAmount = Amount(amount: maximum ?? balance, rate: rate, minimumFractionDigits: 0)
         
-        let balanceText = balanceAmount.description
-        let balanceOutput = String(format: S.Send.balance, balanceText)
         var feeOutput = ""
-        var color: UIColor = .grayTextTint
         let feeColor: UIColor = .grayTextTint
 
         if let amount = amount, !amount.isZero, let feeBasis = currentFeeBasis {
@@ -290,23 +290,38 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             feeAmount.rate = rate
             let feeText = feeAmount.description
             feeOutput = String(format: S.Send.fee, feeText)
-
-            if feeAmount.currency == currency && (balanceAmount >= feeAmount) && amount > (balanceAmount - feeAmount) {
-                color = .cameraGuideNegative
-            }
         }
         
-        let attributes: [NSAttributedString.Key: Any] = [
+        let balanceLabelattributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
-            NSAttributedString.Key.foregroundColor: color
+            NSAttributedString.Key.foregroundColor: UIColor.grayTextTint
         ]
+        
+        var balanceAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.font: UIFont.customBody(size: 14.0)
+        ]
+        
+        if isSendingMax || maximum == nil {
+            balanceAttributes[NSAttributedString.Key.foregroundColor] = UIColor.grayTextTint
+        } else {
+            balanceAttributes[NSAttributedString.Key.underlineStyle] = NSUnderlineStyle.single.rawValue
+            balanceAttributes[NSAttributedString.Key.foregroundColor] = Theme.accent
+        }
         
         let feeAttributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
             NSAttributedString.Key.foregroundColor: feeColor
         ]
         
-        return (NSAttributedString(string: balanceOutput, attributes: attributes), NSAttributedString(string: feeOutput, attributes: feeAttributes))
+        let output = NSMutableAttributedString()
+        if isSendingMax {
+            output.append(NSAttributedString(string: "Sending Max: ", attributes: balanceLabelattributes))
+        } else {
+            output.append(NSAttributedString(string: "Balance: ", attributes: balanceLabelattributes))
+        }
+        output.append(NSAttributedString(string: balanceAmount.description, attributes: balanceAttributes))
+        
+        return (output, NSAttributedString(string: feeOutput, attributes: feeAttributes))
     }
     
     @objc private func pasteTapped() {
@@ -431,7 +446,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         let confirm = ConfirmationViewController(amount: displyAmount,
                                                  fee: feeAmount,
-                                                 displayFeeLevel: feeSelection ?? .regular,
+                                                 displayFeeLevel: feeLevel,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency)
@@ -524,7 +539,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     func estimateFeeForRequest(_ protoReq: PaymentProtocolRequest, completion: @escaping (Result<TransferFeeBasis, BRCrypto.Wallet.FeeEstimationError>) -> Void) {
-        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeSelection ?? .regular)
+        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeLevel)
         protoReq.estimateFee(fee: networkFee, completion: completion)
     }
     

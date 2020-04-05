@@ -73,6 +73,7 @@ class AmountViewController: UIViewController, Trackable {
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
     var minimumFractionDigits = 0
+    let balanceLabel = UIButton(type: .system)
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
@@ -82,11 +83,12 @@ class AmountViewController: UIViewController, Trackable {
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
-    private let balanceLabel = UIButton(type: .system)
     private let feeLabel = UILabel()
     private let tapView = UIView()
     private let feeSelector: FeeSelector
-
+    private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
+    var isSendingMax = false
+    
     private var amount: Amount? {
         didSet {
             updateAmountLabel()
@@ -108,9 +110,9 @@ class AmountViewController: UIViewController, Trackable {
         view.addSubview(feeSelector)
         view.addSubview(border)
         view.addSubview(cursor)
-        view.addSubview(balanceLabel)
         view.addSubview(feeLabel)
         view.addSubview(tapView)
+        view.addSubview(balanceLabel)
         view.addSubview(bottomBorder)
     }
 
@@ -148,8 +150,7 @@ class AmountViewController: UIViewController, Trackable {
             balanceLabel.topAnchor.constraint(equalTo: cursor.bottomAnchor) ])
         feeLabel.constrain([
             feeLabel.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor),
-            feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor)
-            ])
+            feeLabel.topAnchor.constraint(equalTo: balanceLabel.firstBaselineAnchor, constant: 2.0)])
         pinPadHeight = pinPad.view.heightAnchor.constraint(equalToConstant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
@@ -192,8 +193,6 @@ class AmountViewController: UIViewController, Trackable {
             myself.toggleCurrency()
         }
         let gr = UITapGestureRecognizer(target: self, action: #selector(didTap))
-        gr.delegate = self
-        gr.cancelsTouchesInView = false
         tapView.addGestureRecognizer(gr)
         tapView.isUserInteractionEnabled = true
 
@@ -210,11 +209,14 @@ class AmountViewController: UIViewController, Trackable {
         }
         
         balanceLabel.addTarget(self, action: #selector(didTapBalance), for: .touchUpInside)
-        balanceLabel.isUserInteractionEnabled = true
     }
 
     @objc private func didTapBalance() {
-        print("[GR] did tap balance")
+        isSendingMax = true
+        didTapMax?()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+            self?.didTap()
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -282,10 +284,19 @@ class AmountViewController: UIViewController, Trackable {
 
     func updateBalanceLabel() {
         if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
-            //If balance is nil, the balance label still needs some text for the bottom padding
-            balanceLabel.setAttributedTitle(balance ?? NSAttributedString(string: " "), for: .normal)
+            guard balance != nil else { return }
+            UIView.performWithoutAnimation {
+                self.balanceLabel.setAttributedTitle(balance ?? NSAttributedString(string: " "), for: .normal)
+                self.balanceLabel.layoutIfNeeded()
+            }
             feeLabel.attributedText = fee
-            balanceLabel.isHidden = cursor.isHidden
+            if amount != nil || isSendingMax {
+                balanceLabel.isHidden = false
+                feeLabel.isHidden = false
+            } else {
+               balanceLabel.isHidden = cursor.isHidden
+               feeLabel.isHidden = cursor.isHidden
+            }
         }
     }
 
@@ -345,16 +356,5 @@ class AmountViewController: UIViewController, Trackable {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension AmountViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        let location = touch.location(in: tapView)
-        if balanceLabel.frame.contains(location) {
-            didTapMax?()
-            return false
-        }
-        return true
     }
 }
