@@ -189,9 +189,9 @@ extension ScanViewController : AVCaptureMetadataOutputObjectsDelegate {
                         NSLog("ERROR: URI String not found")
                         return
                     }
-                    if completion != nil {
+                    if completion != nil && guide.state != .positive {
                         handleURI(uri)
-                    } else if scanKeyCompletion != nil {
+                    } else if scanKeyCompletion != nil && guide.state != .positive {
                         handleKey(uri)
                     }
                 }

@@ -18,7 +18,7 @@ class ApplicationController : Subscriber, Trackable {
 
     //Ideally the window would be private, but is unfortunately required
     //by the UIApplicationDelegate Protocol
-    let window = UIWindow()
+    var window: UIWindow?
     fileprivate let store = Store()
     private var startFlowController: StartFlowPresenter?
     private var modalPresenter: ModalPresenter?
@@ -61,8 +61,9 @@ class ApplicationController : Subscriber, Trackable {
         }
     }
 
-    func launch(application: UIApplication, options: [UIApplicationLaunchOptionsKey: Any]?) {
+    func launch(application: UIApplication, window: UIWindow?, options: [UIApplicationLaunchOptionsKey: Any]?) {
         self.application = application
+        self.window = window
         application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalMinimum)
         setup()
         handleLaunchOptions(options)
@@ -86,7 +87,7 @@ class ApplicationController : Subscriber, Trackable {
             countLaunches()
             setupAppearance()
             setupRootViewController()
-            window.makeKeyAndVisible()
+            window?.makeKeyAndVisible()
             listenForPushNotificationRequest()
             offMainInitialization()
             store.subscribe(self, name: .reinitWalletManager(nil), callback: {
@@ -176,12 +177,12 @@ class ApplicationController : Subscriber, Trackable {
 
         private func didInitWalletManager() {
             guard let walletManager = walletManager else { assert(false, "WalletManager should exist!"); return }
-            guard let rootViewController = window.rootViewController else { return }
+            guard let rootViewController = window?.rootViewController else { return }
             
             hasPerformedWalletDependentInitialization = true
             store.perform(action: PinLength.set(walletManager.pinLength))
             walletCoordinator = WalletCoordinator(walletManager: walletManager, store: store)
-            modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window, apiClient: noAuthApiClient)
+            modalPresenter = ModalPresenter(store: store, walletManager: walletManager, window: window!, apiClient: noAuthApiClient)
             exchangeUpdater = ExchangeUpdater(store: store, walletManager: walletManager)
             feeUpdater = FeeUpdater(walletManager: walletManager, store: store)
             startFlowController = StartFlowPresenter(store: store, walletManager: walletManager, rootViewController: rootViewController)
@@ -257,7 +258,7 @@ class ApplicationController : Subscriber, Trackable {
 
         private func setupRootViewController() {
             mainViewController = MainViewController(store: store)
-            window.rootViewController = mainViewController
+            window?.rootViewController = mainViewController
         }
 
         private func startDataFetchers() {

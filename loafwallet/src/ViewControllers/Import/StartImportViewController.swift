@@ -170,7 +170,10 @@ class StartImportViewController : UIViewController {
                 guard let data = data,
                     let jsonData = try? JSONSerialization.jsonObject(with: data, options: []),
                     let json = jsonData as? [[String: Any]] else { return }
-                myself.handleData(data: json, key: key)
+                
+                DispatchQueue.main.async {
+                    myself.handleData(data: json, key: key)
+                }
             }
             task.resume()
         })
@@ -223,22 +226,26 @@ class StartImportViewController : UIViewController {
             let _ = tx.sign(keys: &keys)
 
                 guard tx.isSigned else {
-                    self.importingActivity.dismiss(animated: true, completion: {
-                        self.showErrorMessage(S.Import.Error.signing)
-                    })
+                    DispatchQueue.main.async {
+                        self.importingActivity.dismiss(animated: true, completion: {
+                            self.showErrorMessage(S.Import.Error.signing)
+                        })
+                    }
                     return
                 }
                 self.walletManager.peerManager?.publishTx(tx, completion: { [weak self] success, error in
                     guard let myself = self else { return }
-                    myself.importingActivity.dismiss(animated: true, completion: {
-                        DispatchQueue.main.async {
-                            if let error = error {
-                                myself.showErrorMessage(error.localizedDescription)
-                                return
+                    DispatchQueue.main.async {
+                        myself.importingActivity.dismiss(animated: true, completion: {
+                            DispatchQueue.main.async {
+                                if let error = error {
+                                    myself.showErrorMessage(error.localizedDescription)
+                                    return
+                                }
+                                myself.showSuccess()
                             }
-                            myself.showSuccess()
-                        }
-                    })
+                        })
+                    }
                 })
         })
     }
