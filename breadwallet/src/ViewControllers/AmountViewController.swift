@@ -35,7 +35,7 @@ class AmountViewController: UIViewController, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
-    var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
+    var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?, Bool)?)?
     var didUpdateAmount: ((Amount?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
     var didTapMax: (() -> Void)?
@@ -87,7 +87,9 @@ class AmountViewController: UIViewController, Trackable {
     private let tapView = UIView()
     private let feeSelector: FeeSelector
     private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
-    var isSendingMax = false
+    
+    //Controlled by SendViewController
+    var isSendViewSendingMax = false
     
     private var amount: Amount? {
         didSet {
@@ -209,10 +211,10 @@ class AmountViewController: UIViewController, Trackable {
         }
         
         balanceLabel.addTarget(self, action: #selector(didTapBalance), for: .touchUpInside)
+        balanceLabel.isUserInteractionEnabled = false
     }
 
     @objc private func didTapBalance() {
-        isSendingMax = true
         didTapMax?()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
             self?.didTap()
@@ -283,20 +285,21 @@ class AmountViewController: UIViewController, Trackable {
     }
 
     func updateBalanceLabel() {
-        if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
+        if let (balance, fee, isUserInteractionEnabled) = balanceTextForAmount?(amount, selectedRate) {
             guard balance != nil else { return }
             UIView.performWithoutAnimation {
                 self.balanceLabel.setAttributedTitle(balance ?? NSAttributedString(string: " "), for: .normal)
                 self.balanceLabel.layoutIfNeeded()
             }
             feeLabel.attributedText = fee
-            if amount != nil || isSendingMax {
+            if amount != nil || isSendViewSendingMax {
                 balanceLabel.isHidden = false
                 feeLabel.isHidden = false
             } else {
                balanceLabel.isHidden = cursor.isHidden
                feeLabel.isHidden = cursor.isHidden
             }
+            balanceLabel.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
 

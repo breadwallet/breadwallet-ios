@@ -72,6 +72,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var maximum: Amount? {
         didSet {
             sender.maximum = maximum
+            if let max = maximum, isSendingMax {
+                amountView.forceUpdateAmount(amount: max)
+            }
         }
     }
     private var amount: Amount? {
@@ -79,7 +82,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if amount != maximum {
                 isSendingMax = false
             }
-            updateFees()
+            if oldValue != amount {
+                updateFees()
+            }
         }
     }
     private var address: String? {
@@ -93,11 +98,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var currentFeeBasis: TransferFeeBasis?
     private var isSendingMax = false {
         didSet {
-            if isSendingMax {
-                amountView.balanceLabel.isUserInteractionEnabled = false
-            } else {
-                amountView.balanceLabel.isUserInteractionEnabled = true
-            }
+            amountView.isSendViewSendingMax = isSendingMax
         }
     }
     
@@ -221,24 +222,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         
         amountView.didTapMax = strongify(self) { myself in
+            guard let max = myself.maximum else {
+                myself.showErrorMessage("Error calculating maximum")
+                return
+            }
             myself.isSendingMax = true
-            guard let address = myself.address else { return }
-            myself.sender.estimateLimitMaximum(address: address, fee: myself.feeLevel, completion: { result in
-                switch result {
-                case .success(let max):
-                    DispatchQueue.main.async {
-                         myself.handleMax(amount: max)
-                     }
-                case .failure(let error):
-                    myself.showErrorMessage("Could not estimate max: \(error)")
-                }
-            })
+            myself.amountView.forceUpdateAmount(amount: max)
         }
-    }
-    
-    private func handleMax(amount: BRCrypto.Amount) {
-        let amount = Amount(cryptoAmount: amount, currency: currency)
-        amountView.forceUpdateAmount(amount: amount)
     }
     
     private func updateFees() {
@@ -265,12 +255,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private func updateLimits() {
         guard let address = address else { return }
         sender.estimateLimitMaximum(address: address, fee: feeLevel, completion: { [weak self] result in
+            guard let `self` = self else { return }
             switch result {
             case .success(let maximumAmount):
                 DispatchQueue.main.async {
-                    self?.maximum = Amount(cryptoAmount: maximumAmount, currency: self!.currency)
-                    self?.amountView.updateBalanceLabel()
-                    self?.amountView.balanceLabel.isUserInteractionEnabled = true
+                    self.maximum = Amount(cryptoAmount: maximumAmount, currency: self.currency)
+                    self.amountView.updateBalanceLabel()
                 }
             case .failure(let error):
                 print("[LIMIT] error: \(error)")
@@ -278,7 +268,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         })
     }
     
-    private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?) {
+    private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?, Bool) {
         //Use maximum if available, otherwise use balance
         let balanceAmount = Amount(amount: maximum ?? balance, rate: rate, minimumFractionDigits: 0)
         
@@ -320,8 +310,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             output.append(NSAttributedString(string: "Balance: ", attributes: balanceLabelattributes))
         }
         output.append(NSAttributedString(string: balanceAmount.description, attributes: balanceAttributes))
-        
-        return (output, NSAttributedString(string: feeOutput, attributes: feeAttributes))
+        let isUserInteractionEnabled = !isSendingMax
+        return (output, NSAttributedString(string: feeOutput, attributes: feeAttributes), isUserInteractionEnabled)
     }
     
     @objc private func pasteTapped() {
