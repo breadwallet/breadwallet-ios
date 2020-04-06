@@ -166,6 +166,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        updateLimits()
         if let initialRequest = initialRequest {
             handleRequest(initialRequest)
         }
@@ -253,7 +254,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func updateLimits() {
-        guard let address = address else { return }
+        guard let address = address ?? currency.placeHolderAddress else { return }
         sender.estimateLimitMaximum(address: address, fee: feeLevel, completion: { [weak self] result in
             guard let `self` = self else { return }
             switch result {
