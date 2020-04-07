@@ -72,6 +72,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var maximum: Amount? {
         didSet {
             sender.maximum = maximum
+            amountView.maximum = maximum
             if let max = maximum, isSendingMax {
                 amountView.forceUpdateAmount(amount: max)
             }

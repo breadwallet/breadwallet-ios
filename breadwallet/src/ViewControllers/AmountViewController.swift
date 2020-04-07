@@ -48,6 +48,7 @@ class AmountViewController: UIViewController, Trackable {
             fullRefresh()
         }
     }
+    var maximum: Amount?
     var didUpdateFee: ((FeeLevel) -> Void)? {
         didSet {
             feeSelector.didUpdateFee = didUpdateFee
@@ -283,6 +284,14 @@ class AmountViewController: UIViewController, Trackable {
         }
         amountLabel.text = output
         placeholder.isHidden = output.utf8.isEmpty ? false : true
+        
+        if let max = maximum {
+            if amount > max {
+                amountLabel.textColor = UIColor.cameraGuideNegative
+            } else {
+                amountLabel.textColor = .darkText
+            }
+        }
     }
 
     func updateBalanceLabel() {
