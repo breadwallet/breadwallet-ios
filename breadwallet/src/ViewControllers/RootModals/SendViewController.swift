@@ -285,13 +285,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    // returns Balance Text, Fee Text and isUserInteractionEnabled for balanceLabel
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?, Bool) {
         //Use maximum if available, otherwise use balance
         let balanceAmount = Amount(amount: maximum ?? balance, rate: rate, minimumFractionDigits: 0)
-        
         var feeOutput = ""
-        let feeColor: UIColor = .grayTextTint
-
         if let amount = amount, !amount.isZero, let feeBasis = currentFeeBasis {
             var feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: sender.wallet.feeCurrency)
             feeAmount.rate = rate
@@ -304,10 +302,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             NSAttributedString.Key.foregroundColor: UIColor.grayTextTint
         ]
         
-        var balanceAttributes: [NSAttributedString.Key: Any] = [
-            NSAttributedString.Key.font: UIFont.customBody(size: 14.0)
-        ]
-        
+        var balanceAttributes: [NSAttributedString.Key: Any] = [ NSAttributedString.Key.font: UIFont.customBody(size: 14.0) ]
         if isSendingMax || maximum == nil {
             balanceAttributes[NSAttributedString.Key.foregroundColor] = UIColor.grayTextTint
         } else {
@@ -317,18 +312,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         
         let feeAttributes: [NSAttributedString.Key: Any] = [
             NSAttributedString.Key.font: UIFont.customBody(size: 14.0),
-            NSAttributedString.Key.foregroundColor: feeColor
+            NSAttributedString.Key.foregroundColor: UIColor.grayTextTint
         ]
         
-        let output = NSMutableAttributedString()
-        if isSendingMax {
-            output.append(NSAttributedString(string: "Sending Max: ", attributes: balanceLabelattributes))
-        } else {
-            output.append(NSAttributedString(string: "Balance: ", attributes: balanceLabelattributes))
-        }
-        output.append(NSAttributedString(string: balanceAmount.description, attributes: balanceAttributes))
-        let isUserInteractionEnabled = !isSendingMax
-        return (output, NSAttributedString(string: feeOutput, attributes: feeAttributes), isUserInteractionEnabled)
+        let balanceOutput = NSMutableAttributedString()
+        balanceOutput.append(NSAttributedString(string: isSendingMax ? S.Send.sendingMax : S.Send.balance, attributes: balanceLabelattributes))
+        balanceOutput.append(NSAttributedString(string: balanceAmount.description, attributes: balanceAttributes))
+        return (balanceOutput, NSAttributedString(string: feeOutput, attributes: feeAttributes), !isSendingMax)
     }
     
     @objc private func pasteTapped() {

@@ -35,6 +35,7 @@ class AmountViewController: UIViewController, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
+    // returns Balance Text, Fee Text and isUserInteractionEnabled for balanceLabel
     var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?, Bool)?)?
     var didUpdateAmount: ((Amount?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
