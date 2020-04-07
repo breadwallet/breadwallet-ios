@@ -228,7 +228,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         
         amountView.didTapMax = strongify(self) { myself in
             guard let max = myself.maximum else {
-                myself.showErrorMessage("Error calculating maximum")
+                //This is highly unlikely to be reached because the button should be disabled
+                //if a maximum doesn't exist
+                myself.showErrorMessage(S.Send.Error.maxError)
                 return
             }
             myself.isSendingMax = true

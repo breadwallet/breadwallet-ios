@@ -98,6 +98,7 @@ enum S {
         enum Error {
             static let authenticationError = NSLocalizedString("Send.Error.authenticationError", value: "Authentication Error", comment: "Sending error message")
             static let notConnected = NSLocalizedString("Send.Error.notConnected", value: "Network not connected", comment: "Sending error message")
+            static let maxError = NSLocalizedString("Send.Error.maxError", value: "Could not calculate maximum", comment: "Error calculating maximum.")
         }
     }
 
