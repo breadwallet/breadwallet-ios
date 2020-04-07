@@ -341,7 +341,7 @@
 /* Payment too small alert title */
 "PaymentProtocol.Errors.smallOutputError" = "Couldn't make payment";
 /* Amount too small error message */
-"PaymentProtocol.Errors.smallPayment" = "Payment can’t be less than %1$@. Bitcoin transaction fees are more than the amount of this transaction. Please increase the amount and try again. ";
+"PaymentProtocol.Errors.smallPayment" = "Payment can’t be less than %1$@. Transaction fees are more than the amount of this transaction. Please increase the amount and try again.";
 /* Output too small error message. */
 "PaymentProtocol.Errors.smallTransaction" = "Bitcoin transaction outputs can't be less than %1$@.";
 /* Unsupported signature type payment protocol error message */

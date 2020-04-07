@@ -77,6 +77,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             }
         }
     }
+    private var minimum: Amount? {
+        didSet { sender.minimum = minimum }
+    }
+    
     private var amount: Amount? {
         didSet {
             if amount != maximum {
@@ -267,6 +271,18 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 print("[LIMIT] error: \(error)")
             }
         })
+        
+        sender.estimateLimitMinimum(address: address, fee: feeLevel) { [weak self] result in
+            guard let `self` = self else { return }
+            switch result {
+            case .success(let minimumAmount):
+                DispatchQueue.main.async {
+                    self.minimum = Amount(cryptoAmount: minimumAmount, currency: self.currency)
+                }
+            case .failure(let error):
+                print("[LIMIT] error: \(error)")
+            }
+        }
     }
     
     private func balanceTextForAmount(_ amount: Amount?, rate: Rate?) -> (NSAttributedString?, NSAttributedString?, Bool) {
@@ -377,8 +393,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.containsAddress, buttonLabel: S.Button.ok)
             
         case .outputTooSmall(let minOutput), .paymentTooSmall(let minOutput):
-            let text = Store.state.showFiatAmounts ? minOutput.fiatDescription : minOutput.tokenDescription
-            let message = String(format: S.PaymentProtocol.Errors.smallPayment, text)
+            let amountText = "\(minOutput.tokenDescription) (\(minOutput.fiatDescription))"
+            let message = String(format: S.PaymentProtocol.Errors.smallPayment, amountText)
             showAlert(title: S.Alert.error, message: message, buttonLabel: S.Button.ok)
             
         case .insufficientFunds:
