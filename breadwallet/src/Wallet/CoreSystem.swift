@@ -61,8 +61,10 @@ class CoreSystem: Subscriber, Trackable {
                 
                 var req = request
                 if let authToken = authToken {
-                    req.authorize(withToken: authToken)
+                //    req.authorize(withToken: authToken)
                 }
+                
+                req.authorize(withToken: BlockChainDB.createForTestBDBToken)
                 //TODO:CRYPTO does not handle 401, other headers, redirects
                 return session.dataTask(with: req, completionHandler: completion)
         },
@@ -226,7 +228,7 @@ class CoreSystem: Subscriber, Trackable {
             mode = network.defaultMode
         }
         print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-        var success = system.createWalletManager(network: network,
+        let success = system.createWalletManager(network: network,
                                                  mode: mode,
                                                  addressScheme: addressScheme,
                                                  currencies: requiredTokens)

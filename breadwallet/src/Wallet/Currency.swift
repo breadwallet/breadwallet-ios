@@ -219,6 +219,7 @@ extension Currency {
     var isERC20Token: Bool { return tokenType == .erc20 }
     var isBRDToken: Bool { return uid == Currencies.brd.uid }
     var isXRP: Bool { return uid == Currencies.xrp.uid }
+    var isHBAR: Bool { return uid == Currencies.hbar.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
@@ -358,6 +359,7 @@ enum Currencies: String, CaseIterable {
     case brd
     case tusd
     case xrp
+    case hbar
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -375,6 +377,8 @@ enum Currencies: String, CaseIterable {
             uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
         case .xrp:
             uids = "ripple-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+        case .hbar:
+            uids = "hedera-mainnet:__native__"
         }
         return CurrencyId(rawValue: uids)
     }
