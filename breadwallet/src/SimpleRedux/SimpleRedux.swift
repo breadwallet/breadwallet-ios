@@ -74,6 +74,7 @@ enum TriggerName {
     case didViewTransactions([Transaction]?)
     case showInAppNotification(BRDMessage?)
     case didSyncKVStore
+    case initializeNetwork(Network?, System?, (() -> Void)?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -145,6 +146,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.showInAppNotification, .showInAppNotification):
         return true
     case (.didSyncKVStore, .didSyncKVStore):
+        return true
+    case (.initializeNetwork, .initializeNetwork):
         return true
     default:
         return false

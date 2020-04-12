@@ -11,17 +11,32 @@
 import Foundation
 import WalletKit
 
-class WalletInitializer {
-    private func initializeWallet(network: Network, system: System) {
+class WalletInitializer: Subscriber {
+    
+    init() {
+        Store.subscribe(self, name: .initializeNetwork(nil, nil, nil)) { [weak self] trigger in
+            if case let .initializeNetwork(network, system, callback) = trigger {
+                if let network = network, let system = system, let callback = callback {
+                    self?.initializeWallet(network: network, system: system, callback: callback)
+                }
+            }
+        }
+        
+    }
+    
+    private func initializeWallet(network: Network, system: System, callback: @escaping () -> Void) {
+        print ("[SYS] initialize: \(network.name)")
         guard network.currency.uid == Currencies.hbar.uid else { return }
-        guard !system.accountIsInitialized(system.account, onNetwork: network) else { return }
-
+        guard !system.accountIsInitialized(system.account, onNetwork: network) else {
+            print ("[SYS] skipping, account is initialized")
+            return
+        }
+        
         system.accountInitialize (system.account, onNetwork: network) { (res: Result<Data, System.AccountInitializationError>) in
             var serializationData: Data?
             switch res {
             case .success (let data):
                 serializationData = data
-                print ("[SYS] system: success: \(String(data: data, encoding: .utf8)!)")
             case .failure (let error):
                 switch error {
                 case .alreadyInitialized:
@@ -31,6 +46,7 @@ class WalletInitializer {
                             .map { "{id: \($0.id), balance: \($0.balance)}"}
                     print ("[SYS] system: Multiple Hedera Accounts: \(accountDescriptions.joined(separator: ", "))")
 
+                    //TODO:HBAR - handle multiple HBAR accounts
                     // Chose the Hedera account with the largest balance - DEMO-SPECFIC
                     let hederaAccount = accounts.sorted { $0.balance > $1.balance }[0]
                     serializationData = system.accountInitialize (system.account,
@@ -46,12 +62,8 @@ class WalletInitializer {
             }
 
             if let serializationData = serializationData {
+                callback()
                 print ("SYS: system: SerializationData: \(CoreCoder.hex.encode(data: serializationData)!)")
-//                self.addCurrencies(for: network)
-//                self.setupWalletManager(for: network)
-//                DispatchQueue.main.async {
-//                    Store.perform(action: ManageWallets.AddWallets(self.placeholderWalletStates))
-//                }
             } else {
                 print ("SYS: system: skipped hedera due to no serialization")
             }

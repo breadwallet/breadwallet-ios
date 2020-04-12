@@ -29,6 +29,8 @@ class CoreSystem: Subscriber, Trackable {
         return wallets[currency.uid]
     }
 
+    private let initializer = WalletInitializer()
+    
     // MARK: Lifecycle
 
     init() {
@@ -48,7 +50,7 @@ class CoreSystem: Subscriber, Trackable {
             isReachable ? self.connect() : self.disconnect()
         }
     }
-
+    
     /// Creates and configures the System with the Account and BDB authentication token.
     func create(account: Account, authToken: String?) {
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
@@ -61,6 +63,7 @@ class CoreSystem: Subscriber, Trackable {
                 
                 var req = request
                 if let authToken = authToken {
+                    //TODO:HBAR - use proper token
                 //    req.authorize(withToken: authToken)
                 }
                 
@@ -79,6 +82,10 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
+        //TODO:HBAR - remove wiping all the time
+        //if let system = self.system {
+            System.wipeAll(atPath: C.coreDataDirURL.path, except: [])
+        //}
         self.system = System.create(listener: self,
                                     account: account,
                                     onMainnet: !E.isTestnet,
@@ -177,7 +184,12 @@ class CoreSystem: Subscriber, Trackable {
     private func addCurrencies(for network: Network) {
         guard let assetCollection = assetCollection else { return assertionFailure() }
         for coreCurrency in network.currencies {
-            guard currencies[coreCurrency.uid] == nil else { return assertionFailure() }
+            
+            //TODO:HBAR - figure out why this assertion fails
+            guard currencies[coreCurrency.uid] == nil else { return
+                //assertionFailure()
+                
+            }
             guard let metaData = assetCollection.allAssets[coreCurrency.uid] else {
                 print("[SYS] unknown currency omitted: \(network.currency.code) / \(coreCurrency.uid)")
                 continue
@@ -233,7 +245,17 @@ class CoreSystem: Subscriber, Trackable {
                                                  addressScheme: addressScheme,
                                                  currencies: requiredTokens)
         if !success {
-            print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
+            
+            let callback: () -> Void = {
+                self.addCurrencies(for: network)
+                self.setupWalletManager(for: network)
+                DispatchQueue.main.async {
+                    Store.perform(action: ManageWallets.AddWallets(self.placeholderWalletStates))
+                }
+            }
+            
+            Store.trigger(name: .initializeNetwork(network, system, callback))
+            print("[SYS] failed to create wallet manager. for \(network) wiping persistent storage to retry...")
 //            system.wipe(network: network)
 //            success = system.createWalletManager(network: network,
 //                                                 mode: mode,
@@ -548,7 +570,7 @@ class CoreSystem: Subscriber, Trackable {
 extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
-        //print("[SYS] system event: \(event)")
+        print("[SYS] system event: \(event)")
         switch event {
         case .created:
             break
@@ -575,7 +597,7 @@ extension CoreSystem: SystemListener {
     }
 
     func handleManagerEvent(system: System, manager: WalletKit.WalletManager, event: WalletManagerEvent) {
-        //print("[SYS] \(manager.network) manager event: \(event)")
+        print("[SYS] \(manager.network) manager event: \(event)")
         switch event {
         case .created:
             break
@@ -672,7 +694,7 @@ extension CoreSystem: SystemListener {
     }
 
     func handleWalletEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, event: WalletEvent) {
-        //print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+        print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
         switch event {
         case .created:
             if let wallet = addWallet(wallet) {
