@@ -20,8 +20,8 @@ enum LWDonationAddress: String {
 
       var address: String {
           switch self {
-          case .litwalletHardware:          return "MVRj1whQ8hqcpffjRxLLCJG1mD27V9YygY"
-          case .generalLitecoinFoundation:  return "MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme"
+          case .litwalletHardware:          return "MJ4W7NZya4SzE7R6xpEVdamGCimaQYPiWu" //old MVRj1whQ8hqcpffjRxLLCJG1mD27V9YygY
+          case .generalLitecoinFoundation:  return "MVZj7gBRwcVpa9AAWdJm8A3HqTst112eJe" //old MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme 
           }
       }
 }

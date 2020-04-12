@@ -203,7 +203,8 @@ class SendViewController : UIViewController, Subscriber, ModalPresentable, Track
                             dynamicDonate.dismiss(animated: true, completion: {
                              self.send()
                                 
-                             let properties: [String: String] = ["PLATFORM":"iOS",
+                             let properties: [String: String] = ["ADDRESS_SCHEME":"v2",
+                                                                 "PLATFORM":"iOS",
                                                                 "DONATION_ACCOUNT": dynamicDonate.finalDonationMemo,
                                                                 "DONATION_AMOUNT": String(describing: dynamicDonate.finalDonationAmount.rawValue)]
                             
