@@ -115,6 +115,9 @@ class Currency: CurrencyWithIcon {
         if isXRP {
             return ["xrpl", "xrp", "ripple"]
         }
+        if isHBAR {
+            return ["hbar"]
+        }
         return nil
     }
     
