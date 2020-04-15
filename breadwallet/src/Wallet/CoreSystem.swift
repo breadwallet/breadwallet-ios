@@ -16,7 +16,8 @@ class CoreSystem: Subscriber, Trackable {
     private var system: System?
     private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
     private let listenerQueue = DispatchQueue(label: "com.brd.CoreSystem.listener", qos: .utility)
-
+    private let keyStore: KeyStore
+    
     // MARK: Wallets + Currencies
 
     private(set) var assetCollection: AssetCollection?
@@ -31,7 +32,8 @@ class CoreSystem: Subscriber, Trackable {
     
     // MARK: Lifecycle
 
-    init() {
+    init(keyStore: KeyStore) {
+        self.keyStore = keyStore
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
             guard let `self` = self else { return }
             self.queue.async {
@@ -237,10 +239,10 @@ class CoreSystem: Subscriber, Trackable {
             assertionFailure("invalid wallet manager mode \(mode) for \(network.currency.code)")
             mode = network.defaultMode
         }
-        print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
         var success = false
         
         if system.accountIsInitialized(system.account, onNetwork: network) {
+            print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
             success = system.createWalletManager(network: network,
                                                  mode: mode,
                                                  addressScheme: addressScheme,
@@ -255,13 +257,16 @@ class CoreSystem: Subscriber, Trackable {
             }
             assert(success, "failed to create \(network) wallet manager")
         } else {
+                print("[SYS] initializing wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
                 initialize(network: network, system: system) { data in
                     guard let data = data else { return }
+                    self.keyStore.updateAccountSerialization(data)
                     print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
                     success = system.createWalletManager(network: network,
                                                          mode: mode,
                                                          addressScheme: addressScheme,
                                                          currencies: requiredTokens)
+                    assert(success, "failed to create \(network) wallet manager")
             }
         }
     }

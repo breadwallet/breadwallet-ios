@@ -241,6 +241,14 @@ extension KeyStore: WalletAuthenticator {
         return try? keychainItem(key: KeychainKey.systemAccount)
     }
     
+    func updateAccountSerialization(_ data: Data) {
+        do {
+            try setKeychainItem(key: KeychainKey.systemAccount, item: data)
+        } catch let error {
+            assertionFailure("keychain write error: \(error.localizedDescription)")
+        }
+    }
+    
     // MARK: biometrics authentication
     
     /// Returns whether the user can unlock the BRD app with biometrics (Touch ID or Face ID) rather than

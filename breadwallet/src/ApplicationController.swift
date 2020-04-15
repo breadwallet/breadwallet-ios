@@ -39,7 +39,7 @@ class ApplicationController: Subscriber, Trackable {
         return homeScreen
     }
         
-    private let coreSystem = CoreSystem()
+    private let coreSystem: CoreSystem!
     private var keyStore: KeyStore!
 
     private var launchURL: URL?
@@ -61,6 +61,7 @@ class ApplicationController: Subscriber, Trackable {
     init() {
         do {
             self.keyStore = try KeyStore.create()
+            self.coreSystem = CoreSystem(keyStore: keyStore)
         } catch let error { // only possible exception here should be if the keychain is inaccessible
             print("error initializing key store: \(error)")
             fatalError("error initializing key store")

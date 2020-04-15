@@ -130,7 +130,7 @@ private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([C
                                   colors: (UIColor.fromHex("8259EF"), UIColor.fromHex("8259EF")),
                                   name: "Hedera",
                                   tokenAddress: nil,
-                                  decimals: 8,
+                                  decimals: 9,
                                   alternateCode: nil)
     
     currencyMetaData["hedera-mainnet:__native__"] = hedera
