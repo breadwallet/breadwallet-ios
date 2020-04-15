@@ -28,8 +28,6 @@ class CoreSystem: Subscriber, Trackable {
     func wallet(for currency: Currency) -> Wallet? {
         return wallets[currency.uid]
     }
-
-    private let initializer = WalletInitializer()
     
     // MARK: Lifecycle
 
@@ -240,29 +238,32 @@ class CoreSystem: Subscriber, Trackable {
             mode = network.defaultMode
         }
         print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-        let success = system.createWalletManager(network: network,
+        var success = false
+        
+        if system.accountIsInitialized(system.account, onNetwork: network) {
+            success = system.createWalletManager(network: network,
                                                  mode: mode,
                                                  addressScheme: addressScheme,
                                                  currencies: requiredTokens)
-        if !success {
-            
-            let callback: () -> Void = {
-                self.addCurrencies(for: network)
-                self.setupWalletManager(for: network)
-                DispatchQueue.main.async {
-                    Store.perform(action: ManageWallets.AddWallets(self.placeholderWalletStates))
-                }
+            if !success {
+                print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
+                system.wipe(network: network)
+                success = system.createWalletManager(network: network,
+                                                     mode: mode,
+                                                     addressScheme: addressScheme,
+                                                     currencies: requiredTokens)
             }
-            
-            Store.trigger(name: .initializeNetwork(network, system, callback))
-            print("[SYS] failed to create wallet manager. for \(network) wiping persistent storage to retry...")
-//            system.wipe(network: network)
-//            success = system.createWalletManager(network: network,
-//                                                 mode: mode,
-//                                                 addressScheme: addressScheme,
-//                                                 currencies: requiredTokens)
+            assert(success, "failed to create \(network) wallet manager")
+        } else {
+                initialize(network: network, system: system) { data in
+                    guard let data = data else { return }
+                    print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
+                    success = system.createWalletManager(network: network,
+                                                         mode: mode,
+                                                         addressScheme: addressScheme,
+                                                         currencies: requiredTokens)
+            }
         }
-        //assert(success, "failed to create \(network) wallet manager")
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
