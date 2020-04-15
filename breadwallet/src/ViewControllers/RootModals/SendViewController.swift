@@ -539,7 +539,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     func estimateFeeForRequest(_ protoReq: PaymentProtocolRequest, completion: @escaping (Result<TransferFeeBasis, WalletKit.Wallet.FeeEstimationError>) -> Void) {
-        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeSelection ?? .regular)
+        let networkFee = protoReq.requiredNetworkFee ?? sender.wallet.feeForLevel(level: feeLevel)
         protoReq.estimateFee(fee: networkFee, completion: completion)
     }
     
