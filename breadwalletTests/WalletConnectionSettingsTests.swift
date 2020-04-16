@@ -26,7 +26,7 @@ class WalletConnectionSettingsTests: XCTestCase {
         let account = setupNewAccount(keyStore: keyStore)
         Backend.connect(authenticator: keyStore)
         client = Backend.apiClient
-        system = CoreSystem()
+        system = CoreSystem(keyStore: keyStore)
         system.create(account: account!, authToken: "")
     }
 

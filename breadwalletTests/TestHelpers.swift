@@ -108,6 +108,24 @@ struct TestCurrencies {
         "currency_id": "ripple-mainnet:__native__"
     }
     """.utf8)
+    
+        private static let hbarMetaData = Data("""
+    {
+        "code": "HBAR",
+        "name": "Hedera",
+        "scale": 9,
+        "is_supported": true,
+        "contract_address": "",
+        "sale_address": "",
+        "contract_info": {},
+        "colors": [
+            "#282e34",
+            "#282e34"
+        ],
+        "type": "",
+        "currency_id": "hedera-mainnet:__native__"
+    }
+    """.utf8)
 
     static var btc: AppCurrency {
         let btc = CoreCurrency(uids: Currencies.btc.uid.rawValue, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
@@ -177,6 +195,19 @@ struct TestCurrencies {
                            units: Set([xrp_xrp]),
                            baseUnit: xrp_xrp,
                            defaultUnit: xrp_xrp)!
+    }
+    
+    static var hbar: AppCurrency {
+        let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: hbarMetaData)
+        let hbar = CoreCurrency (uids: Currencies.hbar.uid.rawValue, name: "HBAR", code: Currencies.hbar.code, type: "native", issuer: nil)
+        let hbar_hbar = WalletKit.Unit (currency: hbar, code: "HBAR", name: "Hedera", symbol: "HBAR")
+        let network = networks.first(where: { $0.uids == "hedera-mainnet" })!
+        return AppCurrency(core: hbar,
+                           network: network,
+                           metaData: metaData,
+                           units: Set([hbar_hbar]),
+                           baseUnit: hbar_hbar,
+                           defaultUnit: hbar_hbar)!
     }
 }
 
