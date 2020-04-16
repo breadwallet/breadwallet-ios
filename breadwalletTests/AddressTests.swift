@@ -17,26 +17,6 @@ private var keyStore: KeyStore!
 private var system: CoreSystem!
 
 class AddressTests : XCTestCase {
-
-    override class func setUp() {
-        super.setUp()
-        clearKeychain()
-        deleteKvStoreDb()
-        keyStore = try! KeyStore.create()
-        let account = setupNewAccount(keyStore: keyStore)
-        Backend.connect(authenticator: keyStore)
-        client = Backend.apiClient
-        system = CoreSystem(keyStore: keyStore)
-        system.create(account: account!, authToken: "")
-    }
-    
-    override class func tearDown() {
-        super.tearDown()
-        system.shutdown(completion: nil)
-        Backend.disconnectWallet()
-        clearKeychain()
-        keyStore.destroy()
-    }
     
     func testXRPAddresses() {
         //Valid
