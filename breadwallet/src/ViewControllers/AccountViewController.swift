@@ -224,7 +224,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func createAccount() {
-        let activity = BRActivityViewController(message: "Creating Account")
+        let activity = BRActivityViewController(message: "Creating Hedera Account")
         present(activity, animated: true, completion: nil)
         
         let completion: (Wallet?) -> Void = { wallet in
