@@ -13,8 +13,8 @@ import WalletKit
 
 extension CoreSystem {
     
-    func initialize(network: Network, system: System, callback: @escaping (Data?) -> Void) {
-        system.accountInitialize(system.account, onNetwork: network, createIfDoesNotExist: false) { (res: Result<Data, System.AccountInitializationError>) in
+    func initialize(network: Network, system: System, createIfDoesNotExist create: Bool, callback: @escaping (Data?) -> Void) {
+        system.accountInitialize(system.account, onNetwork: network, createIfDoesNotExist: create) { (res: Result<Data, System.AccountInitializationError>) in
             var serializationData: Data?
             switch res {
             case .success (let data):
@@ -40,9 +40,4 @@ extension CoreSystem {
             callback(serializationData)
         }
     }
-    
-    func createAccount() {
-        
-    }
-    
 }

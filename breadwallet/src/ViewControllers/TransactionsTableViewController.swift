@@ -37,7 +37,13 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     var didStopScrolling: (() -> Void)?
 
     // MARK: - Private
-    private let wallet: Wallet?
+    var wallet: Wallet? {
+        didSet {
+            if wallet != nil {
+                subscribeToTransactionUpdates()
+            }
+        }
+    }
     private let currency: Currency
     
     private let transactionCellIdentifier = "TransactionCellIdentifier"
@@ -102,11 +108,13 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                 _ = self?.reload(txHash: txHash)
             }
         }
-        
+    }
+    
+    private func subscribeToTransactionUpdates() {
         wallet?.subscribe(self) { [weak self] event in
             guard let `self` = self else { return }
             DispatchQueue.main.async {
-                print("[TXLIST] \(Date()) \(self.wallet?.currency.code) wallet event: \(event)")
+                print("[TXLIST] \(Date()) \(self.wallet?.currency.code ?? "") wallet event: \(event)")
                 switch event {
                 case .balanceUpdated, .transferAdded, .transferDeleted:
                     self.updateTransactions()

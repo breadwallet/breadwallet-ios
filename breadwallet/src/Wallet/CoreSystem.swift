@@ -30,6 +30,8 @@ class CoreSystem: Subscriber, Trackable {
         return wallets[currency.uid]
     }
     
+    private var createWalletCallback: ((Wallet?) -> Void)?
+    
     // MARK: Lifecycle
 
     init(keyStore: KeyStore) {
@@ -48,6 +50,15 @@ class CoreSystem: Subscriber, Trackable {
             guard let `self` = self, let system = self.system else { return }
             system.setNetworkReachable(isReachable)
             isReachable ? self.connect() : self.disconnect()
+        }
+        
+        Store.subscribe(self, name: .createAccount(nil, nil)) { [weak self] trigger in
+            guard let `self` = self else { return }
+            if case let .createAccount(currency, callback) = trigger {
+                if let currency = currency, let callback = callback {
+                    self.createAccount(forCurrency: currency, callback: callback)
+                }
+            }
         }
     }
     
@@ -258,7 +269,7 @@ class CoreSystem: Subscriber, Trackable {
             assert(success, "failed to create \(network) wallet manager")
         } else {
                 print("[SYS] initializing wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-                initialize(network: network, system: system) { data in
+                initialize(network: network, system: system, createIfDoesNotExist: false) { data in
                     guard let data = data else { return }
                     self.keyStore.updateAccountSerialization(data)
                     print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
@@ -268,6 +279,23 @@ class CoreSystem: Subscriber, Trackable {
                                                          currencies: requiredTokens)
                     assert(success, "failed to create \(network) wallet manager")
             }
+        }
+    }
+    
+    private func createAccount(forCurrency currency: Currency, callback: @escaping (Wallet?) -> Void) {
+        guard let system = system else { return callback(nil) }
+        initialize(network: currency.network, system: system, createIfDoesNotExist: true) { data in
+            guard let data = data else { return callback(nil) }
+            guard let assetCollection = self.assetCollection else { return callback(nil) }
+            self.keyStore.updateAccountSerialization(data)
+            print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
+            
+            self.createWalletCallback = callback
+            let success = system.createWalletManager(network: currency.network,
+                                                 mode: self.connectionMode(for: currency),
+                                                 addressScheme: currency.network.defaultAddressScheme,
+                                                 currencies: currency.network.currencies.filter { assetCollection.isEnabled($0.uid) })
+            assert(success, "failed to create \(currency.network) wallet manager")
         }
     }
 
@@ -327,6 +355,10 @@ class CoreSystem: Subscriber, Trackable {
                             currency: currency,
                             system: self)
         wallets[coreWallet.currency.uid] = wallet
+        if currency.isHBAR && createWalletCallback != nil {
+            createWalletCallback?(wallet)
+            createWalletCallback = nil
+        }
         return wallet
     }
     

@@ -52,8 +52,8 @@ enum TriggerName {
     case openFile(Data)
     case receivedPaymentRequest(PaymentRequest?)
     case scanQr
-    case authenticateForPlatform(String, Bool, (PlatformAuthResult)->Void) // (prompt, allowBiometricAuth, callback)
-    case confirmTransaction(Currency?, Amount?, Amount?, FeeLevel, String, (Bool)->Void) // currency, amount, fee, displayFeeLevel, address, callback
+    case authenticateForPlatform(String, Bool, (PlatformAuthResult) -> Void) // (prompt, allowBiometricAuth, callback)
+    case confirmTransaction(Currency?, Amount?, Amount?, FeeLevel, String, (Bool) -> Void) // currency, amount, fee, displayFeeLevel, address, callback
     case hideStatusBar
     case showStatusBar
     case lightWeightAlert(String)
@@ -74,7 +74,8 @@ enum TriggerName {
     case didViewTransactions([Transaction]?)
     case showInAppNotification(BRDMessage?)
     case didSyncKVStore
-    case initializeNetwork(Network?, System?, (() -> Void)?)
+    case createAccount(Currency?, ((Wallet?) -> Void)?)
+    
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -147,7 +148,7 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.didSyncKVStore, .didSyncKVStore):
         return true
-    case (.initializeNetwork, .initializeNetwork):
+    case (.createAccount, .createAccount):
         return true
     default:
         return false

@@ -45,7 +45,13 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     // MARK: - Private
-    private let wallet: Wallet?
+    private var wallet: Wallet? {
+        didSet {
+            if wallet != nil {
+                transactionsTableView?.wallet = wallet
+            }
+        }
+    }
     private let headerView: AccountHeaderView
     private let footerView: AccountFooterView
     private let createFooter: CreateAccountFooterView
@@ -206,34 +212,38 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         }
         
         createFooter.didTapCreate = { [weak self] in
-            
             let alert = UIAlertController(title: "Confirm Account Creation",
                                           message: "Only create a Hedera account if you intend on storing HBAR in your wallet.",
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Not Now", style: .default, handler: nil))
-            alert.addAction(UIAlertAction(title: "Create Account", style: .default, handler: { _ in
-                let activity = BRActivityViewController(message: "Creating Account")
-                self?.present(activity, animated: true, completion: nil)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
-                    
-                    activity.dismiss(animated: true, completion: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: {
-                            UIView.animate(withDuration: 0.5, animations: {
-                                self?.createFooter.alpha = 0.0
-                            })
-                            })
-                    })
-                    
-                })
+            alert.addAction(UIAlertAction(title: "Create Account", style: .default, handler: { [weak self] _ in
+                self?.createAccount()
             }))
-        
             self?.present(alert, animated: true, completion: nil)
-            
+        }
+    }
+    
+    private func createAccount() {
+        let activity = BRActivityViewController(message: "Creating Account")
+        present(activity, animated: true, completion: nil)
+        
+        let completion: (Wallet?) -> Void = { wallet in
+            DispatchQueue.main.async {
+                activity.dismiss(animated: true, completion: { [weak self] in
+                    if wallet == nil {
+                        self?.showErrorMessage("Something went wrong account creation. Please try again later.")
+                    } else {
+                        UIView.animate(withDuration: 0.5, animations: {
+                            self?.createFooter.alpha = 0.0
+                        })
+                        Store.perform(action: Alert.Show(.accountCreation))
+                        self?.wallet = wallet
+                    }
+                })
+            }
         }
         
-//        if wallet.manager.account.isInitialized(onNetwork: wallet.manager.network) {
-//            createFooter.isHidden = true
-//        }
+        Store.trigger(name: .createAccount(currency, completion))
     }
     
     private func addTransactionsView() {

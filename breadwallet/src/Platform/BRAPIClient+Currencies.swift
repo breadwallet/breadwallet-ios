@@ -120,21 +120,9 @@ extension BRAPIClient {
 
 // Converts an array of CurrencyMetaData to a dictionary keyed on uid
 private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([CurrencyId: CurrencyMetaData]) -> Void) {
-    var currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
+    let currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
         dict[token.uid] = token
     })
-    
-    let hedera = CurrencyMetaData(uid: "hedera-mainnet:__native__",
-                                  code: "HBAR",
-                                  isSupported: true,
-                                  colors: (UIColor.fromHex("8259EF"), UIColor.fromHex("8259EF")),
-                                  name: "Hedera",
-                                  tokenAddress: nil,
-                                  decimals: 9,
-                                  alternateCode: nil)
-    
-    currencyMetaData["hedera-mainnet:__native__"] = hedera
-    
     print("[CurrencyList] tokens updated: \(currencies.count) tokens")
     completion(currencyMetaData)
 }

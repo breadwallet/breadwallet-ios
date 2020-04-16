@@ -14,6 +14,7 @@ enum AlertType {
     case sendSuccess
     case addressesCopied
     case sweepSuccess(callback: () -> Void)
+    case accountCreation
     case none
 
     var header: String {
@@ -28,6 +29,8 @@ enum AlertType {
             return S.Alerts.copiedAddressesHeader
         case .sweepSuccess:
             return S.Import.success
+        case .accountCreation:
+            return "Success"
         case .none:
             return "none"
         }
@@ -45,6 +48,8 @@ enum AlertType {
             return S.Alerts.copiedAddressesSubheader
         case .sweepSuccess:
             return S.Import.successBody
+        case .accountCreation:
+            return "Hedera Account succesfully created."
         case .none:
             return "none"
         }
@@ -68,6 +73,8 @@ func == (lhs: AlertType, rhs: AlertType) -> Bool {
     case (.addressesCopied, .addressesCopied):
         return true
     case (.sweepSuccess, .sweepSuccess):
+        return true
+    case (.accountCreation, .accountCreation):
         return true
     case (.none, .none):
         return true
