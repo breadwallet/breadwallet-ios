@@ -27,18 +27,8 @@ class WalletConnectionSettings {
         sanitizeAll()
     }
 
-    static func defaultMode(for currency: Currency) -> WalletConnectionMode {
-        assert(currency.tokenType == .native)
-        switch currency.uid {
-        case Currencies.btc.uid:
-            return .p2p_only
-        case Currencies.bch.uid:
-            return .api_only
-        case Currencies.eth.uid:
-            return .api_only
-        default:
-            return .api_only
-        }
+    static var defaultMode: WalletConnectionMode {
+        return .api_only
     }
 
     func mode(for currency: Currency) -> WalletConnectionMode {
@@ -51,7 +41,7 @@ class WalletConnectionSettings {
         } else {
             // valid mode not found, set to default
             assert(walletInfo.connectionModes[currency.uid] == nil, "invalid mode serialization found in kv-store")
-            let mode = WalletConnectionSettings.defaultMode(for: currency)
+            let mode = WalletConnectionSettings.defaultMode
             print("[KV] setting default mode for \(currency.uid): \(mode)")
             walletInfo.connectionModes[currency.uid] = mode.serialization
             save()

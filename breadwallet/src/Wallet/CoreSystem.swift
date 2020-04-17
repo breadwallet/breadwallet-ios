@@ -460,7 +460,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let kv = Backend.kvStore,
             let walletInfo = WalletInfo(kvStore: kv) else {
                 assertionFailure()
-                return WalletConnectionSettings.defaultMode(for: networkCurrency)
+                return WalletConnectionSettings.defaultMode
         }
         let settings = WalletConnectionSettings(system: self, kvStore: kv, walletInfo: walletInfo)
         return settings.mode(for: networkCurrency)
