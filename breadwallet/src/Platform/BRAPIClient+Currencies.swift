@@ -54,10 +54,12 @@ extension BRAPIClient {
         guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
         let cachedFilePath = documentsDir.appendingPathComponent("currencies.json").path
         
+        var shouldProcess = true
         // If cache isn't expired, use cached data and return before the network call
-        if !isCacheExpired(path: cachedFilePath, timeout: C.secondsInMinute*60) &&
+        if !isCacheExpired(path: cachedFilePath, timeout: C.secondsInMinute*60*24) &&
             processCurrenciesCache(path: cachedFilePath, completion: completion) {
-            return
+            //Even if cache is used, we still want to update the local version
+            shouldProcess = false
         }
         
         let req = URLRequest(url: url("/currencies"))
@@ -71,16 +73,18 @@ extension BRAPIClient {
                 } catch let e {
                     print("[CurrencyList] failed to write to cache: \(e.localizedDescription)")
                 }
-                processCurrencies(currencies, completion: completion)
-                
+                if shouldProcess {
+                    processCurrencies(currencies, completion: completion)
+                }
             case .error(let error):
                 print("[CurrencyList] error fetching tokens: \(error)")
                 copyEmbeddedCurrencies(path: cachedFilePath, fileManager: fm)
-                let result = processCurrenciesCache(path: cachedFilePath, completion: completion)
-                assert(result, "failed to get currency list from backend or cache")
+                if shouldProcess {
+                   let result = processCurrenciesCache(path: cachedFilePath, completion: completion)
+                   assert(result, "failed to get currency list from backend or cache")
+                }
             }
         })
-        
         cleanupOldTokensFile()
     }
     
