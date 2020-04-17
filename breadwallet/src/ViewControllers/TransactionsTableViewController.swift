@@ -108,6 +108,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                 _ = self?.reload(txHash: txHash)
             }
         }
+        subscribeToTransactionUpdates()
     }
     
     private func subscribeToTransactionUpdates() {
