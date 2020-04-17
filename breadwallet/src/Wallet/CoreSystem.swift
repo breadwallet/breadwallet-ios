@@ -93,7 +93,6 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        //TODO:HBAR - remove wiping all the time
         if let system = self.system {
             System.wipeAll(atPath: C.coreDataDirURL.path, except: [system])
         }

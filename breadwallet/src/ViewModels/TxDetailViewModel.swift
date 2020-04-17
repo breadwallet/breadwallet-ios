@@ -68,8 +68,18 @@ struct TxDetailViewModel: TxViewModel {
         }
     }
     
-    var destinationTag: String? {
-        return tx.destinationTag
+    var extraAttribute: String? {
+        return tx.extraAttribute
+    }
+    
+    var extraAttributeHeader: String {
+        if tx.currency.isXRP {
+            return S.TransactionDetails.destinationTagHeader
+        }
+        if tx.currency.isHBAR {
+            return S.TransactionDetails.memoTagHeader
+        }
+        return ""
     }
     
     var transactionHash: String {

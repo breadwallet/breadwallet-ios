@@ -121,6 +121,30 @@ class Currency: CurrencyWithIcon {
         return nil
     }
     
+    /// Key used to get and set Core's TransferAttribute
+    ///
+    /// If this key exist, the send view should have an extra AttributeCell
+    var transactionAttribute: String? {
+        if isXRP {
+            return "DestinationTag"
+        }
+        if isHBAR {
+            return "Memo"
+        }
+        return nil
+    }
+    
+    /// String used as placeholder text for the extra attribute in the send view
+    var transactionAttributeLabel: String? {
+        if isXRP {
+            return S.Send.destinationTagLabel
+        }
+        
+        if isHBAR {
+            return "Hedera Memo (Optional)"
+        }
+        return nil
+    }
     
     /// Can be used if an example address is required eg. to estimate the max send limit
     var placeHolderAddress: String? {

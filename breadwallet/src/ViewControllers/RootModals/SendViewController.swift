@@ -33,7 +33,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
         amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
-        tagCell = AttributeCell()
+        attributeCell = AttributeCell(currency: currency)
         
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -49,7 +49,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
     private let amountView: AmountViewController
     private let addressCell: AddressCell
-    private let tagCell: AttributeCell?
+    private let attributeCell: AttributeCell?
     private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
     private let currencyBorder = UIView(color: .secondaryShadow)
@@ -119,7 +119,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
         var addressGroupBottom: NSLayoutYAxisAnchor
-        if currency.uid == Currencies.xrp.uid, let tagCell = tagCell {
+        if currency.transactionAttribute != nil, let tagCell = attributeCell {
             view.addSubview(tagCell)
             tagCell.constrain([
                 tagCell.leadingAnchor.constraint(equalTo: addressCell.leadingAnchor),
@@ -219,11 +219,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if isFirstResponder {
                 self?.memoCell.textView.resignFirstResponder()
                 self?.addressCell.textField.resignFirstResponder()
-                self?.tagCell?.textField.resignFirstResponder()
+                self?.attributeCell?.textField.resignFirstResponder()
             }
         }
         
-        tagCell?.didBeginEditing = { [weak self] in
+        attributeCell?.didBeginEditing = { [weak self] in
             self?.amountView.closePinPad()
         }
         
@@ -370,7 +370,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                                                         amount: amount,
                                                         feeBasis: feeBasis,
                                                         comment: memoCell.textView.text,
-                                                        destinationTag: tagCell?.address))
+                                                        attribute: attributeCell?.address))
     }
     
     private func handleValidationResult(_ result: SenderValidationResult, protocolRequest: PaymentProtocolRequest? = nil) -> Bool {
@@ -514,7 +514,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 memoCell.content = request.label
             }
             if request.destinationTag != nil {
-                tagCell?.setContent(request.destinationTag)
+                attributeCell?.setContent(request.destinationTag)
             }
         case .remote:
             let loadingView = BRActivityViewController(message: S.Send.loadingRequest)

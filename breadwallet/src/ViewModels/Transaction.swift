@@ -173,9 +173,10 @@ class Transaction {
         }
     }
     
-    var destinationTag: String? {
-        guard let destinationTag = transfer.attributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
-        return destinationTag.value
+    var extraAttribute: String? {
+        guard let key = currency.transactionAttribute else { return nil }
+        guard let attribute = transfer.attributes.first(where: { $0.key == key }) else { return nil }
+        return attribute.value
     }
 
     // MARK: Init

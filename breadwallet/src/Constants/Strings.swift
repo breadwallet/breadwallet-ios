@@ -201,6 +201,7 @@ enum S {
         static let gasPriceHeader = NSLocalizedString("TransactionDetails.gasPriceHeader", value:"Gas Price", comment: "Tx detail field header")
         static let gasLimitHeader = NSLocalizedString("TransactionDetails.gasLimitHeader", value:"Gas Limit", comment: "Tx detail field header")
         static let destinationTagHeader = NSLocalizedString("TransactionDetails.destinationTagHeader", value:"Destination Tag", comment: "Destination Tag Header")
+        static let memoTagHeader = NSLocalizedString("TransactionDetails.memoTagHeader", value:"Hedera Memo", comment: "Hedera Memo Tag Header")
     }
 
     enum SecurityCenter {

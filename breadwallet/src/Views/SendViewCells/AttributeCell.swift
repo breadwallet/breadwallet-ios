@@ -12,11 +12,14 @@ import UIKit
 
 class AttributeCell: UIView {
 
-    init() {
+    init(currency: Currency) {
+        self.currency = currency
         super.init(frame: .zero)
         setupViews()
     }
 
+    private let currency: Currency
+    
     var address: String? {
         return contentLabel.text
     }
@@ -82,7 +85,7 @@ class AttributeCell: UIView {
     }
 
     private func setInitialData() {
-        label.text = S.Send.destinationTagLabel
+        label.text = currency.transactionAttributeLabel
         textField.font = contentLabel.font
         textField.textColor = contentLabel.textColor
         textField.isHidden = true
