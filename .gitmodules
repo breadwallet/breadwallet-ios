@@ -3,4 +3,4 @@
 	url = https://github.com/breadwallet/swift-protobuf/
 [submodule "Modules/walletkit"]
 	path = Modules/walletkit
-	url = git@github.com:blockset-corp/walletkit.git
+	url = https://github.com/blockset-corp/walletkit.git
