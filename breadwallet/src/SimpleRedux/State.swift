@@ -153,7 +153,7 @@ struct WalletState {
                            displayOrder: displayOrder,
                            syncProgress: 0.0,
                            syncState: .success,
-                           balance: nil,
+                           balance: UserDefaults.balance(forCurrency: currency),
                            lastBlockTimestamp: 0,
                            isRescanning: false,
                            currentRate: UserDefaults.currentRate(forCode: currency.code),

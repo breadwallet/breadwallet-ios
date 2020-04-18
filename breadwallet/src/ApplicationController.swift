@@ -261,8 +261,9 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     func willResignActive() {
-        self.applyBlurEffect()        
+        applyBlurEffect()
         checkForNotificationSettingsChange(appActive: false)
+        cacheBalances()
     }
     
     func didBecomeActive() {
@@ -382,8 +383,6 @@ class ApplicationController: Subscriber, Trackable {
                                        navigationController: UINavigationController) {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
-            //guard let wallet = self.coreSystem.wallet(for: currency) else { return }
-            
             if currency.isBRDToken, UserDefaults.shouldShowBRDRewardsAnimation {
                 let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
                 self.saveEvent(name, attributes: ["currency": currency.code])
@@ -442,6 +441,13 @@ class ApplicationController: Subscriber, Trackable {
         blurView.alpha = 1.0
         blurView.frame = window.frame
         window.addSubview(blurView)
+    }
+    
+    private func cacheBalances() {
+        Store.state.orderedWallets.forEach {
+            guard let balance = $0.balance else { return }
+            UserDefaults.saveBalance(balance, forCurrency: $0.currency)
+        }
     }
     
     private func removeBlurEffect() {

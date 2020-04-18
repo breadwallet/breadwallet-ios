@@ -976,6 +976,7 @@ class ModalPresenter: Subscriber, Trackable {
     }
     
     private func showAccountView(currency: Currency, animated: Bool, completion: (() -> Void)?) {
+        //TODO:HBAR - cleanup
         let pushAccountView = {
 //            guard let nc = self.topViewController?.navigationController as? RootNavigationController,
 //                nc.viewControllers.count == 1 else { return }

@@ -93,9 +93,6 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        if let system = self.system {
-            System.wipeAll(atPath: C.coreDataDirURL.path, except: [system])
-        }
         self.system = System.create(listener: self,
                                     account: account,
                                     onMainnet: !E.isTestnet,
@@ -197,7 +194,7 @@ class CoreSystem: Subscriber, Trackable {
             
             //TODO:HBAR - figure out why this assertion fails
             guard currencies[coreCurrency.uid] == nil else { return
-                //assertionFailure()
+                assertionFailure()
                 
             }
             guard let metaData = assetCollection.allAssets[coreCurrency.uid] else {
@@ -341,7 +338,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let assetCollection = assetCollection,
             let currency = currencies[coreWallet.currency.uid],
             wallets[coreWallet.currency.uid] == nil else {
-                //assertionFailure()
+                assertionFailure()
                 return nil
         }
 
