@@ -205,9 +205,11 @@ class Wallet {
     }
 
     private func publishEvent(_ event: WalletEvent) {
-        subscriptions
-            .flatMap { $0.value }
-            .forEach { $0(event) }
+        DispatchQueue.main.async { [weak self] in
+            self?.subscriptions
+                .flatMap { $0.value }
+                .forEach { $0(event) }
+        }
     }
 
     // MARK: Init
