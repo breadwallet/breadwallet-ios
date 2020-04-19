@@ -207,7 +207,9 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             self?.transactionsTableView?.tableView.contentOffset.y = offset
         }
         
-        if wallet != nil {
+        if currency.isHBAR && wallet == nil {
+            createFooter.isHidden = false
+        } else {
             createFooter.isHidden = true
         }
         

@@ -45,6 +45,10 @@ class Wallet {
     var connectionMode: WalletConnectionMode {
         return system.connectionMode(for: currency)
     }
+    
+    var isInitialized: Bool {
+        return system.walletIsInitialized(self)
+    }
 
     // MARK: - Fees
 

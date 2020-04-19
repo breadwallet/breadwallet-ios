@@ -184,6 +184,11 @@ class CoreSystem: Subscriber, Trackable {
             }
         }
     }
+    
+    func walletIsInitialized(_ wallet: Wallet) -> Bool {
+        guard let account = system?.account else { return false }
+        return system?.accountIsInitialized(account, onNetwork: wallet.currency.network) ?? false
+    }
 
     // MARK: - Core Wallet Management
 
@@ -266,7 +271,13 @@ class CoreSystem: Subscriber, Trackable {
         } else {
                 print("[SYS] initializing wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
                 initialize(network: network, system: system, createIfDoesNotExist: false) { data in
-                    guard let data = data else { return }
+                    guard let data = data else {
+                        DispatchQueue.main.async {
+                            if let newState = Store.state[currency]?.mutate(requiresCreation: true) {
+                                Store.perform(action: WalletChange(currency).set(newState))
+                            }
+                        }
+                        return }
                     self.keyStore.updateAccountSerialization(data)
                     print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
                     success = system.createWalletManager(network: network,
@@ -354,6 +365,11 @@ class CoreSystem: Subscriber, Trackable {
         if currency.isHBAR && createWalletCallback != nil {
             createWalletCallback?(wallet)
             createWalletCallback = nil
+            DispatchQueue.main.async {
+                if let newState = Store.state[currency]?.mutate(requiresCreation: false) {
+                    Store.perform(action: WalletChange(currency).set(newState))
+                }
+            }
         }
         return wallet
     }

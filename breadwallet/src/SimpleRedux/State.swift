@@ -146,7 +146,8 @@ struct WalletState {
     }
     let currentRate: Rate?
     let fiatPriceInfo: FiatPriceInfo?
-
+    var requiresCreation: Bool = false
+    
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            wallet: wallet,
@@ -170,7 +171,8 @@ struct WalletState {
                     receiveAddress: String? = nil,
                     legacyReceiveAddress: String? = nil,
                     currentRate: Rate? = nil,
-                    fiatPriceInfo: FiatPriceInfo? = nil) -> WalletState {
+                    fiatPriceInfo: FiatPriceInfo? = nil,
+                    requiresCreation: Bool? = nil) -> WalletState {
 
         return WalletState(currency: self.currency,
                            wallet: wallet ?? self.wallet,
@@ -181,7 +183,8 @@ struct WalletState {
                            lastBlockTimestamp: lastBlockTimestamp ?? self.lastBlockTimestamp,
                            isRescanning: isRescanning ?? self.isRescanning,
                            currentRate: currentRate ?? self.currentRate,
-                           fiatPriceInfo: fiatPriceInfo ?? self.fiatPriceInfo)
+                           fiatPriceInfo: fiatPriceInfo ?? self.fiatPriceInfo,
+                           requiresCreation: requiresCreation ?? self.requiresCreation)
     }
 }
 
@@ -195,7 +198,8 @@ func == (lhs: WalletState, rhs: WalletState) -> Bool {
         lhs.balance == rhs.balance &&
         lhs.lastBlockTimestamp == rhs.lastBlockTimestamp &&
         lhs.isRescanning == rhs.isRescanning &&
-        lhs.currentRate == rhs.currentRate
+        lhs.currentRate == rhs.currentRate &&
+        lhs.requiresCreation == rhs.requiresCreation
 }
 
 extension RootModal: Equatable {}
