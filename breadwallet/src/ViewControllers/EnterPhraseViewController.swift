@@ -11,7 +11,7 @@ import UIKit
 enum PhraseEntryReason {
     case setSeed(LoginCompletionHandler)
     case validateForResettingPin(EnterPhraseCallback)
-    case validateForWipingWallet(()->Void)
+    case validateForWipingWallet(() -> Void)
 }
 
 typealias EnterPhraseCallback = (String) -> Void
