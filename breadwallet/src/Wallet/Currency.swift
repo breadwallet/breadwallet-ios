@@ -121,27 +121,18 @@ class Currency: CurrencyWithIcon {
         return nil
     }
     
-    /// Key used to get and set Core's TransferAttribute
-    ///
-    /// If this key exist, the send view should have an extra AttributeCell
-    var transactionAttribute: String? {
+    var attributeDefinition: AttributeDefinition? {
         if isXRP {
-            return "DestinationTag"
+            return AttributeDefinition(key: "DestinationTag",
+                                       label: S.Send.destinationTagLabel,
+                                       keyboardType: .numberPad,
+                                       maxLength: 9)
         }
         if isHBAR {
-            return "Memo"
-        }
-        return nil
-    }
-    
-    /// String used as placeholder text for the extra attribute in the send view
-    var transactionAttributeLabel: String? {
-        if isXRP {
-            return S.Send.destinationTagLabel
-        }
-        
-        if isHBAR {
-            return "Hedera Memo (Optional)"
+            return AttributeDefinition(key: "Memo",
+                                       label: "Hedera Memo (Optional)",
+                                       keyboardType: .default,
+                                       maxLength: 9)
         }
         return nil
     }
@@ -413,4 +404,11 @@ enum Currencies: String, CaseIterable {
 
 extension WalletKit.Currency {
     var uid: CurrencyId { return CurrencyId(rawValue: uids) }
+}
+
+struct AttributeDefinition {
+    let key: String
+    let label: String
+    let keyboardType: UIKeyboardType
+    let maxLength: Int
 }

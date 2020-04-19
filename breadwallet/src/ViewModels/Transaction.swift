@@ -174,7 +174,7 @@ class Transaction {
     }
     
     var extraAttribute: String? {
-        guard let key = currency.transactionAttribute else { return nil }
+        guard let key = currency.attributeDefinition?.key else { return nil }
         guard let attribute = transfer.attributes.first(where: { $0.key == key }) else { return nil }
         return attribute.value
     }

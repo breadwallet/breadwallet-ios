@@ -119,7 +119,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
         var addressGroupBottom: NSLayoutYAxisAnchor
-        if currency.transactionAttribute != nil, let tagCell = attributeCell {
+        if currency.attributeDefinition != nil, let tagCell = attributeCell {
             view.addSubview(tagCell)
             tagCell.constrain([
                 tagCell.leadingAnchor.constraint(equalTo: addressCell.leadingAnchor),

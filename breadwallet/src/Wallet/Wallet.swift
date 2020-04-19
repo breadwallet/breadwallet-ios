@@ -160,7 +160,7 @@ class Wallet {
     
     private func attributes(forAttribute attribute: String?) -> Set<TransferAttribute>? {
         guard let attribute = attribute else { return nil }
-        guard let key = currency.transactionAttribute else { return nil }
+        guard let key = currency.attributeDefinition?.key else { return nil }
         guard let attributes = core.transferAttributes.first(where: { $0.key == key }) else { return nil }
         attributes.value = attribute
         return Set([attributes])

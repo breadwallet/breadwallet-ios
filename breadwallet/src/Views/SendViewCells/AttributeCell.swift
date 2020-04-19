@@ -85,7 +85,8 @@ class AttributeCell: UIView {
     }
 
     private func setInitialData() {
-        label.text = currency.transactionAttributeLabel
+        guard let attributeDefintion = currency.attributeDefinition else { return }
+        label.text = attributeDefintion.label
         textField.font = contentLabel.font
         textField.textColor = contentLabel.textColor
         textField.isHidden = true
@@ -94,8 +95,9 @@ class AttributeCell: UIView {
         textField.clearButtonMode = .whileEditing
         textField.autocorrectionType = .no
         textField.autocapitalizationType = .none
-        textField.keyboardType = .numberPad
+        textField.keyboardType = attributeDefintion.keyboardType
         textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        
         label.textColor = .grayTextTint
         contentLabel.lineBreakMode = .byTruncatingMiddle
 
@@ -115,6 +117,11 @@ class AttributeCell: UIView {
     }
     
     @objc private func textFieldDidChange() {
+        guard let maxLength = currency.attributeDefinition?.maxLength else { return }
+        guard let newText = textField.text, newText.utf8.count > maxLength else {
+            textDidChange?(textField.text)
+            return }
+        textField.text = String(newText[newText.startIndex..<newText.index(newText.startIndex, offsetBy: maxLength)])
         textDidChange?(textField.text)
     }
 
