@@ -270,15 +270,9 @@ class CoreSystem: Subscriber, Trackable {
             assert(success, "failed to create \(network) wallet manager")
         } else {
                 print("[SYS] initializing wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-                initialize(network: network, system: system, createIfDoesNotExist: false) { data in
-                    guard let data = data else {
-                        DispatchQueue.main.async {
-                            if let newState = Store.state[currency]?.mutate(requiresCreation: true) {
-                                Store.perform(action: WalletChange(currency).set(newState))
-                            }
-                        }
-                        return }
-                    self.keyStore.updateAccountSerialization(data)
+                initialize(network: network, system: system, createIfDoesNotExist: false) { [weak self] data in
+                    guard let data = data else { self?.setRequiresCreation(currency); return }
+                    self?.keyStore.updateAccountSerialization(data)
                     print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
                     success = system.createWalletManager(network: network,
                                                          mode: mode,
@@ -303,6 +297,12 @@ class CoreSystem: Subscriber, Trackable {
                                                  addressScheme: currency.network.defaultAddressScheme,
                                                  currencies: currency.network.currencies.filter { assetCollection.isEnabled($0.uid) })
             assert(success, "failed to create \(currency.network) wallet manager")
+        }
+    }
+    
+    private func setRequiresCreation(_ currency: Currency) {
+        DispatchQueue.main.async {
+            Store.perform(action: SetRequiresCreation(currency))
         }
     }
 
@@ -349,7 +349,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let assetCollection = assetCollection,
             let currency = currencies[coreWallet.currency.uid],
             wallets[coreWallet.currency.uid] == nil else {
-                assertionFailure()
+                //assertionFailure()
                 return nil
         }
 
@@ -366,9 +366,7 @@ class CoreSystem: Subscriber, Trackable {
             createWalletCallback?(wallet)
             createWalletCallback = nil
             DispatchQueue.main.async {
-                if let newState = Store.state[currency]?.mutate(requiresCreation: false) {
-                    Store.perform(action: WalletChange(currency).set(newState))
-                }
+                Store.perform(action: SetCreationSuccess(currency))
             }
         }
         return wallet

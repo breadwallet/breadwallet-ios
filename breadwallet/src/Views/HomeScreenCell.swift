@@ -84,11 +84,11 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         container.setNeedsDisplay()
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
-                            guard let syncState = state[viewModel.currency]?.syncState else { return }
-                            guard viewModel.currency.wallet?.isInitialized == true else {
+                            if viewModel.currency.isHBAR && (Store.state.requiresCreation(viewModel.currency)) {
                                 self.isSyncIndicatorVisible = false
                                 return
                             }
+                            guard let syncState = state[viewModel.currency]?.syncState else { return }
                             self.syncIndicator.syncState = syncState
                             switch syncState {
                             case .connecting, .failed, .syncing:
