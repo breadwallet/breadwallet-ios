@@ -280,7 +280,8 @@ class CoreSystem: Subscriber, Trackable {
     
     private func createAccount(forCurrency currency: Currency, callback: @escaping (Wallet?) -> Void) {
         guard let system = system else { return callback(nil) }
-        initialize(network: currency.network, system: system, createIfDoesNotExist: true) { data in
+        initialize(network: currency.network, system: system, createIfDoesNotExist: true) { [weak self] data in
+            guard let `self` = self else { return }
             guard let data = data else { return callback(nil) }
             guard let assetCollection = self.assetCollection else { return callback(nil) }
             self.keyStore.updateAccountSerialization(data)
@@ -291,6 +292,9 @@ class CoreSystem: Subscriber, Trackable {
                                                  mode: self.connectionMode(for: currency),
                                                  addressScheme: currency.network.defaultAddressScheme,
                                                  currencies: currency.network.currencies.filter { assetCollection.isEnabled($0.uid) })
+            if success {
+                self.saveEvent("hbar.created")
+            }
             assert(success, "failed to create \(currency.network) wallet manager")
         }
     }

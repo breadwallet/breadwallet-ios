@@ -11,7 +11,7 @@ import UIKit
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: - Public
-    var currency: Currency// { return wallet.currency }
+    var currency: Currency
     
     init(currency: Currency, wallet: Wallet?) {
         self.wallet = wallet
