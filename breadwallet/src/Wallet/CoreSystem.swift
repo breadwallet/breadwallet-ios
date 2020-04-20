@@ -77,7 +77,6 @@ class CoreSystem: Subscriber, Trackable {
                     req.authorize(withToken: authToken)
                 }
                 
-                req.authorize(withToken: BlockChainDB.createForTestBDBToken)
                 //TODO:CRYPTO does not handle 401, other headers, redirects
                 return session.dataTask(with: req, completionHandler: completion)
         },
