@@ -74,8 +74,7 @@ class CoreSystem: Subscriber, Trackable {
                 
                 var req = request
                 if let authToken = authToken {
-                    //TODO:HBAR - use proper token
-                //    req.authorize(withToken: authToken)
+                    req.authorize(withToken: authToken)
                 }
                 
                 req.authorize(withToken: BlockChainDB.createForTestBDBToken)
