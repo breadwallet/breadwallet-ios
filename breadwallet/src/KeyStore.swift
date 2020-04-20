@@ -997,7 +997,7 @@ private struct KeychainKey {
     public static let pinFailTime = "pinfailheight"
     public static let apiAuthKey = "authprivkey"
     public static let apiUserAccount = "https://api.breadwallet.com"
-    public static let bdbClientToken = "bdbClientToken"
+    public static let bdbClientToken = "bdbClientToken2"
     public static let bdbAuthUser = "bdbAuthUser"
     public static let bdbAuthToken = "bdbAuthToken"
     public static let systemAccount = "systemAccount"
