@@ -219,11 +219,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         }
         
         createFooter.didTapCreate = { [weak self] in
-            let alert = UIAlertController(title: "Confirm Account Creation",
-                                          message: "Only create a Hedera account if you intend on storing HBAR in your wallet.",
+            let alert = UIAlertController(title: S.AccountCreation.title,
+                                          message: S.AccountCreation.body,
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Not Now", style: .default, handler: nil))
-            alert.addAction(UIAlertAction(title: "Create Account", style: .default, handler: { [weak self] _ in
+            alert.addAction(UIAlertAction(title: S.AccountCreation.notNow, style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: S.AccountCreation.create, style: .default, handler: { [weak self] _ in
                 self?.createAccount()
             }))
             self?.present(alert, animated: true, completion: nil)
@@ -231,7 +231,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func createAccount() {
-        let activity = BRActivityViewController(message: "Creating Account")
+        let activity = BRActivityViewController(message: S.AccountCreation.creating)
         present(activity, animated: true, completion: nil)
         
         let completion: (Wallet?) -> Void = { [weak self] wallet in
@@ -240,7 +240,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
                 self?.createTimeoutTimer = nil
                 activity.dismiss(animated: true, completion: {
                     if wallet == nil {
-                        self?.showErrorMessage("Something went wrong account creation. Please try again later.")
+                        self?.showErrorMessage(S.AccountCreation.error)
                     } else {
                         UIView.animate(withDuration: 0.5, animations: {
                             self?.createFooter.alpha = 0.0
@@ -254,10 +254,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         
         let handleTimeout: (Timer) -> Void = { [weak self] timer in
             activity.dismiss(animated: true, completion: {
-                self?.showErrorMessage("The Request timed out. Please try again later.")
+                self?.showErrorMessage(S.AccountCreation.timeout)
             })
         }
-        self.createTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: false, block: handleTimeout)
+        //This could take a while because we're waiting for a transaction to confirm, so we need a decent timeout of 45 seconds.
+        self.createTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 45, repeats: false, block: handleTimeout)
         Store.trigger(name: .createAccount(currency, completion))
     }
     

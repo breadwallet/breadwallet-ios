@@ -130,7 +130,7 @@ class Currency: CurrencyWithIcon {
         }
         if isHBAR {
             return AttributeDefinition(key: "Memo",
-                                       label: "Hedera Memo (Optional)",
+                                       label: S.Send.memoTagLabelOptional,
                                        keyboardType: .default,
                                        maxLength: 9)
         }
