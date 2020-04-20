@@ -81,6 +81,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     private var rewardsTappedEvent: String {
         return makeEventName([EventContext.rewards.name, Event.banner.name])
     }
+    private var createTimeoutTimer: Timer? {
+        willSet {
+            createTimeoutTimer?.invalidate()
+        }
+    }
 
     var isSearching: Bool = false
     
@@ -229,9 +234,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         let activity = BRActivityViewController(message: "Creating Account")
         present(activity, animated: true, completion: nil)
         
-        let completion: (Wallet?) -> Void = { wallet in
+        let completion: (Wallet?) -> Void = { [weak self] wallet in
             DispatchQueue.main.async {
-                activity.dismiss(animated: true, completion: { [weak self] in
+                self?.createTimeoutTimer?.invalidate()
+                self?.createTimeoutTimer = nil
+                activity.dismiss(animated: true, completion: {
                     if wallet == nil {
                         self?.showErrorMessage("Something went wrong account creation. Please try again later.")
                     } else {
@@ -245,6 +252,12 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             }
         }
         
+        let handleTimeout: (Timer) -> Void = { [weak self] timer in
+            activity.dismiss(animated: true, completion: {
+                self?.showErrorMessage("The Request timed out. Please try again later.")
+            })
+        }
+        self.createTimeoutTimer = Timer.scheduledTimer(withTimeInterval: 30, repeats: false, block: handleTimeout)
         Store.trigger(name: .createAccount(currency, completion))
     }
     

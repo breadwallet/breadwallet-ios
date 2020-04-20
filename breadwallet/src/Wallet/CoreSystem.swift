@@ -196,12 +196,7 @@ class CoreSystem: Subscriber, Trackable {
     private func addCurrencies(for network: Network) {
         guard let assetCollection = assetCollection else { return assertionFailure() }
         for coreCurrency in network.currencies {
-            
-            //TODO:HBAR - figure out why this assertion fails
-            guard currencies[coreCurrency.uid] == nil else { return
-                assertionFailure()
-                
-            }
+            guard currencies[coreCurrency.uid] == nil else { return }
             guard let metaData = assetCollection.allAssets[coreCurrency.uid] else {
                 print("[SYS] unknown currency omitted: \(network.currency.code) / \(coreCurrency.uid)")
                 continue
