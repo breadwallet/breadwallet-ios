@@ -9,9 +9,6 @@
 import Foundation
 
 class ExchangeUpdater: Subscriber {
-
-    private var lastUpdate = Date.distantPast
-    private let requestThrottleSeconds: TimeInterval = 5.0
     
     // MARK: - Public
 
@@ -19,20 +16,12 @@ class ExchangeUpdater: Subscriber {
         Store.lazySubscribe(self,
                         selector: { $0.defaultCurrencyCode != $1.defaultCurrencyCode },
                         callback: { _ in
-                            self.forceRefresh()
+                            self.refresh()
                         })
     }
-    
-    func refresh() {
-        guard Date().timeIntervalSince(lastUpdate) > requestThrottleSeconds else { return }
-        self.forceRefresh()
-    }
 
-    private func forceRefresh() {
+    func refresh() {
         guard !Store.state.currencies.isEmpty else { return }
-        
-        lastUpdate = Date()
-        
         Backend.apiClient.fetchPriceInfo(currencies: Store.state.currencies) { result in
             guard case .success(let priceInfo) = result else { return }
             Store.state.currencies.forEach {
