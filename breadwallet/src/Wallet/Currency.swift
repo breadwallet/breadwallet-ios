@@ -132,7 +132,7 @@ class Currency: CurrencyWithIcon {
             return AttributeDefinition(key: "Memo",
                                        label: S.Send.memoTagLabelOptional,
                                        keyboardType: .default,
-                                       maxLength: 9)
+                                       maxLength: 100)
         }
         return nil
     }
