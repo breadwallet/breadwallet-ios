@@ -758,7 +758,7 @@
 /* Send money amount label */
 "Send.amountLabel" = "Сумма";
 /* Balance: $4.00 */
-"Send.balance" = "Баланс: %1$@";
+"Send.balance" = "Баланс: ";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Разрешить доступ к камере в: \"Настройки\" > \"Приложения\" > \"BRD\" > \"Разрешения\"";
 /* Permission required to access camera */

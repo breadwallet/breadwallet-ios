@@ -758,7 +758,7 @@
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
-"Send.balance" = "餘額：%1$@";
+"Send.balance" = "餘額：";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "到「設定」 > 「應用程式」 > 「BRD」 > 「權限」允許相機存取";
 /* Permission required to access camera */

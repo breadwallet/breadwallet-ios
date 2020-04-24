@@ -758,7 +758,7 @@
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
-"Send.balance" = "残高: %1$@";
+"Send.balance" = "残高: ";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "「設定」 > 「アプリ」 > 「ブレッド」 > 「許可」でカメラへのアクセスを許可してください";
 /* Permission required to access camera */
