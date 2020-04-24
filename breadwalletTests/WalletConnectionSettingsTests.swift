@@ -42,12 +42,12 @@ class WalletConnectionSettingsTests: XCTestCase {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletInfo = WalletInfo(name: "Test") // empty WalletInfo with no saved modes
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
-        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .api_only,
+        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .p2p_only,
                                                                       TestCurrencies.bch: .api_only,
                                                                       TestCurrencies.eth: .api_only]
 
         expectedDefaultModes.forEach { (currency, expectedMode) in
-            XCTAssertEqual(WalletConnectionSettings.defaultMode, expectedMode)
+            XCTAssertEqual(WalletConnectionSettings.defaultMode(for: currency), expectedMode)
             XCTAssertEqual(settings.mode(for: currency), expectedMode)
         }
     }
@@ -66,7 +66,7 @@ class WalletConnectionSettingsTests: XCTestCase {
         XCTAssertEqual(settings.mode(for: TestCurrencies.eth), connectionModes[TestCurrencies.eth.uid])
 
         // verify default is returned for currency with no set mode
-        XCTAssertEqual(settings.mode(for: TestCurrencies.bch), WalletConnectionSettings.defaultMode)
+        XCTAssertEqual(settings.mode(for: TestCurrencies.bch), WalletConnectionSettings.defaultMode(for: TestCurrencies.bch))
     }
 
     func testChangingModes() {
