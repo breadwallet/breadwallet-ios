@@ -1,4 +1,4 @@
-[![LoafWallet](/images/top-logo.jpg)](https://itunes.apple.com/us/app/loafwallet/id1119332592)
+[![LoafWallet](/images/header-ios.png)](https://itunes.apple.com/us/app/loafwallet/id1119332592)
 
 ## The easy and secure Litecoin wallet
 
