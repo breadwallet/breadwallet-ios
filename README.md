@@ -66,6 +66,17 @@ Simplicity and ease-of-use is **Litewallet**'s core design principle. A simple r
 
 Any jailbreak app can grant itself access to every other app's keychain data. This means it can access your wallet and steal your Litecoin by self-signing as described [here](http://www.saurik.com/id/8) and including `<key>application-identifier</key><string>*</string>` in its .entitlements file.
 
+1. Download and install cocopods to your Mac computer: `sudo gem install cocoapods`
+2. Download and install the latest version of [Xcode](https://developer.apple.com/xcode/)
+3. Clone this repo & init submodules
+```bash
+$ git clone https://github.com/litecoin-foundation/loafwallet-ios
+$ git submodule init
+$ git submodule update
+```
+4. From the root where the Podfile is located, install the pods: `pod install`
+5. From the root where the *Xcode Workspace* is located, open the project: `open loafwallet.xcworkspace`
+ 
 ### Litewallet Team:
 * [Development Code of Conduct](/development.md)
 ---
