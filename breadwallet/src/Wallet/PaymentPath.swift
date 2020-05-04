@@ -12,6 +12,13 @@ import Foundation
 
 private let domainRegex = ""
 
+enum PaymentPathError: Error {
+    case invalidPayID
+    case badResponse
+    case currencyNotSupported
+    case invalidAddress
+}
+
 class PaymentPath {
     
     private let address: String
@@ -21,11 +28,11 @@ class PaymentPath {
         guard isValidAddress(address) else { return nil }
     }
     
-    func fetchAddress(forCurrency currency: Currency, callback: @escaping (String?) -> Void) {
-        guard let id = currency.payId else { callback(nil); return }
+    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<String, PaymentPathError>) -> Void) {
+        guard let id = currency.payId else { callback(.failure(.currencyNotSupported)); return }
         let components = address.components(separatedBy: "$")
         guard components.count == 2, !components[0].isEmpty, !components[1].isEmpty else {
-            callback(nil); return
+            callback(.failure(.invalidPayID)); return
         }
         
         let name = components[0]
@@ -35,10 +42,15 @@ class PaymentPath {
         
         request.addValue("application/\(id)+json", forHTTPHeaderField: "Accept")
         URLSession.shared.dataTask(with: request) { data, _, _ in
-            guard let data = data else { callback(nil); return }
+            guard let data = data else { callback(.failure(.badResponse)); return }
             guard let response = try? JSONDecoder().decode(PayIdResponse.self, from: data) else {
-                callback(nil); return }
-            callback(response.addressDetails.address)
+                callback(.failure(.badResponse)); return }
+            if currency.isValidAddress(response.addressDetails.address) {
+                callback(.success(response.addressDetails.address))
+            } else {
+                print("invalid address: \(response.addressDetails.address)")
+                callback(.failure(.invalidAddress))
+            }
         }.resume()
     }
     

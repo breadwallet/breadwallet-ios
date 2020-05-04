@@ -339,17 +339,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             self.addressCell.setContent(pasteboard)
             self.addressCell.loadPayID()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                path.fetchAddress(forCurrency: self.currency) { address in
-                        DispatchQueue.main.async {
-                            if address != nil {
-                                self.payIdAddress = address
-                                self.payId = pasteboard
-                                self.addressCell.showPayId()
-                            } else {
-                                self.addressCell.hidePayID()
-                            }
-                        }
+                path.fetchAddress(forCurrency: self.currency) { response in
+                    DispatchQueue.main.async {
+                        self.handlePayIdResponse(response, id: pasteboard)
                     }
+                }
             })
             return
         }
@@ -360,6 +354,29 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         self.paymentProtocolRequest = nil
         handleRequest(request)
+    }
+    
+    private func handlePayIdResponse(_ response: Result<String, PaymentPathError>, id: String) {
+        switch response {
+        case .success(let address):
+            self.payIdAddress = address
+            self.payId = id
+            self.addressCell.showPayId()
+        case .failure(let error):
+            switch error {
+            case .badResponse:
+                showErrorMessage("Bad PayID Response")
+            case .currencyNotSupported:
+                showErrorMessage("Currency Not supported")
+            case .invalidAddress:
+                showErrorMessage("Invalid Address returned")
+            case .invalidPayID:
+                showErrorMessage("Invalid PayID")
+            }
+            
+            self.addressCell.setContent("")
+            self.addressCell.hidePayID()
+        }
     }
 
     @objc private func scanTapped() {

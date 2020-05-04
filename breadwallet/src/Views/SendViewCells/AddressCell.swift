@@ -81,7 +81,7 @@ class AddressCell: UIView {
         label.isHidden = false
         payIDLabel.isHidden = true
         activityIndicator.stopAnimating()
-        activityIndicator.isHidden = false
+        activityIndicator.isHidden = true
     }
     
     func loadPayID() {
