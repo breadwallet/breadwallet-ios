@@ -93,12 +93,18 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     private var address: String? {
+        if payIdAddress != nil {
+            return payIdAddress
+        }
         if let protoRequest = paymentProtocolRequest {
             return protoRequest.primaryTarget?.description
         } else {
             return addressCell.address
         }
     }
+    
+    private var payIdAddress: String?
+    private var payId: String?
     
     private var currentFeeBasis: TransferFeeBasis?
     private var isSendingMax = false {
@@ -329,6 +335,25 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
+        if let path = PaymentPath(address: pasteboard) {
+            self.addressCell.setContent(pasteboard)
+            self.addressCell.loadPayID()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
+                path.fetchAddress(forCurrency: self.currency) { address in
+                        DispatchQueue.main.async {
+                            if address != nil {
+                                self.payIdAddress = address
+                                self.payId = pasteboard
+                                self.addressCell.showPayId()
+                            } else {
+                                self.addressCell.hidePayID()
+                            }
+                        }
+                    }
+            })
+            return
+        }
+        
         guard let request = PaymentRequest(string: pasteboard, currency: currency) else {
             let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
             return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
@@ -461,7 +486,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                                                  displayFeeLevel: feeLevel,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
-                                                 currency: currency)
+                                                 currency: currency,
+                                                 payId: payId)
         confirm.successCallback = send
         confirm.cancelCallback = sender.reset
         

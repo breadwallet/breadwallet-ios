@@ -84,6 +84,8 @@ class Theme: BRDTheme {
         case accentHighlighted = "#5667E0"
         case success = "#5BE081"
         case error = "#EA6654"
+        case payID = "71cfa2"
+        case payIDBackground = "24282e"
     }
 
     enum TextAlpha: CGFloat {

@@ -8,6 +8,24 @@
 
 import UIKit
 
+class PayIDLabel: UILabel {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.text = "PayID"
+        self.backgroundColor = UIColor.fromHex(Theme.ColorHex.payIDBackground.rawValue)
+        self.textColor = UIColor.fromHex(Theme.ColorHex.payID.rawValue)
+        self.layer.cornerRadius = 2.0
+        self.layer.masksToBounds = true
+        self.font = Theme.body1
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 class AddressCell: UIView {
 
     init(currency: Currency) {
@@ -49,6 +67,31 @@ class AddressCell: UIView {
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
+    private let payIDLabel = PayIDLabel()
+    private let activityIndicator = UIActivityIndicatorView(style: .gray)
+    
+    func showPayId() {
+        label.isHidden = true
+        payIDLabel.isHidden = false
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = true
+    }
+    
+    func hidePayID() {
+        label.isHidden = false
+        payIDLabel.isHidden = true
+        activityIndicator.stopAnimating()
+        activityIndicator.isHidden = false
+    }
+    
+    func loadPayID() {
+        label.isHidden = true
+        addSubview(activityIndicator)
+        activityIndicator.constrain([
+            activityIndicator.constraint(.centerY, toView: self),
+            activityIndicator.constraint(.leading, toView: self, constant: C.padding[2]) ])
+        activityIndicator.startAnimating()
+    }
     
     fileprivate let currency: Currency
 
@@ -66,12 +109,18 @@ class AddressCell: UIView {
         addSubview(border)
         addSubview(paste)
         addSubview(scan)
+        addSubview(payIDLabel)
     }
 
     private func addConstraints() {
         label.constrain([
             label.constraint(.centerY, toView: self),
             label.constraint(.leading, toView: self, constant: C.padding[2]) ])
+        payIDLabel.constrain([
+            payIDLabel.constraint(.centerY, toView: self),
+            payIDLabel.constraint(.leading, toView: self, constant: C.padding[2]) ])
+        payIDLabel.isHidden = true
+        
         contentLabel.constrain([
             contentLabel.constraint(.leading, toView: label),
             contentLabel.constraint(toBottom: label, constant: 0.0),

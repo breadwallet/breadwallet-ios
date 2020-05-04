@@ -121,6 +121,19 @@ class Currency: CurrencyWithIcon {
         return nil
     }
     
+    var payId: String? {
+        if isBitcoin {
+            return "btc-mainnet"
+        }
+        if isEthereum {
+            return "eth-mainnet"
+        }
+        if isXRP {
+            return "xrpl-mainnet"
+        }
+        return nil
+    }
+    
     var attributeDefinition: AttributeDefinition? {
         if isXRP {
             return AttributeDefinition(key: "DestinationTag",
