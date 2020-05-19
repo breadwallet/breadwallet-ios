@@ -126,7 +126,7 @@ class Currency: CurrencyWithIcon {
             return AttributeDefinition(key: "DestinationTag",
                                        label: S.Send.destinationTagLabel,
                                        keyboardType: .numberPad,
-                                       maxLength: 9)
+                                       maxLength: 10)
         }
         if isHBAR {
             return AttributeDefinition(key: "Memo",
