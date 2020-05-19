@@ -146,10 +146,13 @@ class Currency: CurrencyWithIcon {
             return E.isTestnet ? "bchtest:qqpz7r5k72e07j0syq26f0h8srvdqeqjg50wg9fp3z" : "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"
         }
         if isEthereumCompatible {
-            return "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
+            return "0xA6A60123Feb7F61081b1BFe063464b3219cEdCEc"
         }
         if isXRP {
             return "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV"
+        }
+        if isHBAR {
+            return "0.0.39768"
         }
         return nil
     }
