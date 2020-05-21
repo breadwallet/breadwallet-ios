@@ -365,12 +365,20 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: "No fee estimate", buttonLabel: S.Button.ok)
             return false
         }
+        
+        //XRP destination Tag must fit into UInt32
+        if let attribute = attributeCell?.attribute, currency.isXRP {
+            if UInt32(attribute) == nil {
+               showAlert(title: S.Alert.error, message: "Destination tag is too long.", buttonLabel: S.Button.ok)
+               return false
+            }
+        }
 
         return handleValidationResult(sender.createTransaction(address: address,
                                                         amount: amount,
                                                         feeBasis: feeBasis,
                                                         comment: memoCell.textView.text,
-                                                        attribute: attributeCell?.address))
+                                                        attribute: attributeCell?.attribute))
     }
     
     private func handleValidationResult(_ result: SenderValidationResult, protocolRequest: PaymentProtocolRequest? = nil) -> Bool {
@@ -427,6 +435,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     @objc private func sendTapped() {
         if addressCell.textField.isFirstResponder {
             addressCell.textField.resignFirstResponder()
+        }
+        
+        if attributeCell?.textField.isFirstResponder == true {
+            attributeCell?.textField.resignFirstResponder()
         }
         
         guard validateSendForm(),
