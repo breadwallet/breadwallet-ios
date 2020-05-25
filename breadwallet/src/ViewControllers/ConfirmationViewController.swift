@@ -105,17 +105,20 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             address.topAnchor.constraint(equalTo: toLabel.bottomAnchor),
             address.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         
-        payIdlabel.constrain([
-            payIdlabel.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
-            payIdlabel.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]) ])
-        payIdAddress.constrain([
-            payIdAddress.leadingAnchor.constraint(equalTo: payIdlabel.leadingAnchor),
-            payIdAddress.topAnchor.constraint(equalTo: payIdlabel.bottomAnchor),
-            payIdAddress.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
+        if payID != nil {
+           payIdlabel.constrain([
+               payIdlabel.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
+               payIdlabel.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]) ])
+           payIdAddress.constrain([
+               payIdAddress.leadingAnchor.constraint(equalTo: payIdlabel.leadingAnchor),
+               payIdAddress.topAnchor.constraint(equalTo: payIdlabel.bottomAnchor),
+               payIdAddress.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
+        }
         
+        let processingTimeAnchor = payID == nil ? address.bottomAnchor : payIdAddress.bottomAnchor
         processingTime.constrain([
-            processingTime.leadingAnchor.constraint(equalTo: payIdAddress.leadingAnchor),
-            processingTime.topAnchor.constraint(equalTo: payIdAddress.bottomAnchor, constant: C.padding[2]),
+            processingTime.leadingAnchor.constraint(equalTo: address.leadingAnchor),
+            processingTime.topAnchor.constraint(equalTo: processingTimeAnchor, constant: C.padding[2]),
             processingTime.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         sendLabel.constrain([
             sendLabel.leadingAnchor.constraint(equalTo: processingTime.leadingAnchor),
@@ -215,7 +218,14 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             sendButton.image = nil
         }
         
-        payIdAddress.text = payID
+        if payID == nil {
+            payIdlabel.text = nil
+            payIdAddress.text = nil
+            payIdlabel.isHidden = true
+            payIdAddress.isHidden = true
+        } else {
+            payIdAddress.text = payID
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {

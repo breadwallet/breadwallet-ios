@@ -338,13 +338,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         if let path = PaymentPath(address: pasteboard) {
             self.addressCell.setContent(pasteboard)
             self.addressCell.loadPayID()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                path.fetchAddress(forCurrency: self.currency) { response in
-                    DispatchQueue.main.async {
-                        self.handlePayIdResponse(response, id: pasteboard)
-                    }
+            path.fetchAddress(forCurrency: self.currency) { response in
+                DispatchQueue.main.async {
+                    self.handlePayIdResponse(response, id: pasteboard)
                 }
-            })
+            }
             return
         }
         

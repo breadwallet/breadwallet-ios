@@ -126,7 +126,7 @@ class AmountViewController: UIViewController, Trackable {
             amountLabel.centerYAnchor.constraint(equalTo: currencyToggle.centerYAnchor) ])
         placeholder.constrain([
             placeholder.leadingAnchor.constraint(equalTo: amountLabel.leadingAnchor, constant: 2.0),
-            placeholder.centerYAnchor.constraint(equalTo: amountLabel.centerYAnchor) ])
+            placeholder.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[1]) ])
         cursor.constrain([
             cursor.leadingAnchor.constraint(equalTo: amountLabel.trailingAnchor, constant: 2.0),
             cursor.heightAnchor.constraint(equalToConstant: 24.0),
@@ -134,7 +134,8 @@ class AmountViewController: UIViewController, Trackable {
             cursor.widthAnchor.constraint(equalToConstant: 2.0) ])
         currencyToggle.constrain([
             currencyToggle.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
-            currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]) ])
+            currencyToggle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
+            currencyToggle.heightAnchor.constraint(equalToConstant: 35.0)])
 
         feeSelector.constrain([
             feeSelector.topAnchor.constraint(equalTo: feeLabel.bottomAnchor, constant: 4.0),

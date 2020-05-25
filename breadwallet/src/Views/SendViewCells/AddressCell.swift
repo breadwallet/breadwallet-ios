@@ -13,11 +13,11 @@ class PayIDLabel: UILabel {
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.text = "PayID"
-        self.backgroundColor = UIColor.fromHex(Theme.ColorHex.payIDBackground.rawValue)
-        self.textColor = UIColor.fromHex(Theme.ColorHex.payID.rawValue)
+        self.backgroundColor = .secondaryButton
         self.layer.cornerRadius = 2.0
         self.layer.masksToBounds = true
         self.font = Theme.body1
+        self.textColor = .grayTextTint
     }
     
     required init?(coder: NSCoder) {
@@ -114,10 +114,10 @@ class AddressCell: UIView {
 
     private func addConstraints() {
         label.constrain([
-            label.constraint(.centerY, toView: self),
-            label.constraint(.leading, toView: self, constant: C.padding[2]) ])
+            label.constraint(.leading, toView: self, constant: C.padding[2]),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1])])
         payIDLabel.constrain([
-            payIDLabel.constraint(.centerY, toView: self),
+            payIDLabel.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
             payIDLabel.constraint(.leading, toView: self, constant: C.padding[2]) ])
         payIDLabel.isHidden = true
         
@@ -136,10 +136,13 @@ class AddressCell: UIView {
             tapView.trailingAnchor.constraint(equalTo: paste.leadingAnchor) ])
         scan.constrain([
             scan.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            scan.centerYAnchor.constraint(equalTo: centerYAnchor) ])
+            scan.centerYAnchor.constraint(equalTo: centerYAnchor),
+            scan.heightAnchor.constraint(equalToConstant: 32.0)])
         paste.constrain([
             paste.centerYAnchor.constraint(equalTo: centerYAnchor),
-            paste.trailingAnchor.constraint(equalTo: scan.leadingAnchor, constant: -C.padding[1]) ])
+            paste.trailingAnchor.constraint(equalTo: scan.leadingAnchor, constant: -C.padding[1]),
+            paste.heightAnchor.constraint(equalToConstant: 33.0)
+        ])
         border.constrain([
             border.leadingAnchor.constraint(equalTo: leadingAnchor),
             border.bottomAnchor.constraint(equalTo: bottomAnchor),
