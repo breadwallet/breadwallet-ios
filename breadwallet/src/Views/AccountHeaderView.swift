@@ -212,7 +212,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             self.collapseHeader()
         }
         if currency.shouldHideChart {
-            self.collapseHeader()
+            self.collapseHeader(animated: false)
         }
     }
     
@@ -258,15 +258,23 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         })
     }
     
-    private func hideChart() {
+    private func hideChart(animated: Bool = true) {
         isChartHidden = true
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            self.chartView.alpha = 0.0
-            self.exchangeRateLabel.alpha = 0.0
-            self.priceChangeView.alpha = 0.0
-            self.graphButtonStackView.alpha = 0.0
-            self.historyPeriodPill.alpha = 0.0
-        })
+        if animated {
+            UIView.animate(withDuration: C.animationDuration, animations: {
+                self.setChartTransparent()
+            })
+        } else {
+            setChartTransparent()
+        }
+    }
+    
+    private func setChartTransparent() {
+        chartView.alpha = 0.0
+        exchangeRateLabel.alpha = 0.0
+        priceChangeView.alpha = 0.0
+        graphButtonStackView.alpha = 0.0
+        historyPeriodPill.alpha = 0.0
     }
     
     func setOffset(_ offset: CGFloat) {
@@ -314,13 +322,17 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     
     //Needs to be public so that it can be hidden
     //when the rewards view is expanded on the iPhone5
-    func collapseHeader() {
+    func collapseHeader(animated: Bool = true) {
         headerHeight?.constant = AccountHeaderView.headerViewMinHeight
-        UIView.animate(withDuration: C.animationDuration, animations: {
-            self.superview?.superview?.layoutIfNeeded()
-        }, completion: { _ in
-            self.hideChart()
-        })
+        if animated {
+           UIView.animate(withDuration: C.animationDuration, animations: {
+               self.superview?.superview?.layoutIfNeeded()
+           }, completion: { _ in
+               self.hideChart()
+           })
+        } else {
+            self.hideChart(animated: false)
+        }
     }
     
     func stopHeightConstraint() {

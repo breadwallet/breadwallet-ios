@@ -158,6 +158,7 @@ class Currency: CurrencyWithIcon {
     }
     
     var shouldHideChart: Bool {
+        //AVM and EUR.AVM don't have real exchange rates, so we hide the chart
         if uid == "ethereum-mainnet:0xF01Cd2f1c9E42c509d309aC8C5b29B6dA8E64b1a" ||
             uid == "ethereum-mainnet:0x74004a7227615fb52b82d17ffabfa376907d8a4d" {
             return true
