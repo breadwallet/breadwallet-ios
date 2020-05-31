@@ -194,7 +194,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         }
         
         if let initiallySelected = graphButtons.first(where: { return $0.hasInitialHistoryPeriod }) {
-            self.updateHistoryPeriodPillPosition(button: initiallySelected.button)
+            self.updateHistoryPeriodPillPosition(button: initiallySelected.button, withAnimation: false)
         }
                 
         Store.subscribe(self,
@@ -209,6 +209,9 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         chartView.shouldHideChart = { [weak self] in
             guard let `self` = self else { return }
             self.shouldLockExpandingChart = true
+            self.collapseHeader()
+        }
+        if currency.shouldHideChart {
             self.collapseHeader()
         }
     }
@@ -328,15 +331,18 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         headerHeight?.isActive = true
     }
     
-    private func updateHistoryPeriodPillPosition(button: UIButton) {
+    private func updateHistoryPeriodPillPosition(button: UIButton, withAnimation: Bool) {
         historyPeriodPillX?.isActive = false
         historyPeriodPillY?.isActive = false
         historyPeriodPillX = historyPeriodPill.centerXAnchor.constraint(equalTo: button.centerXAnchor)
         historyPeriodPillY = historyPeriodPill.centerYAnchor.constraint(equalTo: button.centerYAnchor)
         NSLayoutConstraint.activate([historyPeriodPillX!, historyPeriodPillY!])
-        UIView.spring(C.animationDuration, animations: {
-            self.layoutIfNeeded()
-        }, completion: {_ in})
+        
+        if withAnimation {
+            UIView.spring(C.animationDuration, animations: {
+                self.layoutIfNeeded()
+            }, completion: {_ in})
+        }
         
         button.setTitleColor(.white, for: .normal)
         graphButtons.forEach {
@@ -348,7 +354,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     
     private func didTap(button: UIButton) {
         saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.axisToggle.name]))
-        updateHistoryPeriodPillPosition(button: button)
+        updateHistoryPeriodPillPosition(button: button, withAnimation: true)
     }
 
     override func draw(_ rect: CGRect) {
