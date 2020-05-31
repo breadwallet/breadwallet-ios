@@ -142,7 +142,31 @@ extension BRAPIClient {
             }
         }).resume()
     }
-
+    
+    func setHardcodedRates() {
+        setHardcoded(rate: 100, baseCurrencyCode: "USD", forCryptoCurrencyCode: "AVM")
+        setHardcoded(rate: 100, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "EUR.AVM")
+    }
+    
+    func setHardcoded(rate: Double, baseCurrencyCode base: String, forCryptoCurrencyCode cryptoCode: String) {
+        guard let currency = Store.state.currencies.first(where: { $0.code == cryptoCode }) else { return }
+        let currentFiatCode = Store.state.defaultCurrencyCode
+        
+        //If default currency is the currency of the base rate, we don't need to convert
+        guard currentFiatCode != base else {
+            let rate = Rate(code: currentFiatCode, name: currency.name, rate: rate, reciprocalCode: currency.code)
+            Store.perform(action: WalletChange(currency).setExchangeRate(rate))
+            return
+        }
+        
+        convert(from: base, to: currentFiatCode) { exchangeRate in
+            DispatchQueue.main.async {
+                let rate = Rate(code: currentFiatCode, name: currency.name, rate: rate*exchangeRate, reciprocalCode: currency.code)
+                Store.perform(action: WalletChange(currency).setExchangeRate(rate))
+            }
+        }
+    }
+    
     func convertFor(code: String, data: [PriceDataPoint], callback: @escaping (([PriceDataPoint]) -> Void)) {
         guard BRAPIClient.shouldUseUSDRate(currencyCodes: [code]) else { return callback(data) }
         self.fetchFiatRate { rate in
@@ -176,6 +200,26 @@ extension BRAPIClient {
                     let result = try JSONDecoder().decode(FixerResult.self, from: data)
                     if let rate = result.rates[code] {
                         callback(rate)
+                    }
+                } catch let e {
+                    print("JSON decoding error: \(e)")
+                }
+            }).resume()
+        }
+    }
+    
+    func convert(from: String, to: String, callback: @escaping (Double) -> Void) {
+        KeyStore.getFixerApiToken { token in
+            guard let token = token else { return }
+            let url = URL(string: "http://data.fixer.io/api/latest?access_key=\(token)&base=\(from)&symbols=\(to)")!
+            URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
+                guard let data = data else { print("error: \(error!)"); return }
+                do {
+                    let result = try JSONDecoder().decode(FixerResult.self, from: data)
+                    if let rate = result.rates[to] {
+                        callback(rate)
+                    } else {
+                        print("Fixer result not found: \(result)")
                     }
                 } catch let e {
                     print("JSON decoding error: \(e)")
