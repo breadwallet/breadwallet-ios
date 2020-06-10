@@ -8,24 +8,6 @@
 
 import UIKit
 
-class PayIDLabel: UILabel {
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.text = "PayID"
-        self.backgroundColor = .secondaryButton
-        self.layer.cornerRadius = 2.0
-        self.layer.masksToBounds = true
-        self.font = Theme.body1
-        self.textColor = .grayTextTint
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-}
-
 class AddressCell: UIView {
 
     init(currency: Currency) {
@@ -41,7 +23,8 @@ class AddressCell: UIView {
     var textDidChange: ((String?) -> Void)?
     var didBeginEditing: (() -> Void)?
     var didReceivePaymentRequest: ((PaymentRequest) -> Void)?
-
+    var didReceivePayId: ((Result<String, PayIdError>) -> Void)?
+    
     func setContent(_ content: String?) {
         contentLabel.text = content
         textField.text = content
@@ -56,7 +39,9 @@ class AddressCell: UIView {
     
     func hideActionButtons() {
         paste.isHidden = true
+        paste.isEnabled = false
         scan.isHidden = true
+        scan.isEnabled = false
     }
 
     let textField = UITextField()
@@ -67,14 +52,16 @@ class AddressCell: UIView {
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
-    private let payIDLabel = PayIDLabel()
+    private let payIDLabel = PayIdLabel()
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
     
     func showPayId() {
+        textField.resignFirstResponder()
         label.isHidden = true
         payIDLabel.isHidden = false
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
+        isEditable = false
     }
     
     func hidePayID() {
@@ -82,13 +69,14 @@ class AddressCell: UIView {
         payIDLabel.isHidden = true
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
+        isEditable = true
     }
     
-    func loadPayID() {
+    func showPayIdSpinner() {
         label.isHidden = true
         addSubview(activityIndicator)
         activityIndicator.constrain([
-            activityIndicator.constraint(.centerY, toView: self),
+            activityIndicator.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
             activityIndicator.constraint(.leading, toView: self, constant: C.padding[2]) ])
         activityIndicator.startAnimating()
     }
@@ -203,6 +191,13 @@ extension AddressCell: UITextFieldDelegate {
         gr.isEnabled = true
         tapView.isUserInteractionEnabled = true
         contentLabel.text = textField.text
+        
+        if let text = textField.text, let payId = PayId(address: text) {
+            showPayIdSpinner()
+            payId.fetchAddress(forCurrency: currency) { result in
+                self.didReceivePayId?(result)
+            }
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

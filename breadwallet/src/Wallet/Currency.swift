@@ -121,16 +121,18 @@ class Currency: CurrencyWithIcon {
         return nil
     }
     
+    func doesMatchPayId(_ details: PayIdAddress) -> Bool {
+        let environment = (E.isTestnet || E.isRunningTests) ? "testnet" : "mainnet"
+        guard details.environment.lowercased() == environment else { return false }
+        guard let id = payId else { return false }
+        return details.paymentNetwork.lowercased() == id.lowercased()
+    }
+    
     var payId: String? {
-        if isBitcoin {
-            return "btc-mainnet"
-        }
-        if isEthereum {
-            return "eth-mainnet"
-        }
-        if isXRP {
-            return "xrpl-mainnet"
-        }
+        if isBitcoin { return "btc" }
+        if isEthereum { return "eth" }
+        //TODO:PAYID - enable xrp when XAddress support is added
+        //if isXRP { return "xrpl" }
         return nil
     }
     

@@ -211,6 +211,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         addressCell.didReceivePaymentRequest = { [weak self] request in
             self?.handleRequest(request)
         }
+        addressCell.didReceivePayId = { [weak self] result in
+            DispatchQueue.main.async {
+                self?.handlePayIdResponse(result, id: self?.addressCell.address ?? "", shouldShowError: true)
+            }
+        }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount, rate: rate)
         }
@@ -335,12 +340,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
-        if let path = PaymentPath(address: pasteboard) {
+        if let path = PayId(address: pasteboard) {
             self.addressCell.setContent(pasteboard)
-            self.addressCell.loadPayID()
+            self.addressCell.showPayIdSpinner()
             path.fetchAddress(forCurrency: self.currency) { response in
                 DispatchQueue.main.async {
-                    self.handlePayIdResponse(response, id: pasteboard)
+                    self.handlePayIdResponse(response, id: pasteboard, shouldShowError: true )
                 }
             }
             return
@@ -354,27 +359,46 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         handleRequest(request)
     }
     
-    private func handlePayIdResponse(_ response: Result<String, PaymentPathError>, id: String) {
+    private func handlePayIdResponse(_ response: Result<String, PayIdError>, id: String, shouldShowError: Bool) {
         switch response {
         case .success(let address):
-            self.payIdAddress = address
-            self.payId = id
-            self.addressCell.showPayId()
-        case .failure(let error):
-            switch error {
-            case .badResponse:
-                showErrorMessage("Bad PayID Response")
-            case .currencyNotSupported:
-                showErrorMessage("Currency Not supported")
-            case .invalidAddress:
-                showErrorMessage("Invalid Address returned")
-            case .invalidPayID:
-                showErrorMessage("Invalid PayID")
+            guard currency.isValidAddress(address) else {
+                let message = String(format: S.Send.invalidAddressMessage, currency.name)
+                showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+                resetPayId()
+                return
             }
             
-            self.addressCell.setContent("")
-            self.addressCell.hidePayID()
+            //Here we have a valid address from PayID
+            //After this event, the addresscell should be in an un-editable state similar
+            //to when a payment request is recieved
+            payIdAddress = address
+            payId = id
+            addressCell.showPayId()
+            addressCell.hideActionButtons()
+        case .failure(let error):
+            if shouldShowError {
+                switch error {
+                case .badResponse:
+                    showErrorMessage(S.PayId.invalidPayID)
+                case .currencyNotSupported:
+                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
+                case .invalidAddress:
+                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
+                case .invalidPayID:
+                    showErrorMessage(S.PayId.invalidPayID)
+                }
+            }
+            self.resetPayId()
         }
+    }
+    
+    private func resetPayId() {
+        payIdAddress = nil
+        payId = nil
+        addressCell.hidePayID()
+        addressCell.setContent("")
+        addressCell.hidePayID()
     }
 
     @objc private func scanTapped() {
@@ -427,7 +451,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             
         case .invalidAddress:
-            let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
+            let message = String(format: S.Send.invalidAddressMessage, currency.name)
             showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
             
         case .ownAddress:

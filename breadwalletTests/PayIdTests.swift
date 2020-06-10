@@ -15,23 +15,25 @@ import XCTest
 class PayIdTests : XCTestCase {
     
     func testPaymentPathInit() {
-        XCTAssertNotNil(PaymentPath(address: "GiveDirectly$payid.charity"))
-        XCTAssertNotNil(PaymentPath(address: "test5$payid.test.coinselect.com"))
-        XCTAssertNotNil(PaymentPath(address: "reza$payid.test.coinselect.com"))
-        XCTAssertNotNil(PaymentPath(address: "pay$wietse.com"))
-        XCTAssertNotNil(PaymentPath(address: "john.smith$dev.payid.es"))
-        XCTAssertNotNil(PaymentPath(address: "pay$zochow.ski"))
+        XCTAssertNotNil(PayId(address: "GiveDirectly$payid.charity"))
+        XCTAssertNotNil(PayId(address: "test5$payid.test.coinselect.com"))
+        XCTAssertNotNil(PayId(address: "reza$payid.test.coinselect.com"))
+        XCTAssertNotNil(PayId(address: "pay$wietse.com"))
+        XCTAssertNotNil(PayId(address: "john.smith$dev.payid.es"))
+        XCTAssertNotNil(PayId(address: "pay$zochow.ski"))
         
-        XCTAssertNil(PaymentPath(address: ""))
-        XCTAssertNil(PaymentPath(address: "test5payid.test.coinselect.com"))
-        XCTAssertNil(PaymentPath(address: "payid.test.coinselect.com"))
-        XCTAssertNil(PaymentPath(address: "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY"))
-        XCTAssertNil(PaymentPath(address: "unknown"))
-        XCTAssertNil(PaymentPath(address: "0x2c4d5626b6559927350db12e50143e2e8b1b9951"))
+        XCTAssertNil(PayId(address: ""))
+        XCTAssertNil(PayId(address: "test5payid.test.coinselect.com"))
+        XCTAssertNil(PayId(address: "payid.test.coinselect.com"))
+        XCTAssertNil(PayId(address: "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY"))
+        XCTAssertNil(PayId(address: "unknown"))
+        XCTAssertNil(PayId(address: "0x2c4d5626b6559927350db12e50143e2e8b1b9951"))
+        XCTAssertNil(PayId(address: "$payid.charity"))
+        XCTAssertNil(PayId(address: "payid.charity$"))
     }
     
     func testBTC() {
-        let path = PaymentPath(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.btc) { result in
@@ -42,7 +44,7 @@ class PayIdTests : XCTestCase {
     }
     
     func testEth() {
-        let path = PaymentPath(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.eth) { result in
@@ -53,7 +55,7 @@ class PayIdTests : XCTestCase {
     }
     
     func testUnsuportedCurrency() {
-        let path = PaymentPath(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.bch) { address in

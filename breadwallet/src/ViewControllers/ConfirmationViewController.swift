@@ -56,7 +56,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     private let fee = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
     
-    private let payIdlabel = PayIDLabel()
+    private let payIdlabel = PayIdLabel()
     private let payIdAddress = UILabel(font: .customBody(size: 16.0), color: .darkText)
     
     override func viewDidLoad() {

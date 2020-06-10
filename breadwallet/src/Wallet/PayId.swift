@@ -51,7 +51,7 @@ class PayId {
     }
     
     private func isValidAddress(_ address: String) -> Bool {
-        let pattern = ".*\\$.*"
+        let pattern = ".+\\$.+"
         let range = address.range(of: pattern, options: .regularExpression)
         return range != nil
     }
