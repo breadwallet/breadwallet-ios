@@ -420,6 +420,16 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return false
         }
         
+        //Having an invalid address will cause fee estimation to fail,
+        //so we need to display this error before the fee estimate error.
+        //Without this, the fee estimate error will be shown and the user won't
+        //know that the address is invalid.
+        guard currency.isValidAddress(address) else {
+            let message = String(format: S.Send.invalidAddressMessage, currency.name)
+            showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+            return false
+        }
+
         guard let amount = amount, !amount.isZero else {
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
