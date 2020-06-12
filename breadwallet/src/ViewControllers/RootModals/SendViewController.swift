@@ -343,9 +343,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         if let path = PayId(address: pasteboard) {
             self.addressCell.setContent(pasteboard)
             self.addressCell.showPayIdSpinner()
-            path.fetchAddress(forCurrency: self.currency) { response in
+            path.fetchAddress(forCurrency: currency) { response in
                 DispatchQueue.main.async {
-                    self.handlePayIdResponse(response, id: pasteboard, shouldShowError: true )
+                    self.handlePayIdResponse(response, id: pasteboard, shouldShowError: true)
                 }
             }
             return
@@ -359,9 +359,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         handleRequest(request)
     }
     
-    private func handlePayIdResponse(_ response: Result<String, PayIdError>, id: String, shouldShowError: Bool) {
+    private func handlePayIdResponse(_ response: Result<(String, String?), PayIdError>, id: String, shouldShowError: Bool) {
         switch response {
-        case .success(let address):
+        case .success(let addressDetails):
+            let address = addressDetails.0
+            let tag = addressDetails.1
             guard currency.isValidAddress(address) else {
                 let message = String(format: S.Send.invalidAddressMessage, currency.name)
                 showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
@@ -376,6 +378,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             payId = id
             addressCell.showPayId()
             addressCell.hideActionButtons()
+            if let destinationTag = tag {
+                attributeCell?.setContent(destinationTag)
+            }
         case .failure(let error):
             if shouldShowError {
                 switch error {

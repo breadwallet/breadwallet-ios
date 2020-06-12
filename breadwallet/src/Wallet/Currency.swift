@@ -131,8 +131,7 @@ class Currency: CurrencyWithIcon {
     var payId: String? {
         if isBitcoin { return "btc" }
         if isEthereum { return "eth" }
-        //TODO:PAYID - enable xrp when XAddress support is added
-        //if isXRP { return "xrpl" }
+        if isXRP { return "xrpl" }
         return nil
     }
     

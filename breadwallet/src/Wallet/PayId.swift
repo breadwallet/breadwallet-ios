@@ -27,7 +27,8 @@ class PayId {
         guard isValidAddress(address) else { return nil }
     }
     
-    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<String, PayIdError>) -> Void) {
+    // response: (String, String?) == (cryptoAddress, destinationTag(optional) )
+    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<(String, String?), PayIdError>) -> Void) {
         guard currency.payId != nil else { callback(.failure(.currencyNotSupported)); return }
         let components = address.components(separatedBy: separator)
         guard components.count == 2, !components[0].isEmpty, !components[1].isEmpty else {
@@ -36,7 +37,7 @@ class PayId {
         
         let name = components[0]
         let domain = components[1]
-        let url = URL(string: "https://\(domain)/\(name)")!
+        guard let url = URL(string: "https://\(domain)/\(name)") else { callback(.failure(.invalidPayID)); return }
         var request = URLRequest(url: url)
         request.addValue("application/payid+json", forHTTPHeaderField: "Accept")
         request.addValue("1.0", forHTTPHeaderField: "PayID-Version")
@@ -46,7 +47,7 @@ class PayId {
             guard let response = try? JSONDecoder().decode(PayIdResponse.self, from: data) else {
                 callback(.failure(.badResponse)); return }
             guard let first = response.addresses.first(where: { currency.doesMatchPayId($0) }) else { callback(.failure(.currencyNotSupported)); return }
-            callback(.success(first.addressDetails.address))
+            callback(.success((first.addressDetails.address, first.addressDetails.tag)))
         }.resume()
     }
     
@@ -72,4 +73,5 @@ struct PayIdAddress: Codable {
 
 struct PayIdAddressDetails: Codable {
     let address: String
+    let tag: String?
 }
