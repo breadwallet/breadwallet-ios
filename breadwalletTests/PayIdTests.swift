@@ -70,10 +70,10 @@ class PayIdTests : XCTestCase {
         waitForExpectations(timeout: 60, handler: nil)
     }
     
-    func handleResult(_ result: Result<String, PayIdError>, expected: String) {
+    func handleResult(_ result: Result<(String, String?), PayIdError>, expected: String) {
         switch result {
         case .success(let address):
-            XCTAssertTrue(address == expected)
+            XCTAssertTrue(address.0 == expected)
         case .failure(let error):
             XCTFail("message: \(error)")
         }
