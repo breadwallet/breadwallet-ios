@@ -108,8 +108,11 @@ class PinPadViewController: UICollectionViewController {
     private let keyboardType: KeyboardType
     private let items: [String]
     private let maxDigits: Int
-
+    private let haptics = UIImpactFeedbackGenerator(style: .medium)
+    
     override func viewDidLoad() {
+        haptics.prepare()
+        
         switch style {
         case .white:
             switch keyboardType {
@@ -150,6 +153,8 @@ class PinPadViewController: UICollectionViewController {
     }
     
     private func handleInputAtItemIndex(index: Int) {
+        haptics.impactOccurred()
+        
         let item = items[index]
         
         if let specialKey = SpecialKeys(rawValue: item) {
