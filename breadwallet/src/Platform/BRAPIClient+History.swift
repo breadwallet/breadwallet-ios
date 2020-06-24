@@ -144,8 +144,8 @@ extension BRAPIClient {
     }
     
     func setHardcodedRates() {
-        setHardcoded(rate: 100, baseCurrencyCode: "USD", forCryptoCurrencyCode: "AVM")
-        setHardcoded(rate: 100, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "EUR.AVM")
+        setHardcoded(rate: 100, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "AVM")
+        setHardcoded(rate: 1, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "EUR.AVM")
     }
     
     func setHardcoded(rate: Double, baseCurrencyCode base: String, forCryptoCurrencyCode cryptoCode: String) {
