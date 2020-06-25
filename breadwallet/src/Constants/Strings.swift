@@ -94,6 +94,7 @@ enum S {
         static let legacyAddressWarning = NSLocalizedString("Send.legacyAddressWarning", value: "Warning: this is a legacy bitcoin address. Are you sure you want to send Bitcoin Cash to it?", comment: "Attempting to send to ")
         static let insufficientGasTitle = NSLocalizedString("Send.insufficientGasTitle", value: "Insufficient Ethereum Balance", comment: "Insufficient gas alert title")
         static let insufficientGasMessage = NSLocalizedString("Send.insufficientGasMessage", value: "You must have at least %1$@ in your wallet in order to transfer this type of token. Would you like to go to your Ethereum wallet now?", comment: "Insufficient gas alert message")
+        static let destinationTagLabel = NSLocalizedString("Send.destinationTag_optional", value: "Destination Tag (Optional)", comment: "Destination Tag Label")
         enum Error {
             static let authenticationError = NSLocalizedString("Send.Error.authenticationError", value: "Authentication Error", comment: "Sending error message")
             static let notConnected = NSLocalizedString("Send.Error.notConnected", value: "Network not connected", comment: "Sending error message")
@@ -197,6 +198,7 @@ enum S {
         static let feeHeader = NSLocalizedString("TransactionDetails.feeHeader", value:"Total Fee", comment: "Tx detail field header")
         static let gasPriceHeader = NSLocalizedString("TransactionDetails.gasPriceHeader", value:"Gas Price", comment: "Tx detail field header")
         static let gasLimitHeader = NSLocalizedString("TransactionDetails.gasLimitHeader", value:"Gas Limit", comment: "Tx detail field header")
+        static let destinationTagHeader = NSLocalizedString("TransactionDetails.destinationTagHeader", value:"Destination Tag", comment: "Destination Tag Header")
     }
 
     enum SecurityCenter {

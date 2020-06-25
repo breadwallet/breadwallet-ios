@@ -49,7 +49,9 @@ final class TxMetaData: BRKVStoreObject, Codable {
         deviceId = try container.decode(String.self, forKey: .deviceId)
         created = try container.decode(Date.self, forKey: .created)
         comment = try container.decode(String.self, forKey: .comment)
-        tokenTransfer = try container.decode(String.self, forKey: .tokenTransfer)
+
+        //tokenTransfer is sometimes not present in TxMetaData from Android so we shouldn't throw if it doesn't exist
+        tokenTransfer = (try? container.decode(String.self, forKey: .tokenTransfer)) ?? ""
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 

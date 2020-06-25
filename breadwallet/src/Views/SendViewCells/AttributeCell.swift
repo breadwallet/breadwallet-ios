@@ -82,7 +82,7 @@ class AttributeCell: UIView {
     }
 
     private func setInitialData() {
-        label.text = "Destination Tag (Optional)"
+        label.text = S.Send.destinationTagLabel
         textField.font = contentLabel.font
         textField.textColor = contentLabel.textColor
         textField.isHidden = true

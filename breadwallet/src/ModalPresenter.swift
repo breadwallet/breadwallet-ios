@@ -859,7 +859,8 @@ class ModalPresenter: Subscriber, Trackable {
     private func presentPlatformWebViewController(_ mountPoint: String) {
         let vc = BRWebViewController(bundleName: C.webBundle,
                                      mountPoint: mountPoint,
-                                     walletAuthenticator: keyStore)
+                                     walletAuthenticator: keyStore,
+                                     system: system)
         vc.startServer()
         vc.preload()
         vc.modalPresentationStyle = .overFullScreen

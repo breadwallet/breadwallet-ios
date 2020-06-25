@@ -23,8 +23,10 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
     private var tempAuthResponses = [String: Int]()
     private var tempAuthResults = [String: Bool]()
     private var isPresentingAuth = false
-
-    init(walletAuthenticator: TransactionAuthenticator) {
+    private let system: CoreSystem
+    
+    init(walletAuthenticator: TransactionAuthenticator, system: CoreSystem) {
+        self.system = system
         self.walletAuthenticator = walletAuthenticator
     }
     
@@ -131,9 +133,12 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             return try BRHTTPResponse(request: req, code: 200, json: ["version": version, "build": build])
         }
         
-        // POST /_wallet/currencies
+        // GET /_wallet/currencies
         //
-        // Returns all currency details
+        // Returns details the currencies the user has in the local wallet.
+        //
+        // If the query parameter `include_hidden` is present, with a value of `true`, details for all
+        // available currencies, visible and hidden, are returned.
         //
         // Response body: application/json
         //      {
@@ -155,10 +160,51 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
         router.get("/_wallet/currencies") { (req, _) -> BRHTTPResponse in
             let fiatCode = req.query["fiat"]?.first
             var response = [[String: Any]]()
-            for currency in Store.state.currencies {
-                response.append(self.currencyInfo(currency, fiatCode: fiatCode))
+            
+            if let includeAll = req.query["include_hidden"]?.first, includeAll == "true", let currencies = self.allCurrencies() {
+                for id in currencies.keys {
+                    if let metaData = currencies[id] {
+                        let info = self.currencyInfo(metaData, fiatCode: fiatCode)
+                        response.append(info)
+                    }
+                }
+            } else {
+                for currency in Store.state.currencies {
+                    response.append(self.currencyInfo(currency, fiatCode: fiatCode))
+                }
             }
+            
             return try BRHTTPResponse(request: req, code: 200, json: response)
+        }
+        
+        // POST /_wallet/currencies
+        //
+        // Invoked when a currency is added via the back end.
+        //
+        // The client needs to add the currency the local assets, then send a response.
+        //
+        router.post("/_wallet/currencies") { (req, _) -> BRHTTPResponse in
+            let asyncResp = BRHTTPResponse(async: req)
+            // get the currency code that was added
+            guard let data = req.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: Any],
+                let currencyCode = json["code"] as? String
+            else {
+                asyncResp.provide(400, json: ["error": "params-error"])
+                return asyncResp
+            }
+            
+            guard let assets = self.system.assetCollection,
+                let currency = assets.allAssets.first(where: { $1.code == currencyCode }) else {
+                    asyncResp.provide(400, json: ["error": "currency-doesnt-exist"])
+                    return asyncResp
+            }
+            
+            assets.add(asset: currency.1)
+            assets.saveChanges()
+            asyncResp.provide(200)
+            return asyncResp
         }
         
         // POST /_wallet/addresses/<currency_code>
@@ -188,6 +234,55 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
                                  "address": address])
             }
             return try BRHTTPResponse(request: req, code: 200, json: (response.count == 1) ? response.first! : response)
+        }
+        
+        // GET /_wallet/maxlimit
+        //
+        // Request body: application/json
+        // {
+        //      "currency": "eth",
+        //      "toAddress": "0x123.."
+        // }
+        //
+        // Response body: application/json
+        // {
+        //      "numerator":"1000",
+        //      "denominator":"100000"
+        // }
+        router.post("_wallet/maxlimit") { (request, _) -> BRHTTPResponse in
+            let asyncResp = BRHTTPResponse(async: request)
+            guard let data = request.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: Any],
+                let toAddress = json["toAddress"] as? String,
+                let currencyCode = json["currency"] as? String,
+                let currency = Store.state.currencies.filter({$0.code.lowercased() == currencyCode.lowercased()}).first,
+                currency.isValidAddress(toAddress) else {
+                    asyncResp.provide(400, json: ["error": "params-error"])
+                    return asyncResp
+            }
+            
+            guard let wallet = Store.state[currency]?.wallet else { return BRHTTPResponse(request: request, code: 500) }
+            
+            wallet.estimateLimitMaximum(address: toAddress, fee: .priority, completion: { result in
+                switch result {
+                case .success(let maximumAmount):
+                    let amount = Amount(cryptoAmount: maximumAmount, currency: currency)
+                    let numerator = amount.tokenUnformattedString(in: currency.baseUnit)
+                    let denominator = Amount(tokenString: "1", currency: currency, unit: currency.defaultUnit).tokenUnformattedString(in: currency.baseUnit)
+                    request.queue.async {
+                        asyncResp.provide(200, json: [
+                            "numerator": numerator,
+                            "denominator": denominator
+                        ])
+                    }
+                case .failure(let error):
+                    request.queue.async {
+                        asyncResp.provide(500, json: ["error": "estimateLimitMaximum error: \(error)"])
+                    }
+                }
+            })
+            return asyncResp
         }
         
         // POST /_wallet/transaction
@@ -379,6 +474,10 @@ extension BRWalletPlugin {
         return d
     }
     
+    func balance(currencyId: CurrencyId) -> Amount? {
+        return system.walletBalance(currencyId: currencyId)
+    }
+    
     func currencyInfo(_ currency: Currency, fiatCode: String?) -> [String: Any] {
         var d = [String: Any]()
         d["id"] = currency.code
@@ -413,5 +512,51 @@ extension BRWalletPlugin {
             }
         }
         return d
+    }
+    
+    func currencyInfo(_ currencyData: CurrencyMetaData, fiatCode: String?) -> [String: Any] {
+        var d = [String: Any]()
+        
+        d["id"] = currencyData.code
+        d["ticker"] = currencyData.code
+        d["name"] = currencyData.name
+        d["colors"] = [currencyData.colors.0.toHex, currencyData.colors.1.toHex]
+        
+        // Add the balance info if available from the user's current wallets.
+        if let curr = Store.state.currencies.first(where: { $0.code == currencyData.code }),
+            let balance = balance(currencyId: currencyData.uid) {
+            
+            var numerator = balance.tokenUnformattedString(in: curr.baseUnit)
+            var denomiator = Amount(tokenString: "1", currency: curr, unit: curr.defaultUnit).tokenUnformattedString(in: curr.baseUnit)
+            
+            d["balance"] = ["currency": currencyData.code,
+                            "numerator": numerator,
+                            "denominator": denomiator]
+                    
+            if let rate = curr.state?.currentRate {
+                let amount = Amount(amount: balance, rate: curr.state?.currentRate)
+                let decimals = amount.localFormat.maximumFractionDigits
+                let denominatorValue = (pow(10, decimals) as NSDecimalNumber).doubleValue
+                
+                let fiatValue = (amount.fiatValue as NSDecimalNumber).doubleValue
+                numerator = String(Int(fiatValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["fiatBalance"] = ["currency": rate.code,
+                                    "numerator": numerator,
+                                    "denominator": denomiator]
+                
+                let rateValue = rate.rate
+                numerator = String(Int(rateValue * denominatorValue))
+                denomiator = String(Int(denominatorValue))
+                d["exchange"] = ["currency": rate.code,
+                                 "numerator": numerator,
+                                 "denominator": denomiator]
+            }
+        }
+        return d
+    }
+    
+    func allCurrencies() -> [CurrencyId: CurrencyMetaData]? {
+        return self.system.assetCollection?.allAssets ?? [:]
     }
 }

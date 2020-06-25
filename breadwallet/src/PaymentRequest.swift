@@ -61,12 +61,16 @@ struct PaymentRequest {
     var remoteRequest: URL?
     var paymentProtocolRequest: PaymentProtocolRequest?
     var r: URL?
+    var destinationTag: String?
     
     init?(string: String, currency: Currency) {
         self.currency = currency
-        
+                
         //Case: Incoming string is just a plain address
         if let address = Address.create(string: string, network: currency.network) {
+            
+            //TODO:CRYPTO - workaround for CORE-843
+            guard currency.isValidAddress(string) else { return nil }
             toAddress = address
             type = .local
             return
@@ -118,6 +122,10 @@ struct PaymentRequest {
                 case "tokenaddress":
                     if value.lowercased() != currency.tokenAddress?.lowercased() {
                         return nil
+                    }
+                case "dt":
+                    if Int(value) != nil {
+                        destinationTag = value
                     }
                 default:
                     print("Unknown Key found: \(param.name)")

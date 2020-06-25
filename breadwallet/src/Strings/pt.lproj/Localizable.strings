@@ -22,8 +22,6 @@
 "AccessibilityLabels.faq" = "Centro de Ajuda";
 /* Account balance */
 "Account.balance" = "Saldo";
-/* Delisted token alert banner message */
-"Account.delistedToken" = "Este token foi retirado porque o emissor decidiu suspender o suporte do ERC20. \n\nAinda pode enviar estes tokens para outra plataforma. Para obter mais informações, visite a nossa página de suporte.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ por %2$@";
 /* Loading Wallet Message */
@@ -38,18 +36,10 @@
 "Alert.keystore.generic.android" = "Há um problema com a KeyStore do seu SO Android. Por favor, contacte support@breadwallet.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Os seus dados encriptados pelo BRD foram recentemente invalidados porque o seu ecrã de bloqueio do Android estava desativado.";
-/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. \nPortanto, os dados do seu aplicativo BRD devem ser apagados a desinstalação.pel\n\nNão se preocupe, seus fundos continuam seguros! Reinstale a aplicação e recupere a sua carteira usando a chave de papel.";
-/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. Portanto, os seus dados da aplicação BRD devem ser apagados.\n\nNão se preocupe, seus fundos continuam seguros! Recupere asua carteira usando a sua chave de papel.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Erro na KeyStore do Android";
 /* No internet alert message */
 "Alert.noInternet" = "Não foi encontrada uma ligação à internet. Verifique a sua ligação e tente novamente.";
-/* General error message */
-"Alert.somethingWentWrong" = "Algo correu mal. Por favor, tente novamente.";
-/* Request timed out error message */
-"Alert.timedOut" = "Tempo limite da solicitação esgotado. Verifique sua conexão e tente novamente.";
 /* Warning alert title */
 "Alert.warning" = "Aviso";
 /* 'the addresses were copied'' Alert title */
@@ -122,52 +112,30 @@
 "Button.buy" = "Comprar";
 /* Cancel button label */
 "Button.cancel" = "Cancelar";
-/* Confirm button title */
-"Button.confirm" = "Confirmar";
-/* Button label to open a email compose window with our support email in the to field. */
-"Button.contactSupport.android" = "Contatar a assistência ";
 /* prompt continue button */
 "Button.continueAction" = "Continuar";
 /* prompt dismiss button */
 "Button.dismiss" = "Descartar";
-/* Done button title */
-"Button.done" = "Feito";
 /* Button to return to the "home" screen (the home screen is the top menu). */
 "Button.Home" = "Página inicial";
 /* Ignore button label */
 "Button.ignore" = "Ignorar";
-/* Maybe Later button label */
-"Button.maybeLater" = "Talvez Mais Tarde";
 /* menu button */
 "Button.menu" = "Menu";
-/* More information button */
-"Button.moreInfo" = "Mais informações";
 /* No button */
 "Button.no" = "Não";
 /* OK button label */
 "Button.ok" = "OK";
-/* Open Settings button */
-"Button.openSettings" = "Abrir Configurações";
 /* receive button */
 "Button.receive" = "Receber";
-/* Button label to open Security Settings. */
-"Button.securitySettings.android" = "Centro de Segurança";
 /* Click this button to sell an asset */
 "Button.sell" = "Vender";
 /* send button */
 "Button.send" = "Enviar";
 /* Settings button label */
 "Button.settings" = "Definições";
-/* Setup button label */
-"Button.setup" = "Definir";
-/* Skip button title */
-"Button.skip" = "Saltar";
 /* Settings button label */
 "Button.submit" = "Submeter";
-/* Button label to uninstall the app. */
-"Button.uninstall.android" = "Desinstalar";
-/* Button label to wipe the user's application data. */
-"Button.wipe.android" = "Apagar";
 /* Yes button */
 "Button.yes" = "Sim";
 /* Camera plugin instruction */
@@ -176,8 +144,6 @@
 "Confirmation.amountLabel" = "Montante a enviar:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Comissão da rede:";
-/* Network Fee: (ETH) */
-"Confirmation.feeLabelETH" = "Taxa de Rede (ETH):";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Tempo de processamento: Prevê-se que esta transação esteja concluída dentro de %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -210,14 +176,6 @@
 "DefaultCurrency.rateLabel" = "Taxa de Câmbio";
 /* The wallet is disabled. */
 "Disabled.title" = "Carteira desativada";
-/* Share address by e-mail subject */
-"Email.address_subject" = "%1$s Endereço";
-/* Service capabilities description */
-"EME.permissions.accountRequest" = "Requisitar %1$@ dados da conta";
-/* Service capabilities description */
-"EME.permissions.callRequest" = "Requisitar %1$@ ligação de contrato inteligente";
-/* Service capabilities description */
-"EME.permissions.paymentRequest" = "Requisitar %1$@ pagamento";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo não está configurado para enviar emails com a app Mail do iOS.";
 /* Email unavailable alert title */
@@ -232,8 +190,6 @@
 "ErrorMessages.touchIdFailed.android" = "Impressão digital não reconhecida. Por favor, tente novamente.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Pode personalizar o seu limite de gastos do Face ID a partir de %1$@.";
-/* Text describing the purpose of the Face ID settings in the BRD app. */
-"FaceIDSettings.explanatoryText" = "Utilizar o Face ID para abrir a sua aplicação BRD e transferir dinheiro.";
 /* Face Id screen label */
 "FaceIDSettings.label" = "Utilize o seu rosto para desbloquear o seu BRD e enviar dinheiro até certo limite definido.";
 /* Title of the screen for setting the Face ID Spending Limit */
@@ -242,14 +198,10 @@
 "FaceIDSettings.switchLabel" = "Ativar o Face ID para o BRD";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
-/* Text label for a toggle that enables Face ID for sending money. */
-"FaceIDSettings.transactionsTitleText" = "Ativar o Face ID para transferir dinheiro";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Não configurou o Face ID neste dispositivo. Para o configurar neste momento, vá a Definições->Face ID e Código de Acesso.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID não configurado";
-/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
-"FaceIDSettings.unlockTitleText" = "Ativar o Face ID para abrir BRD";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Limite de Gastos do Face ID";
 /* Economy fee */
@@ -262,40 +214,18 @@
 "FeeSelector.estimatedDeliver" = "Entrega estimada: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 a 5 minutos";
-/* Priority fee */
-"FeeSelector.priority" = "Prioridade";
-/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
-"FeeSelector.priorityTime" = "10–30 minutos";
 /* Regular fee */
 "FeeSelector.regular" = "Normal.";
 /* E.g. [This transaction is predicted to complete in] 10-60 minutes */
 "FeeSelector.regularTime" = "10-60 minutos";
 /* Fee Selector title */
 "FeeSelector.title" = "Velocidade de processamento";
-/* Label for the Android file chooser when we need to prompt the user to select an image file. */
-"FileChooser.selectImageSource.android" = "Selecione a origem da imagem";
-/* Fingerprint authentication settings screen description */
-"FingerprintSettings.description" = "Utilize a sua impressão digital para desbloquear a sua aplicação BRD e enviar transacções.";
-/* Switch label to enable fingerprint authentication to send money */
-"FingerprintSettings.sendMoney" = "Use a impressão digital para enviar dinheiro";
-/* Fingerprint authentication settings sceen title */
-"FingerprintSettings.title" = "Impressão digital";
-/* Switch label to enable fingerprint authentication to unlock BRD app */
-"FingerprintSettings.unlockApp" = "Use a impressão digital para desbloquear o BRD";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Administrador";
-/* Home screen menu button to buy some bitcoin */
-"HomeScreen.buy" = "Comprar";
-/* home screen toolbar 'Buy & Sell' button */
-"HomeScreen.buyAndSell" = "Comprar e Vender";
-/* Menu button on the home screen toolbar */
-"HomeScreen.menu" = "Menu";
 /* This section lists the users wallets */
 "HomeScreen.portfolio" = "Carteiras";
 /* Label for the total balance of all the user's assets (style is all lower case if your language permits) */
 "HomeScreen.totalAssets" = "ativos totais";
-/* (Tap here to) trade (your assets for other assets) */
-"HomeScreen.trade" = "Comércio";
 /* Checking private key balance progress view text */
 "Import.checking" = "A verificar o saldo da chave privada...";
 /* Sweep private key confirmation message */
@@ -343,27 +273,15 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignorar";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\n Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves e roubar as suas bitcoins! Apague esta carteira imediatamente e restaure-a num dispositivo seguro.";
+"JailbreakWarnings.messageWithBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\
+ Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves e roubar as suas bitcoins! Apague esta carteira imediatamente e restaure-a num dispositivo seguro.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\n Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves da BRD e roubar as suas bitcoins. Por favor, use a BRD somente num dispositivo não desbloqueado.";
+"JailbreakWarnings.messageWithoutBalance" = "SEGURANÇA DO DISPOSITIVO COMPROMETIDA\
+ Qualquer aplicação com \"jailbreak\" consegue aceder aos seus dados de porta-chaves da BRD e roubar as suas bitcoins. Por favor, use a BRD somente num dispositivo não desbloqueado.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "AVISO";
 /* Wipe wallet button */
 "JailbreakWarnings.wipe" = "Apagar";
-/* Approve link wallet button label */
-"LinkWallet.approve" = "Aprovar";
-/* Decline link wallet button label */
-"LinkWallet.decline" = "Recusar";
-/* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "As aplicações externas não podem enviar dinheiro   sem a aprovação deste dispositivo";
-/* Link Wallet view title above domain list */
-"LinkWallet.domainTitle" = "Nota: interaja com esta aplicação APENAS quando se encontrar num dos seguintes domínios";
-/* Link wallet logo footer text */
-"LinkWallet.logoFooter" = "Pagamento Seguro";
-/* Link Wallet view title above permissions list */
-"LinkWallet.permissionsTitle" = "Esta aplicação poderá:";
-/* Link Wallet view title */
-"LinkWallet.title" = "Relacionar Carteira";
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Os serviços de localização estão desativados.";
 /* No permissions for location services */
@@ -380,10 +298,6 @@
 "MenuButton.addWallet" = "Adicionar Carteira";
 /* Menu button title */
 "MenuButton.lock" = "Bloquear Carteira";
-/* (Click here to) manage (your list of) wallets */
-"MenuButton.manageWallets" = "Gerir Carteiras";
-/* (press here to) scan (a) QR code */
-"MenuButton.scan" = "Escanear o código QR";
 /* Menu button title */
 "MenuButton.security" = "Centro de Segurança";
 /* Menu button title */
@@ -396,16 +310,6 @@
 "MenuViewController.modalTitle" = "Menu";
 /* button label */
 "MenuViewController.recoverButton" = "Recuperar Carteira";
-/* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "A sua chave de papel é necessária para abrir a sua carteira se alterar as definições de segurança do seu telefone. \n\nTem a certeza de que quer definir a sua chave de papel mais tarde?";
-/* Paper Key Skip modal Continue Set Up button */
-"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continuar Definição";
-/* Paper Key Skip modal I'll do it later button */
-"Modal.PaperKeySkip.Button.IllDoItLater" = "Mais tarde";
-/* Paper Key Skip modal title */
-"Modal.PaperKeySkip.Title" = "Atenção";
-/* Node selection mode is automatic */
-"NodeSelector.automatic" = "Automático";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Mudar para o modo automático";
 /* Node is connected label */
@@ -416,8 +320,6 @@
 "NodeSelector.enterBody" = "Introduza o endereço de IP e porta do nó (opcional)";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "Introduza o nó";
-/* Entered invalid node address at the node selection screen */
-"NodeSelector.invalid" = "Nó inválido";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "Trocar para modo manual";
 /* Node address label */
@@ -428,34 +330,6 @@
 "NodeSelector.statusLabel" = "Estado da ligação do nó";
 /* Node Selector view title */
 "NodeSelector.title" = "Nós de bitcoin";
-/* Onboarding screen 'I'll browse first' button */
-"Onboarding.browseFirst" = "Vou navegar primeiro";
-/* Onboarding screen 'Buy some coin' button */
-"Onboarding.buyCoin" = "Comprar moedas";
-/* Onboarding screen 'Get started' (create new wallet) button */
-"Onboarding.getStarted" = "Começar";
-/* Onboarding screen 'Next' button */
-"Onboarding.next" = "Seguinte";
-/* Onboarding screen restore an existing wallet. */
-"Onboarding.restoreWallet" = "Restaurar a carteira";
-/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
-"Onboarding.skip" = "Saltar";
-/* Onboarding screen Page 4 title */
-"OnboardingPageFour.title" = "Comece a investir hoje com um montante a partir de 50$!";
-/* Onboarding screen Page 1 title */
-"OnboardingPageOne.title" = "Bem vindo à sua nova carteira global!";
-/* Onboarding screen Page 3 subtitle */
-"OnboardingPageThree.subtitle" = "Invista e diversifique com a BRD, de modo fácil e seguro.";
-/* Onboarding screen Page 3 title */
-"OnboardingPageThree.title" = "Compre e negoceie bitcoins, tokens e outras moedas digitais.";
-/* Onboarding screen Page 2 subtitle */
-"OnboardingPageTwo.subtitle" = "Temos activos protegidos no valor de mais de 6 mil milhões de dólares. ";
-/* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Junte-se a milhões de pessoas em todo o mundo que confiam em BRD.";
-/* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Enviar %1$@ para comprar %2$@";
-/* Payment confirmation view title */
-"PaymentConfirmation.title" = "Confirmação";
 /* Bad Payment request alert title */
 "PaymentProtocol.Errors.badPaymentRequest" = "Pedido de Pagamento Inválido";
 /* Error opening payment protocol file message */
@@ -474,18 +348,6 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "tipo de assinatura não suportado";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certificado não fidedigno";
-/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
-"Prompts.Email.body" = "Seja o primeiro a receber atualizações de suporte e produtos importantes";
-/* Placeholder text for an email address text field. */
-"Prompts.Email.placeholder" = "introduza o seu email";
-/* Body text that is shown when the user successfully subscribes to email updates. */
-"Prompts.Email.successBody" = "Fez a subscrição para receber atualizações com sucesso";
-/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
-"Prompts.Email.successFootnote" = "Apreciamos o seu apoio continuado";
-/* Title that is shown when the user successfully subscribes to email updates. */
-"Prompts.Email.successTitle" = "Obrigado!";
-/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
-"Prompts.Email.title" = "Entre no círculo";
 /* Enable face ID prompt body */
 "Prompts.FaceId.body" = "Para ativar o Face ID, toque em Continuar";
 /* Enable face ID prompt title */
@@ -500,8 +362,6 @@
 "Prompts.NoScreenLock.title.android" = "Bloqueio de ecrã desativado";
 /* Warning about recovery key (formerly paper key). */
 "Prompts.PaperKey.body" = "O seu Paper Key deve ser guardado para o caso de perder ou alterar o seu telemóvel.";
-/* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Defina a sua chave de papel para o caso de perder ou substituir o seu telefone. A sua chave também é necessária se alterar as definições de segurança do seu telefone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Ação Necessária";
 /* Transaction rejected prompt body */
@@ -528,14 +388,6 @@
 "Prompts.UpgradePin.title" = "Atualizar PIN";
 /* Body text for the push notifications prompt. */
 "PushNotifications.body" = "Ative as notificações por push e seja o primeiro a descobrir novos recursos e ofertas especiais.";
-/* Push notifications are disabled alert title" */
-"PushNotifications.disabled" = "Notificações Desativadas";
-/* Body text when push notifications are disabled. */
-"PushNotifications.disabledBody" = "Ative as notificações para receber ofertas especiais e atualizações do BRD.";
-/* Body text when push notifications are enabled. */
-"PushNotifications.enabledBody" = "Está a receber ofertas especiais e atualizações do BRD.";
-/* Instructions to enable push notifications for BRD in the phone's system settings. */
-"PushNotifications.enableInstructions" = "Parece que as notificações estão desativadas. Vá para Configurações para ativar as notificações do BRD.";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Receber Notificações Push";
 /* Push notifications are off label */
@@ -544,16 +396,6 @@
 "PushNotifications.on" = "Ligado";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Mantenha-se actualizado";
-/* Push notifications settings failed to update settings on the back end */
-"PushNotifications.updateFailed" = "Falha ao atualizar as configurações de notificações por push";
-/* Google play review prompt body */
-"RateAppPrompt.Body.Android" = "Se gostas da nossa app, dedica uns instantes a avaliá-la e escreve uma opinião.";
-/* Google play review prompt, revivew button */
-"RateAppPrompt.Button.Dismiss.Android" = "Não, obrigado";
-/* Google play review prompt, dismiss button */
-"RateAppPrompt.Button.RateApp.Android" = "Avalia a BRD";
-/* Google play review prompt title */
-"RateAppPrompt.Title.Android" = "Avalia a BRD";
 /* Address copied message. */
 "Receive.copied" = "Copiado para a área de transferência.";
 /* Share via email button label */
@@ -590,78 +432,6 @@
 "RecoverWallet.subheader" = "Introduza a chave de papel para a carteira que quer recuperar.";
 /* Reset PIN with paper key: sub-header */
 "RecoverWallet.subheader_reset_pin" = "Para redefinir o seu PIN, introduza as palavras da sua chave de papel nas caixas abaixo.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryInputError" = "A palavra que introduziu está incorrecta. Por favor, tente outra vez.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quase pronto! Introduza as seguintes palavras da sua chave de recuperação.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar Chave de Recuperação";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Introduzir Chave de Recuperação";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Por favor, introduza a sua chave de recuperação para desvincular esta carteira deste dispositivo.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Tem a certeza que pretende definir a sua chave de recuperação mais tarde?";
-/* Title for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Definir Mais Tarde";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Gerar Chave de Recuperação";
-/* Subtext for the recovery key landing page. */
-"RecoveryKeyFlow.generateKeyExplanation" = "Esta chave é necessária para recuperar o seu dinheiro caso mude ou perca o seu telefone.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Gerar a sua chave de recuperação privada";
-/* Title for a button that takes the user to the wallet after setting up the recovery key. */
-"RecoveryKeyFlow.goToWalletButtonTitle" = "Ir para Carteira";
-/* Hint text for recovery key intro page, e.g., Step 2 */
-"RecoveryKeyFlow.howItWorksStep" = "Como funciona - Passo %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Algumas das palavras que introduziu não correspondem à sua chave de recuperação.\nPor favor, tente outra vez.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.keepSecure" = "Mantenha-a segura";
-/* Informs the user that the recovery is only required for recovering a wallet. */
-"RecoveryKeyFlow.keyUseHint" = "A sua chave é apenas necessária para recuperação, não para o acesso normal à sua carteira.";
-/* Reminds the user not to take screenshots or email the recovery key words */
-"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Por motivos de segurança, não faça capturas de ecrã ou envie por email estas palavras.";
-/* Recommends that the user avoids capturing the paper key with a screenshot */
-"RecoveryKeyFlow.noScreenshotsRecommendation" = "Tome nota num papel da sua chave de recuperação e confirme. Capturas de ecrã não são recomendadas por questões de segurança.";
-/* Title displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWallet" = "Recuperar a Sua Carteira";
-/* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Por favor, introduza a chave de recuperação da carteira que pretende recuperar.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.relaxBuyTrade" = "Relaxe, compre, e troque";
-/* Reminds the user to write down the recovery key words. */
-"RecoveryKeyFlow.rememberToWriteDownReminder" = "Lembre-se de apontar estas palavras. Deslize para trás caso se tenha esquecido.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Por favor, introduza a sua chave de recuperação para redefinir o seu PIN.";
-/* Assures the user that BRD will keep the user's funds secure. */
-"RecoveryKeyFlow.securityAssurance" = "Compre e troque sabendo que os seus fundos estão protegidos pela melhor segurança e privacidade na área.";
-/* Recommends that the user stores the recovery key in a secure location */
-"RecoveryKeyFlow.storeSecurelyRecommendation" = "Guarde a sua chave numa localização segura. Esta é a única forma de recuperar a sua carteira. A BRD não guarda uma cópia.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Parabéns! Completou a definição da sua chave de recuperação.";
-/* Subtitle for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successSubheading" = "Está pronto para depositar, trocar, e comprar crypto a partir da sua carteira BRD.";
-/* Title displayed to the user on the intro screen when unlinking a wallet */
-"RecoveryKeyFlow.unlinkWallet" = "Desvincule a sua carteira deste dispositivo.";
-/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
-"RecoveryKeyFlow.unlinkWalletSubtext" = "Comece uma nova carteira desvinculando o seu dispositivo da carteira já instalada.";
-/* Warning displayed when the user starts the process of unlinking a wallet */
-"RecoveryKeyFlow.unlinkWalletWarning" = "A carteira tem de ser recuperada para recuperar o acesso.";
-/* Title displayed to the user on the intro screen when wiping a wallet */
-"RecoveryKeyFlow.wipeWallet" = "Desvincule a sua carteira deste dispositivo.";
-/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
-"RecoveryKeyFlow.wipeWalletSubtext" = "Comece uma nova carteira, limpando a carteira actual do seu dispositivo.";
-/* Title for recovery key intro page */
-"RecoveryKeyFlow.writeItDown" = "Tome nota da sua chave";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Tome nota novamente da sua chave de recuperação";
-/* Subtitle for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Tome nota das seguintes palavras em ordem.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "A Sua Chave de Recuperação";
-/* Title for the step number when the user pages through the recovery words */
-"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ de %2$@";
 /* No amount entered error message. */
 "RequestAnAmount.noAmount" = "Primeiro, por favor, introduza um montante.";
 /* Request a specific amount of bitcoin */
@@ -688,12 +458,6 @@
 "ReScan.subheader1" = "Tempo previsto";
 /* Subheader label */
 "ReScan.subheader2" = "Quando sincronizar?";
-/* Rewards view expanded body. */
-"RewardsView.expandedBody" = "Saiba como pode poupar em comissões de negociação e desbloqueie recompensas futuras.";
-/* Rewards view expanded title. */
-"RewardsView.expandedTitle" = "Apresentando as Recompensas BRD.";
-/* Rewards view title */
-"RewardsView.normalTitle" = "Recompensas";
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Flash da Câmara";
 /* Complete filter label */
@@ -713,8 +477,6 @@
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Chave de Papel";
-/* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Chave de Papel";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protege a sua BRD de utilizadores não autorizados.";
 /* PIN button title */
@@ -725,18 +487,6 @@
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
 "SecurityCenter.touchIdTitle.android" = "Autenticação por Impressão Digital";
-/* Segwit enabled confirmation title */
-"Segwit.ConfirmationConfirmationTitle" = "Ativou o SegWit!";
-/* Segwit enabled confirmation description */
-"Segwit.ConfirmationInstructionsDescription" = "Obrigado por ajudar a fazer a bitcoin avançar.";
-/* Segwit instructions */
-"Segwit.ConfirmationInstructionsInstructions" = "O suporte do SegWit ainda é um recurso beta.\nQuando o SegWit estiver ativado, não será possível desativá-lo. Poderá encontrar o endereço legado nas Configurações.\nAlguns serviços de terceiros, incluindo a criptografia, podem estar indisponíveis para utilizadores que ativaram o SegWit. Em caso de emergência, poderá gerar um endereço legado em Preferências> Configurações de Bitcoin.\nO SegWit será automaticamente ativado para todos os utilizadores numa futura atualização.";
-/* Segwit extra confirmation title. */
-"Segwit.ConfirmChoiceLayout" = "A ativação do SegWit é uma opção irreversível. Tem a certeza de que pretende continuar?";
-/* Segwit enableButton */
-"Segwit.Enable" = "Ativar";
-/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
-"Segwit.HomeButton" = "Até à Lua";
 /* Send money amount label */
 "Send.amountLabel" = "Quantia";
 /* Balance: $4.00 */
@@ -799,8 +549,6 @@
 "Send.scanLabel" = "Digitalizar";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Enviar";
-/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
-"Send.sendMaximum" = "Enviar montante máximo?";
 /* Send screen title (as in "this is the screen for sending money") */
 "Send.title" = "Enviar";
 /* Send money to label */
@@ -817,10 +565,6 @@
 "Settings.advanced" = "Avançadas";
 /* Advanced Settings title */
 "Settings.advancedTitle" = "Definições avançadas";
-/* ATM map menu item title explaining that it's a feature only available in the USA */
-"Settings.atmMapMenuItemSubtitle" = "Disponível apenas nos EUA";
-/* ATM map menu item title */
-"Settings.atmMapMenuItemTitle" = "Crypto ATM mapa";
 /* i.e. the currency which will be displayed */
 "Settings.currency" = "Mostrar moeda";
 /* e.g. "USD Settings" (settings for how USD is handled) */
@@ -829,8 +573,6 @@
 "Settings.currencySettings" = "Definições da Moeda";
 /* Join Early access label */
 "Settings.earlyAccess" = "Registe-se no Acesso Antecipado";
-/* Enable segwit. */
-"Settings.EnableSegwit" = "Ativar Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Está a gostar da BRD?";
 /* Face ID spending limit label */
@@ -841,16 +583,12 @@
 "Settings.manage" = "Gerir";
 /* Notifications label */
 "Settings.notifications" = "Notificações";
-/* Section header for "other settings". */
-"Settings.other" = "Outro";
 /* Preferences settings section header */
 "Settings.preferences" = "Preferências";
 /* Tap here to reset the list of currencies to the default settings. */
 "Settings.resetCurrencies" = "Repor as moedas predefinidas";
 /* Leave review button label */
 "Settings.review" = "Deixe-nos uma avaliação";
-/* Rewards menu item */
-"Settings.rewards" = "Recompensas";
 /* Share anonymous data label */
 "Settings.shareData" = "Partilhar Dados Anónimos";
 /* Sync blockchain label */
@@ -861,18 +599,10 @@
 "Settings.touchIdLimit" = "Limite de Gastos Touch ID";
 /* The fingerprint spending limit */
 "Settings.touchIdLimit.android" = "Limite de Gastos da Autenticação por Impressão Digital";
-/* View legacy address (old format). */
-"Settings.ViewLegacyAddress" = "Ver Endereço de Receção Legada";
-/* Receive Bitcoin instructions */
-"Settings.ViewLegacyAddressReceiveDescription" = "Apenas envie Bitcoin (BTC) para este endereço. Qualquer outro ativo enviado para este endereço será irreversivelmente perdido";
-/* Receive Bitcoin */
-"Settings.ViewLegacyAddressReceiveTitle" = "Receber Bitcoin";
 /* Wallet Settings section header */
 "Settings.wallet" = "Carteira";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Eliminar a Ligação a Partir Deste Dispositivo";
-/* Wipe/delete your wallet from the current device. */
-"Settings.wipe.android" = "Desvincule a sua carteira deste dispositivo.";
 /* Share data view body */
 "ShareData.body" = "Ajude a melhorar a BRD partilhando os seus dados anónimos connosco. Isto não inclui quaisquer informações financeiras. Respeitamos a sua privacidade financeira.";
 /* Share data header */
@@ -882,31 +612,26 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Escrever Novamente Chave de Papel";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "A chave de papel é a única forma de restaurar a sua BRD se o seu telefone for perdido, roubado, partido ou atualizado.\n\nVamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
-/* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "A sua chave de papel é a única forma de restaurar a sua BRD se o seu telefone se perder, partir, for roubado ou atualizado.\n\nA sua chave de papel também é necessária se alterar as definições de segurança do seu dispositivo.\n\nVamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
+"StartPaperPhrase.body" = "A chave de papel é a única forma de restaurar a sua BRD se o seu telefone for perdido, roubado, partido ou atualizado.\
+\
+Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Escrever Chave de Papel";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "A última vez que escreveu a sua chave de papel foi em \n%1$@";
+"StartPaperPhrase.date" = "A última vez que escreveu a sua chave de papel foi em \
+%1$@";
 /* button label */
 "StartViewController.createButton" = "Criar Carteira Nova";
 /* Start view message */
 "StartViewController.message" = "A forma mais protegida e segura de utilizar a bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recuperar Carteira";
-/* Syncing view done syncing state header text */
-"SyncingView.activity" = "Atividade";
 /* Syncing view connectiong state header text */
 "SyncingView.connecting" = "Conectando";
-/* The sync has failed (to complete) */
-"SyncingView.failed" = "A sincronização falhou";
 /* Syncing view header text */
 "SyncingView.header" = "A Sincronizar";
 /* Retry button label */
 "SyncingView.retry" = "Tentar Novamente";
-/* "eg. Synced through <Jan 12, 2015> */
-"SyncingView.syncedThrough" = "Sincronizado por %1$@";
 /* Syncing view syncing state header text */
 "SyncingView.syncing" = "Sincronizando";
 /* 6 d (6 days) */
@@ -937,8 +662,6 @@
 "TouchIdSettings.disabledWarning.body.android" = "Não ativou a autenticação por impressão digital neste dispositivo. Vá a Definições -> Segurança para definir a autenticação por impressão digital.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Autenticação por Impressão Digital não Ativada";
-/* Text that describes the purpose of the Touch ID settings in the BRD app. */
-"TouchIdSettings.explanatoryText" = "Utilizar o Touch ID para abrir a sua aplicação BRD e transferir dinheiro.";
 /* Touch Id screen label */
 "TouchIdSettings.label" = "Utilize a impressão digital para desbloquear a sua BRD e enviar dinheiro até um limite definido.";
 /* Link Text (see TouchIdSettings.customizeText) */
@@ -953,14 +676,10 @@
 "TouchIdSettings.title" = "Touch ID";
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Autenticação por Impressão Digital";
-/* Text label for a toggle that enables Touch ID for sending money. */
-"TouchIdSettings.transactionsTitleText" = "Ativar o Touch ID para transferir dinheiro";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Não definiu o Touch ID neste dispositivo. Vá a Definições->Touch ID e Código para o configurar agora.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID Não Configurado";
-/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
-"TouchIdSettings.unlockTitleText" = "Ativar o Touch ID para abrir BRD";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Pedir sempre um código de acesso";
 /* Touch ID spending limit screen body */
@@ -1017,8 +736,6 @@
 "TransactionDetails.amountHeader" = "Quantia";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ quando recebido, %2$@ agora";
-/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Confirmado no bloco";
 /* Memo section header */
@@ -1027,9 +744,6 @@
 "TransactionDetails.commentsPlaceholder" = "Adicionar memorando...";
 /* Timestamp section header for complete tx */
 "TransactionDetails.completeTimestampHeader" = "Concluído";
-/* Block height and confirmations label
-eg. 182930 (45061 confirmations) */
-"TransactionDetails.confirmationsLabel" = "Confirmações";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "As suas transações aparecerão aqui.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1044,8 +758,6 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Limite de GAS";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Preço da GAS";
-/* Hide Details button */
-"TransactionDetails.hideDetails" = "Ocultar Detalhes";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "Iniciado";
 /* More button title */
@@ -1097,7 +809,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "Total";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "ID da Transação de Bitcoin";
+"TransactionDetails.txHashHeader" = "ID da transação";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "Recebida neste endereço";
 /* (this transaction was) Sent to this address: */
@@ -1158,23 +870,6 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN Obrigatório";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autorizar esta transação";
-/* Turn off fast sync confirmation question */
-"WalletConnectionSettings.confirmation" = "Tem certeza de que deseja desativar o Fastsync?";
-/* Explanation for wallet connection setting */
-"WalletConnectionSettings.explanatoryText" = "Faça a sincronização da sua carteira de bitcoin praticamente instantânea. Saiba mais sobre como funciona aqui.";
-/* Connection mode switch label. */
-"WalletConnectionSettings.footerTitle" = "Distribuído por";
-/* Wallet connection settings view title */
-"WalletConnectionSettings.header" = "Fastsync (piloto)";
-/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
-"WalletConnectionSettings.link" = "aqui";
-/* WalletConnectionSettiongs
-Wallet connection settings menu item title. */
-"WalletConnectionSettings.menuTitle" = "Modo de conexão";
-/* Turn off fast sync button label */
-"WalletConnectionSettings.turnOff" = "Desligar";
-/* Wallet connection settings view title */
-"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "Abra a aplicação BRD para iPhone para configurar a sua carteira.";
 /* Dismiss button label */
@@ -1184,7 +879,9 @@ Wallet connection settings menu item title. */
 /* Updating webview message */
 "Webview.updating" = "A Atualizar...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "As Breadwallets mudaram de nome para BRD, com um visual completamente novo e algumas características novas. \n\nSe precisar de ajuda, procure o (?) no canto superior direito da maioria das telas.";
+"Welcome.body" = "As Breadwallets mudaram de nome para BRD, com um visual completamente novo e algumas características novas. \
+\
+Se precisar de ajuda, procure o (?) no canto superior direito da maioria das telas.";
 /* Top title of welcome screen */
 "Welcome.title" = "Bem-vindo ao BRD!";
 /* Wipe wallet alert message */
@@ -1215,3 +912,334 @@ Wallet connection settings menu item title. */
 "WritePaperPhrase.previous" = "Anterior";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$li de %2$li";
+/* Section header for "other settings". */
+"Settings.other" = "Outro";
+/* (Click here to) manage (your list of) wallets */
+"MenuButton.manageWallets" = "Gerir Carteiras";
+/* Menu button on the home screen toolbar */
+"HomeScreen.menu" = "Menu";
+/* Home screen menu button to buy some bitcoin */
+"HomeScreen.buy" = "Comprar";
+/* (Tap here to) trade (your assets for other assets) */
+"HomeScreen.trade" = "Comércio";
+/* (press here to) scan (a) QR code */
+"MenuButton.scan" = "Escanear o código QR";
+/* The sync has failed (to complete) */
+"SyncingView.failed" = "A sincronização falhou";
+/* "eg. Synced through <Jan 12, 2015> */
+"SyncingView.syncedThrough" = "Sincronizado por %1$@";
+/* Push notifications are disabled alert title" */
+"PushNotifications.disabled" = "Notificações Desativadas";
+/* Instructions to enable push notifications for BRD in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Parece que as notificações estão desativadas. Vá para Configurações para ativar as notificações do BRD.";
+/* Approve link wallet button label */
+"LinkWallet.approve" = "Aprovar";
+/* Decline link wallet button label */
+"LinkWallet.decline" = "Recusar";
+/* Link Wallet view title */
+"LinkWallet.title" = "Relacionar Carteira";
+/* Link Wallet view title above domain list */
+"LinkWallet.domainTitle" = "Nota: interaja com esta aplicação APENAS quando se encontrar num dos seguintes domínios";
+/* Link Wallet view title above permissions list */
+"LinkWallet.permissionsTitle" = "Esta aplicação poderá:";
+/* Link Wallet view dislaimer footer */
+"LinkWallet.disclaimer" = "As aplicações externas não podem enviar dinheiro   sem a aprovação deste dispositivo";
+/* Link wallet logo footer text */
+"LinkWallet.logoFooter" = "Pagamento Seguro";
+/* Payment confirmation view title */
+"PaymentConfirmation.title" = "Confirmação";
+/* Eg. Send 1.0Eth to purchase CCC */
+"PaymentConfirmation.amountText" = "Enviar %1$@ para comprar %2$@";
+/* Service capabilities description */
+"EME.permissions.accountRequest" = "Requisitar %1$@ dados da conta";
+/* Service capabilities description */
+"EME.permissions.callRequest" = "Requisitar %1$@ ligação de contrato inteligente";
+/* Service capabilities description */
+"EME.permissions.paymentRequest" = "Requisitar %1$@ pagamento";
+/* "(it was worth) $100 when sent, (and it is worth) $200 now" */
+"TransactionDetails.amountWhenSent" = "%1$@ ao ser enviado, %2$@ agora";
+/* Request timed out error message */
+"Alert.timedOut" = "Tempo limite da solicitação esgotado. Verifique sua conexão e tente novamente.";
+/* Delisted token alert banner message */
+"Account.delistedToken" = "Este token foi retirado porque o emissor decidiu suspender o suporte do ERC20. \
+\
+Ainda pode enviar estes tokens para outra plataforma. Para obter mais informações, visite a nossa página de suporte.";
+/* General error message */
+"Alert.somethingWentWrong" = "Algo correu mal. Por favor, tente novamente.";
+/* More information button */
+"Button.moreInfo" = "Mais informações";
+/* Title for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.title" = "Entre no círculo";
+/* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
+"Prompts.Email.body" = "Seja o primeiro a receber atualizações de suporte e produtos importantes";
+/* Placeholder text for an email address text field. */
+"Prompts.Email.placeholder" = "introduza o seu email";
+/* Title that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successTitle" = "Obrigado!";
+/* Body text that is shown when the user successfully subscribes to email updates. */
+"Prompts.Email.successBody" = "Fez a subscrição para receber atualizações com sucesso";
+/* Text that is displayed as a footnote when the user successfully subscribes to email updates. */
+"Prompts.Email.successFootnote" = "Apreciamos o seu apoio continuado";
+/* View legacy address (old format). */
+"Settings.ViewLegacyAddress" = "Ver Endereço de Receção Legada";
+/* Receive Bitcoin */
+"Settings.ViewLegacyAddressReceiveTitle" = "Receber Bitcoin";
+/* Receive Bitcoin instructions */
+"Settings.ViewLegacyAddressReceiveDescription" = "Apenas envie Bitcoin (BTC) para este endereço. Qualquer outro ativo enviado para este endereço será irreversivelmente perdido";
+/* Enable segwit. */
+"Settings.EnableSegwit" = "Ativar Segwit";
+/* Segwit extra confirmation title. */
+"Segwit.ConfirmChoiceLayout" = "A ativação do SegWit é uma opção irreversível. Tem a certeza de que pretende continuar?";
+/* Segwit enabled confirmation title */
+"Segwit.ConfirmationConfirmationTitle" = "Ativou o SegWit!";
+/* Segwit enabled confirmation description */
+"Segwit.ConfirmationInstructionsDescription" = "Obrigado por ajudar a fazer a bitcoin avançar.";
+/* Segwit instructions */
+"Segwit.ConfirmationInstructionsInstructions" = "O suporte do SegWit ainda é um recurso beta.\
+Quando o SegWit estiver ativado, não será possível desativá-lo. Poderá encontrar o endereço legado nas Configurações.\
+Alguns serviços de terceiros, incluindo a criptografia, podem estar indisponíveis para utilizadores que ativaram o SegWit. Em caso de emergência, poderá gerar um endereço legado em Preferências> Configurações de Bitcoin.\
+O SegWit será automaticamente ativado para todos os utilizadores numa futura atualização.";
+/* Segwit enableButton */
+"Segwit.Enable" = "Ativar";
+/* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
+"Send.sendMaximum" = "Enviar montante máximo?";
+/* Onboarding screen Page 1 title */
+"OnboardingPageOne.title" = "Bem vindo à sua nova carteira global!";
+/* Onboarding screen Page 2 subtitle */
+"OnboardingPageTwo.subtitle" = "Temos activos protegidos no valor de mais de 6 mil milhões de dólares. ";
+/* Onboarding screen Page 2 title */
+"OnboardingPageTwo.title" = "Junte-se a milhões de pessoas em todo o mundo que confiam em BRD.";
+/* Onboarding screen Page 3 subtitle */
+"OnboardingPageThree.subtitle" = "Invista e diversifique com a BRD, de modo fácil e seguro.";
+/* Onboarding screen Page 3 title */
+"OnboardingPageThree.title" = "Compre e negoceie bitcoins, tokens e outras moedas digitais.";
+/* Onboarding screen Page 4 title */
+"OnboardingPageFour.title" = "Comece a investir hoje com um montante a partir de 50$!";
+/* Onboarding screen 'I'll browse first' button */
+"Onboarding.browseFirst" = "Vou navegar primeiro";
+/* Onboarding screen 'Buy some coin' button */
+"Onboarding.buyCoin" = "Comprar moedas";
+/* Onboarding screen 'Get started' (create new wallet) button */
+"Onboarding.getStarted" = "Começar";
+/* Onboarding screen 'Next' button */
+"Onboarding.next" = "Seguinte";
+/* Onboarding screen restore an existing wallet. */
+"Onboarding.restoreWallet" = "Restaurar a carteira";
+/* Onboarding screen Skip button title that allows the user to exit the onboarding process. */
+"Onboarding.skip" = "Saltar";
+/* Network Fee: (ETH) */
+"Confirmation.feeLabelETH" = "Taxa de Rede (ETH):";
+/* Rewards menu item */
+"Settings.rewards" = "Recompensas";
+/* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
+"Segwit.HomeButton" = "Até à Lua";
+/* Rewards view title */
+"RewardsView.normalTitle" = "Recompensas";
+/* Rewards view expanded title. */
+"RewardsView.expandedTitle" = "Apresentando as Recompensas BRD.";
+/* Rewards view expanded body. */
+"RewardsView.expandedBody" = "Saiba como pode poupar em comissões de negociação e desbloqueie recompensas futuras.";
+/* Maybe Later button label */
+"Button.maybeLater" = "Talvez Mais Tarde";
+/* Block height and confirmations label
+eg. 182930 (45061 confirmations) */
+"TransactionDetails.confirmationsLabel" = "Confirmações";
+/* Button label to open Security Settings. */
+"Button.securitySettings.android" = "Centro de Segurança";
+/* Button label to open a email compose window with our support email in the to field. */
+"Button.contactSupport.android" = "Contatar a assistência ";
+/* Button label to wipe the user's application data. */
+"Button.wipe.android" = "Apagar";
+/* Button label to uninstall the app. */
+"Button.uninstall.android" = "Desinstalar";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
+"Alert.keystore.invalidated.wipe.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. Portanto, os seus dados da aplicação BRD devem ser apagados.\
+\
+Não se preocupe, seus fundos continuam seguros! Recupere asua carteira usando a sua chave de papel.";
+/* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
+"Alert.keystore.invalidated.uninstall.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. \
+Portanto, os dados do seu aplicativo BRD devem ser apagados a desinstalação.pel\
+\
+Não se preocupe, seus fundos continuam seguros! Reinstale a aplicação e recupere a sua carteira usando a chave de papel.";
+/* Confirm button title */
+"Button.confirm" = "Confirmar";
+/* Done button title */
+"Button.done" = "Feito";
+/* Skip button title */
+"Button.skip" = "Saltar";
+/* Default title for the recovery key landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Gerar a sua chave de recuperação privada";
+/* Title for the recovery key landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Tome nota novamente da sua chave de recuperação";
+/* Subtext for the recovery key landing page. */
+"RecoveryKeyFlow.generateKeyExplanation" = "Esta chave é necessária para recuperar o seu dinheiro caso mude ou perca o seu telefone.";
+/* Hint text for recovery key intro page, e.g., Step 2 */
+"RecoveryKeyFlow.howItWorksStep" = "Como funciona - Passo %1$@";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.writeItDown" = "Tome nota da sua chave";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.keepSecure" = "Mantenha-a segura";
+/* Title for recovery key intro page */
+"RecoveryKeyFlow.relaxBuyTrade" = "Relaxe, compre, e troque";
+/* Recommends that the user avoids capturing the paper key with a screenshot */
+"RecoveryKeyFlow.noScreenshotsRecommendation" = "Tome nota num papel da sua chave de recuperação e confirme. Capturas de ecrã não são recomendadas por questões de segurança.";
+/* Recommends that the user stores the recovery key in a secure location */
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Guarde a sua chave numa localização segura. Esta é a única forma de recuperar a sua carteira. A BRD não guarda uma cópia.";
+/* Assures the user that BRD will keep the user's funds secure. */
+"RecoveryKeyFlow.securityAssurance" = "Compre e troque sabendo que os seus fundos estão protegidos pela melhor segurança e privacidade na área.";
+/* Button text for the 'Generate Recovery Key' button */
+"RecoveryKeyFlow.generateKeyButton" = "Gerar Chave de Recuperação";
+/* Informs the user that the recovery is only required for recovering a wallet. */
+"RecoveryKeyFlow.keyUseHint" = "A sua chave é apenas necessária para recuperação, não para o acesso normal à sua carteira.";
+/* Title for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "A Sua Chave de Recuperação";
+/* Subtitle for the write recovery key screen */
+"RecoveryKeyFlow.writeKeyScreenSubtitle" = "Tome nota das seguintes palavras em ordem.";
+/* Title for the step number when the user pages through the recovery words */
+"RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ de %2$@";
+/* Reminds the user not to take screenshots or email the recovery key words */
+"RecoveryKeyFlow.noScreenshotsOrEmailWarning" = "Por motivos de segurança, não faça capturas de ecrã ou envie por email estas palavras.";
+/* Reminds the user to write down the recovery key words. */
+"RecoveryKeyFlow.rememberToWriteDownReminder" = "Lembre-se de apontar estas palavras. Deslize para trás caso se tenha esquecido.";
+/* Title for the confirmation step of the recovery key flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar Chave de Recuperação";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quase pronto! Introduza as seguintes palavras da sua chave de recuperação.";
+/* Instructs the user to enter words from the set of recovery key words. */
+"RecoveryKeyFlow.confirmRecoveryInputError" = "A palavra que introduziu está incorrecta. Por favor, tente outra vez.";
+/* Title for a button that takes the user to the wallet after setting up the recovery key. */
+"RecoveryKeyFlow.goToWalletButtonTitle" = "Ir para Carteira";
+/* Title for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successHeading" = "Parabéns! Completou a definição da sua chave de recuperação.";
+/* Subtitle for the success page after the recovery key has been set up */
+"RecoveryKeyFlow.successSubheading" = "Está pronto para depositar, trocar, e comprar crypto a partir da sua carteira BRD.";
+/* Error text displayed when the user enters an incorrect recovery key */
+"RecoveryKeyFlow.invalidPhrase" = "Algumas das palavras que introduziu não correspondem à sua chave de recuperação.\
+Por favor, tente outra vez.";
+/* Title displayed to the user on the intro screen when unlinking a wallet */
+"RecoveryKeyFlow.unlinkWallet" = "Desvincule a sua carteira deste dispositivo.";
+/* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
+"RecoveryKeyFlow.unlinkWalletSubtext" = "Comece uma nova carteira desvinculando o seu dispositivo da carteira já instalada.";
+/* Title displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWallet" = "Recuperar a Sua Carteira";
+/* Subtitle displayed when the user starts the process of recovering a wallet */
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Por favor, introduza a chave de recuperação da carteira que pretende recuperar.";
+/* Title displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKey" = "Introduzir Chave de Recuperação";
+/* Subtitle displayed when the user starts the process of entering a recovery key */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Por favor, introduza a sua chave de recuperação para desvincular esta carteira deste dispositivo.";
+/* Warning displayed when the user starts the process of unlinking a wallet */
+"RecoveryKeyFlow.unlinkWalletWarning" = "A carteira tem de ser recuperada para recuperar o acesso.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Por favor, introduza a sua chave de recuperação para redefinir o seu PIN.";
+/* Title for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Definir Mais Tarde";
+/* Body text for an alert dialog asking the user whether to set up the recovery key later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Tem a certeza que pretende definir a sua chave de recuperação mais tarde?";
+/* Open Settings button */
+"Button.openSettings" = "Abrir Configurações";
+/* Body text when push notifications are disabled. */
+"PushNotifications.disabledBody" = "Ative as notificações para receber ofertas especiais e atualizações do BRD.";
+/* Body text when push notifications are enabled. */
+"PushNotifications.enabledBody" = "Está a receber ofertas especiais e atualizações do BRD.";
+/* Paper key explanation text (Android-version) */
+"StartPaperPhrase.Body.Android" = "A sua chave de papel é a única forma de restaurar a sua BRD se o seu telefone se perder, partir, for roubado ou atualizado.\
+\
+A sua chave de papel também é necessária se alterar as definições de segurança do seu dispositivo.\
+\
+Vamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
+/* Warning about paper key (Android-version) */
+"Prompts.PaperKey.Body.Android" = "Defina a sua chave de papel para o caso de perder ou substituir o seu telefone. A sua chave também é necessária se alterar as definições de segurança do seu telefone.";
+/* Setup button label */
+"Button.setup" = "Definir";
+/* Paper Key Skip modal title */
+"Modal.PaperKeySkip.Title" = "Atenção";
+/* Paper Key Skip modal body (Android-version) */
+"Modal.PaperKeySkip.Body.Android" = "A sua chave de papel é necessária para abrir a sua carteira se alterar as definições de segurança do seu telefone. \
+\
+Tem a certeza de que quer definir a sua chave de papel mais tarde?";
+/* Paper Key Skip modal I'll do it later button */
+"Modal.PaperKeySkip.Button.IllDoItLater" = "Mais tarde";
+/* Paper Key Skip modal Continue Set Up button */
+"Modal.PaperKeySkip.Button.ContinueSetUp" = "Continuar Definição";
+/* Priority fee */
+"FeeSelector.priority" = "Prioridade";
+/* E.g. [This transaction is predicted to complete in] 10-30 minutes */
+"FeeSelector.priorityTime" = "10–30 minutos";
+/* Google play review prompt title */
+"RateAppPrompt.Title.Android" = "Avalia a BRD";
+/* Google play review prompt body */
+"RateAppPrompt.Body.Android" = "Se gostas da nossa app, dedica uns instantes a avaliá-la e escreve uma opinião.";
+/* Google play review prompt, dismiss button */
+"RateAppPrompt.Button.RateApp.Android" = "Avalia a BRD";
+/* Google play review prompt, revivew button */
+"RateAppPrompt.Button.Dismiss.Android" = "Não, obrigado";
+/* ATM map menu item title explaining that it's a feature only available in the USA */
+"Settings.atmMapMenuItemSubtitle" = "Disponível apenas nos EUA";
+/* ATM map menu item title */
+"Settings.atmMapMenuItemTitle" = "Crypto ATM mapa";
+/* Syncing view done syncing state header text */
+"SyncingView.activity" = "Atividade";
+/* Share address by e-mail subject */
+"Email.address_subject" = "%1$s Endereço";
+/* Label for the Android file chooser when we need to prompt the user to select an image file. */
+"FileChooser.selectImageSource.android" = "Selecione a origem da imagem";
+/* home screen toolbar 'Buy & Sell' button */
+"HomeScreen.buyAndSell" = "Comprar e Vender";
+/* Paper Key button title */
+"SecurityCenter.paperKeyTitle.android" = "Chave de Papel";
+/* Text describing the purpose of the Face ID settings in the BRD app. */
+"FaceIDSettings.explanatoryText" = "Utilizar o Face ID para abrir a sua aplicação BRD e transferir dinheiro.";
+/* Text label for a toggle that enables Face ID for sending money. */
+"FaceIDSettings.transactionsTitleText" = "Ativar o Face ID para transferir dinheiro";
+/* Text label for a toggle that enables Face ID for unlocking the BRD app. */
+"FaceIDSettings.unlockTitleText" = "Ativar o Face ID para abrir BRD";
+/* Text that describes the purpose of the Touch ID settings in the BRD app. */
+"TouchIdSettings.explanatoryText" = "Utilizar o Touch ID para abrir a sua aplicação BRD e transferir dinheiro.";
+/* Text label for a toggle that enables Touch ID for sending money. */
+"TouchIdSettings.transactionsTitleText" = "Ativar o Touch ID para transferir dinheiro";
+/* Text label for the toggle that enables Touch ID for unlocking the BRD app. */
+"TouchIdSettings.unlockTitleText" = "Ativar o Touch ID para abrir BRD";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "Ocultar Detalhes";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "Modo de conexão";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync (piloto)";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "Faça a sincronização da sua carteira de bitcoin praticamente instantânea. Saiba mais sobre como funciona aqui.";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "aqui";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "Distribuído por";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Tem certeza de que deseja desativar o Fastsync?";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "Desligar";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "Impressão digital";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "Utilize a sua impressão digital para desbloquear a sua aplicação BRD e enviar transacções.";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "Use a impressão digital para desbloquear o BRD";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "Use a impressão digital para enviar dinheiro";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "Desvincule a sua carteira deste dispositivo.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "Desvincule a sua carteira deste dispositivo.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "Comece uma nova carteira, limpando a carteira actual do seu dispositivo.";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "Automático";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "Nó inválido";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "Falha ao atualizar as configurações de notificações por push";
+/* Optional Destination Tag label */
+"Send.destinationTag_optional" = "Etiqueta de Destino (Opcional)";
+/* Required Destination Tag label */
+"Send.destinationTag_required" = "Etiqueta de Destino (Obrigatório)";

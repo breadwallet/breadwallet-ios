@@ -107,6 +107,11 @@ class Transaction {
         case .created, .signed, .submitted, .pending:
             return .pending
         case .included:
+            
+            guard transfer.confirmation?.error == nil else {
+                return .invalid
+            }
+            
             switch Int(confirmations) {
             case 0:
                 return .pending
@@ -166,6 +171,11 @@ class Transaction {
             let rate = currency.state?.currentRate
             createMetaData(rate: rate, comment: comment, kvStore: kvStore)
         }
+    }
+    
+    var destinationTag: String? {
+        guard let destinationTag = transfer.attributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
+        return destinationTag.value
     }
 
     // MARK: Init
