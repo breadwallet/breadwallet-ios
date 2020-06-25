@@ -72,7 +72,7 @@ enum HistoryPeriod: String, CaseIterable {
         case .day, .week:
             formatter.setLocalizedDateFormatFromTemplate("HH:mm MMM d")
         case .month, .months, .year, .years:
-            formatter.setLocalizedDateFormatFromTemplate("MMM d, ''yy")
+            formatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
         }
         
         return formatter

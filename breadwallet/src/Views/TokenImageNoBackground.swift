@@ -23,6 +23,7 @@ class RenderedIconBase: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        guard !code.isEmpty else { return }
         addSubview(label)
         label.frame = bounds
         label.text = "\(code.first!)"

@@ -20,7 +20,7 @@ class AttributeCell: UIView {
 
     private let currency: Currency
     
-    var address: String? {
+    var attribute: String? {
         return contentLabel.text
     }
 

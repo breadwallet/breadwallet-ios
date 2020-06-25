@@ -60,7 +60,14 @@ extension TxViewModel {
     var shortTimestamp: String {
         guard tx.timestamp > 0 else { return tx.isValid ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: tx.timestamp)
-        return DateFormatter.shortDateFormatter.string(from: date)
+        
+        //If timestamp is this year, use short formatter without year
+        //otherwise, use formatter with year
+        if date.hasEqualYear(Date()) {
+            return DateFormatter.shortDateFormatter.string(from: date)
+        } else {
+            return DateFormatter.mediumDateFormatter.string(from: date)
+        }
     }
     
     var tokenTransferCode: String? {

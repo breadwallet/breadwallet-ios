@@ -73,7 +73,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         container.currency = viewModel.currency
         icon.image = viewModel.currency.imageNoBackground
         icon.tintColor = viewModel.currency.isSupported ? .white : .disabledBackground
-        iconContainer.layer.cornerRadius = (iconContainer.frame.width / 2)
+        iconContainer.layer.cornerRadius = C.Sizes.homeCellCornerRadius
         currencyName.text = viewModel.currency.name
         currencyName.textColor = viewModel.currency.isSupported ? .white : .disabledWhiteText
         price.text = viewModel.exchangeRate
@@ -126,7 +126,7 @@ class HomeScreenCell: UITableViewCell, Subscriber {
     }
 
     private func addConstraints() {
-        let containerPadding = E.isIPhone5 ? C.padding[1] : C.padding[2]
+        let containerPadding = C.padding[1]
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: 0,
                                                            left: containerPadding,
                                                            bottom: -C.padding[1],
