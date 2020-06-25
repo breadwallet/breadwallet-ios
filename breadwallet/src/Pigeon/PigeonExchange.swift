@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 import UIKit
 
 // swiftlint:disable type_body_length

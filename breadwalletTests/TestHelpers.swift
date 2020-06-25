@@ -9,11 +9,11 @@
 import Foundation
 import XCTest
 @testable import breadwallet
-@testable import BRCrypto
+@testable import WalletKit
 
 let testWalletSecAttrService = "com.brd.testnetQA.tests"
 
-typealias CoreCurrency = BRCrypto.Currency
+typealias CoreCurrency = WalletKit.Currency
 typealias AppCurrency = breadwallet.Currency
 
 private let networks = Network.installBuiltins()
@@ -108,13 +108,31 @@ struct TestCurrencies {
         "currency_id": "ripple-mainnet:__native__"
     }
     """.utf8)
+    
+        private static let hbarMetaData = Data("""
+    {
+        "code": "HBAR",
+        "name": "Hedera",
+        "scale": 9,
+        "is_supported": true,
+        "contract_address": "",
+        "sale_address": "",
+        "contract_info": {},
+        "colors": [
+            "#282e34",
+            "#282e34"
+        ],
+        "type": "",
+        "currency_id": "hedera-mainnet:__native__"
+    }
+    """.utf8)
 
     static var btc: AppCurrency {
         let btc = CoreCurrency(uids: Currencies.btc.uid.rawValue, name: "Bitcoin", code: Currencies.btc.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: btcMetaData)
         let network = networks.first(where: { $0.uids == "bitcoin-mainnet" })!
-        let BTC_SATOSHI = BRCrypto.Unit(currency: btc, code: "BTC-SAT", name: "Satoshi", symbol: "SAT")
-        let BTC_BTC = BRCrypto.Unit (currency: btc, code: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
+        let BTC_SATOSHI = WalletKit.Unit(currency: btc, code: "BTC-SAT", name: "Satoshi", symbol: "SAT")
+        let BTC_BTC = WalletKit.Unit (currency: btc, code: "BTC-BTC",  name: "Bitcoin", symbol: "B", base: BTC_SATOSHI, decimals: 8)
         return AppCurrency(core: btc,
                            network: network,
                            metaData: metaData,
@@ -126,8 +144,8 @@ struct TestCurrencies {
     static var bch: AppCurrency {
         let bch = CoreCurrency(uids: Currencies.bch.uid.rawValue, name: "Bitcoin Cash", code: Currencies.bch.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: bchMetaData)
-        let BCH_SATOSHI = BRCrypto.Unit (currency: bch, code: "BCH-SAT",  name: "Satoshi", symbol: "SAT")
-        let BCH_BCH = BRCrypto.Unit (currency: bch, code: "BCH-BTC",  name: "Bitcoin Cash", symbol: "BCH", base: BCH_SATOSHI, decimals: 8)
+        let BCH_SATOSHI = WalletKit.Unit (currency: bch, code: "BCH-SAT",  name: "Satoshi", symbol: "SAT")
+        let BCH_BCH = WalletKit.Unit (currency: bch, code: "BCH-BTC",  name: "Bitcoin Cash", symbol: "BCH", base: BCH_SATOSHI, decimals: 8)
         let network = networks.first(where: { $0.uids == "bitcoincash-mainnet" })!
         return AppCurrency(core: bch,
                            network: network,
@@ -140,9 +158,9 @@ struct TestCurrencies {
     static var eth: AppCurrency {
         let eth = CoreCurrency(uids: Currencies.eth.uid.rawValue, name: "Ethereum", code: Currencies.eth.code, type: "native", issuer: nil)
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: ethMetaData)
-        let ETH_WEI = BRCrypto.Unit (currency: eth, code: "ETH-WEI", name: "WEI", symbol: "wei")
-        let ETH_GWEI = BRCrypto.Unit (currency: eth, code: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
-        let ETH_ETHER = BRCrypto.Unit (currency: eth, code: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
+        let ETH_WEI = WalletKit.Unit (currency: eth, code: "ETH-WEI", name: "WEI", symbol: "wei")
+        let ETH_GWEI = WalletKit.Unit (currency: eth, code: "ETH-GWEI", name: "GWEI",  symbol: "gwei", base: ETH_WEI, decimals: 9)
+        let ETH_ETHER = WalletKit.Unit (currency: eth, code: "ETH-ETH", name: "ETHER", symbol: "E", base: ETH_WEI, decimals: 18)
         let network = networks.first(where: { $0.uids == "ethereum-mainnet" })!
         return AppCurrency(core: eth,
                            network: network,
@@ -155,8 +173,8 @@ struct TestCurrencies {
     static var brd: AppCurrency {
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: brdMetaData)
         let brd = CoreCurrency (uids: Currencies.brd.uid.rawValue, name: "BRD Token", code: Currencies.brd.code, type: "erc20", issuer: "0x558ec3152e2eb2174905cd19aea4e34a23de9ad6")
-        let brd_brdi = BRCrypto.Unit (currency: brd, code: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
-        let brd_brd  = BRCrypto.Unit (currency: brd, code: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)
+        let brd_brdi = WalletKit.Unit (currency: brd, code: "BRD_Integer", name: "BRD Integer", symbol: "BRDI")
+        let brd_brd  = WalletKit.Unit (currency: brd, code: "BRD_Decimal", name: "BRD_Decimal", symbol: "BRD", base: brd_brdi, decimals: 18)
         let network = networks.first(where: { $0.uids == "ethereum-mainnet" })!
         return AppCurrency(core: brd,
                            network: network,
@@ -169,7 +187,7 @@ struct TestCurrencies {
     static var xrp: AppCurrency {
         let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: xrpMetaData)
         let xrp = CoreCurrency (uids: Currencies.xrp.uid.rawValue, name: "XRP", code: Currencies.xrp.code, type: "native", issuer: nil)
-        let xrp_xrp = BRCrypto.Unit (currency: xrp, code: "XRP", name: "XRP", symbol: "XRP")
+        let xrp_xrp = WalletKit.Unit (currency: xrp, code: "XRP", name: "XRP", symbol: "XRP")
         let network = networks.first(where: { $0.uids == "ripple-mainnet" })!
         return AppCurrency(core: xrp,
                            network: network,
@@ -177,6 +195,19 @@ struct TestCurrencies {
                            units: Set([xrp_xrp]),
                            baseUnit: xrp_xrp,
                            defaultUnit: xrp_xrp)!
+    }
+    
+    static var hbar: AppCurrency {
+        let metaData = try! JSONDecoder().decode(CurrencyMetaData.self, from: hbarMetaData)
+        let hbar = CoreCurrency (uids: Currencies.hbar.uid.rawValue, name: "HBAR", code: Currencies.hbar.code, type: "native", issuer: nil)
+        let hbar_hbar = WalletKit.Unit (currency: hbar, code: "HBAR", name: "Hedera", symbol: "HBAR")
+        let network = networks.first(where: { $0.uids == "hedera-mainnet" })!
+        return AppCurrency(core: hbar,
+                           network: network,
+                           metaData: metaData,
+                           units: Set([hbar_hbar]),
+                           baseUnit: hbar_hbar,
+                           defaultUnit: hbar_hbar)!
     }
 }
 

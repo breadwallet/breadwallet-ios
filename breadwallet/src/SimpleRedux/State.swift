@@ -20,6 +20,7 @@ struct State {
     let walletID: String?
     let wallets: [CurrencyId: WalletState]
     var experiments: [Experiment]?
+    let creationRequired: [CurrencyId]
     
     subscript(currency: Currency) -> WalletState? {
         guard let walletState = wallets[currency.uid] else {
@@ -61,7 +62,8 @@ extension State {
                         pinLength: 6,
                         walletID: nil,
                         wallets: [:],
-                        experiments: nil
+                        experiments: nil,
+                        creationRequired: []
         )
     }
     
@@ -76,7 +78,8 @@ extension State {
                    pinLength: Int? = nil,
                    walletID: String? = nil,
                    wallets: [CurrencyId: WalletState]? = nil,
-                   experiments: [Experiment]? = nil) -> State {
+                   experiments: [Experiment]? = nil,
+                   creationRequired: [CurrencyId]? = nil) -> State {
         return State(isLoginRequired: isLoginRequired ?? self.isLoginRequired,
                      rootModal: rootModal ?? self.rootModal,
                      showFiatAmounts: showFiatAmounts ?? self.showFiatAmounts,
@@ -87,7 +90,8 @@ extension State {
                      pinLength: pinLength ?? self.pinLength,
                      walletID: walletID ?? self.walletID,
                      wallets: wallets ?? self.wallets,
-                     experiments: experiments ?? self.experiments)
+                     experiments: experiments ?? self.experiments,
+                     creationRequired: creationRequired ?? self.creationRequired)
     }
 
     func mutate(walletState: WalletState) -> State {
@@ -104,6 +108,10 @@ extension State {
     public func experimentWithName(_ experimentName: ExperimentName) -> Experiment? {
         guard let set = experiments, let exp = set.first(where: { $0.name == experimentName.rawValue }) else { return nil }
         return exp
+    }
+    
+    public func requiresCreation(_ currency: Currency) -> Bool {
+        return creationRequired.contains(currency.uid)
     }
     
 }
@@ -146,14 +154,14 @@ struct WalletState {
     }
     let currentRate: Rate?
     let fiatPriceInfo: FiatPriceInfo?
-
+    
     static func initial(_ currency: Currency, wallet: Wallet? = nil, displayOrder: Int) -> WalletState {
         return WalletState(currency: currency,
                            wallet: wallet,
                            displayOrder: displayOrder,
                            syncProgress: 0.0,
                            syncState: .success,
-                           balance: nil,
+                           balance: UserDefaults.balance(forCurrency: currency),
                            lastBlockTimestamp: 0,
                            isRescanning: false,
                            currentRate: UserDefaults.currentRate(forCode: currency.code),

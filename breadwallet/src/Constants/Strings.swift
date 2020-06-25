@@ -95,6 +95,7 @@ enum S {
         static let insufficientGasTitle = NSLocalizedString("Send.insufficientGasTitle", value: "Insufficient Ethereum Balance", comment: "Insufficient gas alert title")
         static let insufficientGasMessage = NSLocalizedString("Send.insufficientGasMessage", value: "You must have at least %1$@ in your wallet in order to transfer this type of token. Would you like to go to your Ethereum wallet now?", comment: "Insufficient gas alert message")
         static let destinationTagLabel = NSLocalizedString("Send.destinationTag_optional", value: "Destination Tag (Optional)", comment: "Destination Tag Label")
+        static let memoTagLabelOptional = NSLocalizedString("Send.memoTag_optional", value: "Hedera Memo (Optional)", comment: "Hedera Memo Tag Label")
         enum Error {
             static let authenticationError = NSLocalizedString("Send.Error.authenticationError", value: "Authentication Error", comment: "Sending error message")
             static let notConnected = NSLocalizedString("Send.Error.notConnected", value: "Network not connected", comment: "Sending error message")
@@ -114,6 +115,16 @@ enum S {
     enum Account {
         static let balance = NSLocalizedString("Account.balance", value:"Balance", comment: "Account header balance label")
         static let delistedToken = NSLocalizedString("Account.delistedToken", value: "This token has been delisted because the issuer decided to move to their own blockchain.\n\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\n\nFor more details, please visit our support page.", comment: "Delisted token alert banner message")
+    }
+    
+    enum AccountCreation {
+        static let title = NSLocalizedString("AccountCreation.title", value:"Confirm Account Creation", comment: "Confirm Account Creation Title")
+        static let body = NSLocalizedString("AccountCreation.body", value:"Only create a Hedera account if you intend on storing HBAR in your wallet.", comment: "Confirm Account Creation mesage body")
+        static let notNow = NSLocalizedString("AccountCreation.notNow", value:"Not Now", comment: "Not Now button label.")
+        static let create = NSLocalizedString("AccountCreation.create", value:"Create Account", comment: "Create Account button label")
+        static let creating = NSLocalizedString("AccountCreation.creating", value:"Creating Account", comment: "Creating Account progress Label")
+        static let error = NSLocalizedString("AccountCreation.error", value:"An error occured during account creation. Please try again later.", comment: "Creating Account progress Label")
+        static let timeout = NSLocalizedString("AccountCreation.timeout", value:"The Request timed out. Please try again later.", comment: "Creating Account progress Label")
     }
 
     enum JailbreakWarnings {
@@ -201,6 +212,7 @@ enum S {
         static let gasPriceHeader = NSLocalizedString("TransactionDetails.gasPriceHeader", value:"Gas Price", comment: "Tx detail field header")
         static let gasLimitHeader = NSLocalizedString("TransactionDetails.gasLimitHeader", value:"Gas Limit", comment: "Tx detail field header")
         static let destinationTagHeader = NSLocalizedString("TransactionDetails.destinationTagHeader", value:"Destination Tag", comment: "Destination Tag Header")
+        static let memoTagHeader = NSLocalizedString("TransactionDetails.memoTagHeader", value:"Hedera Memo", comment: "Hedera Memo Tag Header")
     }
 
     enum SecurityCenter {
@@ -432,7 +444,7 @@ enum S {
         static let next = NSLocalizedString("Onboarding.next", value: "Next", comment: "Button that navigates to the next page in the onboarding flow.")
         static let restoreWallet = NSLocalizedString("Onboarding.restoreWallet", value: "Restore wallet", comment: "Button that allows the user to restore an existing crypto wallet")
         static let skip = NSLocalizedString("Onboarding.skip", value: "Skip", comment: "Button that allows the user to skip to the end of the onboarding flow.")
-        static let pageOneTitle = NSLocalizedString("OnboardingPageOne.title", value: "Welcome to your new global wallet!", comment: "Title displayed on the first page of the onboarding flow.")
+        static let pageOneTitle = NSLocalizedString("OnboardingPageOne.title", value: "Welcome to your new digital asset wallet!", comment: "Title displayed on the first page of the onboarding flow.")
         static let pageTwoTitle = NSLocalizedString("OnboardingPageTwo.title", value: "Join millions of people around the world who trust BRD.", comment: "Title displayed on the second page of the onboarding flow.")
         static let pageTwoSubtitle = NSLocalizedString("OnboardingPageTwo.subtitle", value: "Join the 1.5 million people around the world who trust BRD.", comment: "Subtitle displayed on the second page of the onboarding flow.")  
         static let pageThreeTitle = NSLocalizedString("OnboardingPageThree.title", value: "Buy and trade bitcoin, tokens, and other digital currencies.", comment: "Title displayed on the third page of the onboarding flow.")  

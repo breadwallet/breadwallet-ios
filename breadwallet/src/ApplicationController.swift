@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 import UserNotifications
 
 private let timeSinceLastExitKey = "TimeSinceLastExit"
@@ -39,7 +39,7 @@ class ApplicationController: Subscriber, Trackable {
         return homeScreen
     }
         
-    private let coreSystem = CoreSystem()
+    private let coreSystem: CoreSystem!
     private var keyStore: KeyStore!
 
     private var launchURL: URL?
@@ -61,6 +61,7 @@ class ApplicationController: Subscriber, Trackable {
     init() {
         do {
             self.keyStore = try KeyStore.create()
+            self.coreSystem = CoreSystem(keyStore: keyStore)
         } catch let error { // only possible exception here should be if the keychain is inaccessible
             print("error initializing key store: \(error)")
             fatalError("error initializing key store")
@@ -260,8 +261,9 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     func willResignActive() {
-        self.applyBlurEffect()        
+        applyBlurEffect()
         checkForNotificationSettingsChange(appActive: false)
+        cacheBalances()
     }
     
     func didBecomeActive() {
@@ -381,14 +383,13 @@ class ApplicationController: Subscriber, Trackable {
                                        navigationController: UINavigationController) {
         
         homeScreen.didSelectCurrency = { [unowned self] currency in
-            guard let wallet = self.coreSystem.wallet(for: currency) else { return }
-            
             if currency.isBRDToken, UserDefaults.shouldShowBRDRewardsAnimation {
                 let name = self.makeEventName([EventContext.rewards.name, Event.openWallet.name])
                 self.saveEvent(name, attributes: ["currency": currency.code])
             }
             
-            let accountViewController = AccountViewController(wallet: wallet)
+            let wallet = self.coreSystem.wallet(for: currency)
+            let accountViewController = AccountViewController(currency: currency, wallet: wallet)
             navigationController.pushViewController(accountViewController, animated: true)
         }
         
@@ -440,6 +441,13 @@ class ApplicationController: Subscriber, Trackable {
         blurView.alpha = 1.0
         blurView.frame = window.frame
         window.addSubview(blurView)
+    }
+    
+    private func cacheBalances() {
+        Store.state.orderedWallets.forEach {
+            guard let balance = $0.balance else { return }
+            UserDefaults.saveBalance(balance, forCurrency: $0.currency)
+        }
     }
     
     private func removeBlurEffect() {

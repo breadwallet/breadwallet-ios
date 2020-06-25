@@ -65,7 +65,11 @@ class AssetIndex: BRKVStoreObject, Codable {
     }
     
     static var defaultCurrencyIds: [CurrencyId] {
-        return Currencies.allCases.map { $0.uid }.filter { $0 != Currencies.bch.uid && $0 != Currencies.xrp.uid && $0 != Currencies.tusd.uid }
+        return [
+            Currencies.btc.uid,
+            Currencies.eth.uid,
+            Currencies.brd.uid
+        ]
     }
 }
 

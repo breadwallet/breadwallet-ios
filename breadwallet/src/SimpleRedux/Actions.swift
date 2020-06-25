@@ -36,6 +36,25 @@ struct UpdateExperiments: Action {
     }
 }
 
+struct SetRequiresCreation: Action {
+    let reduce: Reducer
+    init(_ currency: Currency) {
+        reduce = {
+            return $0.mutate(creationRequired: [currency.uid])
+        }
+    }
+}
+
+struct SetCreationSuccess: Action {
+    let reduce: Reducer
+    init(_ currency: Currency) {
+        reduce = {
+            let newValue = $0.creationRequired.filter { $0 != currency.uid }
+            return $0.mutate(creationRequired: newValue)
+        }
+    }
+}
+
 // MARK: - Root Modals
 struct RootModalActions {
     struct Present: Action {

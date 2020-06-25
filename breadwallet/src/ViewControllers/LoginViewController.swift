@@ -8,7 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-import BRCrypto
+import WalletKit
 import MachO
 
 private let topControlHeight: CGFloat = 32.0

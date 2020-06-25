@@ -6,7 +6,7 @@
 //  Copyright © 2018-2019 Breadwinner AG. All rights reserved.
 //
 import Foundation
-import BRCrypto
+import WalletKit
 
 struct PigeonCrypto {
     

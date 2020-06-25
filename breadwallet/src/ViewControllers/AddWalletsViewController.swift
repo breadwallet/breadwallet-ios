@@ -49,7 +49,7 @@ class AddWalletsViewController: UITableViewController {
         // add eth when adding tokens
         let currenciesToAdd = addedCurrencyIndices.map { allAssets[$0] }
         if let eth = allAssets.first(where: { $0.uid == Currencies.eth.uid }),
-            !currenciesToAdd.filter({ $0.tokenAddress != nil }).isEmpty, // tokens are being added
+            !currenciesToAdd.filter({ $0.tokenAddress != nil && ($0.tokenAddress?.isEmpty == false) }).isEmpty, // tokens are being added
             !assetCollection.enabledAssets.contains(eth), // eth not already added
             !currenciesToAdd.contains(eth) { // eth not being explicitly added
             self.assetCollection.add(asset: eth)

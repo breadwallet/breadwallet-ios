@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 extension String {
     func matches(regularExpression pattern: String) -> Bool {

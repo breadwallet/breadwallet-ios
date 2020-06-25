@@ -97,6 +97,13 @@ class SyncingHeaderView: UIView, Subscriber {
     }
 
     private func updateText() {
+        if currency.isHBAR && Store.state.requiresCreation(currency) {
+            date.text = ""
+            lineLoadingView.isHidden = true
+            syncIndicator.isHidden = true
+            return
+        }
+        
         switch syncState {
         case .connecting:
             date.text = S.SyncingView.connecting

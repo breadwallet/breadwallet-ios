@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import BRCrypto
+import WalletKit
 
 private let qrSize: CGFloat = 186.0
 private let smallButtonHeight: CGFloat = 32.0

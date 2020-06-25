@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 import UIKit
 
 // swiftlint:disable type_body_length
@@ -16,7 +16,8 @@ class CoreSystem: Subscriber, Trackable {
     private var system: System?
     private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
     private let listenerQueue = DispatchQueue(label: "com.brd.CoreSystem.listener", qos: .utility)
-
+    private let keyStore: KeyStore
+    
     // MARK: Wallets + Currencies
 
     private(set) var assetCollection: AssetCollection?
@@ -28,10 +29,13 @@ class CoreSystem: Subscriber, Trackable {
     func wallet(for currency: Currency) -> Wallet? {
         return wallets[currency.uid]
     }
-
+    
+    private var createWalletCallback: ((Wallet?) -> Void)?
+    
     // MARK: Lifecycle
 
-    init() {
+    init(keyStore: KeyStore) {
+        self.keyStore = keyStore
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
             guard let `self` = self else { return }
             self.queue.async {
@@ -47,8 +51,17 @@ class CoreSystem: Subscriber, Trackable {
             system.setNetworkReachable(isReachable)
             isReachable ? self.connect() : self.disconnect()
         }
+        
+        Store.subscribe(self, name: .createAccount(nil, nil)) { [weak self] trigger in
+            guard let `self` = self else { return }
+            if case let .createAccount(currency, callback) = trigger {
+                if let currency = currency, let callback = callback {
+                    self.createAccount(forCurrency: currency, callback: callback)
+                }
+            }
+        }
     }
-
+    
     /// Creates and configures the System with the Account and BDB authentication token.
     func create(account: Account, authToken: String?) {
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
@@ -63,6 +76,7 @@ class CoreSystem: Subscriber, Trackable {
                 if let authToken = authToken {
                     req.authorize(withToken: authToken)
                 }
+                
                 //TODO:CRYPTO does not handle 401, other headers, redirects
                 return session.dataTask(with: req, completionHandler: completion)
         },
@@ -168,6 +182,11 @@ class CoreSystem: Subscriber, Trackable {
             }
         }
     }
+    
+    func walletIsInitialized(_ wallet: Wallet) -> Bool {
+        guard let account = system?.account else { return false }
+        return system?.accountIsInitialized(account, onNetwork: wallet.currency.network) ?? false
+    }
 
     // MARK: - Core Wallet Management
 
@@ -175,7 +194,7 @@ class CoreSystem: Subscriber, Trackable {
     private func addCurrencies(for network: Network) {
         guard let assetCollection = assetCollection else { return assertionFailure() }
         for coreCurrency in network.currencies {
-            guard currencies[coreCurrency.uid] == nil else { return assertionFailure() }
+            guard currencies[coreCurrency.uid] == nil else { return }
             guard let metaData = assetCollection.allAssets[coreCurrency.uid] else {
                 print("[SYS] unknown currency omitted: \(network.currency.code) / \(coreCurrency.uid)")
                 continue
@@ -225,20 +244,63 @@ class CoreSystem: Subscriber, Trackable {
             assertionFailure("invalid wallet manager mode \(mode) for \(network.currency.code)")
             mode = network.defaultMode
         }
-        print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
-        var success = system.createWalletManager(network: network,
-                                                 mode: mode,
-                                                 addressScheme: addressScheme,
-                                                 currencies: requiredTokens)
-        if !success {
-            print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
-            system.wipe(network: network)
+        var success = false
+        
+        if system.accountIsInitialized(system.account, onNetwork: network) {
+            print("[SYS] creating wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
             success = system.createWalletManager(network: network,
                                                  mode: mode,
                                                  addressScheme: addressScheme,
                                                  currencies: requiredTokens)
+            if !success {
+                print("[SYS] failed to create wallet manager. wiping persistent storage to retry...")
+                system.wipe(network: network)
+                success = system.createWalletManager(network: network,
+                                                     mode: mode,
+                                                     addressScheme: addressScheme,
+                                                     currencies: requiredTokens)
+            }
+            assert(success, "failed to create \(network) wallet manager")
+        } else {
+                print("[SYS] initializing wallet manager for \(network). active wallets: \(requiredTokens.map { $0.code }.joined(separator: ","))")
+                initialize(network: network, system: system, createIfDoesNotExist: false) { [weak self] data in
+                    guard let data = data else { self?.setRequiresCreation(currency); return }
+                    self?.keyStore.updateAccountSerialization(data)
+                    print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
+                    success = system.createWalletManager(network: network,
+                                                         mode: mode,
+                                                         addressScheme: addressScheme,
+                                                         currencies: requiredTokens)
+                    assert(success, "failed to create \(network) wallet manager")
+            }
         }
-        assert(success, "failed to create \(network) wallet manager")
+    }
+    
+    private func createAccount(forCurrency currency: Currency, callback: @escaping (Wallet?) -> Void) {
+        guard let system = system else { return callback(nil) }
+        initialize(network: currency.network, system: system, createIfDoesNotExist: true) { [weak self] data in
+            guard let `self` = self else { return }
+            guard let data = data else { return callback(nil) }
+            guard let assetCollection = self.assetCollection else { return callback(nil) }
+            self.keyStore.updateAccountSerialization(data)
+            print("[SYS] hbar initializationData: \(CoreCoder.hex.encode(data: data) ?? "no hex")")
+            
+            self.createWalletCallback = callback
+            let success = system.createWalletManager(network: currency.network,
+                                                 mode: self.connectionMode(for: currency),
+                                                 addressScheme: currency.network.defaultAddressScheme,
+                                                 currencies: currency.network.currencies.filter { assetCollection.isEnabled($0.uid) })
+            if success {
+                self.saveEvent("hbar.created")
+            }
+            assert(success, "failed to create \(currency.network) wallet manager")
+        }
+    }
+    
+    private func setRequiresCreation(_ currency: Currency) {
+        DispatchQueue.main.async {
+            Store.perform(action: SetRequiresCreation(currency))
+        }
     }
 
     /// Migrates the old sqlite persistent storage data to Core, if present.
@@ -280,11 +342,11 @@ class CoreSystem: Subscriber, Trackable {
     }
 
     /// Adds a Wallet model for the Core Wallet if it is enabled in the asset collection.
-    private func addWallet(_ coreWallet: BRCrypto.Wallet) -> Wallet? {
+    private func addWallet(_ coreWallet: WalletKit.Wallet) -> Wallet? {
         guard let assetCollection = assetCollection,
             let currency = currencies[coreWallet.currency.uid],
             wallets[coreWallet.currency.uid] == nil else {
-                assertionFailure()
+                //assertionFailure()
                 return nil
         }
 
@@ -297,11 +359,18 @@ class CoreSystem: Subscriber, Trackable {
                             currency: currency,
                             system: self)
         wallets[coreWallet.currency.uid] = wallet
+        if currency.isHBAR && createWalletCallback != nil {
+            createWalletCallback?(wallet)
+            createWalletCallback = nil
+            DispatchQueue.main.async {
+                Store.perform(action: SetCreationSuccess(currency))
+            }
+        }
         return wallet
     }
     
     /// Triggered by Core wallet deleted event -- normally never triggered
-    private func removeWallet(_ coreWallet: BRCrypto.Wallet) {
+    private func removeWallet(_ coreWallet: WalletKit.Wallet) {
         guard wallets[coreWallet.currency.uid] != nil else { return assertionFailure() }
         wallets[coreWallet.currency.uid] = nil
         updateWalletStates()
@@ -398,7 +467,7 @@ class CoreSystem: Subscriber, Trackable {
         guard let kv = Backend.kvStore,
             let walletInfo = WalletInfo(kvStore: kv) else {
                 assertionFailure()
-                return WalletConnectionSettings.defaultMode(for: networkCurrency)
+                return WalletConnectionSettings.defaultMode(for: currency)
         }
         let settings = WalletConnectionSettings(system: self, kvStore: kv, walletInfo: walletInfo)
         return settings.mode(for: networkCurrency)
@@ -483,7 +552,7 @@ class CoreSystem: Subscriber, Trackable {
         }
     }
     
-    private func coreWallet(_ currencyId: CurrencyId) -> BRCrypto.Wallet? {
+    private func coreWallet(_ currencyId: CurrencyId) -> WalletKit.Wallet? {
         return system?.wallets.first(where: { $0.currency.uid == currencyId })
     }
     
@@ -546,7 +615,7 @@ class CoreSystem: Subscriber, Trackable {
 extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
-        //print("[SYS] system event: \(event)")
+        print("[SYS] system event: \(event)")
         switch event {
         case .created:
             break
@@ -572,8 +641,8 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleManagerEvent(system: System, manager: BRCrypto.WalletManager, event: WalletManagerEvent) {
-        //print("[SYS] \(manager.network) manager event: \(event)")
+    func handleManagerEvent(system: System, manager: WalletKit.WalletManager, event: WalletManagerEvent) {
+        print("[SYS] \(manager.network) manager event: \(event)")
         switch event {
         case .created:
             break
@@ -669,8 +738,8 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleWalletEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, event: WalletEvent) {
-        //print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+    func handleWalletEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, event: WalletEvent) {
+        print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
         switch event {
         case .created:
             if let wallet = addWallet(wallet) {
@@ -692,7 +761,7 @@ extension CoreSystem: SystemListener {
         }
     }
 
-    func handleTransferEvent(system: System, manager: BRCrypto.WalletManager, wallet: BRCrypto.Wallet, transfer: Transfer, event: TransferEvent) {
+    func handleTransferEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, transfer: Transfer, event: TransferEvent) {
         guard let wallet = self.wallets[wallet.currency.uid] else { return }
         print("[SYS] \(manager.network) transfer \(event): \(wallet.currency.code) \(transfer.hash?.description.truncateMiddle() ?? "")")
         wallet.handleTransferEvent(event, transfer: transfer)

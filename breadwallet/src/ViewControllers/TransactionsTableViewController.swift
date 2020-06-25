@@ -11,15 +11,16 @@ import UIKit
 class TransactionsTableViewController: UITableViewController, Subscriber, Trackable {
 
     // MARK: - Public
-    init(wallet: Wallet, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
+    init(currency: Currency, wallet: Wallet?, didSelectTransaction: @escaping ([Transaction], Int) -> Void) {
         self.wallet = wallet
+        self.currency = currency
         self.didSelectTransaction = didSelectTransaction
         self.showFiatAmounts = Store.state.showFiatAmounts
         super.init(nibName: nil, bundle: nil)
     }
     
     deinit {
-        wallet.unsubscribe(self)
+        wallet?.unsubscribe(self)
         Store.unsubscribe(self)
     }
 
@@ -36,8 +37,14 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     var didStopScrolling: (() -> Void)?
 
     // MARK: - Private
-    private let wallet: Wallet
-    private var currency: Currency { return wallet.currency }
+    var wallet: Wallet? {
+        didSet {
+            if wallet != nil {
+                subscribeToTransactionUpdates()
+            }
+        }
+    }
+    private let currency: Currency
     
     private let transactionCellIdentifier = "TransactionCellIdentifier"
     private var transactions: [Transaction] = []
@@ -101,11 +108,14 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                 _ = self?.reload(txHash: txHash)
             }
         }
-        
-        wallet.subscribe(self) { [weak self] event in
+        subscribeToTransactionUpdates()
+    }
+    
+    private func subscribeToTransactionUpdates() {
+        wallet?.subscribe(self) { [weak self] event in
             guard let `self` = self else { return }
             DispatchQueue.main.async {
-                print("[TXLIST] \(Date()) \(self.wallet.currency.code) wallet event: \(event)")
+                print("[TXLIST] \(Date()) \(self.wallet?.currency.code ?? "") wallet event: \(event)")
                 switch event {
                 case .balanceUpdated, .transferAdded, .transferDeleted:
                     self.updateTransactions()
@@ -151,8 +161,10 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
 
     private func updateTransactions() {
         assert(Thread.isMainThread)
-        allTransactions = wallet.transfers
-        reload()
+        if let transfers = wallet?.transfers {
+           allTransactions = transfers
+           reload()
+        }
     }
 
     // MARK: - Table view data source

@@ -133,18 +133,15 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
         total.constrain([
             total.trailingAnchor.constraint(equalTo: subHeaderView.trailingAnchor, constant: -C.padding[2]),
-            total.centerYAnchor.constraint(equalTo: subHeaderView.topAnchor, constant: C.padding[1])
-            ])
+            total.centerYAnchor.constraint(equalTo: subHeaderView.topAnchor, constant: C.padding[1])])
 
         totalAssetsLabel.constrain([
             totalAssetsLabel.trailingAnchor.constraint(equalTo: total.trailingAnchor),
-            totalAssetsLabel.bottomAnchor.constraint(equalTo: total.topAnchor)
-            ])
+            totalAssetsLabel.bottomAnchor.constraint(equalTo: total.topAnchor)])
         
         logo.constrain([
             logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
-            logo.centerYAnchor.constraint(equalTo: total.centerYAnchor)
-            ])
+            logo.centerYAnchor.constraint(equalTo: total.centerYAnchor)])
 
         debugLabel.constrain([
             debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
@@ -155,8 +152,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             prompt.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             prompt.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             prompt.topAnchor.constraint(equalTo: subHeaderView.bottomAnchor),
-            promptHiddenConstraint
-            ])
+            promptHiddenConstraint])
         
         addChildViewController(assetList, layout: {
             assetList.view.constrain([
@@ -302,6 +298,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             // Do a full reload of the toolbar so it's laid out correctly with updated button titles.
             self.setupToolbar()
             self.saveEvent("experiment.buySellMenuButton", attributes: ["show": self.shouldShowBuyAndSell ? "true" : "false"])
+        })
+        
+        Store.subscribe(self, selector: {
+            $0.wallets.count != $1.wallets.count
+        }, callback: { _ in
+            self.updateTotalAssets()
         })
     }
     

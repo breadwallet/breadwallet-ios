@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 import UIKit
 
 protocol CurrencyWithIcon {
@@ -15,7 +15,7 @@ protocol CurrencyWithIcon {
     var colors: (UIColor, UIColor) { get }
 }
 
-typealias CurrencyUnit = BRCrypto.Unit
+typealias CurrencyUnit = WalletKit.Unit
 typealias CurrencyId = Identifier<Currency>
 
 /// Combination of the Core Currency model and its metadata properties
@@ -26,8 +26,8 @@ class Currency: CurrencyWithIcon {
         case unknown
     }
 
-    private let core: BRCrypto.Currency
-    let network: BRCrypto.Network
+    private let core: WalletKit.Currency
+    let network: WalletKit.Network
 
     /// Unique identifier from BlockchainDB
     var uid: CurrencyId { assert(core.uid == metaData.uid); return metaData.uid }
@@ -115,9 +115,27 @@ class Currency: CurrencyWithIcon {
         if isXRP {
             return ["xrpl", "xrp", "ripple"]
         }
+        if isHBAR {
+            return ["hbar"]
+        }
         return nil
     }
     
+    var attributeDefinition: AttributeDefinition? {
+        if isXRP {
+            return AttributeDefinition(key: "DestinationTag",
+                                       label: S.Send.destinationTagLabel,
+                                       keyboardType: .numberPad,
+                                       maxLength: 9)
+        }
+        if isHBAR {
+            return AttributeDefinition(key: "Memo",
+                                       label: S.Send.memoTagLabelOptional,
+                                       keyboardType: .default,
+                                       maxLength: 100)
+        }
+        return nil
+    }
     
     /// Can be used if an example address is required eg. to estimate the max send limit
     var placeHolderAddress: String? {
@@ -165,12 +183,12 @@ class Currency: CurrencyWithIcon {
 
     // MARK: Init
 
-    init?(core: BRCrypto.Currency,
-          network: BRCrypto.Network,
+    init?(core: WalletKit.Currency,
+          network: WalletKit.Network,
           metaData: CurrencyMetaData,
-          units: Set<BRCrypto.Unit>,
-          baseUnit: BRCrypto.Unit,
-          defaultUnit: BRCrypto.Unit) {
+          units: Set<WalletKit.Unit>,
+          baseUnit: WalletKit.Unit,
+          defaultUnit: WalletKit.Unit) {
         guard core.uid == metaData.uid else { return nil }
         self.core = core
         self.network = network
@@ -197,10 +215,6 @@ extension Currency: Hashable {
 extension Currency {
     
     func isValidAddress(_ address: String) -> Bool {
-        //TODO:CRYPTO - workaround for CORE-843
-        if (address == "unknown" || address.isEmpty) && isXRP {
-            return false
-        }
         return Address.create(string: address, network: network) != nil
     }
 
@@ -219,6 +233,7 @@ extension Currency {
     var isERC20Token: Bool { return tokenType == .erc20 }
     var isBRDToken: Bool { return uid == Currencies.brd.uid }
     var isXRP: Bool { return uid == Currencies.xrp.uid }
+    var isHBAR: Bool { return uid == Currencies.hbar.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
@@ -358,6 +373,7 @@ enum Currencies: String, CaseIterable {
     case brd
     case tusd
     case xrp
+    case hbar
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -375,6 +391,8 @@ enum Currencies: String, CaseIterable {
             uids = "ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376"
         case .xrp:
             uids = "ripple-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
+        case .hbar:
+            uids = "hedera-mainnet:__native__"
         }
         return CurrencyId(rawValue: uids)
     }
@@ -384,6 +402,13 @@ enum Currencies: String, CaseIterable {
     var instance: Currency? { return state?.currency }
 }
 
-extension BRCrypto.Currency {
+extension WalletKit.Currency {
     var uid: CurrencyId { return CurrencyId(rawValue: uids) }
+}
+
+struct AttributeDefinition {
+    let key: String
+    let label: String
+    let keyboardType: UIKeyboardType
+    let maxLength: Int
 }

@@ -50,6 +50,7 @@ private let notificationOptInDeferralCountKey = "notificationOptInDeferCountKey"
 private let appLaunchesAtLastNotificationDeferralKey = "appLaunchesAtLastNotificationDeferralKey"
 private let deviceIdKey = "BR_DEVICE_ID"
 private let savedChartHistoryPeriodKey = "savedHistoryPeriodKey"
+private let balanceKey = "balanceKey"
 
 typealias ResettableBooleanSetting = [String: Bool]
 typealias ResettableObjectSetting = String
@@ -189,6 +190,17 @@ extension UserDefaults {
 
     static func setCurrentRateData(newValue: [String: Any], forCode: String) {
         defaults.set(newValue, forKey: currentRateKey + forCode.uppercased())
+    }
+    
+    static func balance(forCurrency currency: Currency) -> Amount? {
+        guard let tokenString = defaults.string(forKey: balanceKey + currency.code) else {
+            return nil
+        }
+        return Amount(tokenString: tokenString, currency: currency)
+    }
+    
+    static func saveBalance(_ balance: Amount, forCurrency currency: Currency) {
+        defaults.set(balance.tokenFormattedString, forKey: balanceKey + currency.code)
     }
 
     static var customNodeIP: String? {

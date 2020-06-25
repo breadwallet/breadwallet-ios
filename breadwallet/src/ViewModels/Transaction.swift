@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 /// Transacton status
 enum TransactionStatus {
@@ -49,7 +49,7 @@ struct FeeBasis {
 
 /// Wrapper for BRCrypto Transfer
 class Transaction {
-    private let transfer: BRCrypto.Transfer
+    private let transfer: WalletKit.Transfer
     let wallet: Wallet
 
     var currency: Currency { return wallet.currency }
@@ -173,14 +173,15 @@ class Transaction {
         }
     }
     
-    var destinationTag: String? {
-        guard let destinationTag = transfer.attributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
-        return destinationTag.value
+    var extraAttribute: String? {
+        guard let key = currency.attributeDefinition?.key else { return nil }
+        guard let attribute = transfer.attributes.first(where: { $0.key == key }) else { return nil }
+        return attribute.value
     }
 
     // MARK: Init
 
-    init(transfer: BRCrypto.Transfer, wallet: Wallet, kvStore: BRReplicatedKVStore?, rate: Rate?) {
+    init(transfer: WalletKit.Transfer, wallet: Wallet, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.transfer = transfer
         self.wallet = wallet
         

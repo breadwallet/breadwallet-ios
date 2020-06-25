@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 import LocalAuthentication
-import BRCrypto
+import WalletKit
 import CloudKit
 
 private var WalletSecAttrService: String {
@@ -91,8 +91,8 @@ extension WalletAuthenticator {
 
 /// Protocol for signing transactions
 protocol TransactionAuthenticator: WalletAuthenticator {
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin: String) -> Bool
-    func signAndSubmit(transfer: BRCrypto.Transfer,
+    func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet, withPin: String) -> Bool
+    func signAndSubmit(transfer: WalletKit.Transfer,
                        wallet: Wallet,
                        withBiometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void)
@@ -239,6 +239,14 @@ extension KeyStore: WalletAuthenticator {
     
     private var serializedAccountData: Data? {
         return try? keychainItem(key: KeychainKey.systemAccount)
+    }
+    
+    func updateAccountSerialization(_ data: Data) {
+        do {
+            try setKeychainItem(key: KeychainKey.systemAccount, item: data)
+        } catch let error {
+            assertionFailure("keychain write error: \(error.localizedDescription)")
+        }
     }
     
     // MARK: biometrics authentication
@@ -681,12 +689,12 @@ extension KeyStore: WalletAuthenticator {
 
 extension KeyStore: TransactionAuthenticator {
 
-    func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet, withPin pin: String) -> Bool {
+    func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet, withPin pin: String) -> Bool {
         guard authenticate(withPin: pin) else { return false }
         return signAndSubmit(transfer: transfer, wallet: wallet)
     }
     
-    func signAndSubmit(transfer: BRCrypto.Transfer,
+    func signAndSubmit(transfer: WalletKit.Transfer,
                        wallet: Wallet,
                        withBiometricsPrompt biometricsPrompt: String,
                        completion: @escaping (BiometricsResult) -> Void) {
@@ -701,7 +709,7 @@ extension KeyStore: TransactionAuthenticator {
         }
     }
     
-    private func signAndSubmit(transfer: BRCrypto.Transfer, wallet: Wallet) -> Bool {
+    private func signAndSubmit(transfer: WalletKit.Transfer, wallet: Wallet) -> Bool {
         return autoreleasepool {
             do {
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic) else { return false }
@@ -989,9 +997,9 @@ private struct KeychainKey {
     public static let pinFailTime = "pinfailheight"
     public static let apiAuthKey = "authprivkey"
     public static let apiUserAccount = "https://api.breadwallet.com"
-    public static let bdbClientToken = "bdbClientToken"
-    public static let bdbAuthUser = "bdbAuthUser"
-    public static let bdbAuthToken = "bdbAuthToken"
+    public static let bdbClientToken = "bdbClientToken3"
+    public static let bdbAuthUser = "bdbAuthUser3"
+    public static let bdbAuthToken = "bdbAuthToken3"
     public static let systemAccount = "systemAccount"
     public static let seed = "seed" // deprecated
     public static let masterPubKey = "masterpubkey" // deprecated

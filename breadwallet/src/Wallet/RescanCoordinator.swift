@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 /// Coordinates blockchain rescan for wallet managers
 struct RescanCoordinator: Trackable {

@@ -9,7 +9,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 /// Handles user authentication and JWT token generation
 struct AuthenticationClient {

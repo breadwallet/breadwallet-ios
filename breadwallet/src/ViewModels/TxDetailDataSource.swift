@@ -26,7 +26,7 @@ class TxDetailDataSource: NSObject {
         case gasLimit
         case fee
         case total
-        case destinationTag
+        case extraAttribute
         
         var cellType: UITableViewCell.Type {
             switch self {
@@ -74,7 +74,7 @@ class TxDetailDataSource: NSObject {
         if viewModel.fee != nil { fields.append(.fee) }
         if viewModel.total != nil { fields.append(.total) }
         if viewModel.exchangeRate != nil { fields.append(.exchangeRate) }
-        if viewModel.destinationTag != nil { fields.append(.destinationTag) }
+        if viewModel.extraAttribute != nil { fields.append(.extraAttribute) }
         
         fields.append(.blockHeight)
         fields.append(.confirmations)
@@ -109,8 +109,8 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.totalHeader
         case .confirmations:
             return S.TransactionDetails.confirmationsLabel
-        case .destinationTag:
-            return S.TransactionDetails.destinationTagHeader
+        case .extraAttribute:
+            return viewModel.extraAttributeHeader
         default:
             return ""
         }
@@ -186,9 +186,9 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .confirmations:
             guard let labelCell = cell as? TxLabelCell else { return cell }
             labelCell.value = viewModel.confirmations
-        case .destinationTag:
+        case .extraAttribute:
             guard let labelCell = cell as? TxLabelCell else { return cell }
-            labelCell.value = viewModel.destinationTag ?? ""
+            labelCell.value = viewModel.extraAttribute ?? ""
         }
         
         return cell

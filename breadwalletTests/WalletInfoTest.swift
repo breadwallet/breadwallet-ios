@@ -7,7 +7,7 @@
 //
 
 import XCTest
-import BRCrypto
+import WalletKit
 @testable import breadwallet
 
 class WalletInfoTest : XCTestCase {

@@ -8,7 +8,7 @@
 
 import Foundation
 import SwiftProtobuf
-import BRCrypto
+import WalletKit
 
 enum PigeonMessageType: String {
     case link = "LINK"

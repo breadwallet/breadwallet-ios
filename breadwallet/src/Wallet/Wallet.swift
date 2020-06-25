@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 typealias WalletEventCallback = (WalletEvent) -> Void
 typealias CreateTransferResult = Result<Transfer, Wallet.CreateTransferError>
@@ -24,7 +24,7 @@ class Wallet {
     }
     
     let currency: Currency
-    private let core: BRCrypto.Wallet
+    private let core: WalletKit.Wallet
     private unowned let system: CoreSystem
 
     // MARK: - Network
@@ -44,6 +44,10 @@ class Wallet {
     
     var connectionMode: WalletConnectionMode {
         return system.connectionMode(for: currency)
+    }
+    
+    var isInitialized: Bool {
+        return system.walletIsInitialized(self)
     }
 
     // MARK: - Fees
@@ -73,7 +77,7 @@ class Wallet {
                              amount: Amount,
                              fee: FeeLevel,
                              completion: @escaping (TransferFeeBasis?) -> Void) {
-        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+        guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
         let networkFee = feeForLevel(level: fee)
         core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
             guard case let .success(feeBasis) = result else {
@@ -86,16 +90,16 @@ class Wallet {
     
     public func estimateLimitMaximum (address: String,
                                       fee: FeeLevel,
-                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
-        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+                                      completion: @escaping WalletKit.Wallet.EstimateLimitHandler) {
+        guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
         let networkFee = feeForLevel(level: fee)
         core.estimateLimitMaximum(target: target, fee: networkFee, completion: completion)
     }
     
     public func estimateLimitMinimum (address: String,
                                       fee: FeeLevel,
-                                      completion: @escaping BRCrypto.Wallet.EstimateLimitHandler) {
-        guard let target = BRCrypto.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
+                                      completion: @escaping WalletKit.Wallet.EstimateLimitHandler) {
+        guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return assertionFailure() }
         let networkFee = feeForLevel(level: fee)
         core.estimateLimitMinimum(target: target, fee: networkFee, completion: completion)
     }
@@ -132,7 +136,7 @@ class Wallet {
     }
 
     func isOwnAddress(_ address: String) -> Bool {
-        //TODO:CRYPTO need BRCrypto.Wallet interface -- this only works for single-address networks
+        //TODO:CRYPTO need WalletKit.Wallet interface -- this only works for single-address networks
         return core.target == Address.create(string: address, network: core.manager.network)
     }
 
@@ -141,24 +145,25 @@ class Wallet {
     func createTransfer(to address: String,
                         amount: Amount,
                         feeBasis: TransferFeeBasis,
-                        destinationTag: String? = nil) -> CreateTransferResult {
+                        attribute: String? = nil) -> CreateTransferResult {
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
         guard let transfer = core.createTransfer(target: target,
                                                  amount: amount.cryptoAmount,
                                                  estimatedFeeBasis: feeBasis,
-                                                 attributes: attributes(forDestinationTag: destinationTag)) else {
+                                                 attributes: attributes(forAttribute: attribute)) else {
             return .failure(.invalidAmountOrFee)
         }
         return .success(transfer)
     }
     
-    private func attributes(forDestinationTag tag: String?) -> Set<TransferAttribute>? {
-        guard let tag = tag else { return nil }
-        guard let destinationTag = core.transferAttributes.first(where: { $0.key == "DestinationTag" }) else { return nil }
-        destinationTag.value = tag
-        return Set([destinationTag])
+    private func attributes(forAttribute attribute: String?) -> Set<TransferAttribute>? {
+        guard let attribute = attribute else { return nil }
+        guard let key = currency.attributeDefinition?.key else { return nil }
+        guard let attributes = core.transferAttributes.first(where: { $0.key == key }) else { return nil }
+        attributes.value = attribute
+        return Set([attributes])
     }
     
     func createTransfer(forProtocolRequest protoReq: PaymentProtocolRequest, feeBasis: TransferFeeBasis) -> CreateTransferResult {
@@ -200,14 +205,16 @@ class Wallet {
     }
 
     private func publishEvent(_ event: WalletEvent) {
-        subscriptions
-            .flatMap { $0.value }
-            .forEach { $0(event) }
+        DispatchQueue.main.async { [weak self] in
+            self?.subscriptions
+                .flatMap { $0.value }
+                .forEach { $0(event) }
+        }
     }
 
     // MARK: Init
 
-    init(core: BRCrypto.Wallet, currency: Currency, system: CoreSystem) {
+    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
         self.core = core
         self.currency = currency
         self.system = system
@@ -244,7 +251,7 @@ extension Wallet {
         publishEvent(event)
     }
 
-    func handleTransferEvent(_ event: TransferEvent, transfer: BRCrypto.Transfer) {
+    func handleTransferEvent(_ event: TransferEvent, transfer: WalletKit.Transfer) {
         print("[SYS] \(currency.code) transfer \(transfer.hash?.description.truncateMiddle() ?? "") event: \(event)")
         switch event {
         case .created:
@@ -271,7 +278,7 @@ extension Wallet {
     }
 }
 
-extension BRCrypto.Transfer {
+extension WalletKit.Transfer {
     var isVisible: Bool {
         switch state {
         case .deleted:

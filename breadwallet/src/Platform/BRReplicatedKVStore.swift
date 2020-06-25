@@ -8,7 +8,7 @@
 
 import Foundation
 import SQLite3
-import BRCrypto
+import WalletKit
 
 public enum BRReplicatedKVStoreError: Error {
     case sqLiteError

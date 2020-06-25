@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import BRCrypto
+import WalletKit
 
 let BRAPIClientErrorDomain = "BRApiClientErrorDomain"
 
