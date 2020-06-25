@@ -115,6 +115,11 @@ struct C {
     
     static let tusdContractAddress = "0x0000000000085d4780B73119b644AE5ecd22b376"
     static let tusdContractCode = "TUSD"
+    
+    //TODO - remove fixer hack
+    static let fixerFiatCurrencies = ["SEK", "DKK"]
+    static let fixerCryptoCurrencies = ["OXT"]
+    static let fixerAPITokenRecordId = "FixerAPIToken"
 }
 
 enum Words {

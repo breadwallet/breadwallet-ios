@@ -104,6 +104,10 @@ class ApplicationController: Subscriber, Trackable {
 
         appRatingManager.start()
 
+        Store.subscribe(self, name: .wipeWalletNoPrompt, callback: { [weak self] _ in
+            self?.wipeWalletNoPrompt()
+        })
+        
         Store.subscribe(self, name: .didWipeWallet) { [unowned self] _ in
             self.modalPresenter = nil
             self.rootNavigationController?.viewControllers = []
@@ -445,6 +449,33 @@ class ApplicationController: Subscriber, Trackable {
         }, completion: { _ in
             self.blurView.removeFromSuperview()
         })
+    }
+    
+    // do not call directly, instead use wipeWalletNoPrompt trigger so other subscribers are notified
+    private func wipeWalletNoPrompt() {
+        let activity = BRActivityViewController(message: S.WipeWallet.wiping)
+        var topViewController = rootNavigationController as UIViewController?
+        while let newTopViewController = topViewController?.presentedViewController {
+            topViewController = newTopViewController
+        }
+        topViewController?.present(activity, animated: true, completion: nil)
+        
+        let success = keyStore.wipeWallet()
+        guard success else { // unexpected error writing to keychain
+            activity.dismiss(animated: true)
+            topViewController?.showAlert(title: S.WipeWallet.failedTitle, message: S.WipeWallet.failedMessage)
+            return
+        }
+        
+        self.coreSystem.shutdown {
+            DispatchQueue.main.async {
+                Backend.disconnectWallet()
+                Store.perform(action: Reset())
+                activity.dismiss(animated: true) {
+                    Store.trigger(name: .didWipeWallet)
+                }
+            }
+        }
     }
 }
 

@@ -113,9 +113,19 @@ open class BRReplicatedKVStore: NSObject {
         try self.migrateDatabase()
     }
     
+    static func rmdb() throws {
+        guard (Backend.kvStore != nil) || E.isRunningTests else {
+            if FileManager.default.fileExists(atPath: BRReplicatedKVStore.dbPath.path) {
+                try FileManager.default.removeItem(at: BRReplicatedKVStore.dbPath)
+            }
+            return
+        }
+        try Backend.kvStore?.rmdb()
+    }
+    
     /// Removes the entire database all at once. One must call openDatabase() and migrateDatabase()
     /// if one wishes to use this instance again after calling this
-    open func rmdb() throws {
+    private func rmdb() throws {
         try dispatch_sync_throws(dbQueue) {
             try self.checkErr(sqlite3_close(self.db), s: "rmdb - close")
             if FileManager.default.fileExists(atPath: BRReplicatedKVStore.dbPath.path) {

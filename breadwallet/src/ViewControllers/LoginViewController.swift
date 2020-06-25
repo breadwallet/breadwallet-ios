@@ -106,6 +106,10 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                                                             }
             })            
         }
+        disabledView.didCompleteWipeGesture = { [weak self] in
+            guard let `self` = self else { return }
+            self.wipeFromDisabledGesture()
+        }
         logo.tintColor = .darkBackground
         updateDebugLabel()
     }
@@ -360,6 +364,21 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         let firstLine = "Attempts remaining: \(remaining)"
         let secondLine = "Disabled until: \(disabledUntil)"
         debugLabel.text = "\(firstLine)\n\(secondLine)"
+    }
+    
+    private func wipeFromDisabledGesture() {
+        let disabledUntil = keyMaster.walletDisabledUntil
+        let unlockInterval = disabledUntil - Date().timeIntervalSince1970
+        
+        //If unlock time is greater than 4 hours allow wiping
+        guard unlockInterval > (C.secondsInMinute * 60 * 4.0) else { return }
+        let alertView = UIAlertController(title: "",
+                                          message: S.UnlockScreen.wipePrompt, preferredStyle: .alert)
+        alertView.addAction(UIAlertAction(title: S.Button.cancel, style: .default, handler: nil))
+        alertView.addAction(UIAlertAction(title: S.JailbreakWarnings.wipe, style: .destructive, handler: { _ in
+            Store.trigger(name: .wipeWalletNoPrompt)
+        }))
+        present(alertView, animated: true, completion: nil)
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {

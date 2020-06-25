@@ -24,7 +24,7 @@ enum FeeLevel: Int {
         case .economy:
             return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
         case .regular:
-            return Int(C.secondsInMinute) * 50 * 1000 //50 mins
+            return Int(C.secondsInMinute) * 40 * 1000 //40 mins
         case .priority:
             return Int(C.secondsInMinute) * 10 * 1000 //10 mins
         }
