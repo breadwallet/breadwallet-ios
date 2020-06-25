@@ -36,6 +36,8 @@ class ExchangeUpdater: Subscriber {
                 Store.perform(action: WalletChange($0).setExchangeRate(rate))
             }
         }
+        
+        Backend.apiClient.setHardcodedRates()
     }
 
 }

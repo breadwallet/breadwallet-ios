@@ -121,6 +121,20 @@ class Currency: CurrencyWithIcon {
         return nil
     }
     
+    func doesMatchPayId(_ details: PayIdAddress) -> Bool {
+        let environment = (E.isTestnet || E.isRunningTests) ? "testnet" : "mainnet"
+        guard details.environment.lowercased() == environment else { return false }
+        guard let id = payId else { return false }
+        return details.paymentNetwork.lowercased() == id.lowercased()
+    }
+    
+    var payId: String? {
+        if isBitcoin { return "btc" }
+        if isEthereum { return "eth" }
+        if isXRP { return "xrpl" }
+        return nil
+    }
+    
     var attributeDefinition: AttributeDefinition? {
         if isXRP {
             return AttributeDefinition(key: "DestinationTag",
@@ -155,6 +169,15 @@ class Currency: CurrencyWithIcon {
             return "0.0.39768"
         }
         return nil
+    }
+    
+    var shouldHideChart: Bool {
+        //AVM and EUR.AVM don't have real exchange rates, so we hide the chart
+        if uid == "ethereum-mainnet:0xF01Cd2f1c9E42c509d309aC8C5b29B6dA8E64b1a" ||
+            uid == "ethereum-mainnet:0x74004a7227615fb52b82d17ffabfa376907d8a4d" {
+            return true
+        }
+        return false
     }
 
     /// Returns a transfer URI with the given address

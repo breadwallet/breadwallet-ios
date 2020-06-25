@@ -93,12 +93,18 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     private var address: String? {
+        if payIdAddress != nil {
+            return payIdAddress
+        }
         if let protoRequest = paymentProtocolRequest {
             return protoRequest.primaryTarget?.description
         } else {
             return addressCell.address
         }
     }
+    
+    private var payIdAddress: String?
+    private var payId: String?
     
     private var currentFeeBasis: TransferFeeBasis?
     private var isSendingMax = false {
@@ -204,6 +210,11 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         addressCell.didReceivePaymentRequest = { [weak self] request in
             self?.handleRequest(request)
+        }
+        addressCell.didReceivePayId = { [weak self] result in
+            DispatchQueue.main.async {
+                self?.handlePayIdResponse(result, id: self?.addressCell.address ?? "", shouldShowError: true)
+            }
         }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
             return self?.balanceTextForAmount(amount, rate: rate)
@@ -329,12 +340,70 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
 
+        if let path = PayId(address: pasteboard) {
+            self.addressCell.setContent(pasteboard)
+            self.addressCell.showPayIdSpinner()
+            path.fetchAddress(forCurrency: currency) { response in
+                DispatchQueue.main.async {
+                    self.handlePayIdResponse(response, id: pasteboard, shouldShowError: true)
+                }
+            }
+            return
+        }
+        
         guard let request = PaymentRequest(string: pasteboard, currency: currency) else {
             let message = String.init(format: S.Send.invalidAddressOnPasteboard, currency.name)
             return showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
         }
         self.paymentProtocolRequest = nil
         handleRequest(request)
+    }
+    
+    private func handlePayIdResponse(_ response: Result<(String, String?), PayIdError>, id: String, shouldShowError: Bool) {
+        switch response {
+        case .success(let addressDetails):
+            let address = addressDetails.0
+            let tag = addressDetails.1
+            guard currency.isValidAddress(address) else {
+                let message = String(format: S.Send.invalidAddressMessage, currency.name)
+                showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+                resetPayId()
+                return
+            }
+            
+            //Here we have a valid address from PayID
+            //After this event, the addresscell should be in an un-editable state similar
+            //to when a payment request is recieved
+            payIdAddress = address
+            payId = id
+            addressCell.showPayId()
+            addressCell.hideActionButtons()
+            if let destinationTag = tag {
+                attributeCell?.setContent(destinationTag)
+            }
+        case .failure(let error):
+            if shouldShowError {
+                switch error {
+                case .badResponse:
+                    showErrorMessage(S.PayId.invalidPayID)
+                case .currencyNotSupported:
+                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
+                case .invalidAddress:
+                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
+                case .invalidPayID:
+                    showErrorMessage(S.PayId.invalidPayID)
+                }
+            }
+            self.resetPayId()
+        }
+    }
+    
+    private func resetPayId() {
+        payIdAddress = nil
+        payId = nil
+        addressCell.hidePayID()
+        addressCell.setContent("")
+        addressCell.hidePayID()
     }
 
     @objc private func scanTapped() {
@@ -356,6 +425,16 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             return false
         }
         
+        //Having an invalid address will cause fee estimation to fail,
+        //so we need to display this error before the fee estimate error.
+        //Without this, the fee estimate error will be shown and the user won't
+        //know that the address is invalid.
+        guard currency.isValidAddress(address) else {
+            let message = String(format: S.Send.invalidAddressMessage, currency.name)
+            showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
+            return false
+        }
+
         guard let amount = amount, !amount.isZero else {
             showAlert(title: S.Alert.error, message: S.Send.noAmount, buttonLabel: S.Button.ok)
             return false
@@ -387,7 +466,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             showAlert(title: S.Alert.error, message: S.Send.noFeesError, buttonLabel: S.Button.ok)
             
         case .invalidAddress:
-            let message = String.init(format: S.Send.invalidAddressMessage, currency.name)
+            let message = String(format: S.Send.invalidAddressMessage, currency.name)
             showAlert(title: S.Send.invalidAddressTitle, message: message, buttonLabel: S.Button.ok)
             
         case .ownAddress:
@@ -461,7 +540,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                                                  displayFeeLevel: feeLevel,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
-                                                 currency: currency)
+                                                 currency: currency,
+                                                 payId: payId)
         confirm.successCallback = send
         confirm.cancelCallback = sender.reset
         

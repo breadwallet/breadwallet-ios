@@ -834,4 +834,16 @@ enum S {
                                                                   value: "Are you sure you want to set up your recovery key later?",
                                                                   comment: "Body text for an alert dialog asking the user whether to set up the recovery key later.")
     }
+    
+    enum PayId {
+        static let invalidPayID = NSLocalizedString("Send.payId_invalid",
+                                                    value: "Invalid PayId",
+                                                    comment: "Error message for invalid PayID")
+        static let noAddress = NSLocalizedString("Send.payId_noAddress",
+                                                 value: "There is no %1$s address associated with this PayID.",
+                                                 comment: "Error message for no address associated with a PayID for a given currency")
+        static let retrievalError = NSLocalizedString("Send.payId_retrievalError",
+                                                value: "There was an error retrieving the address for this PayID. Please try again later.",
+                                                comment: "Error message for error in retrieving the address from the PayID endpoint")
+    }
 }

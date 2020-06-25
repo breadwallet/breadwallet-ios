@@ -11,13 +11,14 @@ import LocalAuthentication
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency) {
+    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency, payId: String? = nil) {
         self.amount = amount
         self.feeAmount = fee
         self.displayFeeLevel = displayFeeLevel
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
         self.currency = currency
+        self.payID = payId
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -27,7 +28,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     private let addressText: String
     private let isUsingBiometrics: Bool
     private let currency: Currency
-
+    private let payID: String?
+    
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
     let blurView = UIVisualEffectView()
@@ -53,7 +55,10 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     private let send = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let fee = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
-
+    
+    private let payIdlabel = PayIdLabel()
+    private let payIdAddress = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    
     override func viewDidLoad() {
         addSubviews()
         addConstraints()
@@ -67,6 +72,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         contentBox.addSubview(toLabel)
         contentBox.addSubview(amountLabel)
         contentBox.addSubview(address)
+        contentBox.addSubview(payIdlabel)
+        contentBox.addSubview(payIdAddress)
         contentBox.addSubview(processingTime)
         contentBox.addSubview(sendLabel)
         contentBox.addSubview(feeLabel)
@@ -97,9 +104,21 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             address.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
             address.topAnchor.constraint(equalTo: toLabel.bottomAnchor),
             address.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
+        
+        if payID != nil {
+           payIdlabel.constrain([
+               payIdlabel.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
+               payIdlabel.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]) ])
+           payIdAddress.constrain([
+               payIdAddress.leadingAnchor.constraint(equalTo: payIdlabel.leadingAnchor),
+               payIdAddress.topAnchor.constraint(equalTo: payIdlabel.bottomAnchor),
+               payIdAddress.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
+        }
+        
+        let processingTimeAnchor = payID == nil ? address.bottomAnchor : payIdAddress.bottomAnchor
         processingTime.constrain([
             processingTime.leadingAnchor.constraint(equalTo: address.leadingAnchor),
-            processingTime.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]),
+            processingTime.topAnchor.constraint(equalTo: processingTimeAnchor, constant: C.padding[2]),
             processingTime.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         sendLabel.constrain([
             sendLabel.leadingAnchor.constraint(equalTo: processingTime.leadingAnchor),
@@ -197,6 +216,15 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
         if !isUsingBiometrics {
             sendButton.image = nil
+        }
+        
+        if payID == nil {
+            payIdlabel.text = nil
+            payIdAddress.text = nil
+            payIdlabel.isHidden = true
+            payIdAddress.isHidden = true
+        } else {
+            payIdAddress.text = payID
         }
     }
 
