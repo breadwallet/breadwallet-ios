@@ -52,6 +52,7 @@ class Sender: Subscriber {
     private var transfer: BRCrypto.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
     var maximum: Amount?
+    var minimum: Amount?
     
     var displayPaymentProtocolResponse: ((String) -> Void)?
     
@@ -110,20 +111,9 @@ class Sender: Subscriber {
         guard wallet.currency.isValidAddress(address) else { return .invalidAddress }
         guard !wallet.isOwnAddress(address) else { return .ownAddress }
 
-        //TODO:CRYPTO
-//        if let minOutput = walletManager.wallet?.minOutputAmount {
-//            guard amount >= minOutput else { return .outputTooSmall(minOutput) }
-//        }
-//
-//        guard amount <= (walletManager.wallet?.maxOutputAmount ?? 0) else {
-//            return .insufficientFunds
-//        }
-//
-//        if currency.isBitcoin {
-//            guard currency.state?.fees != nil else {
-//                return .noFees
-//            }
-//        }
+        if let minOutput = minimum {
+            guard amount >= minOutput else { return .outputTooSmall(minOutput) }
+        }
 
         if let maximum = maximum {
             guard amount <= maximum else { return .insufficientFunds }
@@ -133,7 +123,6 @@ class Sender: Subscriber {
         if wallet.feeCurrency != wallet.currency {
             guard let feeBalance = wallet.feeCurrency.state?.balance, !feeBalance.isZero else { return .insufficientGas }
         }
-        //guard wallet.currency.state.currentRate != nil else { return .noExchangeRate } // allow sending without exchange rate
         return .ok
     }
 

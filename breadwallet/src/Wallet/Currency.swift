@@ -117,6 +117,24 @@ class Currency: CurrencyWithIcon {
         }
         return nil
     }
+    
+    
+    /// Can be used if an example address is required eg. to estimate the max send limit
+    var placeHolderAddress: String? {
+        if isBitcoin {
+            return E.isTestnet ? "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx" : "bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq"
+        }
+        if isBitcoinCash {
+            return E.isTestnet ? "bchtest:qqpz7r5k72e07j0syq26f0h8srvdqeqjg50wg9fp3z" : "bitcoincash:qpm2qsznhks23z7629mms6s4cwef74vcwvy22gdx6a"
+        }
+        if isEthereumCompatible {
+            return "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
+        }
+        if isXRP {
+            return "r3kmLJN5D28dHuH8vZNUZpMC43pEHpaocV"
+        }
+        return nil
+    }
 
     /// Returns a transfer URI with the given address
     func addressURI(_ address: String) -> String? {

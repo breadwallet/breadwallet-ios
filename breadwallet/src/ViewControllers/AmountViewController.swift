@@ -35,10 +35,11 @@ class AmountViewController: UIViewController, Trackable {
         super.init(nibName: nil, bundle: nil)
     }
 
-    var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?)?)?
+    // returns Balance Text, Fee Text and isUserInteractionEnabled for balanceLabel
+    var balanceTextForAmount: ((Amount?, Rate?) -> (NSAttributedString?, NSAttributedString?, Bool)?)?
     var didUpdateAmount: ((Amount?) -> Void)?
     var didChangeFirstResponder: ((Bool) -> Void)?
-
+    var didTapMax: (() -> Void)?
     var currentOutput: String {
         return amountLabel.text ?? ""
     }
@@ -47,6 +48,7 @@ class AmountViewController: UIViewController, Trackable {
             fullRefresh()
         }
     }
+    var maximum: Amount?
     var didUpdateFee: ((FeeLevel) -> Void)? {
         didSet {
             feeSelector.didUpdateFee = didUpdateFee
@@ -73,6 +75,7 @@ class AmountViewController: UIViewController, Trackable {
     private let isPinPadExpandedAtLaunch: Bool
     private let isRequesting: Bool
     var minimumFractionDigits = 0
+    let balanceLabel = UIButton(type: .system)
     private var hasTrailingDecimal = false
     private var pinPadHeight: NSLayoutConstraint?
     private let placeholder = UILabel(font: .customBody(size: 16.0), color: .grayTextTint)
@@ -82,11 +85,14 @@ class AmountViewController: UIViewController, Trackable {
     private let border = UIView(color: .secondaryShadow)
     private let bottomBorder = UIView(color: .secondaryShadow)
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
-    private let balanceLabel = UILabel()
     private let feeLabel = UILabel()
     private let tapView = UIView()
     private let feeSelector: FeeSelector
-
+    private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
+    
+    //Controlled by SendViewController
+    var isSendViewSendingMax = false
+    
     private var amount: Amount? {
         didSet {
             updateAmountLabel()
@@ -108,9 +114,9 @@ class AmountViewController: UIViewController, Trackable {
         view.addSubview(feeSelector)
         view.addSubview(border)
         view.addSubview(cursor)
-        view.addSubview(balanceLabel)
         view.addSubview(feeLabel)
         view.addSubview(tapView)
+        view.addSubview(balanceLabel)
         view.addSubview(bottomBorder)
     }
 
@@ -148,8 +154,7 @@ class AmountViewController: UIViewController, Trackable {
             balanceLabel.topAnchor.constraint(equalTo: cursor.bottomAnchor) ])
         feeLabel.constrain([
             feeLabel.leadingAnchor.constraint(equalTo: balanceLabel.leadingAnchor),
-            feeLabel.topAnchor.constraint(equalTo: balanceLabel.bottomAnchor)
-            ])
+            feeLabel.topAnchor.constraint(equalTo: balanceLabel.firstBaselineAnchor, constant: 2.0)])
         pinPadHeight = pinPad.view.heightAnchor.constraint(equalToConstant: 0.0)
         addChildViewController(pinPad, layout: {
             pinPad.view.constrain([
@@ -207,6 +212,15 @@ class AmountViewController: UIViewController, Trackable {
                 feeSelector.heightAnchor.constraint(equalToConstant: 0)])
         }
         
+        balanceLabel.addTarget(self, action: #selector(didTapBalance), for: .touchUpInside)
+        balanceLabel.isUserInteractionEnabled = false
+    }
+
+    @objc private func didTapBalance() {
+        didTapMax?()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: { [weak self] in
+            self?.didTap()
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -270,14 +284,32 @@ class AmountViewController: UIViewController, Trackable {
         }
         amountLabel.text = output
         placeholder.isHidden = output.utf8.isEmpty ? false : true
+        
+        if let max = maximum {
+            if amount > max {
+                amountLabel.textColor = UIColor.cameraGuideNegative
+            } else {
+                amountLabel.textColor = .darkText
+            }
+        }
     }
 
     func updateBalanceLabel() {
-        if let (balance, fee) = balanceTextForAmount?(amount, selectedRate) {
-            //If balance is nil, the balance label still needs some text for the bottom padding
-            balanceLabel.attributedText = balance ?? NSAttributedString(string: " ")
+        if let (balance, fee, isUserInteractionEnabled) = balanceTextForAmount?(amount, selectedRate) {
+            guard balance != nil else { return }
+            UIView.performWithoutAnimation {
+                self.balanceLabel.setAttributedTitle(balance ?? NSAttributedString(string: " "), for: .normal)
+                self.balanceLabel.layoutIfNeeded()
+            }
             feeLabel.attributedText = fee
-            balanceLabel.isHidden = cursor.isHidden
+            if amount != nil || isSendViewSendingMax {
+                balanceLabel.isHidden = false
+                feeLabel.isHidden = false
+            } else {
+               balanceLabel.isHidden = cursor.isHidden
+               feeLabel.isHidden = cursor.isHidden
+            }
+            balanceLabel.isUserInteractionEnabled = isUserInteractionEnabled
         }
     }
 
