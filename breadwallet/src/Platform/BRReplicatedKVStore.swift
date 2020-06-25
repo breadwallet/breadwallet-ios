@@ -247,7 +247,7 @@ open class BRReplicatedKVStore: NSObject {
     
     fileprivate func _set(_ key: String, value: [UInt8], localVer: UInt64) throws -> (UInt64, Date) {
         var newVer: UInt64 = 0
-        var time = Date()
+        let time = Date()
         try txn {
             let (curVer, _) = try self._localVersion(key)
             if curVer != localVer {
@@ -293,7 +293,7 @@ open class BRReplicatedKVStore: NSObject {
             throw BRReplicatedKVStoreError.notFound
         }
         var newVer: UInt64 = 0
-        var time = Date()
+        let time = Date()
         try txn {
             let (curVer, _) = try self._localVersion(key)
             if curVer != localVer {
@@ -381,7 +381,7 @@ open class BRReplicatedKVStore: NSObject {
             throw BRReplicatedKVStoreError.conflict // setRemoteVersion can't be used for creates
         }
         var newVer: UInt64 = 0
-        var time = Date()
+        let time = Date()
         try txn {
             let (curVer, _) = try self._localVersion(key)
             if curVer != localVer {

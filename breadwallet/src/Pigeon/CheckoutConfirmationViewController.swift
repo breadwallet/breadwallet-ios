@@ -195,8 +195,8 @@ class CheckoutConfirmationViewController: UIViewController {
                     })
                 case .creationError(let message):
                     self.showAlertAndDismiss(title: S.Send.createTransactionError, message: message, buttonLabel: S.Button.ok)
-                case .publishFailure(let error):
-                    self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(error.message) (\(error.code))", buttonLabel: S.Button.ok)
+                case .publishFailure(let code, let message):
+                    self.showAlertAndDismiss(title: S.Alerts.sendFailure, message: "\(message) (\(code))", buttonLabel: S.Button.ok)
                 case .insufficientGas:
                     self.showInsufficientGasError()
                 }
