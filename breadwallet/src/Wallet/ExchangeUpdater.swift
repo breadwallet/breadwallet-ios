@@ -36,7 +36,7 @@ class ExchangeUpdater: Subscriber {
         Backend.apiClient.fetchPriceInfo(currencies: Store.state.currencies) { result in
             guard case .success(let priceInfo) = result else { return }
             Store.state.currencies.forEach {
-                guard let info = priceInfo[$0.code.uppercased()] else { return }
+                guard let info = priceInfo[$0.cryptoCompareCode] else { return }
                 
                 Store.perform(action: WalletChange($0).setFiatPriceInfo(info))
                 

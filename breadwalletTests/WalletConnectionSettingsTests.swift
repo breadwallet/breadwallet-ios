@@ -43,7 +43,7 @@ class WalletConnectionSettingsTests: XCTestCase {
         let walletInfo = WalletInfo(name: "Test") // empty WalletInfo with no saved modes
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
         let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .p2p_only,
-                                                                      TestCurrencies.bch: .p2p_only,
+                                                                      TestCurrencies.bch: .api_only,
                                                                       TestCurrencies.eth: .api_only]
 
         expectedDefaultModes.forEach { (currency, expectedMode) in
