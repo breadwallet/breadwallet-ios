@@ -155,7 +155,7 @@
 /* Click this button to sell an asset */
 "Button.sell" = "Sälj";
 /* send button */
-"Button.send" = "skicka";
+"Button.send" = "Senden";
 /* Settings button label */
 "Button.settings" = "Inställningar";
 /* Setup button label */
@@ -274,6 +274,14 @@
 "FeeSelector.title" = "Bearbetningshastighet";
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "Välj bildkälla";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "Använd ditt fingeravtryck för att låsa upp din BRD-app och skicka transaktioner.";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "Använd fingeravtryck för att skicka pengar";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "Fingeravtryck";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "Använd fingeravtryck för att låsa upp BRD";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
 /* Home screen menu button to buy some bitcoin */
@@ -396,6 +404,8 @@
 "Modal.PaperKeySkip.Button.IllDoItLater" = "Jag gör det senare";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "Observera";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "Automatisk";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "Byt till automatiskt läge";
 /* Node is connected label */
@@ -406,6 +416,8 @@
 "NodeSelector.enterBody" = "Ange nodens IP-adress och port (valfritt)";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "Ange nod";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "Ogiltig nod";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "Byt till manuellt läge";
 /* Node address label */
@@ -532,6 +544,8 @@
 "PushNotifications.on" = "På";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "Håll dig uppdaterad";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "Det gick inte att uppdatera inställningarna för push-aviseringar";
 /* Google play review prompt body */
 "RateAppPrompt.Body.Android" = "Om du älskar vår app, var god ta en stund att betygsätta den och ge oss en recension.";
 /* Google play review prompt, revivew button */
@@ -634,6 +648,10 @@
 "RecoveryKeyFlow.unlinkWalletSubtext" = "Starta en ny plånbok genom att ta bort länken till den för närvarande installerade plånboken från denna enhet.";
 /* Warning displayed when the user starts the process of unlinking a wallet */
 "RecoveryKeyFlow.unlinkWalletWarning" = "Plånboken måste återställas för att du ska återfå tillgång till den.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "Ta bort länken till din plånbok från denna enhet.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "Starta en ny plånbok genom att torka av den nuvarande plånboken från din enhet.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Skriv ner din nyckel";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -853,6 +871,8 @@
 "Settings.wallet" = "Plånbok";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "Ta Bort Länken Från Denna Enhet";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "Ta bort länken till din plånbok från denna enhet.";
 /* Share data view body */
 "ShareData.body" = "Hjälp till att förbättra BRD genom att dela dina anonyma uppgifter med oss. Detta inbegriper inga ekonomiska uppgifter. Vi respekterar din ekonomiska sekretess.";
 /* Share data header */
@@ -1024,6 +1044,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gasbegränsning";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gaspris";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "Dölj detaljer";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "Initierad";
 /* More button title */
@@ -1058,7 +1080,7 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.statusHeader" = "Status";
 /* Transaction Details Title */
 "TransactionDetails.title" = "Transaktionsuppgifter";
-/* Hide Details button */
+/* Transaction Details Title - Failed */
 "TransactionDetails.titleFailed" = "Dölj detaljer";
 /* Transaction Details Title - Internal */
 "TransactionDetails.titleInternal" = "Intern";
@@ -1075,7 +1097,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "Totalt";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "Transaktions-ID";
+"TransactionDetails.txHashHeader" = "Bitcoin transaktions-ID";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "Togs emot på den här adressen";
 /* (this transaction was) Sent to this address: */
@@ -1136,6 +1158,23 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN-kod krävs";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Godkänn denna transaktion";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Är du säker på att du vill stänga av Fastsync?";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "Gör synkronisering av din bitcoin-plånbok praktiskt taget omedelbart. Läs mer om hur det fungerar här.";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "Drivs av";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "Fastsync (pilot)";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "här";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "Anslutningsläge";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "Stäng av";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "Öppna iPhone-appen BRD för att ställa in din plånbok.";
 /* Dismiss button label */

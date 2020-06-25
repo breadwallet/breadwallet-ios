@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import BRCrypto
 
 let π: CGFloat = .pi
 
@@ -117,8 +118,23 @@ struct C {
 }
 
 enum Words {
+    //Returns the wordlist of the current localization
     static var wordList: [NSString]? {
         guard let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist") else { return nil }
         return NSArray(contentsOfFile: path) as? [NSString]
+    }
+    
+    //Returns the wordlist that matches to localization of the phrase
+    static func wordList(forPhrase phrase: String) -> [NSString]? {
+        var result = [NSString]()
+        Bundle.main.localizations.forEach { lang in
+            if let path = Bundle.main.path(forResource: "BIP39Words", ofType: "plist", inDirectory: nil, forLocalization: lang) {
+                if let words = NSArray(contentsOfFile: path) as? [NSString],
+                    Account.validatePhrase(phrase, words: words.map { String($0) }) {
+                    result = words
+                }
+            }
+        }
+        return result
     }
 }

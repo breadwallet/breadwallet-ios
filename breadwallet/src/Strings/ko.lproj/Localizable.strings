@@ -274,6 +274,14 @@
 "FeeSelector.title" = "처리 속도";
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "이미지 소스 선택";
+/* Fingerprint authentication settings screen description */
+"FingerprintSettings.description" = "지문을 사용하여 브레드의 보안을 해제하고 설정된 금액으로 송금할 수 있습니다.";
+/* Switch label to enable fingerprint authentication to send money */
+"FingerprintSettings.sendMoney" = "지문을 사용하여 송금";
+/* Fingerprint authentication settings sceen title */
+"FingerprintSettings.title" = "지문";
+/* Switch label to enable fingerprint authentication to unlock BRD app */
+"FingerprintSettings.unlockApp" = "지문을 사용하여 BRD 잠금 해제";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "관리";
 /* Home screen menu button to buy some bitcoin */
@@ -396,6 +404,8 @@
 "Modal.PaperKeySkip.Button.IllDoItLater" = "나중에 하겠습니다.";
 /* Paper Key Skip modal title */
 "Modal.PaperKeySkip.Title" = "주";
+/* Node selection mode is automatic */
+"NodeSelector.automatic" = "자동적 인";
 /* Switch to automatic mode button label */
 "NodeSelector.automaticButton" = "자동 모드로 전환";
 /* Node is connected label */
@@ -406,6 +416,8 @@
 "NodeSelector.enterBody" = "노드 IP 주소와 포트를 입력하십시오(선택)";
 /* Enter Node ip address view title */
 "NodeSelector.enterTitle" = "노드를 입력하십시오";
+/* Entered invalid node address at the node selection screen */
+"NodeSelector.invalid" = "잘못된 노드";
 /* Switch to manual mode button label */
 "NodeSelector.manualButton" = "수동 모드로 전환";
 /* Node address label */
@@ -532,6 +544,8 @@
 "PushNotifications.on" = "On";
 /* Push notifications settings view title label */
 "PushNotifications.title" = "계속 정보를 받으세요.";
+/* Push notifications settings failed to update settings on the back end */
+"PushNotifications.updateFailed" = "푸시 알림 설정을 업데이트하지 못했습니다";
 /* Google play review prompt body */
 "RateAppPrompt.Body.Android" = "앱이 마음에 드신다면 잠시 시간을 내어 평가를 하고 리뷰를 보내주세요.";
 /* Google play review prompt, revivew button */
@@ -634,6 +648,10 @@
 "RecoveryKeyFlow.unlinkWalletSubtext" = "현재 설치된 지갑에서 기기 연결을 해제해 새 지갑을 시작하세요.";
 /* Warning displayed when the user starts the process of unlinking a wallet */
 "RecoveryKeyFlow.unlinkWalletWarning" = "액세스 권한을 다시 받으려면 지갑을 복구해야 합니다.";
+/* Title displayed to the user on the intro screen when wiping a wallet */
+"RecoveryKeyFlow.wipeWallet" = "이 기기에서 지갑 연결을 해제합니다.";
+/* Subtitle displayed to the user on the intro screen when wiping a wallet. */
+"RecoveryKeyFlow.wipeWalletSubtext" = "기기에서 현재 지갑을 닦아서 새 지갑을 시작합니다.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "키를 적어 주세요.";
 /* Title for the recovery key landing page if the key has already been generated. */
@@ -853,6 +871,8 @@
 "Settings.wallet" = "지갑";
 /* Unlink/delete your wallet from the current device. */
 "Settings.wipe" = "이 기기에서 연결 해제";
+/* Wipe/delete your wallet from the current device. */
+"Settings.wipe.android" = "이 기기에서 지갑 연결을 해제합니다.";
 /* Share data view body */
 "ShareData.body" = "브레드 기능 향상을 위해 여러분의 익명 데이터를 공유해 주세요. 금융 정보는 포함되지 않습니다. 여러분의 금융 관련 개인정보는 안전하게 보호됩니다.";
 /* Share data header */
@@ -1024,6 +1044,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas Limit";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas Price";
+/* Hide Details button */
+"TransactionDetails.hideDetails" = "세부 정보 숨기기";
 /* Label showing the transaction was started (initialized) */
 "TransactionDetails.initializedTimestampHeader" = "초기화됨";
 /* More button title */
@@ -1058,7 +1080,7 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.statusHeader" = "상태";
 /* Transaction Details Title */
 "TransactionDetails.title" = "트랜잭션 세부 정보";
-/* Hide Details button */
+/* Transaction Details Title - Failed */
 "TransactionDetails.titleFailed" = "세부 정보 숨기기";
 /* Transaction Details Title - Internal */
 "TransactionDetails.titleInternal" = "내부";
@@ -1075,7 +1097,7 @@ eg. 182930 (45061 confirmations) */
 /* Tx detail field header */
 "TransactionDetails.totalHeader" = "합계";
 /* Transaction ID header */
-"TransactionDetails.txHashHeader" = "Transaction ID";
+"TransactionDetails.txHashHeader" = "Bitcoin Transaction ID";
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "이 주소에서 받음";
 /* (this transaction was) Sent to this address: */
@@ -1136,6 +1158,23 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN 코드 입력 필수";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "이 거래 승인";
+/* Turn off fast sync confirmation question */
+"WalletConnectionSettings.confirmation" = "Fastsync를 끄시겠습니까?";
+/* Explanation for wallet connection setting */
+"WalletConnectionSettings.explanatoryText" = "비트 코인 지갑을 실제로 즉시 동기화하십시오. 작동 방식에 대해 자세히 알아보십시오.";
+/* Connection mode switch label. */
+"WalletConnectionSettings.footerTitle" = "에 의해 구동";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.header" = "패스트 싱크 (파일럿)";
+/* Link text in explanatoryText This NB: This should exactly match the last word of WalletConnectionSettings.explanatoryText */
+"WalletConnectionSettings.link" = "여기";
+/* WalletConnectionSettiongs
+Wallet connection settings menu item title. */
+"WalletConnectionSettings.menuTitle" = "연결 모드";
+/* Turn off fast sync button label */
+"WalletConnectionSettings.turnOff" = "끄다";
+/* Wallet connection settings view title */
+"WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
 "Watch.noWalletWarning" = "귀하의 월렛을 설정하려면 BRD 앱을 열어 주세요.";
 /* Dismiss button label */

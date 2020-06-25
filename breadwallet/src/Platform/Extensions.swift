@@ -103,14 +103,14 @@ public extension Data {
 
             var bzret = BZ2_bzCompressInit(&stream, BZDefaultBlockSize, 0, BZDefaultWorkFactor)
             guard bzret == BZ_OK else {
-                print("failed compression init")
+                print("[bz2] failed compression init")
                 success = false
                 return
             }
             repeat {
                 bzret = BZ2_bzCompress(&stream, stream.avail_in > 0 ? BZ_RUN : BZ_FINISH)
                 guard bzret >= BZ_OK else {
-                    print("failed compress")
+                    print("[bz2] failed compress")
                     success = false
                     return
                 }
@@ -144,14 +144,14 @@ public extension Data {
             
             var bzret = BZ2_bzDecompressInit(&stream, 0, 0)
             guard bzret == BZ_OK else {
-                print("failed decompress init")
+                print("[bz2] failed decompress init")
                 success = false
                 return
             }
             repeat {
                 bzret = BZ2_bzDecompress(&stream)
                 guard bzret >= BZ_OK else {
-                    print("failed decompress")
+                    print("[bz2] failed decompress")
                     success = false
                     return
                 }

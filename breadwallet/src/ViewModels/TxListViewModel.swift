@@ -29,8 +29,7 @@ struct TxListViewModel: TxViewModel {
             case .sent, .recovered:
                 format = isComplete ? S.Transaction.sentTo : S.Transaction.sendingTo
             case .received:
-                //TODO:CRYPTO via/from
-                if tx.currency.isEthereumCompatible {
+                if !tx.currency.isBitcoinCompatible {
                     format = isComplete ? S.Transaction.receivedFrom : S.Transaction.receivingFrom
                     address = tx.fromAddress
                 } else {

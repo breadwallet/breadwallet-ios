@@ -302,7 +302,7 @@ extension KeyStore: WalletAuthenticator {
                     return apiKey
                 }
                 guard let phrase: String = try keychainItem(key: KeychainKey.mnemonic),
-                    let words = Words.wordList?.map({ $0 as String }),
+                    let words = Words.wordList(forPhrase: phrase)?.map({ $0 as String }),
                     let apiKey = Key.createForBIP32ApiAuth(phrase: phrase, words: words) else { return nil }
                 try setKeychainItem(key: KeychainKey.apiAuthKey, item: apiKey.encodeAsPrivate)
                 return apiKey
