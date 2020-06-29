@@ -10,40 +10,34 @@ import UIKit
 
 extension UIFont {
     static var header: UIFont {
-        guard let font = UIFont(name: "CircularPro-Bold", size: 18.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font
+        return customBold(size: 18.0)
     }
     static func customBold(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Bold", size: size) else { return UIFont.preferredFont(forTextStyle: .headline) }
+        guard let font = UIFont(name: "CircularPro-Bold", size: size) else { return UIFont.systemFont(ofSize: size, weight: .bold) }
         return font
     }
     static func customBody(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: size) else { return UIFont.preferredFont(forTextStyle: .subheadline) }
+        guard let font = UIFont(name: "CircularPro-Book", size: size) else { return UIFont.systemFont(ofSize: size, weight: .regular) }
         return font
     }
     static func customMedium(size: CGFloat) -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Medium", size: size) else { return UIFont.preferredFont(forTextStyle: .body) }
+        guard let font = UIFont(name: "CircularPro-Medium", size: size) else { return UIFont.systemFont(ofSize: size, weight: .medium) }
         return font
     }
     static func emailPlaceholder() -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 15.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font
+        return customBody(size: 15.0)
     }
     static func onboardingHeading() -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 24.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font        
+        return customBody(size: 24.0)
     }
     static func onboardingSmallHeading() -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 18.0) else { return UIFont.preferredFont(forTextStyle: .headline) }
-        return font        
+        return customBody(size: 18.0)
     }
     static func onboardingSubheading() -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font                
+        return customBody(size: 14.0)
     }
     static func onboardingSkipButton() -> UIFont {
-        guard let font = UIFont(name: "CircularPro-Book", size: 14.0) else { return UIFont.preferredFont(forTextStyle: .body) }
-        return font                
+        return customBody(size: 14.0)
     }
             
     static var regularAttributes: [NSAttributedString.Key: Any] {
