@@ -117,9 +117,6 @@
 	<string>Used to scan barcodes</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>CircularPro-Bold.otf</string>
-		<string>CircularPro-Book.otf</string>
-		<string>CircularPro-Medium.otf</string>
 		<string>BarlowSemiCondensed-SemiBold.ttf</string>
 		<string>BarlowSemiCondensed-Medium.ttf</string>
 		<string>BarlowSemiCondensed-Light.ttf</string>
