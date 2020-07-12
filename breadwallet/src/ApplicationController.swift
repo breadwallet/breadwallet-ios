@@ -170,7 +170,7 @@ class ApplicationController: Subscriber, Trackable {
                 self.launchURL = nil
             }
 
-            self.connect()
+            self.coreSystem.connect()
         }
     }
     
@@ -215,13 +215,13 @@ class ApplicationController: Subscriber, Trackable {
         if shouldRequireLogin() {
             Store.perform(action: RequireLogin())
         }
-        connect()
+        resume()
         updateAssetBundles()
         coreSystem.updateFees()
     }
 
     func didEnterBackground() {
-        disconnect()
+        pause()
         //Save the backgrounding time if the user is logged in
         if !Store.state.isLoginRequired {
             UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: timeSinceLastExitKey)
@@ -239,13 +239,13 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
     
-    private func connect() {
+    private func resume() {
         fetchBackendUpdates()
-        coreSystem.connect()
+        coreSystem.resume()
     }
     
-    private func disconnect() {
-        coreSystem.disconnect()
+    private func pause() {
+        coreSystem.pause()
     }
 
     private func shouldRequireLogin() -> Bool {
@@ -257,7 +257,7 @@ class ApplicationController: Subscriber, Trackable {
     
     private func retryAfterIsReachable() {
         guard !keyStore.noWallet else { return }
-        connect()
+        resume()
     }
     
     func willResignActive() {
