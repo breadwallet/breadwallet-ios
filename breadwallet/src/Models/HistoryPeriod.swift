@@ -23,6 +23,23 @@ enum HistoryPeriod: String, CaseIterable {
         return period
     }
     
+    var days: Int {
+        switch self {
+        case .day:
+            return 1
+        case .week:
+            return 7
+        case .month:
+            return 31
+        case .months:
+            return 93
+        case .year:
+            return 365
+        case .years:
+            return 365*3
+        }
+    }
+    
     func saveMostRecent() {
         UserDefaults.lastChartHistoryPeriod = self.rawValue
     }

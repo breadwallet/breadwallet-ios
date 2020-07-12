@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CoinGecko",
+        "repositoryURL": "https://github.com/acorscadden/CoinGecko",
+        "state": {
+          "branch": "dev",
+          "revision": "49d830bb7f74ec41aec49f9c6f1a68bd1aa91cf7",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

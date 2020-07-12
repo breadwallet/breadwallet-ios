@@ -7,6 +7,9 @@
 //
 
 import Foundation
+import CoinGecko
+
+let gecko = ApiClient()
 
 enum FiatPriceInfoResult {
     case success([String: FiatPriceInfo])
@@ -52,66 +55,31 @@ extension BRAPIClient {
     // Fetches price information relative to the user's default fiat currency for the given crypto currencies,
     // including the 24-hour price change, the current fiat price, and fiat percent change, e.g., +13% ($100)
     func fetchPriceInfo(currencies: [Currency], _ handler: @escaping (FiatPriceInfoResult) -> Void) {
-        
-        // fsyms param (comma-separated ticker symbols) max length is 300 characters
-        // requests are batched to ensure the length is not exceeded
         let chunkSize = 50
         let chunks = currencies.chunked(by: chunkSize)
-        
-        let shouldUseUSDRate = BRAPIClient.shouldUseUSDRate(currencyCodes: currencies.map { $0.cryptoCompareCode })
-        let currentCode = shouldUseUSDRate ? "USD" : Store.state.defaultCurrencyCode
-        
         var combinedResults: [String: FiatPriceInfo] = [:]
-        var errorResult: FiatPriceInfoResult?
-        
-        let queue = DispatchQueue.global(qos: .utility)
         let group = DispatchGroup()
         for chunk in chunks {
             group.enter()
-            let codes = chunk.map { $0.cryptoCompareCode }
-            guard let codeList = codes.joined(separator: ",").addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-                assertionFailure()
-                errorResult = .error("invalid token codes")
-                return group.leave()
+            let coinGeckoIds = chunk.compactMap { $0.coinGeckoId }
+            let vs = Store.state.defaultCurrencyCode.lowercased()
+            let resource = Resources.simplePrice(ids: coinGeckoIds, vsCurrency: vs, options: [.change]) { (result: Result<PriceList, CoinGeckoError>) in
+                guard case .success(let data) = result else { return group.leave() }
+                coinGeckoIds.forEach { id in
+                    guard let simplePrice = data.first(where: { $0.id == id }) else { return }
+                    guard let change = simplePrice.change24hr else { return }
+                    combinedResults[id] = FiatPriceInfo(changePercentage24Hrs: change,
+                                                        change24Hrs: change*simplePrice.price,
+                                                        price: simplePrice.price)
+                }
+                group.leave()
             }
-            let request = URLRequest(url: URL(string: "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=\(codeList)&tsyms=\(currentCode.uppercased())")!)
-            dataTaskWithRequest(request, responseQueue: queue, handler: { data, _, error in
-                guard error == nil, let data = data else {
-                    errorResult = .error(error?.localizedDescription ?? "unknown error")
-                    return group.leave()
-                }
-                do {
-                    guard let data = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
-                        let prices = data["RAW"] as? [String: [String: [String: Any]]] else {
-                        errorResult = .error("exchange rate API error")
-                        return group.leave()
-                    }
-                    codes.forEach {
-                        guard let change = prices[$0]?[currentCode]?["CHANGE24HOUR"] as? Double,
-                            let percentChange = prices[$0]?[currentCode]?["CHANGEPCT24HOUR"] as? Double,
-                            let price = prices[$0]?[currentCode]?["PRICE"] as? Double else { return }
-                        combinedResults[$0] = FiatPriceInfo(changePercentage24Hrs: percentChange,
-                                                          change24Hrs: change,
-                                                          price: price)
-                    }
-                    group.leave()
-                } catch let e {
-                    errorResult = .error(e.localizedDescription)
-                    group.leave()
-                }
-            }).resume()
+            gecko.load(resource)
         }
         
         group.notify(queue: .main) {
-            if let errorResult = errorResult {
-                handler(errorResult)
-            } else {
-                self.convertFor(info: combinedResults) { foo in
-                    DispatchQueue.main.async {
-                        handler(.success(foo))
-                    }
-                }
-            }
+            assert(Thread.isMainThread)
+            handler(.success(combinedResults))
         }
     }
     
@@ -120,27 +88,14 @@ extension BRAPIClient {
     //
     // The returned data points are uses to display the chart on the account screen
     func fetchHistory(forCode: String, period: HistoryPeriod, callback: @escaping (PriceHistoryResult) -> Void) {
-        let request = URLRequest(url: period.urlForCode(code: forCode))
-        dataTaskWithRequest(request, handler: { data, _, error in
-            guard error == nil, let data = data else { callback(.unavailable); return }
-            DispatchQueue.global(qos: .utility).async {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .secondsSince1970
-                do {
-                    let response = try decoder.decode(HistoryResponseContainer.self, from: data)
-                    let reduced = reduceDataSize(array: response.Data, byFactor: period.reductionFactor)
-                    self.convertFor(code: forCode, data: reduced) { history in
-                        DispatchQueue.main.async {
-                            callback(.success(history))
-                        }
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        callback(.unavailable)
-                    }
-                }
+        let chart = Resources.marketChart(currencyId: "bitcoin", vs: "cad", days: period.days) { (result: Result<MarketChart, CoinGeckoError>) in
+            guard case .success(let data) = result else { return }
+            let points: [PriceDataPoint] = data.dataPoints.map {
+                return PriceDataPoint(time: Date(timeIntervalSince1970: Double($0.timestamp)/1000.0), close: $0.price)
             }
-        }).resume()
+            callback(.success(points))
+        }
+        gecko.load(chart)
     }
     
     func setHardcodedRates() {

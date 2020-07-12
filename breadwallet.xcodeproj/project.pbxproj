@@ -67,6 +67,7 @@
 		3A93890A22A303800081FCF9 /* CubicCurveAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A93890822A3037F0081FCF9 /* CubicCurveAlgorithm.swift */; };
 		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
 		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
+		3AC13A7524B807EC00045539 /* CoinGecko in Frameworks */ = {isa = PBXBuildFile; productRef = 3AC13A7424B807EC00045539 /* CoinGecko */; };
 		3ADE270C248F35B80023B770 /* PayIdLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADE270B248F35B80023B770 /* PayIdLabel.swift */; };
 		3AEF7B72234A4E3C005BE184 /* RequestUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -1265,6 +1266,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
+				3AC13A7524B807EC00045539 /* CoinGecko in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
@@ -2358,6 +2360,7 @@
 			name = breadwallet;
 			packageProductDependencies = (
 				3A0C6087242A5CC900F0FBC2 /* WalletKit */,
+				3AC13A7424B807EC00045539 /* CoinGecko */,
 			);
 			productName = breadwallet;
 			productReference = 75A2A7901DA5934300A983D8 /* breadwallet.app */;
@@ -2503,6 +2506,9 @@
 				sv,
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
+			packageReferences = (
+				3AC13A7324B807EC00045539 /* XCRemoteSwiftPackageReference "CoinGecko" */,
+			);
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -5083,10 +5089,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		3AC13A7324B807EC00045539 /* XCRemoteSwiftPackageReference "CoinGecko" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/acorscadden/CoinGecko";
+			requirement = {
+				branch = dev;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		3A0C6087242A5CC900F0FBC2 /* WalletKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WalletKit;
+		};
+		3AC13A7424B807EC00045539 /* CoinGecko */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AC13A7324B807EC00045539 /* XCRemoteSwiftPackageReference "CoinGecko" */;
+			productName = CoinGecko;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

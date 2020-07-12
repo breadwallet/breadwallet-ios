@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoinGecko
 
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
@@ -38,6 +39,19 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let supported = Resources.supported { (result: Result<[String], CoinGeckoError>) in
+            guard case .success(let supported) = result else { return }
+                
+            self.fiatCurrencies.forEach {
+                if !supported.contains($0.code.lowercased()) {
+                    print("[chart] missing: \($0.code), \($0.name)")
+                }
+            }
+            
+        }
+        let client = ApiClient()
+        client.load(supported)
         
         tableView.register(SeparatorCell.self, forCellReuseIdentifier: cellIdentifier)
         self.selectedCurrencyCode = Store.state.defaultCurrencyCode
