@@ -66,5 +66,4 @@ fastlane/test_output
 Screenshots/shots
 .DS_Store
 *.xcscheme
-GoogleService-Info.plist
-GoogleService-iOS-Beta-Info.plist
+loafwallet/GoogleService-Info.plist
