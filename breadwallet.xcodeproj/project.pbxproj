@@ -5094,7 +5094,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/acorscadden/CoinGecko";
 			requirement = {
-				branch = dev;
+				branch = main;
 				kind = branch;
 			};
 		};

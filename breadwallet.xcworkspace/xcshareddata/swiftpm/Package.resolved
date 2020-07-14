@@ -5,8 +5,8 @@
         "package": "CoinGecko",
         "repositoryURL": "https://github.com/acorscadden/CoinGecko",
         "state": {
-          "branch": "dev",
-          "revision": "49d830bb7f74ec41aec49f9c6f1a68bd1aa91cf7",
+          "branch": "main",
+          "revision": "f34fbf9c1d65d98f28560ead267fbc923baf9de8",
           "version": null
         }
       }
