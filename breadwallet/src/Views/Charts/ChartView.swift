@@ -22,6 +22,7 @@ class ChartView: UIView {
     private var currency: Currency
     private var values = [HistoryPeriod: [Int]]()
     private var hasPerformedInitialLayout = false
+    private let historyFetcher = HistoryFetcher()
     var scrubberDidBegin: (() -> Void)?
     var scrubberDidEnd: (() -> Void)?
     var scrubberDidUpdateToValues: ((String, String) -> Void)? //(Price, Date) eg. $120.0, Jan 5th
@@ -171,8 +172,8 @@ class ChartView: UIView {
         //Fetch initial history period
         fetchHistory(forPeriod: historyPeriod)
         
-        //Fetch all others
-        DispatchQueue.global(qos: .background).async {
+        //Fetch all others after slight delay
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + 0.2) {
             let periodsToFetch = HistoryPeriod.allCases.filter { $0 != self.historyPeriod }
             periodsToFetch.forEach { self.fetchHistory(forPeriod: $0) }
         }
@@ -246,7 +247,8 @@ class ChartView: UIView {
     }
     
     private func fetchHistory(forPeriod period: HistoryPeriod) {
-        Backend.apiClient.fetchHistory(forCode: currency.cryptoCompareCode, period: period, callback: { [weak self] result in
+        guard let id = currency.coinGeckoId else { return }
+        historyFetcher.fetchHistory(forCode: id, period: period, callback: { [weak self] result in
             guard let `self` = self else { return }
             switch result {
             case .success(let data):

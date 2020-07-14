@@ -64,25 +64,6 @@ enum HistoryPeriod: String, CaseIterable {
         }
     }
     
-    func urlForCode(code: String) -> URL {
-        let shouldUseUSD = BRAPIClient.shouldUseUSDRate(currencyCodes: [code.uppercased()])
-        let tsym = shouldUseUSD ? "USD" : Store.state.defaultCurrencyCode.uppercased()
-        switch self {
-        case .day:
-            return URL(string: "https://min-api.cryptocompare.com/data/histominute?fsym=\(code.uppercased())&tsym=\(tsym)&limit=1440")!
-        case .week:
-            return URL(string: "https://min-api.cryptocompare.com/data/histohour?fsym=\(code.uppercased())&tsym=\(tsym)&limit=168")!
-        case .month:
-            return URL(string: "https://min-api.cryptocompare.com/data/histohour?fsym=\(code.uppercased())&tsym=\(tsym)&limit=720")!
-        case .months:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=90")!
-        case .year:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=365")!
-        case .years:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=1095")!
-        }
-    }
-    
     var dateFormatter: DateFormatter {
         let formatter = DateFormatter()
         switch self {
@@ -106,13 +87,13 @@ enum HistoryPeriod: String, CaseIterable {
     var reductionFactor: Int {
         switch self {
         case .day:
-            return 8
+            return 6
         case .month:
             return 4
         case .year:
             return 2
         case .years:
-            return 5
+            return 3
         default:
             return 0
         }

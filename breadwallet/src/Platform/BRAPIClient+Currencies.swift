@@ -40,6 +40,12 @@ struct FiatCurrency: Decodable {
         
         return currencies ?? []
     }()
+    
+    // case of code doesn't matter
+    static func isCodeAvailable(_ code: String) -> Bool {
+        let available = FiatCurrency.availableCurrencies.map { $0.code.lowercased() }
+        return available.contains(code.lowercased())
+    }
 
 }
 
