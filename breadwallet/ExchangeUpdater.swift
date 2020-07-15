@@ -63,7 +63,7 @@ class ExchangeUpdater: Subscriber {
                     guard let simplePrice = data.first(where: { $0.id == id }) else { return }
                     guard let change = simplePrice.change24hr else { return }
                     combinedResults[id] = FiatPriceInfo(changePercentage24Hrs: change,
-                                                        change24Hrs: change*simplePrice.price,
+                                                        change24Hrs: change*simplePrice.price/100,
                                                         price: simplePrice.price)
                 }
                 group.leave()
@@ -72,7 +72,6 @@ class ExchangeUpdater: Subscriber {
         }
         
         group.notify(queue: .main) {
-            assert(Thread.isMainThread)
             handler(.success(combinedResults))
         }
     }
