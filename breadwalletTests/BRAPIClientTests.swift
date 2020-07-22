@@ -10,13 +10,14 @@ import XCTest
 @testable import breadwallet
 import WalletKit
 
+private var authenticator: WalletAuthenticator { return keyStore as WalletAuthenticator }
+private var client: BRAPIClient!
+private var keyStore: KeyStore!
+
 // This test will test against the live API at api.breadwallet.com
 class BRAPIClientTests: XCTestCase {
-    var authenticator: WalletAuthenticator { return keyStore as WalletAuthenticator }
-    var client: BRAPIClient!
-    private var keyStore: KeyStore!
     
-    override func setUp() {
+    override class func setUp() {
         super.setUp()
         clearKeychain()
         keyStore = try! KeyStore.create()
@@ -24,7 +25,7 @@ class BRAPIClientTests: XCTestCase {
         client = BRAPIClient(authenticator: authenticator)
     }
     
-    override func tearDown() {
+    override class func tearDown() {
         super.tearDown()
         client = nil
         clearKeychain()

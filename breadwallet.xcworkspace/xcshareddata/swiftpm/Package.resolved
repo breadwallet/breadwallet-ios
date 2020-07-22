@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/breadwallet/CoinGecko",
         "state": {
           "branch": null,
-          "revision": "f34fbf9c1d65d98f28560ead267fbc923baf9de8",
-          "version": "1.0.0"
+          "revision": "be65fb1d75e62b103f9a1988b05d5d5690396ff3",
+          "version": "1.0.1"
         }
       }
     ]
