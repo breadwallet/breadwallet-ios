@@ -430,10 +430,10 @@
 		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
 		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
 		CEAA9E9B1DC2B9320066731D /* ConfirmPhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */; };
-		CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */; };
+		CEAA9E9E1DC2F90C0066731D /* Font-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */; };
 		CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
-		CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */; };
-		CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */; };
+		CEAA9EA31DC2FC700066731D /* Font-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* Font-Book.otf */; };
+		CEAA9EA41DC2FC700066731D /* Font-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* Font-Medium.otf */; };
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
 		CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */; };
@@ -1161,10 +1161,10 @@
 		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
 		CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPhraseView.swift; path = src/Views/ConfirmPhraseView.swift; sourceTree = "<group>"; };
-		CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Bold.otf"; path = "Fonts/CircularPro-Bold.otf"; sourceTree = "<group>"; };
+		CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Bold.otf"; path = "Fonts/Font-Bold.otf"; sourceTree = "<group>"; };
 		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
-		CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Book.otf"; path = "Fonts/CircularPro-Book.otf"; sourceTree = "<group>"; };
-		CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "CircularPro-Medium.otf"; path = "Fonts/CircularPro-Medium.otf"; sourceTree = "<group>"; };
+		CEAA9EA11DC2FC700066731D /* Font-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Book.otf"; path = "Fonts/Font-Book.otf"; sourceTree = "<group>"; };
+		CEAA9EA21DC2FC700066731D /* Font-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Medium.otf"; path = "Fonts/Font-Medium.otf"; sourceTree = "<group>"; };
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
 		CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SegmentedButton.swift; path = src/Controls/SegmentedButton.swift; sourceTree = "<group>"; };
@@ -2159,9 +2159,9 @@
 		CEAA9E9C1DC2F8270066731D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				CEAA9EA11DC2FC700066731D /* CircularPro-Book.otf */,
-				CEAA9EA21DC2FC700066731D /* CircularPro-Medium.otf */,
-				CEAA9E9D1DC2F90C0066731D /* CircularPro-Bold.otf */,
+				CEAA9EA11DC2FC700066731D /* Font-Book.otf */,
+				CEAA9EA21DC2FC700066731D /* Font-Medium.otf */,
+				CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -2343,6 +2343,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
 			buildPhases = (
+				3ADA3F8924C8D2FE00E1CBCF /* Copy Fonts */,
 				CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */,
 				75A2A78C1DA5934300A983D8 /* Sources */,
 				75A2A78D1DA5934300A983D8 /* Frameworks */,
@@ -2730,7 +2731,7 @@
 				9AE8010921FFF81F00D5058C /* rewardsIcon-26.gif in Resources */,
 				9AE800F921FFF81F00D5058C /* rewardsIcon-22.gif in Resources */,
 				9A926F4F22034B3800CC2263 /* CellHighlight-34.png in Resources */,
-				CEAA9EA31DC2FC700066731D /* CircularPro-Book.otf in Resources */,
+				CEAA9EA31DC2FC700066731D /* Font-Book.otf in Resources */,
 				9A926F5822034B3800CC2263 /* CellHighlight-64.png in Resources */,
 				9A926F8C22034B3800CC2263 /* CellHighlight-75.png in Resources */,
 				9AE800DB21FFF81F00D5058C /* rewardsIcon-18.gif in Resources */,
@@ -2791,13 +2792,13 @@
 				9A926F8B22034B3800CC2263 /* CellHighlight-38.png in Resources */,
 				9A926F7C22034B3800CC2263 /* CellHighlight-73.png in Resources */,
 				9AE800EA21FFF81F00D5058C /* rewardsIcon-48.gif in Resources */,
-				CEAA9EA41DC2FC700066731D /* CircularPro-Medium.otf in Resources */,
+				CEAA9EA41DC2FC700066731D /* Font-Medium.otf in Resources */,
 				9AE800D221FFF81F00D5058C /* rewardsIcon-4.gif in Resources */,
 				9A926F6D22034B3800CC2263 /* CellHighlight-31.png in Resources */,
 				9AE800D521FFF81F00D5058C /* rewardsIcon-27.gif in Resources */,
 				9AE800D821FFF81F00D5058C /* rewardsIcon-43.gif in Resources */,
 				9A926F6222034B3800CC2263 /* CellHighlight-45.png in Resources */,
-				CEAA9E9E1DC2F90C0066731D /* CircularPro-Bold.otf in Resources */,
+				CEAA9E9E1DC2F90C0066731D /* Font-Bold.otf in Resources */,
 				7C98B0A5215A99C8007C85EB /* brd-tokens-staging.tar in Resources */,
 				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
 				9A926F8322034B3800CC2263 /* CellHighlight-70.png in Resources */,
@@ -2856,6 +2857,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3ADA3F8924C8D2FE00E1CBCF /* Copy Fonts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Fonts";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh scripts/copy_fonts.sh\n";
+		};
 		7C3C4695218253DC0036D95A /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

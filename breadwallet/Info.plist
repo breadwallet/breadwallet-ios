@@ -134,9 +134,9 @@
 	<string>Used to scan barcodes</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>CircularPro-Bold.otf</string>
-		<string>CircularPro-Book.otf</string>
-		<string>CircularPro-Medium.otf</string>
+		<string>Font-Bold.otf</string>
+		<string>Font-Book.otf</string>
+		<string>Font-Medium.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
