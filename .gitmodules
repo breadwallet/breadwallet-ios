@@ -6,4 +6,4 @@
 	url = https://github.com/blockset-corp/walletkit.git
 [submodule "Modules/mobile-font"]
 	path = Modules/mobile-font
-	url = git@gitlab.com:breadwallet/mobile-font.git
+	url = ../mobile-font.git
