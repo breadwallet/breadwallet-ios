@@ -12,6 +12,8 @@ copy_font() {
 	fi
 }
 
+mkdir -p breadwallet/Fonts
+
 copy_font "mobile_font_bold.otf" "Font-Bold.otf"
 copy_font "mobile_font_book.otf" "Font-Book.otf"
 copy_font "mobile_font_medium.otf" "Font-Medium.otf"
