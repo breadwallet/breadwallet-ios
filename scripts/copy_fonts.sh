@@ -7,7 +7,7 @@ copy_font() {
 	then
   		echo "Success $1"
 	else
-		cp "scripts/SF-Pro-Text-Regular.otf" "breadwallet/Fonts/$2"
+		cp "scripts/BrisaSans-Regular.otf" "breadwallet/Fonts/$2"
 		echo "Used placeholder $1"
 	fi
 }
