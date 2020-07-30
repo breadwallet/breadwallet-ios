@@ -61,7 +61,7 @@ class ExchangeUpdater: Subscriber {
                 guard case .success(let data) = result else { return group.leave() }
                 coinGeckoIds.forEach { id in
                     guard let simplePrice = data.first(where: { $0.id == id }) else { return }
-                    guard let change = simplePrice.change24hr else { return }
+                    let change = simplePrice.change24hr ?? 0.0
                     combinedResults[id] = FiatPriceInfo(changePercentage24Hrs: change,
                                                         change24Hrs: change*simplePrice.price/100,
                                                         price: simplePrice.price)
@@ -77,12 +77,12 @@ class ExchangeUpdater: Subscriber {
     }
     
     // MARK: - Hardcoded
-    func setHardcodedRates() {
+    private func setHardcodedRates() {
         setHardcoded(rate: 100, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "AVM")
         setHardcoded(rate: 1, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "EUR.AVM")
     }
     
-    func setHardcoded(rate: Double, baseCurrencyCode base: String, forCryptoCurrencyCode cryptoCode: String) {
+    private func setHardcoded(rate: Double, baseCurrencyCode base: String, forCryptoCurrencyCode cryptoCode: String) {
         guard let currency = Store.state.currencies.first(where: { $0.code == cryptoCode }) else { return }
         let currentFiatCode = Store.state.defaultCurrencyCode
         
@@ -101,7 +101,7 @@ class ExchangeUpdater: Subscriber {
         }
     }
     
-    func convert(from: String, to: String, callback: @escaping (Double) -> Void) {
+    private func convert(from: String, to: String, callback: @escaping (Double) -> Void) {
         
         struct FixerResult: Codable {
             var rates: [String: Double]

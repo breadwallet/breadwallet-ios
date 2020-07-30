@@ -69,3 +69,6 @@ Screenshots/shots
 breadwallet/Icon.xcassets/AppIcon-Internal.appiconset
 breadwallet/Config.plist
 /Modules/breadwallet-core
+/breadwallet/Fonts/Font-Medium.otf
+/breadwallet/Fonts/Font-Book.otf
+/breadwallet/Fonts/Font-Bold.otf
