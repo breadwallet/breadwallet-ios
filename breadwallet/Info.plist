@@ -56,7 +56,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.4.1</string>
+	<string>4.4.2</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -112,7 +112,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -134,9 +134,9 @@
 	<string>Used to scan barcodes</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>CircularPro-Bold.otf</string>
-		<string>CircularPro-Book.otf</string>
-		<string>CircularPro-Medium.otf</string>
+		<string>Font-Bold.otf</string>
+		<string>Font-Book.otf</string>
+		<string>Font-Medium.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
