@@ -55,6 +55,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
+    private var attributeCellHeight: NSLayoutConstraint?
     private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
     private let sender: Sender
@@ -127,11 +128,12 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         var addressGroupBottom: NSLayoutYAxisAnchor
         if currency.attributeDefinition != nil, let tagCell = attributeCell {
             view.addSubview(tagCell)
+            attributeCellHeight = tagCell.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight)
             tagCell.constrain([
                 tagCell.leadingAnchor.constraint(equalTo: addressCell.leadingAnchor),
                 tagCell.topAnchor.constraint(equalTo: addressCell.bottomAnchor),
                 tagCell.trailingAnchor.constraint(equalTo: addressCell.trailingAnchor),
-                tagCell.heightAnchor.constraint(equalToConstant: SendCell.defaultHeight)])
+                attributeCellHeight])
             addressGroupBottom = tagCell.bottomAnchor
         } else {
             addressGroupBottom = addressCell.bottomAnchor
@@ -376,6 +378,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             //to when a payment request is recieved
             payIdAddress = address
             payId = id
+            if tag != nil {
+                self.hideDestinationTag()
+            }
             addressCell.showPayId()
             addressCell.hideActionButtons()
             if let destinationTag = tag {
@@ -396,6 +401,15 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             }
             self.resetPayId()
         }
+    }
+    
+    private func hideDestinationTag() {
+        UIView.animate(withDuration: C.animationDuration, animations: {
+            self.attributeCellHeight?.constant = 0.0
+            self.attributeCell?.alpha = 0.0
+        }, completion: { _ in
+            self.attributeCell?.isHidden = true
+        })
     }
     
     private func resetPayId() {
