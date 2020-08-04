@@ -324,10 +324,34 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
         // Status codes:
         //   - 200: Presented email UI
         //   - 400: No address param provided
-        router.get("_email") { [weak self] (request, _) -> BRHTTPResponse in
+        router.get("/_email") { [weak self] (request, _) -> BRHTTPResponse in
             if let email = request.query["address"], email.count == 1 {
                 DispatchQueue.main.async {
                     self?.messageUIPresenter.presentMailCompose(emailAddress: email[0])
+                }
+                return BRHTTPResponse(request: request, code: 200)
+            } else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+        }
+        
+        //POST /_email opens system email dialog
+        // Status codes:
+        //   - 200: Presented email UI
+        //   - 400: No params provided
+        router.post("/_email") { [weak self] (request, _) -> BRHTTPResponse in
+            guard let data = request.body(),
+                let j = try? JSONSerialization.jsonObject(with: data, options: []),
+                let json = j as? [String: String] else {
+                return BRHTTPResponse(request: request, code: 400)
+            }
+            if let email = json["address"] {
+                let subject = json["subject"]
+                let body = json["body"]
+                DispatchQueue.main.async {
+                    self?.messageUIPresenter.presentMailCompose(emailAddress: email,
+                                                                subject: subject,
+                                                                body: body)
                 }
                 return BRHTTPResponse(request: request, code: 200)
             } else {

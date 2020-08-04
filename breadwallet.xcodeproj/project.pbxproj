@@ -53,9 +53,9 @@
 		3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A0C6087242A5CC900F0FBC2 /* WalletKit */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
 		3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328C225301D60043EBA4 /* PriceChangeView.swift */; };
-		3A36328F2253E53E0043EBA4 /* BRAPIClient+History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */; };
 		3A3D63DC22F10B4F000DE920 /* AddWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */; };
 		3A3D63DE22F10B58000DE920 /* ManageWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */; };
+		3A4D8ECD24C8CA5600FA7AC8 /* CoinGecko in Frameworks */ = {isa = PBXBuildFile; productRef = 3A4D8ECC24C8CA5600FA7AC8 /* CoinGecko */; };
 		3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */; };
 		3A611A0C2322139D004B8E36 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0B2322139D004B8E36 /* Dot.swift */; };
 		3A611A0F2325738C004B8E36 /* AnimatedBlockSetLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */; };
@@ -67,6 +67,8 @@
 		3A93890A22A303800081FCF9 /* CubicCurveAlgorithm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A93890822A3037F0081FCF9 /* CubicCurveAlgorithm.swift */; };
 		3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */; };
 		3AB3EE11227A27DD00414616 /* ASADataFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */; };
+		3ADA10D924BE097D000A1D99 /* CoinGeckoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */; };
+		3ADA10E824BE28D6000A1D99 /* HistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADA10E724BE28D6000A1D99 /* HistoryFetcher.swift */; };
 		3ADE270C248F35B80023B770 /* PayIdLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADE270B248F35B80023B770 /* PayIdLabel.swift */; };
 		3AEF7B72234A4E3C005BE184 /* RequestUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -428,7 +430,10 @@
 		CEAA9E951DC1659F0066731D /* UILabel+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */; };
 		CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E961DC18E1F0066731D /* PhraseView.swift */; };
 		CEAA9E9B1DC2B9320066731D /* ConfirmPhraseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */; };
+		CEAA9E9E1DC2F90C0066731D /* Font-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */; };
 		CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
+		CEAA9EA31DC2FC700066731D /* Font-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA11DC2FC700066731D /* Font-Book.otf */; };
+		CEAA9EA41DC2FC700066731D /* Font-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = CEAA9EA21DC2FC700066731D /* Font-Medium.otf */; };
 		CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */; };
 		CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9EA71DC3342E0066731D /* PinView.swift */; };
 		CEAFC8611E5D5B0500E4FD06 /* SegmentedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAFC8601E5D5B0500E4FD06 /* SegmentedButton.swift */; };
@@ -744,7 +749,6 @@
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bonjour.swift; path = src/Platform/Bonjour.swift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
 		3A36328C225301D60043EBA4 /* PriceChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChangeView.swift; path = src/Views/PriceChangeView.swift; sourceTree = "<group>"; };
-		3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+History.swift"; path = "src/Platform/BRAPIClient+History.swift"; sourceTree = "<group>"; };
 		3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddWalletsViewController.swift; path = src/ViewControllers/AddWalletsViewController.swift; sourceTree = "<group>"; };
 		3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletsViewController.swift; path = src/ViewControllers/ManageWalletsViewController.swift; sourceTree = "<group>"; };
 		3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChange.swift; path = src/Models/PriceChange.swift; sourceTree = "<group>"; };
@@ -759,6 +763,8 @@
 		3AA8B0D6242E7DFB006BD84F /* WalletKitSwift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WalletKitSwift; path = Modules/walletkit/WalletKitSwift; sourceTree = "<group>"; };
 		3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ASADataFormatter.swift; path = src/Utilities/ASADataFormatter.swift; sourceTree = "<group>"; };
 		3AB3EE10227A27DD00414616 /* ASADataFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASADataFormatterTests.swift; sourceTree = "<group>"; };
+		3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGeckoTests.swift; sourceTree = "<group>"; };
+		3ADA10E724BE28D6000A1D99 /* HistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFetcher.swift; sourceTree = "<group>"; };
 		3ADE270B248F35B80023B770 /* PayIdLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PayIdLabel.swift; path = src/Views/PayId/PayIdLabel.swift; sourceTree = "<group>"; };
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
@@ -1122,7 +1128,7 @@
 		CE6DCC2A1E63D6290044257B /* WalletCreationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WalletCreationTests.swift; sourceTree = "<group>"; };
 		CE6DCC2C1E63D6B10044257B /* TestHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestHelpers.swift; sourceTree = "<group>"; };
 		CE6DCC2F1E6666470044257B /* NonScrollingCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NonScrollingCollectionView.swift; path = src/Views/NonScrollingCollectionView.swift; sourceTree = "<group>"; };
-		CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExchangeUpdater.swift; path = src/Wallet/ExchangeUpdater.swift; sourceTree = "<group>"; };
+		CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExchangeUpdater.swift; sourceTree = "<group>"; };
 		CE760EDB1E561DF900EFAC2B /* UpdatePinViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdatePinViewController.swift; path = src/ViewControllers/SecurityCenter/UpdatePinViewController.swift; sourceTree = "<group>"; };
 		CE77F201210E4C010092CC8F /* LinkStatusCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LinkStatusCircle.swift; path = src/Pigeon/LinkStatusCircle.swift; sourceTree = "<group>"; };
 		CE8644241F2C160200033129 /* ConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmationViewController.swift; path = src/ViewControllers/ConfirmationViewController.swift; sourceTree = "<group>"; };
@@ -1155,6 +1161,10 @@
 		CEAA9E941DC1659F0066731D /* UILabel+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UILabel+BRWAdditions.swift"; path = "src/Extensions/UILabel+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9E961DC18E1F0066731D /* PhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PhraseView.swift; path = src/Views/PhraseView.swift; sourceTree = "<group>"; };
 		CEAA9E9A1DC2B9320066731D /* ConfirmPhraseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ConfirmPhraseView.swift; path = src/Views/ConfirmPhraseView.swift; sourceTree = "<group>"; };
+		CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Bold.otf"; path = "Fonts/Font-Bold.otf"; sourceTree = "<group>"; };
+		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
+		CEAA9EA11DC2FC700066731D /* Font-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Book.otf"; path = "Fonts/Font-Book.otf"; sourceTree = "<group>"; };
+		CEAA9EA21DC2FC700066731D /* Font-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Font-Medium.otf"; path = "Fonts/Font-Medium.otf"; sourceTree = "<group>"; };
 		CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIFont+BRWAdditions.swift"; path = "src/Extensions/UIFont+BRWAdditions.swift"; sourceTree = "<group>"; };
 		CEAA9EA51DC3246F0066731D /* StartNavigationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StartNavigationDelegate.swift; path = src/FlowControllers/StartNavigationDelegate.swift; sourceTree = "<group>"; };
 		CEAA9EA71DC3342E0066731D /* PinView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PinView.swift; path = src/Views/PinView.swift; sourceTree = "<group>"; };
@@ -1259,6 +1269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
+				3A4D8ECD24C8CA5600FA7AC8 /* CoinGecko in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
 				3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
@@ -1315,7 +1326,6 @@
 				E89C0612216D79550012CE0D /* BRAPIClient+EmailSubscription.swift */,
 				22122B711F0B8996000E9AB9 /* BRAPIClient+Events.swift */,
 				7CF9988C23202C75004AEC17 /* BRAPIClient+Experiments.swift */,
-				3A36328E2253E53E0043EBA4 /* BRAPIClient+History.swift */,
 				222C424F1E90492800078EB5 /* BRAPIClient+KV.swift */,
 				71A3171122A6E5F10088F97C /* BRAPIClient+Messages.swift */,
 				CEE9A2E820AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift */,
@@ -1403,10 +1413,12 @@
 		710B035B21F6603C007E8A2A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
 				710B036321F8C208007E8A2A /* AppRatingManager.swift */,
 				714F5D6D22037F2400F7CA70 /* EventMonitor.swift */,
 				3AB3EE0E227A23B400414616 /* ASADataFormatter.swift */,
 				7CF5319C231EE01300E61F12 /* Base32.swift */,
+				3ADA10E724BE28D6000A1D99 /* HistoryFetcher.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -1501,7 +1513,6 @@
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
 				7C0F3DC32124A81100531E54 /* Backend.swift */,
 				754AE0BB1DFE8A46007FD001 /* SecureAllocator.swift */,
-				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
 				7C787AE121ED89510017EA7E /* KeyStore.swift */,
 				CED82D4D1E575A5500507A9B /* main.swift */,
 				7C377EBD20F64C5900E8CF1C /* Messages.pb.swift */,
@@ -1566,6 +1577,7 @@
 				CE0ED79824098302000AA24F /* AddressTests.swift */,
 				3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */,
 				3A69884E24591F4A0084953D /* PayIdTests.swift */,
+				3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */,
 				7124991922204CF700BEA491 /* json */,
 				710B036021F67858007E8A2A /* MockClasses */,
 				CE4CA7B81EE0C89F00373F11 /* Platform */,
@@ -2148,6 +2160,9 @@
 		CEAA9E9C1DC2F8270066731D /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				CEAA9EA11DC2FC700066731D /* Font-Book.otf */,
+				CEAA9EA21DC2FC700066731D /* Font-Medium.otf */,
+				CEAA9E9D1DC2F90C0066731D /* Font-Bold.otf */,
 			);
 			name = Fonts;
 			sourceTree = "<group>";
@@ -2329,6 +2344,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
 			buildPhases = (
+				3ADA3F8924C8D2FE00E1CBCF /* Copy Fonts */,
 				CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */,
 				75A2A78C1DA5934300A983D8 /* Sources */,
 				75A2A78D1DA5934300A983D8 /* Frameworks */,
@@ -2349,6 +2365,7 @@
 			name = breadwallet;
 			packageProductDependencies = (
 				3A0C6087242A5CC900F0FBC2 /* WalletKit */,
+				3A4D8ECC24C8CA5600FA7AC8 /* CoinGecko */,
 			);
 			productName = breadwallet;
 			productReference = 75A2A7901DA5934300A983D8 /* breadwallet.app */;
@@ -2494,6 +2511,9 @@
 				sv,
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
+			packageReferences = (
+				3A4D8ECB24C8CA5600FA7AC8 /* XCRemoteSwiftPackageReference "CoinGecko" */,
+			);
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
@@ -2712,6 +2732,7 @@
 				9AE8010921FFF81F00D5058C /* rewardsIcon-26.gif in Resources */,
 				9AE800F921FFF81F00D5058C /* rewardsIcon-22.gif in Resources */,
 				9A926F4F22034B3800CC2263 /* CellHighlight-34.png in Resources */,
+				CEAA9EA31DC2FC700066731D /* Font-Book.otf in Resources */,
 				9A926F5822034B3800CC2263 /* CellHighlight-64.png in Resources */,
 				9A926F8C22034B3800CC2263 /* CellHighlight-75.png in Resources */,
 				9AE800DB21FFF81F00D5058C /* rewardsIcon-18.gif in Resources */,
@@ -2772,11 +2793,13 @@
 				9A926F8B22034B3800CC2263 /* CellHighlight-38.png in Resources */,
 				9A926F7C22034B3800CC2263 /* CellHighlight-73.png in Resources */,
 				9AE800EA21FFF81F00D5058C /* rewardsIcon-48.gif in Resources */,
+				CEAA9EA41DC2FC700066731D /* Font-Medium.otf in Resources */,
 				9AE800D221FFF81F00D5058C /* rewardsIcon-4.gif in Resources */,
 				9A926F6D22034B3800CC2263 /* CellHighlight-31.png in Resources */,
 				9AE800D521FFF81F00D5058C /* rewardsIcon-27.gif in Resources */,
 				9AE800D821FFF81F00D5058C /* rewardsIcon-43.gif in Resources */,
 				9A926F6222034B3800CC2263 /* CellHighlight-45.png in Resources */,
+				CEAA9E9E1DC2F90C0066731D /* Font-Bold.otf in Resources */,
 				7C98B0A5215A99C8007C85EB /* brd-tokens-staging.tar in Resources */,
 				75A2A79B1DA5934300A983D8 /* Assets.xcassets in Resources */,
 				9A926F8322034B3800CC2263 /* CellHighlight-70.png in Resources */,
@@ -2835,6 +2858,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3ADA3F8924C8D2FE00E1CBCF /* Copy Fonts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Fonts";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh scripts/copy_fonts.sh\n";
+		};
 		7C3C4695218253DC0036D95A /* SwiftLint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2955,6 +2996,7 @@
 				22A9A9491DF61945000F0016 /* BRBSPatch.swift in Sources */,
 				CE92F9F61DEDF6890046B516 /* UIViewControllerContextTransitioning+BRAdditions.swift in Sources */,
 				CEA362681E00EE320061FC0E /* CameraGuideView.swift in Sources */,
+				3ADA10E824BE28D6000A1D99 /* HistoryFetcher.swift in Sources */,
 				CEDB0B0722D445DB00331FFC /* ChartView.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
@@ -3042,7 +3084,6 @@
 				E89C0613216D79550012CE0D /* BRAPIClient+EmailSubscription.swift in Sources */,
 				7CBABD9C20181D890077CB55 /* NSMutableAttributedString+Additions.swift in Sources */,
 				3A69885E24591F890084953D /* PayId.swift in Sources */,
-				3A36328F2253E53E0043EBA4 /* BRAPIClient+History.swift in Sources */,
 				CEC6AA421DEFC88F00EE5AFD /* ReceiveViewController.swift in Sources */,
 				7C9BC58F231765190011732F /* WalletConnectionSettings.swift in Sources */,
 				CEE20C2D1EA288FA0086F724 /* UpdatingLabel.swift in Sources */,
@@ -3215,6 +3256,7 @@
 				CEE218BB21026BAB00399231 /* PigeonTest.swift in Sources */,
 				CEA7E6761F057D77001F8C27 /* WalletInfoTest.swift in Sources */,
 				3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */,
+				3ADA10D924BE097D000A1D99 /* CoinGeckoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5071,10 +5113,26 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		3A4D8ECB24C8CA5600FA7AC8 /* XCRemoteSwiftPackageReference "CoinGecko" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/breadwallet/CoinGecko";
+			requirement = {
+				kind = exactVersion;
+				version = 1.0.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		3A0C6087242A5CC900F0FBC2 /* WalletKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WalletKit;
+		};
+		3A4D8ECC24C8CA5600FA7AC8 /* CoinGecko */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A4D8ECB24C8CA5600FA7AC8 /* XCRemoteSwiftPackageReference "CoinGecko" */;
+			productName = CoinGecko;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

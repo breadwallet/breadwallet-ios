@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CoinGecko",
+        "repositoryURL": "https://github.com/breadwallet/CoinGecko",
+        "state": {
+          "branch": null,
+          "revision": "be65fb1d75e62b103f9a1988b05d5d5690396ff3",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

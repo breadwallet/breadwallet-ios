@@ -76,12 +76,18 @@ class MessageUIPresenter: NSObject, Trackable {
         present(emailView)
     }
 
-    func presentMailCompose(emailAddress: String) {
+    func presentMailCompose(emailAddress: String, subject: String? = nil, body: String? = nil) {
         guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
         originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
         emailView.setToRecipients([emailAddress.replacingOccurrences(of: "%40", with: "@")])
+        if let subject = subject {
+            emailView.setSubject(subject)
+        }
+        if let body = body {
+            emailView.setMessageBody(body, isHTML: false)
+        }
         emailView.mailComposeDelegate = self
         saveEvent("receive.presentMailCompose")
         present(emailView)

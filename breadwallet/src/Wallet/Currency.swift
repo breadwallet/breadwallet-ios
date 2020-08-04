@@ -9,6 +9,7 @@
 import Foundation
 import WalletKit
 import UIKit
+import CoinGecko
 
 protocol CurrencyWithIcon {
     var code: String { get }
@@ -38,6 +39,10 @@ class Currency: CurrencyWithIcon {
 
     var cryptoCompareCode: String {
         return metaData.alternateCode?.uppercased() ?? core.code.uppercased()
+    }
+    
+    var coinGeckoId: String? {
+        return metaData.coinGeckoId
     }
     
     // Number of confirmations needed until a transaction is considered complete
@@ -318,6 +323,7 @@ public struct CurrencyMetaData: CurrencyWithIcon {
     }
 
     var alternateCode: String?
+    var coinGeckoId: String?
     
     enum CodingKeys: String, CodingKey {
         case uid = "currency_id"
@@ -357,9 +363,26 @@ extension CurrencyMetaData: Codable {
         name = try container.decode(String.self, forKey: .name)
         tokenAddress = try container.decode(String.self, forKey: .tokenAddress)
         decimals = try container.decode(UInt8.self, forKey: .decimals)
-        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames),
-            let code = alternateNames["cryptocompare"] {
-            alternateCode = code
+        
+        var didFindCoinGeckoID = false
+        if let alternateNames = try? container.decode([String: String].self, forKey: .alternateNames) {
+            if let code = alternateNames["cryptocompare"] {
+                alternateCode = code
+            }
+            
+            if let id = alternateNames["coingecko"] {
+                didFindCoinGeckoID = true
+                coinGeckoId = id
+            }
+        }
+        
+        // If the /currencies endpoint hasn't provided a coingeckoID,
+        // use the local list. Eventually /currencies should provide
+        // all of them
+        if !didFindCoinGeckoID {
+            if let id = CoinGeckoCodes.map[code.uppercased()] {
+                coinGeckoId = id
+            }
         }
     }
 
@@ -375,8 +398,16 @@ extension CurrencyMetaData: Codable {
         try container.encode(name, forKey: .name)
         try container.encode(tokenAddress, forKey: .tokenAddress)
         try container.encode(decimals, forKey: .decimals)
+        
+        var alternateNames = [String: String]()
         if let alternateCode = alternateCode {
-            try container.encode(["cryptocompare": alternateCode], forKey: .alternateNames)
+            alternateNames["cryptocompare"] = alternateCode
+        }
+        if let coingeckoId = coinGeckoId {
+            alternateNames["coingecko"] = coingeckoId
+        }
+        if !alternateNames.isEmpty {
+            try container.encode(alternateNames, forKey: .alternateNames)
         }
     }
 }

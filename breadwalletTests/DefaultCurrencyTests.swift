@@ -34,4 +34,15 @@ class DefaultCurrencyTests : XCTestCase {
         XCTAssertTrue(UserDefaults.defaultCurrencyCode == "CAD", "Actions should persist new value")
     }
     
+    func testUnsupported() {
+        UserDefaults.defaultCurrencyCode = "AAA"
+        XCTAssertTrue(UserDefaults.defaultCurrencyCode == "USD", "USD should be default for unsupported codes")
+    }
+    
+    func testUnsupportedAction() {
+        UserDefaults.defaultCurrencyCode = "USD"
+        Store.perform(action: DefaultCurrency.SetDefault("AAA"))
+        XCTAssertTrue(UserDefaults.defaultCurrencyCode == "USD", "USD should be default for unsupported codes")
+    }
+    
 }

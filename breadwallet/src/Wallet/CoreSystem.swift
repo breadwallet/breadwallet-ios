@@ -49,7 +49,7 @@ class CoreSystem: Subscriber, Trackable {
         Reachability.addDidChangeCallback { [weak self] isReachable in
             guard let `self` = self, let system = self.system else { return }
             system.setNetworkReachable(isReachable)
-            isReachable ? self.connect() : self.disconnect()
+            isReachable ? self.connect() : self.pause()
         }
         
         Store.subscribe(self, name: .createAccount(nil, nil)) { [weak self] trigger in
@@ -68,8 +68,7 @@ class CoreSystem: Subscriber, Trackable {
         print("[SYS] create | account timestamp: \(account.timestamp)")
         assert(self.system == nil)
 
-        let backend = BlockChainDB(session: URLSession.shared,
-                                   bdbBaseURL: "https://\(C.bdbHost)",
+        let backend = BlockChainDB(bdbBaseURL: "https://\(C.bdbHost)",
             bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
                 
                 var req = request
@@ -129,13 +128,21 @@ class CoreSystem: Subscriber, Trackable {
                 .forEach { $0.connect(using: $0.customPeer) }
         }
     }
+    
+    func resume() {
+        queue.async {
+            print("[SYS] resume")
+            guard let system = self.system else { return }
+            system.resume()
+        }
+    }
 
     /// Disconnects all wallet managers. Used on background and when reachability is lost.
-    func disconnect() {
+    func pause() {
         queue.async {
-            print("[SYS] disconnect")
+            print("[SYS] pause")
             guard let system = self.system else { return }
-            system.disconnectAll()
+            system.pause()
         }
     }
 

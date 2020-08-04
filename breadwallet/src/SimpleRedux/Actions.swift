@@ -184,9 +184,11 @@ enum DefaultCurrency {
     struct SetDefault: Action, Trackable {
         let reduce: Reducer
         init(_ defaultCurrencyCode: String) {
-            UserDefaults.defaultCurrencyCode = defaultCurrencyCode
-            reduce = { $0.mutate(defaultCurrencyCode: defaultCurrencyCode) }
-            saveEvent("event.setDefaultCurrency", attributes: ["code": defaultCurrencyCode])
+            let isCodeAvailable = FiatCurrency.isCodeAvailable(defaultCurrencyCode)
+            let newCode = isCodeAvailable ? defaultCurrencyCode : "USD"
+            UserDefaults.defaultCurrencyCode = newCode
+            reduce = { $0.mutate(defaultCurrencyCode: newCode) }
+            saveEvent("event.setDefaultCurrency", attributes: ["code": newCode])
         }
     }
 }

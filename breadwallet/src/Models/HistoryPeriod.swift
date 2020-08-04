@@ -23,6 +23,23 @@ enum HistoryPeriod: String, CaseIterable {
         return period
     }
     
+    var days: Int {
+        switch self {
+        case .day:
+            return 1
+        case .week:
+            return 7
+        case .month:
+            return 31
+        case .months:
+            return 93
+        case .year:
+            return 365
+        case .years:
+            return 365*3
+        }
+    }
+    
     func saveMostRecent() {
         UserDefaults.lastChartHistoryPeriod = self.rawValue
     }
@@ -44,25 +61,6 @@ enum HistoryPeriod: String, CaseIterable {
             return (formatterForUnits([.year]).string(from: 60*60*24*31*12) ?? "1y").trim(" ").toMaxLength(2)
         case .years:
             return (formatterForUnits([.year]).string(from: 60*60*24*31*36) ?? "3y").trim(" ").toMaxLength(2)
-        }
-    }
-    
-    func urlForCode(code: String) -> URL {
-        let shouldUseUSD = BRAPIClient.shouldUseUSDRate(currencyCodes: [code.uppercased()])
-        let tsym = shouldUseUSD ? "USD" : Store.state.defaultCurrencyCode.uppercased()
-        switch self {
-        case .day:
-            return URL(string: "https://min-api.cryptocompare.com/data/histominute?fsym=\(code.uppercased())&tsym=\(tsym)&limit=1440")!
-        case .week:
-            return URL(string: "https://min-api.cryptocompare.com/data/histohour?fsym=\(code.uppercased())&tsym=\(tsym)&limit=168")!
-        case .month:
-            return URL(string: "https://min-api.cryptocompare.com/data/histohour?fsym=\(code.uppercased())&tsym=\(tsym)&limit=720")!
-        case .months:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=90")!
-        case .year:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=365")!
-        case .years:
-            return URL(string: "https://min-api.cryptocompare.com/data/histoday?fsym=\(code.uppercased())&tsym=\(tsym)&limit=1095")!
         }
     }
     
@@ -89,13 +87,13 @@ enum HistoryPeriod: String, CaseIterable {
     var reductionFactor: Int {
         switch self {
         case .day:
-            return 8
+            return 6
         case .month:
             return 4
         case .year:
             return 2
         case .years:
-            return 5
+            return 3
         default:
             return 0
         }

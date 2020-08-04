@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoinGecko
 
 class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackable {
 
@@ -80,7 +81,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         let currency = fiatCurrencies[indexPath.row]
         let code = currency.code
 
-        cell.textLabel?.text = "\(currency.code) (\(Rate.symbolMap[code] ?? currency.code))"
+        cell.textLabel?.text = "\(currency.code) (\(Rate.symbolMap[code] ?? currency.code)) - \(currency.name)"
         cell.textLabel?.font = UIFont.customBody(size: 14.0)
         cell.textLabel?.textColor = .white
 

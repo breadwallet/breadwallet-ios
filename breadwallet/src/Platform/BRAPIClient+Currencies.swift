@@ -40,6 +40,12 @@ struct FiatCurrency: Decodable {
         
         return currencies ?? []
     }()
+    
+    // case of code doesn't matter
+    static func isCodeAvailable(_ code: String) -> Bool {
+        let available = FiatCurrency.availableCurrencies.map { $0.code.lowercased() }
+        return available.contains(code.lowercased())
+    }
 
 }
 
@@ -49,7 +55,6 @@ extension BRAPIClient {
     
     /// Get the list of supported currencies and their metadata from the backend or local cache
     func getCurrencyMetaData(completion: @escaping ([CurrencyId: CurrencyMetaData]) -> Void) {
-        
         let fm = FileManager.default
         guard let documentsDir = try? fm.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return assertionFailure() }
         let cachedFilePath = documentsDir.appendingPathComponent("currencies.json").path
@@ -62,7 +67,8 @@ extension BRAPIClient {
             shouldProcess = false
         }
         
-        let req = URLRequest(url: url("/currencies"))
+        var req = URLRequest(url: url("/currencies"))
+        req.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
         send(request: req, handler: { (result: APIResult<[CurrencyMetaData]>) in
             switch result {
             case .success(let currencies):
