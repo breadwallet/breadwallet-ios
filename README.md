@@ -50,6 +50,16 @@ We manage all translations with:
 
 [PhraseApp - Start localizing software the simple way](https://phraseapp.com)
 
+### Building and running
+
+You will need [Xcode](https://developer.apple.com/xcode/) to build and run this app.
+
+Once you have Xcode installed, clone this repository.  Update its submodules by running the following command from the root of your project:
+
+`$ git submodule update --init --recursive`
+
+ Then use Xcode to open the `breadwallet.xcworkspace` file.  From there, you can build and run via the Xcode menu.
+
 ### WARNING:
 
 ***Installation on jailbroken devices is strongly discouraged.***
