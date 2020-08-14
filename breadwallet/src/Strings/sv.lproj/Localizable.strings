@@ -186,12 +186,39 @@
 "Button.yes" = "Ja";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centrera ditt ID i boxen";
+"CloudBackup.backupDeleted" = "Backup raderad";
+"CloudBackup.backupDeletedMessage" = "Din iCloud-säkerhetskopia har raderats efter för många misslyckade PIN-försök. Appen kommer nu att starta om.";
+"CloudBackup.backupMenuTitle" = "iCloud Backup";
+"CloudBackup.createButton" = "Skapa ny plånbok";
+"CloudBackup.createWarning" = "En tidigare säkerhetskopierad plånbok har upptäckts. Att använda denna säkerhetskopia rekommenderas. Är du säker på att du vill fortsätta att skapa en ny plånbok?";
+"CloudBackup.enableBody1" = "iCloud-nyckelring måste vara aktiverad för att den här funktionen ska fungera.";
+"CloudBackup.enableBody2" = "Det ska se ut så här:";
+"CloudBackup.enableButton" = "Jag har aktiverat iCloud Keychain";
+"CloudBackup.enableTitle" = "Aktivera nyckelring";
+"CloudBackup.encryptBackupMessage" = "Ange stift för att kryptera säkerhetskopiering";
+"CloudBackup.mainBody" = "Vi rekommenderar fortfarande att du skriver ner din återställningsfras och håller den säker, men du kan också säkerhetskopiera din återställningsfras till iCloud. Observera att iCloud-säkerhetskopiering är bara lika säker som ditt iCloud-konto.";
+"CloudBackup.mainTitle" = "Säkerhetskopiering av återställning iCloud";
+"CloudBackup.mainWarning" = "iCloud-nyckelring måste vara aktiverad i appen iOS-inställningar för att den här funktionen ska fungera";
+"CloudBackup.mainWarningConfirmation" = "Är du säker på att du vill inaktivera iCloud Backup? Detta tar bort din säkerhetskopia från alla enheter.";
+"CloudBackup.pinAttempts" = "Återstående försök innan radering av säkerhetskopiering: %1$@";
+"CloudBackup.recoverButton" = "Återställ från återställningsnyckel";
+"CloudBackup.recoverHeader" = "Ange PIN-kod för att låsa upp iCloud-säkerhetskopiering";
+"CloudBackup.restoreButton" = "Återställ från iCloud Backup";
+"CloudBackup.selectTitle" = "Välj Säkerhetskopia";
+"CloudBackup.step1" = "Starta appen Inställningar.";
+"CloudBackup.step2" = "Tryck på ditt Apple-ID-namn.";
+"CloudBackup.step3" = "Tryck på iCloud.";
+"CloudBackup.step4" = "Kontrollera att iCloud-nyckelring är PÅ";
+"CloudBackup.understandText" = "Jag förstår att den här funktionen inte fungerar om inte iCloud Keychain är aktiverat.";
+"CloudBackup.warningBody" = "Din iCloud-säkerhetskopia raderas efter %1$@ fler felaktiga PIN-försök.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Belopp att skicka:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Nätverks-avgift";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Nätverksavgift (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Behandlingstid: Den här transaktionen beräknas slutföras om %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -518,6 +545,11 @@
 "Prompts.PaperKey.Body.Android" = "Ha en skriven nyckel ifall du skulle tappa bort eller byta telefon. Nyckeln krävs också om du ändrar säkerhetsinställningarna på din telefon. ";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Åtgärd krävs";
+"Prompts.RateApp.dontShow" = "Fråga inte igen";
+"Prompts.RateApp.enjoyingBrd" = "Njuter BRD?";
+"Prompts.RateApp.googlePlayReview" = "Din recension hjälper till att växa BRD-gemenskapen.";
+"Prompts.RateApp.noThanks" = "Nej tack";
+"Prompts.RateApp.rateUs" = "Granska oss";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Din plånbok kan vara osynkroniserad. Detta kan ofta lösas genom att läsa om blockkedjan.";
 /* Transaction rejected prompt title */
@@ -758,7 +790,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "Belopp";
 /* Balance: $4.00 */
-"Send.balance" = "Saldo: ";
+"Send.balance" = "Saldo: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Saldo:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Tillåt kameraåtkomst under Inställningar > Appar > BRD > Behörigheter";
 /* Permission required to access camera */
@@ -815,12 +849,22 @@
 "Send.noFeesError" = "Villkor för nätverksavgifter laddas ned. Försök igen.";
 /* Paste button label */
 "Send.pasteLabel" = "Klistra in";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "Ogiltigt PayID.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "Det finns ingen %1$s adress kopplad till detta PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Det gick inte att hämta adressen för detta PayID. Vänligen försök igen senare.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Kunde inte lägga ut transaktion.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "Kunde inte ladda betalningsförfrågan";
 /* Scan button label */
 "Send.scanLabel" = "Läs av";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Skicka Max: ";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Skicka";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -919,6 +963,10 @@
 "StartViewController.message" = "Det säkraste och tryggaste sättet att använda bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Återställ plånbok";
+"SupportForm.feedbackAppreciated" = "Vi skulle älska din feedback";
+"SupportForm.helpUsImprove" = "Hjälp oss att förbättra";
+"SupportForm.notNow" = "Inte nu";
+"SupportForm.pleaseDescribe" = "Beskriv din upplevelse";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Aktivitet";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1116,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gasbegränsning";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gaspris";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Dölj detaljer";
 /* Label showing the transaction was started (initialized) */

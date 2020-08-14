@@ -186,12 +186,39 @@
 "Button.yes" = "Sí";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centra tu ID en el recuadro";
+"CloudBackup.backupDeleted" = "Copia de seguridad borrada";
+"CloudBackup.backupDeletedMessage" = "Tu copia de seguridad de iCloud ha sido borrada después de demasiados intentos fallidos de PIN. La aplicación se reiniciará ahora.";
+"CloudBackup.backupMenuTitle" = "Copia de seguridad de iCloud";
+"CloudBackup.createButton" = "Crear nueva cartera";
+"CloudBackup.createWarning" = "Se ha detectado una billetera con copia de seguridad anterior. Se recomienda utilizar esta copia de seguridad. ¿Está seguro de que desea continuar con la creación de una nueva billetera?";
+"CloudBackup.enableBody1" = "El llavero de iCloud debe estar activado para que esta función funcione.";
+"CloudBackup.enableBody2" = "Debería tener el siguiente aspecto:";
+"CloudBackup.enableButton" = "He activado el llavero de iCloud";
+"CloudBackup.enableTitle" = "Habilitar llavero";
+"CloudBackup.encryptBackupMessage" = "Ingrese el PIN para cifrar la copia de seguridad";
+"CloudBackup.mainBody" = "Aún te recomendamos que escribas tu frase de recuperación y la mantengas segura, pero también puedes respaldar tu frase de recuperación en iCloud. Ten en cuenta que la copia de seguridad de iCloud solo es tan segura como tu cuenta de iCloud.";
+"CloudBackup.mainTitle" = "Copia de seguridad de recuperación de iCloud";
+"CloudBackup.mainWarning" = "El llavero de iCloud debe estar activado en la aplicación de configuración de iOS para que esta función funcione";
+"CloudBackup.mainWarningConfirmation" = "¿Estás seguro de que deseas desactivar la copia de seguridad de iCloud? Esto eliminará su copia de seguridad de todos los dispositivos.";
+"CloudBackup.pinAttempts" = "Intentos restantes antes de borrar la copia de seguridad: %1$@";
+"CloudBackup.recoverButton" = "Restaurar desde la clave de recuperación";
+"CloudBackup.recoverHeader" = "Ingrese el PIN para desbloquear la copia de seguridad de iCloud";
+"CloudBackup.restoreButton" = "Restaurar desde copia de seguridad de iCloud";
+"CloudBackup.selectTitle" = "Elija Backup";
+"CloudBackup.step1" = "Inicie la aplicación de configuración.";
+"CloudBackup.step2" = "Toca el nombre de tu Apple ID.";
+"CloudBackup.step3" = "Toca iCloud.";
+"CloudBackup.step4" = "Verifica que el llavero de iCloud esté encendido";
+"CloudBackup.understandText" = "Entiendo que esta función no funcionará a menos que iCloud Keychain esté habilitado.";
+"CloudBackup.warningBody" = "Tu copia de seguridad de iCloud se borrará después de %1$@ más intentos de PIN incorrectos.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Cantidad a enviar:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Tarifa de la red:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Tarifa de red (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Tiempo de procesamiento: se prevé que esta transacción se completará en %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -518,6 +545,11 @@
 "Prompts.PaperKey.Body.Android" = "Configura tu clave de papel por si pierdes o cambias tu teléfono. Tu clave también es necesaria si cambias los ajustes de seguridad del teléfono.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Acción obligatoria";
+"Prompts.RateApp.dontShow" = "No preguntes de nuevo";
+"Prompts.RateApp.enjoyingBrd" = "¿Disfrutas de BRD?";
+"Prompts.RateApp.googlePlayReview" = "Su revisión ayuda a hacer crecer la comunidad BRD.";
+"Prompts.RateApp.noThanks" = "No, gracias.";
+"Prompts.RateApp.rateUs" = "Revisenos";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Tu cartera puede no estar sincronizada. Esto a menudo puede arreglarse volviendo a escanear la cadena de bloques.";
 /* Transaction rejected prompt title */
@@ -758,7 +790,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "Cantidad";
 /* Balance: $4.00 */
-"Send.balance" = "Saldo: ";
+"Send.balance" = "Saldo: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Saldo:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Para permitir el acceso a la cámara, ve a «Ajustes», selecciona «Aplicaciones», busca la aplicación «BRD» y selecciona la opción «Permisos»";
 /* Permission required to access camera */
@@ -815,12 +849,22 @@
 "Send.noFeesError" = "Se están descargando las condiciones de tarifa de red. Inténtalo de nuevo.";
 /* Paste button label */
 "Send.pasteLabel" = "Pegar";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayID inválido.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "No hay una dirección %1$s asociada con este PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Se produjo un error al recuperar la dirección de este PayID. Por favor, inténtelo de nuevo más tarde.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "No se pudo publicar la transacción.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "No se pudo cargar la solicitud de pago";
 /* Scan button label */
 "Send.scanLabel" = "Escanear";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Envío máximo:";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Enviar";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -919,6 +963,10 @@
 "StartViewController.message" = "La forma más segura de usar bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recuperar monedero";
+"SupportForm.feedbackAppreciated" = "Nos encantaría que sus comentarios";
+"SupportForm.helpUsImprove" = "Ayúdanos a mejorar";
+"SupportForm.notNow" = "Ahora no";
+"SupportForm.pleaseDescribe" = "Por favor describa su experiencia";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Actividad";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1116,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Límite de gasolina";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Precio de la gasolina";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Ocultar detalles";
 /* Label showing the transaction was started (initialized) */

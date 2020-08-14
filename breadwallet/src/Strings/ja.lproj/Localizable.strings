@@ -186,12 +186,39 @@
 "Button.yes" = "はい";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "ご自身のIDをこのボックス内の中央に配置してください";
+"CloudBackup.backupDeleted" = "バックアップが消去されました";
+"CloudBackup.backupDeletedMessage" = "PINの試行が何度も失敗した後、iCloudバックアップが消去されました。アプリが再起動します。";
+"CloudBackup.backupMenuTitle" = "iCloudバックアップ";
+"CloudBackup.createButton" = "新しいウォレットを作成する";
+"CloudBackup.createWarning" = "以前にバックアップされたウォレットが検出されました。このバックアップを使用することをお勧めします。新しいウォレットを作成してよろしいですか？";
+"CloudBackup.enableBody1" = "この機能を使用するには、iCloudキーチェーンをオンにする必要があります。";
+"CloudBackup.enableBody2" = "次のようになります。";
+"CloudBackup.enableButton" = "iCloudキーチェーンをオンにしました";
+"CloudBackup.enableTitle" = "キーチェーンを有効にする";
+"CloudBackup.encryptBackupMessage" = "バックアップを暗号化するにはPINを入力してください";
+"CloudBackup.mainBody" = "回復フレーズを書き留めて安全に保つことをお勧めしますが、回復フレーズをiCloudにバックアップすることもできます。 iCloudバックアップは、iCloudアカウントと同じくらい安全です。";
+"CloudBackup.mainTitle" = "iCloudリカバリバックアップ";
+"CloudBackup.mainWarning" = "この機能を使用するには、iOS設定アプリでiCloudキーチェーンをオンにする必要があります";
+"CloudBackup.mainWarningConfirmation" = "iCloudバックアップを無効にしてもよろしいですか？これにより、すべてのデバイスからバックアップが削除されます。";
+"CloudBackup.pinAttempts" = "バックアップを消去する前に残っている試行： %1$@";
+"CloudBackup.recoverButton" = "回復キーから復元";
+"CloudBackup.recoverHeader" = "PINを入力してiCloudバックアップのロックを解除します";
+"CloudBackup.restoreButton" = "iCloudバックアップから復元";
+"CloudBackup.selectTitle" = "バックアップを選択";
+"CloudBackup.step1" = "設定アプリを起動します。";
+"CloudBackup.step2" = "Apple ID名をタップします。";
+"CloudBackup.step3" = "iCloudをタップします。";
+"CloudBackup.step4" = "iCloudキーチェーンがオンになっていることを確認する";
+"CloudBackup.understandText" = "この機能はiCloudキーチェーンが有効になっていないと機能しないことを理解しています。";
+"CloudBackup.warningBody" = "あなたのiCloudバックアップは、あと%1$@回の間違ったPIN試行の後に消去されます。";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "送る金額：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "ネットワーク手数料：";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "ネットワーク料金（ETH）:";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "処理時間: この取引は%1$@で完了する見込みです。";
 /* Label for "send" button on final confirmation screen */
@@ -518,6 +545,11 @@
 "Prompts.PaperKey.Body.Android" = "携帯電話を紛失または交換した場合に備え,ペーパー・キーをセットアップします。お客様のキーは,携帯電話のセキュリティ設定を変更した場合にも必要となります。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "アクションが要求されました";
+"Prompts.RateApp.dontShow" = "もう聞かないで";
+"Prompts.RateApp.enjoyingBrd" = "BRDを楽しんでいますか？";
+"Prompts.RateApp.googlePlayReview" = "あなたのレビューは、BRDコミュニティの成長に役立ちます。";
+"Prompts.RateApp.noThanks" = "結構です";
+"Prompts.RateApp.rateUs" = "私たちをレビュー";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "あなたのウォレットは同期されていない可能性があります。ブロックチェーンを再スキャンすることで修復できる可能性があります。";
 /* Transaction rejected prompt title */
@@ -758,7 +790,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
-"Send.balance" = "残高: ";
+"Send.balance" = "残高: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "残高:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "「設定」 > 「アプリ」 > 「ブレッド」 > 「許可」でカメラへのアクセスを許可してください";
 /* Permission required to access camera */
@@ -815,12 +849,22 @@
 "Send.noFeesError" = "ネットワーク手数料の諸条件のダウンロード中です。もう一度お試し下さい。";
 /* Paste button label */
 "Send.pasteLabel" = "貼り付け";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayIDが無効です。";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "このPayIDに関連付けられている%1$sアドレスはありません。";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "このPayIDの住所の取得中にエラーが発生しました。後でもう一度やり直してください。";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "取引を実行できませんでした。";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "支払い要求がロードできませんでした";
 /* Scan button label */
 "Send.scanLabel" = "スキャン";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "最大送信：";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "送金する";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -919,6 +963,10 @@
 "StartViewController.message" = "最も安全にビットコインを使う手段。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "ウォレットを復元する";
+"SupportForm.feedbackAppreciated" = "フィードバックをお待ちしています";
+"SupportForm.helpUsImprove" = "改善にご協力ください";
+"SupportForm.notNow" = "今はやめろ";
+"SupportForm.pleaseDescribe" = "あなたの経験を教えてください";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "アクティビティ";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1116,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "ガソリン上限";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "ガソリン価格";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "詳細を隠す";
 /* Label showing the transaction was started (initialized) */

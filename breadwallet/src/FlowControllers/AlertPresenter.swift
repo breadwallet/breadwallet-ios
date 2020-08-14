@@ -90,6 +90,8 @@ class AlertPresenter: Subscriber {
                 topConstraint?.constant = size.height
                 window.layoutIfNeeded()
             }, completion: { _ in
+                
+                //TODO: clean up these callbacks
                 if case .paperKeySet(let callback) = type {
                     callback()
                 }
@@ -97,6 +99,9 @@ class AlertPresenter: Subscriber {
                     callback()
                 }
                 if case .sweepSuccess(let callback) = type {
+                    callback()
+                }
+                if case .cloudBackupRestoreSuccess(let callback) = type {
                     callback()
                 }
                 completion()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class StartNavigationDelegate: NSObject, UINavigationControllerDelegate {
 
@@ -38,12 +39,22 @@ class StartNavigationDelegate: NSObject, UINavigationControllerDelegate {
                 NSAttributedString.Key.font: UIFont.customBold(size: 17.0)
             ]
             navigationController.setClearNavbar()
-        }
-
-        if viewController is UpdatePinViewController {
+            
+            //Stop being able to swipe back from updating pin view
             if let gr = navigationController.interactivePopGestureRecognizer {
                 navigationController.view.removeGestureRecognizer(gr)
             }
+        }
+        
+        if #available(iOS 13.6, *) {
+            if viewController is UIHostingController<SelectBackupView> {
+               navigationController.navigationBar.tintColor = .navigationTint
+               navigationController.navigationBar.titleTextAttributes = [
+                   NSAttributedString.Key.foregroundColor: UIColor.white,
+                   NSAttributedString.Key.font: UIFont.customBold(size: 17.0)
+               ]
+               navigationController.setClearNavbar()
+           }
         }
     }
 }

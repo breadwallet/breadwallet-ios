@@ -48,7 +48,7 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     private func setupAddWalletButton() {
         let topInset: CGFloat = 0
-        let leftRightInset: CGFloat = C.padding[2]
+        let leftRightInset: CGFloat = C.padding[1]
         let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: addWalletButtonHeight))
         

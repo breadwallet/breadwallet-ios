@@ -38,7 +38,7 @@ enum ExitRecoveryKeyAction {
 //
 class RecoveryKeyFlowController {
     
-    private static let pinTransitionDelegate = PinTransitioningDelegate()
+    static let pinTransitionDelegate = PinTransitioningDelegate()
     
     //
     // Entry point into the recovery key flow.

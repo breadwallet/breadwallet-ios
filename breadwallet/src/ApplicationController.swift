@@ -365,8 +365,7 @@ class ApplicationController: Subscriber, Trackable {
         
         startFlowController = StartFlowPresenter(keyMaster: keyStore,
                                                  rootViewController: navigationController,
-                                                 createHomeScreen: createHomeScreen,
-                                                 createBuyScreen: createBuyScreen)
+                                                 createHomeScreen: createHomeScreen)
     }
     
     private func setupAppearance() {
@@ -412,19 +411,6 @@ class ApplicationController: Subscriber, Trackable {
             nc.setDarkStyle()
             navigationController.present(nc, animated: true, completion: nil)
         }
-    }
-    
-    /// Creates an instance of the buy screen. This may be invoked from the StartFlowPresenter if the user
-    /// goes through onboarding and decides to buy coin right away.
-    private func createBuyScreen() -> BRWebViewController {
-        let buyScreen = BRWebViewController(bundleName: C.webBundle,
-                                            mountPoint: "/buy",
-                                            walletAuthenticator: keyStore,
-                                            system: coreSystem)
-        buyScreen.startServer()
-        buyScreen.preload()
-        
-        return buyScreen
     }
     
     /// Creates an instance of the home screen. This may be invoked from StartFlowPresenter.presentOnboardingFlow().

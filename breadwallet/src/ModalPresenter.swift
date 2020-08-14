@@ -8,7 +8,7 @@
 
 import UIKit
 import LocalAuthentication
-
+import SwiftUI
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
 
@@ -499,7 +499,7 @@ class ModalPresenter: Subscriber, Trackable {
         ]
         
         // MARK: Security Settings
-        let securityItems: [MenuItem] = [
+        var securityItems: [MenuItem] = [
             // Unlink
             MenuItem(title: S.Settings.wipe) { [weak self] in
                 guard let `self` = self, let vc = self.topViewController else { return }
@@ -529,6 +529,18 @@ class ModalPresenter: Subscriber, Trackable {
                 self.presentWritePaperKey(fromViewController: menuNav)
             }
         ]
+        
+        // Add iCloud backup
+        if #available(iOS 13.6, *) {
+            securityItems.append(
+                MenuItem(title: S.CloudBackup.backupMenuTitle) {
+                    let synchronizer = BackupSynchronizer(context: .existingWallet, keyStore: self.keyStore, navController: menuNav)
+                    let cloudView = CloudBackupView(synchronizer: synchronizer)
+                    let hosting = UIHostingController(rootView: cloudView)
+                    menuNav.pushViewController(hosting, animated: true)
+                }
+            )
+        }
         
         // MARK: Root Menu
         var rootItems: [MenuItem] = [
@@ -806,11 +818,6 @@ class ModalPresenter: Subscriber, Trackable {
         self.menuNavController = menuNav
         
         self.topViewController?.present(menuNav, animated: true, completion: nil)
-    }
-    
-    func addressOf<T: AnyObject>(_ o: T) -> String {
-        let addr = unsafeBitCast(o, to: Int.self)
-        return String(format: "%p", addr)
     }
     
     private func presentConnectionModeScreen(menuNav: UINavigationController) {

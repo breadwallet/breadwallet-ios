@@ -83,7 +83,7 @@ class BRTar {
                 // read name
                 let name = try readNameAtLocation(loc, fromHandle: tarFh)
                 log("got file name from tar \(name)")
-                let newFilePath = (path as NSString).appendingPathComponent(name)
+                let newFilePath = URL(fileURLWithPath: path).appendingPathComponent(name).path
                 log("will write to \(newFilePath)")
                 var size = readSizeAtLocation(loc, fromHandle: tarFh)
                 log("its size is \(size)")
@@ -117,7 +117,7 @@ class BRTar {
             case .directory:
                 let name = try readNameAtLocation(loc, fromHandle: tarFh)
                 log("got new directory name \(name)")
-                let dirPath = (path as NSString).appendingPathComponent(name)
+                let dirPath = URL(fileURLWithPath: path).appendingPathComponent(name).path
                 log("will create directory at \(dirPath)")
                 try fm.createDirectory(atPath: dirPath, withIntermediateDirectories: true, attributes: nil)
                 log("success creating directory")
