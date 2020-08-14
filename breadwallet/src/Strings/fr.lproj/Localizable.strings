@@ -186,12 +186,39 @@
 "Button.yes" = "Oui";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centrez votre identifiant dans le champ";
+"CloudBackup.backupDeleted" = "Sauvegarde effacée";
+"CloudBackup.backupDeletedMessage" = "Votre sauvegarde iCloud a été effacée après trop de tentatives de code PIN ratées. L'application va maintenant redémarrer.";
+"CloudBackup.backupMenuTitle" = "Sauvegarde iCloud";
+"CloudBackup.createButton" = "Créer un nouveau portefeuille";
+"CloudBackup.createWarning" = "Un portefeuille précédemment sauvegardé a été détecté. L'utilisation de cette sauvegarde est recommandée. Êtes-vous sûr de vouloir procéder à la création d'un nouveau portefeuille?";
+"CloudBackup.enableBody1" = "Le porte-clés iCloud doit être activé pour que cette fonctionnalité fonctionne.";
+"CloudBackup.enableBody2" = "Il devrait ressembler à ce qui suit:";
+"CloudBackup.enableButton" = "J’ai activé iCloud Keychain";
+"CloudBackup.enableTitle" = "Activer le porte-clés";
+"CloudBackup.encryptBackupMessage" = "Entrez le code PIN pour crypter la sauvegarde";
+"CloudBackup.mainBody" = "Nous vous recommandons toujours de noter votre phrase de récupération et de la garder en sécurité, mais vous pouvez également sauvegarder votre phrase de récupération sur iCloud. Veuillez noter que la sauvegarde iCloud n'est aussi sécurisée que votre compte iCloud.";
+"CloudBackup.mainTitle" = "Sauvegarde de récupération iCloud";
+"CloudBackup.mainWarning" = "Le porte-clés iCloud doit être activé dans l’application Paramètres iOS pour que cette fonctionnalité fonctionne";
+"CloudBackup.mainWarningConfirmation" = "Êtes-vous sûr de vouloir désactiver la sauvegarde iCloud ? Cela supprimera votre sauvegarde de tous les appareils.";
+"CloudBackup.pinAttempts" = "Tentatives restantes avant d'effacer la sauvegarde: %1$@";
+"CloudBackup.recoverButton" = "Restaurer à partir de la clé de récupération";
+"CloudBackup.recoverHeader" = "Entrez le code PIN pour déverrouiller la sauvegarde iCloud";
+"CloudBackup.restoreButton" = "Restaurer à partir de la sauvegarde iCloud";
+"CloudBackup.selectTitle" = "Choisir la sauvegarde";
+"CloudBackup.step1" = "Lancez l'application Paramètres.";
+"CloudBackup.step2" = "Appuyez sur le nom de votre identifiant Apple.";
+"CloudBackup.step3" = "Appuyez sur iCloud.";
+"CloudBackup.step4" = "Vérifiez que le porte-clés iCloud est activé";
+"CloudBackup.understandText" = "Je comprends que cette fonctionnalité ne fonctionnera pas si le porte-clés iCloud n'est pas activé.";
+"CloudBackup.warningBody" = "Votre sauvegarde iCloud sera effacée après %1$@ autres tentatives de code PIN incorrectes.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Montant à envoyer :";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Frais de réseau :";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Frais de réseau (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Temps de traitement : cette opération devrait se conclure dans %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -518,6 +545,11 @@
 "Prompts.PaperKey.Body.Android" = "Paramétrez votre clé papier au cas où vous perdriez ou remplaceriez votre téléphone. Votre clé sera également requise si vous modifiez les paramètres de sécurité de votre téléphone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Une action est requise";
+"Prompts.RateApp.dontShow" = "Ne plus demander";
+"Prompts.RateApp.enjoyingBrd" = "Vous aimez BRD?";
+"Prompts.RateApp.googlePlayReview" = "Votre avis contribue à développer la communauté BRD.";
+"Prompts.RateApp.noThanks" = "Non merci";
+"Prompts.RateApp.rateUs" = "Évaluez-nous";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Votre portefeuille n'est peut être pas synchronisé. Cela peut souvent être corrigé en scannant la blockchain à nouveau.";
 /* Transaction rejected prompt title */
@@ -758,7 +790,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "Montant";
 /* Balance: $4.00 */
-"Send.balance" = "Solde: ";
+"Send.balance" = "Solde : %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Solde:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Autoriser l'accès à l'appareil photo en allant dans « Paramètres » > « Apps » > « BRD » > « Permissions »";
 /* Permission required to access camera */
@@ -815,12 +849,22 @@
 "Send.noFeesError" = "Les conditions des frais de réseau sont en cours de téléchargement. Veuillez réessayer.";
 /* Paste button label */
 "Send.pasteLabel" = "Coller";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayID invalide.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "Il n’y a pas d’adresse de 1 $S associée à cette PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Une erreur s'est produite lors de la récupération de l'adresse pour ce PayID. Veuillez réessayer plus tard.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Impossible de publier la transaction.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "Impossible de charger la demande de paiement";
 /* Scan button label */
 "Send.scanLabel" = "Scanner";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Envoi maximum:";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Envoyer";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -919,6 +963,10 @@
 "StartViewController.message" = "La façon la plus facile et sécurisée  d'utiliser bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Récupérer le portefeuille";
+"SupportForm.feedbackAppreciated" = "Nous aimerions vos retours";
+"SupportForm.helpUsImprove" = "Aidez-nous à améliorer";
+"SupportForm.notNow" = "Pas maintenant";
+"SupportForm.pleaseDescribe" = "Veuillez décrire votre expérience";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Activité";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1116,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Limite de gaz";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Prix du gaz";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Masquer les détails";
 /* Label showing the transaction was started (initialized) */

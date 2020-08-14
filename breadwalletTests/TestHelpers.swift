@@ -219,7 +219,9 @@ func clearKeychain() {
                    kSecClassIdentity as String]
     classes.forEach { className in
         SecItemDelete([kSecClass as String: className,
-                       kSecAttrService: testWalletSecAttrService] as CFDictionary)
+                       kSecAttrService: testWalletSecAttrService,
+                       kSecAttrSynchronizable: kSecAttrSynchronizableAny
+            ] as CFDictionary)
     }
 }
 

@@ -332,7 +332,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         ]
         
         let balanceOutput = NSMutableAttributedString()
-        balanceOutput.append(NSAttributedString(string: isSendingMax ? S.Send.sendingMax : S.Send.balance, attributes: balanceLabelattributes))
+        balanceOutput.append(NSAttributedString(string: isSendingMax ? S.Send.sendingMax : S.Send.balanceString, attributes: balanceLabelattributes))
         balanceOutput.append(NSAttributedString(string: balanceAmount.description, attributes: balanceAttributes))
         return (balanceOutput, NSAttributedString(string: feeOutput, attributes: feeAttributes), !isSendingMax)
     }

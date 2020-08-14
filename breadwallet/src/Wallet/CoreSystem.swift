@@ -757,6 +757,11 @@ extension CoreSystem: SystemListener {
                 let walletID = self.walletID(address: wallet.target.description) {
                 DispatchQueue.main.async {
                     Store.perform(action: WalletID.Set(walletID))
+                    if #available(iOS 13.6, *) {
+                        DispatchQueue.global(qos: .utility).async {
+                            self.keyStore.migrateNoKeyBackup(id: walletID)
+                        }
+                    }
                 }
             }
 

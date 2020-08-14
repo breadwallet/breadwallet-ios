@@ -186,12 +186,39 @@
 "Button.yes" = "是";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "将您的身份证号集中在方框中";
+"CloudBackup.backupDeleted" = "备份已删除";
+"CloudBackup.backupDeletedMessage" = "PIN尝试失败次数过多后，您的iCloud备份已被删除。该应用程序现在将重新启动。";
+"CloudBackup.backupMenuTitle" = "iCloud备份";
+"CloudBackup.createButton" = "创建新钱包";
+"CloudBackup.createWarning" = "检测到先前备份的钱包。建议使用此备份。您确定要继续创建新的钱包吗？";
+"CloudBackup.enableBody1" = "要启用此功能，必须打开iCloud钥匙串。";
+"CloudBackup.enableBody2" = "它应该如下所示：";
+"CloudBackup.enableButton" = "我已开启iCloud钥匙串";
+"CloudBackup.enableTitle" = "启用钥匙串";
+"CloudBackup.encryptBackupMessage" = "输入密码以加密备份";
+"CloudBackup.mainBody" = "我们仍然建议写下恢复短语并保持其安全性，但是您也可以将恢复短语备份到iCloud。请注意，iCloud备份仅与您的iCloud帐户一样安全。";
+"CloudBackup.mainTitle" = "iCloud恢复备份";
+"CloudBackup.mainWarning" = "必须在iOS设置应用中打开iCloud钥匙串才能使用此功能";
+"CloudBackup.mainWarningConfirmation" = "您确定要禁用iCloud备份吗？这将从所有设备上删除您的备份。";
+"CloudBackup.pinAttempts" = "清除备份之前还有剩余尝试： %1$@";
+"CloudBackup.recoverButton" = "从恢复密钥还原";
+"CloudBackup.recoverHeader" = "输入PIN码以解锁iCloud备份";
+"CloudBackup.restoreButton" = "从iCloud备份还原";
+"CloudBackup.selectTitle" = "选择备份";
+"CloudBackup.step1" = "启动设置应用。";
+"CloudBackup.step2" = "点击您的Apple ID名称。";
+"CloudBackup.step3" = "点按iCloud。";
+"CloudBackup.step4" = "验证iCloud钥匙串是否已打开";
+"CloudBackup.understandText" = "我了解除非启用iCloud钥匙串，否则此功能将无法使用。";
+"CloudBackup.warningBody" = "在尝试了%1$@次不正确的PIN后，您的iCloud备份将被清除。";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "发送金额：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "网络费：";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "网络费 (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "处理时间：预计此交易将在 %1$@ 后完成。";
 /* Label for "send" button on final confirmation screen */
@@ -518,6 +545,11 @@
 "Prompts.PaperKey.Body.Android" = "设置纸钥,避免手机丢失或更换带来的不便。您需要提供密钥以更改手机安全设置。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要采取的行动";
+"Prompts.RateApp.dontShow" = "不要再问了";
+"Prompts.RateApp.enjoyingBrd" = "享受BRD吗？";
+"Prompts.RateApp.googlePlayReview" = "您的评论有助于扩大BRD社区。";
+"Prompts.RateApp.noThanks" = "不了，谢谢。";
+"Prompts.RateApp.rateUs" = "评论我们";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "您的钱包可能不同步。通常可通过重新扫描区块链来修复。";
 /* Transaction rejected prompt title */
@@ -758,7 +790,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "金额";
 /* Balance: $4.00 */
-"Send.balance" = "余额：";
+"Send.balance" = "余额：%1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "余额:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "在“设置”>“应用”>“BRD”>“权限”中允许访问相机";
 /* Permission required to access camera */
@@ -815,12 +849,22 @@
 "Send.noFeesError" = "正在下载网络费状态。请重试。";
 /* Paste button label */
 "Send.pasteLabel" = "粘贴";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "无效的PayID。";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "没有与此PayID相关的%1$s地址。";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "检索此PayID的地址时出错。请稍后再试。";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "无法发布交易。";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "无法加载支付请求";
 /* Scan button label */
 "Send.scanLabel" = "扫描";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "发送上限：";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "发送";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -919,6 +963,10 @@
 "StartViewController.message" = "使用比特币最安全且最可靠的方式。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "恢复钱包";
+"SupportForm.feedbackAppreciated" = "我们希望收到您的反馈";
+"SupportForm.helpUsImprove" = "帮助我们改善";
+"SupportForm.notNow" = "现在不要";
+"SupportForm.pleaseDescribe" = "请描述您的经历";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "活动";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1116,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "燃料上限";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "燃料价格";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "隐藏详细信息";
 /* Label showing the transaction was started (initialized) */
