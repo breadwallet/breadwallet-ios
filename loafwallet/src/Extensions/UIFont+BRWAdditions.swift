@@ -10,19 +10,19 @@ import UIKit
 
 extension UIFont {
     static var header: UIFont {
-        return UIFont(name: "CircularPro-Bold", size: 17.0) ?? UIFont.preferredFont(forTextStyle: .headline)
+        return UIFont(name: "BarlowSemiCondensed-Bold", size: 17.0) ?? UIFont.preferredFont(forTextStyle: .headline)
     }
     
     static func customBold(size: CGFloat) -> UIFont {
-        return UIFont(name: "CircularPro-Bold", size: size) ?? UIFont.preferredFont(forTextStyle: .headline)
+        return UIFont(name: "BarlowSemiCondensed-Bold", size: size) ?? UIFont.preferredFont(forTextStyle: .headline)
     }
     
     static func customBody(size: CGFloat) -> UIFont {
-        return UIFont(name: "CircularPro-Book", size: size)  ?? UIFont.preferredFont(forTextStyle: .subheadline)
+        return UIFont(name: "BarlowSemiCondensed-Regular", size: size)  ?? UIFont.preferredFont(forTextStyle: .subheadline)
     }
     
     static func customMedium(size: CGFloat) -> UIFont {
-        return UIFont(name: "CircularPro-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
+        return UIFont(name: "BarlowSemiCondensed-Medium", size: size) ?? UIFont.preferredFont(forTextStyle: .body)
     }
     
     static func barlowBold(size: CGFloat) -> UIFont {
