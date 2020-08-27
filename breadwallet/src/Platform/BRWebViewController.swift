@@ -390,19 +390,15 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
     open func webView(_ webView: WKWebView,
                       decidePolicyFor navigationAction: WKNavigationAction,
                       decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if let iframe = navigationAction.targetFrame {
-            let iframeRequest = iframe.request
-            if let iframeUrl = iframeRequest.url {
-                if let iframeHost = iframeUrl.host {
-                    if hostAllowList.contains(iframeHost) {
-                        return decisionHandler(.allow)
-                    }
-                }
-            }
-        }
+        let isMainFrameOrWindow = navigationAction.targetFrame?.isMainFrame ?? true
 
-        if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
-            if host == server.listenAddress || port.int32Value == Int32(server.port) {
+        if let url = navigationAction.request.url, let host = url.host {
+            // allow all local server targets
+            if let port = (url as NSURL).port, (host == server.listenAddress || port.int32Value == Int32(server.port)) {
+                return decisionHandler(.allow)
+            }
+            // allow iframe targets based on allow list
+            if !isMainFrameOrWindow && hostAllowList.contains(host) {
                 return decisionHandler(.allow)
             }
         }
