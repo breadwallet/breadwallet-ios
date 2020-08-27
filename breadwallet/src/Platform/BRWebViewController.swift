@@ -50,6 +50,9 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
         return URL(string: "http://127.0.0.1:\(server.port)\(mountPoint)")!
     }
     
+    // Sometimes the webview will open partner widgets.  This is the list of hosts the webview will allow.
+    private let hostAllowList:[String] = ["trade-ui.sandbox.coinify.com", "trade-ui.coinify.com"]
+
     private let messageUIPresenter = MessageUIPresenter()
 
     private var notificationObservers = [String: NSObjectProtocol]()
@@ -387,6 +390,17 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
     open func webView(_ webView: WKWebView,
                       decidePolicyFor navigationAction: WKNavigationAction,
                       decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let iframe = navigationAction.targetFrame {
+            let iframeRequest = iframe.request
+            if let iframeUrl = iframeRequest.url {
+                if let iframeHost = iframeUrl.host {
+                    if hostAllowList.contains(iframeHost) {
+                        return decisionHandler(.allow)
+                    }
+                }
+            }
+        }
+
         if let url = navigationAction.request.url, let host = url.host, let port = (url as NSURL).port {
             if host == server.listenAddress || port.int32Value == Int32(server.port) {
                 return decisionHandler(.allow)
