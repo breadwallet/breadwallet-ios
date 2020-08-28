@@ -196,7 +196,7 @@
 "CloudBackup.enableButton" = "Jeg har tændt for iCloud-nøglering";
 "CloudBackup.enableTitle" = "Aktivér nøglering";
 "CloudBackup.encryptBackupMessage" = "Indtast pin for at kryptere backup";
-"CloudBackup.mainBody" = "Vi anbefaler stadig, at du skriver din gendannelsesfrase ned og holder den sikker, men du kan også sikkerhedskopiere din gendannelsesfrase til iCloud. Bemærk, iCloud-sikkerhedskopi er kun så sikker som din iCloud-konto.";
+"CloudBackup.mainBody" = "Bemærk, iCloud-sikkerhedskopi er kun så sikker som din iCloud-konto. Vi anbefaler stadig, at du skriver din gendannelsesfrase ned i følgende trin og holder den sikker. Gendannelsesfrasen er den eneste måde at gendanne din tegnebog på, hvis du ikke længere har adgang til iCloud.";
 "CloudBackup.mainTitle" = "Sikkerhedskopiering af iCloud-genoprettelse";
 "CloudBackup.mainWarning" = "iCloud-nøglering skal være tændt i iOS-indstillingsappen for at denne funktion kan fungere";
 "CloudBackup.mainWarningConfirmation" = "Er du sikker på, at du vil deaktivere iCloud Backup? Dette vil slette din sikkerhedskopi fra alle enheder.";
@@ -303,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "Forventet levering: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minutter";
+"FeeSelector.lessThanMinutes" = "&lt;$1$d minutter";
 /* Priority fee */
 "FeeSelector.priority" = "Prioritet";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -417,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "Pungens navn";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Administrer pung";
+"MarketData.high24h" = "24 timer høj";
+"MarketData.low24h" = "24 timer lav";
+"MarketData.marketCap" = "Markedsværdi";
+"MarketData.volume" = "Handelsvolumen";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Tilføj pung";
 /* Menu button title */
@@ -539,8 +544,8 @@
 "Prompts.NoScreenLock.body.android" = "Der skal en skærmlås til på enheden, for at beskytte din pung. Gå til \"Indstillinger\" > \"Sikkerhed\" > \"Skærmlås\" og aktiver for at fortsætte.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Skærmlås deaktiveret";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Din Papirnøgle skal gemmes i tilfælde af du nogensinde mister eller skifter telefon.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Din gendannelsessætning skal gemmes, hvis du mister eller ændrer din telefon.";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "Opret din papirnøgle, i tilfælde af at du mister eller udskifter din telefon. Din nøgle er også påkrævet, hvis du ændrer sikkerhedsindstillingerne på din telefon.";
 /* An action is required (You must do this action). */
@@ -638,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "For at nulstille din PIN, skal du indtaste ordene fra din paper key i boksene nedenfor.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du indtastede er forkert. Prøv igen.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Næsten færdig! Indtast følgende ord fra din genoprettelsesnøgle.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekræft Genoprettelsesnøgle";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Indtast Genoprettelsesnøgle";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Indtast venligst din genoprettelsesnøgle for at fjerne tilknytningen til denne tegnebog fra din enhed.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Er du sikker på, at du vil opsætte din genoprettelsesnøgle senere?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Næsten færdig! Indtast følgende ord fra din gendannelsesfrase.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekræft gendannelsesfrase";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Indtast gendannelsesfrase";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Indtast din gendannelsesfrase for at fjerne linket fra denne tegnebog fra din enhed.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Er du sikker på, at du vil konfigurere din gendannelsesfrase senere?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Opsæt senere";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Generer Genoprettelsesnøgle";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generer gendannelsesfrase";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "Denne nøgle er nødvendig for at inddrive dine penge, hvis du opgraderer eller mister din telefon.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Generer din private genoprettelsesnøgle";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Generer din private gendannelsesfrase";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Gå til Tegnebog";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Sådan fungerer det - Trin %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Nogle af de indtastede ord matcher ikke din genoprettelsesnøgle. Prøv igen.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Nogle af de ord, du indtastede, stemmer ikke overens med din gendannelsesfrase. Prøv igen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Hold den sikker";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -673,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Gendan din Tegnebog";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Indtast venligst genoprettelsesnøglen til den tegnebog, du vil gendanne.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Indtast gendannelsesfrasen for den tegnebog, du vil gendanne.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Slap af, køb og handel";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Husk at skrive disse ord ned. Stryg tilbage, hvis du har glemt dem.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Indtast venligst din genoprettelsesnøgle for at nulstille din pinkode.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Indtast din gendannelsesfrase for at nulstille din pinkode.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Køb og handel vel vidende, at dine midler er beskyttet af den bedste sikkerhed og privatlivspolitik i branchen.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Gem din nøgle på et sikkert sted. Dette er den eneste måde at genoprette din tegnebog på. BRD beholder ikke en kopi.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Tillykke! Du har gennemført opsætningen af genoprettelsesnøgle.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Tillykke! Du afsluttede opsætningen af din gendannelsesfrase.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Du er klar til at indbetale, handle og købe krypto fra din BRD-tegnebog.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -700,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Start en ny tegnebog ved at tørre den aktuelle tegnebog fra din enhed.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Skriv din nøgle ned";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Skriv din genoprettelsesnøgle ned igen";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Skriv din gendannelsessæt igen";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Skriv følgende ord ned i rækkefølge.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Din Genoprettelsesnøgle";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Din gendannelsesfrase";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ af %2$@";
 /* No amount entered error message. */
@@ -760,9 +765,9 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Den eneste måde at få adgang til dine bitcoin på, hvis du mister eller opgraderer din telefon.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Paper key";
+"SecurityCenter.paperKeyTitle" = "Gendannelsesfrase";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "Paper key";
 /* PIN button description */
@@ -956,7 +961,7 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv paper key ned";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Du skrev sidst din paper key ned den \n%1$@";
+"StartPaperPhrase.date" = "Sidst skrevet ned på \n %1$@";
 /* button label */
 "StartViewController.createButton" = "Opret ny tegnebog";
 /* Start view message */
@@ -1270,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Fejl";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "For at oprette en ny pung eller gendanne en eksisterende pung, skal du først fjerne linket til den pung der er installeret på nuværende tidspunkt. For at fortsætte, skal du indtaste den nuværende pungs papirnøgle.";
+"WipeWallet.instruction" = "Indtast din gendannelsesfrase for at udslette denne tegnebog fra din enhed.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Fjern link til pung for at fjerne den fra denne enhed. Når linket til denne pung er fjernet, kan du starte en ny pung eller gendanne en anden pung på denne enhed.";
 /* Start wipe wallet view warning */
