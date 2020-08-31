@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "잔액";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "발행자가 ERC20 지원을 중단하기로 결정했기 때문에 이 토큰은 목록에서 제외되었습니다. \n\n하지만 이 토큰을 다른 플랫폼으로 보낼 수는 있습니다. 자세한 내용은 지원 페이지를 방문하십시오.";
+"Account.delistedToken" = "이 토큰은 목록에서 삭제되었습니다. \n\n여전히 이러한 토큰을 다른 플랫폼으로 보낼 수 있습니다. 자세한 내용은 지원 페이지를 참조하십시오.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@ 당 %1$@";
 /* Loading Wallet Message */

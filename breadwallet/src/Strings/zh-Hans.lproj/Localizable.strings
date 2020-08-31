@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "余额";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "这种代币已被摘牌，因为发行者决定停止支持 ERC20。\n\n您仍然可以将这些代币汇到别的平台。请访问我们的支持页面获取更多细节。";
+"Account.delistedToken" = "该令牌已被除名。 \n\n您可能仍然可以将这些令牌发送到另一个平台。有关更多详细信息，请访问我们的支持页面。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ / %2$@";
 /* Loading Wallet Message */

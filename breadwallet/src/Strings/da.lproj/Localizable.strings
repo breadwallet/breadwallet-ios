@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Denne værdikupon er fjernet fra listen, da udstederen har valgt at stoppe ERC20-support. \n\nDu kan muligvis stadig sende disse værdikuponer til en anden platform. Se vores hjælpeside for mere information.";
+"Account.delistedToken" = "Denne værdikupon er fjernet fra listen. \n\nDu kan muligvis stadig sende disse værdikuponer til en anden platform. Se vores hjælpeside for mere information.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */

@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Balans";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Dit token is verwijderd omdat de uitgever besloot de ERC20-ondersteuning stop te zetten. \n\nMogelijk kunt u deze tokens nog steeds naar een ander platform verzenden. Ga voor meer informatie naar onze ondersteuningspagina.";
+"Account.delistedToken" = "Dit token is verwijderd. \n\nMogelijk kunt u deze tokens nog steeds naar een ander platform verzenden. Ga voor meer informatie naar onze ondersteuningspagina.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */

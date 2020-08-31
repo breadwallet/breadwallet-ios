@@ -114,7 +114,7 @@ enum S {
 
     enum Account {
         static let balance = NSLocalizedString("Account.balance", value:"Balance", comment: "Account header balance label")
-        static let delistedToken = NSLocalizedString("Account.delistedToken", value: "This token has been delisted because the issuer decided to move to their own blockchain.\n\nDon’t worry! You will be able to send these tokens out from the BRD app to another platform that supports the token swap.\n\nFor more details, please visit our support page.", comment: "Delisted token alert banner message")
+        static let delistedToken = NSLocalizedString("Account.delistedToken", value: "This token has been delisted. \n\nYou may still be able to send these tokens to another platform. For more details, visit our support page.", comment: "Delisted token alert banner message")
     }
     
     enum AccountCreation {
