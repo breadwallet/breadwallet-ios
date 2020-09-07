@@ -2,8 +2,8 @@
 
 # check for config file
 if [ ! -f $PWD/build/exportOptions.plist ]; then
-  echo "ERROR: You must have a correctly configured exportOptions.plist file in the 'build' folder of the project, and you must run this script from the project root folder."
-  exit 1
+	mkdir -pv $PWD/build
+	cp $PWD/.circleci/config/exportOptions.plist $PWD/build/exportOptions.plist
 fi
 
 # use xcpretty if available for improved build output formatting
@@ -15,9 +15,11 @@ scheme=$1
 if [[ -n "$scheme" ]]; then
   archive_path="$PWD/build/"$scheme".xcarchive"
   # clean and archive the specified scheme
-  xcodebuild -workspace breadwallet.xcworkspace -scheme "$scheme" clean archive -archivePath "$archive_path" | $xcpretty
+  set -o pipefail
+  xcodebuild -workspace breadwallet.xcworkspace -scheme "$scheme" clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO  | $xcpretty
+  rc=$?; if [[ $rc != 0 ]]; then exit $rc; fi
   # export and upload to App Store Connect
-  xcodebuild -exportArchive -archivePath "$archive_path" -exportOptionsPlist $PWD/build/exportOptions.plist -exportPath $PWD/build | $xcpretty
+#  xcodebuild -exportArchive -archivePath "$archive_path" -exportOptionsPlist $PWD/build/exportOptions.plist -exportPath $PWD/build | $xcpretty
 else
     echo "Usage: archive.sh <scheme>"
     echo "Available schemes:"

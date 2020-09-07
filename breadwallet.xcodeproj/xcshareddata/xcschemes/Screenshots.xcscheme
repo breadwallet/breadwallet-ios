@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
-               BuildableName = "breadwallet.app"
+               BuildableName = "coinsquare.app"
                BlueprintName = "breadwallet"
                ReferencedContainer = "container:breadwallet.xcodeproj">
             </BuildableReference>
@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
+            BuildableName = "coinsquare.app"
+            BlueprintName = "breadwallet"
+            ReferencedContainer = "container:breadwallet.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -59,17 +68,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
-            BuildableName = "breadwallet.app"
-            BlueprintName = "breadwallet"
-            ReferencedContainer = "container:breadwallet.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Screenshots"
@@ -86,13 +84,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
-            BuildableName = "breadwallet.app"
+            BuildableName = "coinsquare.app"
             BlueprintName = "breadwallet"
             ReferencedContainer = "container:breadwallet.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -105,7 +101,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "75A2A78F1DA5934300A983D8"
-            BuildableName = "breadwallet.app"
+            BuildableName = "coinsquare.app"
             BlueprintName = "breadwallet"
             ReferencedContainer = "container:breadwallet.xcodeproj">
          </BuildableReference>
