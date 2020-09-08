@@ -106,12 +106,12 @@ jobs:
             xcodebuild clean -workspace breadwallet.xcworkspace -scheme breadwallet | xcpretty
             
       - run:
-          name: xcodebuild  build submodules
+          name: xcodebuild  build submodules (disabled)
           command: |
             security default-keychain
             security set-keychain-settings -lut 9999
             security unlock-keychain -p test ~/Library/Keychains/default.keychain
-            xcodebuild  build  -verbose   -workspace breadwallet.xcworkspace   -scheme submodules | xcpretty
+            echo xcodebuild  build  -verbose   -workspace breadwallet.xcworkspace   -scheme submodules
             
       - run:
           name: makebuild 
