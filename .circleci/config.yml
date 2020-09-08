@@ -16,6 +16,7 @@ jobs:
       - run:
           name: Pull Submodules
           command: |
+            git submodule init
             git submodule update --init --recursive
 
       #Check init
