@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "残高";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "発行者がERC20のサポートを終了することを決定した為、このトークンはリストから外れています。 \n\nそれらのトークンを他のプラットフォームに転送することは依然可能かもしれません。詳しくは、サポートページをご覧ください。";
+"Account.delistedToken" = "このトークンは上場廃止となりました。 \n\nこれらのトークンを別のプラットフォームに送信できる場合があります。詳しくは、サポートページをご覧ください。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@あたり%1$@";
 /* Loading Wallet Message */
@@ -196,7 +196,7 @@
 "CloudBackup.enableButton" = "iCloudキーチェーンをオンにしました";
 "CloudBackup.enableTitle" = "キーチェーンを有効にする";
 "CloudBackup.encryptBackupMessage" = "バックアップを暗号化するにはPINを入力してください";
-"CloudBackup.mainBody" = "回復フレーズを書き留めて安全に保つことをお勧めしますが、回復フレーズをiCloudにバックアップすることもできます。 iCloudバックアップは、iCloudアカウントと同じくらい安全です。";
+"CloudBackup.mainBody" = "iCloudバックアップは、iCloudアカウントと同じくらい安全です。次の手順でリカバリフレーズを書き留めて、安全に保管することをお勧めします。回復フレーズは、iCloudにアクセスできなくなった場合にウォレットを回復する唯一の方法です。";
 "CloudBackup.mainTitle" = "iCloudリカバリバックアップ";
 "CloudBackup.mainWarning" = "この機能を使用するには、iOS設定アプリでiCloudキーチェーンをオンにする必要があります";
 "CloudBackup.mainWarningConfirmation" = "iCloudバックアップを無効にしてもよろしいですか？これにより、すべてのデバイスからバックアップが削除されます。";
@@ -303,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "推定送金時間: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2〜5分";
+"FeeSelector.lessThanMinutes" = "&lt;$1$d 分";
 /* Priority fee */
 "FeeSelector.priority" = "優先度";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -417,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "ウォレットの名前";
 /* Manage wallet modal title */
 "ManageWallet.title" = "ウォレットを管理";
+"MarketData.high24h" = "24時間高";
+"MarketData.low24h" = "24時間低";
+"MarketData.marketCap" = "時価総額";
+"MarketData.volume" = "取引量";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "ウォレットの追加";
 /* Menu button title */
@@ -539,8 +544,8 @@
 "Prompts.NoScreenLock.body.android" = "ウォレットを守るため機器の画面をロックする必要があります。「設定」 > 「セキュリティ」 > 「画面ロック」で有効にしてから続行してください。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "画面ロックが無効になっています";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "携帯電話の紛失時や変更時に備えて、お客様の復元フレーズは必ず保管しておいてください。";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "電話を紛失または変更した場合に備えて、回復フレーズを保存する必要があります。";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "携帯電話を紛失または交換した場合に備え,ペーパー・キーをセットアップします。お客様のキーは,携帯電話のセキュリティ設定を変更した場合にも必要となります。";
 /* An action is required (You must do this action). */
@@ -638,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "PINコードをリセットするには、復元フレーズの中から当てはまる単語を下記ボックスの中に入力してください。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "入力した単語は正しくありません。もう一度入力してください。";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "もうすぐです ! 復元キーから単語を入力してください。";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "復元キーの確認";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "復元キーの入力";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "復元キーを入力して,端末からウォレットを解除してください。";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "復元キーの使用は後からでよろしいですか？";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "ほぼ完了しました！回復フレーズから次の単語を入力します。";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "回復フレーズの確認";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "回復フレーズを入力してください";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "デバイスからこのウォレットのリンクを解除するには、リカバリフレーズを入力してください。";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "後でリカバリフレーズを設定してもよろしいですか？";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "後から行う";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "復元キーを生成する";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "回復フレーズの生成";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "携帯のアップグレードや紛失の際に,保有資金を復元するためにこのキーが必要です。";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "秘密復元キーを生成します";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "プライベートな回復フレーズを生成する";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "ウォレットへ";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "使い方 - ステップ%1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "入力した単語にお客様の復元キーと一致しないものがあります。\nもう一度入力してください。";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "入力した単語の一部が回復フレーズと一致しません。もう一度お試しください。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "安全に保管";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -673,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "ウォレットの復元";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "復元したいウォレットの復元キーを入力してください。";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "回復するウォレットの回復フレーズを入力してください。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "安心の購入と取引";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "単語はメモしましたか。忘れていたら,スワイプして戻ってください。";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "復元キーを入力して,PINコードをリセットしてください。";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "PINをリセットするには、回復フレーズを入力してください。";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "お客様の資産は最も安全に個人情報を守りながら保護されていますので,安心して購入や取引ができます。";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "キーは安全な場所に保管してください。ウォレットを復元できるのはこのキーだけです。BRD はキーを保存していません。";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "おつかれさまです ! 復元キーの設定は完了しました。";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "おめでとう！回復フレーズの設定が完了しました。";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "BRD ウォレットで仮想通貨を保管・購入・取引をする準備ができました。";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -700,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "デバイスから現在のウォレットを消去して、新しいウォレットを開始します。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "復元キーをメモする";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "もう一度,復元キーをメモする";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "回復フレーズをもう一度書き留めます";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "以下の単語を順番通りにメモしてください。";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "お客様の復元キー";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "あなたの回復フレーズ";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@の%2$@";
 /* No amount entered error message. */
@@ -760,9 +765,9 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "あなたが携帯電話を紛失したり、アップグレードした場合にご自身のビットコインへアクセスできる唯一の方法です。";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "復元フレーズ";
+"SecurityCenter.paperKeyTitle" = "回復フレーズ";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "復元フレーズ";
 /* PIN button description */
@@ -956,7 +961,7 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "あなたが最後に復元フレーズを書き留めたのは %1$@です";
+"StartPaperPhrase.date" = "最後に書き留めた\n %1$@";
 /* button label */
 "StartViewController.createButton" = "新しいウォレットを作成する";
 /* Start view message */
@@ -1270,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "失敗しました";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "新しいウォレットを起動したり既存のウォレットを復元するには、まず現在インストールされているウォレットのリンクを解除する必要があります。現在使用しているウォレットの復元フレーズを入力して続行してください。";
+"WipeWallet.instruction" = "デバイスからこのウォレットをワイプするには、リカバリフレーズを入力してください。";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "ご利用ウォレットのリンクを解除してこの機器から解除してください。このウォレットのリンクが解除されると、この機器で新しいウォレットを起動したり、別のウォレット再び利用できるようになります。";
 /* Start wipe wallet view warning */

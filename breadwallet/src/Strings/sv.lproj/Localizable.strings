@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Denna token har avförts eftersom utfärdaren har beslutat att sluta stödja ERC20. \n\nDu kan eventuellt skicka dessa tokens till en annan plattform. Besök vår supportsida för mer information.";
+"Account.delistedToken" = "Detta token har avlistats. \n\nDu kanske fortfarande kan skicka dessa tokens till en annan plattform. För mer information, besök vår supportsida.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -79,9 +79,9 @@
 /* Send failure alert header label (the send failed to happen) */
 "Alerts.sendFailure" = "Sändningen misslyckades";
 /* Send success alert header label (confirmation that the send happened) */
-"Alerts.sendSuccess" = "Skicka bekräftelse";
+"Alerts.sendSuccess" = "Sänd bekräftelse";
 /* Send success alert subheader label (e.g. the money was sent) */
-"Alerts.sendSuccessSubheader" = "Pengarna skickade!";
+"Alerts.sendSuccessSubheader" = "Pengarna sändade!";
 /* Fingerprint was recognized by the scanner */
 "Alerts.touchIdSucceeded.android" = "Fingeravtryck bekräftat";
 /* Tell the user where they can enable permissions to access device storage. */
@@ -99,9 +99,9 @@
 /* API Token error message */
 "ApiClient.tokenError" = "Kan inte ta emot API-symbol";
 /* Send BCH view body. */
-"BCH.body" = "Ange mottagarens BCH-adress nedan. Alla BCH i din plånbok vid nästa fork (%1$@) kommer skickas.";
+"BCH.body" = "Ange mottagarens BCH-adress nedan. Alla BCH i din plånbok vid nästa fork (%1$@) kommer sändas.";
 /* Confirm sending <$5.00> to <address>? */
-"BCH.confirmationMessage" = "Bekräfta skickar %1$@ till %2$@";
+"BCH.confirmationMessage" = "Bekräfta sändar %1$@ till %2$@";
 /* Confirmation alert title */
 "BCH.confirmationTitle" = "Bekräftelse";
 /* Generic bch erorr message */
@@ -113,7 +113,7 @@
 /* Attempted to scan unsupported qr code error message. */
 "BCH.paymentProtocolError" = "Betalningsprotokollsbegäran stöds inte för BCH-transaktioner";
 /* BCH successfully sent alert message */
-"BCH.successMessage" = "BCH skickades.";
+"BCH.successMessage" = "BCH sändades.";
 /* Widthdraw BCH view title */
 "BCH.title" = "Ta ut BCH";
 /* Tx Hash button header */
@@ -169,7 +169,7 @@
 /* Click this button to sell an asset */
 "Button.sell" = "Sälj";
 /* send button */
-"Button.send" = "Senden";
+"Button.send" = "Sänd";
 /* Settings button label */
 "Button.settings" = "Inställningar";
 /* Setup button label */
@@ -196,7 +196,7 @@
 "CloudBackup.enableButton" = "Jag har aktiverat iCloud Keychain";
 "CloudBackup.enableTitle" = "Aktivera nyckelring";
 "CloudBackup.encryptBackupMessage" = "Ange stift för att kryptera säkerhetskopiering";
-"CloudBackup.mainBody" = "Vi rekommenderar fortfarande att du skriver ner din återställningsfras och håller den säker, men du kan också säkerhetskopiera din återställningsfras till iCloud. Observera att iCloud-säkerhetskopiering är bara lika säker som ditt iCloud-konto.";
+"CloudBackup.mainBody" = "Observera att iCloud-säkerhetskopiering är bara lika säker som ditt iCloud-konto. Vi rekommenderar fortfarande att du skriver ned din återställningsfras i följande steg och håller den säker. Återställningsfrasen är det enda sättet att återställa din plånbok om du inte längre kan komma åt iCloud.";
 "CloudBackup.mainTitle" = "Säkerhetskopiering av återställning iCloud";
 "CloudBackup.mainWarning" = "iCloud-nyckelring måste vara aktiverad i appen iOS-inställningar för att den här funktionen ska fungera";
 "CloudBackup.mainWarningConfirmation" = "Är du säker på att du vill inaktivera iCloud Backup? Detta tar bort din säkerhetskopia från alla enheter.";
@@ -212,7 +212,7 @@
 "CloudBackup.understandText" = "Jag förstår att den här funktionen inte fungerar om inte iCloud Keychain är aktiverat.";
 "CloudBackup.warningBody" = "Din iCloud-säkerhetskopia raderas efter %1$@ fler felaktiga PIN-försök.";
 /* Amount to Send: ($1.00) */
-"Confirmation.amountLabel" = "Belopp att skicka:";
+"Confirmation.amountLabel" = "Belopp att sänd:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Nätverks-avgift";
 /* Network Fee: (ETH) */
@@ -222,7 +222,7 @@
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Behandlingstid: Den här transaktionen beräknas slutföras om %1$@.";
 /* Label for "send" button on final confirmation screen */
-"Confirmation.send" = "Skicka";
+"Confirmation.send" = "Sänd";
 /* Confirmation Screen title */
 "Confirmation.title" = "Bekräftelse";
 /* To: (address) */
@@ -260,13 +260,13 @@
 /* Service capabilities description */
 "EME.permissions.paymentRequest" = "Begär %1$@ kontoinformation";
 /* Email unavailable alert title */
-"ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att skicka e-post med post-appen i iOS.";
+"ErrorMessages.emailUnavailableMessage" = "Enheten är inte konfigurerad för att sänd e-post med post-appen i iOS.";
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "E-posten är inte tillgänglig";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
 "ErrorMessages.loopingLockScreen.android" = "BRD kan inte verifieras på grund av en bugg i din version av Android. [Klicka här för mer information.]";
 /* Messaging unavailable alert title */
-"ErrorMessages.messagingUnavailableMessage" = "Denna enhet är inte konfigurerad för att skicka meddelanden.";
+"ErrorMessages.messagingUnavailableMessage" = "Denna enhet är inte konfigurerad för att sänd meddelanden.";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableTitle" = "Meddelandehantering inte tillgänglig";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
@@ -274,9 +274,9 @@
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Du kan anpassa din utgiftsgräns för Face ID från %1$@.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
-"FaceIDSettings.explanatoryText" = "Använd Face ID för att låsa upp din BRD-app och skicka pengar.";
+"FaceIDSettings.explanatoryText" = "Använd Face ID för att låsa upp din BRD-app och sänd pengar.";
 /* Face Id screen label */
-"FaceIDSettings.label" = "Använd ditt ansikte för att låsa upp din BRD och skicka pengar upp till en satt gräns.";
+"FaceIDSettings.label" = "Använd ditt ansikte för att låsa upp din BRD och sänd pengar upp till en satt gräns.";
 /* Title of the screen for setting the Face ID Spending Limit */
 "FaceIDSettings.linkText" = "Sida för utgiftsgräns för Face ID";
 /* Setting to turn on Face ID for BRD */
@@ -284,7 +284,7 @@
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
 /* Text label for a toggle that enables Face ID for sending money. */
-"FaceIDSettings.transactionsTitleText" = "Aktivera Face ID för att skicka pengar";
+"FaceIDSettings.transactionsTitleText" = "Aktivera Face ID för att sänd pengar";
 /* Instructions on how to turn on face id on the iPhone. Please ensure the name of the menu in this string matches the wording Apple uses in the iPhone menu. */
 "FaceIDSettings.unavailableAlertMessage" = "Du har inte satt upp Face ID på den här enheten. Gå till Inställningar->Face ID & Lösenord för att sätta upp det nu.";
 /* Face ID unavailable alert title */
@@ -303,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "Beräknad leverans: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minuter";
+"FeeSelector.lessThanMinutes" = "&lt;$1$d minuter";
 /* Priority fee */
 "FeeSelector.priority" = "Prioritet";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -316,9 +317,9 @@
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "Välj bildkälla";
 /* Fingerprint authentication settings screen description */
-"FingerprintSettings.description" = "Använd ditt fingeravtryck för att låsa upp din BRD-app och skicka transaktioner.";
+"FingerprintSettings.description" = "Använd ditt fingeravtryck för att låsa upp din BRD-app och sänd transaktioner.";
 /* Switch label to enable fingerprint authentication to send money */
-"FingerprintSettings.sendMoney" = "Använd fingeravtryck för att skicka pengar";
+"FingerprintSettings.sendMoney" = "Använd fingeravtryck för att sänd pengar";
 /* Fingerprint authentication settings sceen title */
 "FingerprintSettings.title" = "Fingeravtryck";
 /* Switch label to enable fingerprint authentication to unlock BRD app */
@@ -340,7 +341,7 @@
 /* Checking private key balance progress view text */
 "Import.checking" = "Kontrollerar privat nyckelsaldo...";
 /* Sweep private key confirmation message */
-"Import.confirm" = "Skicka %1$@ från denna privata nyckel till din plånbok? Bitcoins nätverk tar en avgift på %2$@.";
+"Import.confirm" = "Sänd %1$@ från denna privata nyckel till din plånbok? Bitcoins nätverk tar en avgift på %2$@.";
 /* Duplicate key error message */
 "Import.Error.duplicate" = "Denna privata nyckel finns redan i din plånbok.";
 /* empty private key error message */
@@ -396,7 +397,7 @@
 /* Decline link wallet button label */
 "LinkWallet.decline" = "Avböj";
 /* Link Wallet view dislaimer footer */
-"LinkWallet.disclaimer" = "Externa appar kan inte skicka pengar utan godkännande från denna enhet";
+"LinkWallet.disclaimer" = "Externa appar kan inte sänd pengar utan godkännande från denna enhet";
 /* Link Wallet view title above domain list */
 "LinkWallet.domainTitle" = "OBS: Interagera BARA med denna app från en av följande domäner";
 /* Link wallet logo footer text */
@@ -417,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "Plånbokens namn";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Hantera plånbok";
+"MarketData.high24h" = "24h hög";
+"MarketData.low24h" = "24 timmar låg";
+"MarketData.marketCap" = "Börsvärde";
+"MarketData.volume" = "Handelsvolym";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Lägg till plånbok";
 /* Menu button title */
@@ -494,7 +499,7 @@
 /* Onboarding screen Page 2 title */
 "OnboardingPageTwo.title" = "Bli en av miljontals människor runt om i världen som litar på BRD.";
 /* Eg. Send 1.0Eth to purchase CCC */
-"PaymentConfirmation.amountText" = "Skicka %1$@ för att köpa %2$@";
+"PaymentConfirmation.amountText" = "Sänd %1$@ för att köpa %2$@";
 /* Payment confirmation view title */
 "PaymentConfirmation.title" = "Bekräftelse";
 /* Bad Payment request alert title */
@@ -539,8 +544,8 @@
 "Prompts.NoScreenLock.body.android" = "Ett skärmlås krävs på enheten för att skydda din plånbok. Gå till Inställningar > Säkerhet > Skärmlås och aktivera för att fortsätta.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Skärmlås inaktiverat";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Din pappersnyckel måste sparas ifall du skulle förlora eller byta ut din telefon.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Din återställningsfras måste sparas om du tappar eller byter telefon.";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "Ha en skriven nyckel ifall du skulle tappa bort eller byta telefon. Nyckeln krävs också om du ändrar säkerhetsinställningarna på din telefon. ";
 /* An action is required (You must do this action). */
@@ -638,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "För att återställa din PIN-kod anger du orden från din ordnyckel i boxarna nedan.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du skrev in är felaktigt. Var god försök igen.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Nästan klar! Ange följande ord från din återställningsnyckel.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekräfta återställningsnyckel";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Ange återställningsnyckel";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Ange din återställningsnyckel för att ta bort länken till denna plånbok från din enhet.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Är du säker på att du vill ställa in din återställningsnyckel vid ett senare tillfälle?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Nästan klar! Ange följande ord från din återställningsfras.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bekräfta återställningsfrasen";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Ange återvinningsfras";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Ange din återställningsfras för att ta bort länken till din plånbok från din enhet.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Är du säker på att du vill konfigurera din återställningsfras senare?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Ställ in senare";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Generera återställningsnyckel";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generera återhämtningsfras";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "Den här nyckeln krävs för att återställa dina pengar om du uppgraderar eller förlorar din telefon.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Skapa din privata återställningsnyckel";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Generera din privata återhämtningsfras";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Gå till plånbok";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Hur det fungerar - Steg %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Några av orden du skrev in matchar inte din återställningsnyckel. Var god försök igen.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Vissa av de ord du angav matchar inte din återställningsfras. Var god försök igen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Förvara den säkert";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -673,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Återställ din plånbok";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Ange återställningsnyckeln för den plånbok du vill återställa.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Ange återställningsfrasen för plånboken du vill återställa.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Slappna av, köp, och handla";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Kom ihåg att skriva ner dessa ord. Svep tillbaka om du glömt att göra det.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Ange din återställningsnyckel för att återställa din PIN-kod.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Ange din återställningsfras för att återställa din PIN-kod.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Köp och handla med vetskapen att dina tillgångar skyddas av den bästa säkerheten och integriteten i branschen";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Förvara din nyckel på en säker plats. Detta är det enda sättet att återställa din plånbok. BRD tillhandahåller inte någon kopia.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Gratulerar! Du är nu klar med att ställa in din återställningsnyckel.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Grattis! Du slutförde din återställningsfrasinstallation.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Du är nu redo att börja sätta in, handla med och köpa krypto från din BRD-plånbok";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -700,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Starta en ny plånbok genom att torka av den nuvarande plånboken från din enhet.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Skriv ner din nyckel";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Skriv ner din återställningsnyckel igen";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Skriv ner din återhämtningsfras igen";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Skriv ner följande ord i ordning.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Din återställningsnyckel";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Din återhämtningsfras";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ av %2$@";
 /* No amount entered error message. */
@@ -715,7 +720,7 @@
 /* Alert action button label */
 "ReScan.alertAction" = "Synka";
 /* Alert message body */
-"ReScan.alertMessage" = "Du kan inte skicka pengar under synkning.";
+"ReScan.alertMessage" = "Du kan inte sänd pengar under synkning.";
 /* Alert message title */
 "ReScan.alertTitle" = "Synka med blockkedja?";
 /* extimated time */
@@ -727,7 +732,7 @@
 /* Start Sync button label */
 "ReScan.buttonTitle" = "Starta synkning";
 /* Sync blockchain view footer */
-"ReScan.footer" = "Du kan inte skicka pengar under synkningen med blockkedjan.";
+"ReScan.footer" = "Du kan inte sänd pengar under synkningen med blockkedjan.";
 /* Sync Blockchain view header */
 "ReScan.header" = "Synka blockkedja";
 /* Subheader label */
@@ -743,9 +748,9 @@
 /* Scan bitcoin address camera flash toggle */
 "Scanner.flashButtonLabel" = "Kamerablixt";
 /* (alert dialog message) Would you like to send a [Bitcoin / Bitcoin Cash / Ethereum] payment to this address?") */
-"Scanner.paymentPromptMessage" = "Vill du skicka en %1$@ betalning till den här adressen?";
+"Scanner.paymentPromptMessage" = "Vill du sänd en %1$@ betalning till den här adressen?";
 /* alert dialog title */
-"Scanner.paymentPromptTitle" = "Skicka betalning";
+"Scanner.paymentPromptTitle" = "Sänd betalning";
 /* Complete filter label */
 "Search.complete" = "avsluta";
 /* Pending filter label */
@@ -755,14 +760,14 @@
 /* [Click here to] search */
 "Search.search" = "Sök";
 /* Sent filter label */
-"Search.sent" = "skickat";
+"Search.sent" = "sänd";
 /* Face ID button title */
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Det enda sättet att komma åt dina bitcoin om du förlorar eller uppgraderar din telefon.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Ordnyckel";
+"SecurityCenter.paperKeyTitle" = "Återställningsfras";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "Ordnyckel";
 /* PIN button description */
@@ -770,7 +775,7 @@
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-siffrig PIN-kod";
 /* Touch ID button description */
-"SecurityCenter.touchIdDescription" = "Lås enkelt upp ditt BRD och skicka pengar upp till en inställd gräns.";
+"SecurityCenter.touchIdDescription" = "Lås enkelt upp ditt BRD och sänd pengar upp till en inställd gräns.";
 /* Touch ID button title */
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
@@ -802,7 +807,7 @@
 /* Camera not allowed alert title */
 "Send.cameraUnavailableTitle" = "BRD har inte tillgång till kameran";
 /* Warning when sending to self. */
-"Send.containsAddress" = "Destinationen är din egen adress. Du kan inte skicka till dig själv.";
+"Send.containsAddress" = "Destinationen är din egen adress. Du kan inte sänd till dig själv.";
 /* Could not create transaction alert title */
 "Send.creatTransactionError" = "Kunde inte skapa transaktion.";
 /* Description for sending money label */
@@ -834,7 +839,7 @@
 /* Is rescanning error message */
 "Send.isRescanning" = "Skicka är avaktiverat under en full omskanning.";
 /* Warning when the user is trying to send bitcoin cash to a legacy bitcoin address (possible, but probably not what the user wants to do) */
-"Send.legacyAddressWarning" = "Varning: detta är en legacy bitcoin-adress. Är du säker på att du vill skicka Bitcoin Cash till den?";
+"Send.legacyAddressWarning" = "Varning: detta är en legacy bitcoin-adress. Är du säker på att du vill sänd Bitcoin Cash till den?";
 /* We are loading the request (now) */
 "Send.loadingRequest" = "Laddar förfrågan";
 /* Hedera Memo Tag Label */
@@ -844,7 +849,7 @@
 /* Empty address alert message */
 "Send.noAddress" = "Ange mottagarens adress.";
 /* Emtpy amount alert message */
-"Send.noAmount" = "Ange ett belopp att skicka.";
+"Send.noAmount" = "Ange ett belopp att sänd.";
 /* No Fees error */
 "Send.noFeesError" = "Villkor för nätverksavgifter laddas ned. Försök igen.";
 /* Paste button label */
@@ -864,13 +869,13 @@
 /* Scan button label */
 "Send.scanLabel" = "Läs av";
 /* Sending Max: $4.00 for iOS, the balance can't have a parameter */
-"Send.sendingMax" = "Skicka Max: ";
+"Send.sendingMax" = "Sänd Max: ";
 /* Send button label (the action, "press here to send") */
-"Send.sendLabel" = "Skicka";
+"Send.sendLabel" = "Sänd";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
-"Send.sendMaximum" = "Skicka maxbeloppet?";
+"Send.sendMaximum" = "Sänd maxbeloppet?";
 /* Send screen title (as in "this is the screen for sending money") */
-"Send.title" = "Skicka";
+"Send.title" = "Sänd";
 /* Send money to label */
 "Send.toLabel" = "Till";
 /* Adress already used alert message - first part */
@@ -932,7 +937,7 @@
 /* View legacy address (old format). */
 "Settings.ViewLegacyAddress" = "Visa mottagaradress i gamla formatet";
 /* Receive Bitcoin instructions */
-"Settings.ViewLegacyAddressReceiveDescription" = "Skicka endast bitcoin (BTC) till denna adress. Alla andra tillgångar som skickas till denna adress går förlorade permanent.";
+"Settings.ViewLegacyAddressReceiveDescription" = "Sänd endast bitcoin (BTC) till denna adress. Alla andra tillgångar som sänd till denna adress går förlorade permanent.";
 /* Receive Bitcoin */
 "Settings.ViewLegacyAddressReceiveTitle" = "Erhåll bitcoin";
 /* Wallet Settings section header */
@@ -956,7 +961,7 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Senast skrev du ner din ordnyckel på \n%1$@";
+"StartPaperPhrase.date" = "Senast nedskrivet \n %1$@";
 /* button label */
 "StartViewController.createButton" = "Skapa ny plånbok";
 /* Start view message */
@@ -1010,9 +1015,9 @@
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Fingeravtrycksautentisering har inte aktiverats";
 /* Text that describes the purpose of the Touch ID settings in the BRD app. */
-"TouchIdSettings.explanatoryText" = "Använd Touch ID för att låsa upp din BRD-app och skicka pengar.";
+"TouchIdSettings.explanatoryText" = "Använd Touch ID för att låsa upp din BRD-app och sänd pengar.";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "Använd ditt fingeravtryck för att låsa upp BRD och skicka pengar upp till en inställd gräns.";
+"TouchIdSettings.label" = "Använd ditt fingeravtryck för att låsa upp BRD och sänd pengar upp till en inställd gräns.";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Sida för utgiftsgräns i Touch ID";
 /* Spending Limit: b100,000 ($100) */
@@ -1026,7 +1031,7 @@
 /* Fingerprint authentication label */
 "TouchIdSettings.title.android" = "Fingeravtrycksautentisering";
 /* Text label for a toggle that enables Touch ID for sending money. */
-"TouchIdSettings.transactionsTitleText" = "Aktivera Touch ID för att skicka pengar";
+"TouchIdSettings.transactionsTitleText" = "Aktivera Touch ID för att sänd pengar";
 /* Touch ID unavailable alert message */
 "TouchIdSettings.unavailableAlertMessage" = "Du har inte ställt in Touch ID på denna enhet. Gå till Inställningar->Touch ID & Lösenkod för att ställa in det nu.";
 /* Touch ID unavailable alert title */
@@ -1036,7 +1041,7 @@
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Kräver alltid lösenord";
 /* Touch ID spending limit screen body */
-"TouchIdSpendingLimit.body" = "Du kommer att behöva ange din 6-siffriga PIN-kod för att skicka transaktioner som överskrider din utnyttjandegräns och varje gång efter 48 timmar sedan du senast angav din 6-siffriga PIN-kod.";
+"TouchIdSpendingLimit.body" = "Du kommer att behöva ange din 6-siffriga PIN-kod för att sänd transaktioner som överskrider din utnyttjandegräns och varje gång efter 48 timmar sedan du senast angav din 6-siffriga PIN-kod.";
 /* Touch Id spending limit screen title */
 "TouchIdSpendingLimit.title" = "Touch ID utnyttjandegräns";
 /* name of spending limit when using fingerprint authorization */
@@ -1052,7 +1057,7 @@
 /* Exchange rate on date header */
 "Transaction.exchangeOnDayReceived" = "Växlingskurs vid mottagande:";
 /* Exchange rate on date header */
-"Transaction.exchangeOnDaySent" = "Växlingskurs vid skickande:";
+"Transaction.exchangeOnDaySent" = "Växlingskurs vid sändade:";
 /* Transaction failed status text */
 "Transaction.failed" = "Misslyckad";
 /* (b600 fee) */
@@ -1068,9 +1073,9 @@
 /* Send status text: 'In progress: 20%' */
 "Transaction.sendingStatus" = "Pågår: %1$@";
 /* sending to <address> */
-"Transaction.sendingTo" = "skickar till %1$@";
+"Transaction.sendingTo" = "Sändar till %1$@";
 /* sent to <address> */
-"Transaction.sentTo" = "skickat till %1$@";
+"Transaction.sentTo" = "Sänd till %1$@";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Ingående saldo: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
@@ -1090,7 +1095,7 @@
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
 "TransactionDetails.amountWhenReceived" = "%1$@ vid mottagande, %2$@ nu";
 /* "(it was worth) $100 when sent, (and it is worth) $200 now" */
-"TransactionDetails.amountWhenSent" = "%1$@ när det skickades, %2$@ nu";
+"TransactionDetails.amountWhenSent" = "%1$@ när det sänddes, %2$@ nu";
 /* Block height label */
 "TransactionDetails.blockHeightLabel" = "Bekräftad i block";
 /* Memo section header */
@@ -1143,9 +1148,9 @@ eg. 182930 (45061 confirmations) */
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "tar emot via %1$@";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
-"TransactionDetails.sent" = "Skickade %1$@";
+"TransactionDetails.sent" = "Sändade %1$@";
 /* Sent $5.00 */
-"TransactionDetails.sentAmountDescription" = "Skickade <b>%1$@</b>";
+"TransactionDetails.sentAmountDescription" = "Sändade <b>%1$@</b>";
 /* Show Details button */
 "TransactionDetails.showDetails" = "Visa detaljer";
 /* The balance the user started with before the transaction completed */
@@ -1163,9 +1168,9 @@ eg. 182930 (45061 confirmations) */
 /* Transaction Details Title - Receiving */
 "TransactionDetails.titleReceiving" = "Tar emot";
 /* Transaction Details Title - Sending */
-"TransactionDetails.titleSending" = "Skickar";
+"TransactionDetails.titleSending" = "Sändar";
 /* Transaction Details Title - Sent */
-"TransactionDetails.titleSent" = "Skickat";
+"TransactionDetails.titleSent" = "Sänd";
 /* "Sent [$5] to [address]" => This is the "to [address]" part. */
 "TransactionDetails.to" = "till %1$@";
 /* Tx detail field header */
@@ -1175,7 +1180,7 @@ eg. 182930 (45061 confirmations) */
 /* (this transaction was) Received at this address: */
 "TransactionDirection.address" = "Togs emot på den här adressen";
 /* (this transaction was) Sent to this address: */
-"TransactionDirection.to" = "Skickat till den här adressen";
+"TransactionDirection.to" = "Sänd till den här adressen";
 /* Disabled until date */
 "UnlockScreen.disabled" = "Inaktiverad till: %1$@";
 /* Unlock with FaceID accessibility label */
@@ -1199,7 +1204,7 @@ eg. 182930 (45061 confirmations) */
 /* Update PIN caption text */
 "UpdatePin.caption" = "Kom ihåg PIN-koden. Om du glömmer den, kommer du inte åt dina bitcoin.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "Din PIN-kod används för att låsa upp ditt BRD och skicka pengar";
+"UpdatePin.createInstruction" = "Din PIN-kod används för att låsa upp ditt BRD och sänd pengar";
 /* Update PIN title */
 "UpdatePin.createTitle" = "Ställ in PIN-kod";
 /* Update PIN title */
@@ -1270,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Misslyckades";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "För att skapa en ny plånbok eller återställa en befintlig plånbok måste du först ta bort länken till den plånbok som för närvarande är installerad. Ange den nuvarande plånbokens pappersnyckel för att fortsätta.";
+"WipeWallet.instruction" = "Ange din återställningsfras för att torka den här plånboken från din enhet.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Ta bort länken till din plånbok för att ta bort den från denna enhet. När länken till denna plånbok är borttagen kan du skapa en ny plånbok eller återställa en annan plånbok på denna enhet.";
 /* Start wipe wallet view warning */

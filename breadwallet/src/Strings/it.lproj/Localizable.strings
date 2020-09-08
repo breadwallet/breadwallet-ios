@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Questo token è stato eliminato dalla lista perché l'emittente ha deciso di cessare il supporto di ERC20. \n\nTi sarà comunque possibile inviare questi token a un'altra piattaforma. Per ulteriori informazioni, visita la nostra pagina di assistenza.";
+"Account.delistedToken" = "Questo token è stato eliminato dalla lista. \n\nTi sarà comunque possibile inviare questi token a un'altra piattaforma. Per ulteriori informazioni, visita la nostra pagina di assistenza.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -196,7 +196,7 @@
 "CloudBackup.enableButton" = "Ho acceso iCloud Keychain";
 "CloudBackup.enableTitle" = "Abilita portachiavi";
 "CloudBackup.encryptBackupMessage" = "Inserisci il PIN per crittografare il backup";
-"CloudBackup.mainBody" = "Ti consigliamo comunque di annotare la frase di ripristino e di mantenerla al sicuro, ma puoi anche eseguire il backup della frase di ripristino su iCloud. Tieni presente che il backup di iCloud è sicuro quanto il tuo account iCloud.";
+"CloudBackup.mainBody" = "Tieni presente che il backup di iCloud è sicuro quanto il tuo account iCloud. Consigliamo comunque di annotare la frase di ripristino nel passaggio successivo e di tenerla al sicuro. La frase di ripristino è l'unico modo per recuperare il tuo portafoglio se non puoi più accedere a iCloud.";
 "CloudBackup.mainTitle" = "Backup del ripristino iCloud";
 "CloudBackup.mainWarning" = "Il portachiavi iCloud deve essere attivato nell'app Impostazioni iOS affinché questa funzione funzioni";
 "CloudBackup.mainWarningConfirmation" = "Sei sicuro di voler disabilitare il backup di iCloud? Questo cancellerà il tuo backup da tutti i dispositivi.";
@@ -303,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "Consegna Stimata: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minuti";
+"FeeSelector.lessThanMinutes" = "&lt;1'd minuti";
 /* Priority fee */
 "FeeSelector.priority" = "Priorità";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -417,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "Nome Portafoglio";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Gestisci Portafoglio";
+"MarketData.high24h" = "24 ore di alta";
+"MarketData.low24h" = "24 ore minimo";
+"MarketData.marketCap" = "Capitalizzazione di mercato";
+"MarketData.volume" = "Volume di scambio";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Aggiungi portafoglio";
 /* Menu button title */
@@ -539,8 +544,8 @@
 "Prompts.NoScreenLock.body.android" = "È necessaria una schermata di blocco del dispositivo per proteggere il tuo portafoglio. Vai su “Impostazioni” > “Sicurezza” > “Schermata di Blocco” e abilitala per continuare.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Schermata di blocco disabilitata";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "È necessario salvare la tua Paper Key nel caso in cui dovessi perdere o cambiare telefono.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "La frase di recupero deve essere salvata in caso di smarrimento o cambio di telefono.";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "Imposta la tua chiave di protezione in caso dovessi perdere o sostituire il tuo cellulare.\nLa chiave è richiesta anche se cambi le impostazioni di sicurezza del telefono.";
 /* An action is required (You must do this action). */
@@ -638,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "Per reimpostare il tuo PIN, immetti le parole della tua Paper Key all'interno dei riquadri sottostanti.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "La parola che hai inserito è sbagliata. Prova di nuovo per favore.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quasi fatto! Inserisci le seguenti parole dalla tua chiave di recupero.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Conferma la chiave di recupero";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Inserisci la chiave di recupero";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Per favore inserisci la tua chiave di recupero per scollegare questo portafoglio dal tuo dispositivo.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Sei sicuro di voler impostare la tua chiave di recupero più tardi?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quasi fatto! Inserisci le seguenti parole dalla tua frase di recupero.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Conferma frase di recupero";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Immettere la frase di ripristino";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Inserisci la tua frase di recupero per scollegare questo portafoglio dal tuo dispositivo.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Sei sicuro di voler impostare la tua frase di recupero più tardi?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Imposta più tardi";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Genera una chiave di recupero";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Genera frase di ripristino";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "La chiave è necessaria per recuperare il tuo denaro nel caso cambiassi o perdessi il telefono.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Genera la tua chiave privata di recupero";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Genera la tua frase di recupero privata";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Vai al portafoglio";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Come funziona - Passo %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Alcune delle parole che hai inserito non corrispondono alla tua chiave di recupero. Per favore riprova.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Alcune delle parole che hai inserito non corrispondono alla tua frase di recupero. Per favore riprova.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Tienila al sicuro";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -673,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Recupera il tuo portafoglio.";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Per favore inserisci la chiave di recupero del portafoglio che vuoi recuperare.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Inserisci la frase di recupero del portafoglio che vuoi recuperare.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Rilassati, compra e fai affari";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Ricorda di annotare queste parole. Torna indietro se ti sei dimenticato.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Per favore inserisci la tua chiave di recupero per resettare il tuo PIN.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Inserisci la frase di recupero per reimpostare il PIN.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Compra e fai affari sapendo che i tuoi fondi sono protetti dalla migliore sicurezza e privacy sul mercato.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Conserva la tua chiave in un luogo sicuro. Questa è l'unica maniera per recuperare il tuo portafoglio. BRD non ne mantiene una copia.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Congratulazioni! Hai completato l'impostazione della tua chiave di recupero.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Congratulazioni! Hai completato la configurazione della frase di recupero.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Sei pronto per depositare, commerciare e comprare criptovaluta dal tua portafoglio BRD.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -700,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Iniziate un nuovo portafoglio cancellando il portafoglio attuale dal vostro dispositivo.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Annota la tua chiave";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Annota di nuovo la tua chiave di recupero";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Annota di nuovo la frase di recupero";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Annota le seguenti parole in ordine.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "La tua chiave di recupero";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "La tua frase di recupero";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ di %2$@";
 /* No amount entered error message. */
@@ -760,9 +765,9 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "L'unico modo per accedere al tuo  bitcoin se perdi o aggiorni il telefono.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Paper Key";
+"SecurityCenter.paperKeyTitle" = "Frase di recupero";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "Paper Key";
 /* PIN button description */
@@ -956,7 +961,7 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Annota la Paper Key";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Hai annotato la Paper Key l'ultima volta il\n%1$@";
+"StartPaperPhrase.date" = "Ultimo scritto su \n %1$@";
 /* button label */
 "StartViewController.createButton" = "Crea nuovo portafoglio";
 /* Start view message */
@@ -1270,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Fallito";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Per attivare un nuovo portafoglio o ripristinarne uno esistente, devi innanzitutto scollegare il portafoglio che è attualmente installato. Per continuare, inserisci la Paper Key corrente del portafoglio.";
+"WipeWallet.instruction" = "Inserisci la tua frase di recupero per cancellare questo portafoglio dal tuo dispositivo.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Scollega il tuo portafoglio per rimuoverlo da questo dispositivo. Una volta scollegato questo portafoglio, puoi attivare un nuovo portafoglio o ripristinarne un altro su questo dispositivo.";
 /* Start wipe wallet view warning */
