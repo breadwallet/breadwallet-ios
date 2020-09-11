@@ -38,7 +38,7 @@ struct MenuItem {
     }
     
     init(title: String, icon: UIImage? = nil, subMenu: [MenuItem], rootNav: UINavigationController, faqButton: UIButton? = nil) {
-        let subMenuVC = MenuViewController(items: subMenu, title: title, faqButton: faqButton)
+        let subMenuVC = BRDMenuViewController(items: subMenu, title: title, faqButton: faqButton)
         self.init(title: title, icon: icon, accessoryText: nil) {
             rootNav.pushViewController(subMenuVC, animated: true)
         }
