@@ -394,11 +394,18 @@ class ApplicationController: Subscriber, Trackable {
             navigationController.pushViewController(accountViewController, animated: true)
         }
         
+        homeScreen.didTapBuy = {
+            Store.perform(action: RootModalActions.Present(modal: .buy(currency: nil)))
+        }
+        
+        homeScreen.didTapTrade = {
+            Store.perform(action: RootModalActions.Present(modal: .trade))
+        }
+        
         homeScreen.didTapRedemption = {
             let vc = CashUI.AtmMenuViewController()
             navigationController.pushViewController(vc, animated: true)
         }
-
         
         homeScreen.didTapMenu = { [unowned self] in
             self.modalPresenter?.presentMenu()

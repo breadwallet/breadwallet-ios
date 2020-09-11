@@ -47,10 +47,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         NotificationCenter.default.removeObserver(self)
     }
 
-    private let amountView: AmountViewController
-    private let addressCell: AddressCell
+    public let amountView: AmountViewController
+    public let addressCell: AddressCell
     private let attributeCell: AttributeCell?
-    private let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
+    public let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?

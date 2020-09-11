@@ -8,6 +8,7 @@
 
 import UIKit
 import LocalAuthentication
+import CashUI
 
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
@@ -1144,5 +1145,41 @@ class SecurityCenterNavigationDelegate: NSObject, UINavigationControllerDelegate
     func setStyle(navigationController: UINavigationController) {
         navigationController.isNavigationBarHidden = false
         navigationController.setDefaultStyle()
+    }
+}
+
+extension ModalPresenter {
+    
+    public func presentModal(for currencyId: CurrencyId, amount: String, address: String, completion: @escaping (() -> Void)) {
+        let currency = system.currency(for: currencyId)
+        
+        assert(currency != nil)
+        
+        let bitcoinAddress = "bitcoin:\(address)?amount=\(amount)"
+        let request = PaymentRequest(string: bitcoinAddress, currency: currency!)
+        
+        assert(request != nil)
+        self.currentRequest = request
+        let modal = RootModal.send(currency: currency!)
+        self.presentModal(modal) { (viewController) in
+            let vc = (viewController as! ModalViewController).childViewController as! SendViewController
+            vc.onPublishSuccess = {
+                completion()
+            }
+            vc.disableUI()
+        }
+    }
+    
+    func presentActivity() {
+        let vc = CashUI.ActivityViewController()
+        self.topViewController?.present(vc, animated: true, completion: nil)
+    }
+}
+
+extension SendViewController {
+    func disableUI() {
+        self.amountView.view.isUserInteractionEnabled = false
+        self.addressCell.isUserInteractionEnabled = false
+        self.memoCell.isUserInteractionEnabled = false
     }
 }

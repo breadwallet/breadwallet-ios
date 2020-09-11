@@ -47,6 +47,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapManageWallets: (() -> Void)?
+    var didTapBuy: (() -> Void)?
+    var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
     var didTapRedemption: (() -> Void)?
     
