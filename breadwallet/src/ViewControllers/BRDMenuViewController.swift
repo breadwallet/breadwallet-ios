@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuViewController: UITableViewController, Subscriber {
+class BRDMenuViewController: UITableViewController, Subscriber {
     
     let standardItemHeight: CGFloat = 48.0
     let subtitleItemHeight: CGFloat = 58.0
