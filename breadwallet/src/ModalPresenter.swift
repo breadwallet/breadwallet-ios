@@ -174,7 +174,7 @@ class ModalPresenter: Subscriber, Trackable {
         }
     }
 
-    private func presentModal(_ type: RootModal) {
+    private func presentModal(_ type: RootModal, configuration: ((UIViewController) -> Void)? = nil) {
         guard let vc = rootModalViewController(type) else {
             Store.perform(action: RootModalActions.Present(modal: .none))
             return
@@ -182,6 +182,7 @@ class ModalPresenter: Subscriber, Trackable {
         vc.transitioningDelegate = modalTransitionDelegate
         vc.modalPresentationStyle = .overFullScreen
         vc.modalPresentationCapturesStatusBarAppearance = true
+        configuration?(vc)
         topViewController?.present(vc, animated: true) {
             Store.perform(action: RootModalActions.Present(modal: .none))
             Store.trigger(name: .hideStatusBar)
