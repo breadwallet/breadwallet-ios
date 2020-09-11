@@ -27,7 +27,6 @@ enum FeeLevel: Int {
             return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
         }
         
-
         //BTC is custom
         switch self {
         case .economy:

@@ -741,7 +741,7 @@ extension CoreSystem: SystemListener {
             saveEvent("event.recommendRescan")
 
         case .blockUpdated: // (let height):
-            break
+            manager.wallets.forEach { self.wallets[$0.currency.uid]?.blockUpdated() }
         }
     }
 

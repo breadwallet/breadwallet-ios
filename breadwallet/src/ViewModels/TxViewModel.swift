@@ -8,6 +8,7 @@
 
 import Foundation
 import WalletKit
+import UIKit
 
 /// Representation of a transaction
 protocol TxViewModel {
@@ -73,6 +74,22 @@ extension TxViewModel {
     var tokenTransferCode: String? {
         guard let code = tx.metaData?.tokenTransfer, !code.isEmpty else { return nil }
         return code
+    }
+    
+    var icon: StatusIcon {
+        if tx.confirmations < currency.confirmationsUntilFinal {
+            return .pending(CGFloat(tx.confirmations)/CGFloat(currency.confirmationsUntilFinal))
+        }
+        
+        if tx.status == .invalid {
+            return .failed
+        }
+        
+        if tx.direction == .received || tx.direction == .recovered {
+            return .received
+        }
+        
+        return .sent
     }
 }
 

@@ -277,6 +277,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
                    transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
            })
            view.sendSubviewToBack(transactionsTableView.view)
+            headerView.setExtendedTouchDelegate(transactionsTableView.tableView)
         }
     }
         

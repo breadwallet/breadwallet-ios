@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mon BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Il semble que vous utilisez un clavier tiers. Ce dernier peut enregistrer ce que vous tapez et voler votre portefeuille papier. Veuillez basculer vers le clavier Android par défaut pour plus de sécurité.";
+"Alert.customKeyboard.android" = "Il semble que vous utilisez un clavier tiers, qui peut enregistrer ce que vous tapez et voler votre phrase de récupération. Veuillez passer au clavier Android par défaut pour une protection supplémentaire.";
 /* Error alert title */
 "Alert.error" = "Erreur";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Vos données cryptées de BRD ont été récemment invalidées, car le verrouillage de l'écran de votre appareil Android a été désactivé.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Nous ne pouvons pas continuer car les paramètres de verrouillage de votre écran ont été modifiés (par exemple, le mot de passe a été désactivé, les empreintes digitales ont été modifiées). Pour des raisons de sécurité, Android a verrouillé en permanence votre magasin de clés. Par conséquent, les données de votre application BRD doivent être effacées par désinstallation.\n\nNe vous inquiétez pas, vos fonds sont toujours en sécurité ! Réinstallez l'application et récupérez votre portefeuille à l'aide de votre clé en papier.";
+"Alert.keystore.invalidated.uninstall.android" = "Nous ne pouvons pas continuer car vos paramètres de verrouillage d'écran ont été modifiés (par exemple, le mot de passe a été désactivé, les empreintes digitales ont été modifiées). Pour des raisons de sécurité, Android a verrouillé définitivement votre magasin de clés. Par conséquent, les données de votre application BRD doivent être effacées lors de la désinstallation. \n\nNe vous inquiétez pas, vos fonds sont toujours en sécurité! Réinstallez l'application et récupérez votre portefeuille à l'aide de votre phrase de récupération.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Nous ne pouvons pas continuer car les paramètres de verrouillage de votre écran ont été modifiés (par exemple, le mot de passe a été désactivé, les empreintes digitales ont été modifiées). Pour des raisons de sécurité, Android a verrouillé en permanence votre magasin de clés. Par conséquent, les données de votre application BRD doivent être effacées.\n\nNe vous inquiétez pas, vos fonds sont toujours en sécurité ! Récupérez votre portefeuille en utilisant votre clé en papier.";
+"Alert.keystore.invalidated.wipe.android" = "Nous ne pouvons pas continuer car vos paramètres de verrouillage d'écran ont été modifiés (par exemple, le mot de passe a été désactivé, les empreintes digitales ont été modifiées). Pour des raisons de sécurité, Android a verrouillé définitivement votre magasin de clés. Par conséquent, les données de votre application BRD doivent être effacées. \n\nNe vous inquiétez pas, vos fonds sont toujours en sécurité! Récupérez votre portefeuille en utilisant votre phrase de récupération.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Erreur avec le KeyStore Android";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Toutes les adresses du portefeuille ont été copiées avec succès.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Ensemble des clés papier";
+"Alerts.paperKeySet" = "Ensemble de phrases de récupération";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Impressionnant !";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Coût total :";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Les mots saisis ne correspondent pas à votre clé papier. Veuillez réessayer.";
+"ConfirmPaperPhrase.error" = "Les mots saisis ne correspondent pas à votre phrase de récupération. Veuillez réessayer.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Pour vous assurer que tout a été écrit correctement, entrez les mots suivants à partir de votre clé papier.";
+"ConfirmPaperPhrase.label" = "Pour vous assurer que tout a été écrit correctement, veuillez saisir les mots suivants de votre phrase de récupération.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Mot no.%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Récupérer le portefeuille";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Votre clé papier est nécessaire pour ouvrir votre portefeuille si vous modifier les paramètres de sécurité de votre téléphone. \n\nÊtes-vous certain de vouloir paramétrer votre clé papier plus tard ?";
+"Modal.PaperKeySkip.Body.Android" = "Votre phrase de récupération est requise pour ouvrir votre portefeuille si vous modifiez les paramètres de sécurité de votre téléphone. \n\nVoulez-vous vraiment configurer votre phrase de récupération plus tard?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Continuer le paramétrage";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "Votre phrase de récupération doit être enregistrée au cas où vous perdriez ou changeriez votre téléphone.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Paramétrez votre clé papier au cas où vous perdriez ou remplaceriez votre téléphone. Votre clé sera également requise si vous modifiez les paramètres de sécurité de votre téléphone.";
+"Prompts.PaperKey.Body.Android" = "Configurez votre phrase de récupération au cas où vous perdriez ou remplaceriez votre téléphone. Votre clé est également requise si vous modifiez les paramètres de sécurité de votre téléphone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Une action est requise";
 "Prompts.RateApp.dontShow" = "Ne plus demander";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Réinitialiser PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Entrez la clé papier";
+"RecoverWallet.instruction" = "Entrez la phrase de récupération";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Récupérez votre BRD avec votre clé papier.";
+"RecoverWallet.intro" = "Récupérez votre BRD avec votre phrase de récupération.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "La clé papier saisie n'est pas valide. Revérifiez chaque mot et réessayez.";
+"RecoverWallet.invalid" = "La phrase de récupération que vous avez entrée n'est pas valide. Veuillez vérifier chaque mot et réessayer.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Flèche gauche";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Flèche droite";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Entrez la clé papier pour le portefeuille que vous souhaitez récupérer.";
+"RecoverWallet.subheader" = "Saisissez la phrase de récupération du portefeuille que vous souhaitez récupérer.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Pour réinitialiser votre PIN, entrez les mots de votre clé papier dans les cases ci-dessous.";
+"RecoverWallet.subheader_reset_pin" = "Pour réinitialiser votre code PIN, entrez les mots de votre phrase de récupération dans les cases ci-dessous.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Le mot que vous avez entré est incorrect. Veuillez réessayer.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Phrase de récupération";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Clé papier";
+"SecurityCenter.paperKeyTitle.android" = "Phrase de récupération";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protège vos BRD contre les utilisateurs non autorisés.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Partager des données anonymes ?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Enregistrez la clé papier à nouveau";
+"StartPaperPhrase.againButtonTitle" = "Notez à nouveau la phrase de récupération";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Votre clé papier est la seule façon de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou mis à niveau.\n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
+"StartPaperPhrase.body" = "Votre phrase de récupération est le seul moyen de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou mis à niveau. \n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Votre clé papier est la seule façon de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou changé. \n\nVotre clé papier est également nécessaire si vous modifiez les paramètres de sécurité de votre appareil.\n\nNous afficherons une liste de mots que vous devrez noter sur un papier et conserver en sécurité.";
+"StartPaperPhrase.Body.Android" = "Votre phrase de récupération est le seul moyen de restaurer votre BRD si votre téléphone est perdu, volé, cassé ou mis à niveau. \n\nVotre phrase de récupération est également requise si vous modifiez les paramètres de sécurité de votre appareil. \n\nNous allons vous montrer une liste de mots à écrire sur un morceau de papier et à garder en sécurité.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Écrire la clé papier";
+"StartPaperPhrase.buttonTitle" = "Notez la phrase de récupération";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Dernière note le \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Démarrer ou récupérer un autre portefeuille vous permet d'accéder et de gérer un portefeuille BRD différent sur cet appareil.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Vous ne pourrez plus accéder à votre portefeuille courant depuis cet appareil. Si vous souhaitez le récupérer plus tard, vous devrais réentrer la clé papier.";
+"WipeWallet.startWarning" = "Votre portefeuille actuel sera supprimé de cet appareil. Si vous souhaitez le restaurer ultérieurement, vous devrez entrer votre phrase de récupération.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Démarrer our réinitialiser un autre portefeuille";
 /* Wipe wallet button title */

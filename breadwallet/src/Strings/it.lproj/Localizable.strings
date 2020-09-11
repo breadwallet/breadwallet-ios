@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Il Mio BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Sembra che tu stia utilizzando una tastiera di terze parti, essa può registrare ciò che scrivi e rubare la tua Paper Key. Per favore, utilizza la tastiera Android di default per maggiore protezione.";
+"Alert.customKeyboard.android" = "Sembra che tu stia utilizzando una tastiera di terze parti, che può registrare ciò che digiti e rubare la tua frase di recupero. Passa alla tastiera Android predefinita per una protezione extra.";
 /* Error alert title */
 "Alert.error" = "Errore";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "I tuoi dati criptati di BRD sono stati recentemente  invalidati  perché la schermata di blocco del tuo Android era disabilitata.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Non possiamo procedere perché le impostazioni del blocco schermo sono state modificate (ad es. la password è stata disabilitata, le impronte digitali sono state modificate). Per ragioni di sicurezza, Android ha bloccato in modo permanente il tuo keystore. Pertanto, i dati dell'app BRD devono essere cancellati attraverso la disinstallazione.\n\nNon preoccuparti, i tuoi fondi sono ancora al sicuro! Reinstalla l'app e recupera il tuo portafoglio utilizzando la paper key.";
+"Alert.keystore.invalidated.uninstall.android" = "Non possiamo procedere perché le impostazioni di blocco dello schermo sono state modificate (ad es. La password è stata disabilitata, le impronte digitali sono state modificate). Per motivi di sicurezza, Android ha bloccato in modo permanente il tuo archivio chiavi. Pertanto, i dati dell'app BRD devono essere cancellati mediante la disinstallazione. \n\nNon preoccuparti, i tuoi fondi sono ancora al sicuro! Reinstalla l'app e recupera il tuo portafoglio utilizzando la frase di ripristino.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Non possiamo procedere perché le impostazioni del blocco schermo sono state modificate (ad es. la password è stata disabilitata, le impronte digitali sono state modificate). Per ragioni di sicurezza, Android ha bloccato in modo permanente il tuo keystore. Dunque, i dati dell'app BRD devono essere cancellati.\n\nNon preoccuparti, i tuoi fondi sono ancora al sicuro! Recupera il tuo portafoglio usando la tua paper key.";
+"Alert.keystore.invalidated.wipe.android" = "Non possiamo procedere perché le impostazioni di blocco dello schermo sono state modificate (ad es. La password è stata disabilitata, le impronte digitali sono state modificate). Per motivi di sicurezza, Android ha bloccato in modo permanente il tuo archivio chiavi. Pertanto, i dati della tua app BRD devono essere cancellati. \n\nNon preoccuparti, i tuoi fondi sono ancora al sicuro! Recupera il tuo portafoglio usando la frase di recupero.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Errore KeyStore Android";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Tutti gli indirizzi del portafoglio sono stati copiati con successo.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Paper Key Impostata";
+"Alerts.paperKeySet" = "Set di frasi di ripristino";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Fantastico!";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Costo totale:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Le parole inserite non corrispondono alla tua Paper Key. Ti preghiamo di riprovare.";
+"ConfirmPaperPhrase.error" = "Le parole inserite non corrispondono alla frase di recupero. Per favore riprova.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Per assicurarci che tutto sia stato scritto correttamente, per favore inserisci le seguenti parole della tua Paper Key.";
+"ConfirmPaperPhrase.label" = "Per assicurarti che tutto sia stato scritto correttamente, inserisci le seguenti parole dalla frase di recupero.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Parola n°%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Recupera Portafoglio";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "La tua chiave di protezione è richiesta per aprire il tuo portafoglio se cambi le impostazioni di sicurezza sul cellulare.\n\nSei sicuro di voler impostare la chiave di sicurezza più tardi?";
+"Modal.PaperKeySkip.Body.Android" = "La tua frase di recupero è necessaria per aprire il tuo portafoglio se modifichi le impostazioni di sicurezza sul tuo telefono. \n\nSei sicuro di voler impostare la frase di recupero in un secondo momento?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Continua Impostazioni";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "La frase di recupero deve essere salvata in caso di smarrimento o cambio di telefono.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Imposta la tua chiave di protezione in caso dovessi perdere o sostituire il tuo cellulare.\nLa chiave è richiesta anche se cambi le impostazioni di sicurezza del telefono.";
+"Prompts.PaperKey.Body.Android" = "Imposta la tua frase di recupero in caso di smarrimento o sostituzione del telefono. La tua chiave è richiesta anche se modifichi le impostazioni di sicurezza del telefono.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Azione necessaria";
 "Prompts.RateApp.dontShow" = "Non chiedere più";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Reimposta PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Inserisci la tua Paper Key";
+"RecoverWallet.instruction" = "Inserisci la frase di recupero";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Recupera il tuo BRD con la tua Paper Key";
+"RecoverWallet.intro" = "Recupera il tuo BRD con la tua frase di recupero.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "La Paper Key inserita non è valida. Si prega di controllare ogni parola due volte e riprovare.";
+"RecoverWallet.invalid" = "La frase di recupero che hai inserito non è valida. Si prega di ricontrollare ogni parola e riprovare.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Freccia Sinistra";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Freccia Destra";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Inserisci la Paper Key per il portafoglio che vuoi recuperare.";
+"RecoverWallet.subheader" = "Inserisci la frase di ripristino per il portafoglio che desideri recuperare.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Per reimpostare il tuo PIN, immetti le parole della tua Paper Key all'interno dei riquadri sottostanti.";
+"RecoverWallet.subheader_reset_pin" = "Per reimpostare il PIN, inserisci le parole della frase di recupero nelle caselle seguenti.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "La parola che hai inserito è sbagliata. Prova di nuovo per favore.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Frase di recupero";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Paper Key";
+"SecurityCenter.paperKeyTitle.android" = "Frase di recupero";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protegge il tuo BRD dagli utenti non autorizzati.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Condividi Dati Anonimi?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Annota di nuovo la Paper Key";
+"StartPaperPhrase.againButtonTitle" = "Scrivi di nuovo la frase di recupero";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "La tua Paper Key è l'unico modo per ripristinare il tuo BRD, nel caso il tuo telefono sia perso, rubato, rotto o aggiornato.\n\nTi mostreremo un elenco di parole da annotare su un pezzo di carta e conservare al sicuro.";
+"StartPaperPhrase.body" = "La tua frase di recupero è l'unico modo per ripristinare il tuo BRD se il tuo telefono viene smarrito, rubato, rotto o aggiornato. \n\nTi mostreremo un elenco di parole da scrivere su un pezzo di carta e da tenere al sicuro.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "La chiave di sicurezza è il solo modo per ripristinare il tuo BRD se il tuo telefono viene perso, rubato, rotto, o aggiornato.\n\nLa tua chiave di sicurezza è richiesta anche se cambi le impostazioni di sicurezza del dispositivo.\n\nTi mostreremo una lista di parole da scrivere su un pezzo di carta e tenere al sicuro.";
+"StartPaperPhrase.Body.Android" = "La tua frase di recupero è l'unico modo per ripristinare il tuo BRD se il tuo telefono viene smarrito, rubato, rotto o aggiornato. \n\nLa tua frase di recupero è richiesta anche se modifichi le impostazioni di sicurezza sul tuo dispositivo. \n\nTi mostreremo un elenco di parole da scrivere su un pezzo di carta e da tenere al sicuro.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Annota la Paper Key";
+"StartPaperPhrase.buttonTitle" = "Annotare la frase di recupero";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Ultimo scritto su \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Scollega il tuo portafoglio per rimuoverlo da questo dispositivo. Una volta scollegato questo portafoglio, puoi attivare un nuovo portafoglio o ripristinarne un altro su questo dispositivo.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Il tuo attuale portafoglio verrà rimosso dal tuo dispositivo. Se desidererai ripristinarlo in futuro, avrai bisogno della tua Paper Key.";
+"WipeWallet.startWarning" = "Il tuo portafoglio attuale verrà rimosso da questo dispositivo. Se desideri ripristinarlo in futuro, dovrai inserire la tua frase di recupero.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Scollega portafoglio";
 /* Wipe wallet button title */

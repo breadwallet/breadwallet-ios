@@ -10,6 +10,7 @@ import Foundation
 import WalletKit
 
 typealias WalletEventCallback = (WalletEvent) -> Void
+typealias WalletManagerEventCallback = (WalletManagerEvent) -> Void
 typealias CreateTransferResult = Result<Transfer, Wallet.CreateTransferError>
 
 extension NetworkFee {
@@ -195,18 +196,35 @@ class Wallet {
     // MARK: Event Subscriptions
 
     private var subscriptions: [Int: [WalletEventCallback]] = [:]
+    private var managerSubscriptions: [Int: [WalletManagerEventCallback]] = [:]
 
     func subscribe(_ subscriber: Subscriber, callback: @escaping WalletEventCallback) {
         subscriptions[subscriber.hashValue, default: []].append(callback)
+    }
+    
+    func subscribeManager(_ subscriber: Subscriber, callback: @escaping WalletManagerEventCallback) {
+        managerSubscriptions[subscriber.hashValue, default: []].append(callback)
     }
 
     func unsubscribe(_ subscriber: Subscriber) {
         subscriptions.removeValue(forKey: subscriber.hashValue)
     }
+    
+    func unsubscribeManager(_ subscriber: Subscriber) {
+        managerSubscriptions.removeValue(forKey: subscriber.hashValue)
+    }
 
     private func publishEvent(_ event: WalletEvent) {
         DispatchQueue.main.async { [weak self] in
             self?.subscriptions
+                .flatMap { $0.value }
+                .forEach { $0(event) }
+        }
+    }
+    
+    private func publishEvent(_ event: WalletManagerEvent) {
+        DispatchQueue.main.async { [weak self] in
+            self?.managerSubscriptions
                 .flatMap { $0.value }
                 .forEach { $0(event) }
         }
@@ -224,6 +242,11 @@ class Wallet {
 // MARK: - Events
 
 extension Wallet {
+    
+    func blockUpdated() {
+        publishEvent(.blockUpdated(height: 0))
+    }
+    
     func handleWalletEvent(_ event: WalletEvent) {
         print("[SYS] \(currency.code) wallet event: \(event)")
         switch event {

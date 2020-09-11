@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mein BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Anscheinend verwenden Sie eine Drittanbieter-Tastatur, die Ihre Eingaben aufzeichnen und Ihren Paper Key stehlen kann. Bitte wechseln Sie für zusätzlichen Schutz zur Standard-Tastatur von Android.";
+"Alert.customKeyboard.android" = "Es sieht so aus, als würden Sie eine Tastatur eines Drittanbieters verwenden, mit der Sie Ihre Eingabe aufzeichnen und Ihre Wiederherstellungsphrase stehlen können. Bitte wechseln Sie für zusätzlichen Schutz zur Standard-Android-Tastatur.";
 /* Error alert title */
 "Alert.error" = "Fehler";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Ihre mit BRD verschlüsselten Daten wurden vor Kurzem für ungültig erklärt, da Ihre Android-Bildschirmsperre deaktiviert war.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Wir können nicht fortfahren, da Ihre Bildschirmsperre-Einstellungen geändert wurden (z.B. Passwort wurde deaktiviert, Fingerabdrücke wurden geändert). Aus Sicherheitsgründen hat Android Ihren Schlüsselspeicher dauerhaft gesperrt. Daher müssen Ihre BRD-Applikationsdaten durch eine Deinstallation gelöscht werden.\n\nKeine Sorge, Ihr Geld ist immer noch sicher! Installieren Sie die App erneut und stellen Sie Ihr Wallet mit Ihrem Papierschlüssel wieder her.";
+"Alert.keystore.invalidated.uninstall.android" = "Wir können nicht fortfahren, da Ihre Bildschirmsperreinstellungen geändert wurden (z. B. wurde das Passwort deaktiviert, Fingerabdrücke wurden geändert). Aus Sicherheitsgründen hat Android Ihren Schlüsselspeicher dauerhaft gesperrt. Daher müssen Ihre BRD-App-Daten durch Deinstallation gelöscht werden. \n\nKeine Sorge, Ihr Geld ist immer noch sicher! Installieren Sie die App neu und stellen Sie Ihre Brieftasche mithilfe Ihrer Wiederherstellungsphrase wieder her.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Wir können nicht fortfahren, da Ihre Bildschirmsperre-Einstellungen geändert wurden (z.B. Passwort wurde deaktiviert, Fingerabdrücke wurden geändert). Aus Sicherheitsgründen hat Android Ihren Schlüsselspeicher dauerhaft gesperrt. Daher müssen Ihre BRD-Applikationsdaten gelöscht werden.\n\nKeine Sorge, Ihr Geld ist immer noch sicher! Stellen Sie Ihre Brieftasche mit Ihrem Papierschlüssel wieder her.";
+"Alert.keystore.invalidated.wipe.android" = "Wir können nicht fortfahren, da Ihre Bildschirmsperreinstellungen geändert wurden (z. B. wurde das Passwort deaktiviert, Fingerabdrücke wurden geändert). Aus Sicherheitsgründen hat Android Ihren Schlüsselspeicher dauerhaft gesperrt. Daher müssen Ihre BRD-App-Daten gelöscht werden. \n\nKeine Sorge, Ihr Geld ist immer noch sicher! Stellen Sie Ihre Brieftasche mit Ihrer Wiederherstellungsphrase wieder her.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android-KeyStore-Fehler";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Es wurden alle Wallet-Adressen erfolgreich kopiert.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Offlineschlüssel festgelegt";
+"Alerts.paperKeySet" = "Wiederherstellungssatz";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Großartig!";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Gesamtkosten:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Die eingegebenen Wörter stimmen nicht mit Ihrem Papierschlüssel überein. Bitte versuchen Sie es erneut.";
+"ConfirmPaperPhrase.error" = "Die eingegebenen Wörter stimmen nicht mit Ihrer Wiederherstellungsphrase überein. Bitte versuche es erneut.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Um sicherzustellen, dass alles korrekt notiert worden ist, gib bitte die folgenden Wörter deines Offlineschlüssels ein.";
+"ConfirmPaperPhrase.label" = "Um sicherzustellen, dass alles korrekt aufgeschrieben wurde, geben Sie bitte die folgenden Wörter aus Ihrem Wiederherstellungssatz ein.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Wort #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Wallet wiederherstellen";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Sie benötigen Ihren Papierschlüssel, um auf Ihre Wallet zuzugreifen, wenn Sie einmal die Sicherheitseinstellungen Ihres Smartphones ändern.\n\nMöchten Sie Ihren Papierschlüssel wirklich erst später einrichten?";
+"Modal.PaperKeySkip.Body.Android" = "Ihre Wiederherstellungsphrase ist erforderlich, um Ihre Brieftasche zu öffnen, wenn Sie die Sicherheitseinstellungen Ihres Telefons ändern. \n\nSind Sie sicher, dass Sie Ihre Wiederherstellungsphrase später einrichten möchten?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Weiter einrichten";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "Ihre Wiederherstellungsphrase muss gespeichert werden, falls Sie Ihr Telefon verlieren oder wechseln.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Richten Sie Ihren Papierschlüssel für den Fall ein, dass Sie Ihr Smartphone einmal verlieren. Sie benötigen den Schlüssel ebenfalls, wenn Sie die Sicherheitseinstellungen Ihre Smartphones ändern.s";
+"Prompts.PaperKey.Body.Android" = "Richten Sie Ihre Wiederherstellungsphrase ein, falls Sie jemals Ihr Telefon verlieren oder ersetzen sollten. Ihr Schlüssel wird auch benötigt, wenn Sie die Sicherheitseinstellungen Ihres Telefons ändern.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Maßnahme erforderlich";
 "Prompts.RateApp.dontShow" = "Fragen Sie nicht noch einmal";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PIN zurücksetzen";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Offlineschlüssel eingeben";
+"RecoverWallet.instruction" = "Geben Sie die Wiederherstellungsphrase ein";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Stelle dein BRD mithilfe deines Offlineschlüssels wieder her.";
+"RecoverWallet.intro" = "Stellen Sie Ihre BRD mit Ihrer Wiederherstellungsphrase wieder her.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "Der von dir eingegebene Offlineschlüssel ist ungültig. Bitte überprüfe nochmal jedes Wort und versuche es erneut.";
+"RecoverWallet.invalid" = "Die von Ihnen eingegebene Wiederherstellungsphrase ist ungültig. Bitte überprüfen Sie jedes Wort und versuchen Sie es erneut.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Linker Pfeil";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Rechter Pfeil";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Gib den Offlineschlüssel für das Wallet ein, das du wiederherstellen willst.";
+"RecoverWallet.subheader" = "Geben Sie den Wiederherstellungssatz für die Brieftasche ein, die Sie wiederherstellen möchten.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Gib die Wörter des Offlineschlüssels in die Kästen unten ein, um deine PIN zurückzusetzen.";
+"RecoverWallet.subheader_reset_pin" = "Um Ihre PIN zurückzusetzen, geben Sie die Wörter aus Ihrer Wiederherstellungsphrase in die Felder unten ein.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Das von Ihnen eingegebene Wort ist nicht korrekt. Bitte versuchen Sie es erneut.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Wiederherstellungsphrase";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Offlineschlüssel";
+"SecurityCenter.paperKeyTitle.android" = "Wiederherstellungsphrase";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Schütze dein BRD vor nicht autorisierten Benutzern.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonyme Nutzungsdaten übermitteln?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Offlineschlüssel erneut notieren";
+"StartPaperPhrase.againButtonTitle" = "Schreiben Sie die Wiederherstellungsphrase erneut auf";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Dein Offlineschlüssel ist die einzige Möglichkeit, dein BRD wiederherzustellen, falls du dein Smartphone verlierst, austauscht, es gestohlen wird oder kaputtgeht.\n\nHierfür zeigen wir dir eine Liste von Wörtern an, damit du sie dir auf ein Stück Papier notieren kannst, das es sicher aufzubewahren gilt.";
+"StartPaperPhrase.body" = "Ihre Wiederherstellungsphrase ist die einzige Möglichkeit, Ihre BRD wiederherzustellen, wenn Ihr Telefon verloren geht, gestohlen, defekt oder aktualisiert wird. \n\nWir zeigen Ihnen eine Liste mit Wörtern, die Sie auf ein Blatt Papier schreiben und sicher aufbewahren können.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Ihr Papierschlüssel ist der einzige Weg, um Ihr BRD wiederherzustellen, wenn Ihr Smartphone gestohlen wird, kaputt oder verloren geht oder wenn Sie ein neues kaufen.\n\nIhr Papierschlüssel wird ebenfalls benötigt, wenn Sie die Sicherheitseinstellungen Ihres Geräts ändern.\n\nWir zeigen Ihnen eine Liste an Wörtern, die Sie auf einen Zettel Papier (daher Papierschlüssel) schreiben und sicher aufbewahren.";
+"StartPaperPhrase.Body.Android" = "Ihre Wiederherstellungsphrase ist die einzige Möglichkeit, Ihre BRD wiederherzustellen, wenn Ihr Telefon verloren geht, gestohlen, defekt oder aktualisiert wird. \n\nIhre Wiederherstellungsphrase ist auch erforderlich, wenn Sie die Sicherheitseinstellungen auf Ihrem Gerät ändern. \n\nWir zeigen Ihnen eine Liste mit Wörtern, die Sie auf ein Blatt Papier schreiben und sicher aufbewahren können.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Offlineschlüssel notieren";
+"StartPaperPhrase.buttonTitle" = "Notieren Sie die Wiederherstellungsphrase";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Zuletzt niedergeschrieben am \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Heben Sie die Verknüpfung Ihres Wallets auf, um es von diesem Gerät zu entfernen. Sobald die Verknüpfung dieses Wallets entfernt ist, können Sie ein neues Wallet anlegen oder ein anderes Wallet auf diesem Gerät wiederherstellen.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Sie werden von diesem Gerät aus keinen Zugriff auf Ihr aktuelles BRD-Wallet mehr haben. Der Saldo verbleibt auf dem Satz.";
+"WipeWallet.startWarning" = "Ihre aktuelle Brieftasche wird von diesem Gerät entfernt. Wenn Sie es in Zukunft wiederherstellen möchten, müssen Sie Ihre Wiederherstellungsphrase eingeben.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Verknüpfung des Wallets aufheben";
 /* Wipe wallet button title */
