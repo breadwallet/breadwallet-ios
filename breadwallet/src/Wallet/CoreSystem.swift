@@ -30,6 +30,10 @@ class CoreSystem: Subscriber, Trackable {
         return wallets[currency.uid]
     }
     
+    func currency(for currencyId: CurrencyId) -> Currency? {
+        return currencies[currencyId]
+    }
+    
     private var createWalletCallback: ((Wallet?) -> Void)?
     
     // MARK: Lifecycle
