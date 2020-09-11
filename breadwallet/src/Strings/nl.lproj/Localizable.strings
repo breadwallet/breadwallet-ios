@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mijn BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Het lijkt erop dat u een toetsenbord van een derde gebruikt. Deze kan bijhouden wat u typt en eventueel uw sleutel stelen. Schakel alstublieft over naar het standaard Android toetsenbord voor extra veiligheid.";
+"Alert.customKeyboard.android" = "Het lijkt erop dat u een toetsenbord van een derde partij gebruikt, dat kan opnemen wat u typt en uw herstelzin kan stelen. Schakel over naar het standaard Android-toetsenbord voor extra bescherming.";
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Uw door BRD geëncrypteerde data is onlangs ongeldig gemaakt omdat uw Android schermvergrendeling is uitgeschakeld.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. wachtwoord was uitgeschakeld, vingerafdrukken waren gewijzigd). Om veiligheidsredenen heeft Android uw sleutelarchief permanent gesloten. Daarom moeten uw BRD-app-gegevens worden gewist door de installatie ongedaan te maken.\n\nGeen zorgen, uw geld is nog steeds veilig! Installeer de app opnieuw en herstel uw portemonnee met behulp van uw papieren sleutel.";
+"Alert.keystore.invalidated.uninstall.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. Wachtwoord is uitgeschakeld, vingerafdrukken zijn gewijzigd). Om veiligheidsredenen heeft Android uw sleutelopslag permanent vergrendeld. Daarom moeten uw BRD-app-gegevens worden gewist door de installatie ongedaan te maken. \n\nMaak je geen zorgen, je geld is nog steeds veilig! Installeer de app opnieuw en herstel uw portemonnee met uw herstelzin.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. wachtwoord was uitgeschakeld, vingerafdrukken waren gewijzigd). Om veiligheidsredenen heeft Android uw sleutelarchief permanent gesloten. Daarom moeten uw BRD-app-gegevens worden gewist.\n\nGeen zorgen, uw geld is nog steeds veilig! Herstel uw portemonnee met behulp van uw papieren sleutel.";
+"Alert.keystore.invalidated.wipe.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. Wachtwoord is uitgeschakeld, vingerafdrukken zijn gewijzigd). Om veiligheidsredenen heeft Android uw sleutelopslag permanent vergrendeld. Daarom moeten uw BRD-app-gegevens worden gewist. \n\nMaak je geen zorgen, je geld is nog steeds veilig! Herstel uw portemonnee met behulp van uw herstelzin.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fout";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Alle wallet-adressen zijn succesvol gekopieerd.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Paper key set";
+"Alerts.paperKeySet" = "Herstelsgroepset";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Geweldig!";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Totale Prijs:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "De ingevulde woorden komen niet overeen met uw paper key. Probeer het opnieuw.";
+"ConfirmPaperPhrase.error" = "De ingevoerde woorden komen niet overeen met uw herstelzin. Probeer het a.u.b. opnieuw.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Voer de volgende woorden in van je papieren sleutel om te verzekeren dat alles correct is opgeschreven.";
+"ConfirmPaperPhrase.label" = "Voer de volgende woorden uit uw herstelzin in om er zeker van te zijn dat alles correct is opgeschreven.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Woord #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Portemonnee Herstellen";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "U heeft uw papieren sleutel nodig om uw wallet te openen als u uw beveiligingsinstellingen op uw telefoon wijzigt.\n\nWeet u zeker dat u uw papieren sleutel later wilt instellen?";
+"Modal.PaperKeySkip.Body.Android" = "Uw herstelzin is vereist om uw portemonnee te openen als u de beveiligingsinstellingen op uw telefoon wijzigt. \n\nWeet u zeker dat u uw herstelzin later wilt instellen?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Doorgaan met instellen";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "Uw herstelzin moet worden opgeslagen voor het geval u uw telefoon verliest of wijzigt.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Stel uw papieren sleutel in voor het geval dat u uw telefoon ooit kwijtraakt of vervangt. U heeft uw sleutel nodig indien u de beveiligingsinstellingen van uw telefoon aanpast.";
+"Prompts.PaperKey.Body.Android" = "Stel uw herstelzin in voor het geval u ooit uw telefoon kwijtraakt of vervangt. Uw sleutel is ook vereist als u de beveiligingsinstellingen van uw telefoon wijzigt.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Actie Vereist";
 "Prompts.RateApp.dontShow" = "Vraag het niet nog eens";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PIN Resetten";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Papieren Sleutel Invoeren";
+"RecoverWallet.instruction" = "Voer de herstelzin in";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Herstel je BRD met je papieren sleutel.";
+"RecoverWallet.intro" = "Herstel uw BRD met uw herstelzin.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "De papieren sleutel die je hebt ingevoerd is ongeldig. Check ieder woord a.u.b. en probeer het opnieuw.";
+"RecoverWallet.invalid" = "De ingevoerde herstelzin is ongeldig. Controleer elk woord nogmaals en probeer het opnieuw.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Linker Pijl";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Rechter Pijl";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Voer de papieren sleutel in voor de portemonnee die je wilt herstellen.";
+"RecoverWallet.subheader" = "Voer de herstelzin in voor de portemonnee die u wilt herstellen.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Om je PIN te resetten moet je de woorden van je papieren sleutel in onderstaande velden invoeren.";
+"RecoverWallet.subheader_reset_pin" = "Om uw pincode opnieuw in te stellen, voert u de woorden uit uw herstelzin in de onderstaande vakken in.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Het woord dat u ingevoerd heeft is niet juist. Probeer het nogmaals.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Herstelzin";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Papieren Sleutel";
+"SecurityCenter.paperKeyTitle.android" = "Herstelzin";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Beschermt je BRD van ongeautoriseerde gebruikers.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonieme Data Delen?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
+"StartPaperPhrase.againButtonTitle" = "Schrijf de herstelzin opnieuw op";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je BRD te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+"StartPaperPhrase.body" = "Uw herstelzin is de enige manier om uw BRD te herstellen als uw telefoon verloren, gestolen, defect of geüpgraded is. \n\nWe laten u een lijst met woorden zien die u op een vel papier kunt schrijven en veilig kunt bewaren.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Uw papieren sleutel is de enige manier om uw BRD te herstellen indien u uw telefoon kwijtraakt of als deze gestolen of geüpgraded wordt. \n\nU heeft uw papieren sleutel tevens nodig indien u de beveiligingsinstellingen van uw apparaat aanpast.\n\nWe tonen u een lijst met woorden die u op een stuk papier kunt opschrijven en veilig dient te bewaren.";
+"StartPaperPhrase.Body.Android" = "Uw herstelzin is de enige manier om uw BRD te herstellen als uw telefoon verloren, gestolen, defect of geüpgraded is. \n\nUw herstelzin is ook vereist als u de beveiligingsinstellingen op uw apparaat wijzigt. \n\nWe laten u een lijst met woorden zien die u op een vel papier kunt schrijven en veilig kunt bewaren.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
+"StartPaperPhrase.buttonTitle" = "Schrijf de herstelzin op";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Laatst opgeschreven \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Ontkoppel je portemonnee om het te verwijderen van dit toestel. Wanneer deze portemonnee ontkoppeld is kunt u een nieuwe portemonnee beginnen of een andere portemonnee laden op dit toestel.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "U zal niet langer uw huidige BRD portemonnee kunnen bereiken vanaf dit apparaat. Uw saldo zal hetzelfde blijven.";
+"WipeWallet.startWarning" = "Uw huidige portemonnee wordt van dit apparaat verwijderd. Als u het in de toekomst wilt herstellen, moet u uw herstelzin invoeren.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Portemonnee Ontkoppelen";
 /* Wipe wallet button title */

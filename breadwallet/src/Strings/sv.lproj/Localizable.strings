@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mitt BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Det verkar som att du använder ett tangentbord från tredje part, vilket kan registrera det du skriver och stjäla din kryptonyckel. Byt till Androids standardtangentbord för extra säkerhet.";
+"Alert.customKeyboard.android" = "Det verkar som om du använder ett tangentbord från tredje part som kan spela in vad du skriver och stjäla din återställningsfras. Byt till standard Android-tangentbordet för extra skydd.";
 /* Error alert title */
 "Alert.error" = "Fel";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Dina krypterade BRD-uppgifter har nyligen ogiltigförklarats på grund av att Androids skärmlås inaktiverades.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Vi kan inte fortsätta eftersom dina skärmslåsinställningar har ändrats (t.ex. lösenordet inaktiverades, fingeravtryck ändrades). Av säkerhetsskäl har Android låst din nyckelförvaring. Därför måste dina BRD-appdata tas bort genom att avinstallera appen.\n\nOroa dig inte, dina pengar är fortfarande säkra! Installera om appen och återställ din plånbok med din pappersnyckel.";
+"Alert.keystore.invalidated.uninstall.android" = "Vi kan inte fortsätta eftersom dina inställningar för skärmlås har ändrats (t.ex. lösenord har inaktiverats, fingeravtryck har ändrats). Av säkerhetsskäl har Android permanent låst din nyckelbutik. Därför måste dina BRD-appdata rensas genom att avinstallera. \n\nOroa dig inte, dina pengar är fortfarande säkra! Installera om appen och återställ din plånbok med din återställningsfras.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Vi kan inte fortsätta eftersom dina skärmslåsinställningar har ändrats (t.ex. lösenordet inaktiverades, fingeravtryck ändrades). Av säkerhetsskäl har Android låst din nyckelförvaring. Därför måste dina BRD-appdata tas bort.\n\nOroa dig inte, dina pengar är fortfarande säkra! Återställ din plånbok med pappersnyckeln.";
+"Alert.keystore.invalidated.wipe.android" = "Vi kan inte fortsätta eftersom dina inställningar för skärmlås har ändrats (t.ex. lösenord har inaktiverats, fingeravtryck har ändrats). Av säkerhetsskäl har Android permanent låst din nyckelbutik. Därför måste dina BRD-appdata rensas. \n\nOroa dig inte, dina pengar är fortfarande säkra! Återställ din plånbok med din återställningsfras.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "KeyStore-fel för Android";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Alla plånboksadresser har kopierats.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Ordnyckel är inställd";
+"Alerts.paperKeySet" = "Återställningsfrasuppsättning";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Härligt!";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Total kostnad:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Orden som angivits matchar inte din pappersnyckel. Försök igen.";
+"ConfirmPaperPhrase.error" = "De angivna orden matchar inte din återställningsfras. Var god försök igen.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Ange följande ord från din ordnyckel, för att vara säker på att allt skrevs korrekt.";
+"ConfirmPaperPhrase.label" = "För att säkerställa att allt har skrivits ner korrekt, skriv följande ord från din återställningsfras.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Ord #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Återställ plånbok";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Din skrivna nyckel krävs för att öppna din plånbok om du ändrar säkerhetsinställningarna på din telefon. \n\nÄr du säker på att du vill vänta med att ordna en skriven nyckel? ";
+"Modal.PaperKeySkip.Body.Android" = "Din återställningsfras krävs för att öppna din plånbok om du ändrar säkerhetsinställningarna på din telefon. \n\nÄr du säker på att du vill ställa in din återställningsfras senare?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Fortsätt processen";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "Din återställningsfras måste sparas om du tappar eller byter telefon.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Ha en skriven nyckel ifall du skulle tappa bort eller byta telefon. Nyckeln krävs också om du ändrar säkerhetsinställningarna på din telefon. ";
+"Prompts.PaperKey.Body.Android" = "Ställ in din återställningsfras om du någonsin tappar eller byter ut telefonen. Din nyckel krävs också om du ändrar telefonens säkerhetsinställningar.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Åtgärd krävs";
 "Prompts.RateApp.dontShow" = "Fråga inte igen";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Återställ PIN-kod";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Ange ordnyckel";
+"RecoverWallet.instruction" = "Ange återställningsfras";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Återställ BRD med din ordnyckel.";
+"RecoverWallet.intro" = "Återställ din BRD med din återställningsfras.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "Den ordnyckel du angav är ogiltig. Dubbelkolla varje ord och försök igen.";
+"RecoverWallet.invalid" = "Återställningsfrasen du angav är ogiltig. Dubbelkolla varje ord och försök igen.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Vänster pil";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Höger pil";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Ange ordnyckel till den plånbok du vill återställ.";
+"RecoverWallet.subheader" = "Ange återställningsfrasen för plånboken du vill återställa.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "För att återställa din PIN-kod anger du orden från din ordnyckel i boxarna nedan.";
+"RecoverWallet.subheader_reset_pin" = "För att återställa din PIN-kod, ange orden från din återställningsfras i rutorna nedan.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du skrev in är felaktigt. Var god försök igen.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Återställningsfras";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Ordnyckel";
+"SecurityCenter.paperKeyTitle.android" = "Återställningsfras";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Skyddar ditt BRD från obehöriga användare.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Dela anonyma uppgifter?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Skriv ner ordnyckel på nytt";
+"StartPaperPhrase.againButtonTitle" = "Skriv ner återhämtningsfrasen igen";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din ordnyckel  är enda sättet att återställ BRD om du förlorat din telefon, blivit bestulen på den eller har uppgraderat den.\n\nVi visar dig en lista över ord som du kan skriva ner på ett papper och gömma undan.";
+"StartPaperPhrase.body" = "Din återställningsfras är det enda sättet att återställa din BRD om din telefon går förlorad, stulen, trasig eller uppgraderas. \n\nVi visar dig en lista med ord att skriva ner på ett papper och hålla dig säker.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Det är enbart med din skrivna nyckel du kan återställa BRD om din telefon försvinner, går sönder eller uppgraderas. \n\nDen skrivna nyckeln behövs också om du ändrar säkerhetsinställningarna på din enhet. \n\nVi visar dig en lista med ord som du ska nedteckna på ett papper och förvara säkert. ";
+"StartPaperPhrase.Body.Android" = "Din återställningsfras är det enda sättet att återställa din BRD om din telefon går förlorad, stulen, trasig eller uppgraderas. \n\nDin återställningsfras krävs också om du ändrar säkerhetsinställningarna på din enhet. \n\nVi visar dig en lista med ord att skriva ner på ett papper och hålla dig säker.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Skriv ner ordnyckel";
+"StartPaperPhrase.buttonTitle" = "Skriv ner återhämtningsfras";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Senast nedskrivet \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Ta bort länken till din plånbok för att ta bort den från denna enhet. När länken till denna plånbok är borttagen kan du skapa en ny plånbok eller återställa en annan plånbok på denna enhet.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Du kommer inte längre att kunna komma åt din aktuella BRDplånbok från denna enhet. Saldot kommer att kvarstå på frasen.";
+"WipeWallet.startWarning" = "Din nuvarande plånbok kommer att tas bort från den här enheten. Om du vill återställa den i framtiden måste du ange din återställningsfras.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Ta Bort Länken Till Plånboken";
 /* Wipe wallet button title */

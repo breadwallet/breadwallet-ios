@@ -902,4 +902,11 @@ enum S {
         static let restoreButton = NSLocalizedString("CloudBackup.restoreButton", value: "Restore from iCloud Backup", comment: "")
         static let backupMenuTitle = NSLocalizedString("CloudBackup.backupMenuTitle", value: "iCloud Backup", comment: "")
     }
+    
+    enum MarketData {
+        static let high24h = NSLocalizedString("MarketData.high24h", value: "24h high", comment: "")
+        static let low24h = NSLocalizedString("MarketData.low24h", value: "24h low", comment: "")
+        static let marketCap = NSLocalizedString("MarketData.marketCap", value: "Market Cap", comment: "")
+        static let volume = NSLocalizedString("MarketData.volume", value: "Trading Volume", comment: "")
+    }
 }
