@@ -47,9 +47,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     var didSelectCurrency: ((Currency) -> Void)?
     var didTapManageWallets: (() -> Void)?
-    var didTapBuy: (() -> Void)?
-    var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
+    var didTapRedemption: (() -> Void)?
     
     var okToShowPrompts: Bool {
         // On the initial display we need to load the walletes in the asset list table view first.
@@ -224,8 +223,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func setupToolbar() {
-        let buttons = [(buyButtonTitle, #imageLiteral(resourceName: "buy"), #selector(buy)),
-                       (S.HomeScreen.trade, #imageLiteral(resourceName: "trade"), #selector(trade)),
+        let buttons = [("Redeem", #imageLiteral(resourceName: "buy"), #selector(redeem)),
                        (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
                         let button = UIButton.vertical(title: title, image: image)
                         button.tintColor = .navigationTint
@@ -323,14 +321,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     
     // MARK: Actions
     
-    @objc private func buy() {
-        saveEvent("currency.didTapBuyBitcoin", attributes: [ "buyAndSell": shouldShowBuyAndSell ? "true" : "false" ])
-        didTapBuy?()
-    }
-    
-    @objc private func trade() {
-        saveEvent("currency.didTapTrade", attributes: [:])
-        didTapTrade?()
+    @objc private func redeem() {
+        saveEvent("currency.didTapRedemption", attributes: [:])
+        didTapRedemption?()
     }
     
     @objc private func menu() { didTapMenu?() }

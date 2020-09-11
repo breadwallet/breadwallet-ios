@@ -328,6 +328,7 @@
 		9AE8011521FFF81F00D5058C /* rewardsIcon-64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */; };
 		9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF721FE64E200D5058C /* RewardsView.swift */; };
 		9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */; };
+		B379B8CA250BFC520041B859 /* CashUI in Frameworks */ = {isa = PBXBuildFile; productRef = B379B8C9250BFC520041B859 /* CashUI */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE08B2A320F66822009FA568 /* BRAPIClient+Pigeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */; };
@@ -1278,6 +1279,7 @@
 				7CD03E8523429F580084F00F /* SwiftProtobuf.framework in Frameworks */,
 				22717B062315D3E300F77F4E /* CloudKit.framework in Frameworks */,
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
+				B379B8CA250BFC520041B859 /* CashUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2365,6 +2367,7 @@
 			packageProductDependencies = (
 				3A0C6087242A5CC900F0FBC2 /* WalletKit */,
 				3A4D8ECC24C8CA5600FA7AC8 /* CoinGecko */,
+				B379B8C9250BFC520041B859 /* CashUI */,
 			);
 			productName = breadwallet;
 			productReference = 75A2A7901DA5934300A983D8 /* coinsquare.app */;
@@ -2512,6 +2515,7 @@
 			mainGroup = 75A2A7871DA5934300A983D8;
 			packageReferences = (
 				3A4D8ECB24C8CA5600FA7AC8 /* XCRemoteSwiftPackageReference "CoinGecko" */,
+				B379B8C8250BFC520041B859 /* XCRemoteSwiftPackageReference "cash-ui-ios" */,
 			);
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
 			projectDirPath = "";
@@ -5121,6 +5125,14 @@
 				version = 1.0.1;
 			};
 		};
+		B379B8C8250BFC520041B859 /* XCRemoteSwiftPackageReference "cash-ui-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/atmcoin/cash-ui-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -5132,6 +5144,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3A4D8ECB24C8CA5600FA7AC8 /* XCRemoteSwiftPackageReference "CoinGecko" */;
 			productName = CoinGecko;
+		};
+		B379B8C9250BFC520041B859 /* CashUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B379B8C8250BFC520041B859 /* XCRemoteSwiftPackageReference "cash-ui-ios" */;
+			productName = CashUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

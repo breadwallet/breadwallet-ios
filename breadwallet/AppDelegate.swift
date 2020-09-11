@@ -8,6 +8,8 @@
 
 import UIKit
 import LocalAuthentication
+import CashUI
+import CashCore
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -15,11 +17,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return applicationController.window
     }
     let applicationController = ApplicationController()
+    
+    static var url: EnvironmentUrl {
+        #if TESTNET
+        return .Staging
+        #else
+        return .Production
+        #endif
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         redirectStdOut()
         UIView.swizzleSetFrame()
         applicationController.launch(application: application, options: launchOptions)
+        CoreSessionManager.shared.start(url: AppDelegate.url)
+        CoreSessionManager.shared.delegate = self
         return true
     }
 
@@ -85,4 +97,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             _ = freopen($0, "w+", stdout)
         }
     }
+}
+
+extension AppDelegate: CoreSessionManagerDelegate {
+    
+    func sendCoin(amount: String, address: String, completion: @escaping (() -> Void)) {
+        let applicationController = self.applicationController
+        let modalPresenter = applicationController.modalPresenter
+        
+        let currencyId = Currencies.btc.uid
+        modalPresenter!.presentModal(for: currencyId, amount: amount, address: address, completion: {
+            completion()
+        })
+    }
+    
 }
