@@ -11,11 +11,11 @@ import UIKit
 extension UIColor {
         
     static var newGradientStart: UIColor {
-        return UIColor.fromHex("FB5491")
+        return UIColor.fromHex("#ECE9E6")
     }
 
     static var newGradientEnd: UIColor {
-        return UIColor.fromHex("FAA03F")
+        return UIColor.fromHex("FFFFFF")
     }
 
     static var darkBackground: UIColor {
@@ -103,11 +103,11 @@ extension UIColor {
 
     // MARK: Gradient
     static var gradientStart: UIColor {
-        return UIColor(red: 247.0/255.0, green: 164.0/255.0, blue: 69.0/255.0, alpha: 1.0)
+        return Theme.secondaryBackground
     }
 
     static var gradientEnd: UIColor {
-        return UIColor(red: 252.0/255.0, green: 83.0/255.0, blue: 148.0/255.0, alpha: 1.0)
+        return Theme.tertiaryBackground
     }
 
     static var offWhite: UIColor {
