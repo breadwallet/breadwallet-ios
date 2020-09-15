@@ -51,6 +51,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     var didTapTrade: (() -> Void)?
     var didTapMenu: (() -> Void)?
     var didTapRedemption: (() -> Void)?
+    var didTapActivity: (() -> Void)?
+    var didTapScanQR: (() -> Void)?
     
     var okToShowPrompts: Bool {
         // On the initial display we need to load the walletes in the asset list table view first.
@@ -225,8 +227,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func setupToolbar() {
-        let buttons = [("Redeem", #imageLiteral(resourceName: "buy"), #selector(redeem)),
-                       ("Scan QR", #imageLiteral(resourceName: "buy"), #selector(redeem)),
+        let buttons = [("ATM Cash Redeem", #imageLiteral(resourceName: "redeem"), #selector(redeem)),
+                       ("Scan QR Code", #imageLiteral(resourceName: "qrcode"), #selector(scanQR)),
+                       ("Activity", #imageLiteral(resourceName: "activity"), #selector(activity)),
                        (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
                         let button = UIButton.vertical(title: title, image: image)
                         button.tintColor = .navigationTint
@@ -244,6 +247,8 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             buttons[1],
             flexibleSpace,
             buttons[2],
+            flexibleSpace,
+            buttons[3],
             flexibleSpace
         ]
         
@@ -337,6 +342,15 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     @objc private func redeem() {
         saveEvent("currency.didTapRedemption", attributes: [:])
         didTapRedemption?()
+    }
+    
+    @objc private func activity() {
+        saveEvent("currency.didTapActivity", attributes: [:])
+        didTapActivity?()
+    }
+    
+    @objc private func scanQR() {
+        didTapScanQR?()
     }
     
     @objc private func menu() { didTapMenu?() }

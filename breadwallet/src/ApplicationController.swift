@@ -407,8 +407,16 @@ class ApplicationController: Subscriber, Trackable {
             navigationController.pushViewController(vc, animated: true)
         }
         
+        homeScreen.didTapActivity = { [unowned self] in
+            self.modalPresenter?.presentActivity()
+        }
+        
         homeScreen.didTapMenu = { [unowned self] in
             self.modalPresenter?.presentMenu()
+        }
+        
+        homeScreen.didTapScanQR = { [unowned self] in
+            self.modalPresenter?.presentLoginScan()
         }
         
         homeScreen.didTapManageWallets = { [unowned self] in
