@@ -1,8 +1,8 @@
 {
   "images" : [
     {
+      "filename" : "CSQ.Logo.White-40.png",
       "idiom" : "universal",
-      "filename" : "LogoGradient.pdf",
       "scale" : "1x"
     },
     {
@@ -15,10 +15,7 @@
     }
   ],
   "info" : {
-    "version" : 1,
-    "author" : "xcode"
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
+    "author" : "xcode",
+    "version" : 1
   }
 }
