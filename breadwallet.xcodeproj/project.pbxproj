@@ -5203,7 +5203,7 @@
 			repositoryURL = "https://github.com/atmcoin/cash-ui-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
+				minimumVersion = 1.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
