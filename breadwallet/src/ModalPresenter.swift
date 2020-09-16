@@ -560,11 +560,6 @@ class ModalPresenter: Subscriber, Trackable {
             MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [weak self] in
                 self?.presentFaq()
             },
-                        
-            // Rewards
-            MenuItem(title: S.Settings.rewards, icon: MenuItem.Icon.rewards) { [weak self] in
-                self?.presentPlatformWebViewController("/rewards")
-            },
             
             // About
             MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {

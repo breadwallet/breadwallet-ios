@@ -23,7 +23,13 @@ class MenuCell: SeparatorCell {
     func set(item: MenuItem) {
         textLabel?.text = item.title
         textLabel?.font = .customBody(size: 16.0)
-        textLabel?.textColor = .white
+        // Disable Support for now. Not moving to an extension as it will be enabled in the future
+        if item.title == S.MenuButton.support {
+            textLabel?.textColor = .gray
+            isUserInteractionEnabled = false
+        } else {
+            textLabel?.textColor = .white
+        }
         
         imageView?.image = item.icon
         imageView?.tintColor = Theme.accent
