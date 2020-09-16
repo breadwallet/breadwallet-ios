@@ -11,7 +11,7 @@ import UIKit
 struct MenuItem {
     
     enum Icon {
-        static let scan = UIImage(named: "scan")
+        static let scan = UIImage(named: "qrcode")
         static let wallet = UIImage(named: "wallet")
         static let preferences = UIImage(named: "prefs")
         static let security = UIImage(named: "security")
