@@ -127,7 +127,8 @@ class Sender: Subscriber {
     }
 
     func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil) -> SenderValidationResult {
-        assert(transfer == nil)
+        // Dismissing the views when sending will cause transfer to be non nil. This fixes a crash
+        transfer = nil
         let result = validate(address: address, amount: amount)
         guard case .ok = result else { return result }
 
