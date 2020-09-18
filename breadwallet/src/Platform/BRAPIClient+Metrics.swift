@@ -67,14 +67,7 @@ extension BRAPIClient {
     }
     
     private func sendMetrics(payload: MetricsPayload) {
-        guard let data = try? JSONEncoder().encode(payload) else { return }
-        var req = URLRequest(url: self.url("/me/metrics"))
-        req.httpMethod = "POST"
-        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        req.setValue("application/json", forHTTPHeaderField: "Accept")
-        req.httpBody = data
-        self.dataTaskWithRequest(req, authenticated: true, handler: { _, _, _ in
-        }).resume()
+        // Do not send any metrics
     }
     
     private var bundles: [String: String] {
