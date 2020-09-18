@@ -497,6 +497,9 @@
 		CEE20C341EA5B4550086F724 /* ArticleIds.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C331EA5B4550086F724 /* ArticleIds.swift */; };
 		CEE20C361EA5B4620086F724 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C351EA5B4620086F724 /* Constants.swift */; };
 		CEE20C381EA5B4680086F724 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
+		CEE218BB21026BAB00399231 /* PigeonTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA0470E20FD073C00F2694A /* PigeonTest.swift */; };
+		CEE218BC2102719F00399231 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7C377EBF20F64ECE00E8CF1C /* SwiftProtobuf.framework */; };
+		CEE218E021066BFF00399231 /* LinkWalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE218DF21066BFF00399231 /* LinkWalletViewController.swift */; };
 		CEE6282A1EA98B6D001035AA /* DispatchQueue+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE628291EA98B6D001035AA /* DispatchQueue+Additions.swift */; };
 		CEE659E71F65A936001FF29D /* RetryTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE659E61F65A936001FF29D /* RetryTimer.swift */; };
 		CEE65DF01E39056F0002994D /* Rate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE65DEF1E39056F0002994D /* Rate.swift */; };
@@ -557,6 +560,7 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
+
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
