@@ -16,26 +16,30 @@ enum FeeLevel: Int {
     
     //Time in millis
     func preferredTime(forCurrency currency: Currency) -> Int {
-
-        //Eth == 1min
-        if currency.isEthereumCompatible {
-            return Int(C.secondsInMinute) * 1 * 1000 // 1 mins
-        }
-
-        //All others == 3 mins
-        guard currency.uid == Currencies.btc.uid else {
-            return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
+        
+        if currency.uid == Currencies.btc.uid {
+            switch self {
+            case .economy:
+                return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
+            case .regular:
+                return Int(C.secondsInMinute) * 30 * 1000 //30 mins
+            case .priority:
+                return Int(C.secondsInMinute) * 10 * 1000 //10 mins
+            }
         }
         
-        //BTC is custom
-        switch self {
-        case .economy:
-            return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
-        case .regular:
-            return Int(C.secondsInMinute) * 30 * 1000 //30 mins
-        case .priority:
-            return Int(C.secondsInMinute) * 10 * 1000 //10 mins
+        if currency.isEthereumCompatible {
+            switch self {
+            case .economy:
+                return Int(C.secondsInMinute) * 5 * 1000
+            case .regular:
+                return Int(C.secondsInMinute) * 3 * 1000
+            case .priority:
+                return Int(C.secondsInMinute) * 1 * 1000
+            }
         }
+        
+        return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
     }
 }
 
