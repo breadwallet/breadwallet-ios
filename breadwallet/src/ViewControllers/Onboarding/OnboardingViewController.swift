@@ -344,15 +344,15 @@ class OnboardingViewController: UIViewController {
                                     subheading: "", 
                                     videoClip: ""))
         
-        pages.append(OnboardingPage(heading: S.OnboardingScreen.pageTwoTitle,
-                                    subheading: S.OnboardingScreen.pageTwoSubtitle,
+        pages.append(OnboardingPage(heading: "",
+                                    subheading: "",
                                     videoClip: "onboarding-video-globe"))
             
         pages.append(OnboardingPage(heading: S.OnboardingScreen.pageThreeTitle,
-                           subheading: S.OnboardingScreen.pageThreeSubtitle,
+                           subheading: "",
                            videoClip: "onboarding-video-coins-in"))
             
-        pages.append(OnboardingPage(heading: S.OnboardingScreen.pageFourTitle,
+        pages.append(OnboardingPage(heading: "",
                            subheading: "",
                            videoClip: "onboarding-video-coins-out"))
     }
@@ -745,6 +745,8 @@ class OnboardingViewController: UIViewController {
                                         // update the title and animate the top & bottom buttons back into view
                                         self.topButton.title = self.topButtonText(pageIndex: nextIndex)
                                         self.bottomButton.title = self.bottomButtonText(pageIndex: nextIndex)
+                                        self.topButton.isHidden = true
+                                        self.bottomButton.backgroundColor = UIColor.primaryButton
                                         
                                         UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4, animations: { 
                                             self.topButtonAnimationConstraint?.constant = self.buttonsVisibleYOffset
@@ -847,7 +849,7 @@ class OnboardingViewController: UIViewController {
         super.viewDidLoad()
         
         navigationController?.isNavigationBarHidden = true
-        view.backgroundColor = Theme.primaryBackground
+        view.backgroundColor = .black
                 
         setUpLogo()
         setUpPages()

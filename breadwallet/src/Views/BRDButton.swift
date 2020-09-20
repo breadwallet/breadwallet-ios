@@ -55,6 +55,15 @@ class BRDButton: UIControl {
     private let label = UILabel()
     private let cornerRadius: CGFloat = 2.0
     private var imageView: UIImageView?
+    
+    override var backgroundColor: UIColor? {
+        get {
+            return container.backgroundColor
+        }
+        set {
+            container.backgroundColor = newValue
+        }
+    }
 
     override var isHighlighted: Bool {
         didSet {
