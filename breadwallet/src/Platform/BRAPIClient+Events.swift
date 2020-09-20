@@ -216,7 +216,7 @@ class AnalyticsEventListener {
 
     private func syncEventsToServer() {
         guard isWalletReady else { return }
-        eventManager?.uploadEvents()
+        // Do not upload events to server
     }
     
     private func pushEvent(eventName: String, attributes: [String: String]) {
