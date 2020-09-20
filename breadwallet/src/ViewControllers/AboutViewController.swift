@@ -53,16 +53,8 @@ class AboutViewController: UIViewController {
         
         let verticalMargin = (E.isIPhone6OrSmaller) ? C.padding[1] : C.padding[2]
         
-        walletID.constrain([
-            walletID.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: verticalMargin),
-            walletID.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            walletID.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
-        blog.constrain([
-            blog.topAnchor.constraint(equalTo: walletID.bottomAnchor, constant: verticalMargin),
-            blog.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            blog.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         twitter.constrain([
-            twitter.topAnchor.constraint(equalTo: blog.bottomAnchor, constant: verticalMargin),
+            twitter.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: verticalMargin),
             twitter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             twitter.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         reddit.constrain([
@@ -92,17 +84,14 @@ class AboutViewController: UIViewController {
     }
 
     private func setActions() {
-        blog.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://brd.com/blog/")
-        }
         twitter.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://twitter.com/brdhq")
+            myself.presentURL(string: "https://twitter.com/Coinsquare")
         }
         reddit.button.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://reddit.com/r/brdapp/")
+            myself.presentURL(string: "https://reddit.com/r/coinsquare/")
         }
         privacy.tap = strongify(self) { myself in
-            myself.presentURL(string: "https://brd.com/privacy")
+            myself.presentURL(string: "https://www.just.cash/privacy-policy.html")
         }
     }
 

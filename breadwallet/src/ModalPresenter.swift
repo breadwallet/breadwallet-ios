@@ -480,11 +480,6 @@ class ModalPresenter: Subscriber, Trackable {
             btcMenu,
             bchMenu,
             ethMenu,
-
-            // Share Anonymous Data
-            MenuItem(title: S.Settings.shareData, callback: {
-                menuNav.pushViewController(ShareDataViewController(), animated: true)
-            }),
             
             // Reset Wallets
             MenuItem(title: S.Settings.resetCurrencies, callback: { [weak self] in
