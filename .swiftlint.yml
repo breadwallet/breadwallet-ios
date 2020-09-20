@@ -7,6 +7,8 @@ disabled_rules:
   - force_cast
   - force_try
   - empty_count
+  - line_length
+
 
 opt_in_rules:
   - empty_count
@@ -20,11 +22,6 @@ excluded:
   - breadwalletUITests
   - breadwallet/src/Constants/Strings.swift
   - breadwallet/*.pb.swift # ProtoBuf generated files
-
-line_length:
-    warning: 170
-    ignores_comments: true
-    ignores_urls: true
 
 function_body_length:
     warning: 300
