@@ -13,13 +13,13 @@ import WalletKit
 import CloudKit
 
 private var WalletSecAttrService: String {
-    if E.isRunningTests { return "com.brd.testnetQA.tests" }
+    if E.isRunningTests { return "cash.just.testnetQA.tests" }
     #if TESTNET
-    return "com.brd.testnetQA"
+    return "cash.just.testnetQA"
     #elseif INTERNAL
-    return "com.brd.internalQA"
+    return "cash.just.internalQA"
     #else
-    return "org.voisine.breadwallet"
+    return "cash.just.breadwallet"
     #endif
 }
 
