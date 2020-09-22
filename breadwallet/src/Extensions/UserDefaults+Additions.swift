@@ -349,7 +349,7 @@ extension UserDefaults {
     }
 
     static var shouldShowBRDCellHighlight: Bool {
-        get { return !defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
+        get { return defaults.bool(forKey: shouldHideBRDCellHighlightKey)   }
         set { defaults.set(!newValue, forKey: shouldHideBRDCellHighlightKey) }
     }
     
