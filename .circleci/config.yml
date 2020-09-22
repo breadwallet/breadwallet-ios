@@ -125,8 +125,8 @@ jobs:
             git commit -m "circleci build"
             mkdir build
             cp .circleci/config/exportOptions.plist build
-            ./scripts/makebuild.sh 4.0 44 ci  
-            
+            ./scripts/makebuild.sh 4.3.${CIRCLE_BUILD_NUM} ${CIRCLE_BUILD_NUM} ci
+            ./scripts/uploadbuild.sh ${CIRCLE_BRANCH}
             
       - run:
           name: xcodebuild  build (disabled)
