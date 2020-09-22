@@ -49,7 +49,7 @@
 /* Error alert title */
 "Alert.error" = "Erreur";
 /* Keystore error */
-"Alert.keystore.generic.android" = "Un problème est survenu avec votre keystore Android OS, veuillez contacter support@breadwallet.com";
+"Alert.keystore.generic.android" = "Un problème est survenu avec votre keystore Android OS, veuillez contacter support@coinsquare.com";
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Vos données cryptées de Coinsquare ont été récemment invalidées, car le verrouillage de l'écran de votre appareil Android a été désactivé.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
@@ -443,7 +443,7 @@
 /* Node Selector view title */
 "NodeSelector.title" = "Nœuds Bitcoin";
 /* Onboarding screen 'I'll browse first' button */
-"Onboarding.browseFirst" = "Je vais d'abord explorer le site";
+"Onboarding.browseFirst" = "Configurer le portefeuille";
 /* Onboarding screen 'Buy some coin' button */
 "Onboarding.buyCoin" = "Acheter de la monnaie";
 /* Onboarding screen 'Get started' (create new wallet) button */
@@ -457,9 +457,9 @@
 /* Onboarding screen Page 4 title */
 "OnboardingPageFour.title" = "Commencez à investir dès aujourd'hui avec seulement 50 $ !";
 /* Onboarding screen Page 1 title */
-"OnboardingPageOne.title" = "Bienvenue dans votre nouveau portefeuille d'actifs numériques!";
+"OnboardingPageOne.title" = "Bienvenue dans votre portefeuille de monnaie virtuelle compatible ATM!";
 /* Onboarding screen Page 3 subtitle */
-"OnboardingPageThree.subtitle" = "Investissez et diversifiez facilement et en toute sécurité avec Coinsquare.";
+"OnboardingPageThree.subtitle" = "Envoyer et recevoir facilement et en toute sécurité avec Coinsquare.";
 /* Onboarding screen Page 3 title */
 "OnboardingPageThree.title" = "Achetez et vendez des bitcoins, des tokens, et d'autres monnaies électroniques.";
 /* Onboarding screen Page 2 subtitle */
