@@ -269,6 +269,56 @@ extension Currency {
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
 }
 
+// MARK: - Confirmation times
+
+extension Currency {
+    func feeText(forIndex index: Int) -> String {
+        if isEthereumCompatible {
+            return ethFeeText(forIndex: index)
+        } else if isBitcoinCompatible {
+            return btcFeeText(forIndex: index)
+        } else {
+            return String(format: S.Confirmation.processingTime, S.FeeSelector.ethTime)
+        }
+    }
+    
+    private func ethFeeText(forIndex index: Int) -> String {
+        
+        switch index {
+        case 0:
+            return String(format: S.FeeSelector.estimatedDelivery, timeString(forMinutes: 6))
+        case 1:
+            return String(format: S.FeeSelector.estimatedDelivery, timeString(forMinutes: 4))
+        case 2:
+            return String(format: S.FeeSelector.estimatedDelivery, timeString(forMinutes: 2))
+        default:
+            return ""
+        }
+    }
+    
+    private func timeString(forMinutes minutes: Int) -> String {
+        let duration: TimeInterval = Double(minutes * 60)
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .brief
+        formatter.allowedUnits = [.minute]
+        formatter.zeroFormattingBehavior = [.dropLeading]
+        return formatter.string(from: duration) ?? ""
+    }
+    
+    private func btcFeeText(forIndex index: Int) -> String {
+        switch index {
+        case 0:
+            return String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.economyTime)
+        case 1:
+            return String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.regularTime)
+        case 2:
+            return String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.priorityTime)
+        default:
+            return ""
+        }
+    }
+}
+
 // MARK: - Images
 
 extension CurrencyWithIcon {

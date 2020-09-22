@@ -26,7 +26,7 @@ class AmountViewController: UIViewController, Trackable {
             let title = currency.defaultUnitName
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
-        self.feeSelector = FeeSelector()
+        self.feeSelector = FeeSelector(currency: currency)
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
                                            maxDigits: Int(currency.defaultUnit.decimals),
