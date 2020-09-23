@@ -32,6 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         applicationController.launch(application: application, options: launchOptions)
         CoreSessionManager.shared.start(url: AppDelegate.url)
         CoreSessionManager.shared.delegate = self
+        NotificationCenter.default.addObserver(self, selector:#selector(handleSessionFailure), name: NSNotification.Name.CoreSessionDidFail, object: nil)
         return true
     }
 
@@ -111,4 +112,17 @@ extension AppDelegate: CoreSessionManagerDelegate {
         })
     }
     
+}
+
+extension AppDelegate {
+    
+    @objc func handleSessionFailure(_ notification: NSNotification) {
+        let error = notification.object as! CashCoreError
+        let alertController = UIAlertController(title: "Error", message: error.message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            
+        })
+        let root = window?.rootViewController as! RootNavigationController
+        root.topViewController?.presentedViewController?.present(alertController, animated: true, completion: nil)
+    }
 }

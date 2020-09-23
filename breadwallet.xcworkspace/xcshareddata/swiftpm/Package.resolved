@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/atmcoin/cash-sdk-ios.git",
         "state": {
           "branch": null,
-          "revision": "16cb2d34315fe6061c6783d68024cbc98c5c8d8b",
-          "version": "3.0.1"
+          "revision": "c66e8dc0687b0226a096ebf2b886eeec07f69b92",
+          "version": "3.0.2"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/atmcoin/cash-ui-ios.git",
         "state": {
           "branch": null,
-          "revision": "1ab023bbcaadcec27a59ea6253720b55712af151",
-          "version": "1.0.4"
+          "revision": "4a6183074d7568e9bbfa88f4949c4f94d89a0944",
+          "version": "1.0.5"
         }
       },
       {
