@@ -618,6 +618,7 @@ enum S {
         static let regularTime = NSLocalizedString("FeeSelector.regularTime", value: "10-60 minutes", comment: "E.g. [This transaction is predicted to complete in] 10-60 minutes")
         static let priorityTime = NSLocalizedString("FeeSelector.priorityTime", value: "10-30 minutes", comment: "E.g. [This transaction is predicted to complete in] 10-30 minutes")
         static let ethTime = NSLocalizedString("FeeSelector.ethTime", value: "2-5 minutes", comment: "E.g. [This transaction is predicted to complete in] 2-5 minutes")
+        static let lessThanMinutes = NSLocalizedString("FeeSelector.lessThanMinutes", value: "&lt;%1$d minutes", comment: "")
     }
 
     enum Confirmation {

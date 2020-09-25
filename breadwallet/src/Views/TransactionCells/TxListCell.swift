@@ -133,7 +133,9 @@ class TxListCell: UITableViewCell {
             timestamp.leadingAnchor.constraint(equalTo: leadingXAnchor, constant: C.padding[2])])
         descriptionLabel.constrain([
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[2]),
-            descriptionLabel.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor)])
+            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(lessThanOrEqualTo: amount.leadingAnchor, constant: -C.padding[2])
+        ])
         pendingConstraints = [
             descriptionLabel.centerYAnchor.constraint(equalTo: statusIndicator.centerYAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: statusIndicator.trailingAnchor, constant: C.padding[1]),
@@ -154,7 +156,6 @@ class TxListCell: UITableViewCell {
         amount.constrain([
             amount.topAnchor.constraint(equalTo: contentView.topAnchor),
             amount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            amount.leadingAnchor.constraint(equalTo: descriptionLabel.trailingAnchor, constant: C.padding[2]),
             amount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2])])
         separator.constrainBottomCorners(height: 0.5)
     }
@@ -162,8 +163,7 @@ class TxListCell: UITableViewCell {
     private func setupStyle() {
         selectionStyle = .none
         amount.textAlignment = .right
-        amount.setContentHuggingPriority(.required, for: .horizontal)
-        timestamp.setContentHuggingPriority(.required, for: .vertical)
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         descriptionLabel.lineBreakMode = .byTruncatingTail
         
         failedIndicator.setTitle(S.Transaction.failed, for: .normal)

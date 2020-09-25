@@ -65,7 +65,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         formatter.isLenient = true
         formatter.numberStyle = .currency
         formatter.generatesDecimalNumbers = true
-        formatter.negativeFormat = formatter.positiveFormat.replacingCharacters(in: formatter.positiveFormat.range(of: "#")!, with: "-#")
         return formatter
     }()
 

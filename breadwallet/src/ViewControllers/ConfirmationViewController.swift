@@ -174,18 +174,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         address.text = addressText
         address.lineBreakMode = .byTruncatingMiddle
 
-        if currency.isBitcoinCompatible {
-            switch displayFeeLevel {
-            case .regular:
-                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.regularTime)
-            case .economy:
-                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.economyTime)
-            case .priority:
-                processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.priorityTime)
-            }
-        } else {
-            processingTime.text = String(format: S.Confirmation.processingTime, S.FeeSelector.ethTime)
-        }
+        processingTime.text = currency.feeText(forIndex: displayFeeLevel.rawValue)
 
         sendLabel.text = S.Confirmation.amountLabel
         sendLabel.adjustsFontSizeToFitWidth = true

@@ -16,4 +16,8 @@ extension Date {
     func hasEqualMonth(_ date: Date) -> Bool {
         return Calendar.current.compare(self, to: date, toGranularity: .month) == .orderedSame
     }
+    
+    func hasEqualDay(_ date: Date) -> Bool {
+        return Calendar.current.compare(self, to: date, toGranularity: .day) == .orderedSame
+    }
 }

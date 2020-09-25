@@ -43,12 +43,6 @@ enum StatusIcon {
 @available(iOS 13.0, *)
 struct TxStatusIcon: View {
     
-    @SwiftUI.State private var isAnimating = false
-    var foreverAnimation: Animation {
-        Animation.linear(duration: 2.0)
-            .repeatForever(autoreverses: false)
-    }
-    
     let status: StatusIcon
     
     var body: some View {
