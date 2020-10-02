@@ -253,7 +253,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
             self.dismiss(animated: true, completion: {
                 Store.perform(action: LoginSuccess())
                 if case .initialLaunch(let loginHandler) = self.context {
-                    guard let account = account else { return assertionFailure() }
+                    guard let account = account else { return }//assertionFailure() }
                     loginHandler(account)
                 }
             })
