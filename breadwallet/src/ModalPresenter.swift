@@ -553,7 +553,7 @@ class ModalPresenter: Subscriber, Trackable {
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [weak self] in
-                self?.presentFaq()
+                self?.presentSupportPages()
             },
             
             // About
@@ -1164,6 +1164,12 @@ extension ModalPresenter {
     func presentActivity() {
         let vc = CashUI.ActivityViewController()
         self.topViewController?.present(vc, animated: true, completion: nil)
+    }
+    
+    func presentSupportPages() {
+        let storyboard = UIStoryboard(name: "SupportListStoryboard", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "SupportListViewController")
+        self.menuNavController!.pushViewController(vc, animated: true)
     }
 }
 

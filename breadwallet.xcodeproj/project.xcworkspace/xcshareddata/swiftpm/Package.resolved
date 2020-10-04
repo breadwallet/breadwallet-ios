@@ -2,6 +2,24 @@
   "object": {
     "pins": [
       {
+        "package": "CashCore",
+        "repositoryURL": "https://github.com/atmcoin/cash-sdk-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "a6f84c05e3806ef74e226a931cc57bf5f4585376",
+          "version": "4.0.0"
+        }
+      },
+      {
+        "package": "CashUI",
+        "repositoryURL": "https://github.com/atmcoin/cash-ui-ios.git",
+        "state": {
+          "branch": null,
+          "revision": "1783de61ae878acc695b46f3b9c79e3142b67d7f",
+          "version": "2.0.0"
+        }
+      },
+      {
         "package": "CoinGecko",
         "repositoryURL": "https://github.com/breadwallet/CoinGecko",
         "state": {

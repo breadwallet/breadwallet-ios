@@ -339,6 +339,8 @@
 		B379B96725101BB00041B859 /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95C25101BB00041B859 /* MenuView.xib */; };
 		B379B96825101BB00041B859 /* AtmInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95D25101BB00041B859 /* AtmInfoView.xib */; };
 		B379B96925101BB00041B859 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B379B95F25101BB00041B859 /* Assets.xcassets */; };
+		B3A9EA832527D32D00C18CCD /* SupportListStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */; };
+		B3A9EA862527D33400C18CCD /* support.json in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA852527D33400C18CCD /* support.json */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE08B2A320F66822009FA568 /* BRAPIClient+Pigeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */; };
@@ -1062,6 +1064,8 @@
 		B379B95C25101BB00041B859 /* MenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
 		B379B95D25101BB00041B859 /* AtmInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AtmInfoView.xib; sourceTree = "<group>"; };
 		B379B95F25101BB00041B859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SupportListStoryboard.storyboard; sourceTree = "<group>"; };
+		B3A9EA852527D33400C18CCD /* support.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = support.json; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Pigeon.swift"; path = "src/Pigeon/BRAPIClient+Pigeon.swift"; sourceTree = "<group>"; };
@@ -1877,6 +1881,7 @@
 		B379B95325101BB00041B859 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B3A9EA842527D33400C18CCD /* Other */,
 				B379B95425101BB00041B859 /* XIB */,
 				B379B95E25101BB00041B859 /* Assets */,
 			);
@@ -1886,6 +1891,7 @@
 		B379B95425101BB00041B859 /* XIB */ = {
 			isa = PBXGroup;
 			children = (
+				B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */,
 				B379B95525101BB00041B859 /* SendVerificationView.xib */,
 				B379B95625101BB00041B859 /* ActivityView.xib */,
 				B379B95725101BB00041B859 /* AtmLocationsView.xib */,
@@ -1905,6 +1911,14 @@
 				B379B95F25101BB00041B859 /* Assets.xcassets */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		B3A9EA842527D33400C18CCD /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				B3A9EA852527D33400C18CCD /* support.json */,
+			);
+			path = Other;
 			sourceTree = "<group>";
 		};
 		CE08B2A120F66807009FA568 /* Pigeon */ = {
@@ -2752,6 +2766,7 @@
 				9AE800EE21FFF81F00D5058C /* rewardsIcon-46.gif in Resources */,
 				9A926F5122034B3800CC2263 /* CellHighlight-83.png in Resources */,
 				9A926F7B22034B3800CC2263 /* CellHighlight-79.png in Resources */,
+				B3A9EA832527D32D00C18CCD /* SupportListStoryboard.storyboard in Resources */,
 				9AE8010621FFF81F00D5058C /* rewardsIcon-67.gif in Resources */,
 				9AE800F221FFF81F00D5058C /* rewardsIcon-61.gif in Resources */,
 				9A926F6322034B3800CC2263 /* CellHighlight-76.png in Resources */,
@@ -2868,6 +2883,7 @@
 				9A926F8322034B3800CC2263 /* CellHighlight-70.png in Resources */,
 				9A926F5C22034B3800CC2263 /* CellHighlight-16.png in Resources */,
 				9A926F7022034B3800CC2263 /* CellHighlight-1.png in Resources */,
+				B3A9EA862527D33400C18CCD /* support.json in Resources */,
 				9A926F4E22034B3800CC2263 /* CellHighlight-71.png in Resources */,
 				9AE800E621FFF81F00D5058C /* rewardsIcon-21.gif in Resources */,
 				9A926F5022034B3800CC2263 /* CellHighlight-80.png in Resources */,
@@ -5181,7 +5197,7 @@
 			repositoryURL = "https://github.com/atmcoin/cash-ui-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 2.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
