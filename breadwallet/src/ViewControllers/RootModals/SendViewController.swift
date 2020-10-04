@@ -56,6 +56,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
     private var attributeCellHeight: NSLayoutConstraint?
+    private let confirmTransitioningDelegate = PinTransitioningDelegate()
     private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
     private let sender: Sender
     private let currency: Currency
