@@ -389,18 +389,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             if let destinationTag = tag {
                 attributeCell?.setContent(destinationTag)
             }
-        case .failure(let error):
+        case .failure(_):
             if shouldShowError {
-                switch error {
-                case .badResponse:
-                    showErrorMessage(S.PayId.invalidPayID)
-                case .currencyNotSupported:
-                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
-                case .invalidAddress:
-                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
-                case .invalidPayID:
-                    showErrorMessage(S.PayId.invalidPayID)
-                }
+                showErrorMessage(type == .fio ? S.FIO.invalid : S.PayId.invalidPayID)
             }
             self.resetPayId()
         }
