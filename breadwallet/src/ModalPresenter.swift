@@ -117,10 +117,6 @@ class ModalPresenter: Subscriber, Trackable {
                 self?.showAccountView(currency: currency, animated: true, completion: nil)
             }
         })
-        Store.subscribe(self, name: .promptLinkWallet(WalletPairingRequest.empty)) { [weak self] in
-            guard case .promptLinkWallet(let pairingRequest)? = $0 else { return }
-            self?.linkWallet(pairingRequest: pairingRequest)
-        }
         
         // Push Notifications Permission Request
         Store.subscribe(self, name: .registerForPushNotificationToken) { [weak self]  _ in
@@ -214,8 +210,6 @@ class ModalPresenter: Subscriber, Trackable {
             return nil
         case .send(let currency):
             return makeSendView(currency: currency)
-        case .sendForRequest(let request):
-            return makeSendView(forRequest: request)
         case .receive(let currency):
             return makeReceiveView(currency: currency, isRequestAmountVisible: (currency.urlSchemes?.first != nil))
         case .loginScan:
@@ -251,41 +245,6 @@ class ModalPresenter: Subscriber, Trackable {
             guard let btc = Currencies.btc.instance else { return nil }
             return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
         }
-    }
-
-    private func makeSendView(forRequest request: PigeonRequest) -> UIViewController? {
-        //TODO:CRYPTO pigeon
-        return nil
-        /*
-        guard let walletManager = walletManagers[request.currency.code] else { return nil }
-        guard let kvStore = Backend.kvStore else { return nil }
-        guard let sender = request.currency.createSender(authenticator: keyStore, walletManager: walletManager, kvStore: kvStore) else { return nil }
-        if let ethSender = sender as? EthereumSender {
-            ethSender.checkoutCustomGasPrice = request.txFee?.rawValue
-            ethSender.checkoutCustomGasLimit = request.txSize
-        }
-        let checkoutVC = CheckoutConfirmationViewController(request: request, sender: sender)
-        checkoutVC.presentVerifyPin = { [weak self, weak checkoutVC] bodyText, success in
-            guard let `self` = self else { return }
-            let vc = VerifyPinViewController(bodyText: bodyText,
-                                             pinLength: Store.state.pinLength,
-                                             walletAuthenticator: self.keyStore,
-                                             pinAuthenticationType: .transactions,
-                                             success: success)
-            vc.didCancel = {
-                sender.reset()
-            }
-            vc.transitioningDelegate = self.verifyPinTransitionDelegate
-            vc.modalPresentationStyle = .overFullScreen
-            vc.modalPresentationCapturesStatusBarAppearance = true
-            checkoutVC?.present(vc, animated: true, completion: nil)
-        }
-        checkoutVC.onPublishSuccess = { [weak self] in
-         // TODO: see AlertPresenter.presentAlert()
-            self?.presentAlert(.sendSuccess, completion: {})
-        }
-        return checkoutVC
-         */
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {
@@ -356,15 +315,7 @@ class ModalPresenter: Subscriber, Trackable {
                     self.presentKeyImport(wallet: wallet, scanResult: scanResult)
                 }
             case .deepLink(let url):
-                if let params = url.queryParameters,
-                    let pubKey = params["publicKey"],
-                    let identifier = params["id"],
-                    let service = params["service"] {
-                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, identifier: identifier, service: service, returnToURL: nil)))
-                } else {
-                    UIApplication.shared.open(url)
-                }
+                UIApplication.shared.open(url)
             case .invalid:
                 break
             }
@@ -690,13 +641,6 @@ class ModalPresenter: Subscriber, Trackable {
                                             UserDefaults.resetAll()
                                             menuNav.showAlert(title: "", message: "User defaults reset")
                                             (menuNav.topViewController as? MenuViewController)?.reloadMenu()
-            }))
-
-            developerItems.append(MenuItem(title: "Reset EME Paired Wallets",
-                                           accessoryText: { "\(Backend.pigeonExchange?.pairedWallets?.pubKeys.count ?? 0)" },
-                                           callback: {
-                                            Backend.pigeonExchange?.resetPairedWallets()
-                                            menuNav.showAlert(title: "", message: "Paired wallets reset")
             }))
 
             developerItems.append(MenuItem(title: "Clear Core persistent storage and exit",
@@ -1115,17 +1059,6 @@ class ModalPresenter: Subscriber, Trackable {
     private func showEmailLogsModal() {
         self.messagePresenter.presenter = self.topViewController
         self.messagePresenter.presentEmailLogs()
-    }
-    
-    private func linkWallet(pairingRequest: WalletPairingRequest) {
-        guard let top = topViewController else { return }
-        Backend.apiClient.fetchServiceInfo(serviceID: pairingRequest.service, callback: { serviceDefinition in
-            guard let serviceDefinition = serviceDefinition else { return self.showLightWeightAlert(message: "Could not retreive service definition"); }
-            DispatchQueue.main.async {
-                let alert = LinkWalletViewController(pairingRequest: pairingRequest, serviceDefinition: serviceDefinition)
-                top.present(alert, animated: true, completion: nil)
-            }
-        })
     }
 }
 
