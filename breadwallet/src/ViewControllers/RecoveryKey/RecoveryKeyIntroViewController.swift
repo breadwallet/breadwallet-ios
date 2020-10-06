@@ -255,9 +255,14 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
         
         didSet {
             if let paging = pagingView {
-                paging.scrollToItem(at: IndexPath(item: self.pageIndex, section: 0),
-                                    at: UICollectionView.ScrollPosition.left,
-                                    animated: true)
+                //scrollToItem is broken in the GM build of xcode 12. Check if later versions fix this
+//                paging.scrollToItem(at: IndexPath(item: self.pageIndex, section: 0),
+//                                    at: UICollectionView.ScrollPosition.left,
+//                                    animated: true)
+                if let rect = paging.layoutAttributesForItem(at: IndexPath(item: pageIndex, section: 0))?.frame {
+                    paging.scrollRectToVisible(rect, animated: true)
+                }
+                
                 // Let the scrolling animation run for a slight delay, then update the continue
                 // button text if needed, and show the key-use info view. Doing a custom UIView animation
                 // for the paging causes the page content to disappear before the next page cell animates in.
@@ -460,7 +465,6 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
     private func setUpContinueButton() {
         continueButton.layer.cornerRadius = 2.0
         continueButton.tap = { [unowned self] in
-            
             if self.mode == .unlinkWallet {
                 self.exit(action: .unlinkWallet)
             } else {
@@ -474,8 +478,12 @@ class RecoveryKeyIntroViewController: BaseRecoveryKeyViewController {
     }
     
     private func setUpConstraints() {
-        
-        pagingViewContainer.constrain(toSuperviewEdges: .zero)
+        pagingViewContainer.constrain([
+            pagingViewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            pagingViewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pagingViewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            pagingViewContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
         
         if let paging = pagingView {
             paging.constrain(toSuperviewEdges: .zero)

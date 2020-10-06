@@ -20,7 +20,7 @@ enum StatusIcon {
         switch self {
         case .sent: return "sendArrow"
         case .received: return "receivedArrow"
-        case .pending(_): return "pendingIndicator"
+        case .pending: return "pendingIndicator"
         case .failed: return "failed"
         }
     }
@@ -32,7 +32,7 @@ enum StatusIcon {
             return Color(UIColor.fromHex("EFEFF2"))
         case .received:
             return Color(Theme.success).opacity(0.16)
-        case .pending(_):
+        case .pending:
             return Color(Theme.accent).opacity(0.16)
         case .failed:
             return Color(Theme.error).opacity(0.16)

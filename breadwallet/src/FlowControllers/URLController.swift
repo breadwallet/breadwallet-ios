@@ -85,19 +85,7 @@ class URLController: Trackable, Subscriber {
             switch target {
             case "scanqr":
                 Store.trigger(name: .scanQr)
-                
-            case "link-wallet":
-                if let params = url.queryParameters,
-                    let pubKey = params["publicKey"],
-                    let identifier = params["id"],
-                    let service = params["service"] {
-                    let returnToURL = URL(string: params["return-to"] ?? "")
-                    print("[EME] PAIRING REQUEST | pubKey: \(pubKey) | identifier: \(identifier) | service: \(service)")
-                    Store.trigger(name: .promptLinkWallet(WalletPairingRequest(publicKey: pubKey, 
-                                                                               identifier: identifier, 
-                                                                               service: service,
-                                                                               returnToURL: returnToURL)))
-                }
+
             case "platform":
                 // grab the rest of the URL, e.g., /exchange/buy/coinify
                 let path = url.pathComponents[3...].joined(separator: "/")

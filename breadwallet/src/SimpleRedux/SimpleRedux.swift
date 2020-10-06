@@ -66,8 +66,6 @@ enum TriggerName {
     case wipeWalletNoPrompt
     case didFetchAnnouncements([Announcement])
     case showCurrency(Currency?)
-    case promptLinkWallet(WalletPairingRequest)
-    case linkWallet(WalletPairingRequest, Bool, PairingCompletionHandler) // request, accepted, callback
     case fetchInbox
     case optInSegWit
     case openPlatformUrl(String)
@@ -131,10 +129,6 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didFetchAnnouncements, .didFetchAnnouncements):
         return true
     case (.showCurrency, .showCurrency):
-        return true
-    case (.promptLinkWallet, .promptLinkWallet):
-        return true
-    case (.linkWallet, .linkWallet):
         return true
     case (.fetchInbox, .fetchInbox):
         return true
