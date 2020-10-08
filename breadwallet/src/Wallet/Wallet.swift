@@ -102,6 +102,7 @@ class Wallet {
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return }
         let networkFee = feeForLevel(level: fee)
+        //TODO:TEZOS add attributes param Set<TransferAttribute>?
         core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: nil, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)

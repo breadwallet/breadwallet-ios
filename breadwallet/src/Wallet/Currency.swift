@@ -232,7 +232,11 @@ class Currency: CurrencyWithIcon {
         self.core = core
         self.network = network
         self.metaData = metaData
-        self.units = Dictionary(uniqueKeysWithValues: units.lazy.map { ($0.name.lowercased(), $0) })
+        self.units = Array(units).reduce([String: CurrencyUnit]()) { (dict, unit) -> [String: CurrencyUnit] in
+            var dict = dict
+            dict[unit.name.lowercased()] = unit
+            return dict
+        }
         self.baseUnit = baseUnit
         self.defaultUnit = defaultUnit
     }
