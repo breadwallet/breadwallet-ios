@@ -160,7 +160,7 @@ private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([C
                                tokenAddress: nil,
                                decimals: 8,
                                alternateCode: nil,
-                               coinGeckoId: nil)
+                               coinGeckoId: "tezos")
     
     currencyMetaData[tst.uid] = tst
     currencyMetaData[bsv.uid] = bsv

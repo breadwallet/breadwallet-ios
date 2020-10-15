@@ -39,6 +39,10 @@ enum FeeLevel: Int {
             }
         }
         
+        if currency.uid == "tezos-mainnet:__native__" {
+            return 60000
+        }
+        
         return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
     }
 }
