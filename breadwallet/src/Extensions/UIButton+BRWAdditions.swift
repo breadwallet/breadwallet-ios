@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CashUI
 
 extension UIButton {
     static func vertical(title: String, image: UIImage) -> UIButton {
@@ -61,11 +62,12 @@ extension UIButton {
         return UIButton.icon(image: #imageLiteral(resourceName: "Close-X-small"), accessibilityLabel: accessibilityLabel)
     }
 
-    static func buildFaqButton(articleId: String, currency: Currency? = nil, tapped: (() -> Void)? = nil) -> UIButton {
+    static func buildFaqButton(articleId: String, from controller: UIViewController? = nil, currency: Currency? = nil, tapped: (() -> Void)? = nil) -> UIButton {
         let button = UIButton.icon(image: #imageLiteral(resourceName: "Faq"), accessibilityLabel: S.AccessibilityLabels.faq)
         button.tintColor = .white
         button.tap = {
-            Store.trigger(name: .presentFaq(articleId, currency))
+            guard let cntrlr = controller else { return }
+            SupportManager.shared.presentSupportTopic(for: articleId, from: cntrlr)
             tapped?()
         }
         return button

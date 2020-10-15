@@ -9,12 +9,12 @@
 import Foundation
 
 enum ArticleIds {
-    static let displayCurrency = "display-currency"
+    static let displayCurrency = "HOW_BALANCE_WORKS"
     static let recoverWallet = "recover-wallet"
-    static let reScan = "re-scan"
-    static let securityCenter = "security-center"
+    static let reScan = "RESCAN"
+    static let securityCenter = "SECURITY_CENTER"
     static let paperKey = "paper-key"
-    static let enableTouchId = "enable-fingerprint-authentication"
+    static let enableTouchId = "FINGERPRINT"
     static let transactionDetails = "transaction-details"
     static let manageWallet = "manage-wallet"
     static let requestAmount = "request-amount"
@@ -22,8 +22,8 @@ enum ArticleIds {
     static let receiveTx = "receive-tx"
     static let walletDisabled = "wallet-disabled"
     static let resetPinWithPaperKey = "reset-pin-paper-key"
-    static let setPin = "set-pin"
-    static let importWallet = "import-wallet"
+    static let setPin = "PIN"
+    static let importWallet = "IMPORT_WALLET"
     static let writePhrase = "write-phrase"
     static let confirmPhrase = "confirm-phrase"
     static let wipeWallet = "wipe-wallet"

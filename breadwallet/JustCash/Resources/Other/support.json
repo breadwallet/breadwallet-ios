@@ -53,6 +53,12 @@
       "category_id": "GENERAL"
     },
     {
+      "id": "RESCAN",
+      "title": "When should I sync my Bitcoin wallet to the blockchain?",
+      "content": "Your COINSQUARE wallet connects directly to the bitcoin network. This improves security and privacy, but also means sometimes your wallet can get out of sync with the network.\n\nSyncing with the blockchain can take a lot of time, and usually isn't necessary. If someone sent you money and it shows as confirmed in the blockchain yet it is not appearing in your wallet, your wallet may be out of sync. First check to make sure the address the money was sent to is correct.\n\nIf you are trying to send money and constantly get error messages that your transaction was rejected, it could also mean your wallet is out of sync.\n\nIOn either of this cases, using this feature will rescan the blockchain to find your money and display it properyl in your wallet.",
+      "category_id": "GENERAL"
+    },
+    {
       "id": "PIN",
       "title": "Why do I need a PIN?",
       "content": "\t\tThe Coinsquare Wallet app requires you to set a PIN to secure your wallet, separate from your device passcode.\n\t\tYou will be required to enter this PIN to view your balance or send money, which keeps your wallet private even if you let someone use your phone or if your phone is stolen by someone who knows your device passcode.\n\t\tDo not forget your wallet PIN! It can only be reset by using your Recovery Key. If you forget your PIN and lose your Recovery Key, your wallet will be lost.",
@@ -131,6 +137,12 @@
       "category_id": "ATM"
     },
     {
+      "id": "SECURITY_CENTER",
+      "title": "What is the Security Center?",
+      "content": "The Security Center allows you to manage additional security features for your COINSQUARE app.\n\n6-digit PIN\nThis PIN is used to unlock your wallet and send money. It prevents other people from accessing your COINSQUARE app in case you let someone else use your phone.\n\nRecovery Phrase\nIf you ever lose or upgrade your phone, you will need your Recovery Phrase to restore your wallet on another device. It is not possible to recover your wallet if you lose both your phone and Recovery Phrase, so write down your Recovery Phrase and keep it safe!\nFingerpring / Touch ID\nWhile the 6-digit PIN is required to secure your wallet, you can also use your device's fingerprint reader for convenience and added security. Using your fingerprint is quicker than entering a PIN, and if people are watching you unlock your wallet they won't be able to see what your PIN is.\nThis option will only appear if your device has a fingerprint reader.",
+      "category_id": "SECURITY"
+    },
+    {
       "id": "WHY_WRITE_DOWN_RECOVERY",
       "title": "Why do I need to write down my recovery key?",
       "content": "The Coinsquare Wallet App connects directly to the cryptocurrency networks, where your wallets are stored. The \"keys\" to access your wallets are securely stored in your phone and nowhere else. The Coinsquare Wallet app will provide you with a unique \"Recovery Key,\" which is a list of 12-words which can be used to recreate the keys to your wallet. If you ever lose or upgrade your phone, this \"Recovery Key\" is required to regain access to your funds.\n\nPlease write down each word, in order, on a piece of paper. We recommend storing your Recovery Key in a safe, safety deposit box at a bank, or wherever you might keep passports, birth certificates, or other important documents. Anyone who has your Recovery Key can access your money, even if they don't have your wallet PIN, so keep it private and don't show it to others!\n",
@@ -157,19 +169,19 @@
     {
       "id": "HOW_WIPE_WALLET",
       "title": "How do I wipe my wallet?",
-      "content": "The Coinsquare Wallet App can only have one wallet active at a time. If you choose to start a new wallet or recover an existing wallet, the currently active wallet must be erased first.\n\nIMPORTANT: If you erase your wallet without writing down its Recovery Key, your money will be lost. To prevent this, you must first enter your Recovery Key for the currently active wallet to make sure you have it written down correctly.\n\nFollow these steps to wipe a wallet:\n\n\t\t 1 - Tap on Menu in the main screen.\n\t\t 2 - Select Security Settings.\n\t\t 3 - Tap on Unlink from this device and then on Next.\n\t\t 4 - Enter the current wallet’s Recovery Key.\n\t\t 5 - Tap on Wipe.\n\nThe wallet will then be erased, and you can create a new wallet or recover a previous wallet.",
+      "content": "The Coinsquare Wallet App can only have one wallet active at a time. If you choose to start a new wallet or recover an existing wallet, the currently active wallet must be erased first.\n\nIMPORTANT: If you erase your wallet without writing down its Recovery Key, your money will be lost. To prevent this, you must first enter your Recovery Key for the currently active wallet to make sure you have it written down correctly.\n\nFollow these steps to wipe a wallet:\n\n\t\t\t 1 - Tap on Menu in the main screen.\n\t\t\t 2 - Select Security Settings.\n\t\t\t 3 - Tap on Unlink from this device and then on Next.\n\t\t\t 4 - Enter the current wallet’s Recovery Key.\n\t\t\t 5 - Tap on Wipe.\n\nThe wallet will then be erased, and you can create a new wallet or recover a previous wallet.",
       "category_id": "SETTINGS"
     },
     {
       "id": "HOW_RECOVER_WALLET",
       "title": "How do I recover a previous wallet I had?",
-      "content": "When you launch the Coinsquare Wallet app for the first time, you will be given the option to create a new wallet or to recover a wallet. If you have a 12 word recovery key from a previous Coinsquare wallet that you would like to recover, follow these steps to recover your wallet:\n\n\t\t 1 - Select Restore Wallet.\n\t\t 2 - Click Next and enter the 12 word Recovery Key in the correct order for the wallet you want to recover.\n\t\t 3 - Set a PIN.\n\t\t 4 - Confirm the PIN.\n\t\t 5 - Leave the app open and on the screen to allow the wallets to sync to the blockchain.\n\nInitial syncing can take up to 45 minutes or more so please prepare to leave the app open with the screen on for an extended period of time.\nIf you wish to recover a wallet using a recovery key but you already have an active wallet loaded in the Coinsquare Wallet app, you will need to follow the directions to wipe the wallet before beginning the process above. If the wallet you are wiping has funds, be sure to write down the 12 word recovery key for the existing wallet (which can be found in the Security Center) before loading the recovery key for the wallet you wish to recover. Visit this page for help on wiping a wallet.",
+      "content": "When you launch the Coinsquare Wallet app for the first time, you will be given the option to create a new wallet or to recover a wallet. If you have a 12 word recovery key from a previous Coinsquare wallet that you would like to recover, follow these steps to recover your wallet:\n\n\t\t\t 1 - Select Restore Wallet.\n\t\t\t 2 - Click Next and enter the 12 word Recovery Key in the correct order for the wallet you want to recover.\n\t\t\t 3 - Set a PIN.\n\t\t\t 4 - Confirm the PIN.\n\t\t\t 5 - Leave the app open and on the screen to allow the wallets to sync to the blockchain.\n\nInitial syncing can take up to 45 minutes or more so please prepare to leave the app open with the screen on for an extended period of time.\nIf you wish to recover a wallet using a recovery key but you already have an active wallet loaded in the Coinsquare Wallet app, you will need to follow the directions to wipe the wallet before beginning the process above. If the wallet you are wiping has funds, be sure to write down the 12 word recovery key for the existing wallet (which can be found in the Security Center) before loading the recovery key for the wallet you wish to recover. Visit this page for help on wiping a wallet.",
       "category_id": "SETTINGS"
     },
     {
       "id": "HOW_CHANGE_CURRENCY",
       "title": "How do I change the local currency displayed in my wallet?",
-      "content": "Your Coinsquare wallet will show your cryptocurrency and its equivalent fiat value in your local currency by default. \n\n You can change this to show the value in a different local currency by following these steps:\n\n\t\t 1 - On the main screen, tap Menu.\n\t\t 2 - Select Preferences and then Display Currency.\n\t\t 3 - Choose the currency you would like to use from the list.\n",
+      "content": "Your Coinsquare wallet will show your cryptocurrency and its equivalent fiat value in your local currency by default. \n\n You can change this to show the value in a different local currency by following these steps:\n\n\t\t\t 1 - On the main screen, tap Menu.\n\t\t\t 2 - Select Preferences and then Display Currency.\n\t\t\t 3 - Choose the currency you would like to use from the list.\n",
       "category_id": "SETTINGS"
     },
     {
@@ -181,7 +193,7 @@
     {
       "id": "HOW_SELECT_NODE",
       "title": "How do I connect to a specific bitcoin node?",
-      "content": "The Coinsquare app connects to a random node on the bitcoin network when syncing your wallet. You can choose to connect to a specific node of your preference by following the steps below:\n\t\t 2 - Select Preferences and then Bitcoin Settings.\n\t\t 3 - Choose Bitcoin Nodes\n\t\t 4 - Tap Switch to Manual Mode\n\t\t 5 - Enter the Node IP address in the window that pops up.  You may also enter a port, although this is optional.  Tap OK when done.\n\nYour wallet will now sync to the blockchain via your preferred node.",
+      "content": "The Coinsquare app connects to a random node on the bitcoin network when syncing your wallet. You can choose to connect to a specific node of your preference by following the steps below:\n\t\t\t 2 - Select Preferences and then Bitcoin Settings.\n\t\t\t 3 - Choose Bitcoin Nodes\n\t\t\t 4 - Tap Switch to Manual Mode\n\t\t\t 5 - Enter the Node IP address in the window that pops up.  You may also enter a port, although this is optional.  Tap OK when done.\n\nYour wallet will now sync to the blockchain via your preferred node.",
       "category_id": "SETTING"
     },
     {

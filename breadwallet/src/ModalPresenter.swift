@@ -9,6 +9,7 @@
 import UIKit
 import LocalAuthentication
 import CashUI
+import CashCore
 
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
@@ -549,7 +550,7 @@ class ModalPresenter: Subscriber, Trackable {
                      icon: #imageLiteral(resourceName: "security"),
                      subMenu: securityItems,
                      rootNav: menuNav,
-                     faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter)),
+                     faqButton: UIButton.buildFaqButton(articleId: ArticleIds.securityCenter, from: menuNav)),
             
             // Support
             MenuItem(title: S.MenuButton.support, icon: MenuItem.Icon.support) { [weak self] in
@@ -876,7 +877,7 @@ class ModalPresenter: Subscriber, Trackable {
         let start = ImportKeyViewController(wallet: wallet, initialQRCode: scanResult)
         start.addCloseNavigationItem(tintColor: .white)
         start.navigationItem.title = S.Import.title
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, currency: wallet.currency)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, from: nc, currency: wallet.currency)
         faqButton.tintColor = .white
         start.navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
         nc.viewControllers = [start]
@@ -1167,8 +1168,7 @@ extension ModalPresenter {
     }
     
     func presentSupportPages() {
-        let storyboard = UIStoryboard(name: "SupportListStoryboard", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "SupportListViewController")
+        guard let vc = SupportManager.shared.supportCategories() else { return }
         self.menuNavController!.pushViewController(vc, animated: true)
     }
 }

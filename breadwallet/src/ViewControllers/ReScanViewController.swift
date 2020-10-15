@@ -13,8 +13,9 @@ class ReScanViewController: UIViewController, Subscriber {
     init(system: CoreSystem, wallet: Wallet) {
         self.system = system
         self.wallet = wallet
-        self.faq = .buildFaqButton(articleId: ArticleIds.reScan, currency: wallet.currency)
+        self.faq = UIButton()
         super.init(nibName: nil, bundle: nil)
+        faq = .buildFaqButton(articleId: ArticleIds.reScan, from: self, currency: wallet.currency)
     }
 
     private let system: CoreSystem
@@ -23,7 +24,7 @@ class ReScanViewController: UIViewController, Subscriber {
     private let body = UILabel.wrapping(font: .systemFont(ofSize: 15.0))
     private let button = BRDButton(title: S.ReScan.buttonTitle, type: .primary)
     private let footer = UILabel.wrapping(font: .customBody(size: 16.0), color: .white)
-    private let faq: UIButton
+    private var faq: UIButton
 
     deinit {
         Store.unsubscribe(self)

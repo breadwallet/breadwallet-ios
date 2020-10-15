@@ -46,7 +46,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
     private let spacer = UIView()
     private let keyMaster: KeyMaster
     
-    private lazy var faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin, currency: nil, tapped: { [unowned self] in
+    private lazy var faq = UIButton.buildFaqButton(articleId: ArticleIds.setPin, from: self, currency: nil, tapped: { [unowned self] in
         self.trackEvent(event: .helpButton)
     })
     

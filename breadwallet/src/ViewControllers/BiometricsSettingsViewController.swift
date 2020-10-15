@@ -218,7 +218,7 @@ class BiometricsSettingsViewController: UIViewController, Subscriber, Trackable 
     private func addFaqButton() {
         let negativePadding = UIBarButtonItem(barButtonSystemItem: .fixedSpace, target: nil, action: nil)
         negativePadding.width = -16.0
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.enableTouchId)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.enableTouchId, from: self)
         faqButton.tintColor = .white
         navigationItem.rightBarButtonItems = [negativePadding, UIBarButtonItem(customView: faqButton)]
     }

@@ -51,7 +51,7 @@ class DefaultCurrencyViewController: UITableViewController, Subscriber, Trackabl
         titleLabel.sizeToFit()
         navigationItem.titleView = titleLabel
 
-        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, currency: nil)
+        let faqButton = UIButton.buildFaqButton(articleId: ArticleIds.displayCurrency, from: self, currency: nil)
         faqButton.tintColor = .navigationTint
         navigationItem.rightBarButtonItems = [UIBarButtonItem.negativePadding, UIBarButtonItem(customView: faqButton)]
     }
