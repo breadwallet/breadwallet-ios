@@ -107,7 +107,7 @@ class Sender: Subscriber {
         wallet.estimateLimitMinimum(address: address, fee: fee, completion: completion)
     }
 
-    private func validate(address: String, amount: Amount) -> SenderValidationResult {
+    private func validate(address: String, amount: Amount, feeBasis: TransferFeeBasis? = nil) -> SenderValidationResult {
         guard wallet.currency.isValidAddress(address) else { return .invalidAddress }
         guard !wallet.isOwnAddress(address) else { return .ownAddress }
 
@@ -121,14 +121,19 @@ class Sender: Subscriber {
             guard amount <= balance else { return .insufficientFunds }
         }
         if wallet.feeCurrency != wallet.currency {
-            guard let feeBalance = wallet.feeCurrency.state?.balance, !feeBalance.isZero else { return .insufficientGas }
+            if let feeBalance = wallet.feeCurrency.state?.balance, let feeBasis = feeBasis {
+                let feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: wallet.feeCurrency)
+                if feeBalance.tokenValue < feeAmount.tokenValue {
+                    return .insufficientGas
+                }
+            }
         }
         return .ok
     }
 
     func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil) -> SenderValidationResult {
         assert(transfer == nil)
-        let result = validate(address: address, amount: amount)
+        let result = validate(address: address, amount: amount, feeBasis: feeBasis)
         guard case .ok = result else { return result }
 
         switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, attribute: attribute) {
@@ -154,7 +159,7 @@ class Sender: Subscriber {
         guard let amount = protoReq.totalAmount else {
             return .invalidRequest("No Amount Specified")
         }
-        return validate(address: address, amount: Amount(cryptoAmount: amount, currency: wallet.currency))
+        return validate(address: address, amount: Amount(cryptoAmount: amount, currency: wallet.currency), feeBasis: nil)
     }
 
     func createTransaction(protocolRequest protoReq: PaymentProtocolRequest,

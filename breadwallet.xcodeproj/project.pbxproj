@@ -81,10 +81,11 @@
 		3ABD8D1B24E1CF1500EC4C91 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABD8D0D24E1CF1500EC4C91 /* SwiftUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		3ADA10D924BE097D000A1D99 /* CoinGeckoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */; };
 		3ADA10E824BE28D6000A1D99 /* HistoryFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADA10E724BE28D6000A1D99 /* HistoryFetcher.swift */; };
-		3ADE270C248F35B80023B770 /* PayIdLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADE270B248F35B80023B770 /* PayIdLabel.swift */; };
+		3ADE270C248F35B80023B770 /* ResolvedAddressLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ADE270B248F35B80023B770 /* ResolvedAddressLabel.swift */; };
 		3AEA2C9C24D122EA00DA4C3A /* CloudBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEA2C9B24D122EA00DA4C3A /* CloudBackupView.swift */; };
 		3AEA2CAB24D3219200DA4C3A /* SelectBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */; };
 		3AEF7B72234A4E3C005BE184 /* RequestUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */; };
+		3AF78B3B2523B05E00FBB280 /* FioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF78B3A2523B05E00FBB280 /* FioTests.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -545,6 +546,7 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
+
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -666,10 +668,11 @@
 		3ABD8D0D24E1CF1500EC4C91 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoinGeckoTests.swift; sourceTree = "<group>"; };
 		3ADA10E724BE28D6000A1D99 /* HistoryFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFetcher.swift; sourceTree = "<group>"; };
-		3ADE270B248F35B80023B770 /* PayIdLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PayIdLabel.swift; path = src/Views/PayId/PayIdLabel.swift; sourceTree = "<group>"; };
+		3ADE270B248F35B80023B770 /* ResolvedAddressLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ResolvedAddressLabel.swift; path = src/Views/PayId/ResolvedAddressLabel.swift; sourceTree = "<group>"; };
 		3AEA2C9B24D122EA00DA4C3A /* CloudBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CloudBackupView.swift; path = src/CloudBackup/CloudBackupView.swift; sourceTree = "<group>"; };
 		3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBackupView.swift; path = src/CloudBackup/SelectBackupView.swift; sourceTree = "<group>"; };
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
+		3AF78B3A2523B05E00FBB280 /* FioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FioTests.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
@@ -1325,7 +1328,7 @@
 		3ADE270A248F35910023B770 /* PayId */ = {
 			isa = PBXGroup;
 			children = (
-				3ADE270B248F35B80023B770 /* PayIdLabel.swift */,
+				3ADE270B248F35B80023B770 /* ResolvedAddressLabel.swift */,
 			);
 			name = PayId;
 			sourceTree = "<group>";
@@ -1493,6 +1496,7 @@
 				CE0ED79824098302000AA24F /* AddressTests.swift */,
 				3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */,
 				3A69884E24591F4A0084953D /* PayIdTests.swift */,
+				3AF78B3A2523B05E00FBB280 /* FioTests.swift */,
 				3ADA10D824BE097D000A1D99 /* CoinGeckoTests.swift */,
 				3A7605E524CF6A050057C1F4 /* KeyStore Tests */,
 				7124991922204CF700BEA491 /* json */,
@@ -2764,7 +2768,7 @@
 				CEDB0B0722D445DB00331FFC /* ChartView.swift in Sources */,
 				CEBF32F61DDCEAF900348FC6 /* TransactionsTableViewController.swift in Sources */,
 				CEE20C381EA5B4680086F724 /* Strings.swift in Sources */,
-				3ADE270C248F35B80023B770 /* PayIdLabel.swift in Sources */,
+				3ADE270C248F35B80023B770 /* ResolvedAddressLabel.swift in Sources */,
 				CE25BF8D1DF3B8A500BC67B6 /* InViewAlert.swift in Sources */,
 				22A9A9511DF61945000F0016 /* TxMetaData.swift in Sources */,
 				7C6ACCB11FEB21580028ABFA /* TxDetailDataSource.swift in Sources */,
@@ -3010,6 +3014,7 @@
 				CEEC70881E943DC900EF788E /* TouchIdEnabledTests.swift in Sources */,
 				CE6DCC2D1E63D6B10044257B /* TestHelpers.swift in Sources */,
 				CE4CA7BA1EE0C8D900373F11 /* BitIdTests.swift in Sources */,
+				3AF78B3B2523B05E00FBB280 /* FioTests.swift in Sources */,
 				22C431301DF89DC00017CAEA /* BRReplicatedKVStoreTests.swift in Sources */,
 				71988B0921EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */,
 				22C431341DF89DFE0017CAEA /* BRCoderTests.swift in Sources */,
