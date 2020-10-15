@@ -213,6 +213,8 @@
 "CloudBackup.warningBody" = "Din iCloud-sikkerhedskopi slettes efter %1$@ flere forkerte PIN-forsøg.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Beløb der skal sendes:";
+"Confirmation.destinationTag" = "Destinationsmærke";
+"Confirmation.destinationTag_EmptyHint" = "(tom)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Netværksgebyr:";
 /* Network Fee: (ETH) */
@@ -303,7 +305,7 @@
 "FeeSelector.estimatedDeliver" = "Forventet levering: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 minutter";
-"FeeSelector.lessThanMinutes" = "&lt;$1$d minutter";
+"FeeSelector.lessThanMinutes" = "<%1$d minutter";
 /* Priority fee */
 "FeeSelector.priority" = "Prioritet";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -520,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "ikke understøttet signaturtype";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certifikat der ikke er tillid til";
+"Platform.transaction_cancelled" = "Transaktion annulleret";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "Vær den første til at modtage vigtige support- og produktopdateringer";
 /* Placeholder text for an email address text field. */
@@ -792,6 +795,7 @@
 "Segwit.Enable" = "Aktiver";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "Til månen";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "Beløb";
 /* Balance: $4.00 */
@@ -816,12 +820,16 @@
 "Send.destinationTag_optional" = "Destinationskode (valgfrit)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "Destinationskode (påkrævet)";
+"Send.destinationTag_required_error" = "Et gyldigt destinationsmærke kræves til måladressen.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "Tegnebord er tomt";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "Kan ikke sende til dig selv.";
 /* Network Fee: $0.01 */
 "Send.fee" = "Netværksafgift: %1$@";
+"Send.fio_invalid" = "Ugyldig FIO-adresse.";
+"Send.fio_noAddress" = "Der er ingen %1$s adresse tilknyttet denne FIO-adresse.";
+"Send.fio_retrievalError" = "Der opstod en fejl under hentning af adressen til denne FIO-adresse. Prøv igen senere.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "Betalingsmodtagerens identitet er ikke bekræftet.";
 /* Insufficient funds error */
@@ -1107,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Bekræftelser";
+"TransactionDetails.destinationTag" = "Destinationsmærke";
+"TransactionDetails.destinationTag_EmptyHint" = "(tom)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Dine transaktioner vil vises her.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1237,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN påkrævet";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Godkend denne transaktion";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Er du sikker på, at du vil slå Fastsync fra?";
 /* Explanation for wallet connection setting */

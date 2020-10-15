@@ -11,14 +11,14 @@ import LocalAuthentication
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency, payId: String? = nil) {
+    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency, resolvedAddress: ResolvedAddress? = nil) {
         self.amount = amount
         self.feeAmount = fee
         self.displayFeeLevel = displayFeeLevel
         self.addressText = address
         self.isUsingBiometrics = isUsingBiometrics
         self.currency = currency
-        self.payID = payId
+        self.resolvedAddress = resolvedAddress
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -28,7 +28,7 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     private let addressText: String
     private let isUsingBiometrics: Bool
     private let currency: Currency
-    private let payID: String?
+    private let resolvedAddress: ResolvedAddress?
     
     //ContentBoxPresenter
     let contentBox = UIView(color: .white)
@@ -56,8 +56,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     private let fee = UILabel(font: .customBody(size: 14.0), color: .darkText)
     private let total = UILabel(font: .customMedium(size: 14.0), color: .darkText)
     
-    private let payIdlabel = PayIdLabel()
-    private let payIdAddress = UILabel(font: .customBody(size: 16.0), color: .darkText)
+    private let resolvedAddressTitle = ResolvedAddressLabel()
+    private let resolvedAddressLabel = UILabel(font: .customBody(size: 16.0), color: .darkText)
     
     override func viewDidLoad() {
         addSubviews()
@@ -72,8 +72,8 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
         contentBox.addSubview(toLabel)
         contentBox.addSubview(amountLabel)
         contentBox.addSubview(address)
-        contentBox.addSubview(payIdlabel)
-        contentBox.addSubview(payIdAddress)
+        contentBox.addSubview(resolvedAddressTitle)
+        contentBox.addSubview(resolvedAddressLabel)
         contentBox.addSubview(processingTime)
         contentBox.addSubview(sendLabel)
         contentBox.addSubview(feeLabel)
@@ -105,17 +105,17 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             address.topAnchor.constraint(equalTo: toLabel.bottomAnchor),
             address.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         
-        if payID != nil {
-           payIdlabel.constrain([
-               payIdlabel.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
-               payIdlabel.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]) ])
-           payIdAddress.constrain([
-               payIdAddress.leadingAnchor.constraint(equalTo: payIdlabel.leadingAnchor),
-               payIdAddress.topAnchor.constraint(equalTo: payIdlabel.bottomAnchor),
-               payIdAddress.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
+        if resolvedAddress != nil {
+           resolvedAddressTitle.constrain([
+               resolvedAddressTitle.leadingAnchor.constraint(equalTo: toLabel.leadingAnchor),
+               resolvedAddressTitle.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[2]) ])
+           resolvedAddressLabel.constrain([
+               resolvedAddressLabel.leadingAnchor.constraint(equalTo: resolvedAddressTitle.leadingAnchor),
+               resolvedAddressLabel.topAnchor.constraint(equalTo: resolvedAddressTitle.bottomAnchor),
+               resolvedAddressLabel.trailingAnchor.constraint(equalTo: contentBox.trailingAnchor, constant: -C.padding[2]) ])
         }
         
-        let processingTimeAnchor = payID == nil ? address.bottomAnchor : payIdAddress.bottomAnchor
+        let processingTimeAnchor = resolvedAddress == nil ? address.bottomAnchor : resolvedAddressLabel.bottomAnchor
         processingTime.constrain([
             processingTime.leadingAnchor.constraint(equalTo: address.leadingAnchor),
             processingTime.topAnchor.constraint(equalTo: processingTimeAnchor, constant: C.padding[2]),
@@ -207,13 +207,14 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
             sendButton.image = nil
         }
         
-        if payID == nil {
-            payIdlabel.text = nil
-            payIdAddress.text = nil
-            payIdlabel.isHidden = true
-            payIdAddress.isHidden = true
+        if resolvedAddress == nil {
+            resolvedAddressTitle.text = nil
+            resolvedAddressLabel.text = nil
+            resolvedAddressTitle.isHidden = true
+            resolvedAddressLabel.isHidden = true
         } else {
-            payIdAddress.text = payID
+            resolvedAddressLabel.text = resolvedAddress?.humanReadableAddress
+            resolvedAddressTitle.text = resolvedAddress?.label
         }
     }
 

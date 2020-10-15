@@ -23,7 +23,7 @@ class AddressCell: UIView {
     var textDidChange: ((String?) -> Void)?
     var didBeginEditing: (() -> Void)?
     var didReceivePaymentRequest: ((PaymentRequest) -> Void)?
-    var didReceivePayId: ((Result<(String, String?), PayIdError>) -> Void)?
+    var didReceiveResolvedAddress: ((Result<(String, String?), ResolvableError>, ResolvableType) -> Void)?
     
     func setContent(_ content: String?) {
         contentLabel.text = content
@@ -52,21 +52,22 @@ class AddressCell: UIView {
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
     private let border = UIView(color: .secondaryShadow)
-    private let payIDLabel = PayIdLabel()
+    private let resolvedAddressLabel = ResolvedAddressLabel()
     private let activityIndicator = UIActivityIndicatorView(style: .gray)
     
-    func showPayId() {
+    func showResolveableState(type: ResolvableType) {
         textField.resignFirstResponder()
         label.isHidden = true
-        payIDLabel.isHidden = false
+        resolvedAddressLabel.isHidden = false
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
         isEditable = false
+        resolvedAddressLabel.type = type
     }
     
-    func hidePayID() {
+    func hideResolveableState() {
         label.isHidden = false
-        payIDLabel.isHidden = true
+        resolvedAddressLabel.isHidden = true
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
         isEditable = true
@@ -97,17 +98,17 @@ class AddressCell: UIView {
         addSubview(border)
         addSubview(paste)
         addSubview(scan)
-        addSubview(payIDLabel)
+        addSubview(resolvedAddressLabel)
     }
 
     private func addConstraints() {
         label.constrain([
             label.constraint(.leading, toView: self, constant: C.padding[2]),
             label.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1])])
-        payIDLabel.constrain([
-            payIDLabel.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
-            payIDLabel.constraint(.leading, toView: self, constant: C.padding[2]) ])
-        payIDLabel.isHidden = true
+        resolvedAddressLabel.constrain([
+            resolvedAddressLabel.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[1]),
+            resolvedAddressLabel.constraint(.leading, toView: self, constant: C.padding[2]) ])
+        resolvedAddressLabel.isHidden = true
         
         contentLabel.constrain([
             contentLabel.constraint(.leading, toView: label),
@@ -192,10 +193,13 @@ extension AddressCell: UITextFieldDelegate {
         tapView.isUserInteractionEnabled = true
         contentLabel.text = textField.text
         
-        if let text = textField.text, let payId = PayId(address: text) {
+        if let text = textField.text, let resolver = ResolvableFactory.resolver(text) {
             showPayIdSpinner()
-            payId.fetchAddress(forCurrency: currency) { result in
-                self.didReceivePayId?(result)
+            resolver.fetchAddress(forCurrency: currency) { result in
+                DispatchQueue.main.async {
+                    self.didReceiveResolvedAddress?(result, resolver.type)
+                    self.resolvedAddressLabel.type = resolver.type
+                }
             }
         }
     }
