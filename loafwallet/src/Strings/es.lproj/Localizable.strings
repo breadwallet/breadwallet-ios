@@ -180,6 +180,9 @@
 /* Changelly Title */
 "BuyCenter.changellyTitle" = "Changelly";
 
+/* Coming Soon */
+"BuyCenter.comingSoon" = "Próximamente...";
+
 /* Buy Modal Title */
 "BuyCenter.ModalTitle" = "Comprar Łitecoin";
 

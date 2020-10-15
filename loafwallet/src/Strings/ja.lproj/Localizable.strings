@@ -179,6 +179,9 @@
 /* Changelly Title */
 "BuyCenter.changellyTitle" = "Changelly";
 
+/* Coming Soon */
+"BuyCenter.comingSoon" = "近日中に";
+
 /* Buy Modal Title */
 "BuyCenter.ModalTitle" = "Litecoin を購入する";
 

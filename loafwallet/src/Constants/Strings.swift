@@ -199,6 +199,8 @@ enum S {
         static let bitrefillFinancialDetails = NSLocalizedString("BuyCenter.bitrefillFinancialDetails", value: "**• Buy gift cards\n• Refill prepaid phones\n• Steam, Amazon, Hotels.com\n• Works in 170 countries**", comment: "Bitrefill buy financial details")
         }
       static let barItemTitle = NSLocalizedString("BuyCenter.barItemTitle", value: "**Buy**", comment: "Buy Bar Item Title")
+        
+      static let comingSoon = NSLocalizedString("BuyCenter.comingSoon", value: "**ComingSoon**", comment: "Coming Soon")
     }
 
     enum SecurityCenter {
