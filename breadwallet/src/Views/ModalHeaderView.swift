@@ -21,12 +21,12 @@ class ModalHeaderView: UIView {
         didSet { close.tap = closeCallback }
     }
     
-    init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil, currency: Currency? = nil) {
+    init(title: String, style: ModalHeaderViewStyle, faqInfo: String? = nil, currency: Currency? = nil, controller: UIViewController? = nil) {
         self.titleLabel.text = title
         self.style = style
         
         if let faqInfo = faqInfo {
-            self.faq = UIButton.buildFaqButton(articleId: faqInfo, currency: currency)
+            self.faq = UIButton.buildFaqButton(articleId: faqInfo, from: controller, currency: currency)
         }
 
         super.init(frame: .zero)

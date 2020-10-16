@@ -17,7 +17,7 @@ class ModalViewController: UIViewController, Subscriber {
         self.childViewController = childViewController
         self.modalInfo = childViewController
         if let articleId = childViewController.faqArticleId {
-            self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, faqInfo: articleId, currency: childViewController.faqCurrency)
+            self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark, faqInfo: articleId, currency: childViewController.faqCurrency, controller: childViewController)
         } else {
             self.header = ModalHeaderView(title: modalInfo.modalTitle, style: .dark)
         }
