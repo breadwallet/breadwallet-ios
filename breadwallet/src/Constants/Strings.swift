@@ -332,6 +332,8 @@ enum S {
         static let privacy = NSLocalizedString("About.privacy", value:"Privacy Policy", comment: "Privay Policy button label")
         static let walletID = NSLocalizedString("About.walletID", value:"Coinsquare Rewards ID", comment: "About screen wallet ID label")
         static let footer = NSLocalizedString("About.footer", value:"Made by the global Coinsquare team. Version %1$@ Build %2$@", comment: "About screen footer")
+        static let telephone = NSLocalizedString("About.telephone", value:"Telephone", comment: "About screen telephone label")
+        static let email = NSLocalizedString("About.email", value:"Email", comment: "About screen email label")
     }
 
     enum PushNotifications {

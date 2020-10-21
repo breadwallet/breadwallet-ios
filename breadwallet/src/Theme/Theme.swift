@@ -84,6 +84,7 @@ class Theme: BRDTheme {
         case accentHighlighted = "#5667E0"
         case success = "#5BE081"
         case error = "#EA6654"
+        case icon = "#4F65E3"
     }
 
     enum TextAlpha: CGFloat {
@@ -182,6 +183,10 @@ class Theme: BRDTheme {
     
     static var success: UIColor {
         return color(.success)
+    }
+    
+    static var icon: UIColor {
+        return color(.icon)
     }
     
     // returns a font with the given size with the default typeface

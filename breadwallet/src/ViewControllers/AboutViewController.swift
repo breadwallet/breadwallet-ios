@@ -15,7 +15,8 @@ class AboutViewController: UIViewController {
     private let logo = UIImageView(image: #imageLiteral(resourceName: "LogoCutout").withRenderingMode(.alwaysTemplate))
     private let logoBackground = MotionGradientView()
     private let walletID = WalletIDCell()
-    private let blog = AboutCell(text: S.About.blog)
+    private let telephone = AboutCell(text: S.About.telephone, value: "+1 800-797-1404")
+    private let email = AboutCell(text: S.About.email, value: "support@just.cash")
     private let twitter = AboutCell(text: S.About.twitter)
     private let reddit = AboutCell(text: S.About.reddit)
     private let privacy = UIButton(type: .system)
@@ -32,8 +33,8 @@ class AboutViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(logoBackground)
         logoBackground.addSubview(logo)
-        view.addSubview(walletID)
-        view.addSubview(blog)
+        view.addSubview(telephone)
+        view.addSubview(email)
         view.addSubview(twitter)
         view.addSubview(reddit)
         view.addSubview(privacy)
@@ -53,8 +54,16 @@ class AboutViewController: UIViewController {
         
         let verticalMargin = (E.isIPhone6OrSmaller) ? C.padding[1] : C.padding[2]
         
+        telephone.constrain([
+            telephone.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: verticalMargin),
+            telephone.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            telephone.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
+        email.constrain([
+            email.topAnchor.constraint(equalTo: telephone.bottomAnchor, constant: verticalMargin),
+            email.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            email.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         twitter.constrain([
-            twitter.topAnchor.constraint(equalTo: logoBackground.bottomAnchor, constant: verticalMargin),
+            twitter.topAnchor.constraint(equalTo: email.bottomAnchor, constant: verticalMargin),
             twitter.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             twitter.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         reddit.constrain([

@@ -341,6 +341,7 @@
 		B379B96925101BB00041B859 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B379B95F25101BB00041B859 /* Assets.xcassets */; };
 		B3A9EA832527D32D00C18CCD /* SupportListStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */; };
 		B3A9EA862527D33400C18CCD /* support.json in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA852527D33400C18CCD /* support.json */; };
+		B3B22F25253E0B84004DC2A7 /* ListViewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE08B2A320F66822009FA568 /* BRAPIClient+Pigeon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */; };
@@ -1054,6 +1055,7 @@
 		9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "rewardsIcon-64.gif"; path = "src/Views/AnimatedIcons/Rewards Icon Frames/rewardsIcon-64.gif"; sourceTree = "<group>"; };
 		9AE8FFF721FE64E200D5058C /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsView.swift; path = src/Views/RewardsView.swift; sourceTree = "<group>"; };
 		9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsIconView.swift; path = src/Views/AnimatedIcons/RewardsIconView.swift; sourceTree = "<group>"; };
+		B3059B692539303D00223098 /* cash-ui-ios */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "cash-ui-ios"; path = "../../cash-ui-ios"; sourceTree = "<group>"; };
 		B379B95525101BB00041B859 /* SendVerificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendVerificationView.xib; sourceTree = "<group>"; };
 		B379B95625101BB00041B859 /* ActivityView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityView.xib; sourceTree = "<group>"; };
 		B379B95725101BB00041B859 /* AtmLocationsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AtmLocationsView.xib; sourceTree = "<group>"; };
@@ -1066,6 +1068,7 @@
 		B379B95F25101BB00041B859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SupportListStoryboard.storyboard; sourceTree = "<group>"; };
 		B3A9EA852527D33400C18CCD /* support.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = support.json; sourceTree = "<group>"; };
+		B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListViewTableViewCell.xib; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "BRAPIClient+Pigeon.swift"; path = "src/Pigeon/BRAPIClient+Pigeon.swift"; sourceTree = "<group>"; };
@@ -1495,6 +1498,7 @@
 		75A2A7871DA5934300A983D8 = {
 			isa = PBXGroup;
 			children = (
+				B3059B692539303D00223098 /* cash-ui-ios */,
 				B379B95225101BB00041B859 /* JustCash */,
 				75A2A7921DA5934300A983D8 /* breadwallet */,
 				75A2A7A71DA5934300A983D8 /* breadwalletTests */,
@@ -1901,6 +1905,7 @@
 				B379B95B25101BB00041B859 /* ActivityTableViewCell.xib */,
 				B379B95C25101BB00041B859 /* MenuView.xib */,
 				B379B95D25101BB00041B859 /* AtmInfoView.xib */,
+				B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */,
 			);
 			path = XIB;
 			sourceTree = "<group>";
@@ -2906,6 +2911,7 @@
 				9A926F6B22034B3800CC2263 /* CellHighlight-39.png in Resources */,
 				9A926F5B22034B3800CC2263 /* CellHighlight-32.png in Resources */,
 				9A926F7522034B3800CC2263 /* CellHighlight-33.png in Resources */,
+				B3B22F25253E0B84004DC2A7 /* ListViewTableViewCell.xib in Resources */,
 				B379B96325101BB00041B859 /* VerifyCashCodeView.xib in Resources */,
 				9A926F6C22034B3800CC2263 /* CellHighlight-61.png in Resources */,
 				9A926F9422034B3800CC2263 /* CellHighlight-56.png in Resources */,

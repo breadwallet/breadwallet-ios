@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -15,6 +16,53 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="6QH-tv-pm0">
+                            <rect key="frame" x="0.0" y="99.5" width="414" height="66"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XGi-nD-GcF">
+                                    <rect key="frame" x="159.5" y="0.0" width="95" height="32"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="32" id="Twa-t8-rO4"/>
+                                    </constraints>
+                                    <state key="normal" title="Privacy Policy">
+                                        <color key="titleColor" red="0.30980392159999998" green="0.39607843139999999" blue="0.89019607840000003" alpha="1" colorSpace="calibratedRGB"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="presentPrivacyPolicy" destination="MxT-hO-Q05" eventType="touchUpInside" id="YcO-wJ-iim"/>
+                                    </connections>
+                                </button>
+                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="+1 800-797-1404 | support@just.cash" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="RNp-Qe-RYi">
+                                    <rect key="frame" x="62.5" y="27" width="289" height="32"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="32" id="4ES-tX-yFu"/>
+                                    </constraints>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
+                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
+                                </textView>
+                                <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Eh6-A0-adj" userLabel="Separator Line">
+                                    <rect key="frame" x="-20" y="1" width="454" height="1"/>
+                                    <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="1" id="QMm-dI-M3v"/>
+                                    </constraints>
+                                </view>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="Eh6-A0-adj" firstAttribute="leading" secondItem="6QH-tv-pm0" secondAttribute="leading" constant="-20" id="692-nO-jPE"/>
+                                <constraint firstItem="XGi-nD-GcF" firstAttribute="top" secondItem="6QH-tv-pm0" secondAttribute="top" id="9p2-bS-ep9"/>
+                                <constraint firstAttribute="trailing" secondItem="Eh6-A0-adj" secondAttribute="trailing" constant="-20" id="aZr-Wy-gG2"/>
+                                <constraint firstItem="XGi-nD-GcF" firstAttribute="centerX" secondItem="6QH-tv-pm0" secondAttribute="centerX" id="ga3-v5-AvL"/>
+                                <constraint firstItem="RNp-Qe-RYi" firstAttribute="top" secondItem="XGi-nD-GcF" secondAttribute="bottom" constant="-5" id="h3h-mO-4rx"/>
+                                <constraint firstAttribute="height" constant="66" id="uh2-gU-AHX"/>
+                                <constraint firstItem="Eh6-A0-adj" firstAttribute="top" secondItem="6QH-tv-pm0" secondAttribute="top" constant="1" id="v8a-fr-Od0"/>
+                                <constraint firstItem="RNp-Qe-RYi" firstAttribute="centerX" secondItem="6QH-tv-pm0" secondAttribute="centerX" id="zUb-Np-YEg"/>
+                            </constraints>
+                        </view>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="topicCellReuseIdentifier" id="MFG-39-cbe">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
@@ -37,7 +85,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a6M-x1-HAG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="290" y="110"/>
+            <point key="canvasLocation" x="289.85507246376812" y="109.82142857142857"/>
         </scene>
         <!--Topic Detail View Controller-->
         <scene sceneID="V9K-T4-sEZ">
@@ -55,23 +103,72 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iGt-bB-8sB">
-                                <rect key="frame" x="20" y="159.5" width="374" height="702.5"/>
+                                <rect key="frame" x="20" y="159.5" width="374" height="636.5"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="eBZ-Zo-aFX">
+                                <rect key="frame" x="20" y="796" width="374" height="66"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hy-i0-8vU">
+                                        <rect key="frame" x="139.5" y="0.0" width="95" height="32"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="633-rg-DDn"/>
+                                        </constraints>
+                                        <state key="normal" title="Privacy Policy">
+                                            <color key="titleColor" red="0.30980392156862746" green="0.396078431372549" blue="0.8901960784313725" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="presentPrivacyPolicy" destination="7Gn-Du-G4M" eventType="touchUpInside" id="qli-GS-vCq"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="+1 800-797-1404 | support@just.cash" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="TS4-Px-kZP">
+                                        <rect key="frame" x="42.5" y="27" width="289" height="32"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="qxi-vU-BO7"/>
+                                        </constraints>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <dataDetectorType key="dataDetectorTypes" phoneNumber="YES" link="YES"/>
+                                    </textView>
+                                    <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TB2-HU-3DQ" userLabel="Separator Line">
+                                        <rect key="frame" x="-20" y="1" width="414" height="1"/>
+                                        <color key="backgroundColor" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="u9A-n8-wSG"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="TS4-Px-kZP" firstAttribute="centerX" secondItem="eBZ-Zo-aFX" secondAttribute="centerX" id="6n8-pk-wU4"/>
+                                    <constraint firstItem="TB2-HU-3DQ" firstAttribute="leading" secondItem="eBZ-Zo-aFX" secondAttribute="leading" constant="-20" id="7WU-XN-9bw"/>
+                                    <constraint firstAttribute="height" constant="66" id="BIF-dB-JLZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="TB2-HU-3DQ" secondAttribute="trailing" constant="-20" id="Tvn-aD-Eyk"/>
+                                    <constraint firstItem="2hy-i0-8vU" firstAttribute="top" secondItem="eBZ-Zo-aFX" secondAttribute="top" id="UzU-wS-ge9"/>
+                                    <constraint firstItem="2hy-i0-8vU" firstAttribute="centerX" secondItem="eBZ-Zo-aFX" secondAttribute="centerX" id="gC6-VB-H2B"/>
+                                    <constraint firstItem="TB2-HU-3DQ" firstAttribute="top" secondItem="eBZ-Zo-aFX" secondAttribute="top" constant="1" id="hJB-yo-KyF"/>
+                                    <constraint firstItem="TS4-Px-kZP" firstAttribute="top" secondItem="2hy-i0-8vU" secondAttribute="bottom" constant="-5" id="pzP-H2-58g"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="iGt-bB-8sB" firstAttribute="bottom" secondItem="rsc-4g-Sbc" secondAttribute="bottom" id="7fW-7n-Ey5"/>
+                            <constraint firstItem="eBZ-Zo-aFX" firstAttribute="top" secondItem="iGt-bB-8sB" secondAttribute="bottom" id="HEW-SL-GU2"/>
                             <constraint firstItem="vVh-Tk-IMT" firstAttribute="top" secondItem="rsc-4g-Sbc" secondAttribute="top" constant="20" id="K1q-xz-f91"/>
                             <constraint firstItem="rsc-4g-Sbc" firstAttribute="trailing" secondItem="vVh-Tk-IMT" secondAttribute="trailing" constant="20" id="Oha-M0-jJl"/>
+                            <constraint firstItem="rsc-4g-Sbc" firstAttribute="trailing" secondItem="eBZ-Zo-aFX" secondAttribute="trailing" constant="20" id="VsA-Sx-Z37"/>
                             <constraint firstItem="iGt-bB-8sB" firstAttribute="leading" secondItem="rsc-4g-Sbc" secondAttribute="leading" constant="20" id="WG1-Re-sTj"/>
                             <constraint firstItem="rsc-4g-Sbc" firstAttribute="trailing" secondItem="iGt-bB-8sB" secondAttribute="trailing" constant="20" id="XFG-Px-dFS"/>
+                            <constraint firstItem="rsc-4g-Sbc" firstAttribute="bottom" secondItem="eBZ-Zo-aFX" secondAttribute="bottom" id="pNN-j3-M5w"/>
                             <constraint firstItem="iGt-bB-8sB" firstAttribute="top" secondItem="vVh-Tk-IMT" secondAttribute="bottom" constant="20" id="wqf-8W-JHj"/>
                             <constraint firstItem="vVh-Tk-IMT" firstAttribute="leading" secondItem="rsc-4g-Sbc" secondAttribute="leading" constant="20" id="yng-7f-nWE"/>
+                            <constraint firstItem="eBZ-Zo-aFX" firstAttribute="leading" secondItem="rsc-4g-Sbc" secondAttribute="leading" constant="20" id="ysP-MJ-WC8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="rsc-4g-Sbc"/>
                     </view>
