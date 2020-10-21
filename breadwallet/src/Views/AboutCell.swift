@@ -36,7 +36,7 @@ class AboutCell: UIView {
         textView.font = .customBody(size: 16.0)
         textView.dataDetectorTypes = .all
         textView.isEditable = false
-        textView.tintColor = Theme.icon
+        textView.tintColor = .white
     }
     
     private func setup() {
