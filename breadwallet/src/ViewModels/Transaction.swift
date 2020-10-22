@@ -49,7 +49,7 @@ struct FeeBasis {
 
 /// Wrapper for BRCrypto Transfer
 class Transaction {
-    private let transfer: WalletKit.Transfer
+    let transfer: WalletKit.Transfer
     let wallet: Wallet
 
     var currency: Currency { return wallet.currency }
@@ -194,6 +194,10 @@ class Transaction {
     init(transfer: WalletKit.Transfer, wallet: Wallet, kvStore: BRReplicatedKVStore?, rate: Rate?) {
         self.transfer = transfer
         self.wallet = wallet
+        
+        if wallet.currency.isTezos {
+            print("[address] \(transfer.target)")
+        }
         
         if let kvStore = kvStore, let metaDataKey = metaDataKey {
             // load existing metadata if found

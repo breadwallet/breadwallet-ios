@@ -61,6 +61,8 @@
 		3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328C225301D60043EBA4 /* PriceChangeView.swift */; };
 		3A3D63DC22F10B4F000DE920 /* AddWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */; };
 		3A3D63DE22F10B58000DE920 /* ManageWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */; };
+		3A529E4C253B957200BD0A17 /* StakingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A529E4B253B957200BD0A17 /* StakingCell.swift */; };
+		3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */; };
 		3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */; };
 		3A611A0C2322139D004B8E36 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0B2322139D004B8E36 /* Dot.swift */; };
 		3A611A0F2325738C004B8E36 /* AnimatedBlockSetLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */; };
@@ -557,7 +559,6 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
-
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -669,6 +670,8 @@
 		3A36328C225301D60043EBA4 /* PriceChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChangeView.swift; path = src/Views/PriceChangeView.swift; sourceTree = "<group>"; };
 		3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddWalletsViewController.swift; path = src/ViewControllers/AddWalletsViewController.swift; sourceTree = "<group>"; };
 		3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletsViewController.swift; path = src/ViewControllers/ManageWalletsViewController.swift; sourceTree = "<group>"; };
+		3A529E4B253B957200BD0A17 /* StakingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StakingCell.swift; sourceTree = "<group>"; };
+		3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StakeViewController.swift; path = src/ViewControllers/StakeViewController.swift; sourceTree = "<group>"; };
 		3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChange.swift; path = src/Models/PriceChange.swift; sourceTree = "<group>"; };
 		3A611A0B2322139D004B8E36 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dot.swift; path = src/Views/Dot.swift; sourceTree = "<group>"; };
 		3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnimatedBlockSetLogo.swift; path = src/AnimatedBlockSetLogo.swift; sourceTree = "<group>"; };
@@ -1311,6 +1314,15 @@
 			path = Modules/libbz2;
 			sourceTree = "<group>";
 		};
+		3A529E4A253B956000BD0A17 /* Staking */ = {
+			isa = PBXGroup;
+			children = (
+				3A529E4B253B957200BD0A17 /* StakingCell.swift */,
+				3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */,
+			);
+			name = Staking;
+			sourceTree = "<group>";
+		};
 		3A611A0D23257354004B8E36 /* BlockSetAnimation */ = {
 			isa = PBXGroup;
 			children = (
@@ -1515,6 +1527,7 @@
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
 				3A6785EF256F2EF70065F835 /* ReceiveGift */,
 				3AFAD92E2567ED22005853E8 /* Gifting */,
+				3A529E4A253B956000BD0A17 /* Staking */,
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
@@ -2815,6 +2828,7 @@
 				9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */,
 				754AE0BC1DFE8A46007FD001 /* SecureAllocator.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
+				3A529E4C253B957200BD0A17 /* StakingCell.swift in Sources */,
 				3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */,
 				CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
@@ -3098,6 +3112,7 @@
 				713CD88A2240198A004657D4 /* RecoveryKeyIntroViewController.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
+				3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

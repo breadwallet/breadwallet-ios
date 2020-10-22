@@ -279,6 +279,7 @@ extension Currency {
     var isHBAR: Bool { return uid == Currencies.hbar.uid }
     var isBitcoinCompatible: Bool { return isBitcoin || isBitcoinCash }
     var isEthereumCompatible: Bool { return isEthereum || isERC20Token }
+    var isTezos: Bool { return uid == Currencies.xtz.uid }
 }
 
 // MARK: - Confirmation times
@@ -493,6 +494,7 @@ enum Currencies: String, CaseIterable {
     case tusd
     case xrp
     case hbar
+    case xtz
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -512,6 +514,8 @@ enum Currencies: String, CaseIterable {
             uids = "ripple-\(E.isTestnet ? "testnet" : "mainnet"):__native__"
         case .hbar:
             uids = "hedera-mainnet:__native__"
+        case .xtz:
+            uids = "tezos-mainnet:__native__"
         }
         return CurrencyId(rawValue: uids)
     }

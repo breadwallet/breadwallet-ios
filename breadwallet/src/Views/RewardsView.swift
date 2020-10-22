@@ -63,7 +63,6 @@ class RewardsView: UIView {
     }
 
     private func setUpSubviews() {
-        
         addSubview(icon)
         addSubview(normalTitle)
         addSubview(indicatorView)

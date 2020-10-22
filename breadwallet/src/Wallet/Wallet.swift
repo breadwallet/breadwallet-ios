@@ -31,6 +31,7 @@ class Wallet {
     enum CreateTransferError: Error {
         case invalidAddress
         case invalidAmountOrFee
+        case internalError
     }
     
     let currency: Currency
@@ -163,6 +164,21 @@ class Wallet {
         //TODO:CRYPTO need WalletKit.Wallet interface -- this only works for single-address networks
         return core.target == Address.create(string: address, network: core.manager.network)
     }
+    
+    // Returns the staked validator address or nil
+    // if this wallet isn't staked
+    var stakedValidatorAddress: String? {
+        guard let mostRecentDelegation = transfers.first(where: {
+            guard let attribute = $0.transfer.attributes.first(where: { $0.key == "DelegationOp" }) else { return false }
+            return attribute.value == "1"
+        }) else { return nil }
+        
+        if mostRecentDelegation.toAddress != "unknown" {
+            return mostRecentDelegation.toAddress //most recent delegation was a stake txn
+        } else {
+            return nil //most recent delegation was an un-stake txn
+        }
+    }
 
     // MARK: Sending
 
@@ -216,6 +232,29 @@ class Wallet {
         return PaymentProtocolRequest.create(wallet: core, forBitPay: jsonData)
     }
 
+    // MARK: Staking
+    
+    func stake(address: String?, feeBasis: TransferFeeBasis) -> CreateTransferResult {
+                
+        guard let address = address else { return .failure(.invalidAddress) } //TODO:TEZOS --accept nil addresses
+        
+        guard let target = Address.create(string: address, network: core.manager.network) else {
+            return .failure(.invalidAddress)
+        }
+        
+        guard let delegationAttribute = core.transferAttributes.first(where: { $0.key == "DelegationOp" }) else {
+            return .failure(.internalError) }
+        delegationAttribute.value = "1"
+        
+        guard let transfer = core.createTransfer(target: target,
+                                                 amount: Amount.zero(currency).cryptoAmount,
+                                                 estimatedFeeBasis: feeBasis,
+                                                 attributes: Set([delegationAttribute])) else {
+            return .failure(.invalidAmountOrFee)
+        }
+        return .success(transfer)
+    }
+    
     // MARK: Event Subscriptions
 
     private var subscriptions: [Int: [WalletEventCallback]] = [:]

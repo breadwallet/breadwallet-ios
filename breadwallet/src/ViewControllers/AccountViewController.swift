@@ -74,6 +74,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     private var headerContainerSearchHeight: NSLayoutConstraint?
     private var rewardsViewHeightConstraint: NSLayoutConstraint?
     private var rewardsView: RewardsView?
+    private var extraCell: UIView?
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
     private var rewardsShrinkTimer: Timer?
@@ -93,7 +94,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private var shouldShowRewardsView: Bool {
-        return currency.isBRDToken
+        return currency.isBRDToken || currency.isTezos
     }
     
     private var shouldAnimateRewardsView: Bool {
@@ -349,27 +350,31 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     // under the table view header, above the transaction cells.
     private func addRewardsView() {
         
-        let rewards = RewardsView()
-        view.addSubview(rewards)
-        rewardsView = rewards
+//        let rewards = RewardsView()
+//        view.addSubview(rewards)
+        
+        let staking = StakingCell(currency: currency)
+        view.addSubview(staking)
+        extraCell = staking
+//        rewardsView = rewards
 
         //Rewards view has an intrinsic grey padding view, so it doesn't need top padding.
-        let rewardsViewTopConstraint = rewards.topAnchor.constraint(equalTo: headerView.bottomAnchor)
+        let rewardsViewTopConstraint = staking.topAnchor.constraint(equalTo: headerView.bottomAnchor)
         // Start the rewards view at a height of zero if animating, otherwise at the normal height.
         let initialHeight = shouldAnimateRewardsView ? 0 : RewardsView.normalSize
-        rewardsViewHeightConstraint = rewards.heightAnchor.constraint(equalToConstant: initialHeight)
+        rewardsViewHeightConstraint = staking.heightAnchor.constraint(equalToConstant: initialHeight)
         
-        rewards.constrain([
+        staking.constrain([
             rewardsViewTopConstraint,
             rewardsViewHeightConstraint,
-            rewards.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
+                            staking.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                            staking.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
         tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: self,
                                                           action: #selector(rewardsViewTapped))
-        rewardsView?.addGestureRecognizer(tapGestureRecognizer)
+        extraCell?.addGestureRecognizer(tapGestureRecognizer)
     }
 
     private func expandRewardsView() {
@@ -409,8 +414,12 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     @objc private func rewardsViewTapped() {
-        saveEvent(rewardsTappedEvent)
-        Store.trigger(name: .openPlatformUrl("/rewards"))
+        if currency.isBRDToken {
+            saveEvent(rewardsTappedEvent)
+            Store.trigger(name: .openPlatformUrl("/rewards"))
+        } else if currency.isTezos {
+            Store.perform(action: RootModalActions.Present(modal: .stake(currency: self.currency)))
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
