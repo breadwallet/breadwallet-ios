@@ -471,6 +471,7 @@ extension BRWalletPlugin {
                             rate: btcWalletState.currentRate)
         d["local_currency_precision"] = amount.localFormat.maximumFractionDigits
         d["local_currency_symbol"] = amount.localFormat.currencySymbol
+        d["app_version"] = BRUserAgentHeaderGenerator.brdAppVersion()
         return d
     }
     
