@@ -79,18 +79,27 @@
                             <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="large"/>
                         </imageView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ym3-CX-F5E" userLabel="Redeem View">
-                            <rect key="frame" x="20" y="45.5" width="280" height="89"/>
+                            <rect key="frame" x="20" y="30" width="280" height="120"/>
                             <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Your cash is ready to pick up at the ATM. Enter Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="GdA-Cg-CXL">
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Your cash is ready to pick up at the ATM." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="GdA-Cg-CXL">
                                     <rect key="frame" x="20" y="0.0" width="240" height="53"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12345-6789" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="ndO-gd-7RI">
-                                    <rect key="frame" x="20" y="58" width="240" height="31"/>
-                                    <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="35"/>
-                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="ndO-gd-7RI">
+                                    <rect key="frame" x="20" y="58" width="240" height="62"/>
+                                    <attributedString key="attributedText">
+                                        <fragment>
+                                            <string key="content">Code: 12345
+PIN:6789</string>
+                                            <attributes>
+                                                <color key="NSColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <font key="NSFont" metaFont="system" size="35"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="truncatingTail" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
                                     <nil key="highlightedColor"/>
                                 </label>
                             </subviews>
@@ -101,7 +110,7 @@
                                 <constraint firstItem="ndO-gd-7RI" firstAttribute="leading" secondItem="Ym3-CX-F5E" secondAttribute="leading" constant="20" id="ARl-l8-hF7"/>
                                 <constraint firstAttribute="bottom" secondItem="ndO-gd-7RI" secondAttribute="bottom" id="DIz-Sb-p9B"/>
                                 <constraint firstItem="ndO-gd-7RI" firstAttribute="top" secondItem="GdA-Cg-CXL" secondAttribute="bottom" constant="5" id="Ugn-ga-3B0"/>
-                                <constraint firstAttribute="height" constant="89" id="av4-yM-iMo"/>
+                                <constraint firstAttribute="height" constant="120" id="av4-yM-iMo"/>
                                 <constraint firstItem="GdA-Cg-CXL" firstAttribute="top" secondItem="Ym3-CX-F5E" secondAttribute="top" id="gS9-Ql-z31"/>
                                 <constraint firstItem="GdA-Cg-CXL" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ym3-CX-F5E" secondAttribute="leading" constant="20" id="sza-VN-Okc"/>
                             </constraints>
@@ -145,7 +154,7 @@
                     </constraints>
                 </view>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Amount USD" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uum-vr-523">
-                    <rect key="frame" x="20" y="442.5" width="99.5" height="20.5"/>
+                    <rect key="frame" x="20" y="442.5" width="99" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
@@ -186,7 +195,6 @@
                 <constraint firstItem="vrm-S7-oWT" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="2Ai-M5-2YZ"/>
                 <constraint firstItem="vol-Lk-qff" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="2en-CT-EUf"/>
                 <constraint firstItem="4bJ-Kv-idW" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="5H5-ZM-Mtv"/>
-                <constraint firstItem="OpX-mF-lM1" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="29" id="AWL-Ir-BR5"/>
                 <constraint firstItem="OpX-mF-lM1" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="vUN-kp-3ea" secondAttribute="leading" priority="750" constant="20" id="BGE-XM-dsA"/>
                 <constraint firstItem="IuR-5X-nI4" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="D2C-q2-FxS"/>
                 <constraint firstItem="vol-Lk-qff" firstAttribute="trailing" secondItem="vUN-kp-3ea" secondAttribute="trailing" id="E9d-di-b83"/>
