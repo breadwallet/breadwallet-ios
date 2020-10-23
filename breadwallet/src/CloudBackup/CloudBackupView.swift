@@ -187,28 +187,6 @@ struct CloudBackupView: View {
         }
         didToggle = false
     }
-    
-    private var isiOS14: Bool {
-        if #available(iOS 14.0, *) {
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
-@available(iOS 14.0, *)
-extension Toggle where Label == Text {
-//    func addStyle() -> Toggle<Text> {
-//        guard #available(iOS 14.0, *) else { return self }
-//        return self.toggleStyle(SwitchToggleStyle(tint: Color.orange)
-////        if let styled = self as? Toggle<Label> {
-////        //if let styled = self.toggleStyle(SwitchToggleStyle(tint: Color(Theme.primaryBackground))) as? Toggle<Label> {
-////            return styled.toggleStyle(SwitchToggleStyle(tint: Color.orange)
-////        } else {
-////            return self
-////        }
-//    }
 }
 
 @available(iOS 13.6, *)
