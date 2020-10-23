@@ -28,13 +28,13 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mooselookmeguntic, MN, 56789" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="pMh-J9-OmN">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mooselookmeguntic, MN, 56789" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="pMh-J9-OmN" userLabel="State Label">
                                         <rect key="frame" x="19" y="63.5" width="212" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#137 - Martha's Haven Park NE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="pYM-Fr-tYb">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#137 - Martha's Haven Park NE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" translatesAutoresizingMaskIntoConstraints="NO" id="pYM-Fr-tYb" userLabel="Street Label">
                                         <rect key="frame" x="24" y="46.5" width="201.5" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
@@ -157,8 +157,8 @@
                 <outlet property="fundedLabel" destination="hI5-rQ-r27" id="1mo-B3-AZf"/>
                 <outlet property="leftView" destination="S90-Np-09i" id="tJS-i7-KpQ"/>
                 <outlet property="rightView" destination="T9d-ry-d0C" id="nqI-HT-pDF"/>
-                <outlet property="stateLabel" destination="pMh-J9-OmN" id="jSg-MB-fWb"/>
-                <outlet property="streetLabel" destination="pYM-Fr-tYb" id="0zg-N9-Zpe"/>
+                <outlet property="stateLabel" destination="pMh-J9-OmN" id="x2f-PL-yu4"/>
+                <outlet property="streetLabel" destination="pYM-Fr-tYb" id="Uhq-lz-jbe"/>
                 <outlet property="timeLabel" destination="skK-LC-rFq" id="DU0-WR-fWf"/>
             </connections>
             <point key="canvasLocation" x="187.68115942028987" y="-205.24553571428569"/>
