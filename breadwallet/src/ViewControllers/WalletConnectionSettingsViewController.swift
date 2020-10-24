@@ -131,7 +131,8 @@ class WalletConnectionSettingsViewController: UIViewController, Trackable {
         
         //This needs to be done in the next run loop or else the animations don't
         //start in the right spot
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { [weak self] in
+            guard let `self` = self else { return }
             self.animatedBlockSetLogo.isOn = self.toggleSwitch.isOn
         }
         
