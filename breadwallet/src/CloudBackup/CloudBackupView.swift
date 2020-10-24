@@ -93,7 +93,6 @@ struct CloudBackupView: View {
                             self.showingDetail = true
                         } else {
                             self.synchronizer.completion?()
-                                //todo show completion is already shown detail
                         }
                     }, label: {
                         ZStack {
