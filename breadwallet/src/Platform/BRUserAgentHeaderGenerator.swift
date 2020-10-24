@@ -42,6 +42,11 @@ public class BRUserAgentHeaderGenerator {
         return "\(appName)/\(appVersion) \(cfNetworkVersion) \(darwinVersion)"
     }
     
+    static func platformVersion() -> String {
+        let version = BRUserAgentHeaderGenerator.brdAppVersion()
+        return "\(version.major).\(version.minor).\(version.hotfix)"
+    }
+    
     static func brdAppVersion() -> BRAppVersion {
         guard
             let info = Bundle.main.infoDictionary,
