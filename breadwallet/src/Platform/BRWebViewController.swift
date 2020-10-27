@@ -399,7 +399,7 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
                 return decisionHandler(.allow)
             }
             // allow iframe targets based on allow list
-            if !isMainFrameOrWindow && hostAllowList.contains(host) {
+            if !isMainFrameOrWindow {
                 return decisionHandler(.allow)
             }
         }
