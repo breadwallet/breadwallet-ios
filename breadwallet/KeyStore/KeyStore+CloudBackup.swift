@@ -15,7 +15,7 @@ import WalletKit
 extension KeyStore: Trackable {
     
     func doesCurrentWalletHaveBackup() -> Bool {
-        guard let id = Store.state.walletID else { return false }
+        let id = Store.state.walletID ?? CloudBackup.noIDKey
         let backup = listBackups().first(where: { $0.identifier == id })
         return backup != nil
     }
