@@ -49,6 +49,12 @@
     {
       "id": "IMPORT_WALLET",
       "title": "How do I import a bitcoin paper wallet?",
+      "content": "If you receive a QR code labeled as a \"paper wallet\" or \"private key\", you can import it into your Coinsquare app's Bitcoin wallet by following these steps:\n\n 1. On the main screen, tap on Menu.\n2. Under Preferences, tap on Bitcoin Settings.\n3. Select Redeem Private Key.\n4. Tap on Scan Private Key and scan the QR code on your paper wallet.\n5. Any funds stored on the paper wallet/private key will be sent into your Coinsquare app's Bitcoin wallet, and will not remain on the paper wallet/private key.\n\nNOTE: If you are importing a bitcoin paper wallet created before the August 1, 2017 fork, and would like to get the bitcoin cash credit, follow the steps here.\n\n\nIf you want to import a wallet created with the Coinsquare Wallet App, use the Unlink from this device function instead.",
+      "category_id": "GENERAL"
+        },
+    {
+      "id": "IMPORT_WALLET",
+      "title": "How do I import a bitcoin paper wallet?",
       "content": "If you receive a QR code labeled as a \"paper wallet\" or \"private key\", you can import it into your Coinsquare app's Bitcoin wallet by following these steps:\n\n 1. On the main screen, tap on Menu.\n 2. Under Preferences, tap on Bitcoin Settings.\n 3. Select Redeem Private Key.\n 4. Tap on Scan Private Key and scan the QR code on your paper wallet.\n 5. Any funds stored on the paper wallet/private key will be sent into your Coinsquare app's Bitcoin wallet, and will not remain on the paper wallet/private key.\n\n NOTE: If you are importing a bitcoin paper wallet created before the August 1, 2017 fork, and would like to get the bitcoin cash credit, follow the steps here.\n\nIf you want to import a wallet created with the Coinsquare Wallet App, use the Unlink from this device function instead.",
       "category_id": "GENERAL"
     },

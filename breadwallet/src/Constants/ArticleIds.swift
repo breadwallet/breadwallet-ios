@@ -10,7 +10,7 @@ import Foundation
 
 enum ArticleIds {
     static let displayCurrency = "HOW_BALANCE_WORKS"
-    static let recoverWallet = "recover-wallet"
+    static let recoverWallet = "IMPORT_WALLET"
     static let reScan = "SYNC_BITCOIN_BLOCK_CHAIN"
     static let securityCenter = "SECURITY_CENTER"
     static let paperKey = "paper-key"
