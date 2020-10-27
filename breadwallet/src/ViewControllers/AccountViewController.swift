@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CashUI
 
 class AccountViewController: UIViewController, Subscriber, Trackable {
     
@@ -407,7 +408,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     
     @objc private func rewardsViewTapped() {
         saveEvent(rewardsTappedEvent)
-        Store.trigger(name: .openPlatformUrl("/rewards"))
+        SupportManager.shared.presentSupportTopic(for: "BRD_REWARDS", from: self)
+//        Store.trigger(name: .openPlatformUrl("/rewards"))
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
