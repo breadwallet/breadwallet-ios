@@ -94,6 +94,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         addConstraints()
         setInitialData()
         setupSubscriptions()
+        
+        logo.contentMode = .scaleAspectFit
+        logo.setNeedsDisplay()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -143,8 +146,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             totalAssetsLabel.bottomAnchor.constraint(equalTo: total.topAnchor)])
         
         logo.constrain([
-            logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[2]),
-            logo.centerYAnchor.constraint(equalTo: total.centerYAnchor)])
+            logo.leadingAnchor.constraint(equalTo: subHeaderView.leadingAnchor, constant: C.padding[1]),
+            logo.centerYAnchor.constraint(equalTo: total.centerYAnchor),
+            logo.widthAnchor.constraint(equalToConstant: view.frame.width/3)])
 
         debugLabel.constrain([
             debugLabel.leadingAnchor.constraint(equalTo: logo.leadingAnchor),
