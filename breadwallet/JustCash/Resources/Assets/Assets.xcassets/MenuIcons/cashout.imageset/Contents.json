@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "cash_out.png",
+      "filename" : "cashout.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "cashout@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "cashout@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
