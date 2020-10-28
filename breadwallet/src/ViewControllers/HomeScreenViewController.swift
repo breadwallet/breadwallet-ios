@@ -227,7 +227,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func setupToolbar() {
-        let buttons = [("ATM Cash Redeem", #imageLiteral(resourceName: "redeem"), #selector(redeem)),
+        let buttons = [("ATM Cash Redeem", #imageLiteral(resourceName: "cashout"), #selector(redeem)),
                        ("Scan QR Code", #imageLiteral(resourceName: "qrcode"), #selector(scanQR)),
                        ("Activity", #imageLiteral(resourceName: "activity"), #selector(activity)),
                        (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
