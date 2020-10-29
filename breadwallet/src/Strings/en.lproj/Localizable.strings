@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "My Coinsquare";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "It looks like you are using a third-party keyboard, which can record what you type and steal your Paper Key. Please switch to the default Android keyboard for extra protection.";
+"Alert.customKeyboard.android" = "It looks like you are using a third-party keyboard, which can record what you type and steal your Recovery Phrase. Please switch to the default Android keyboard for extra protection.";
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Your Coinsquare encrypted data was recently invalidated because your Android lock screen was disabled.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your paper key.";
+"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your recovery phrase.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your paper key.";
+"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your recovery phrase.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android Key Store Error";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "All wallet addresses successfully copied.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Paper Key Set";
+"Alerts.paperKeySet" = "Recovery Phrase Set";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Awesome!";
 /* Alert Header label (the PIN was set) */
@@ -203,9 +203,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Total Cost:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "The words entered do not match your paper key. Please try again.";
+"ConfirmPaperPhrase.error" = "The words entered do not match your recovery phrase. Please try again.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "To make sure everything was written down correctly, please enter the following words from your paper key.";
+"ConfirmPaperPhrase.label" = "To make sure everything was written down correctly, please enter the following words from your recovery phrase.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Word #%1$@";
 /* Agree to legal terms button */
@@ -411,7 +411,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Recover Wallet";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Your paper key is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your paper key later?";
+"Modal.PaperKeySkip.Body.Android" = "Your recovery phrase is required to open your wallet if you change the security settings on your phone.\n\nAre you sure you want to set up your recovery phrase later?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Continue Set Up";
 /* Paper Key Skip modal I'll do it later button */
@@ -513,9 +513,9 @@
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Screen lock disabled";
 /* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Your recovery key must be saved in case you lose or change your phone.";
+"Prompts.PaperKey.body" = "Your recovery phrase must be saved in case you lose or change your phone.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Set up your paper key in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
+"Prompts.PaperKey.Body.Android" = "Set up your recovery phrase in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
 /* Transaction rejected prompt body */
@@ -587,11 +587,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Reset PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Enter Paper Key";
+"RecoverWallet.instruction" = "Enter Recovery Phrase";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Recover your Coinsquare with your paper key.";
+"RecoverWallet.intro" = "Recover your Coinsquare with your recovery phrase.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "The paper key you entered is invalid. Please double-check each word and try again.";
+"RecoverWallet.invalid" = "The recovery phrase you entered is invalid. Please double-check each word and try again.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Left Arrow";
 /* Next button label */
@@ -601,35 +601,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Right Arrow";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Enter the paper key for the wallet you want to recover.";
+"RecoverWallet.subheader" = "Enter the recovery phrase for the wallet you want to recover.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "To reset your PIN, enter the words from your paper key into the boxes below.";
+"RecoverWallet.subheader_reset_pin" = "To reset your PIN, enter the words from your recovery phrase into the boxes below.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "The word you entered is incorrect. Please try again.";
 /* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Almost done! Enter the following words from your recovery key.";
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Almost done! Enter the following words from your recovery phrase.";
 /* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirm Recovery Key";
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirm Recovery Phrase";
 /* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Enter Recovery Key";
+"RecoveryKeyFlow.enterRecoveryKey" = "Enter Recovery Phrase";
 /* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Please enter your recovery key to unlink this wallet from your device.";
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Please enter your recovery phrase to unlink this wallet from your device.";
 /* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Are you sure you want to set up your recovery key later?";
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Are you sure you want to set up your recovery phrase later?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Set Up Later";
 /* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Generate Recovery Key";
+"RecoveryKeyFlow.generateKeyButton" = "Generate Recovery Phrase";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "This key is required to recover your money if you upgrade or lose your phone.";
 /* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Generate your private recovery key";
+"RecoveryKeyFlow.generateKeyTitle" = "Generate your private recovery phrase";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Go to Wallet";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "How it works - Step %1$@";
 /* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Some of the words you entered do not match your recovery key. Please try again.";
+"RecoveryKeyFlow.invalidPhrase" = "Some of the words you entered do not match your recovery phrase. Please try again.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Keep it secure";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +641,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Recover Your Wallet";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Please enter the recovery key of the wallet you want to recover.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Please enter the recovery phrase of the wallet you want to recover.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Relax, buy, and trade";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Remember to write these words down. Swipe back if you forgot.";
 /* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Please enter your recovery key to reset your PIN.";
+"RecoveryKeyFlow.resetPINInstruction" = "Please enter your recovery phrase to reset your PIN.";
 /* Assures the user that Coinsquare will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Buy and trade knowing that your funds are protected by the best security and privacy in the business.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Store your key in a secure location. This is the only way to recover your wallet. Coinsquare does not keep a copy.";
 /* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Congratulations! You completed your recovery key setup.";
+"RecoveryKeyFlow.successHeading" = "Congratulations! You completed your recovery phrase setup.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "You're all set to deposit, trade, and buy crypto from your Coinsquare wallet.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -669,11 +669,11 @@
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Write down your key";
 /* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Write down your recovery key again";
+"RecoveryKeyFlow.writeKeyAgain" = "Write down your recovery phrase again";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Write down the following words in order.";
 /* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Your Recovery Key";
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Your Recovery Phrase";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ of %2$@";
 /* No amount entered error message. */
@@ -730,9 +730,9 @@
 "SecurityCenter.paperKeyDescription" = "The only way to access your assets if you lose or upgrade your phone.";
 /* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Recovery Key";
+"SecurityCenter.paperKeyTitle" = "Recovery Phrase";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Paper Key";
+"SecurityCenter.paperKeyTitle.android" = "Recovery Phrase";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protects your Coinsquare from unauthorized users.";
 /* PIN button title */
@@ -904,13 +904,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Share Anonymous Data?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Write Down Paper Key Again";
+"StartPaperPhrase.againButtonTitle" = "Write Down Recovery Phrase Again";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Your paper key is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.body" = "Your recovery phrase is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your paper key is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nYour paper key is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Your recovery phrase is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nYour recovery phrase is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Write Down Paper Key";
+"StartPaperPhrase.buttonTitle" = "Write Down Recovery Phrase";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Last written down on\n %1$@";
 /* button label */
@@ -1220,11 +1220,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Failed";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Please enter your recovery key to wipe this wallet from your device.";
+"WipeWallet.instruction" = "Please enter your recovery phrase to wipe this wallet from your device.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Starting or recovering another wallet allows you to access and manage a different Coinsquare wallet on this device.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Paper Key.";
+"WipeWallet.startWarning" = "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Recovery Phrase.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Start or Recover Another Wallet";
 /* Wipe wallet button title */
