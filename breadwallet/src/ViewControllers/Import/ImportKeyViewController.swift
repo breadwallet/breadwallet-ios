@@ -268,9 +268,8 @@ class ImportKeyViewController: UIViewController, Subscriber {
             showErrorMessage(S.Import.Error.empty)
         case .unexpectedError:
             showErrorMessage(S.Alert.somethingWentWrong)
-            //TODO:TEZOS - handle this new case
-        case .clientError(_):
-            break
+        case .queryError(let error):
+            showErrorMessage(error.localizedDescription)
         }
     }
     

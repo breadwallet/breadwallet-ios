@@ -70,14 +70,14 @@ class CoreSystem: Subscriber, Trackable {
         print("[SYS] create | account timestamp: \(account.timestamp)")
         assert(self.system == nil)
 
-        let backend = BlocksetSystemClient(bdbBaseURL: "https://\(C.bdbHost)",
+        let backend = BlockChainDB(bdbBaseURL: "https://\(C.bdbHost)",
             bdbDataTaskFunc: { (session, request, completion) -> URLSessionDataTask in
-
+                
                 var req = request
                 if let authToken = authToken {
                     req.authorize(withToken: authToken)
                 }
-
+                
                 //TODO:CRYPTO does not handle 401, other headers, redirects
                 return session.dataTask(with: req, completionHandler: completion)
         },
@@ -92,11 +92,11 @@ class CoreSystem: Subscriber, Trackable {
 
         try? FileManager.default.createDirectory(atPath: C.coreDataDirURL.path, withIntermediateDirectories: true, attributes: nil)
         
-        self.system = System.create(client: backend,
-                                    listener: self,
+        self.system = System.create(listener: self,
                                     account: account,
                                     onMainnet: !E.isTestnet,
                                     path: C.coreDataDirURL.path,
+                                    query: backend,
                                     listenerQueue: self.listenerQueue)
 
         if let system = self.system {
@@ -629,12 +629,7 @@ extension CoreSystem: SystemListener {
 
     func handleSystemEvent(system: System, event: SystemEvent) {
         print("[SYS] system event: \(event)")
-        //TODO:TEZOS - handle these new cases
         switch event {
-        case .deleted:
-            break
-        case .changed(let old, let new):
-            break
         case .created:
             break
 
