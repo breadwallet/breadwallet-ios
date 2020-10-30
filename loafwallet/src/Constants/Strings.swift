@@ -199,8 +199,6 @@ enum S {
         static let bitrefillFinancialDetails = NSLocalizedString("BuyCenter.bitrefillFinancialDetails", value: "**• Buy gift cards\n• Refill prepaid phones\n• Steam, Amazon, Hotels.com\n• Works in 170 countries**", comment: "Bitrefill buy financial details")
         }
       static let barItemTitle = NSLocalizedString("BuyCenter.barItemTitle", value: "**Buy**", comment: "Buy Bar Item Title")
-        
-      static let comingSoon = NSLocalizedString("BuyCenter.comingSoon", value: "**ComingSoon**", comment: "Coming Soon")
     }
 
     enum SecurityCenter {
@@ -444,10 +442,6 @@ enum S {
     enum AccessibilityLabels {
         static let close = NSLocalizedString("AccessibilityLabels.close", value: "**Close**", comment: "Close modal button accessibility label")
         static let faq = NSLocalizedString("AccessibilityLabels.faq", value: "**Support Center**", comment: "Support center accessibiliy label")
-    }
-
-    enum Watch {
-        static let noWalletWarning = NSLocalizedString("Watch.noWalletWarning", value: "**Open the Litewallet iPhone app to set up your wallet.**", comment: "'No wallet' warning for watch app")
     }
 
     enum Search {

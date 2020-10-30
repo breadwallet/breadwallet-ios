@@ -1238,9 +1238,6 @@
 /* Corruption Error alert title */
 "Alert.corruptionMessage" = "";
 
-/* Coming Soon */
-"BuyCenter.comingSoon" = "";
-
 /* Donate Memo */
 "Donate.toThe" = "";
 

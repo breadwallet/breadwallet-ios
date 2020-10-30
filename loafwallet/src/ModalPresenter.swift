@@ -330,7 +330,7 @@ class ModalPresenter : Subscriber, Trackable {
         receiveVC.presentEmail = { [weak self, weak root] address, image in
             guard let root = root else { return }
             self?.messagePresenter.presenter = root
-            self?.messagePresenter.presentMailCompose(bitcoinAddress: address, image: image)
+            self?.messagePresenter.presentMailCompose(litecoinAddress: address, image: image)
         }
         receiveVC.presentText = { [weak self, weak root] address, image in
             guard let root = root else { return }
@@ -349,9 +349,10 @@ class ModalPresenter : Subscriber, Trackable {
                 self?.presentSecurityCenter()
             }
         }
-        menu.didTapSupport = { [weak self, weak menu] in
+        menu.didTapSupport = { [weak self, weak menu] in 
             menu?.dismiss(animated: true, completion: {
-                self?.presentWebView("/support")
+                self?.messagePresenter.presenter = self?.topViewController
+                self?.messagePresenter.presentSupportCompose()
             })
         }
         menu.didTapLock = { [weak self, weak menu] in

@@ -31,7 +31,6 @@ class ApplicationController : Subscriber, Trackable {
     private var kvStoreCoordinator: KVStoreCoordinator?
     private var mainViewController: MainViewController?
     fileprivate var application: UIApplication?
-    private let watchSessionManager = PhoneWCSessionManager()
     private var urlController: URLController?
     private var defaultsUpdater: UserDefaultsUpdater?
     private var reachability = ReachabilityMonitor()
@@ -216,8 +215,7 @@ class ApplicationController : Subscriber, Trackable {
                     }
                 }
                 exchangeUpdater?.refresh(completion: {
-                    self.watchSessionManager.walletManager = self.walletManager
-                    self.watchSessionManager.rate = self.store.state.currentRate
+                    // Update values
                 })
             }
         }
@@ -268,8 +266,7 @@ class ApplicationController : Subscriber, Trackable {
             defaultsUpdater?.refresh()
             walletManager?.apiClient?.events?.up()
             exchangeUpdater?.refresh(completion: {
-                self.watchSessionManager.walletManager = self.walletManager
-                self.watchSessionManager.rate = self.store.state.currentRate
+                // Update values
             })
         }
 

@@ -16,18 +16,11 @@ def shared_pods
   # add after v2.6.0 pod 'SwiftLint'
 end
 
-def shared_watchOS_pods
-end
-
 target 'loafwallet' do
   platform :ios, '12.0'
   shared_pods
   
   target 'loafwalletTests' do
-    inherit! :search_paths
-  end
-  
-  target 'loafwalletUITests' do
     inherit! :search_paths
   end
   

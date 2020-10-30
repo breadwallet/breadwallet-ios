@@ -13,8 +13,8 @@ class MessageUIPresenter: NSObject, Trackable {
 
     weak var presenter: UIViewController?
 
-    func presentMailCompose(bitcoinAddress: String, image: UIImage) {
-        presentMailCompose(string: "litecoin: \(bitcoinAddress)", image: image)
+    func presentMailCompose(litecoinAddress: String, image: UIImage) {
+        presentMailCompose(string: "litecoin: \(litecoinAddress)", image: image)
     }
 
     func presentMailCompose(bitcoinURL: String, image: UIImage) {
@@ -40,6 +40,18 @@ class MessageUIPresenter: NSObject, Trackable {
         UINavigationBar.appearance().titleTextAttributes = nil
         let emailView = MFMailComposeViewController()
         emailView.setToRecipients([C.feedbackEmail])
+        emailView.mailComposeDelegate = self
+        present(emailView)
+    }
+    
+    func presentSupportCompose() {
+        guard MFMailComposeViewController.canSendMail() else { showEmailUnavailableAlert(); return }
+        originalTitleTextAttributes = UINavigationBar.appearance().titleTextAttributes
+        UINavigationBar.appearance().titleTextAttributes = nil
+        let emailView = MFMailComposeViewController()
+        emailView.setSubject("Litewallet Support")
+        emailView.setToRecipients([C.supportEmail])
+        emailView.setMessageBody(C.troubleshootingQuestions, isHTML: true)
         emailView.mailComposeDelegate = self
         present(emailView)
     }

@@ -8,10 +8,18 @@
 
 import UIKit
 
-class BuyTableViewController: UITableViewController {
+class BuyTableViewController: UITableViewController { 
+     
+    @IBOutlet weak var simplexLogoImageView: UIImageView!
+    @IBOutlet weak var simplexHeaderLabel: UILabel!
+    @IBOutlet weak var simplexDetailsLabel: UILabel!
+    @IBOutlet weak var simplexCellContainerView: UIView!
+    
+    @IBOutlet weak var chooseFiatLabel: UILabel!
+    @IBOutlet weak var currencySegmentedControl: UISegmentedControl!
     
     private var currencyCode: String = "USD"
- 
+    
     @IBAction func didTapSimplex(_ sender: Any) {
         
         if let vcWKVC = UIStoryboard.init(name: "Buy", bundle: nil).instantiateViewController(withIdentifier: "BuyWKWebViewController") as? BuyWKWebViewController {
@@ -31,7 +39,7 @@ class BuyTableViewController: UITableViewController {
             NSLog("ERROR: Storyboard not initialized")
         }
     }
-    
+ 
     var store: Store?
     var walletManager: WalletManager?
     let mountPoint = ""
@@ -42,29 +50,29 @@ class BuyTableViewController: UITableViewController {
         thinHeaderView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 1.0)
         thinHeaderView.backgroundColor = .white
         tableView.tableHeaderView = thinHeaderView
-        
-        
-        // TODO: Remove when Simplex or any partner is ready for operations
-        let comingSoonLabel = UILabel()
-        comingSoonLabel.textAlignment = .center
-        comingSoonLabel.textColor = .white
-        comingSoonLabel.font = UIFont.barlowBold(size: 20)
-        comingSoonLabel.text = S.BuyCenter.comingSoon
-        
-        tableView.backgroundView = comingSoonLabel
-        
         tableView.tableFooterView = UIView()
         
-        LWAnalytics.logEventWithParameters(itemName: ._20191105_DTBT)
+        currencySegmentedControl.addTarget(self, action: #selector(didChangeCurrency), for: .valueChanged)
+        currencySegmentedControl.selectedSegmentIndex = PartnerFiatOptions.usd.index
         setupData()
     }
     
     private func setupData() {
+        let simplexData = Partner.partnerDataArray()[0]
+        simplexLogoImageView.image = simplexData.logo
+        simplexHeaderLabel.text = simplexData.headerTitle
+        simplexDetailsLabel.text = simplexData.details
+        simplexCellContainerView.layer.cornerRadius = 6.0
+        simplexCellContainerView.layer.borderColor = UIColor.white.cgColor
+        simplexCellContainerView.layer.borderWidth = 1.0
+        simplexCellContainerView.clipsToBounds = true
         
+        chooseFiatLabel.text = S.DefaultCurrency.chooseFiatLabel
     }
     
     @objc private func didChangeCurrency() {
-        
+        if let code = PartnerFiatOptions(rawValue: currencySegmentedControl.selectedSegmentIndex)?.description {
+            self.currencyCode = code
+        }
     }
 }
-

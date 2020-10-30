@@ -1263,6 +1263,3 @@
 
 /* Message for luxury fee */
 "FeeSelector.luxuryMessage" = "This option virtually guarantees acceptance of your transaction though you are paying a premium.";
-
-/* Coming Soon */
-"BuyCenter.comingSoon" = "Coming soon...";
