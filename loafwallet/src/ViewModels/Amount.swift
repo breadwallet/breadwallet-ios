@@ -46,7 +46,7 @@ struct Amount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativePrefix = "-"
         guard let string = format.string(from: Double(amount)/100000000.0*rate.rate as NSNumber) else { return "" }
         return string
     }
@@ -60,7 +60,7 @@ struct Amount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativePrefix = "-"
         format.currencyCode = "LTC"
 
         switch maxDigits {
@@ -89,7 +89,7 @@ struct Amount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativePrefix = "-"
         format.currencySymbol = rate.currencySymbol
         return format
     }
@@ -129,7 +129,7 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativePrefix = "-"
         if let rate = selectedRate {
             format.currencySymbol = rate.currencySymbol
         } else if let rate = state.currentRate {
@@ -146,7 +146,7 @@ struct DisplayAmount {
         format.isLenient = true
         format.numberStyle = .currency
         format.generatesDecimalNumbers = true
-        format.negativeFormat = format.positiveFormat.replacingCharacters(in: format.positiveFormat.range(of: "#")!, with: "-#")
+        format.negativePrefix = "-"
         format.currencyCode = "LTC"
 
         switch state.maxDigits {
