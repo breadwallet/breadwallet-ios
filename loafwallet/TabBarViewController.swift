@@ -7,7 +7,6 @@
 
 import UIKit
 import Foundation 
-import SwiftyJSON
 
 enum TabViewControllerIndex: Int {
     case transactions = 0

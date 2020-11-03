@@ -136,7 +136,6 @@
 		24D5F26F225A5BEA00225462 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24D5F26D225A5BEA00225462 /* ContainerViewController.swift */; };
 		24D91D0B2166923E0077A619 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 24D91D0A2166923E0077A619 /* UserNotifications.framework */; };
 		24DFCE6823B89CDE001F17F8 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24DFCE6723B89CDE001F17F8 /* Settings.storyboard */; };
-		35263D49B92F5A97F6D39C3F /* Pods_loafwalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0C100AED9E17445EEBE5D7 /* Pods_loafwalletTests.framework */; };
 		7503773D1DF57428005EB8AE /* WalletManager+Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */; };
 		751734B91DAC941E00193C87 /* sec-sub-1.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD8BE1DAA16820075898E /* sec-sub-1.c */; };
 		752438751DAAC50800844BEC /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD6761DAA0E400075898E /* alloc.c */; };
@@ -271,7 +270,7 @@
 		75A2A8101DA5936F00A983D8 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75A2A80E1DA5936F00A983D8 /* MainInterface.storyboard */; };
 		75A2A8141DA5936F00A983D8 /* TodayExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 75A2A8081DA5936F00A983D8 /* TodayExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		75C735AA1DAA1B9C00251ECF /* libunbound.c in Sources */ = {isa = PBXBuildFile; fileRef = 755CD4121DAA0E3E0075898E /* libunbound.c */; };
-		9565EF20DD221C9D2F2A6AEB /* Pods_loafwallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D3369965438F85DF214DE3F /* Pods_loafwallet.framework */; };
+		BB66CB271F7F2FD1936AA04B /* Pods_loafwalletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6FEAAB89A265CC043F53CC51 /* Pods_loafwalletTests.framework */; };
 		CE03EC741EF256AC0038E3A8 /* SimpleUTXO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */; };
 		CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */; };
 		CE124CF81E67A8E500DFA146 /* TransactionDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE124CF71E67A8E500DFA146 /* TransactionDirection.swift */; };
@@ -424,6 +423,7 @@
 		CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF61B111ECF52C700C7EA6A /* AmountViewController.swift */; };
 		CEF61B141ED0D10000C7EA6A /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF61B131ED0D10000C7EA6A /* Types.swift */; };
 		CEF61B161ED2056D00C7EA6A /* NumberFormatter+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF61B151ED2056D00C7EA6A /* NumberFormatter+Additions.swift */; };
+		DC03CB1EE9228BC37FA36F54 /* Pods_loafwallet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4241321F8719503196989C34 /* Pods_loafwallet.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -549,8 +549,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0B0BFC3BB4EF3438E0FD95C9 /* Pods-loafwalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.debug.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.debug.xcconfig"; sourceTree = "<group>"; };
-		17FB6C0C7A4EDEE276391D9A /* Pods-loafwallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.release.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.release.xcconfig"; sourceTree = "<group>"; };
+		012F76A05D15F227D7C3EF9A /* Pods-loafwallet.testnet.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.testnet.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.testnet.xcconfig"; sourceTree = "<group>"; };
 		1B3F74211FFB106200CCA50C /* BiometricsSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BiometricsSettingsViewController.swift; path = src/ViewControllers/BiometricsSettingsViewController.swift; sourceTree = "<group>"; };
 		1B3F74221FFB106200CCA50C /* BiometricsSpendingLimitViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BiometricsSpendingLimitViewController.swift; path = src/ViewControllers/BiometricsSpendingLimitViewController.swift; sourceTree = "<group>"; };
 		1BA74B85206AD60A0083BD2A /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
@@ -817,8 +816,9 @@
 		24D91D0A2166923E0077A619 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
 		24D91D0D2166A5480077A619 /* TestnetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestnetData.swift; sourceTree = "<group>"; };
 		24DFCE6723B89CDE001F17F8 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
-		39A1C8DFFA128099F0556A0E /* Pods-loafwallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.debug.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.debug.xcconfig"; sourceTree = "<group>"; };
-		51D52F10840D223E083B6EDA /* Pods-loafwalletTests.testnet.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.testnet.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.testnet.xcconfig"; sourceTree = "<group>"; };
+		4241321F8719503196989C34 /* Pods_loafwallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_loafwallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5551B367195CB66F70E7147C /* Pods-loafwalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.release.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.release.xcconfig"; sourceTree = "<group>"; };
+		6FEAAB89A265CC043F53CC51 /* Pods_loafwalletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_loafwalletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7503773C1DF57428005EB8AE /* WalletManager+Auth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "WalletManager+Auth.swift"; path = "src/WalletManager+Auth.swift"; sourceTree = "<group>"; };
 		7528D2971ECF655500925DBC /* PaymentProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PaymentProtocol.swift; path = src/PaymentProtocol.swift; sourceTree = "<group>"; };
 		752FB03B1DF8BE4B009086FB /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1417,11 +1417,11 @@
 		75A2A8671DA59BFB00A983D8 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/MainInterface.strings; sourceTree = "<group>"; };
 		75A2A87C1DA59E4E00A983D8 /* loafwallet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = loafwallet.entitlements; sourceTree = "<group>"; };
 		75C735AF1DAA1C9F00251ECF /* libnettle.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libnettle.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		75D0209A7B6BC4A864CC724C /* Pods-loafwalletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.release.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.release.xcconfig"; sourceTree = "<group>"; };
 		75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		8D3369965438F85DF214DE3F /* Pods_loafwallet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_loafwallet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D0C100AED9E17445EEBE5D7 /* Pods_loafwalletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_loafwalletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9F2DD187A660718095013AA0 /* Pods-loafwallet.testnet.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.testnet.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.testnet.xcconfig"; sourceTree = "<group>"; };
+		91361B2DF7CFBF96F66DE835 /* Pods-loafwalletTests.testnet.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.testnet.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.testnet.xcconfig"; sourceTree = "<group>"; };
+		93035AB774472BF9805FD3F9 /* Pods-loafwallet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.debug.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.debug.xcconfig"; sourceTree = "<group>"; };
+		9AA160F2A4C1674AC8595E65 /* Pods-loafwalletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwalletTests.debug.xcconfig"; path = "Target Support Files/Pods-loafwalletTests/Pods-loafwalletTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9C4905F581557D8FD607EB73 /* Pods-loafwallet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-loafwallet.release.xcconfig"; path = "Target Support Files/Pods-loafwallet/Pods-loafwallet.release.xcconfig"; sourceTree = "<group>"; };
 		CE03EC731EF256AC0038E3A8 /* SimpleUTXO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SimpleUTXO.swift; path = src/Models/SimpleUTXO.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1610,7 +1610,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				35263D49B92F5A97F6D39C3F /* Pods_loafwalletTests.framework in Frameworks */,
+				BB66CB271F7F2FD1936AA04B /* Pods_loafwalletTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1649,7 +1649,7 @@
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
 				752FB04D1DF8BF4B009086FB /* sqlite3.framework in Frameworks */,
 				759DA0BE1DAC36A3008CC49B /* libBRCore.a in Frameworks */,
-				9565EF20DD221C9D2F2A6AEB /* Pods_loafwallet.framework in Frameworks */,
+				DC03CB1EE9228BC37FA36F54 /* Pods_loafwallet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2963,8 +2963,8 @@
 				75FEFD1B1DAED56E00203D3A /* libsqlite3.tbd */,
 				75A2A7F21DA5935F00A983D8 /* Messages.framework */,
 				75A2A8091DA5936F00A983D8 /* NotificationCenter.framework */,
-				8D3369965438F85DF214DE3F /* Pods_loafwallet.framework */,
-				9D0C100AED9E17445EEBE5D7 /* Pods_loafwalletTests.framework */,
+				4241321F8719503196989C34 /* Pods_loafwallet.framework */,
+				6FEAAB89A265CC043F53CC51 /* Pods_loafwalletTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -3336,12 +3336,12 @@
 		FEE036865998B9DFEEF3139A /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				39A1C8DFFA128099F0556A0E /* Pods-loafwallet.debug.xcconfig */,
-				9F2DD187A660718095013AA0 /* Pods-loafwallet.testnet.xcconfig */,
-				17FB6C0C7A4EDEE276391D9A /* Pods-loafwallet.release.xcconfig */,
-				0B0BFC3BB4EF3438E0FD95C9 /* Pods-loafwalletTests.debug.xcconfig */,
-				51D52F10840D223E083B6EDA /* Pods-loafwalletTests.testnet.xcconfig */,
-				75D0209A7B6BC4A864CC724C /* Pods-loafwalletTests.release.xcconfig */,
+				93035AB774472BF9805FD3F9 /* Pods-loafwallet.debug.xcconfig */,
+				012F76A05D15F227D7C3EF9A /* Pods-loafwallet.testnet.xcconfig */,
+				9C4905F581557D8FD607EB73 /* Pods-loafwallet.release.xcconfig */,
+				9AA160F2A4C1674AC8595E65 /* Pods-loafwalletTests.debug.xcconfig */,
+				91361B2DF7CFBF96F66DE835 /* Pods-loafwalletTests.testnet.xcconfig */,
+				5551B367195CB66F70E7147C /* Pods-loafwalletTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3405,7 +3405,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2465873D23A5AAD100A32E9E /* Build configuration list for PBXNativeTarget "loafwalletTests" */;
 			buildPhases = (
-				851EE9FAFF1CDBF8F4BAD5F4 /* [CP] Check Pods Manifest.lock */,
+				ABD5154B4DB399A4A81559CD /* [CP] Check Pods Manifest.lock */,
 				2465873223A5AAD000A32E9E /* Sources */,
 				2465873323A5AAD000A32E9E /* Frameworks */,
 				2465873423A5AAD000A32E9E /* Resources */,
@@ -3478,7 +3478,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "loafwallet" */;
 			buildPhases = (
-				4C256FDD5564B94BFF10BA73 /* [CP] Check Pods Manifest.lock */,
+				156E4E7F04DB5E000B3A1A91 /* [CP] Check Pods Manifest.lock */,
 				2430679A238F538C00EBEA99 /* Update Localizable using BartyCrouch */,
 				24E179F223BDAF8000F928D9 /* Xcode custom warnings */,
 				75A2A78C1DA5934300A983D8 /* Sources */,
@@ -3487,9 +3487,8 @@
 				75A2A7E21DA5934400A983D8 /* Embed Watch Content */,
 				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
 				22A9A9831DF63288000F0016 /* Embed Frameworks */,
-				CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */,
 				24E179F123BDAC2C00F928D9 /* Swift Lint Script */,
-				2190D297B82EA6160376EC4C /* [CP] Embed Pods Frameworks */,
+				8B664BEE6304C1815A957FC6 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -3718,21 +3717,26 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2190D297B82EA6160376EC4C /* [CP] Embed Pods Frameworks */ = {
+		156E4E7F04DB5E000B3A1A91 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-loafwallet-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		2430679A238F538C00EBEA99 /* Update Localizable using BartyCrouch */ = {
@@ -3785,29 +3789,24 @@
 			shellPath = /bin/sh;
 			shellScript = "TAGS=\"TODO:|FIXME:|WARNING:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" -or -name \"*.swift\" \\) -print0 | xargs -0 egrep --with-filename --line-number --only-matching \"($TAGS).*\\$\" | perl -p -e \"s/($TAGS)/ warning: \\$1/\"\n";
 		};
-		4C256FDD5564B94BFF10BA73 /* [CP] Check Pods Manifest.lock */ = {
+		8B664BEE6304C1815A957FC6 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-loafwallet-checkManifestLockResult.txt",
+				"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-loafwallet/Pods-loafwallet-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		851EE9FAFF1CDBF8F4BAD5F4 /* [CP] Check Pods Manifest.lock */ = {
+		ABD5154B4DB399A4A81559CD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3828,20 +3827,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		CEE0EF531EBF8C8A0018DB36 /* Icon Versioning */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Icon Versioning";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/scripts/icon_versioning.sh\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -4475,7 +4460,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -4491,7 +4476,7 @@
 		};
 		24470E0123A5BF3C00ADDA27 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 39A1C8DFFA128099F0556A0E /* Pods-loafwallet.debug.xcconfig */;
+			baseConfigurationReference = 93035AB774472BF9805FD3F9 /* Pods-loafwallet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -4505,7 +4490,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -4524,7 +4509,7 @@
 		};
 		24470E0323A5BF3C00ADDA27 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0B0BFC3BB4EF3438E0FD95C9 /* Pods-loafwalletTests.debug.xcconfig */;
+			baseConfigurationReference = 9AA160F2A4C1674AC8595E65 /* Pods-loafwalletTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -4732,7 +4717,7 @@
 		};
 		2465873F23A5AAD100A32E9E /* Testnet */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 51D52F10840D223E083B6EDA /* Pods-loafwalletTests.testnet.xcconfig */;
+			baseConfigurationReference = 91361B2DF7CFBF96F66DE835 /* Pods-loafwalletTests.testnet.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4760,7 +4745,7 @@
 		};
 		2465874023A5AAD100A32E9E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75D0209A7B6BC4A864CC724C /* Pods-loafwalletTests.release.xcconfig */;
+			baseConfigurationReference = 5551B367195CB66F70E7147C /* Pods-loafwalletTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -4893,7 +4878,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -4908,7 +4893,7 @@
 		};
 		75A2A7E51DA5934400A983D8 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 17FB6C0C7A4EDEE276391D9A /* Pods-loafwallet.release.xcconfig */;
+			baseConfigurationReference = 9C4905F581557D8FD607EB73 /* Pods-loafwallet.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -4921,7 +4906,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -5023,7 +5008,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -5038,7 +5023,7 @@
 		};
 		CEA7E69C1F0AAA84001F8C27 /* Testnet */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9F2DD187A660718095013AA0 /* Pods-loafwallet.testnet.xcconfig */;
+			baseConfigurationReference = 012F76A05D15F227D7C3EF9A /* Pods-loafwallet.testnet.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -5052,7 +5037,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/loafwallet/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
