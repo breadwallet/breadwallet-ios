@@ -231,17 +231,22 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func setupToolbar() {
-        let buttons = [("ATM Cash Redeem", #imageLiteral(resourceName: "cashout"), #selector(redeem)),
-                       ("Scan QR Code", #imageLiteral(resourceName: "qrcode"), #selector(scanQR)),
-                       ("Activity", #imageLiteral(resourceName: "activity"), #selector(activity)),
-                       (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))].map { (title, image, selector) -> UIBarButtonItem in
-                        let button = UIButton.vertical(title: title, image: image)
-                        button.tintColor = .navigationTint
-                        button.addTarget(self, action: selector, for: .touchUpInside)
-                        return UIBarButtonItem(customView: button)
+        let items = [("Scan QR Code", #imageLiteral(resourceName: "qrcode"), #selector(scanQR)),
+                     ("ATM Cash Redeem", #imageLiteral(resourceName: "cashout"), #selector(redeem)),
+                     ("Activity", #imageLiteral(resourceName: "activity"), #selector(activity)),
+                     (S.HomeScreen.menu, #imageLiteral(resourceName: "menu"), #selector(menu))]
+        
+        let paddingWidth = C.padding[2]
+        let buttonWidth = (view.bounds.width - (paddingWidth * CGFloat(items.count+1))) / CGFloat(items.count)
+        let buttonHeight = CGFloat(44.0)
+        
+        let buttons = items.map { (title, image, selector) -> UIBarButtonItem in
+            let button = UIButton.vertical(title: title, image: image, size: CGSize(width: buttonWidth, height: buttonHeight))
+            button.tintColor = .navigationTint
+            button.addTarget(self, action: selector, for: .touchUpInside)
+            return UIBarButtonItem(customView: button)
         }
                 
-        let paddingWidth = C.padding[2]
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         
         toolbar.items = [
@@ -256,10 +261,12 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             flexibleSpace
         ]
         
-        let buttonWidth = (view.bounds.width - (paddingWidth * CGFloat(buttons.count+1))) / CGFloat(buttons.count)
-        let buttonHeight = CGFloat(44.0)
         buttons.forEach {
             $0.customView?.frame = CGRect(x: 0, y: 0, width: buttonWidth, height: buttonHeight)
+            let currWidth = $0.customView?.widthAnchor.constraint(equalToConstant: buttonWidth)
+            currWidth?.isActive = true
+            let currHeight = $0.customView?.heightAnchor.constraint(equalToConstant: buttonHeight)
+            currHeight?.isActive = true
         }
         
         // Stash the UIButton's wrapped by the toolbar items in case we need add a badge later.
