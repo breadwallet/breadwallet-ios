@@ -217,13 +217,8 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
     }
     
     open func startServer() {
-        do {
-            if !server.isStarted {
-                try server.start()
-                setupIntegrations()
-            }
-        } catch let e {
-            print("\n\n\nSERVER ERROR! \(e)\n\n\n")
+        if !server.isStarted {
+            setupIntegrations()
         }
     }
     
