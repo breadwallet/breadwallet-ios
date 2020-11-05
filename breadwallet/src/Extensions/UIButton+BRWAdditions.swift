@@ -10,21 +10,27 @@ import UIKit
 import CashUI
 
 extension UIButton {
-    static func vertical(title: String, image: UIImage) -> UIButton {
+    static func vertical(title: String, image: UIImage, size: CGSize) -> UIButton {
+        // Avoid bar button text to grow with the accessibility text size
+        let font = UIFont.systemFont(ofSize: 12)
+        
         let button = UIButton(type: .system)
         button.setTitle(title, for: .normal)
         button.setImage(image, for: .normal)
-        button.titleLabel?.font = Theme.caption
+        button.titleLabel?.font = font // Theme.caption
+        button.titleLabel?.numberOfLines = 0
+        button.titleLabel?.textAlignment = .center
         button.contentMode = .center
         button.imageView?.contentMode = .center
-        if let imageSize = button.imageView?.image?.size,
-            let font = button.titleLabel?.font {
+        button.accessibilityLabel = title
+        if let imageSize = button.imageView?.image?.size {
             let spacing: CGFloat = C.padding[1]/2.0
-            let titleSize = NSString(string: title).size(withAttributes: [NSAttributedString.Key.font: font])
+            let oneLineHeight = NSString(string: "one line").size(withAttributes: [NSAttributedString.Key.font: font]).height
+            let titleSize = NSString(string: title).boundingRect(with: CGSize(width: size.width, height: size.height), options: [.usesLineFragmentOrigin], attributes: [NSAttributedString.Key.font: font], context: nil).size
 
             // These edge insets place the image vertically above the title label
-            button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(26.0 + spacing), right: 0.0)
-            button.imageEdgeInsets = UIEdgeInsets(top: -(titleSize.height + spacing), left: 0.0, bottom: 0.0, right: -titleSize.width)
+            button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: -imageSize.width, bottom: -(26.0 + spacing + (titleSize.height - oneLineHeight)), right: 0.0)
+            button.imageEdgeInsets = UIEdgeInsets(top: -C.padding[2], left: 0.0, bottom: 0.0, right: -titleSize.width)
         }
         return button
     }
