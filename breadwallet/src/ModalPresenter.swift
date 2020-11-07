@@ -311,7 +311,10 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func makeStakeView(currency: Currency) -> UIViewController? {
-        return ModalViewController(childViewController: StakeViewController(currency: currency))
+        guard let wallet = system.wallet(for: currency),
+            let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+        let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
+        return ModalViewController(childViewController: StakeViewController(currency: currency, sender: sender))
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {

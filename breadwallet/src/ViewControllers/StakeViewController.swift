@@ -13,18 +13,21 @@ import UIKit
 class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresentable {
     
     private let currency: Currency
+    private let sender: Sender
+    
     var parentView: UIView? //ModalPresentable
     
     private let titleLabel = UILabel(font: .customBold(size: 17.0))
     private let caption = UILabel(font: .customBody(size: 15.0))
+    private let addressCaption = UILabel(font: .customBody(size: 15.0))
     private let address = UITextField()
     private let button = BRDButton(title: "Stake", type: .primary)
     private let pasteButton = UIButton(type: .system)
     private let infoView = UILabel(font: .customBold(size: 14.0))
     
-    init(currency: Currency) {
+    init(currency: Currency, sender: Sender) {
         self.currency = currency
-        
+        self.sender = sender
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,6 +40,7 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         view.backgroundColor = .white
         view.addSubview(titleLabel)
         view.addSubview(caption)
+        view.addSubview(addressCaption)
         view.addSubview(address)
         view.addSubview(button)
         view.addSubview(infoView)
@@ -58,9 +62,14 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             caption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])
         ])
+        addressCaption.constrain([
+            addressCaption.topAnchor.constraint(equalTo: caption.bottomAnchor, constant: C.padding[3]),
+            addressCaption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
+            addressCaption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])
+        ])
         address.constrain([
             address.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            address.topAnchor.constraint(equalTo: caption.bottomAnchor, constant: C.padding[4]),
+            address.topAnchor.constraint(equalTo: addressCaption.bottomAnchor, constant: C.padding[4]),
             address.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             address.heightAnchor.constraint(equalToConstant: 44.0)
         ])
@@ -91,29 +100,55 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             button.constraint(toBottom: address, constant: C.padding[4]),
             button.constraint(.height, constant: C.Sizes.buttonHeight),
             button.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
+        
+        setInitialData()
+    }
+    
+    private func setInitialData() {
+        if let validatorAddress = currency.wallet?.stakedValidatorAddress {
+            addressCaption.text = "You're Staked!"
+            addressCaption.textColor = UIColor.green
+            
+            address.text = validatorAddress
+            address.isEnabled = false
+            address.borderStyle = .none
+            pasteButton.isUserInteractionEnabled = false
+            pasteButton.isHidden = true
+            
+            button.title = "Unstake"
+            
+        } else {
+            
+        }
     }
     
     private func stakeTapped() {
-  
-        //let amount = Amount.zero(currency)
-        
-//        let confirm = ConfirmationViewController(amount: amount,
-//                                                 fee: fee,
-//                                                 displayFeeLevel: displayFeeLevel,
-//                                                 address: address,
-//                                                 isUsingBiometrics: false,
-//                                                 currency: currency)
-        
         let confirmation = ConfirmationViewController(amount: Amount.zero(currency),
                                                       fee: Amount.zero(currency),
                                                       displayFeeLevel: FeeLevel.regular,
                                                       address: address.text!,
                                                       isUsingBiometrics: true,
                                                       currency: currency)
+        let transitionDelegate = PinTransitioningDelegate()
+        transitionDelegate.shouldShowMaskView = true
+        confirmation.transitioningDelegate = transitionDelegate
+        confirmation.modalPresentationStyle = .overFullScreen
+        confirmation.modalPresentationCapturesStatusBarAppearance = true
+        confirmation.successCallback = { [weak self] in
+            //TODO pin entry/auth
+            self?.confirmed()
+        }
+        confirmation.cancelCallback = {
+            //callback(false)
+        }
         
         present(confirmation, animated: true, completion: nil)
         
-
+    }
+    
+    private func confirmed() {
+        guard let address = currency.wallet?.receiveAddress else { return }
+        sender.stake(address: address)
     }
     
     private func send() {

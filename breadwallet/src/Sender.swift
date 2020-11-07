@@ -200,6 +200,17 @@ class Sender: Subscriber {
         }
     }
     
+    func stake(address: String) {
+        wallet.estimateFee(address: address, amount: Amount.zero(wallet.currency), fee: .regular, completion: { basis in
+            guard let basis = basis else { return }
+            
+            let result = self.wallet.currency.wallet?.stake(address: nil, feeBasis: basis)
+            guard case .success(let transfer) = result else { return }
+            
+            _ = self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: "111111")
+        })
+    }
+    
     private func sendWithPinVerification(transfer: Transfer,
                                          pinVerifier: PinVerifier,
                                          completion: @escaping SendCompletion) {

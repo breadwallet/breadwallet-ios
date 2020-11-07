@@ -168,16 +168,23 @@ class Wallet {
     // Returns the staked validator address or nil
     // if this wallet isn't staked
     var stakedValidatorAddress: String? {
-        guard let mostRecentDelegation = transfers.first(where: {
-            guard let attribute = $0.transfer.attributes.first(where: { $0.key == "DelegationOp" }) else { return false }
-            return attribute.value == "1"
-        }) else { return nil }
         
-        if mostRecentDelegation.toAddress != "unknown" {
-            return mostRecentDelegation.toAddress //most recent delegation was a stake txn
-        } else {
-            return nil //most recent delegation was an un-stake txn
-        }
+        return "tz1S8MNvuFEUsWgjHvi3AxibRBf388NhT1q2"
+        
+//        transfers.forEach {
+//            print("[tezos] attributes: \($0.transfer.attributes)")
+//        }
+//        
+//        guard let mostRecentDelegation = transfers.first(where: {
+//            guard let attribute = $0.transfer.attributes.first(where: { $0.key == "DelegationOp" }) else { return false }
+//            return attribute.value == "1"
+//        }) else { return nil }
+//        
+//        if mostRecentDelegation.toAddress != "unknown" {
+//            return mostRecentDelegation.toAddress //most recent delegation was a stake txn
+//        } else {
+//            return nil //most recent delegation was an un-stake txn
+//        }
     }
 
     // MARK: Sending
