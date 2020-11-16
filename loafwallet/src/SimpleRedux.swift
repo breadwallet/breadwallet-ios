@@ -8,8 +8,8 @@
 
 import UIKit
 
-typealias Reducer = (State) -> State
-typealias Selector = (_ oldState: State, _ newState: State) -> Bool
+typealias Reducer = (ReduxState) -> ReduxState
+typealias Selector = (_ oldState: ReduxState, _ newState: ReduxState) -> Bool
 
 protocol Action {
     var reduce: Reducer { get }
@@ -24,11 +24,11 @@ extension Subscriber {
     }
 }
 
-typealias StateUpdatedCallback = (State) -> Void
+typealias StateUpdatedCallback = (ReduxState) -> Void
 
 struct Subscription {
-    let selector: ((_ oldState: State, _ newState: State) -> Bool)
-    let callback: (State) -> Void
+    let selector: ((_ oldState: ReduxState, _ newState: ReduxState) -> Bool)
+    let callback: (ReduxState) -> Void
 }
 
 struct Trigger {
@@ -148,13 +148,13 @@ class Store {
 
     //Subscription callback is immediately called with current State value on subscription
     //and then any time the selected value changes
-    func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+    func subscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (ReduxState) -> Void) {
         lazySubscribe(subscriber, selector: selector, callback: callback)
         callback(state)
     }
 
     //Same as subscribe(), but doesn't call the callback with current state upon subscription
-    func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (State) -> Void) {
+    func lazySubscribe(_ subscriber: Subscriber, selector: @escaping Selector, callback: @escaping (ReduxState) -> Void) {
         let key = subscriber.hashValue
         let subscription = Subscription(selector: selector, callback: callback)
         if subscriptions[key] != nil {
@@ -180,7 +180,7 @@ class Store {
     }
 
     //MARK: - Private
-    private(set) var state = State.initial {
+    private(set) var state = ReduxState.initial {
         didSet {
             subscriptions
                 .flatMap { $0.value } //Retreive all subscriptions (subscriptions is a dictionary)
