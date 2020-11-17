@@ -97,7 +97,7 @@ struct Amount {
 
 struct DisplayAmount {
     let amount: Satoshis
-    let state: ReduxState
+    let state: State
     let selectedRate: Rate?
     let minimumFractionDigits: Int?
 

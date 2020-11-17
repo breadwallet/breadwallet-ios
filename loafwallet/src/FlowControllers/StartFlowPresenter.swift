@@ -48,7 +48,7 @@ class StartFlowPresenter : Subscriber {
                         callback: { _ in self.presentLoginFlow(isPresentedForLock: true) })
     }
 
-    private func handleStartFlowChange(state: ReduxState) {
+    private func handleStartFlowChange(state: State) {
         if state.isStartFlowVisible {
             guardProtected(queue: DispatchQueue.main) { [weak self] in
                 self?.presentStartFlow()
@@ -58,7 +58,7 @@ class StartFlowPresenter : Subscriber {
         }
     }
 
-    private func handleLoginRequiredChange(state: ReduxState) {
+    private func handleLoginRequiredChange(state: State) {
         if state.isLoginRequired {
             presentLoginFlow(isPresentedForLock: false)
         } else {

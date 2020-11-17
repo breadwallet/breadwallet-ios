@@ -25,11 +25,11 @@ class TouchIdEnabledTests : XCTestCase {
 
     func testInitialState() {
         UserDefaults.isBiometricsEnabled = true
-        let state = ReduxState.initial
+        let state = State.initial
         XCTAssertTrue(state.isBiometricsEnabled, "Initial state should be same as stored value")
 
         UserDefaults.isBiometricsEnabled = false
-        let state2 = ReduxState.initial
+        let state2 = State.initial
         XCTAssertFalse(state2.isBiometricsEnabled, "Initial state should be same as stored value")
     }
 

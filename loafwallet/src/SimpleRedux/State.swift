@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ReduxState {
+struct State {
     let isStartFlowVisible: Bool
     let isLoginRequired: Bool
     let rootModal: RootModal
@@ -28,9 +28,9 @@ struct ReduxState {
     let fees: Fees
 }
 
-extension ReduxState {
-    static var initial: ReduxState {
-        return ReduxState (   isStartFlowVisible: false,
+extension State {
+    static var initial: State {
+        return State(   isStartFlowVisible: false,
                         isLoginRequired: true,
                         rootModal: .none,
                         walletState: WalletState.initial,
