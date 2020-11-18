@@ -254,21 +254,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Обменный курс";
 
-/* Donate Memo */
-"Donate.memo" = "Пожертвование в фонд Litecoin";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "Нажмите, чтобы пожертвовать в фонд Litecoin (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "Подтвердите Пожертвование";
-
-/* Donate articles to the */
-"Donate.toThe" = "Пожертвовать";
-
-/* Donate */
-"Donate.word" = "жертвовать";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Для этого устройства не настроена отправка электронных писем через почтовое приложение iOS.";
 
@@ -910,6 +895,9 @@
 
 /* Start view message */
 "StartViewController.message" = "Самый надежный и безопасный способ использования биткойна.";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "Поддержите фонд Litecoin";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "Подключение ...";

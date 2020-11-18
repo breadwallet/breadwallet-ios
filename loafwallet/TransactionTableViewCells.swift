@@ -262,7 +262,7 @@ enum PromptType {
         }
     }
 
-    func shouldPrompt(walletManager: WalletManager, state: State) -> Bool {
+    func shouldPrompt(walletManager: WalletManager, state: ReduxState) -> Bool {
          
         switch self {
         case .biometrics:

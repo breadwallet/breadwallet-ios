@@ -254,21 +254,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "為替レート";
 
-/* Donate Memo */
-"Donate.memo" = "ライトコイン財団への寄付";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "ライトコイン財団に寄付してください (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "寄付を確認する";
-
-/* Donate articles to the */
-"Donate.toThe" = "に寄付する";
-
-/* Donate */
-"Donate.word" = "寄付";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "この端末は、iOSのメールアプリを使用してメールを送信する設定がされていません。";
 
@@ -910,6 +895,9 @@
 
 /* Start view message */
 "StartViewController.message" = "最も安全にリテコインを使う手段。";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "Litecoin基金を支援する";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "接続しています...";

@@ -17,7 +17,7 @@ struct ShowStartFlow : Action {
 
 struct HideStartFlow : Action {
     let reduce: Reducer = { state in
-        return State(isStartFlowVisible: false,
+        return ReduxState(isStartFlowVisible: false,
                      isLoginRequired: state.isLoginRequired,
                      rootModal: .none,
                      walletState: state.walletState,
@@ -39,7 +39,7 @@ struct HideStartFlow : Action {
 
 struct Reset : Action {
     let reduce: Reducer = { _ in
-        return State.initial.clone(isLoginRequired: false)
+        return ReduxState.initial.clone(isLoginRequired: false)
     }
 }
 
@@ -241,9 +241,9 @@ enum UpdateFees {
 
 
 //MARK: - State Creation Helpers
-extension State {
-    func clone(isStartFlowVisible: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+extension ReduxState {
+    func clone(isStartFlowVisible: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -261,8 +261,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func rootModal(_ type: RootModal) -> State {
-        return State(isStartFlowVisible: false,
+    func rootModal(_ type: RootModal) -> ReduxState {
+        return ReduxState(isStartFlowVisible: false,
                      isLoginRequired: isLoginRequired,
                      rootModal: type,
                      walletState: walletState,
@@ -280,8 +280,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(pasteboard: String?) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(pasteboard: String?) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -299,8 +299,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(walletSyncProgress: Double, timestamp: UInt32) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(walletSyncProgress: Double, timestamp: UInt32) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletSyncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: timestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -318,8 +318,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(syncState: SyncState) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(syncState: SyncState) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -337,8 +337,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(balance: UInt64) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(balance: UInt64) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -356,8 +356,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(transactions: [Transaction]) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(transactions: [Transaction]) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -375,8 +375,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(walletName: String) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(walletName: String) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletName, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -394,8 +394,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(walletSyncingErrorMessage: String?) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(walletSyncingErrorMessage: String?) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: walletState.isRescanning),
@@ -413,8 +413,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(walletCreationDate: Date) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(walletCreationDate: Date) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletCreationDate, isRescanning: walletState.isRescanning),
@@ -432,8 +432,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isRescanning: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isRescanning: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: WalletState(isConnected: walletState.isConnected, syncProgress: walletState.syncProgress, syncState: walletState.syncState, balance: walletState.balance, transactions: walletState.transactions, lastBlockTimestamp: walletState.lastBlockTimestamp, name: walletState.name, creationDate: walletState.creationDate, isRescanning: isRescanning),
@@ -451,8 +451,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isLtcSwapped: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isLtcSwapped: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -470,8 +470,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isLoginRequired: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isLoginRequired: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -489,8 +489,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(currentRate: Rate, rates: [Rate]) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(currentRate: Rate, rates: [Rate]) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -508,8 +508,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(currentRate: Rate) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(currentRate: Rate) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -527,8 +527,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(alert: AlertType?) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(alert: AlertType?) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -546,8 +546,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isBiometricsEnabled: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isBiometricsEnabled: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -565,8 +565,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(defaultCurrencyCode: String) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(defaultCurrencyCode: String) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -584,8 +584,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(recommendRescan: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(recommendRescan: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -603,8 +603,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isLoadingTransactions: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isLoadingTransactions: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -622,8 +622,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(maxDigits: Int) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(maxDigits: Int) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -641,8 +641,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isPushNotificationsEnabled: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isPushNotificationsEnabled: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -660,8 +660,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(isPromptingBiometrics: Bool) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(isPromptingBiometrics: Bool) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -679,8 +679,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(pinLength: Int) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(pinLength: Int) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,
@@ -698,8 +698,8 @@ extension State {
                      pinLength: pinLength,
                      fees: fees)
     }
-    func clone(fees: Fees) -> State {
-        return State(isStartFlowVisible: isStartFlowVisible,
+    func clone(fees: Fees) -> ReduxState {
+        return ReduxState(isStartFlowVisible: isStartFlowVisible,
                      isLoginRequired: isLoginRequired,
                      rootModal: rootModal,
                      walletState: walletState,

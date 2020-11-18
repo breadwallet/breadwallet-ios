@@ -10,8 +10,8 @@ import UIKit
 
 class SendCell : UIView {
 
-    static let defaultHeight: CGFloat = 72.0
-
+    static let defaultHeight: CGFloat = 60.0
+    
     init() {
         super.init(frame: .zero)
         setupViews()

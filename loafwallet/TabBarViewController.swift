@@ -6,7 +6,7 @@
 //  Copyright © 2019 Litecoin Foundation. All rights reserved.
 
 import UIKit
-import Foundation 
+import Foundation
 
 enum TabViewControllerIndex: Int {
     case transactions = 0

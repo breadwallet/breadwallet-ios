@@ -11,7 +11,7 @@ import LocalAuthentication
 
 class ConfirmationViewController : UIViewController, ContentBoxPresenter {
 
-    init(amount: Satoshis, fee: Satoshis, feeType: FeeType, state: State, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, isDonation: Bool = false) {
+    init(amount: Satoshis, fee: Satoshis, feeType: FeeType, state: ReduxState, selectedRate: Rate?, minimumFractionDigits: Int?, address: String, isUsingBiometrics: Bool, isDonation: Bool = false) {
         self.amount = amount
         self.feeAmount = fee
         self.feeType = feeType
@@ -28,7 +28,7 @@ class ConfirmationViewController : UIViewController, ContentBoxPresenter {
     private let amount: Satoshis
     private let feeAmount: Satoshis
     private let feeType: FeeType
-    private let state: State
+    private let state: ReduxState
     private let selectedRate: Rate?
     private let minimumFractionDigits: Int?
     private let addressText: String

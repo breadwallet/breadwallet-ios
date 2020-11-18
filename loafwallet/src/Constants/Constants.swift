@@ -9,23 +9,7 @@
 import UIKit
 
 let π: CGFloat = .pi
-let kDonationAmount: UInt64 = 1800000
-let kDonationAmountInDouble: Double = Double(kDonationAmount) / Double(100000000)
-
-enum LWDonationAddress: String {
-    case litwalletHardware = "Litewallet Hardware Fundraiser" //TODO: Remove after fundraiser goal is acheived in 2020
-    case generalLitecoinFoundation = "Litecoin Foundation"
-    
-    static let allValues = [litwalletHardware, generalLitecoinFoundation]
-    
-    var address: String {
-        switch self {
-        case .litwalletHardware:          return "MJ4W7NZya4SzE7R6xpEVdamGCimaQYPiWu" //old MVRj1whQ8hqcpffjRxLLCJG1mD27V9YygY
-        case .generalLitecoinFoundation:  return "MVZj7gBRwcVpa9AAWdJm8A3HqTst112eJe" //old MDPqwDf9eUErGLcZNt1HN9HqnbFCSCSRme
-        }
-    }
-}
-
+ 
 enum CustomEvent: String {
     case _20191105_AL = "APP_LAUNCHED"
     case _20191105_VSC = "VISIT_SEND_CONTROLLER"
@@ -49,12 +33,26 @@ enum CustomEvent: String {
     case _20200223_DD = "DID_DONATE"
     case _20200225_DCD = "DID_CANCEL_DONATE"
     case _20200301_DUDFPK = "DID_USE_DEFAULT_FEE_PER_KB"
+    case _20201118_DTS = "DID_TAP_SUPPORT_LF"
+}
+
+struct FoundationSupport {
+
+    static let url = URL(string: "https://lite-wallet.org/support_address.html")!
     
-    
+    /// Litecoin Foundation main donation address: MVZj7gBRwcVpa9AAWdJm8A3HqTst112eJe
+    /// As of Nov 14th, 2020
+    static let supportLTCAddress = "MVZj7gBRwcVpa9AAWdJm8A3HqTst112eJe"
 }
 
 struct Padding {
     subscript(multiplier: Int) -> CGFloat {
+        get {
+            return CGFloat(multiplier) * 8.0
+        }
+    }
+    
+    subscript(multiplier: Double) -> CGFloat {
         get {
             return CGFloat(multiplier) * 8.0
         }

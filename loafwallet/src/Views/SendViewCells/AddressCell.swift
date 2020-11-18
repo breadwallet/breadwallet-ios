@@ -36,7 +36,7 @@ class AddressCell : UIView {
     let textField = UITextField()
     let paste = ShadowButton(title: S.Send.pasteLabel, type: .tertiary)
     let scan = ShadowButton(title: S.Send.scanLabel, type: .tertiary)
-    fileprivate var contentLabel = UILabel(font: .customBody(size: 14.0), color: .darkText)
+    fileprivate var contentLabel = UILabel(font: .customBody(size: 12.0), color: .darkText)
     private var label = UILabel(font: .customBody(size: 16.0))
     fileprivate let gr = UITapGestureRecognizer()
     fileprivate let tapView = UIView()
@@ -92,7 +92,7 @@ class AddressCell : UIView {
             scan.centerYAnchor.constraint(equalTo: centerYAnchor) ])
         paste.constrain([
             paste.centerYAnchor.constraint(equalTo: centerYAnchor),
-            paste.trailingAnchor.constraint(equalTo: scan.leadingAnchor, constant: -C.padding[1]) ])
+                            paste.trailingAnchor.constraint(equalTo: scan.leadingAnchor, constant: -C.padding[0.625]) ])
         border.constrain([
             border.leadingAnchor.constraint(equalTo: leadingAnchor),
             border.bottomAnchor.constraint(equalTo: bottomAnchor),

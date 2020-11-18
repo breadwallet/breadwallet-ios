@@ -49,14 +49,18 @@ class DescriptionSendCell : SendCell {
         addSubview(textView)
         textView.constrain([
             textView.constraint(.leading, toView: self, constant: 11.0),
-            textView.topAnchor.constraint(equalTo: topAnchor, constant: C.padding[2]),
-            textView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30.0),
+            textView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
             textView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
 
         textView.addSubview(placeholder)
         placeholder.constrain([
             placeholder.centerYAnchor.constraint(equalTo: textView.centerYAnchor),
             placeholder.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: 5.0) ])
+    }
+    
+    func clearPlaceholder() {
+        placeholder.text = ""
+        placeholder.isHidden = true
     }
 
     required init?(coder aDecoder: NSCoder) {

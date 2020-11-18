@@ -255,21 +255,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Tasa de cambio";
 
-/* Donate Memo */
-"Donate.memo" = "Donación a la Fundación Litecoin";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "Done a la Fundación Litecoin (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "Confirmar donación";
-
-/* Donate articles to the */
-"Donate.toThe" = "Done a la";
-
-/* Donate */
-"Donate.word" = "Donar";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Este dispositivo no está configurado para enviar correo electrónico mediante una aplicación de iOS";
 
@@ -911,6 +896,9 @@
 
 /* Start view message */
 "StartViewController.message" = "La forma más segura de usar Litecoin.";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "Apoyar la Fundación Litecoin";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "Conectando ...";

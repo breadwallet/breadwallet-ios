@@ -254,21 +254,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "환율";
 
-/* Donate Memo */
-"Donate.memo" = "라이트 코인 재단에 기부";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "라이트 코인 재단에 기부하려면 탭하세요 (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "기부 확인";
-
-/* Donate to the articles */
-"Donate.toThe" = "에 기부";
-
-/* Donate */
-"Donate.word" = "기부";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "이 장치는 iOS 메일 앱으로 이메일을 전송하도록 설정되지 않았습니다.";
 
@@ -910,6 +895,9 @@
 
 /* Start view message */
 "StartViewController.message" = "Litecoin을 사용하는 가장 안정되고 안전한 방법.";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "라이트 코인 재단 지원";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "연결 중 ...";

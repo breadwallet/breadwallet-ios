@@ -254,21 +254,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "汇率";
 
-/* Donate Memo */
-"Donate.memo" = "捐赠给莱特币基金会";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "点击捐赠给莱特币基金会 (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "确认捐赠";
-
-/* Donate to the articles */
-"Donate.toThe" = "捐赠给";
-
-/* Donate */
-"Donate.word" = "捐";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "此设备未进行配置，无法用 iOS 邮件应用发送电子邮件。";
 
@@ -910,6 +895,9 @@
 
 /* Start view message */
 "StartViewController.message" = "使用莱特币最安全且最可靠的方式。";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "支持Litecoin基金会";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "正在连线...";

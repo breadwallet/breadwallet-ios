@@ -254,21 +254,6 @@
 /* Exchange rate label */
 "DefaultCurrency.rateLabel" = "Kurs";
 
-/* Donate Memo */
-"Donate.memo" = "Sumbangan untuk Yayasan Litecoin";
-
-/* Donate to the Litecoin Foundation */
-"Donate.title" = "Ketuk untuk Menyumbang ke Yayasan Litecoin (%@)";
-
-/* Donate Confirmation */
-"Donate.title.confirmation" = "Konfirmasi Sumbangan";
-
-/* Donate to the articles */
-"Donate.toThe" = "Donasi ke";
-
-/* Donate */
-"Donate.word" = "Menyumbangkan";
-
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableMessage" = "Perangkat ini tidak dikonfigurasikan untuk mengirim email dengan aplikasi surat iOS.";
 
@@ -910,6 +895,9 @@
 
 /* Start view message */
 "StartViewController.message" = "Cara paling aman dan teraman untuk menggunakan Litecoin.";
+
+/* Support the Litecoin Foundation */
+"SupportTheFoundation.title" = "Dukung Yayasan Litecoin";
 
 /* Syncing view connection state header text */
 "SyncingHeader.connecting" = "Menghubungkan ...";
