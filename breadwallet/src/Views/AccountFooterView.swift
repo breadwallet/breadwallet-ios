@@ -14,8 +14,7 @@ class AccountFooterView: UIView, Subscriber, Trackable {
 
     var sendCallback: (() -> Void)?
     var receiveCallback: (() -> Void)?
-    var buyCallback: (() -> Void)?
-    var sellCallback: (() -> Void)?
+    var giftCallback: (() -> Void)?
     
     private var hasSetup = false
     private let currency: Currency
@@ -54,13 +53,17 @@ class AccountFooterView: UIView, Subscriber, Trackable {
     
     private func setupToolbarButtons() {
         
-        let buttons = [(S.Button.send, #selector(AccountFooterView.send)),
-                       (S.Button.receive, #selector(AccountFooterView.receive))].map { (title, selector) -> UIBarButtonItem in
-                        let button = UIButton.rounded(title: title)
-                        button.tintColor = .white
-                        button.backgroundColor = .transparentWhite
-                        button.addTarget(self, action: selector, for: .touchUpInside)
-                        return UIBarButtonItem(customView: button)
+        let buttons = [
+            (S.Button.send, #selector(AccountFooterView.send)),
+            (S.Button.receive, #selector(AccountFooterView.receive)),
+            ("Gift", #selector(AccountFooterView.gift))
+            //currency.isGiftingEnabled ? ("Gift", #selector(AccountFooterView.gift)) : nil
+        ].compactMap { (title, selector) -> UIBarButtonItem in
+            let button = UIButton.rounded(title: title)
+            button.tintColor = .white
+            button.backgroundColor = .transparentWhite
+            button.addTarget(self, action: selector, for: .touchUpInside)
+            return UIBarButtonItem(customView: button)
         }
         
         let paddingWidth = C.padding[2]
@@ -85,13 +88,9 @@ class AccountFooterView: UIView, Subscriber, Trackable {
 
     @objc private func send() { sendCallback?() }
     @objc private func receive() { receiveCallback?() }
-    @objc private func buy() {
+    @objc private func gift() {
         saveEvent("currency.didTapBuyBitcoin", attributes: ["currency": currency.code.lowercased()])
-        buyCallback?()
-    }
-    @objc private func sell() {
-        saveEvent("currency.didTapSellBitcoin", attributes: ["currency": currency.code.lowercased()])
-        sellCallback?()
+        giftCallback?()
     }
 
     required init(coder aDecoder: NSCoder) {

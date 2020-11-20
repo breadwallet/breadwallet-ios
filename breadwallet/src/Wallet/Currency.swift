@@ -212,6 +212,10 @@ class Currency: CurrencyWithIcon {
         return false
     }
 
+    var isGiftingEnabled: Bool {
+        return isBitcoin
+    }
+    
     // MARK: Init
 
     init?(core: WalletKit.Currency,
