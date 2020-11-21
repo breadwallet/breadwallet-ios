@@ -244,9 +244,15 @@ class ModalPresenter: Subscriber, Trackable {
         case .receiveLegacy:
             guard let btc = Currencies.btc.instance else { return nil }
             return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
+        case .gift :
+            let giftView = GiftViewController()
+            topViewController?.present(giftView, animated: true, completion: {
+                Store.perform(action: RootModalActions.Present(modal: .none))
+            })
+            return nil
         }
     }
-
+    
     private func makeSendView(currency: Currency) -> UIViewController? {
         guard let wallet = system.wallet(for: currency),
             let kvStore = Backend.kvStore else { assertionFailure(); return nil }

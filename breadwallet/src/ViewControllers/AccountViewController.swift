@@ -32,9 +32,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
         footerView.receiveCallback = { [unowned self] in
             Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.giftCallback = { [unowned self] in
-            //Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency)))
-            
+        footerView.giftCallback = {
+            Store.perform(action: RootModalActions.Present(modal: .gift))
         }
     }
     
@@ -131,6 +130,11 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         
         if shouldAnimateRewardsView {
             expandRewardsView()
+        }
+        
+        //TODO:GIFT - maybe just do this a few times?
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.footerView.jiggle()
         }
         
         saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.appeared.name]))
