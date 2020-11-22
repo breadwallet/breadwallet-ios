@@ -49,6 +49,7 @@ class Sender: Subscriber {
     private let authenticator: TransactionAuthenticator
     
     private var comment: String?
+    private var gift: Gift?
     private var transfer: WalletKit.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
     var maximum: Amount?
@@ -131,7 +132,7 @@ class Sender: Subscriber {
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil) -> SenderValidationResult {
+    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil, gift: Gift? = nil) -> SenderValidationResult {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount, feeBasis: feeBasis)
         guard case .ok = result else { return result }
@@ -139,6 +140,7 @@ class Sender: Subscriber {
         switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, attribute: attribute) {
         case .success(let transfer):
             self.comment = comment
+            self.gift = gift
             self.transfer = transfer
             return .ok
         case .failure(let error) where error == .invalidAddress:
@@ -300,6 +302,7 @@ class Sender: Subscriber {
                           comment: comment,
                           feeRate: feeRate,
                           tokenTransfer: nil,
+                          gift: gift,
                           kvStore: kvStore)
 
         // for non-native token transfers, the originating transaction on the network's primary wallet captures the fee spent

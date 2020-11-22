@@ -27,6 +27,7 @@ class TxDetailDataSource: NSObject {
         case fee
         case total
         case extraAttribute
+        case gift
         
         var cellType: UITableViewCell.Type {
             switch self {
@@ -38,6 +39,8 @@ class TxDetailDataSource: NSObject {
                 return TxMemoCell.self
             case .address, .transactionId:
                 return TxAddressCell.self
+            case .gift:
+                return TxGiftCell.self
             default:
                 return TxLabelCell.self
             }
@@ -75,6 +78,7 @@ class TxDetailDataSource: NSObject {
         if viewModel.total != nil { fields.append(.total) }
         if viewModel.exchangeRate != nil { fields.append(.exchangeRate) }
         if viewModel.extraAttribute != nil { fields.append(.extraAttribute) }
+        if viewModel.gift != nil { fields.append(.gift) }
         
         fields.append(.blockHeight)
         fields.append(.confirmations)
@@ -111,6 +115,8 @@ class TxDetailDataSource: NSObject {
             return S.TransactionDetails.confirmationsLabel
         case .extraAttribute:
             return viewModel.extraAttributeHeader
+        case .gift:
+            return "Gift" //TODO:GIFT - translate
         default:
             return ""
         }
@@ -189,6 +195,10 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .extraAttribute:
             guard let labelCell = cell as? TxLabelCell else { return cell }
             labelCell.value = viewModel.extraAttribute ?? ""
+        case .gift:
+            guard let giftCell = cell as? TxGiftCell else { return cell }
+            guard let gift = viewModel.gift else { return cell }
+            giftCell.set(gift: gift)
         }
         
         return cell

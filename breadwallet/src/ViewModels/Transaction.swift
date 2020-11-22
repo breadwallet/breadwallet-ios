@@ -152,6 +152,7 @@ class Transaction {
                         comment: String? = nil,
                         feeRate: Double? = nil,
                         tokenTransfer: String? = nil,
+                        gift: Gift? = nil,
                         kvStore: BRReplicatedKVStore) {
         guard metaData == nil, let key = metaDataKey else { return }
         self.metaData = TxMetaData.create(forTransaction: self,
@@ -160,6 +161,7 @@ class Transaction {
                                           comment: comment,
                                           feeRate: feeRate,
                                           tokenTransfer: tokenTransfer,
+                                          gift: gift,
                                           kvStore: kvStore)
     }
     

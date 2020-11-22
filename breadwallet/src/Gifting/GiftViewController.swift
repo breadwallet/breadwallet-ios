@@ -9,8 +9,24 @@
 //
 
 import UIKit
+import WalletKit
 
 class GiftViewController: UIViewController {
+    
+    //TODO:GIFT - sending protocol for these?
+    var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
+    var onPublishSuccess: (() -> Void)?
+    
+    private let sender: Sender
+    private let wallet: Wallet
+    private let currency: Currency
+    
+    init(sender: Sender, wallet: Wallet, currency: Currency) {
+        self.sender = sender
+        self.wallet = wallet
+        self.currency = currency
+        super.init(nibName: nil, bundle: nil)
+    }
     
     private let gradientView = GradientView()
     private let titleLabel = UILabel(font: Theme.body1, color: .white)
@@ -36,7 +52,7 @@ class GiftViewController: UIViewController {
     private let toolbar = UIStackView()
     private var buttons = [UIButton]()
     private var selectedIndex: Int = -1
-    
+    private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
     private let extraSwitch = UISwitch()
     private let extraLabel = UILabel.wrapping(font: Theme.caption, color: .white)
     
@@ -141,6 +157,93 @@ class GiftViewController: UIViewController {
         extraLabel.text = "add an additional $10 for import network fees"
         extraLabel.numberOfLines = 0
         extraLabel.lineBreakMode = .byWordWrapping
+        createButton.tap = create
+        
+    }
+    
+    private func create() {
+        let result = wallet.createExportablePaperWallet()
+        guard case .success(let paperWallet) = result else { return handleCreatePaperWalletError() }
+        guard let address = paperWallet.address else { return handleCreatePaperWalletError() }
+        guard let privKey = paperWallet.privateKey else { return handleCreatePaperWalletError() }
+        
+        let amount = Amount(tokenString: "0.002", currency: currency)
+        sender.estimateFee(address: address.description, amount: amount, tier: .regular, completion: { [weak self] feeBasis in
+            guard let `self` = self else { return }
+            guard let feeBasis = feeBasis else { return }
+            let feeCurrency = self.sender.wallet.feeCurrency
+            let fee = Amount(cryptoAmount: feeBasis.fee, currency: feeCurrency)
+
+            let rate = Rate(code: "USD", name: "USD", rate: 18000.0, reciprocalCode: "BTC")
+            
+            let displayAmount = Amount(amount: amount,
+                                      rate: rate,
+                                      maximumFractionDigits: Amount.highPrecisionDigits)
+            let feeAmount = Amount(amount: fee,
+                                   rate: rate,
+                                   maximumFractionDigits: Amount.highPrecisionDigits)
+            
+            let gift = Gift.create(key: privKey)
+            _ = self.sender.createTransaction(address: address.description, amount: amount, feeBasis: feeBasis, comment: "Gift to <name>", gift: gift)
+            
+            DispatchQueue.main.async {
+                let confirm = ConfirmationViewController(amount: displayAmount,
+                                                         fee: feeAmount,
+                                                         displayFeeLevel: .regular,
+                                                         address: address.description,
+                                                         isUsingBiometrics: self.sender.canUseBiometrics,
+                                                         currency: self.currency,
+                                                         resolvedAddress: nil,
+                                                         shouldShowMaskView: false)
+                confirm.successCallback = self.send
+                confirm.cancelCallback = self.sender.reset
+                self.present(confirm, animated: true, completion: nil)
+            }
+        })
+        
+    }
+    
+    private func send() {
+        let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+            guard let `self` = self else { return assertionFailure() }
+            self.sendingActivity.dismiss(animated: false) {
+                self.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                    self.parent?.view.isFrameChangeBlocked = false
+                    pinValidationCallback(pin)
+                    self.present(self.sendingActivity, animated: false)
+                }
+            }
+        }
+        
+        present(sendingActivity, animated: true)
+        sender.sendTransaction(allowBiometrics: true, pinVerifier: pinVerifier) { [weak self] result in
+            guard let `self` = self else { return }
+            self.sendingActivity.dismiss(animated: true) {
+                defer { self.sender.reset() }
+                switch result {
+                case .success:
+                    self.dismiss(animated: true) {
+                        Store.trigger(name: .showStatusBar)
+                        self.onPublishSuccess?()
+                    }
+                    //self.saveEvent("send.success")
+                case .creationError(let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: message, buttonLabel: S.Button.ok)
+                    //self.saveEvent("send.publishFailed", attributes: ["errorMessage": message])
+                case .publishFailure(let code, let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(message) (\(code))", buttonLabel: S.Button.ok)
+                    //self.saveEvent("send.publishFailed", attributes: ["errorMessage": "\(message) (\(code))"])
+                case .insufficientGas(let rpcErrorMessage):
+                    print("blah: \(rpcErrorMessage)")
+                    //self.showInsufficientGasError()
+                    //self.saveEvent("send.publishFailed", attributes: ["errorMessage": rpcErrorMessage])
+                }
+            }
+        }
+    }
+    
+    private func handleCreatePaperWalletError() {
+        
     }
     
     private func addButtons() {
@@ -181,6 +284,10 @@ class GiftViewController: UIViewController {
             previousSelectedButton?.layer.borderColor = UIColor.white.withAlphaComponent(0.85).cgColor
             previousSelectedButton?.tintColor = .white
         })
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 }

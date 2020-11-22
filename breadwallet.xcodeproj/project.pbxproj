@@ -90,9 +90,10 @@
 		3AFAD90325674F56005853E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD90225674F56005853E8 /* ContentView.swift */; };
 		3AFAD90525674F57005853E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AFAD90425674F57005853E8 /* Assets.xcassets */; };
 		3AFAD90825674F57005853E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AFAD90725674F57005853E8 /* Preview Assets.xcassets */; };
-		3AFAD90E25674F57005853E8 /* BRDClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 3AFAD8FE25674F56005853E8 /* BRDClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		3AFAD9302567EE15005853E8 /* GiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD92F2567EE15005853E8 /* GiftViewController.swift */; };
 		3AFAD937256826F3005853E8 /* BorderedTextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD936256826F3005853E8 /* BorderedTextInput.swift */; };
+		3AFAD94825698A74005853E8 /* Gift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94725698A74005853E8 /* Gift.swift */; };
+		3AFAD94F25699112005853E8 /* TxGiftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94E25699112005853E8 /* TxGiftCell.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -539,13 +540,6 @@
 			remoteGlobalIDString = 22A9A9951DF63426000F0016;
 			remoteInfo = libbz2;
 		};
-		3AFAD90B25674F57005853E8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3AFAD8FD25674F56005853E8;
-			remoteInfo = BRDClip;
-		};
 		75A2A7A51DA5934300A983D8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -587,7 +581,6 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
 			dstSubfolderSpec = 16;
 			files = (
-				3AFAD90E25674F57005853E8 /* BRDClip.app in Embed App Clips */,
 			);
 			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -706,6 +699,8 @@
 		3AFAD90A25674F57005853E8 /* BRDClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BRDClip.entitlements; sourceTree = "<group>"; };
 		3AFAD92F2567EE15005853E8 /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftViewController.swift; path = src/Gifting/GiftViewController.swift; sourceTree = "<group>"; };
 		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
+		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
+		3AFAD94E25699112005853E8 /* TxGiftCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxGiftCell.swift; path = src/Gifting/TxGiftCell.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
@@ -1399,6 +1394,7 @@
 			children = (
 				3AFAD92F2567EE15005853E8 /* GiftViewController.swift */,
 				3AFAD936256826F3005853E8 /* BorderedTextInput.swift */,
+				3AFAD94E25699112005853E8 /* TxGiftCell.swift */,
 			);
 			name = Gifting;
 			sourceTree = "<group>";
@@ -2043,6 +2039,7 @@
 				7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */,
 				22A9A93D1DF61945000F0016 /* TxMetaData.swift */,
 				CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */,
+				3AFAD94725698A74005853E8 /* Gift.swift */,
 			);
 			name = "KVStore Objects";
 			sourceTree = "<group>";
@@ -2329,7 +2326,6 @@
 			);
 			dependencies = (
 				22A9A99C1DF63426000F0016 /* PBXTargetDependency */,
-				3AFAD90C25674F57005853E8 /* PBXTargetDependency */,
 			);
 			name = breadwallet;
 			packageProductDependencies = (
@@ -2995,6 +2991,7 @@
 				22A9A94E1DF61945000F0016 /* BRHTTPIndexMiddleware.swift in Sources */,
 				71173059220CCC91001931B3 /* PromptView.swift in Sources */,
 				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
+				3AFAD94825698A74005853E8 /* Gift.swift in Sources */,
 				CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */,
 				7C9724661FF07B9A004248C4 /* StatusPip.swift in Sources */,
 				7C35E712200AC2080064808F /* TxViewModel.swift in Sources */,
@@ -3034,6 +3031,7 @@
 				3AFAD9302567EE15005853E8 /* GiftViewController.swift in Sources */,
 				7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */,
 				3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */,
+				3AFAD94F25699112005853E8 /* TxGiftCell.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
@@ -3171,11 +3169,6 @@
 			isa = PBXTargetDependency;
 			target = 22A9A9951DF63426000F0016 /* libbz2 */;
 			targetProxy = 22A9A99B1DF63426000F0016 /* PBXContainerItemProxy */;
-		};
-		3AFAD90C25674F57005853E8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3AFAD8FD25674F56005853E8 /* BRDClip */;
-			targetProxy = 3AFAD90B25674F57005853E8 /* PBXContainerItemProxy */;
 		};
 		75A2A7A61DA5934300A983D8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

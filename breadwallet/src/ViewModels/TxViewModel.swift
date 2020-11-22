@@ -21,6 +21,7 @@ protocol TxViewModel {
     var displayAddress: String { get }
     var comment: String? { get }
     var tokenTransferCode: String? { get }
+    var gift: Gift? { get }
 }
 
 // Default and passthru values
@@ -90,6 +91,10 @@ extension TxViewModel {
         }
         
         return .sent
+    }
+    
+    var gift: Gift? {
+        return tx.metaData?.gift
     }
 }
 

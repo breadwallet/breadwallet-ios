@@ -245,7 +245,29 @@ class ModalPresenter: Subscriber, Trackable {
             guard let btc = Currencies.btc.instance else { return nil }
             return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
         case .gift :
-            let giftView = GiftViewController()
+            guard let currency = Currencies.btc.instance else { return nil }
+            guard let wallet = system.wallet(for: currency),
+                let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+            let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
+            let giftView = GiftViewController(sender: sender, wallet: wallet, currency: currency)
+            
+            giftView.presentVerifyPin = { [weak self, weak giftView] bodyText, success in
+                guard let `self` = self else { return }
+                let vc = VerifyPinViewController(bodyText: bodyText,
+                                                 pinLength: Store.state.pinLength,
+                                                 walletAuthenticator: self.keyStore,
+                                                 pinAuthenticationType: .transactions,
+                                                 success: success)
+                vc.transitioningDelegate = self.verifyPinTransitionDelegate
+                vc.modalPresentationStyle = .overFullScreen
+                vc.modalPresentationCapturesStatusBarAppearance = true
+                giftView?.view.isFrameChangeBlocked = true
+                giftView?.present(vc, animated: true, completion: nil)
+            }
+            giftView.onPublishSuccess = { [weak self] in
+                self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
+            }
+            
             topViewController?.present(giftView, animated: true, completion: {
                 Store.perform(action: RootModalActions.Present(modal: .none))
             })
@@ -1026,12 +1048,8 @@ class ModalPresenter: Subscriber, Trackable {
                                                  displayFeeLevel: displayFeeLevel,
                                                  address: address,
                                                  isUsingBiometrics: false,
-                                                 currency: currency)
-        let transitionDelegate = PinTransitioningDelegate()
-        transitionDelegate.shouldShowMaskView = true
-        confirm.transitioningDelegate = transitionDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
+                                                 currency: currency,
+                                                 shouldShowMaskView: true)
         confirm.successCallback = {
             callback(true)
         }

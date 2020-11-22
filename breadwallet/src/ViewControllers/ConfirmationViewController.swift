@@ -11,17 +11,30 @@ import LocalAuthentication
 
 class ConfirmationViewController: UIViewController, ContentBoxPresenter {
 
-    init(amount: Amount, fee: Amount, displayFeeLevel: FeeLevel, address: String, isUsingBiometrics: Bool, currency: Currency, resolvedAddress: ResolvedAddress? = nil) {
-        self.amount = amount
-        self.feeAmount = fee
-        self.displayFeeLevel = displayFeeLevel
-        self.addressText = address
-        self.isUsingBiometrics = isUsingBiometrics
-        self.currency = currency
-        self.resolvedAddress = resolvedAddress
-        super.init(nibName: nil, bundle: nil)
+    init(amount: Amount,
+         fee: Amount,
+         displayFeeLevel: FeeLevel,
+         address: String,
+         isUsingBiometrics: Bool,
+         currency: Currency,
+         resolvedAddress: ResolvedAddress? = nil,
+         shouldShowMaskView: Bool) {
+            self.amount = amount
+            self.feeAmount = fee
+            self.displayFeeLevel = displayFeeLevel
+            self.addressText = address
+            self.isUsingBiometrics = isUsingBiometrics
+            self.currency = currency
+            self.resolvedAddress = resolvedAddress
+            super.init(nibName: nil, bundle: nil)
+            
+            transitionDelegate.shouldShowMaskView = shouldShowMaskView
+            transitioningDelegate = transitionDelegate
+            modalPresentationStyle = .overFullScreen
+            modalPresentationCapturesStatusBarAppearance = true
     }
 
+    private let transitionDelegate = PinTransitioningDelegate()
     private let amount: Amount
     private let feeAmount: Amount
     private let displayFeeLevel: FeeLevel

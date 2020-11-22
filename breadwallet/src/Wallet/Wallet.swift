@@ -213,6 +213,10 @@ class Wallet {
     func unsubscribeManager(_ subscriber: Subscriber) {
         managerSubscriptions.removeValue(forKey: subscriber.hashValue)
     }
+    
+    func createExportablePaperWallet() -> Result<ExportablePaperWallet, ExportablePaperWalletError> {
+        return manager.createExportablePaperWallet(wallet: core)
+    }
 
     private func publishEvent(_ event: WalletEvent) {
         DispatchQueue.main.async { [weak self] in
