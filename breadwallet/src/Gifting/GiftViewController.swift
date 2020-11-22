@@ -183,7 +183,7 @@ class GiftViewController: UIViewController {
                                    rate: rate,
                                    maximumFractionDigits: Amount.highPrecisionDigits)
             
-            let gift = Gift.create(key: privKey)
+            let gift = Gift.create(key: privKey, hash: nil)
             _ = self.sender.createTransaction(address: address.description, amount: amount, feeBasis: feeBasis, comment: "Gift to <name>", gift: gift)
             
             DispatchQueue.main.async {

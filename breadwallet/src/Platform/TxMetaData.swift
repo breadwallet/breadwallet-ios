@@ -171,4 +171,15 @@ final class TxMetaData: BRKVStoreObject, Codable {
             return nil
         }
     }
+    
+    func updateGift(gift: Gift, kvStore: BRReplicatedKVStore) -> TxMetaData? {
+        self.gift = gift
+        do {
+            print("[gifting] updated tx metadata")
+            return try kvStore.set(self) as? TxMetaData
+        } catch let error {
+            print("[gifting] could not update metadata: \(error)")
+            return nil
+        }
+    }
 }

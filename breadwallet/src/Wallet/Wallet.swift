@@ -19,6 +19,15 @@ extension NetworkFee {
 
 /// Wrapper for BRCrypto Wallet
 class Wallet {
+    
+    // MARK: Init
+    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
+        print("[gifting] wallet init for: \(currency.code)")
+        self.core = core
+        self.currency = currency
+        self.system = system
+    }
+    
     enum CreateTransferError: Error {
         case invalidAddress
         case invalidAmountOrFee
@@ -27,7 +36,20 @@ class Wallet {
     let currency: Currency
     private let core: WalletKit.Wallet
     private unowned let system: CoreSystem
-
+    lazy private var giftingStatusUpdater: GiftingStatusUpdater = {
+        return GiftingStatusUpdater(wallet: self)
+    }()
+    
+    func startGiftingMonitor() {
+        let giftTxns = transfers.filter({ $0.metaData?.gift != nil })
+        //TODO:GIFTING - where to get this kvstore?
+        giftingStatusUpdater.monitor(txns: giftTxns, kvStore: Backend.kvStore!)
+    }
+    
+    func stopGiftingMonitor() {
+        
+    }
+    
     // MARK: - Network
     
     var manager: WalletManager {
@@ -232,14 +254,6 @@ class Wallet {
                 .flatMap { $0.value }
                 .forEach { $0(event) }
         }
-    }
-
-    // MARK: Init
-
-    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
-        self.core = core
-        self.currency = currency
-        self.system = system
     }
 }
 

@@ -15,56 +15,79 @@ class TxGiftCell: TxDetailRowCell {
     
     // MARK: Views
     
-    private let addressButton = UIButton(type: .system)
+    private let share = UIButton(type: .system)
+    private let reclaim = UIButton(type: .system)
+    
+    private var viewModel: TxDetailViewModel!
     private var gift: Gift?
     
     // MARK: - Init
     
     override func addSubviews() {
         super.addSubviews()
-        container.addSubview(addressButton)
+        container.addSubview(share)
+        container.addSubview(reclaim)
     }
     
     override func addConstraints() {
         super.addConstraints()
         
-        addressButton.constrain([
-            addressButton.leadingAnchor.constraint(greaterThanOrEqualTo: titleLabel.trailingAnchor, constant: C.padding[1]),
-            addressButton.constraint(.trailing, toView: container),
-            addressButton.constraint(.top, toView: container),
-            addressButton.constraint(.bottom, toView: container)
-            ])
+        share.constrain([
+            share.constraint(.trailing, toView: container),
+            share.constraint(.top, toView: container),
+            share.constraint(.bottom, toView: container)])
+        
+        reclaim.constrain([
+            reclaim.trailingAnchor.constraint(equalTo: share.leadingAnchor, constant: -C.padding[1]),
+            reclaim.constraint(.top, toView: container),
+            reclaim.constraint(.bottom, toView: container)])
     }
     
     override func setupStyle() {
         super.setupStyle()
-        addressButton.titleLabel?.font = .customBody(size: 14.0)
-        addressButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        addressButton.titleLabel?.minimumScaleFactor = 0.7
-        addressButton.titleLabel?.lineBreakMode = .byTruncatingMiddle
-        addressButton.titleLabel?.textAlignment = .right
-        addressButton.tintColor = .darkGray
+        share.titleLabel?.font = .customBody(size: 14.0)
+        reclaim.titleLabel?.font = .customBody(size: 14.0)
         
-        addressButton.tap = share
+        share.tap = showShare
+        reclaim.tap = showReclaim
+        
+        share.setTitle("Share", for: .normal)
+        reclaim.setTitle("Reclaim", for: .normal)
     }
     
-    private func share() {
+    private func showShare() {
         guard let image = gift?.createImage() else { return }
-        //let item = UIActivityItemSource
-        //image.prepareForInterfaceBuilder()
+        //TODO:GIFT - make this work for iOS 13
         if #available(iOS 13.0, *) {
-            
-            
-            //let provider = UIActivityItemProvider(placeholderItem: image)
-            //let ac = UIActivityViewController(activityItems: [image, provider], applicationActivities: [])
             let ac = UIActivityViewController(activityItems: [ShareActivityItemSource(shareText: "Gift Bitcoin", shareImage: image)], applicationActivities: [])
             UIApplication.topViewController()?.present(ac, animated: true)
+            
+            self.markAsShared()
         }
     }
     
-    func set(gift: Gift) {
+    private func showReclaim() {
+        
+    }
+    
+    private func markAsShared() {
+        guard let kvStore = Backend.kvStore else { return }
+        guard let gift = gift else { return }
+        let newHash = gift.txnHash ?? viewModel.transactionHash
+        
+        let newGift = Gift(shared: true, claimed: gift.claimed, txnHash: newHash, keyData: gift.keyData)
+        viewModel.tx.updateGiftStatus(gift: newGift, kvStore: kvStore)
+        if let hash = newGift.txnHash {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                print("[gifting] txMetaDataUpdated")
+                Store.trigger(name: .txMetaDataUpdated(hash))
+            }
+        }
+    }
+    
+    func set(gift: Gift, viewModel: TxDetailViewModel) {
         self.gift = gift
-        addressButton.setTitle(gift.keyData, for: .normal)
+        self.viewModel = viewModel
     }
 }
 

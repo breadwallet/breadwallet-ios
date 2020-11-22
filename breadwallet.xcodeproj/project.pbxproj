@@ -94,6 +94,7 @@
 		3AFAD937256826F3005853E8 /* BorderedTextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD936256826F3005853E8 /* BorderedTextInput.swift */; };
 		3AFAD94825698A74005853E8 /* Gift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94725698A74005853E8 /* Gift.swift */; };
 		3AFAD94F25699112005853E8 /* TxGiftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94E25699112005853E8 /* TxGiftCell.swift */; };
+		3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -701,6 +702,7 @@
 		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
 		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
 		3AFAD94E25699112005853E8 /* TxGiftCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxGiftCell.swift; path = src/Gifting/TxGiftCell.swift; sourceTree = "<group>"; };
+		3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftingStatusUpdater.swift; path = src/Gifting/GiftingStatusUpdater.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
@@ -1395,6 +1397,7 @@
 				3AFAD92F2567EE15005853E8 /* GiftViewController.swift */,
 				3AFAD936256826F3005853E8 /* BorderedTextInput.swift */,
 				3AFAD94E25699112005853E8 /* TxGiftCell.swift */,
+				3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */,
 			);
 			name = Gifting;
 			sourceTree = "<group>";
@@ -2860,6 +2863,7 @@
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
 				9A39B1252202AE9E00E5018B /* MultiframeAnimation.swift in Sources */,
+				3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */,
 				CE5F21DB1E4A93A500C47B8E /* LoginTransitionDelegate.swift in Sources */,
 				71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,

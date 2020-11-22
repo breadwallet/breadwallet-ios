@@ -198,7 +198,7 @@ extension TxDetailDataSource: UITableViewDataSource {
         case .gift:
             guard let giftCell = cell as? TxGiftCell else { return cell }
             guard let gift = viewModel.gift else { return cell }
-            giftCell.set(gift: gift)
+            giftCell.set(gift: gift, viewModel: viewModel)
         }
         
         return cell

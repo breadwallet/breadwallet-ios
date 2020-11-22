@@ -132,11 +132,15 @@ class Sender: Subscriber {
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil, gift: Gift? = nil) -> SenderValidationResult {
+    func createTransaction(address: String,
+                           amount: Amount,
+                           feeBasis: TransferFeeBasis,
+                           comment: String?,
+                           attribute: String? = nil,
+                           gift: Gift? = nil) -> SenderValidationResult {
         assert(transfer == nil)
         let result = validate(address: address, amount: amount, feeBasis: feeBasis)
         guard case .ok = result else { return result }
-
         switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, attribute: attribute) {
         case .success(let transfer):
             self.comment = comment
@@ -298,11 +302,12 @@ class Sender: Subscriber {
                              rate: rate)
         let feeRate = tx.feeBasis?.pricePerCostFactor.tokenValue.doubleValue
 
+        let newGift: Gift? = gift != nil ? Gift(shared: false, claimed: false, txnHash: transfer.hash?.description, keyData: gift!.keyData) : nil
         tx.createMetaData(rate: rate,
                           comment: comment,
                           feeRate: feeRate,
                           tokenTransfer: nil,
-                          gift: gift,
+                          gift: newGift,
                           kvStore: kvStore)
 
         // for non-native token transfers, the originating transaction on the network's primary wallet captures the fee spent
@@ -315,6 +320,10 @@ class Sender: Subscriber {
                                             kvStore: kvStore,
                                             rate: rate)
             originatingTx.createMetaData(rate: rate, tokenTransfer: wallet.currency.code, kvStore: kvStore)
+        }
+        
+        DispatchQueue.main.async {
+            Store.trigger(name: .txMetaDataUpdated(tx.hash))
         }
     }
 }

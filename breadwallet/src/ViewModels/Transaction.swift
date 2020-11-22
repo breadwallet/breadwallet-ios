@@ -137,6 +137,7 @@ class Transaction {
     private(set) var metaData: TxMetaData?
     
     var comment: String? { return metaData?.comment }
+    var gift: Gift? { return metaData?.gift }
     
     private var metaDataKey: String? {
         // The hash is a hex string, it was previously converted to bytes through UInt256
@@ -173,6 +174,11 @@ class Transaction {
             let rate = currency.state?.currentRate
             createMetaData(rate: rate, comment: comment, kvStore: kvStore)
         }
+    }
+    
+    func updateGiftStatus(gift: Gift, kvStore: BRReplicatedKVStore) {
+        guard let metaData = metaData, let newMetaData = metaData.updateGift(gift: gift, kvStore: kvStore) else { return }
+        self.metaData = newMetaData
     }
     
     var extraAttribute: String? {
@@ -213,7 +219,8 @@ extension Transaction: Hashable {
 func == (lhs: Transaction, rhs: Transaction) -> Bool {
     return lhs.hash == rhs.hash &&
         lhs.status == rhs.status &&
-        lhs.comment == rhs.comment
+        lhs.comment == rhs.comment &&
+        lhs.gift == rhs.gift
 }
 
 func == (lhs: [Transaction], rhs: [Transaction]) -> Bool {

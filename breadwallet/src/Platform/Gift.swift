@@ -12,15 +12,16 @@ import Foundation
 import WalletKit
 import UIKit
 
-struct Gift: Codable {
+struct Gift: Codable, Equatable {
     let shared: Bool
     let claimed: Bool
+    let txnHash: String?
     let keyData: String
 }
 
 extension Gift {
-    static func create(key: Key) -> Gift {
-        return Gift(shared: false, claimed: false, keyData: key.encodeAsPrivate)
+    static func create(key: Key, hash: String?) -> Gift {
+        return Gift(shared: false, claimed: false, txnHash: hash, keyData: key.encodeAsPrivate)
     }
     
     func createImage() -> UIImage? {

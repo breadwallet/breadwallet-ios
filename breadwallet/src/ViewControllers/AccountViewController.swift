@@ -127,7 +127,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        wallet?.startGiftingMonitor()
         if shouldAnimateRewardsView {
             expandRewardsView()
         }

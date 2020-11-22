@@ -78,6 +78,19 @@ extension TxViewModel {
     }
     
     var icon: StatusIcon {
+        if let gift = gift, tx.confirmations >= currency.confirmationsUntilFinal {
+            //not shared should override unclaimed
+            if gift.shared == false {
+                return .gift(.unsent)
+            } else if gift.claimed {
+                return .gift(.claimed)
+            } else {
+                return .gift(.unclaimed)
+            }
+            //how to tell?
+            //return .gift(.reclaimed)
+        }
+        
         if tx.confirmations < currency.confirmationsUntilFinal {
             return .pending(CGFloat(tx.confirmations)/CGFloat(currency.confirmationsUntilFinal))
         }

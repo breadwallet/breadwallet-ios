@@ -60,7 +60,7 @@ enum TriggerName {
     case showAlert(UIAlertController?)
     case didWipeWallet
     case didUpgradePin
-    case txMemoUpdated(String)
+    case txMetaDataUpdated(String)
     case promptShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
@@ -118,7 +118,7 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.didUpgradePin, .didUpgradePin):
         return true
-    case (.txMemoUpdated, .txMemoUpdated):
+    case (.txMetaDataUpdated, .txMetaDataUpdated):
         return true
     case (.promptShareData, .promptShareData):
         return true

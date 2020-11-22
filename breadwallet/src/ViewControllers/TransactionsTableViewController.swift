@@ -102,9 +102,10 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                             self.rate = state[self.currency]?.currentRate
         })
         
-        Store.subscribe(self, name: .txMemoUpdated("")) { [weak self] trigger in
+        Store.subscribe(self, name: .txMetaDataUpdated("")) { [weak self] trigger in
             guard let trigger = trigger else { return }
-            if case .txMemoUpdated(let txHash) = trigger {
+            if case .txMetaDataUpdated(let txHash) = trigger {
+                print("[gifting] reload: \(txHash)")
                 _ = self?.reload(txHash: txHash)
             }
         }
@@ -163,6 +164,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
     private func reload(txHash: String) -> Bool {
         assert(Thread.isMainThread)
         guard let index = transactions.firstIndex(where: { txHash == $0.hash }) else { return false }
+        print("[gifting] reload: \(index)")
         tableView.reload(row: index, section: 0)
         return true
     }

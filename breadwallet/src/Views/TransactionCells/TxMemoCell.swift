@@ -17,8 +17,8 @@ class TxMemoCell: TxDetailRowCell {
     
     // MARK: - Vars
 
-    var viewModel: TxDetailViewModel!
-    weak var tableView: UITableView!
+    private var viewModel: TxDetailViewModel!
+    private weak var tableView: UITableView!
     
     // MARK: - Init
     
@@ -73,7 +73,7 @@ class TxMemoCell: TxDetailRowCell {
     fileprivate func saveComment(comment: String) {
         guard let kvStore = Backend.kvStore else { return }
         viewModel.tx.save(comment: comment, kvStore: kvStore)
-        Store.trigger(name: .txMemoUpdated(viewModel.tx.hash))
+        Store.trigger(name: .txMetaDataUpdated(viewModel.tx.hash))
     }
 }
 

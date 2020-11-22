@@ -10,11 +10,19 @@
 
 import SwiftUI
 
+enum GiftStatus {
+    case claimed
+    case reclaimed
+    case unclaimed
+    case unsent
+}
+
 enum StatusIcon {
     case sent
     case received
     case pending(CGFloat) //progress associated value
     case failed
+    case gift(GiftStatus)
     
     var icon: String {
         switch self {
@@ -22,6 +30,17 @@ enum StatusIcon {
         case .received: return "receivedArrow"
         case .pending: return "pendingIndicator"
         case .failed: return "failed"
+        case .gift(let status):
+            switch status {
+            case .claimed:
+                return "ClaimedGift"
+            case .reclaimed:
+                return "ReclaimedGift"
+            case .unclaimed:
+                return "UnclaimedGift"
+            case .unsent:
+                return "UnsentGift"
+            }
         }
     }
     
@@ -36,6 +55,17 @@ enum StatusIcon {
             return Color(Theme.accent).opacity(0.16)
         case .failed:
             return Color(Theme.error).opacity(0.16)
+        case .gift(let status):
+            switch status {
+            case .claimed:
+                return Color.white
+            case .reclaimed:
+                return Color.white
+            case .unclaimed:
+                return Color.white
+            case .unsent:
+                return Color.white
+            }
         }
     }
 }
