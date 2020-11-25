@@ -56,14 +56,27 @@ class TxGiftCell: TxDetailRowCell {
     }
     
     private func showShare() {
-        guard let image = gift?.createImage() else { return }
-        //TODO:GIFT - make this work for iOS 13
-        if #available(iOS 13.0, *) {
-            let ac = UIActivityViewController(activityItems: [ShareActivityItemSource(shareText: "Gift Bitcoin", shareImage: image)], applicationActivities: [])
-            UIApplication.topViewController()?.present(ac, animated: true)
-            
-            self.markAsShared()
-        }
+        let alert = UIAlertController(title: "Share", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Share link", style: .default, handler: { _ in
+            guard let url = self.gift?.url else { return }
+            //TODO:GIFT - make this work for iOS 13
+            if #available(iOS 13.0, *) {
+                let ac = UIActivityViewController(activityItems: [url], applicationActivities: [])
+                UIApplication.topViewController()?.present(ac, animated: true)
+                self.markAsShared()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "Share QR Code", style: .default, handler: { _ in
+            guard let image = self.gift?.createImage() else { return }
+            //TODO:GIFT - make this work for iOS 13
+            if #available(iOS 13.0, *) {
+                let ac = UIActivityViewController(activityItems: [ShareActivityItemSource(shareText: "Gift Bitcoin", shareImage: image)], applicationActivities: [])
+                UIApplication.topViewController()?.present(ac, animated: true)
+                self.markAsShared()
+            }
+        }))
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
     }
     
     private func showReclaim() {

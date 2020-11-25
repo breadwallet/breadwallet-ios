@@ -20,13 +20,23 @@ struct Gift: Codable, Equatable {
 }
 
 extension Gift {
+    
+    var encodedKeyString: String? {
+        return keyData.data(using: .utf8)?.base64EncodedString()
+    }
+    
+    var url: String? {
+        guard let key = encodedKeyString else { return nil }
+        return "https://brd.com/x/gift/\(key)"
+    }
+    
     static func create(key: Key, hash: String?) -> Gift {
         return Gift(shared: false, claimed: false, txnHash: hash, keyData: key.encodeAsPrivate)
     }
     
     func createImage() -> UIImage? {
         guard let background = UIImage(named: "GiftCard") else { return nil }
-        guard let data = keyData.data(using: .utf8) else { return nil }
+        guard let data = encodedKeyString?.data(using: .utf8) else { return nil }
         guard let qr = UIImage.qrCode(data: data)?.resize(CGSize(width: 300.0, height: 300.0)) else { return nil }
         
         let size = background.size
