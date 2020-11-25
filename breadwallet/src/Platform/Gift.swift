@@ -36,7 +36,7 @@ extension Gift {
     
     func createImage() -> UIImage? {
         guard let background = UIImage(named: "GiftCard") else { return nil }
-        guard let data = encodedKeyString?.data(using: .utf8) else { return nil }
+        guard let data = url?.data(using: .utf8) else { return nil }
         guard let qr = UIImage.qrCode(data: data)?.resize(CGSize(width: 300.0, height: 300.0)) else { return nil }
         
         let size = background.size
