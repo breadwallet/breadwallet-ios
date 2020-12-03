@@ -72,6 +72,7 @@ class ApplicationController: Subscriber, Trackable {
 
     /// didFinishLaunchingWithOptions
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
+        //TODO:GIFT - handle launch options here?
         self.application = application
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         
@@ -151,21 +152,24 @@ class ApplicationController: Subscriber, Trackable {
         self.startBackendServices()
         self.setWalletInfo(account: account)
         authenticateWithBackend { jwt in
-            self.coreSystem.create(account: account, authToken: jwt)
-
+            self.coreSystem.create(account: account,
+                                   authToken: jwt,
+                                   btcWalletCreationCallback: self.handleDeferedLaunchURL)
+            
             self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
                                                  system: self.coreSystem,
                                                  window: self.window,
                                                  alertPresenter: self.alertPresenter)
-            
-            // deep link handling
-            self.urlController = URLController(walletAuthenticator: self.keyStore)
-            if let url = self.launchURL {
-                _ = self.urlController?.handleUrl(url)
-                self.launchURL = nil
-            }
-
             self.coreSystem.connect()
+        }
+    }
+    
+    private func handleDeferedLaunchURL() {
+        // deep link handling
+        self.urlController = URLController(walletAuthenticator: self.keyStore)
+        if let url = self.launchURL {
+            _ = self.urlController?.handleUrl(url)
+            self.launchURL = nil
         }
     }
     

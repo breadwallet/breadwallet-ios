@@ -19,22 +19,24 @@ class URLController: Trackable, Subscriber {
     private var xSource, xSuccess, xError, uri: String?
         
     func handleUrl(_ url: URL) -> Bool {
-        guard !Store.state.isLoginRequired else {
-            // defer url handling until wallet is unlocked
-            urlWaitingForUnlock = url
-            Store.lazySubscribe(self,
-                                selector: { $0.isLoginRequired != $1.isLoginRequired },
-                                callback: { state in
-                                    DispatchQueue.main.async {
-                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
-                                            self.urlWaitingForUnlock = nil
-                                            _ = self.handleUrl(url)
-                                            Store.unsubscribe(self)
-                                        }
-                                    }
-            })
-            return false
-        }
+        
+        //TODO:GIFT - we want to handle gift before login
+//        guard !Store.state.isLoginRequired else {
+//            // defer url handling until wallet is unlocked
+//            urlWaitingForUnlock = url
+//            Store.lazySubscribe(self,
+//                                selector: { $0.isLoginRequired != $1.isLoginRequired },
+//                                callback: { state in
+//                                    DispatchQueue.main.async {
+//                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
+//                                            self.urlWaitingForUnlock = nil
+//                                            _ = self.handleUrl(url)
+//                                            Store.unsubscribe(self)
+//                                        }
+//                                    }
+//            })
+//            return false
+//        }
         
         saveEvent("send.handleURL", attributes: [
             "scheme": url.scheme ?? C.null,
@@ -95,7 +97,8 @@ class URLController: Trackable, Subscriber {
 
             case "debug":
                 handleDebugLink(url)
-                
+            case "gift":
+                handleGiftUrl(url: url)
             default:
                 print("unknown deep link: \(target)")
             }
@@ -184,6 +187,10 @@ class URLController: Trackable, Subscriber {
 
     private func present(alert: UIAlertController) {
         Store.trigger(name: .showAlert(alert))
+    }
+    
+    private func handleGiftUrl(url: URL) {
+        Store.trigger(name: .handleGift(url))
     }
 }
 

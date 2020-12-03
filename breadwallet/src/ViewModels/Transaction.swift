@@ -153,6 +153,7 @@ class Transaction {
                         comment: String? = nil,
                         feeRate: Double? = nil,
                         tokenTransfer: String? = nil,
+                        isReceivedGift: Bool = false,
                         gift: Gift? = nil,
                         kvStore: BRReplicatedKVStore) {
         guard metaData == nil, let key = metaDataKey else { return }
@@ -162,6 +163,7 @@ class Transaction {
                                           comment: comment,
                                           feeRate: feeRate,
                                           tokenTransfer: tokenTransfer,
+                                          isReceivedGift: isReceivedGift,
                                           gift: gift,
                                           kvStore: kvStore)
     }

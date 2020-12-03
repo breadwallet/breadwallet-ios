@@ -21,6 +21,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
     var deviceId: String = ""
     var comment = ""
     var tokenTransfer = ""
+    var isReceivedGift: Bool = false
     var gift: Gift?
     
     enum CodingKeys: String, CodingKey {
@@ -34,6 +35,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
         case created = "c"
         case comment = "comment"
         case tokenTransfer = "tokenTransfer"
+        case isReceivedGift = "isReceivedGift"
         case gift = "gift"
     }
 
@@ -54,6 +56,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
 
         //tokenTransfer is sometimes not present in TxMetaData from Android so we shouldn't throw if it doesn't exist
         tokenTransfer = (try? container.decode(String.self, forKey: .tokenTransfer)) ?? ""
+        isReceivedGift = (try? container.decode(Bool.self, forKey: .isReceivedGift)) ?? false
         gift = try? container.decode(Gift.self, forKey: .gift)
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
@@ -87,6 +90,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
          deviceId: String,
          comment: String?,
          tokenTransfer: String?,
+         isReceivedGift: Bool = false,
          gift: Gift? = nil) {
         print("[TxMetaData] new \(key) \(transaction.created?.description ?? "now")")
         super.init(key: key,
@@ -109,6 +113,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
         }
 
         self.tokenTransfer = tokenTransfer ?? ""
+        self.isReceivedGift = isReceivedGift
         self.gift = gift
     }
     
@@ -131,6 +136,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
         deviceId = s.deviceId
         comment = s.comment
         tokenTransfer = s.tokenTransfer
+        isReceivedGift = s.isReceivedGift
         gift = s.gift
     }
     
@@ -143,7 +149,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
                        comment: String?,
                        feeRate: Double?,
                        tokenTransfer: String?,
-                       gift: Gift? = nil,
+                       isReceivedGift: Bool,
+                       gift: Gift?,
                        kvStore: BRReplicatedKVStore) -> TxMetaData {
         let newData = TxMetaData(key: key,
                                  transaction: tx,
@@ -153,6 +160,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
                                  deviceId: UserDefaults.deviceID,
                                  comment: comment,
                                  tokenTransfer: tokenTransfer,
+                                 isReceivedGift: isReceivedGift,
                                  gift: gift)
         do {
             _ = try kvStore.set(newData)
