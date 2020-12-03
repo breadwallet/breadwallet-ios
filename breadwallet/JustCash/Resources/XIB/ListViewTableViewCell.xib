@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -40,7 +39,8 @@
                             <constraint firstAttribute="width" constant="32" id="elN-d1-Pmi"/>
                             <constraint firstAttribute="height" constant="32" id="f6O-bh-Fcd"/>
                         </constraints>
-                        <state key="normal" image="Star"/>
+                        <inset key="imageEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
+                        <state key="normal" image="Favorite_Selected"/>
                         <connections>
                             <action selector="favoriteAtm:" destination="s0q-RD-Jvo" eventType="touchUpInside" id="mmr-KI-gaT"/>
                         </connections>
@@ -53,37 +53,43 @@
                             <action selector="showMapDirections:" destination="s0q-RD-Jvo" eventType="touchUpInside" id="RjI-J0-IcG"/>
                         </connections>
                     </button>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cashout" translatesAutoresizingMaskIntoConstraints="NO" id="bNo-zR-WyO">
-                        <rect key="frame" x="323" y="42" width="44" height="32"/>
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PVA-GQ-Rl0" userLabel="Purchase Image">
+                        <rect key="frame" x="332" y="42" width="32" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="44" id="bQg-z7-9YT"/>
-                            <constraint firstAttribute="height" constant="32" id="nIH-lD-K4r"/>
+                            <constraint firstAttribute="height" constant="32" id="cy7-WQ-6tE"/>
+                            <constraint firstAttribute="width" constant="32" id="rxo-eQ-wiq"/>
                         </constraints>
-                    </imageView>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitcoin" translatesAutoresizingMaskIntoConstraints="NO" id="y7j-rW-Jux">
-                        <rect key="frame" x="274" y="42" width="44" height="32"/>
+                        <inset key="imageEdgeInsets" minX="7" minY="8" maxX="7" maxY="8"/>
+                        <state key="normal" image="bitcoin_unselected"/>
+                        <state key="selected" image="bitcoin"/>
+                    </button>
+                    <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YBX-4h-pAP" userLabel="Redemption Image">
+                        <rect key="frame" x="292" y="42" width="32" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="44" id="bbf-Wo-sEs"/>
-                            <constraint firstAttribute="height" constant="32" id="ryy-vZ-jUP"/>
+                            <constraint firstAttribute="width" constant="32" id="JSs-Xj-8Nu"/>
+                            <constraint firstAttribute="height" constant="32" id="i8R-Kh-Up5"/>
                         </constraints>
-                    </imageView>
+                        <inset key="imageEdgeInsets" minX="6" minY="8" maxX="6" maxY="8"/>
+                        <state key="normal" image="cashout_unselected"/>
+                        <state key="selected" image="cashout"/>
+                    </button>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="y7j-rW-Jux" secondAttribute="bottom" constant="5" id="6e6-Kc-ueg"/>
                     <constraint firstItem="fYQ-Nu-1BU" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="AdE-xz-1Hy"/>
                     <constraint firstItem="3F4-BT-2KW" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="Dfz-67-16I"/>
                     <constraint firstItem="U2T-OX-tcF" firstAttribute="top" secondItem="wgp-mc-y3Z" secondAttribute="top" constant="5" id="FGN-ev-vB2"/>
-                    <constraint firstItem="gpa-Ju-ioa" firstAttribute="leading" secondItem="bNo-zR-WyO" secondAttribute="trailing" constant="5" id="GN1-sT-p5d"/>
                     <constraint firstItem="gpa-Ju-ioa" firstAttribute="centerX" secondItem="U2T-OX-tcF" secondAttribute="centerX" id="Jod-Cm-iC7"/>
                     <constraint firstItem="gpa-Ju-ioa" firstAttribute="top" secondItem="U2T-OX-tcF" secondAttribute="bottom" constant="5" id="NsB-UD-GBF"/>
                     <constraint firstItem="U2T-OX-tcF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3F4-BT-2KW" secondAttribute="trailing" constant="10" id="Tfi-Vk-GUj"/>
-                    <constraint firstItem="bNo-zR-WyO" firstAttribute="leading" secondItem="y7j-rW-Jux" secondAttribute="trailing" constant="5" id="WJC-KA-QZ0"/>
+                    <constraint firstItem="YBX-4h-pAP" firstAttribute="centerY" secondItem="gpa-Ju-ioa" secondAttribute="centerY" id="Tm0-Ty-1nY"/>
+                    <constraint firstItem="gpa-Ju-ioa" firstAttribute="leading" secondItem="PVA-GQ-Rl0" secondAttribute="trailing" constant="8" id="Zq1-fH-Eka"/>
+                    <constraint firstItem="PVA-GQ-Rl0" firstAttribute="leading" secondItem="YBX-4h-pAP" secondAttribute="trailing" constant="8" id="chj-T4-h8I"/>
                     <constraint firstAttribute="trailing" secondItem="U2T-OX-tcF" secondAttribute="trailing" constant="10" id="kzM-nH-9bp"/>
+                    <constraint firstItem="PVA-GQ-Rl0" firstAttribute="centerY" secondItem="gpa-Ju-ioa" secondAttribute="centerY" id="mXE-Nk-e6R"/>
                     <constraint firstItem="3F4-BT-2KW" firstAttribute="top" secondItem="wgp-mc-y3Z" secondAttribute="top" constant="12" id="o5L-mK-PZp"/>
                     <constraint firstItem="P8c-Bf-fSa" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="pKD-HO-ay6"/>
                     <constraint firstItem="fYQ-Nu-1BU" firstAttribute="top" secondItem="P8c-Bf-fSa" secondAttribute="bottom" id="ppj-Yh-aw8"/>
-                    <constraint firstAttribute="bottom" secondItem="bNo-zR-WyO" secondAttribute="bottom" constant="5" id="wdT-R0-288"/>
                     <constraint firstItem="P8c-Bf-fSa" firstAttribute="top" secondItem="3F4-BT-2KW" secondAttribute="bottom" id="x1g-hQ-00P"/>
                 </constraints>
             </tableViewCellContentView>
@@ -92,8 +98,8 @@
                 <outlet property="atmDescriptionLabel" destination="3F4-BT-2KW" id="uCZ-NS-eKh"/>
                 <outlet property="directionsButton" destination="gpa-Ju-ioa" id="cR1-Gf-PYr"/>
                 <outlet property="favoriteButton" destination="U2T-OX-tcF" id="4k0-He-Lg1"/>
-                <outlet property="purchaseImageView" destination="y7j-rW-Jux" id="44p-n3-qPe"/>
-                <outlet property="redemptionImageView" destination="bNo-zR-WyO" id="rmx-R6-cfo"/>
+                <outlet property="purchaseButton" destination="PVA-GQ-Rl0" id="lHN-aV-FU7"/>
+                <outlet property="redemptionButton" destination="YBX-4h-pAP" id="kfZ-J5-Rd7"/>
                 <outlet property="stateLabel" destination="fYQ-Nu-1BU" id="FGO-Hc-44o"/>
                 <outlet property="streetLabel" destination="P8c-Bf-fSa" id="WI1-Ir-Jd6"/>
             </connections>
@@ -102,8 +108,10 @@
     </objects>
     <resources>
         <image name="Directions" width="106.66666412353516" height="106.66666412353516"/>
-        <image name="Star" width="24" height="24"/>
+        <image name="Favorite_Selected" width="106.66666412353516" height="106.66666412353516"/>
         <image name="bitcoin" width="20" height="27"/>
+        <image name="bitcoin_unselected" width="20" height="27"/>
         <image name="cashout" width="29.5" height="19.5"/>
+        <image name="cashout_unselected" width="29.5" height="19.5"/>
     </resources>
 </document>

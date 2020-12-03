@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +10,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="AtmLocationsViewController" customModule="CashUI">
             <connections>
                 <outlet property="containerView" destination="0Gg-xR-FtP" id="voI-wy-1gX"/>
-                <outlet property="favoriteATMsButton" destination="6gb-pc-d6L" id="qrd-CS-2MS"/>
+                <outlet property="favoriteATMsButton" destination="6gb-pc-d6L" id="e7E-n9-8hV"/>
                 <outlet property="myLocationButton" destination="Pdh-WJ-OSU" id="rhu-zc-LCQ"/>
                 <outlet property="purchaseOnlyATMsButton" destination="7am-Ps-PHt" id="QLR-To-PKq"/>
                 <outlet property="redeemOnlyATMsButton" destination="jPG-cA-yYp" id="LEO-uD-H5V"/>
@@ -59,14 +58,14 @@
                         <outlet property="delegate" destination="-1" id="2cP-U4-59s"/>
                     </connections>
                 </searchBar>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pdh-WJ-OSU" userLabel="My Location Button">
+                <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pdh-WJ-OSU" userLabel="My Location Button">
                     <rect key="frame" x="366" y="802" width="40" height="40"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="40" id="Qap-4h-yZq"/>
                         <constraint firstAttribute="width" constant="40" id="pLM-km-IcN"/>
                     </constraints>
-                    <inset key="imageEdgeInsets" minX="2" minY="2" maxX="2" maxY="2"/>
+                    <inset key="imageEdgeInsets" minX="3" minY="7" maxX="5" maxY="3"/>
                     <state key="normal" image="myLocation_unselected">
                         <color key="titleColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="titleShadowColor" cocoaTouchSystemColor="darkTextColor"/>
