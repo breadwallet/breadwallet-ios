@@ -240,6 +240,8 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
             
         case .deepLink:
             saveEvent("scan.deepLink")
+        case .gift:
+            saveEvent("scan.gift")
         default:
             assertionFailure("unexpected result")
         }

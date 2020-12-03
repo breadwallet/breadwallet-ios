@@ -9,6 +9,8 @@
 import UIKit
 import LocalAuthentication
 import SwiftUI
+import WalletKit
+
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
 
@@ -165,6 +167,29 @@ class ModalPresenter: Subscriber, Trackable {
             guard let trigger = $0 else { return }
             if case let .openPlatformUrl(url) = trigger {
                 self?.presentPlatformWebViewController(url)
+            }
+        }
+        
+        Store.subscribe(self, name: .handleGift(URL(string: "foo.com")!)) { [weak self] in
+            guard let trigger = $0 else { return }
+            if case let .handleGift(url) = trigger {
+                if let gift = QRCode(url: url) {
+                    self?.handleGift(qrCode: gift)
+                }
+            }
+        }
+    }
+    
+    private func handleGift(qrCode: QRCode) {
+        
+        //TODO:GIFT - handle more gracefully if we don't have a wallet
+        guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
+        guard case .gift(let key) = qrCode else { return }
+        guard let privKey = Key.createFromString(asPrivate: key) else { return }
+        wallet.createSweeper(forKey: privKey) { result in
+            DispatchQueue.main.async {
+                let giftView = RedeemGiftViewController(qrCode: qrCode, wallet: wallet, sweeperResult: result)
+                self.topViewController?.present(giftView, animated: true, completion: nil)
             }
         }
     }
@@ -328,6 +353,11 @@ class ModalPresenter: Subscriber, Trackable {
                 UIApplication.shared.open(url)
             case .invalid:
                 break
+            case .gift(_):
+                assertionFailure()
+//                if let wallet = Currencies.btc.instance?.wallet {
+//                    self.presentKeyImport(wallet: wallet, scanResult: scanResult)
+//                }
             }
         }
     }

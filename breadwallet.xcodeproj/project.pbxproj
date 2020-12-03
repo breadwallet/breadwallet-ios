@@ -63,6 +63,8 @@
 		3A611A0C2322139D004B8E36 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0B2322139D004B8E36 /* Dot.swift */; };
 		3A611A0F2325738C004B8E36 /* AnimatedBlockSetLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */; };
 		3A65DE812447E9AF0025C56E /* AccountInitializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */; };
+		3A6785F1256F2F1A0065F835 /* RedeemGiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */; };
+		3A6785FB257019220065F835 /* RedeemTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */; };
 		3A69884F24591F4A0084953D /* PayIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69884E24591F4A0084953D /* PayIdTests.swift */; };
 		3A69885E24591F890084953D /* PayId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69885D24591F890084953D /* PayId.swift */; };
 		3A6A3C7E24DDC90300ACAC70 /* BackupSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */; };
@@ -546,7 +548,6 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
-
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -650,6 +651,8 @@
 		3A611A0B2322139D004B8E36 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dot.swift; path = src/Views/Dot.swift; sourceTree = "<group>"; };
 		3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnimatedBlockSetLogo.swift; path = src/AnimatedBlockSetLogo.swift; sourceTree = "<group>"; };
 		3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInitializationTests.swift; sourceTree = "<group>"; };
+		3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemGiftViewController.swift; sourceTree = "<group>"; };
+		3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedeemTransitioningDelegate.swift; path = src/Views/RedeemTransitioningDelegate.swift; sourceTree = "<group>"; };
 		3A69884E24591F4A0084953D /* PayIdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayIdTests.swift; sourceTree = "<group>"; };
 		3A69885D24591F890084953D /* PayId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayId.swift; sourceTree = "<group>"; };
 		3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BackupSynchronizer.swift; path = src/BackupSynchronizer.swift; sourceTree = "<group>"; };
@@ -1280,6 +1283,15 @@
 			name = BlockSetAnimation;
 			sourceTree = "<group>";
 		};
+		3A6785EF256F2EF70065F835 /* ReceiveGift */ = {
+			isa = PBXGroup;
+			children = (
+				3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */,
+				3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */,
+			);
+			name = ReceiveGift;
+			sourceTree = "<group>";
+		};
 		3A6FD41E24E4568800068ECE /* KeyStore */ = {
 			isa = PBXGroup;
 			children = (
@@ -1432,8 +1444,8 @@
 			children = (
 				75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */,
 				75A2A79F1DA5934300A983D8 /* Info.plist */,
-				7C4548192187E65B0002E884 /* AnyCodable.swift */,
 				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
+				7C4548192187E65B0002E884 /* AnyCodable.swift */,
 				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
 				7C0F3DC32124A81100531E54 /* Backend.swift */,
 				754AE0BB1DFE8A46007FD001 /* SecureAllocator.swift */,
@@ -1448,6 +1460,7 @@
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
+				3A6785EF256F2EF70065F835 /* ReceiveGift */,
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
@@ -2950,8 +2963,10 @@
 				CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */,
 				CE1E5F261EF083A600BD0F72 /* ImportKeyViewController.swift in Sources */,
 				CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */,
+				3A6785FB257019220065F835 /* RedeemTransitioningDelegate.swift in Sources */,
 				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
+				3A6785F1256F2F1A0065F835 /* RedeemGiftViewController.swift in Sources */,
 				9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */,
 				CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */,
 				7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */,
