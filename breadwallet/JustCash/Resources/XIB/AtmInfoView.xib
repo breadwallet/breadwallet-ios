@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -55,7 +54,7 @@
                         <constraint firstAttribute="width" constant="32" id="BnU-Sp-QRG"/>
                         <constraint firstAttribute="height" constant="32" id="piI-N6-4pA"/>
                     </constraints>
-                    <inset key="imageEdgeInsets" minX="2" minY="2" maxX="2" maxY="2"/>
+                    <inset key="imageEdgeInsets" minX="7" minY="7" maxX="7" maxY="7"/>
                     <state key="normal" image="Favorite"/>
                     <state key="selected" image="Favorite_Selected"/>
                     <connections>
@@ -68,6 +67,7 @@
                         <constraint firstAttribute="width" constant="32" id="1ug-6Z-07e"/>
                         <constraint firstAttribute="height" constant="32" id="Zlr-Op-hFE"/>
                     </constraints>
+                    <inset key="imageEdgeInsets" minX="6" minY="8" maxX="6" maxY="8"/>
                     <state key="normal" image="cashout_unselected"/>
                     <state key="selected" image="cashout"/>
                     <connections>
@@ -80,6 +80,7 @@
                         <constraint firstAttribute="width" constant="32" id="LDx-N8-NYn"/>
                         <constraint firstAttribute="height" constant="32" id="tHv-vu-FAb"/>
                     </constraints>
+                    <inset key="imageEdgeInsets" minX="7" minY="8" maxX="7" maxY="8"/>
                     <state key="normal" image="bitcoin_unselected"/>
                     <state key="selected" image="bitcoin"/>
                     <connections>
