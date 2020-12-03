@@ -53,16 +53,24 @@
                             <action selector="showMapDirections:" destination="s0q-RD-Jvo" eventType="touchUpInside" id="RjI-J0-IcG"/>
                         </connections>
                     </button>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Cash" translatesAutoresizingMaskIntoConstraints="NO" id="bNo-zR-WyO">
-                        <rect key="frame" x="319" y="42" width="48" height="32"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cashout" translatesAutoresizingMaskIntoConstraints="NO" id="bNo-zR-WyO">
+                        <rect key="frame" x="323" y="42" width="44" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="48" id="bQg-z7-9YT"/>
+                            <constraint firstAttribute="width" constant="44" id="bQg-z7-9YT"/>
                             <constraint firstAttribute="height" constant="32" id="nIH-lD-K4r"/>
+                        </constraints>
+                    </imageView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bitcoin" translatesAutoresizingMaskIntoConstraints="NO" id="y7j-rW-Jux">
+                        <rect key="frame" x="274" y="42" width="44" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="44" id="bbf-Wo-sEs"/>
+                            <constraint firstAttribute="height" constant="32" id="ryy-vZ-jUP"/>
                         </constraints>
                     </imageView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
+                    <constraint firstAttribute="bottom" secondItem="y7j-rW-Jux" secondAttribute="bottom" constant="5" id="6e6-Kc-ueg"/>
                     <constraint firstItem="fYQ-Nu-1BU" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="AdE-xz-1Hy"/>
                     <constraint firstItem="3F4-BT-2KW" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="Dfz-67-16I"/>
                     <constraint firstItem="U2T-OX-tcF" firstAttribute="top" secondItem="wgp-mc-y3Z" secondAttribute="top" constant="5" id="FGN-ev-vB2"/>
@@ -70,6 +78,7 @@
                     <constraint firstItem="gpa-Ju-ioa" firstAttribute="centerX" secondItem="U2T-OX-tcF" secondAttribute="centerX" id="Jod-Cm-iC7"/>
                     <constraint firstItem="gpa-Ju-ioa" firstAttribute="top" secondItem="U2T-OX-tcF" secondAttribute="bottom" constant="5" id="NsB-UD-GBF"/>
                     <constraint firstItem="U2T-OX-tcF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="3F4-BT-2KW" secondAttribute="trailing" constant="10" id="Tfi-Vk-GUj"/>
+                    <constraint firstItem="bNo-zR-WyO" firstAttribute="leading" secondItem="y7j-rW-Jux" secondAttribute="trailing" constant="5" id="WJC-KA-QZ0"/>
                     <constraint firstAttribute="trailing" secondItem="U2T-OX-tcF" secondAttribute="trailing" constant="10" id="kzM-nH-9bp"/>
                     <constraint firstItem="3F4-BT-2KW" firstAttribute="top" secondItem="wgp-mc-y3Z" secondAttribute="top" constant="12" id="o5L-mK-PZp"/>
                     <constraint firstItem="P8c-Bf-fSa" firstAttribute="leading" secondItem="wgp-mc-y3Z" secondAttribute="leading" constant="20" id="pKD-HO-ay6"/>
@@ -83,6 +92,7 @@
                 <outlet property="atmDescriptionLabel" destination="3F4-BT-2KW" id="uCZ-NS-eKh"/>
                 <outlet property="directionsButton" destination="gpa-Ju-ioa" id="cR1-Gf-PYr"/>
                 <outlet property="favoriteButton" destination="U2T-OX-tcF" id="4k0-He-Lg1"/>
+                <outlet property="purchaseImageView" destination="y7j-rW-Jux" id="44p-n3-qPe"/>
                 <outlet property="redemptionImageView" destination="bNo-zR-WyO" id="rmx-R6-cfo"/>
                 <outlet property="stateLabel" destination="fYQ-Nu-1BU" id="FGO-Hc-44o"/>
                 <outlet property="streetLabel" destination="P8c-Bf-fSa" id="WI1-Ir-Jd6"/>
@@ -91,8 +101,9 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="Cash" width="170.66667175292969" height="132"/>
         <image name="Directions" width="106.66666412353516" height="106.66666412353516"/>
         <image name="Star" width="24" height="24"/>
+        <image name="bitcoin" width="20" height="27"/>
+        <image name="cashout" width="29.5" height="19.5"/>
     </resources>
 </document>
