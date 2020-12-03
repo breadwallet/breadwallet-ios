@@ -11,7 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="AtmInfoView" customModule="CashUI">
-            <rect key="frame" x="0.0" y="0.0" width="240" height="91"/>
+            <rect key="frame" x="0.0" y="0.0" width="240" height="96"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="752" text="This is a long ATM Name" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HHS-gb-Ibp">
@@ -20,8 +20,8 @@
                     <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Purchase Only" textAlignment="right" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QDa-LL-XX2">
-                    <rect key="frame" x="76.5" y="66.5" width="87.5" height="14.5"/>
+                <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Purchase Only" textAlignment="right" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QDa-LL-XX2">
+                    <rect key="frame" x="76.5" y="67.5" width="87.5" height="14.5"/>
                     <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                     <color key="textColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -33,13 +33,13 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="City, State, ZIP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uhY-o5-zkO">
-                    <rect key="frame" x="78" y="45.5" width="84" height="13"/>
+                    <rect key="frame" x="78" y="45.5" width="84" height="14"/>
                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="giA-UR-5C6" userLabel="Directions Button">
-                    <rect key="frame" x="198" y="57" width="32" height="32"/>
+                    <rect key="frame" x="198" y="62" width="32" height="32"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="32" id="7oq-0g-aFE"/>
                         <constraint firstAttribute="height" constant="32" id="bzc-Dr-Zh3"/>
@@ -49,21 +49,64 @@
                         <action selector="showMapDirections:" destination="iN0-l3-epB" eventType="touchUpInside" id="iIi-WE-KRV"/>
                     </connections>
                 </button>
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9yh-fG-rfh" userLabel="Favorite Button">
+                    <rect key="frame" x="10" y="62" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="32" id="BnU-Sp-QRG"/>
+                        <constraint firstAttribute="height" constant="32" id="piI-N6-4pA"/>
+                    </constraints>
+                    <inset key="imageEdgeInsets" minX="2" minY="2" maxX="2" maxY="2"/>
+                    <state key="normal" image="Favorite"/>
+                    <state key="selected" image="Favorite_Selected"/>
+                    <connections>
+                        <action selector="showMapDirections:" destination="iN0-l3-epB" eventType="touchUpInside" id="cyc-w2-yp5"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qbW-sP-7vf" userLabel="Redeem Button">
+                    <rect key="frame" x="136" y="62" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="32" id="1ug-6Z-07e"/>
+                        <constraint firstAttribute="height" constant="32" id="Zlr-Op-hFE"/>
+                    </constraints>
+                    <state key="normal" image="cashout_unselected"/>
+                    <state key="selected" image="cashout"/>
+                    <connections>
+                        <action selector="showMapDirections:" destination="iN0-l3-epB" eventType="touchUpInside" id="nDu-fg-u9a"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="P1u-cL-Mkk" userLabel="Purchase Button">
+                    <rect key="frame" x="72" y="62" width="32" height="32"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="32" id="LDx-N8-NYn"/>
+                        <constraint firstAttribute="height" constant="32" id="tHv-vu-FAb"/>
+                    </constraints>
+                    <state key="normal" image="bitcoin_unselected"/>
+                    <state key="selected" image="bitcoin"/>
+                    <connections>
+                        <action selector="showMapDirections:" destination="iN0-l3-epB" eventType="touchUpInside" id="iP0-ZQ-sj3"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="9yh-fG-rfh" secondAttribute="bottom" constant="2" id="6fe-MD-0wC"/>
                 <constraint firstItem="3Ce-Ct-o2G" firstAttribute="top" secondItem="HHS-gb-Ibp" secondAttribute="bottom" id="74Q-D4-71b"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="giA-UR-5C6" secondAttribute="bottom" constant="2" id="E2D-Qk-bo7"/>
                 <constraint firstItem="QDa-LL-XX2" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="F5k-oh-W19"/>
                 <constraint firstItem="HHS-gb-Ibp" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="ISR-Zx-LE1"/>
+                <constraint firstItem="9yh-fG-rfh" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="10" id="J0S-qL-w9i"/>
+                <constraint firstItem="giA-UR-5C6" firstAttribute="leading" secondItem="qbW-sP-7vf" secondAttribute="trailing" constant="30" id="LW5-Ul-sX7"/>
                 <constraint firstItem="3Ce-Ct-o2G" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="MhL-It-UJm"/>
                 <constraint firstItem="QDa-LL-XX2" firstAttribute="top" secondItem="uhY-o5-zkO" secondAttribute="bottom" constant="8" id="OOq-zX-ho1"/>
                 <constraint firstItem="HHS-gb-Ibp" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="10" id="bfD-GB-8af"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="giA-UR-5C6" secondAttribute="trailing" constant="10" id="eX0-qY-Ipj"/>
                 <constraint firstAttribute="trailing" secondItem="HHS-gb-Ibp" secondAttribute="trailing" constant="10" id="fyd-bL-3Mm"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="P1u-cL-Mkk" secondAttribute="bottom" constant="2" id="kpp-aN-BMN"/>
                 <constraint firstItem="uhY-o5-zkO" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="lAe-uw-B9n"/>
                 <constraint firstItem="uhY-o5-zkO" firstAttribute="top" secondItem="3Ce-Ct-o2G" secondAttribute="bottom" id="pxW-nU-SJU"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="QDa-LL-XX2" secondAttribute="bottom" constant="10" id="yc0-dJ-WiF"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="QDa-LL-XX2" secondAttribute="bottom" constant="14" id="qVT-ky-g8l"/>
+                <constraint firstItem="P1u-cL-Mkk" firstAttribute="leading" secondItem="9yh-fG-rfh" secondAttribute="trailing" constant="30" id="teS-WT-M3l"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="qbW-sP-7vf" secondAttribute="bottom" constant="2" id="vjT-1K-qKk"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
@@ -71,6 +114,9 @@
                 <outlet property="atmIdLabel" destination="HHS-gb-Ibp" id="8dD-cW-jXd"/>
                 <outlet property="atmPurchaseOnlyLabel" destination="QDa-LL-XX2" id="jK1-IH-lsd"/>
                 <outlet property="directionsButton" destination="giA-UR-5C6" id="as2-K5-2u3"/>
+                <outlet property="favoriteButton" destination="9yh-fG-rfh" id="V2D-Ku-a7y"/>
+                <outlet property="purchaseButton" destination="P1u-cL-Mkk" id="nRl-XN-0dP"/>
+                <outlet property="redeemButton" destination="qbW-sP-7vf" id="XXG-Ri-Byd"/>
                 <outlet property="stateLabel" destination="uhY-o5-zkO" id="ox2-ay-yKB"/>
                 <outlet property="streetLabel" destination="3Ce-Ct-o2G" id="TLB-FG-2sm"/>
             </connections>
@@ -78,6 +124,12 @@
         </view>
     </objects>
     <resources>
-        <image name="Directions" width="170.66667175292969" height="170.66667175292969"/>
+        <image name="Directions" width="106.66666412353516" height="106.66666412353516"/>
+        <image name="Favorite" width="106.66666412353516" height="106.66666412353516"/>
+        <image name="Favorite_Selected" width="106.66666412353516" height="106.66666412353516"/>
+        <image name="bitcoin" width="20" height="27"/>
+        <image name="bitcoin_unselected" width="20" height="27"/>
+        <image name="cashout" width="29.5" height="19.5"/>
+        <image name="cashout_unselected" width="29.5" height="19.5"/>
     </resources>
 </document>
