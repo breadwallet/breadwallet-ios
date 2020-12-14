@@ -34,6 +34,11 @@ extension Gift {
         return Gift(shared: false, claimed: false, txnHash: hash, keyData: key.encodeAsPrivate)
     }
     
+    func qrImage() -> UIImage? {
+        guard let data = url?.data(using: .utf8) else { return nil }
+        return UIImage.qrCode(data: data)?.resize(CGSize(width: 300.0, height: 300.0))
+    }
+    
     func createImage() -> UIImage? {
         guard let background = UIImage(named: "GiftCard") else { return nil }
         guard let data = url?.data(using: .utf8) else { return nil }

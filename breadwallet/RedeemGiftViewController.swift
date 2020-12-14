@@ -141,7 +141,10 @@ class RedeemGiftViewController: UIViewController, Subscriber {
         body.textAlignment = .center
         icon.tintColor = .white
         close.tintColor = .white
-        close.tap = { self.dismiss(animated: true, completion: nil) }
+        close.tap = {
+            self.dismiss(animated: true, completion: nil)
+            
+        }
         
         redeem.layer.borderWidth = 1.0
         redeem.layer.borderColor = UIColor.white.withAlphaComponent(0.85).cgColor
@@ -235,7 +238,7 @@ class RedeemGiftViewController: UIViewController, Subscriber {
     
     private func showConfetti() {
         assert(Thread.isMainThread)
-        let duration = 2.0
+        let duration = 10.0
         confetti.emit(for: duration, completion: {
             DispatchQueue.main.async {
                 self.dismiss(animated: true, completion: nil)
@@ -295,50 +298,27 @@ final class ConfettiView: UIView {
 
 private final class ConfettiLayer: CAEmitterLayer {
     func setup() {
-        emitterCells = (0...10).map {_ in ["💸", "💰", "🤑", "💵"].randomElement()! }.map { character in
+        emitterCells = (0...5).map {_ in ["💸", "💰", "🤑", "💵"].randomElement()! }.map { character in
             let cell = CAEmitterCell()
-            
-            cell.emissionLongitude = -.pi/2
-            cell.emissionLatitude = 0
-            cell.emissionRange = .pi/4
-            cell.lifetime = 1.6
-            cell.birthRate = 1
-            
-            cell.velocity = 50
-            cell.velocityRange = cell.velocity/4
-            cell.yAcceleration = -150
-            
-            let color = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 1.0)
-            cell.color = color.cgColor
-            cell.redRange = 0.5
-            cell.greenRange = 0.5
-            cell.blueRange = 0.5
-            cell.name = "rocket"
-            
+            cell.birthRate = 25.0
+            cell.lifetime = 10.0
+            cell.velocity = CGFloat(cell.birthRate * cell.lifetime) - 50
+            cell.velocityRange = cell.velocity / 2
+            cell.emissionLongitude = .pi
+            cell.emissionRange = .pi / 4
+            cell.spinRange = .pi * 6
+            cell.scaleRange = 0.25
+            cell.scale = 1.0 - cell.scaleRange
             cell.contents = character.image().cgImage
-            cell.beginTime = CACurrentMediaTime()
-            
-//            cell.birthRate = 5
-//            cell.lifetime = 2.0
-//            cell.velocity = 200.0
-//            cell.velocityRange = cell.velocity / 2
-//            cell.emissionLongitude = .pi * 2
-//            cell.emissionRange = .pi / 4
-//            cell.spinRange = .pi * 6
-//            cell.scaleRange = 0.25
-//            cell.scale = 1.0 - cell.scaleRange
-//            cell.contents = character.image().cgImage
-//            cell.beginTime = CACurrentMediaTime()
             return cell
         }
     }
     
     override func layoutSublayers() {
         super.layoutSublayers()
-        emitterShape = .sphere
-        //emitterSize = CGSize(width: frame.size.width, height: 1.0)
-        emitterSize = CGSize(width: 10.0, height: 10.0)
-        emitterPosition = CGPoint(x: frame.size.width / 2.0, y: frame.size.height / 2.0)
+        emitterShape = .line
+        emitterSize = CGSize(width: frame.size.width, height: 1.0)
+        emitterPosition = CGPoint(x: frame.size.width / 2.0, y: 0)
     }
 }
 

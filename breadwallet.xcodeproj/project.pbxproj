@@ -53,6 +53,8 @@
 		3A0063BE2509D36500C74A97 /* ExtendedTouchArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0063BD2509D36500C74A97 /* ExtendedTouchArea.swift */; };
 		3A0915CA24D8B31200CDC6A4 /* EnableKeychainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0915C924D8B31100CDC6A4 /* EnableKeychainView.swift */; };
 		3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A0C6087242A5CC900F0FBC2 /* WalletKit */; };
+		3A188FEC257FF1A300957819 /* GiftCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */; };
+		3A188FF82582835600957819 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FF72582835600957819 /* Sharing.swift */; };
 		3A1D416E250957A00089FE63 /* MarketDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D416D250957A00089FE63 /* MarketDataView.swift */; };
 		3A1D4180250965730089FE63 /* MarketDataPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D417F250965730089FE63 /* MarketDataPublisher.swift */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
@@ -68,6 +70,8 @@
 		3A69884F24591F4A0084953D /* PayIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69884E24591F4A0084953D /* PayIdTests.swift */; };
 		3A69885E24591F890084953D /* PayId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69885D24591F890084953D /* PayId.swift */; };
 		3A6A3C7E24DDC90300ACAC70 /* BackupSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */; };
+		3A6C13FF257D463300EA0689 /* GiftHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */; };
+		3A6C1406257D594A00EA0689 /* ShareGiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */; };
 		3A6CA703244239FD001833CA /* WalletInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6CA702244239FD001833CA /* WalletInitializer.swift */; };
 		3A6FD42D24E456B800068ECE /* KeyStoreUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD42C24E456B800068ECE /* KeyStoreUtils.swift */; };
 		3A6FD42F24E4570900068ECE /* KeyStore+CloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD42E24E4570900068ECE /* KeyStore+CloudBackup.swift */; };
@@ -660,6 +664,8 @@
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bonjour.swift; path = src/Platform/Bonjour.swift; sourceTree = "<group>"; };
 		3A0063BD2509D36500C74A97 /* ExtendedTouchArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExtendedTouchArea.swift; path = src/Views/ExtendedTouchArea.swift; sourceTree = "<group>"; };
 		3A0915C924D8B31100CDC6A4 /* EnableKeychainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EnableKeychainView.swift; path = src/CloudBackup/EnableKeychainView.swift; sourceTree = "<group>"; };
+		3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftCurrencyCell.swift; path = src/Gifting/GiftCurrencyCell.swift; sourceTree = "<group>"; };
+		3A188FF72582835600957819 /* Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Sharing.swift; path = src/Gifting/Sharing.swift; sourceTree = "<group>"; };
 		3A1D416D250957A00089FE63 /* MarketDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MarketDataView.swift; path = src/Views/MarketDataView.swift; sourceTree = "<group>"; };
 		3A1D417F250965730089FE63 /* MarketDataPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MarketDataPublisher.swift; path = src/Utilities/MarketDataPublisher.swift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
@@ -675,6 +681,8 @@
 		3A69884E24591F4A0084953D /* PayIdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayIdTests.swift; sourceTree = "<group>"; };
 		3A69885D24591F890084953D /* PayId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayId.swift; sourceTree = "<group>"; };
 		3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BackupSynchronizer.swift; path = src/BackupSynchronizer.swift; sourceTree = "<group>"; };
+		3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftHeaderView.swift; path = src/Gifting/GiftHeaderView.swift; sourceTree = "<group>"; };
+		3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShareGiftViewController.swift; path = src/Gifting/ShareGiftViewController.swift; sourceTree = "<group>"; };
 		3A6CA702244239FD001833CA /* WalletInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletInitializer.swift; sourceTree = "<group>"; };
 		3A6FD42C24E456B800068ECE /* KeyStoreUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoreUtils.swift; sourceTree = "<group>"; };
 		3A6FD42E24E4570900068ECE /* KeyStore+CloudBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyStore+CloudBackup.swift"; sourceTree = "<group>"; };
@@ -1408,9 +1416,13 @@
 			isa = PBXGroup;
 			children = (
 				3AFAD92F2567EE15005853E8 /* GiftViewController.swift */,
+				3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */,
 				3AFAD936256826F3005853E8 /* BorderedTextInput.swift */,
 				3AFAD94E25699112005853E8 /* TxGiftCell.swift */,
 				3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */,
+				3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */,
+				3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */,
+				3A188FF72582835600957819 /* Sharing.swift */,
 			);
 			name = Gifting;
 			sourceTree = "<group>";
@@ -1418,7 +1430,6 @@
 		710B035B21F6603C007E8A2A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				7C4548192187E65B0002E884 /* AnyCodable.swift */,
 				CE74F58C1E3BA85600ED5FA9 /* ExchangeUpdater.swift */,
 				710B036321F8C208007E8A2A /* AppRatingManager.swift */,
 				714F5D6D22037F2400F7CA70 /* EventMonitor.swift */,
@@ -1515,8 +1526,6 @@
 		75A2A7921DA5934300A983D8 /* breadwallet */ = {
 			isa = PBXGroup;
 			children = (
-				75A2A7931DA5934300A983D8 /* AppDelegate.swift */,
-				CE20C8F11DBAF71500C8397A /* ApplicationController.swift */,
 				75A2A87C1DA59E4E00A983D8 /* breadwallet.entitlements */,
 				75A2A79F1DA5934300A983D8 /* Info.plist */,
 				7C4548192187E65B0002E884 /* AnyCodable.swift */,
@@ -2874,6 +2883,7 @@
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
 				3AEA2C9C24D122EA00DA4C3A /* CloudBackupView.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
+				3A188FEC257FF1A300957819 /* GiftCurrencyCell.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */,
 				CEE9A2E920AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift in Sources */,
@@ -2920,6 +2930,7 @@
 				7C72D13622662BB40091B185 /* Wallet.swift in Sources */,
 				CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */,
 				CE274A611FD7C902000A4E62 /* RootNavigationController.swift in Sources */,
+				3A6C1406257D594A00EA0689 /* ShareGiftViewController.swift in Sources */,
 				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CE3CDB9720D443CE007059F6 /* CutoutLabel.swift in Sources */,
@@ -2934,6 +2945,7 @@
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
 				7CEA35D5232A9D1200FB58C4 /* Identifier.swift in Sources */,
 				CEE20C2F1EA3E5820086F724 /* BlinkingView.swift in Sources */,
+				3A6C13FF257D463300EA0689 /* GiftHeaderView.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
 				CEF7D94622CE6AC000939D19 /* HistoryPeriodButton.swift in Sources */,
 				3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */,
@@ -3037,6 +3049,7 @@
 				22A9A94C1DF61945000F0016 /* BRGeoLocationPlugin.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */,
+				3A188FF82582835600957819 /* Sharing.swift in Sources */,
 				22A9A94B1DF61945000F0016 /* BRCoding.swift in Sources */,
 				22A9A9561DF61945000F0016 /* BRWalletPlugin.swift in Sources */,
 				CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */,
