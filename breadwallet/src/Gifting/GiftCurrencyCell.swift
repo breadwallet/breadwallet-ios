@@ -20,10 +20,12 @@ class GiftCurrencyCell: UIView {
     private let fiatBalance = UILabel(font: Theme.body1Accent, color: Theme.primaryText)
     private let tokenBalance = UILabel(font: Theme.body3, color: Theme.secondaryText)
     
-    private let info: GiftInfo
+    private let rate: Double
+    private let amount: Double
     
-    init(info: GiftInfo) {
-        self.info = info
+    init(rate: Double, amount: Double) {
+        self.rate = rate
+        self.amount = amount
         super.init(frame: .zero)
         setup()
     }
@@ -77,11 +79,13 @@ class GiftCurrencyCell: UIView {
         iconContainer.clipsToBounds = true
         icon.tintColor = .white
         
-        price.text = "$\(info.rate.price)"
+        let rateAmount = Amount(tokenString: "1", currency: currency)
+        price.text = rateAmount.fiatDescription
         currencyName.text = "Bitcoin"
         
-        fiatBalance.text = info.sats.fiatDescription
-        tokenBalance.text = info.sats.tokenDescription
+        let displayAmount = Amount(tokenString: "\(amount)", currency: currency)
+        fiatBalance.text = displayAmount.fiatDescription
+        tokenBalance.text = displayAmount.tokenDescription
     }
     
 }

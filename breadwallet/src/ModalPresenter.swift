@@ -173,18 +173,27 @@ class ModalPresenter: Subscriber, Trackable {
         Store.subscribe(self, name: .handleGift(URL(string: "foo.com")!)) { [weak self] in
             guard let trigger = $0 else { return }
             if case let .handleGift(url) = trigger {
-                if let gift = QRCode(url: url) {
+                if let gift = QRCode(url: url, viewModel: nil) {
                     self?.handleGift(qrCode: gift)
                 }
+            }
+        }
+        
+        Store.subscribe(self, name: .reImportGift(nil)) { [weak self] in
+            guard let trigger = $0 else { return }
+            if case let .reImportGift(viewModel) = trigger {
+                guard let gift = viewModel?.gift else { return assertionFailure() }
+                let code = QRCode(url: URL(string: gift.url!)!, viewModel: viewModel)
+                guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
+                self?.presentKeyImport(wallet: wallet, scanResult: code)
             }
         }
     }
     
     private func handleGift(qrCode: QRCode) {
-        
         //TODO:GIFT - handle more gracefully if we don't have a wallet
         guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
-        guard case .gift(let key) = qrCode else { return }
+        guard case .gift(let key, _) = qrCode else { return }
         guard let privKey = Key.createFromString(asPrivate: key) else { return }
         wallet.createSweeper(forKey: privKey) { result in
             DispatchQueue.main.async {

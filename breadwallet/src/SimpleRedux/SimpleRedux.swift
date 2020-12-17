@@ -74,6 +74,7 @@ enum TriggerName {
     case didSyncKVStore
     case createAccount(Currency?, ((Wallet?) -> Void)?)
     case handleGift(URL)
+    case reImportGift(TxViewModel?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -145,6 +146,8 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.createAccount, .createAccount):
         return true
     case (.handleGift, .handleGift):
+        return true
+    case (.reImportGift, .reImportGift):
         return true
     default:
         return false

@@ -15,8 +15,12 @@ import UIKit
 struct Gift: Codable, Equatable {
     let shared: Bool
     let claimed: Bool
+    let reclaimed: Bool? //TODO:GIFT - make this not optional
     let txnHash: String?
     let keyData: String
+    let name: String?
+    let rate: Double?
+    let amount: Double?
 }
 
 extension Gift {
@@ -30,8 +34,15 @@ extension Gift {
         return "https://brd.com/x/gift/\(key)"
     }
     
-    static func create(key: Key, hash: String?) -> Gift {
-        return Gift(shared: false, claimed: false, txnHash: hash, keyData: key.encodeAsPrivate)
+    static func create(key: Key, hash: String?, name: String, rate: Double, amount: Double) -> Gift {
+        return Gift(shared: false,
+                    claimed: false,
+                    reclaimed: false,
+                    txnHash: hash,
+                    keyData: key.encodeAsPrivate,
+                    name: name,
+                    rate: rate,
+                    amount: amount)
     }
     
     func qrImage() -> UIImage? {

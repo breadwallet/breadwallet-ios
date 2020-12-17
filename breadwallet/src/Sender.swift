@@ -302,7 +302,14 @@ class Sender: Subscriber {
                              rate: rate)
         let feeRate = tx.feeBasis?.pricePerCostFactor.tokenValue.doubleValue
 
-        let newGift: Gift? = gift != nil ? Gift(shared: false, claimed: false, txnHash: transfer.hash?.description, keyData: gift!.keyData) : nil
+        let newGift: Gift? = gift != nil ? Gift(shared: false,
+                                                claimed: false,
+                                                reclaimed: false,
+                                                txnHash: transfer.hash?.description,
+                                                keyData: gift!.keyData,
+                                                name: gift!.name,
+                                                rate: gift!.rate,
+                                                amount: gift!.amount) : nil
         tx.createMetaData(rate: rate,
                           comment: comment,
                           feeRate: feeRate,
@@ -322,8 +329,16 @@ class Sender: Subscriber {
             originatingTx.createMetaData(rate: rate, tokenTransfer: wallet.currency.code, kvStore: kvStore)
         }
         
-        DispatchQueue.main.async {
-            Store.trigger(name: .txMetaDataUpdated(tx.hash))
+        if newGift != nil {
+            //gifing needs a delay for some reason
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                print("[gifting] txMetaDataUpdated: \(tx.hash)")
+                Store.trigger(name: .txMetaDataUpdated(tx.hash))
+            }
+        } else {
+            DispatchQueue.main.async {
+                Store.trigger(name: .txMetaDataUpdated(tx.hash))
+            }
         }
     }
 }

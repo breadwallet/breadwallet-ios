@@ -163,6 +163,7 @@ final class TxMetaData: BRKVStoreObject, Codable {
                                  isReceivedGift: isReceivedGift,
                                  gift: gift)
         do {
+            print("[gifting] create tx metadata: \(gift != nil)")
             _ = try kvStore.set(newData)
         } catch let error {
             print("[TxMetaData] could not create metadata: \(error)")

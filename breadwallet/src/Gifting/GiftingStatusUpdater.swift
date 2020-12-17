@@ -38,7 +38,14 @@ class GiftingStatusUpdater {
                 switch error {
                 case .insufficientFunds:
                     if txn.confirmations >= 6 {
-                        let newGift = Gift(shared: true, claimed: true, txnHash: gift.txnHash, keyData: gift.keyData)
+                        let newGift = Gift(shared: true,
+                                           claimed: true,
+                                           reclaimed: gift.reclaimed,
+                                           txnHash: gift.txnHash,
+                                           keyData: gift.keyData,
+                                           name: gift.name,
+                                           rate: gift.rate,
+                                           amount: gift.amount)
                         txn.updateGiftStatus(gift: newGift, kvStore: kvStore)
                         if let hash = newGift.txnHash {
                             Store.trigger(name: .txMetaDataUpdated(hash))

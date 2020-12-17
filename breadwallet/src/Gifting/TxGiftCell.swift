@@ -56,26 +56,14 @@ class TxGiftCell: TxDetailRowCell {
     }
     
     private func showShare() {
-        self.coordinator?.showShare()
+        if #available(iOS 13.0, *) {
+            self.coordinator?.showShare()
+        }
     }
     
     private func showReclaim() {
-        
-    }
-    
-    private func markAsShared() {
-        guard let kvStore = Backend.kvStore else { return }
-        guard let gift = gift else { return }
-        let newHash = gift.txnHash ?? viewModel.transactionHash
-        
-        let newGift = Gift(shared: true, claimed: gift.claimed, txnHash: newHash, keyData: gift.keyData)
-        viewModel.tx.updateGiftStatus(gift: newGift, kvStore: kvStore)
-        if let hash = newGift.txnHash {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                print("[gifting] txMetaDataUpdated")
-                Store.trigger(name: .txMetaDataUpdated(hash))
-            }
-        }
+        guard let viewModel = viewModel else { return }
+        Store.trigger(name: .reImportGift(viewModel))
     }
     
     func set(gift: Gift, viewModel: TxDetailViewModel) {

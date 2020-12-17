@@ -12,13 +12,13 @@ import WalletKit
 enum QRCode: Equatable {
     case paymentRequest(PaymentRequest)
     case privateKey(String)
-    case gift(String)
+    case gift(String, TxViewModel?)
     case deepLink(URL)
     case invalid
     
     init(content: String) {
         if let key = QRCode.extractPrivKeyFromGift(url: URL(string: content)!) {
-            self = .gift(key)
+            self = .gift(key, nil)
         } else if (Key.createFromString(asPrivate: content) != nil) || Key.isProtected(asPrivate: content) {
             self = .privateKey(content)
         } else if let url = URL(string: content), url.isDeepLink {
@@ -30,9 +30,10 @@ enum QRCode: Equatable {
         }
     }
     
-    init?(url: URL) {
+    //TxViewModel is needed for marking as reclaimed
+    init?(url: URL, viewModel: TxViewModel?) {
         guard let key = QRCode.extractPrivKeyFromGift(url: url) else { return nil }
-        self = .gift(key)
+        self = .gift(key, viewModel)
     }
     
     private static func detectPaymentRequest(fromURI uri: String) -> PaymentRequest? {
@@ -60,6 +61,8 @@ enum QRCode: Equatable {
         case (.deepLink(let a), .deepLink(let b)):
             return a == b
         case (.invalid, .invalid):
+            return true
+        case (.gift, .gift):
             return true
         default:
             return false

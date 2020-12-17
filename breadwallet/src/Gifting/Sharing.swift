@@ -21,69 +21,120 @@ class GiftSharingCoordinator {
         self.gift = gift
     }
     
+    @available(iOS 13.0, *)
     func showShare() {
-//        let alert = UIAlertController(title: "Share", message: nil, preferredStyle: .actionSheet)
-//        alert.addAction(UIAlertAction(title: "Share link", style: .default, handler: { _ in
-//            let url = self.gift.url
-//            //TODO:GIFT - make this work for iOS 13
-//            if #available(iOS 13.0, *) {
-//                let ac = UIActivityViewController(activityItems: [url!], applicationActivities: [])
-//                UIApplication.topViewController()?.present(ac, animated: true)
-//                self.markAsShared()
-//            }
-//        }))
-//        alert.addAction(UIAlertAction(title: "Share QR Code", style: .default, handler: { _ in
-//            let image = self.gift.createImage()!
-//            //TODO:GIFT - make this work for iOS 13
-//            if #available(iOS 13.0, *) {
-//                let ac = UIActivityViewController(activityItems: [ShareActivityItemSource(shareText: "Gift Bitcoin", shareImage: image)], applicationActivities: [])
-//                UIApplication.topViewController()?.present(ac, animated: true)
-//                self.markAsShared()
-//            }
-//        }))
-//        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
-//        UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
-        //, gift.url!
-//        let ac = UIActivityViewController(activityItems: [gift.qrImage()!, URL(string: gift.url!)!], applicationActivities: nil)
+        let alert = UIAlertController(title: "Share", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Share link", style: .default, handler: { [weak self] _ in
+            self?.shareUrl()
+        }))
+        alert.addAction(UIAlertAction(title: "Share QR Code", style: .default, handler: { [weak self] _ in
+            self?.shareImage()
+        }))
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
+    }
+    
+    @available(iOS 13.0, *)
+    private func shareUrl() {
+        let ac = UIActivityViewController(activityItems: [URL(string: gift.url!)!], applicationActivities: [])
+        self.present(ac)
+    }
+    
+    @available(iOS 13.0, *)
+    private func shareImage() {
+        assert(Thread.isMainThread)
+        let frame = CGRect(x: 0, y: 0, width: 777, height: 1215)
         
-        if #available(iOS 13.0, *) {
-            let item = ShareActivityItemSource(shareText: gift.url!, shareImage: gift.qrImage()!)
-//            let ac = UIActivityViewController(activityItems: [URL(string: gift.url!)!, item], applicationActivities: [])
-            let ac = UIActivityViewController(activityItems: [item], applicationActivities: [])
-            ac.excludedActivityTypes = [.addToReadingList, .openInIBooks]
-            
-            ac.completionWithItemsHandler = { activity, success, items, error in
-                print("[gifting]: \(activity), \(success), \(items), \(error)")
-                DispatchQueue.main.async {
-                    UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-
-//                    self.parent?.dismiss(animated: true, completion: nil)
-                }
-            }
-            
-            UIApplication.topViewController()?.present(ac, animated: true)
-        } else {
-            // Fallback on earlier versions
+        let temp = ShareGiftView(gift: gift, showButton: false)
+        temp.frame = frame
+        temp.layoutIfNeeded()
+        //temp.bounds = frame
+        
+        //let temp = UIApplication.topViewController()!.view!
+        //let image = temp.image()
+        let renderer = UIGraphicsImageRenderer(size: frame.size)
+        if let format = renderer.format as? UIGraphicsImageRendererFormat {
+            format.opaque = false
+        }
+        let image = renderer.image { ctx in
+            //temp.view.draw(frame)
+            //return temp.layer.render(in: ctx.cgContext)
+            temp.drawHierarchy(in: frame, afterScreenUpdates: true)
         }
         
-        self.markAsShared()
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+//        //UIGraphicsBeginImageContext(frame.size)
+//        UIGraphicsBeginImageContextWithOptions(frame.size, true, 2.0)
+//        if let ctx = UIGraphicsGetCurrentContext() {
+//            //UIGraphicsBeginImageContext(frame.size)
+//
+//            let temp = ShareGiftViewController(gift: gift)
+//            //temp.view.drawHierarchy(in: frame, afterScreenUpdates: true)
+//            temp.view.draw(frame)
+//            temp.view.layer.render(in: ctx)
+//
+//            let image = UIGraphicsGetImageFromCurrentImageContext()
+//            UIGraphicsEndImageContext()
+//
+//            UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
+//
+//            let ac = UIActivityViewController(activityItems: [ShareActivityItemSource(shareText: "Gift Bitcoin", shareImage: image!)], applicationActivities: [])
+//            self.present(ac)
+//        } else {
+//            assertionFailure()
+//        }
+
+    }
+    
+    private func present(_ activity: UIActivityViewController) {
+        activity.completionWithItemsHandler = { [weak self] _, success, _, _ in
+            if success {
+                self?.markAsShared()
+            }
+            DispatchQueue.main.async {
+                UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+            }
+        }
+        activity.excludedActivityTypes = [.addToReadingList, .assignToContact, .markupAsPDF, .openInIBooks]
+        UIApplication.topViewController()?.present(activity, animated: true)
     }
     
     private func markAsShared() {
-        guard let kvStore = Backend.kvStore else { return }
-        //guard let gift = gift else { return }
-        guard let newHash = gift.txnHash ?? viewModel?.tx.hash else { return }
-
-        let newGift = Gift(shared: true, claimed: gift.claimed, txnHash: newHash, keyData: gift.keyData)
-        viewModel?.tx.updateGiftStatus(gift: newGift, kvStore: kvStore)
-        if let hash = newGift.txnHash {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                print("[gifting] txMetaDataUpdated")
-                Store.trigger(name: .txMetaDataUpdated(hash))
-            }
-        }
+//        guard let kvStore = Backend.kvStore else { return }
+//        guard let newHash = gift.txnHash ?? viewModel?.tx.hash else { return }
+//
+//        let newGift = Gift(shared: true,
+//                           claimed: gift.claimed,
+//                           reclaimed: gift.reclaimed,
+//                           txnHash: newHash,
+//                           keyData: gift.keyData)
+//        viewModel?.tx.updateGiftStatus(gift: newGift, kvStore: kvStore)
+//        if let hash = newGift.txnHash {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+//                print("[gifting] txMetaDataUpdated")
+//                Store.trigger(name: .txMetaDataUpdated(hash))
+//            }
+//        }
     }
     
+}
+
+extension UIView {
+
+    /// Creates an image from the view's contents, using its layer.
+    ///
+    /// - Returns: An image, or nil if an image couldn't be created.
+    func image() -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        context.saveGState()
+        layer.render(in: context)
+        context.restoreGState()
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return image
+    }
+
 }
 
 @available(iOS 13.0, *)

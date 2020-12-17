@@ -71,6 +71,7 @@ class TxDetailDataSource: NSObject {
         fields.append(.timestamp)
         fields.append(.address)
         
+        if viewModel.gift != nil { fields.append(.gift) }
         if viewModel.comment != nil { fields.append(.memo) }
         if viewModel.gasPrice != nil { fields.append(.gasPrice) }
         if viewModel.gasLimit != nil { fields.append(.gasLimit) }
@@ -78,7 +79,6 @@ class TxDetailDataSource: NSObject {
         if viewModel.total != nil { fields.append(.total) }
         if viewModel.exchangeRate != nil { fields.append(.exchangeRate) }
         if viewModel.extraAttribute != nil { fields.append(.extraAttribute) }
-        if viewModel.gift != nil { fields.append(.gift) }
         
         fields.append(.blockHeight)
         fields.append(.confirmations)

@@ -80,15 +80,15 @@ extension TxViewModel {
     var icon: StatusIcon {
         if let gift = gift, tx.confirmations >= currency.confirmationsUntilFinal {
             //not shared should override unclaimed
-            if gift.shared == false {
-                return .gift(.unsent)
+            if gift.reclaimed == true {
+                return .gift(.reclaimed)
             } else if gift.claimed {
                 return .gift(.claimed)
+            } else if gift.shared == false {
+                return .gift(.unsent)
             } else {
                 return .gift(.unclaimed)
             }
-            //how to tell?
-            //return .gift(.reclaimed)
         }
         
         if tx.confirmations < currency.confirmationsUntilFinal {

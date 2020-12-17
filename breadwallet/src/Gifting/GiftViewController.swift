@@ -41,8 +41,6 @@ class GiftViewController: UIViewController {
     private let header = UILabel.wrapping(font: Theme.boldTitle, color: .white)
     private let subHeader = UILabel.wrapping(font: Theme.body1, color: UIColor.white.withAlphaComponent(0.85))
     private let amountHeader = UILabel(font: Theme.caption, color: .white)
-    
-    //private let customAmount = BorderedTextInput(placeholder: "Custom amount ($500 max)", keyboardType: .decimalPad)
     private let name = BorderedTextInput(placeholder: "Recipient's Name", keyboardType: .default)
     private let bottomBorder = UIView(color: .white)
     private let createButton: UIButton = {
@@ -78,14 +76,9 @@ class GiftViewController: UIViewController {
     private var minimum: Amount?
     private var privKey: Key?
     private var address: Address?
-    private var recipientName: String?
-    private var selectedAmount: Amount? {
-        didSet {
-            guard selectedAmount != nil else { createButton.setDisabled(); return }
-            verifyExtraAmount()
-            createButton.setEnabled()
-        }
-    }
+    private var recipientName: String? { didSet { validate() }}
+    private var selectedAmount: Amount? { didSet { validate() }}
+    private var rawAmount: Double?
     private var gift: Gift?
     
     override func viewDidLoad() {
@@ -104,7 +97,6 @@ class GiftViewController: UIViewController {
         contentView.addSubview(subHeader)
         contentView.addSubview(amountHeader)
         contentView.addSubview(toolbar)
-        //contentView.addSubview(customAmount)
         contentView.addSubview(name)
         contentView.addSubview(extraSwitch)
         contentView.addSubview(extraLabel)
@@ -118,8 +110,7 @@ class GiftViewController: UIViewController {
         headerView.constrain([
             headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             headerView.topAnchor.constraint(equalTo: view.topAnchor),
-            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         scrollView.constrain([
             scrollView.topAnchor.constraint(equalTo: headerView.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -151,25 +142,18 @@ class GiftViewController: UIViewController {
             toolbar.topAnchor.constraint(equalTo: amountHeader.bottomAnchor, constant: C.padding[2]),
             toolbar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             toolbar.heightAnchor.constraint(equalToConstant: 44.0)])
-//        customAmount.constrain([
-//            customAmount.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-//            customAmount.topAnchor.constraint(equalTo: toolbar.bottomAnchor, constant: C.padding[2]),
-//            customAmount.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])])
         name.constrain([
             name.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             name.topAnchor.constraint(equalTo: toolbar.bottomAnchor, constant: C.padding[2]),
             name.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])])
-        
         extraSwitch.constrain([
             extraSwitch.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             extraSwitch.topAnchor.constraint(equalTo: name.bottomAnchor, constant: C.padding[2]),
             extraSwitch.widthAnchor.constraint(equalToConstant: 53.0) ])
-        
         extraLabel.constrain([
             extraLabel.leadingAnchor.constraint(equalTo: extraSwitch.trailingAnchor, constant: C.padding[1]),
             extraLabel.centerYAnchor.constraint(equalTo: extraSwitch.centerYAnchor),
             extraLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2])])
-        
         bottomBorder.constrain([
             bottomBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBorder.topAnchor.constraint(equalTo: extraLabel.bottomAnchor, constant: C.padding[3]),
@@ -181,6 +165,40 @@ class GiftViewController: UIViewController {
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             createButton.heightAnchor.constraint(equalToConstant: 44.0),
             createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[4])])
+    }
+    
+    private func setInitialData() {
+        fetchInitialData()
+        header.text = "Send Bitcoin to someone\n even if they don't have a wallet."
+        header.textAlignment = .center
+        subHeader.text = """
+            We'll create what's called a \"paper wallet\" with a QR code and instructions for installing BRD that you can email or text to friends and family
+            """
+        subHeader.textAlignment = .center
+        amountHeader.text = "Choose amount ($USD)"
+        toolbar.distribution = .fillEqually
+        toolbar.spacing = 8.0
+        extraSwitch.onTintColor = .white
+        extraLabel.text = "add an additional $10 for import network fees"
+        extraLabel.numberOfLines = 0
+        extraLabel.lineBreakMode = .byWordWrapping
+        createButton.tap = create
+        createButton.setDisabled()
+        
+        name.didUpdate = { [weak self] output in
+            self?.recipientName = output
+        }
+        
+        scrollView.keyboardDismissMode = .onDrag
+        extraLabel.numberOfLines = 0
+        extraLabel.lineBreakMode = .byWordWrapping
+        
+        scrollView.clipsToBounds = true
+        headerView.close.tap = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+        disableExtraSwitch()
+        disableAllButtons()
     }
     
     private func fetchInitialData() {
@@ -235,6 +253,14 @@ class GiftViewController: UIViewController {
         }
     }
     
+    private func validate() {
+        guard selectedAmount != nil else { createButton.setDisabled(); return }
+        verifyExtraAmount()
+        
+        guard recipientName != nil && !recipientName!.isEmpty else { return }
+        createButton.setEnabled()
+    }
+    
     func handleCreatePaperWalletError() {
         
     }
@@ -249,6 +275,8 @@ class GiftViewController: UIViewController {
             let amount = Amount(tokenString: "\(btcAmount)", currency: currency)
             if amount > maximum || amount < minimum {
                 $0.1.setDisabled()
+            } else {
+                $0.1.setEnabled()
             }
         }
     }
@@ -259,40 +287,6 @@ class GiftViewController: UIViewController {
     
     private func enableAllButtons() {
         buttons.forEach { $0.1.setEnabled() }
-    }
-    
-    private func setInitialData() {
-        fetchInitialData()
-        header.text = "Send Bitcoin to someone\n even if they don't have a wallet."
-        header.textAlignment = .center
-        subHeader.text = """
-            We'll create what's called a \"paper wallet\" with a QR code and instructions for installing BRD that you can email or text to friends and family
-            """
-        subHeader.textAlignment = .center
-        amountHeader.text = "Choose amount ($USD)"
-        toolbar.distribution = .fillEqually
-        toolbar.spacing = 8.0
-        extraSwitch.onTintColor = .white
-        extraLabel.text = "add an additional $10 for import network fees"
-        extraLabel.numberOfLines = 0
-        extraLabel.lineBreakMode = .byWordWrapping
-        createButton.tap = create
-        createButton.setDisabled()
-        
-        //customAmount.didUpdate = didOutputCustomAmount(amountString:)
-        
-        name.didUpdate = { [weak self] output in
-            self?.recipientName = output
-        }
-        
-        scrollView.keyboardDismissMode = .onDrag
-        extraLabel.numberOfLines = 0
-        extraLabel.lineBreakMode = .byWordWrapping
-        
-        scrollView.clipsToBounds = true
-        headerView.close.tap = { [weak self] in
-            self?.dismiss(animated: true, completion: nil)
-        }
     }
     
     private func create() {
@@ -315,38 +309,37 @@ class GiftViewController: UIViewController {
             let feeAmount = Amount(amount: fee,
                                    rate: rate,
                                    maximumFractionDigits: Amount.highPrecisionDigits)
-
-            let gift = Gift.create(key: privKey, hash: nil)
+            let gift = Gift.create(key: privKey,
+                                   hash: nil,
+                                   name: self.recipientName!,
+                                   rate: rate.rate,
+                                   amount: self.rawAmount!)
             self.gift = gift
 
-            //Sharing testing
-//            let info = GiftInfo(name: self.recipientName ?? "no name",
-//                                rate: self.rate!,
-//                                sats: self.selectedAmount!)
-//            DispatchQueue.main.async {
-//                let share = ShareGiftViewController(gift: gift, info: info)
-//                self.present(share, animated: true, completion: nil)
-//            }
-            
-            _ = self.sender.createTransaction(address: address.description,
-                                              amount: amount,
-                                              feeBasis: feeBasis,
-                                              comment: comment,
-                                              gift: gift)
-
             DispatchQueue.main.async {
-                let confirm = ConfirmationViewController(amount: displayAmount,
-                                                         fee: feeAmount,
-                                                         displayFeeLevel: .regular,
-                                                         address: address.description,
-                                                         isUsingBiometrics: self.sender.canUseBiometrics,
-                                                         currency: self.currency,
-                                                         resolvedAddress: nil,
-                                                         shouldShowMaskView: false)
-                confirm.successCallback = self.send
-                confirm.cancelCallback = self.sender.reset
-                self.present(confirm, animated: true, completion: nil)
+                let share = ShareGiftViewController(gift: gift)
+                self.present(share, animated: true, completion: nil)
             }
+            
+//            _ = self.sender.createTransaction(address: address.description,
+//                                              amount: amount,
+//                                              feeBasis: feeBasis,
+//                                              comment: comment,
+//                                              gift: gift)
+//
+//            DispatchQueue.main.async {
+//                let confirm = ConfirmationViewController(amount: displayAmount,
+//                                                         fee: feeAmount,
+//                                                         displayFeeLevel: .regular,
+//                                                         address: "Gift to \(self.recipientName!)",
+//                                                         isUsingBiometrics: self.sender.canUseBiometrics,
+//                                                         currency: self.currency,
+//                                                         resolvedAddress: nil,
+//                                                         shouldShowMaskView: false)
+//                confirm.successCallback = self.send
+//                confirm.cancelCallback = self.sender.reset
+//                self.present(confirm, animated: true, completion: nil)
+//            }
         })
         
     }
@@ -371,12 +364,8 @@ class GiftViewController: UIViewController {
                 switch result {
                 case .success:
                     self.onPublishSuccess?()
-                    guard let gift = self.gift else { return }
-                    let info = GiftInfo(name: self.recipientName ?? "no name",
-                                        rate: self.rate!,
-                                        sats: self.selectedAmount!)
-                    
-                    let share = ShareGiftViewController(gift: gift, info: info)
+                    guard let gift = self.gift else { return }                    
+                    let share = ShareGiftViewController(gift: gift)
                     DispatchQueue.main.async {
                         self.present(share, animated: true, completion: nil)
                     }
@@ -445,11 +434,20 @@ extension GiftViewController {
         let selectedButton = buttons[index].1
         let previousSelectedButton: UIButton? = selectedIndex >= 0 ? buttons[selectedIndex].1 : nil
         
-        selectedIndex = index
+        //If unselecting current button
+        guard selectedButton != previousSelectedButton else {
+            selectedIndex = -1
+            selectedAmount = nil
+            selectedButton.setUnSelected()
+            return
+        }
         
+        //Selecting a new button
+        selectedIndex = index
         if let rate = rate {
             let fiatAmount = buttons[index].0
             let btcAmount = round(100000000.0*Double(fiatAmount)/rate.price)/100000000.0
+            rawAmount = btcAmount
             selectedAmount = Amount(tokenString: "\(btcAmount)", currency: currency)
         }
         
@@ -457,26 +455,6 @@ extension GiftViewController {
             selectedButton.setSelected()
             previousSelectedButton?.setUnSelected()
         })
-        
-        //customAmount.clear()
-    }
-    
-    fileprivate func didOutputCustomAmount(amountString: String?) {
-        guard let amountString = amountString else { return }
-        guard let rate = rate else { return }
-        guard let maximum = maximum, let minimum = minimum else { return }
-        guard let doubleAmount = Double(amountString) else { return }
-        let btcAmount = round(100000000.0*doubleAmount/rate.price)/100000000.0
-        let maxGift = Amount(tokenString: "\(round(100000000.0*500.0/rate.price)/100000000.0)", currency: currency)
-        
-        let amount = Amount(tokenString: "\(btcAmount)", currency: currency)
-        if amount > maximum || amount < minimum || amount > maxGift {
-            //customAmount.setInvalid()
-        } else {
-            //customAmount.setValid()
-            selectedAmount = amount
-            enableAllButtons()
-        }
     }
 }
 

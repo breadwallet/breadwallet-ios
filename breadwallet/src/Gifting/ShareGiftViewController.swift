@@ -33,17 +33,16 @@ class ShareGiftView: UIView {
     private let disclaimer = UILabel(font: Theme.body1, color: UIColor.white.withAlphaComponent(0.2))
     private let disclaimer2 = UILabel(font: Theme.body1, color: UIColor.white.withAlphaComponent(0.4))
     private let share = BRDButton(title: "Share", type: .primary)
-    //private let coordinator: GiftSharingCoordinator
     private let gift: Gift
-    private let info: GiftInfo
+    private let showButton: Bool
     
     var didTapShare: (() -> Void)?
     
-    init(gift: Gift, info: GiftInfo) {
+    init(gift: Gift, showButton: Bool = true) {
         self.gift = gift
-        self.info = info
-        self.cell = GiftCurrencyCell(info: info)
-        //self.coordinator = GiftSharingCoordinator(gift: gift)
+        self.showButton = showButton
+        self.cell = GiftCurrencyCell(rate: gift.rate ?? 0,
+                                     amount: gift.amount ?? 0)
         super.init(frame: .zero)
         setup()
     }
@@ -141,10 +140,13 @@ class ShareGiftView: UIView {
     private func setInitialData() {
         qr.image = gift.qrImage()
         qr.contentMode = .scaleAspectFit
-        name.text = info.name
+        name.text = gift.name ?? "no name"
         subHeader.text = "Someone gifted you Bitcoin"
         
-        total.text = info.sats.fiatDescription
+        if let btc = Currencies.btc.instance {
+            let displayAmount = Amount(tokenString: "\(gift.amount ?? 0)", currency: btc)
+            total.text = displayAmount.tokenDescription
+        }
         total.textAlignment = .right
         
         totalLabel.text = "Approximate Total"
@@ -168,20 +170,6 @@ class ShareGiftView: UIView {
         }
     }
     
-    //private func share() {
-        //guard let gift = self.gift else { return }
-
-//
-//                let temp = ShareGiftViewController(gift: gift, info: info)
-//                temp.view.draw(CGRect(x: 0, y: 0, width: 777, height: 1215))
-//                UIGraphicsBeginImageContext(temp.view.frame.size)
-//                temp.view.layer.render(in: UIGraphicsGetCurrentContext()!)
-//                let image = UIGraphicsGetImageFromCurrentImageContext()
-//                UIGraphicsEndImageContext()
-//                //Save it to the camera roll
-//                UIImageWriteToSavedPhotosAlbum(image!, nil, nil, nil)
-    //}
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -192,8 +180,8 @@ class ShareGiftViewController: UIViewController {
     private let shareView: ShareGiftView
     private let coordinator: GiftSharingCoordinator
     
-    init(gift: Gift, info: GiftInfo) {
-        self.shareView = ShareGiftView(gift: gift, info: info)
+    init(gift: Gift) {
+        self.shareView = ShareGiftView(gift: gift)
         self.coordinator = GiftSharingCoordinator(gift: gift)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .overFullScreen
@@ -201,8 +189,10 @@ class ShareGiftViewController: UIViewController {
     
     override func loadView() {
         view = shareView
-        shareView.didTapShare = coordinator.showShare
-        self.coordinator.parent = self
+        if #available(iOS 13.0, *) {
+            shareView.didTapShare = coordinator.showShare
+            self.coordinator.parent = self
+        }
     }
     
     required init?(coder: NSCoder) {
