@@ -102,7 +102,7 @@ class Wallet {
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return }
         let networkFee = feeForLevel(level: fee)
-        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
+        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: nil, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)
                 return
@@ -237,7 +237,7 @@ class Wallet {
     }
     
     func createExportablePaperWallet() -> Result<ExportablePaperWallet, ExportablePaperWalletError> {
-        return manager.createExportablePaperWallet(wallet: core)
+        return manager.createExportablePaperWallet()
     }
 
     private func publishEvent(_ event: WalletEvent) {
