@@ -17,7 +17,7 @@ enum QRCode: Equatable {
     case invalid
     
     init(content: String) {
-        if let key = QRCode.extractPrivKeyFromGift(url: URL(string: content)!) {
+        if let url = URL(string: content), let key = QRCode.extractPrivKeyFromGift(url: url) {
             self = .gift(key, nil)
         } else if (Key.createFromString(asPrivate: content) != nil) || Key.isProtected(asPrivate: content) {
             self = .privateKey(content)
