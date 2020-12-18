@@ -37,7 +37,7 @@ class ShareGiftView: UIView {
     private let showButton: Bool
     
     var didTapShare: (() -> Void)?
-    
+        
     init(gift: Gift, showButton: Bool = true) {
         self.gift = gift
         self.showButton = showButton
@@ -73,20 +73,37 @@ class ShareGiftView: UIView {
     private func addConstraints() {
         blurView.constrain(toSuperviewEdges: nil)
         let top = scrollView.topAnchor.constraint(lessThanOrEqualTo: topAnchor)
-        top.priority = .defaultLow
+        let padding = showButton ? C.padding[2] : 0
+        if !showButton {
+            blurView.isHidden = true
+            backgroundColor = Theme.primaryBackground
+        } else {
+            top.priority = .defaultLow
+        }
         scrollView.constrain([
             top,
             scrollView.heightAnchor.constraint(lessThanOrEqualTo: contentView.heightAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
-            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
-            scrollView.bottomAnchor.constraint(equalTo: share.topAnchor, constant: -C.padding[2])
+            scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: padding),
+            scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -padding)
         ])
+        
+        if showButton {
+            scrollView.constrain([
+                scrollView.bottomAnchor.constraint(equalTo: share.topAnchor, constant: -padding)
+            ])
+        } else {
+            scrollView.constrain([
+                scrollView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+        }
+        
+        let contentViewPadding = showButton ? -C.padding[4] : 0
         contentView.constrain([
             contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
             contentView.topAnchor.constraint(lessThanOrEqualTo: scrollView.topAnchor),
             contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: widthAnchor, constant: -C.padding[4])
+            contentView.widthAnchor.constraint(equalTo: widthAnchor, constant: contentViewPadding)
         ])
         qr.constrain([
             qr.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[6]),
@@ -135,6 +152,10 @@ class ShareGiftView: UIView {
             share.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
             share.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             share.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[4])])
+        
+        if !showButton {
+            share.constrain([share.heightAnchor.constraint(equalToConstant: 0.0)])
+        }
     }
     
     private func setInitialData() {

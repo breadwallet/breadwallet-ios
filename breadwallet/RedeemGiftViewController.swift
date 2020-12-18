@@ -55,7 +55,6 @@ class RedeemGiftViewController: UIViewController, Subscriber {
     private let transitioner = RedeemTransitioningDelegate()
     private let qrCode: QRCode
     private let wallet: Wallet
-    //private var didLoad = false
     private let sweeperResult: Result<WalletSweeper, WalletSweeperError>
     
     init(qrCode: QRCode, wallet: Wallet, sweeperResult: Result<WalletSweeper, WalletSweeperError>) {
@@ -155,8 +154,6 @@ class RedeemGiftViewController: UIViewController, Subscriber {
         
         if #available(iOS 13.0, *) {
             icon.image = UIImage(systemName: "gift")
-        } else {
-            //TODO:GIFT - add backup image
         }
     }
     
@@ -204,8 +201,7 @@ class RedeemGiftViewController: UIViewController, Subscriber {
     private func setErrorMessageState(_ message: String) {
         body.text = message
         redeem.title = "OK"
-        redeem.tap = showConfetti
-        //redeem.tap = { self.dismiss(animated: true, completion: nil) }
+        redeem.tap = { self.dismiss(animated: true, completion: nil) }
     }
     
     private func submit(sweeper: WalletSweeper, fee: TransferFeeBasis) {
@@ -237,8 +233,7 @@ class RedeemGiftViewController: UIViewController, Subscriber {
     }
     
     private func showConfetti() {
-        assert(Thread.isMainThread)
-        let duration = 10.0
+        let duration = 3.0
         confetti.emit(for: duration, completion: {
             DispatchQueue.main.async {
                 self.dismiss(animated: true, completion: nil)
@@ -300,9 +295,9 @@ private final class ConfettiLayer: CAEmitterLayer {
     func setup() {
         emitterCells = (0...5).map {_ in ["💸", "💰", "🤑", "💵"].randomElement()! }.map { character in
             let cell = CAEmitterCell()
-            cell.birthRate = 25.0
-            cell.lifetime = 10.0
-            cell.velocity = CGFloat(cell.birthRate * cell.lifetime) - 50
+            cell.birthRate = 2
+            cell.lifetime = 5.0
+            cell.velocity = 150.0
             cell.velocityRange = cell.velocity / 2
             cell.emissionLongitude = .pi
             cell.emissionRange = .pi / 4
@@ -323,7 +318,7 @@ private final class ConfettiLayer: CAEmitterLayer {
 }
 
 fileprivate extension String {
-    func image(with font: UIFont = UIFont.systemFont(ofSize: 8.0)) -> UIImage {
+    func image(with font: UIFont = UIFont.systemFont(ofSize: 16.0)) -> UIImage {
         let string = NSString(string: "\(self)")
         let attributes: [NSAttributedString.Key: Any] = [
             .font: font

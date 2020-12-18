@@ -27,8 +27,8 @@ class GiftViewController: UIViewController {
         self.currency = currency
         super.init(nibName: nil, bundle: nil)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
     
@@ -70,7 +70,7 @@ class GiftViewController: UIViewController {
     private let extraSwitch = UISwitch()
     private let extraLabel = UILabel.wrapping(font: Theme.caption, color: .white)
     
-    //State
+    // State
     private var rate: SimplePrice?
     private var maximum: Amount?
     private var minimum: Amount?
@@ -316,30 +316,31 @@ class GiftViewController: UIViewController {
                                    amount: self.rawAmount!)
             self.gift = gift
 
-            DispatchQueue.main.async {
-                let share = ShareGiftViewController(gift: gift)
-                self.present(share, animated: true, completion: nil)
-            }
-            
-//            _ = self.sender.createTransaction(address: address.description,
-//                                              amount: amount,
-//                                              feeBasis: feeBasis,
-//                                              comment: comment,
-//                                              gift: gift)
-//
+            //for testing sharing without creating transaction
 //            DispatchQueue.main.async {
-//                let confirm = ConfirmationViewController(amount: displayAmount,
-//                                                         fee: feeAmount,
-//                                                         displayFeeLevel: .regular,
-//                                                         address: "Gift to \(self.recipientName!)",
-//                                                         isUsingBiometrics: self.sender.canUseBiometrics,
-//                                                         currency: self.currency,
-//                                                         resolvedAddress: nil,
-//                                                         shouldShowMaskView: false)
-//                confirm.successCallback = self.send
-//                confirm.cancelCallback = self.sender.reset
-//                self.present(confirm, animated: true, completion: nil)
+//                let share = ShareGiftViewController(gift: gift)
+//                self.present(share, animated: true, completion: nil)
 //            }
+            
+            _ = self.sender.createTransaction(address: address.description,
+                                              amount: amount,
+                                              feeBasis: feeBasis,
+                                              comment: comment,
+                                              gift: gift)
+
+            DispatchQueue.main.async {
+                let confirm = ConfirmationViewController(amount: displayAmount,
+                                                         fee: feeAmount,
+                                                         displayFeeLevel: .regular,
+                                                         address: "Gift to \(self.recipientName!)",
+                                                         isUsingBiometrics: self.sender.canUseBiometrics,
+                                                         currency: self.currency,
+                                                         resolvedAddress: nil,
+                                                         shouldShowMaskView: false)
+                confirm.successCallback = self.send
+                confirm.cancelCallback = self.sender.reset
+                self.present(confirm, animated: true, completion: nil)
+            }
         })
         
     }

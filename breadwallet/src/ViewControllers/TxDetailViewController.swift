@@ -95,6 +95,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
         super.dismiss(animated: flag) {
             self.txDetailDelegate?.txDetailDidDismiss(detailViewController: self)
+            completion?()
         }
     }
     

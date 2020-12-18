@@ -10,7 +10,7 @@ import Foundation
 
 /// Stores additional information about a given transaction
 final class TxMetaData: BRKVStoreObject, Codable {
-    var classVersion: Int = 3
+    var classVersion: Int = 4
     
     var blockHeight: Int = 0
     var exchangeRate: Double = 0
@@ -54,10 +54,18 @@ final class TxMetaData: BRKVStoreObject, Codable {
         created = try container.decode(Date.self, forKey: .created)
         comment = try container.decode(String.self, forKey: .comment)
 
+        if !comment.isEmpty {
+            print("[gifting] error: \(comment)")
+        }
+        
         //tokenTransfer is sometimes not present in TxMetaData from Android so we shouldn't throw if it doesn't exist
         tokenTransfer = (try? container.decode(String.self, forKey: .tokenTransfer)) ?? ""
         isReceivedGift = (try? container.decode(Bool.self, forKey: .isReceivedGift)) ?? false
-        gift = try? container.decode(Gift.self, forKey: .gift)
+        do {
+            gift = try container.decode(Gift.self, forKey: .gift)
+        } catch let e {
+            print("[gifting] error: \(e)")
+        }
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 
