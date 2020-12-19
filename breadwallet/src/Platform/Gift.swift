@@ -15,7 +15,7 @@ import UIKit
 struct Gift: Codable, Equatable {
     let shared: Bool
     let claimed: Bool
-    let reclaimed: Bool? //TODO:GIFT - make this not optional
+    let reclaimed: Bool?
     let txnHash: String?
     let keyData: String
     let name: String?

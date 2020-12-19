@@ -68,6 +68,10 @@ class TxMemoCell: TxDetailRowCell {
         self.viewModel = viewModel
         textView.text = viewModel.comment
         placeholderLabel.isHidden = !textView.text.isEmpty
+        if viewModel.gift != nil {
+            textView.isEditable = false
+            textView.isSelectable = false
+        }
     }
     
     fileprivate func saveComment(comment: String) {

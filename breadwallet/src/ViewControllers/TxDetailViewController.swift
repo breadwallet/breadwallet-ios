@@ -145,7 +145,7 @@ class TxDetailViewController: UIViewController, Subscriber {
     }
     
     private func setupActions() {
-        //TODO:GIFTING - fix closing when expanding txn details in iOS 14 sims?
+// IOS-1671 fix closing when expanding txn details in iOS 14 sims?
 //        let gr = UITapGestureRecognizer(target: self, action: #selector(close))
 //        tapView.addGestureRecognizer(gr)
 //        tapView.isUserInteractionEnabled = true

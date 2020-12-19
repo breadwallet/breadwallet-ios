@@ -191,8 +191,7 @@ class ModalPresenter: Subscriber, Trackable {
     }
     
     private func handleGift(qrCode: QRCode) {
-        //TODO:GIFT - handle more gracefully if we don't have a wallet
-        guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
+        guard let wallet = Currencies.btc.instance?.wallet else { return }
         guard case .gift(let key, _) = qrCode else { return }
         guard let privKey = Key.createFromString(asPrivate: key) else { return }
         wallet.createSweeper(forKey: privKey) { result in

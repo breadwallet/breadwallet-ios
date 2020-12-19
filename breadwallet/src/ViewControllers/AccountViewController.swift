@@ -132,7 +132,6 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             expandRewardsView()
         }
         
-        //TODO:GIFT - maybe just do this a few times?
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             self.footerView.jiggle()
         }

@@ -71,7 +71,11 @@ class TxDetailDataSource: NSObject {
         fields.append(.timestamp)
         fields.append(.address)
         
-        if viewModel.gift != nil { fields.append(.gift) }
+        if let gift = viewModel.gift {
+            if !(gift.reclaimed == true) && !(gift.claimed == true) {
+                fields.append(.gift)
+            }
+        }
         if viewModel.comment != nil { fields.append(.memo) }
         if viewModel.gasPrice != nil { fields.append(.gasPrice) }
         if viewModel.gasLimit != nil { fields.append(.gasLimit) }
@@ -116,7 +120,7 @@ class TxDetailDataSource: NSObject {
         case .extraAttribute:
             return viewModel.extraAttributeHeader
         case .gift:
-            return "Gift" //TODO:GIFT - translate
+            return "Gift"
         default:
             return ""
         }

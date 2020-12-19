@@ -42,8 +42,8 @@ class Wallet {
     
     func startGiftingMonitor() {
         let giftTxns = transfers.filter({ $0.metaData?.gift != nil })
-        //TODO:GIFTING - where to get this kvstore?
-        giftingStatusUpdater.monitor(txns: giftTxns, kvStore: Backend.kvStore!)
+        guard let kvStore = Backend.kvStore else { return }
+        giftingStatusUpdater.monitor(txns: giftTxns, kvStore: kvStore)
     }
     
     func stopGiftingMonitor() {

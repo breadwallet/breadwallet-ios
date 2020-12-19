@@ -19,24 +19,22 @@ class URLController: Trackable, Subscriber {
     private var xSource, xSuccess, xError, uri: String?
         
     func handleUrl(_ url: URL) -> Bool {
-        
-        //TODO:GIFT - we want to handle gift before login
-//        guard !Store.state.isLoginRequired else {
-//            // defer url handling until wallet is unlocked
-//            urlWaitingForUnlock = url
-//            Store.lazySubscribe(self,
-//                                selector: { $0.isLoginRequired != $1.isLoginRequired },
-//                                callback: { state in
-//                                    DispatchQueue.main.async {
-//                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
-//                                            self.urlWaitingForUnlock = nil
-//                                            _ = self.handleUrl(url)
-//                                            Store.unsubscribe(self)
-//                                        }
-//                                    }
-//            })
-//            return false
-//        }
+        guard !Store.state.isLoginRequired else {
+            // defer url handling until wallet is unlocked
+            urlWaitingForUnlock = url
+            Store.lazySubscribe(self,
+                                selector: { $0.isLoginRequired != $1.isLoginRequired },
+                                callback: { state in
+                                    DispatchQueue.main.async {
+                                        if !state.isLoginRequired, let url = self.urlWaitingForUnlock {
+                                            self.urlWaitingForUnlock = nil
+                                            _ = self.handleUrl(url)
+                                            Store.unsubscribe(self)
+                                        }
+                                    }
+            })
+            return false
+        }
         
         saveEvent("send.handleURL", attributes: [
             "scheme": url.scheme ?? C.null,

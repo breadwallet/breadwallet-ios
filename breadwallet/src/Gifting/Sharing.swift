@@ -138,7 +138,6 @@ class ShareActivityItemSource: NSObject, UIActivityItemSource {
     }
 }
 
-// TODO:GIFT - get rid of this
 extension UIApplication {
 
     class func topViewController(_ base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
