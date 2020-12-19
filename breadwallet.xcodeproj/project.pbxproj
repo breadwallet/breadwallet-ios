@@ -92,10 +92,6 @@
 		3AEA2CAB24D3219200DA4C3A /* SelectBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */; };
 		3AEF7B72234A4E3C005BE184 /* RequestUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */; };
 		3AF78B3B2523B05E00FBB280 /* FioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF78B3A2523B05E00FBB280 /* FioTests.swift */; };
-		3AFAD90125674F56005853E8 /* BRDClipApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD90025674F56005853E8 /* BRDClipApp.swift */; };
-		3AFAD90325674F56005853E8 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD90225674F56005853E8 /* ContentView.swift */; };
-		3AFAD90525674F57005853E8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AFAD90425674F57005853E8 /* Assets.xcassets */; };
-		3AFAD90825674F57005853E8 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3AFAD90725674F57005853E8 /* Preview Assets.xcassets */; };
 		3AFAD9302567EE15005853E8 /* GiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD92F2567EE15005853E8 /* GiftViewController.swift */; };
 		3AFAD937256826F3005853E8 /* BorderedTextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD936256826F3005853E8 /* BorderedTextInput.swift */; };
 		3AFAD94825698A74005853E8 /* Gift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94725698A74005853E8 /* Gift.swift */; };
@@ -704,12 +700,6 @@
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
 		3AF78B3A2523B05E00FBB280 /* FioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FioTests.swift; sourceTree = "<group>"; };
 		3AFAD8FE25674F56005853E8 /* BRDClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BRDClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3AFAD90025674F56005853E8 /* BRDClipApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BRDClipApp.swift; sourceTree = "<group>"; };
-		3AFAD90225674F56005853E8 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		3AFAD90425674F57005853E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		3AFAD90725674F57005853E8 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		3AFAD90925674F57005853E8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3AFAD90A25674F57005853E8 /* BRDClip.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BRDClip.entitlements; sourceTree = "<group>"; };
 		3AFAD92F2567EE15005853E8 /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftViewController.swift; path = src/Gifting/GiftViewController.swift; sourceTree = "<group>"; };
 		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
 		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
@@ -1391,27 +1381,6 @@
 			name = PayId;
 			sourceTree = "<group>";
 		};
-		3AFAD8FF25674F56005853E8 /* BRDClip */ = {
-			isa = PBXGroup;
-			children = (
-				3AFAD90025674F56005853E8 /* BRDClipApp.swift */,
-				3AFAD90225674F56005853E8 /* ContentView.swift */,
-				3AFAD90425674F57005853E8 /* Assets.xcassets */,
-				3AFAD90925674F57005853E8 /* Info.plist */,
-				3AFAD90A25674F57005853E8 /* BRDClip.entitlements */,
-				3AFAD90625674F57005853E8 /* Preview Content */,
-			);
-			path = BRDClip;
-			sourceTree = "<group>";
-		};
-		3AFAD90625674F57005853E8 /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				3AFAD90725674F57005853E8 /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
-			sourceTree = "<group>";
-		};
 		3AFAD92E2567ED22005853E8 /* Gifting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1504,7 +1473,6 @@
 				75A2A7B21DA5934300A983D8 /* breadwalletUITests */,
 				75B6F52F1DA71DCC0031A93F /* Modules */,
 				CEA7E67C1F09A9D2001F8C27 /* Screenshots */,
-				3AFAD8FF25674F56005853E8 /* BRDClip */,
 				75A2A7F11DA5935F00A983D8 /* Frameworks */,
 				75A2A7911DA5934300A983D8 /* Products */,
 			);
@@ -2538,8 +2506,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AFAD90825674F57005853E8 /* Preview Assets.xcassets in Resources */,
-				3AFAD90525674F57005853E8 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2832,8 +2798,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AFAD90325674F56005853E8 /* ContentView.swift in Sources */,
-				3AFAD90125674F56005853E8 /* BRDClipApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
