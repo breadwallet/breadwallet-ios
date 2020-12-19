@@ -13,11 +13,11 @@ import UIKit
 class BorderedTextInput: UIView {
     
     private let placeholder = UILabel(font: Theme.caption, color: .white)
-    private let textField = UITextField()
     private let placeholderText: String
     private let keyboardType: UIKeyboardType
     private let unit = UILabel(font: Theme.body1, color: .white)
     var didUpdate: ((String?) -> Void)?
+    let textField = UITextField()
     
     func setInvalid() {
         textField.textColor = UIColor.red
@@ -64,7 +64,6 @@ class BorderedTextInput: UIView {
         if keyboardType == .decimalPad {
             unit.text = "$"
         }
-        //textField.backgroundColor = .orange
     }
     
     private func setInitialData() {

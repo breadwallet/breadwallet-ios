@@ -27,8 +27,8 @@ class GiftViewController: UIViewController {
         self.currency = currency
         super.init(nibName: nil, bundle: nil)
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
     
@@ -80,6 +80,10 @@ class GiftViewController: UIViewController {
     private var selectedAmount: Amount? { didSet { validate() }}
     private var rawAmount: Double?
     private var gift: Gift?
+    
+    // For managing keyboard and scrollview offset
+    var scrollOffset: CGFloat = 0
+    var distance: CGFloat = 0
     
     override func viewDidLoad() {
         addSubviews()
@@ -499,18 +503,37 @@ private extension UIButton {
 
 extension GiftViewController {
     
-    @objc private func keyboardWillShow(notification: Notification) {
-        copyKeyboardChangeAnimation(notification: notification)
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+
+        var safeArea = view.frame
+        safeArea.size.height += scrollView.contentOffset.y
+        safeArea.size.height -= keyboardSize.height + (UIScreen.main.bounds.height*0.04)
+
+        let field = name.textField
+        let fieldFrame = field.convert(field.frame, to: view)
+        
+        if safeArea.contains(fieldFrame) {
+            print("No need to Scroll")
+            return
+        } else {
+            distance = fieldFrame.maxY - safeArea.size.height
+            scrollOffset = scrollView.contentOffset.y
+            self.scrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset + distance), animated: true)
+        }
+
+        scrollView.isScrollEnabled = false
+        presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
     }
     
-    @objc private func keyboardWillHide(notification: Notification) {
-        copyKeyboardChangeAnimation(notification: notification)
-    }
-    
-    private func copyKeyboardChangeAnimation(notification: Notification) {
-        guard let info = KeyboardNotificationInfo(notification.userInfo) else { return }
-        let x = scrollView.contentOffset.x
-        let y = scrollView.contentOffset.y
-        scrollView.setContentOffset(CGPoint(x: x, y: y - info.deltaY), animated: true)
+    @objc func keyboardWillHide(notification: NSNotification) {
+        if distance == 0 {
+            return
+        }
+        self.scrollView.setContentOffset(CGPoint(x: 0, y: scrollOffset), animated: true)
+        scrollOffset = 0
+        distance = 0
+        scrollView.isScrollEnabled = true
+        presentationController?.presentedView?.gestureRecognizers?[0].isEnabled = false
     }
 }
