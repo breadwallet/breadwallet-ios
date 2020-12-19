@@ -47,7 +47,8 @@ class ApplicationController: Subscriber, Trackable {
     private let notificationHandler = NotificationHandler()
     private var appRatingManager = AppRatingManager()
     private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
-
+    private var shouldDisableBiometrics = false
+    
     private var isReachable = true {
         didSet {
             if oldValue == false && isReachable {
@@ -72,15 +73,14 @@ class ApplicationController: Subscriber, Trackable {
 
     /// didFinishLaunchingWithOptions
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
-        //TODO:GIFT - handle launch options here?
         self.application = application
+        handleLaunchOptions(options)
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         
         UNUserNotificationCenter.current().delegate = notificationHandler
         EventMonitor.shared.register(.pushNotifications)
         
         setup()
-        handleLaunchOptions(options)
         Reachability.addDidChangeCallback({ isReachable in
             self.isReachable = isReachable
         })
@@ -187,16 +187,13 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func handleLaunchOptions(_ options: [UIApplication.LaunchOptionsKey: Any]?) {
-        if let url = options?[.url] as? URL {
-            do {
-                let file = try Data(contentsOf: url)
-                if !file.isEmpty {
-                    Store.trigger(name: .openFile(file))
-                }
-            } catch let error {
-                print("Could not open file at: \(url), error: \(error)")
-            }
-        }
+        guard let activityDictionary = options?[.userActivityDictionary] as? [String: Any] else { return }
+        guard let activity = activityDictionary["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity else { return }
+        guard let url = activity.webpageURL else { return }
+        
+        //handle gift url at launch
+        launchURL = url
+        shouldDisableBiometrics = true
     }
     
     private func setupDefaults() {
@@ -350,6 +347,7 @@ class ApplicationController: Subscriber, Trackable {
         
         startFlowController = StartFlowPresenter(keyMaster: keyStore,
                                                  rootViewController: navigationController,
+                                                 shouldDisableBiometrics: shouldDisableBiometrics,
                                                  createHomeScreen: createHomeScreen)
     }
     
@@ -460,6 +458,8 @@ class ApplicationController: Subscriber, Trackable {
 
 extension ApplicationController {
     func open(url: URL) -> Bool {
+        //If this is the same as launchURL, it has already been handled in didFinishLaunchingWithOptions
+        guard launchURL != url else { return true }
         if let urlController = urlController {
             return urlController.handleUrl(url)
         } else {

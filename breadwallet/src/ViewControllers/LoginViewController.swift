@@ -30,10 +30,11 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
         }
     }
 
-    init(for context: Context, keyMaster: KeyMaster) {
+    init(for context: Context, keyMaster: KeyMaster, shouldDisableBiometrics: Bool) {
         self.context = context
         self.keyMaster = keyMaster
         self.disabledView = WalletDisabledView()
+        self.shouldDisableBiometrics = shouldDisableBiometrics
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -67,6 +68,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     private let context: Context
     private var notificationObservers = [String: NSObjectProtocol]()
     private let debugLabel = UILabel.wrapping(font: Theme.body3, color: Theme.primaryText)
+    private let shouldDisableBiometrics: Bool
     
     var isBiometricsEnabledForUnlocking: Bool {
         return self.keyMaster.isBiometricsEnabledForUnlocking
@@ -276,7 +278,7 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
     }
 
     private var shouldUseBiometrics: Bool {
-        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && isBiometricsEnabledForUnlocking
+        return LAContext.canUseBiometrics && !keyMaster.pinLoginRequired && isBiometricsEnabledForUnlocking && !shouldDisableBiometrics
     }
 
     @objc func biometricsTapped() {
