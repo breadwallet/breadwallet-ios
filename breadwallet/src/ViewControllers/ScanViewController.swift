@@ -53,10 +53,10 @@ class ScanViewController: UIViewController, Trackable {
     private let toolbarHeight: CGFloat = 54.0
     private var hasCompleted = false
     
-    init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
+    init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeysOnly: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
         self.paymentRequestCurrencyRestriction = currencyRestriction
-        self.allowScanningPrivateKeysOnly = forScanningPrivateKeys
+        self.allowScanningPrivateKeysOnly = forScanningPrivateKeysOnly
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
     }
@@ -64,7 +64,6 @@ class ScanViewController: UIViewController, Trackable {
     override func viewDidLoad() {
         view.backgroundColor = .black
         toolbar.backgroundColor = .secondaryButton
-
         toolbar.distribution = .fillEqually
         
         view.addSubview(toolbar)
@@ -193,7 +192,10 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         }
         
         if allowScanningPrivateKeysOnly {
-            guard case .privateKey(_) = result else {
+            switch result {
+            case .privateKey, .gift:
+                break
+            default:
                 guide.state = .negative
                 return
             }

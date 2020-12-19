@@ -132,11 +132,10 @@ class ImportKeyViewController: UIViewController, Subscriber {
 
         // Set up the tap handler for the "Scan Private Key" button.
         button.tap = strongify(self) { myself in
-            let scan = ScanViewController(forScanningPrivateKeys: true, completion: { result in
-                if let result = result {
-                    myself.handleScanResult(result)
-                }
-            })
+            let scan = ScanViewController(forScanningPrivateKeysOnly: true) { result in
+                guard let result = result else { return }
+                myself.handleScanResult(result)
+            }
             myself.parent?.present(scan, animated: true, completion: nil)
         }
     }

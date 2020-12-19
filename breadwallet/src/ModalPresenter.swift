@@ -390,11 +390,8 @@ class ModalPresenter: Subscriber, Trackable {
                 UIApplication.shared.open(url)
             case .invalid:
                 break
-            case .gift(_):
-                assertionFailure()
-//                if let wallet = Currencies.btc.instance?.wallet {
-//                    self.presentKeyImport(wallet: wallet, scanResult: scanResult)
-//                }
+            case .gift:
+                self.handleGift(qrCode: scanResult)
             }
         }
     }
