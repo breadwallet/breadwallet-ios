@@ -4,6 +4,7 @@ disabled_rules:
   - large_tuple
   - weak_delegate
   - todo
+  - comment_spacing
 
 opt_in_rules:
   - empty_count
