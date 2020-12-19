@@ -112,7 +112,8 @@ class ShareGiftView: UIView {
             qr.heightAnchor.constraint(equalTo: qr.widthAnchor)])
         name.constrain([
             name.topAnchor.constraint(equalTo: qr.bottomAnchor, constant: C.padding[2]),
-            name.centerXAnchor.constraint(equalTo: centerXAnchor)])
+            name.centerXAnchor.constraint(equalTo: centerXAnchor),
+            name.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.9)])
         subHeader.constrain([
             subHeader.topAnchor.constraint(equalTo: name.bottomAnchor, constant: C.padding[1]),
             subHeader.centerXAnchor.constraint(equalTo: centerXAnchor)])
@@ -180,6 +181,9 @@ class ShareGiftView: UIView {
             $0.lineBreakMode = .byWordWrapping
             $0.textAlignment = .center
         }
+        
+        name.numberOfLines = 1
+        name.lineBreakMode = .byTruncatingTail
         
         contentView.backgroundColor = Theme.primaryBackground
         contentView.layer.cornerRadius = 10.0
