@@ -88,7 +88,7 @@ class AccountFooterView: UIView, Subscriber, Trackable {
             return UIBarButtonItem(customView: button)
         }
         
-        if #available(iOS 13, *), currency.isGiftingEnabled {
+        if currency.isGiftingEnabled {
             let giftButton = UIButton.rounded(image: "Gift")
             giftButton.tap = giftCallback
             self.giftButton = giftButton
