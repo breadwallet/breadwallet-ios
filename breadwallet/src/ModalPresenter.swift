@@ -305,9 +305,9 @@ class ModalPresenter: Subscriber, Trackable {
                 Store.perform(action: RootModalActions.Present(modal: .none))
             })
             return nil
-        }
         case .stake(let currency):
             return makeStakeView(currency: currency)
+        }
     }
 
     private func makeStakeView(currency: Currency) -> UIViewController? {

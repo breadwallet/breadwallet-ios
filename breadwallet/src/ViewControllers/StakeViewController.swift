@@ -128,7 +128,8 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
                                                       displayFeeLevel: FeeLevel.regular,
                                                       address: address.text!,
                                                       isUsingBiometrics: true,
-                                                      currency: currency)
+                                                      currency: currency,
+                                                      shouldShowMaskView: true)
         let transitionDelegate = PinTransitioningDelegate()
         transitionDelegate.shouldShowMaskView = true
         confirmation.transitioningDelegate = transitionDelegate
