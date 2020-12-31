@@ -45,55 +45,29 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         view.addSubview(button)
         view.addSubview(infoView)
         
-        titleLabel.text = "Earn money while holding"
-        caption.text = "Delegate your Tezos account to a validator to earn a reward while keeping full security and control of your coins."
-        
-        titleLabel.textAlignment = .center
-        caption.textAlignment = .center
-        
-        caption.numberOfLines = 0
-        caption.lineBreakMode = .byWordWrapping
-        
         titleLabel.constrain([
             titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: C.padding[2]),
             titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)])
         caption.constrain([
             caption.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: C.padding[3]),
             caption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])
-        ])
+            caption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])])
         addressCaption.constrain([
             addressCaption.topAnchor.constraint(equalTo: caption.bottomAnchor, constant: C.padding[3]),
             addressCaption.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
-            addressCaption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])
-        ])
+            addressCaption.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[3])])
         address.constrain([
             address.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: C.padding[2]),
             address.topAnchor.constraint(equalTo: addressCaption.bottomAnchor, constant: C.padding[4]),
             address.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
-            address.heightAnchor.constraint(equalToConstant: 44.0)
-        ])
+            address.heightAnchor.constraint(equalToConstant: 44.0)])
         infoView.constrain([
             infoView.trailingAnchor.constraint(equalTo: address.trailingAnchor),
-            infoView.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[1])
-        ])
-        infoView.textAlignment = .right
-        address.borderStyle = .roundedRect
-        address.placeholder = "Enter Validator Address"
-        address.backgroundColor = .whiteTint
-        
-        pasteButton.setTitle("Paste", for: .normal)
-        
+            infoView.topAnchor.constraint(equalTo: address.bottomAnchor, constant: C.padding[1])])
         address.addSubview(pasteButton)
-        
         pasteButton.constrain([
             pasteButton.trailingAnchor.constraint(equalTo: address.trailingAnchor, constant: -C.padding[2]),
-            pasteButton.centerYAnchor.constraint(equalTo: address.centerYAnchor)
-        ])
-        
-        pasteButton.tap = pasteTapped
-        button.tap = stakeTapped
-        
+            pasteButton.centerYAnchor.constraint(equalTo: address.centerYAnchor)])
         button.constrain([
             button.constraint(.leading, toView: view, constant: C.padding[2]),
             button.constraint(.trailing, toView: view, constant: -C.padding[2]),
@@ -105,6 +79,26 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
     }
     
     private func setInitialData() {
+        titleLabel.text = "Earn money while holding"
+        caption.text = "Delegate your Tezos account to a validator to earn a reward while keeping full security and control of your coins."
+        
+        titleLabel.textAlignment = .center
+        caption.textAlignment = .center
+        
+        caption.numberOfLines = 0
+        caption.lineBreakMode = .byWordWrapping
+        
+        infoView.textAlignment = .right
+        address.borderStyle = .roundedRect
+        address.placeholder = "Enter Validator Address"
+        address.backgroundColor = .whiteTint
+        
+        pasteButton.setTitle("Paste", for: .normal)
+        
+        pasteButton.tap = pasteTapped
+        button.tap = stakeTapped
+        
+        //Is Staked
         if let validatorAddress = currency.wallet?.stakedValidatorAddress {
             addressCaption.text = "You're Staked!"
             addressCaption.textColor = UIColor.green
@@ -116,17 +110,42 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             pasteButton.isHidden = true
             
             button.title = "Unstake"
-            
+        //Not staked
         } else {
             
         }
     }
     
     private func stakeTapped() {
+        if currency.wallet?.isStaked == true {
+            unstake()
+        } else {
+            stake()
+        }
+    }
+    
+    private func stake() {
+        guard let addressText = address.text, currency.isValidAddress(addressText) else {
+            showInvalidAddress()
+            return
+        }
+        confirm(address: addressText) { [weak self] result in
+            self?.sender.stake(address: addressText)
+        }
+    }
+    
+    private func unstake() {
+        guard let address = currency.wallet?.receiveAddress else { return }
+        confirm(address: address) { [weak self] result in
+            self?.sender.stake(address: address)
+        }
+    }
+    
+    private func confirm(address: String, callback: @escaping (Bool) -> Void) {
         let confirmation = ConfirmationViewController(amount: Amount.zero(currency),
                                                       fee: Amount.zero(currency),
                                                       displayFeeLevel: FeeLevel.regular,
-                                                      address: address.text!,
+                                                      address: address,
                                                       isUsingBiometrics: true,
                                                       currency: currency,
                                                       shouldShowMaskView: true)
@@ -135,29 +154,9 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         confirmation.transitioningDelegate = transitionDelegate
         confirmation.modalPresentationStyle = .overFullScreen
         confirmation.modalPresentationCapturesStatusBarAppearance = true
-        confirmation.successCallback = { [weak self] in
-            //TODO pin entry/auth
-            self?.confirmed()
-        }
-        confirmation.cancelCallback = {
-            //callback(false)
-        }
-        
+        confirmation.successCallback = { callback(true) }
+        confirmation.cancelCallback = { callback(false) }
         present(confirmation, animated: true, completion: nil)
-        
-    }
-    
-    private func confirmed() {
-        guard let address = currency.wallet?.receiveAddress else { return }
-        sender.stake(address: address)
-    }
-    
-    private func send() {
-        
-    }
-    
-    private func reset() {
-        
     }
     
     private func pasteTapped() {

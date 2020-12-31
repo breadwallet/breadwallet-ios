@@ -100,11 +100,22 @@ class Wallet {
     public func estimateFee (address: String,
                              amount: Amount,
                              fee: FeeLevel,
+                             isStake: Bool,
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return }
         let networkFee = feeForLevel(level: fee)
-        //TODO:TEZOS add attributes param Set<TransferAttribute>?
-        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: nil, completion: { result in
+        
+        //Stake/Unstake transactions need the DelegationOp attributed or else the
+        //estimate fee call will fail
+        var attributes: Set<TransferAttribute>?
+        if isStake {
+            if let delegationAttribute = core.transferAttributes.first(where: { $0.key == "DelegationOp" }) {
+                delegationAttribute.value = "1"
+                attributes = Set([delegationAttribute])
+            }
+        }
+        
+        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: attributes, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)
                 return
@@ -168,23 +179,23 @@ class Wallet {
     // Returns the staked validator address or nil
     // if this wallet isn't staked
     var stakedValidatorAddress: String? {
+        guard let mostRecentDelegation = transfers.first(where: {
+            if $0.transfer.attributes.first(where: { $0.key == "type" && $0.value == "DELEGATION" }) != nil {
+                return true
+            } else {
+                return false
+            }
+        }) else { return nil }
         
-        return "tz1S8MNvuFEUsWgjHvi3AxibRBf388NhT1q2"
-        
-//        transfers.forEach {
-//            print("[tezos] attributes: \($0.transfer.attributes)")
-//        }
-//        
-//        guard let mostRecentDelegation = transfers.first(where: {
-//            guard let attribute = $0.transfer.attributes.first(where: { $0.key == "DelegationOp" }) else { return false }
-//            return attribute.value == "1"
-//        }) else { return nil }
-//        
-//        if mostRecentDelegation.toAddress != "unknown" {
-//            return mostRecentDelegation.toAddress //most recent delegation was a stake txn
-//        } else {
-//            return nil //most recent delegation was an un-stake txn
-//        }
+        if mostRecentDelegation.toAddress == receiveAddress {
+            return nil
+        } else {
+            return mostRecentDelegation.toAddress
+        }
+    }
+    
+    var isStaked: Bool {
+        return stakedValidatorAddress != nil
     }
 
     // MARK: Sending

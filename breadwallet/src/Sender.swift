@@ -92,8 +92,8 @@ class Sender: Subscriber {
 
     // MARK: Create
 
-    func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis?) -> Void) {
-        wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
+    func estimateFee(address: String, amount: Amount, tier: FeeLevel, isStake: Bool, completion: @escaping (TransferFeeBasis?) -> Void) {
+        wallet.estimateFee(address: address, amount: amount, fee: tier, isStake: isStake, completion: completion)
     }
     
     public func estimateLimitMaximum (address: String,
@@ -201,12 +201,13 @@ class Sender: Subscriber {
     }
     
     func stake(address: String) {
-        wallet.estimateFee(address: address, amount: Amount.zero(wallet.currency), fee: .regular, completion: { basis in
+        wallet.estimateFee(address: address, amount: Amount.zero(wallet.currency), fee: .regular, isStake: true, completion: { basis in
             guard let basis = basis else { return }
-            
-            let result = self.wallet.currency.wallet?.stake(address: nil, feeBasis: basis)
+            //TODO:TEZOS - get real pin here
+            let result = self.wallet.currency.wallet?.stake(address: address, feeBasis: basis)
             guard case .success(let transfer) = result else { return }
             
+            //TODO:TEZOS - get real pin here
             _ = self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: "111111")
         })
     }

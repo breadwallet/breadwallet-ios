@@ -347,7 +347,7 @@ class BRWalletPlugin: BRHTTPRouterPlugin, BRWebSocketClient, Trackable {
             DispatchQueue.main.sync {
                 CFRunLoopPerformBlock(RunLoop.main.getCFRunLoop(), CFRunLoopMode.commonModes.rawValue) {
 
-                    wallet.estimateFee(address: toAddress, amount: amount, fee: tradeFeeLevel, completion: { (feeBasis) in
+                    wallet.estimateFee(address: toAddress, amount: amount, fee: tradeFeeLevel, isStake: false, completion: { (feeBasis) in
                         guard let transferFeeBasis = feeBasis else {
                             request.queue.async { asyncResp.provide(500, json: ["error": "fee-error"]) }
                             return

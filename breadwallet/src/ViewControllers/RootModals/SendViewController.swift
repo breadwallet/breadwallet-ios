@@ -261,7 +261,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         guard let address = address else { return }
         guard let amount = amount else { return }
-        sender.estimateFee(address: address, amount: amount, tier: feeLevel) { self.handleFeeEstimationResult($0) }
+        sender.estimateFee(address: address, amount: amount, tier: feeLevel, isStake: false) { self.handleFeeEstimationResult($0) }
         updateLimits()
     }
     
