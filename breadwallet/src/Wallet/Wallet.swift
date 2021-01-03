@@ -263,17 +263,13 @@ class Wallet {
     // MARK: Staking
     
     func stake(address: String?, feeBasis: TransferFeeBasis) -> CreateTransferResult {
-                
-        guard let address = address else { return .failure(.invalidAddress) } //TODO:TEZOS --accept nil addresses
-        
+        guard let address = address else { return .failure(.invalidAddress) }
         guard let target = Address.create(string: address, network: core.manager.network) else {
             return .failure(.invalidAddress)
         }
-        
         guard let delegationAttribute = core.transferAttributes.first(where: { $0.key == "DelegationOp" }) else {
             return .failure(.internalError) }
         delegationAttribute.value = "1"
-        
         guard let transfer = core.createTransfer(target: target,
                                                  amount: Amount.zero(currency).cryptoAmount,
                                                  estimatedFeeBasis: feeBasis,

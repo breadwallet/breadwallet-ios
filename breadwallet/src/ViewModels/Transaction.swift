@@ -195,10 +195,6 @@ class Transaction {
         self.transfer = transfer
         self.wallet = wallet
         
-        if wallet.currency.isTezos {
-            print("[address] \(transfer.target)")
-        }
-        
         if let kvStore = kvStore, let metaDataKey = metaDataKey {
             // load existing metadata if found
             self.metaData = TxMetaData(txKey: metaDataKey, store: kvStore)

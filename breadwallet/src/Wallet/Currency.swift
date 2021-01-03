@@ -222,6 +222,10 @@ class Currency: CurrencyWithIcon {
         }
     }
     
+    var supportsStaking: Bool {
+        return isTezos
+    }
+    
     // MARK: Init
 
     init?(core: WalletKit.Currency,
