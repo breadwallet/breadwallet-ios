@@ -314,7 +314,24 @@ class ModalPresenter: Subscriber, Trackable {
         guard let wallet = system.wallet(for: currency),
             let kvStore = Backend.kvStore else { assertionFailure(); return nil }
         let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
-        return ModalViewController(childViewController: StakeViewController(currency: currency, sender: sender))
+        let stakeView = StakeViewController(currency: currency, sender: sender)
+        stakeView.presentVerifyPin = { [weak self, weak stakeView] bodyText, success in
+            guard let `self` = self else { return }
+            let vc = VerifyPinViewController(bodyText: bodyText,
+                                             pinLength: Store.state.pinLength,
+                                             walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
+                                             success: success)
+            vc.transitioningDelegate = self.verifyPinTransitionDelegate
+            vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
+            stakeView?.view.isFrameChangeBlocked = true
+            stakeView?.present(vc, animated: true, completion: nil)
+        }
+        stakeView.onPublishSuccess = { [weak self] in
+            self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
+        }
+        return ModalViewController(childViewController: stakeView)
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {

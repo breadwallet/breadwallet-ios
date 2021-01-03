@@ -12,6 +12,9 @@ import UIKit
 
 class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresentable {
     
+    var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
+    var onPublishSuccess: (() -> Void)?
+    
     private let currency: Currency
     private let sender: Sender
     
@@ -24,6 +27,7 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
     private let button = BRDButton(title: "Stake", type: .primary)
     private let pasteButton = UIButton(type: .system)
     private let infoView = UILabel(font: .customBold(size: 14.0))
+    private let sendingActivity = BRActivityViewController(message: S.TransactionDetails.titleSending)
     
     init(currency: Currency, sender: Sender) {
         self.currency = currency
@@ -89,30 +93,37 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         caption.lineBreakMode = .byWordWrapping
         
         infoView.textAlignment = .right
+        
         address.borderStyle = .roundedRect
         address.placeholder = "Enter Validator Address"
         address.backgroundColor = .whiteTint
-        
         pasteButton.setTitle("Paste", for: .normal)
         
         pasteButton.tap = pasteTapped
         button.tap = stakeTapped
+        button.isEnabled = false
         
-        //Is Staked
-        if let validatorAddress = currency.wallet?.stakedValidatorAddress {
-            addressCaption.text = "You're Staked!"
-            addressCaption.textColor = UIColor.green
-            
-            address.text = validatorAddress
+        if currency.wallet?.hasPendingTxn == true {
+            button.isEnabled = false
             address.isEnabled = false
-            address.borderStyle = .none
-            pasteButton.isUserInteractionEnabled = false
-            pasteButton.isHidden = true
-            
-            button.title = "Unstake"
-        //Not staked
+            infoView.text = "Pending Transaction - please try later"
+            infoView.textColor = Theme.accent
         } else {
-            
+            //Is Staked
+            if let validatorAddress = currency.wallet?.stakedValidatorAddress {
+                addressCaption.text = "You're Staked!"
+                addressCaption.textColor = UIColor.green
+                address.text = validatorAddress
+                address.isEnabled = false
+                pasteButton.isUserInteractionEnabled = false
+                pasteButton.isHidden = true
+                button.isEnabled = true
+                button.title = "Unstake"
+            }
+        }
+        
+        address.editingChanged = { [weak self] in
+            self?.validate()
         }
     }
     
@@ -129,15 +140,51 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             showInvalidAddress()
             return
         }
-        confirm(address: addressText) { [weak self] result in
-            self?.sender.stake(address: addressText)
+        confirm(address: addressText) { [weak self] success in
+            guard success else { return }
+            self?.send(address: addressText)
         }
     }
     
     private func unstake() {
         guard let address = currency.wallet?.receiveAddress else { return }
-        confirm(address: address) { [weak self] result in
-            self?.sender.stake(address: address)
+        confirm(address: address) { [weak self] success in
+            guard success else { return }
+            self?.send(address: address)
+        }
+    }
+    
+    private func send(address: String) {
+        let pinVerifier: PinVerifier = { [weak self] pinValidationCallback in
+            guard let `self` = self else { return assertionFailure() }
+            self.sendingActivity.dismiss(animated: false) {
+                self.presentVerifyPin?(S.VerifyPin.authorize) { pin in
+                    self.parent?.view.isFrameChangeBlocked = false
+                    pinValidationCallback(pin)
+                    self.present(self.sendingActivity, animated: false)
+                }
+            }
+        }
+        
+        present(sendingActivity, animated: true)
+        sender.stake(address: address, pinVerifier: pinVerifier) { [weak self] result in
+            guard let `self` = self else { return }
+            self.sendingActivity.dismiss(animated: true) {
+                defer { self.sender.reset() }
+                switch result {
+                case .success:
+                    self.onPublishSuccess?()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.dismiss(animated: true, completion: nil)
+                    }
+                case .creationError(let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: message, buttonLabel: S.Button.ok)
+                case .publishFailure(let code, let message):
+                    self.showAlert(title: S.Alerts.sendFailure, message: "\(message) (\(code))", buttonLabel: S.Button.ok)
+                case .insufficientGas(let rpcErrorMessage):
+                    print("insufficientGas: \(rpcErrorMessage)")
+                }
+            }
         }
     }
     
@@ -162,8 +209,26 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
     private func pasteTapped() {
         guard let string = UIPasteboard.general.string else { return }
         if currency.isValidAddress(string) {
-            showValidAddress()
             address.text = string
+            
+            showValidAddress()
+            button.isEnabled = true
+            pasteButton.isEnabled = false
+            pasteButton.isHidden = true
+            address.isEnabled = false
+        } else {
+            showInvalidAddress()
+        }
+    }
+    
+    private func validate() {
+        guard let addressString = address.text else { return }
+        if currency.isValidAddress(addressString) {
+            showValidAddress()
+            button.isEnabled = true
+            pasteButton.isEnabled = false
+            pasteButton.isHidden = true
+            address.isEnabled = false
         } else {
             showInvalidAddress()
         }

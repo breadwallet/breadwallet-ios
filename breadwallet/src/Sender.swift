@@ -200,15 +200,24 @@ class Sender: Subscriber {
         }
     }
     
-    func stake(address: String) {
-        wallet.estimateFee(address: address, amount: Amount.zero(wallet.currency), fee: .regular, isStake: true, completion: { basis in
-            guard let basis = basis else { return }
-            //TODO:TEZOS - get real pin here
-            let result = self.wallet.currency.wallet?.stake(address: address, feeBasis: basis)
-            guard case .success(let transfer) = result else { return }
-            
-            //TODO:TEZOS - get real pin here
-            _ = self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: "111111")
+    func stake(address: String, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+        wallet.estimateFee(address: address,
+                           amount: Amount.zero(wallet.currency),
+                           fee: .regular,
+                           isStake: true,
+                           completion: { basis in
+            DispatchQueue.main.async {
+                guard let basis = basis else { return }
+                let result = self.wallet.currency.wallet?.stake(address: address, feeBasis: basis)
+                guard case .success(let transfer) = result else {
+                    return completion(.creationError(message: "no tx")) }
+                pinVerifier { pin in
+                    guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: pin) else {
+                        return completion(.creationError(message: S.Send.Error.authenticationError))
+                    }
+                    self.waitForSubmission(of: transfer, completion: completion)
+                }
+            }
         })
     }
     
