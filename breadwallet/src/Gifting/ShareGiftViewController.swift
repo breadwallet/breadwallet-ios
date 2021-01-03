@@ -163,6 +163,7 @@ class ShareGiftView: UIView {
         qr.image = gift.qrImage()
         qr.contentMode = .scaleAspectFit
         name.text = gift.name ?? "no name"
+        name.textAlignment = .center
         subHeader.text = "Someone gifted you Bitcoin"
         
         if let btc = Currencies.btc.instance {
