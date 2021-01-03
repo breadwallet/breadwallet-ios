@@ -187,6 +187,8 @@ class Currency: CurrencyWithIcon {
 
     /// Returns a transfer URI with the given address
     func addressURI(_ address: String) -> String? {
+        //Tezos doesn't have a URI scheme
+        if isTezos, isValidAddress(address) { return address }
         guard let scheme = urlSchemes?.first, isValidAddress(address) else { return nil }
         if isERC20Token, let tokenAddress = tokenAddress {
             //This is a non-standard uri format to maintain backwards compatibility with old versions of BRD
