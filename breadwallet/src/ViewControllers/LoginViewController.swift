@@ -140,8 +140,8 @@ class LoginViewController: UIViewController, Subscriber, Trackable {
                 }
             }
             notificationObservers[UIApplication.willEnterForegroundNotification.rawValue] =
-                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { _ in
-                    self.showJailbreakWarnings(isJailbroken: isJailbroken)
+                NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: nil) { [weak self] _ in
+                    self?.showJailbreakWarnings(isJailbroken: isJailbroken)
             }
             showJailbreakWarnings(isJailbroken: isJailbroken)
         }

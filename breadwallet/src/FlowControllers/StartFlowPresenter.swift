@@ -25,7 +25,7 @@ class StartFlowPresenter: Subscriber, Trackable {
     private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)
     private var onboardingCompletionHandler: LoginCompletionHandler?
     private let shouldDisableBiometrics: Bool
-    private let startupScreen = StartupScreen()
+    private var startupScreen: StartupScreen? = StartupScreen()
     
     // MARK: - Public
 
@@ -56,11 +56,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func pushStartupScreen() {
-        rootViewController.pushViewController(self.startupScreen, animated: false)
+        guard let startupScreen = self.startupScreen else { return }
+        rootViewController.pushViewController(startupScreen, animated: false)
     }
     
     private func popStartupScreen() {
         rootViewController.popViewController(animated: false)
+        DispatchQueue.main.async { [weak self] in
+            self?.startupScreen = nil
+        }
     }
     
     /// Onboarding
