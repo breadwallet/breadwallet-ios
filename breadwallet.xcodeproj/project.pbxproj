@@ -703,7 +703,6 @@
 		3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBackupView.swift; path = src/CloudBackup/SelectBackupView.swift; sourceTree = "<group>"; };
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
 		3AF78B3A2523B05E00FBB280 /* FioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FioTests.swift; sourceTree = "<group>"; };
-		3AFAD8FE25674F56005853E8 /* BRDClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BRDClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AFAD92F2567EE15005853E8 /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftViewController.swift; path = src/Gifting/GiftViewController.swift; sourceTree = "<group>"; };
 		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
 		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
@@ -1191,13 +1190,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AFAD8FB25674F56005853E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		75A2A78D1DA5934300A983D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1499,7 +1491,6 @@
 				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
 				22A9A9961DF63426000F0016 /* libbz2.framework */,
 				CEA7E67B1F09A9D2001F8C27 /* Screenshots.xctest */,
-				3AFAD8FE25674F56005853E8 /* BRDClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2300,23 +2291,6 @@
 			productReference = 22A9A9961DF63426000F0016 /* libbz2.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3AFAD8FD25674F56005853E8 /* BRDClip */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */;
-			buildPhases = (
-				3AFAD8FA25674F56005853E8 /* Sources */,
-				3AFAD8FB25674F56005853E8 /* Frameworks */,
-				3AFAD8FC25674F56005853E8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = BRDClip;
-			productName = BRDClip;
-			productReference = 3AFAD8FE25674F56005853E8 /* BRDClip.app */;
-			productType = "com.apple.product-type.application.on-demand-install-capable";
-		};
 		75A2A78F1DA5934300A983D8 /* breadwallet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
@@ -2416,9 +2390,6 @@
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
-					3AFAD8FD25674F56005853E8 = {
-						CreatedOnToolsVersion = 12.2;
-					};
 					759DA0D71DAC8668008CC49B = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
@@ -2503,20 +2474,12 @@
 				759DA0D71DAC8668008CC49B /* submodules */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
-				3AFAD8FD25674F56005853E8 /* BRDClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		22A9A9941DF63426000F0016 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3AFAD8FC25674F56005853E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2802,13 +2765,6 @@
 
 /* Begin PBXSourcesBuildPhase section */
 		22A9A9911DF63426000F0016 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3AFAD8FA25674F56005853E8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3311,260 +3267,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		3AFAD91025674F57005853E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		3AFAD91125674F57005853E8 /* Debug-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Debug-Internal";
-		};
-		3AFAD91225674F57005853E8 /* Debug-Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Debug-Testnet";
-		};
-		3AFAD91325674F57005853E8 /* Screenshots */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Screenshots;
-		};
-		3AFAD91425674F57005853E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		3AFAD91525674F57005853E8 /* Release-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Testflight";
-		};
-		3AFAD91625674F57005853E8 /* Release-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Internal";
-		};
-		3AFAD91725674F57005853E8 /* Release-Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Testnet";
 		};
 		759DA0D81DAC8668008CC49B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -5178,21 +4880,6 @@
 				CEE0EF611EBF8D7F0018DB36 /* Release-Testflight */,
 				7CF5934A21B9B15D00A49FED /* Release-Internal */,
 				7CF5935621B9C1AD00A49FED /* Release-Testnet */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3AFAD91025674F57005853E8 /* Debug */,
-				3AFAD91125674F57005853E8 /* Debug-Internal */,
-				3AFAD91225674F57005853E8 /* Debug-Testnet */,
-				3AFAD91325674F57005853E8 /* Screenshots */,
-				3AFAD91425674F57005853E8 /* Release */,
-				3AFAD91525674F57005853E8 /* Release-Testflight */,
-				3AFAD91625674F57005853E8 /* Release-Internal */,
-				3AFAD91725674F57005853E8 /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

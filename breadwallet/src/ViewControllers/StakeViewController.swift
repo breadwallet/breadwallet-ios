@@ -103,6 +103,8 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         button.tap = stakeTapped
         button.isEnabled = false
         
+        //Shouldn't be allowed to send stake/unstake transaction while a pending transaction
+        //is present
         if currency.wallet?.hasPendingTxn == true {
             button.isEnabled = false
             address.isEnabled = false

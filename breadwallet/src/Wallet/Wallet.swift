@@ -178,13 +178,7 @@ class Wallet {
     
     // Returns the staked validator address or nil
     // if this wallet isn't staked
-    var stakedValidatorAddress: String? {
-        
-//        print("[tezosattributes] attributes")
-//        transfers.forEach {
-//            print("[tezosattributes] \($0.transfer.attributes)")
-//        }
-        
+    var stakedValidatorAddress: String? {        
         guard let mostRecentDelegation = transfers.first(where: {
             if $0.transfer.attributes.first(where: { $0.key == "type" && $0.value == "DELEGATION" }) != nil {
                 return true
@@ -192,7 +186,7 @@ class Wallet {
                 return false
             }
         }) else { return nil }
-        
+
         // Staking transactions have the following attributes:
         // type:DELEGATION
         // delegate:<delegateaddress>
@@ -211,7 +205,7 @@ class Wallet {
     }
     
     var hasPendingTxn: Bool {
-        return transfers.filter({ $0.isPending }).count > 1
+        return !transfers.filter({ $0.isPending }).isEmpty
     }
 
     // MARK: Sending
