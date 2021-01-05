@@ -180,22 +180,19 @@ class Wallet {
     // if this wallet isn't staked
     var stakedValidatorAddress: String? {        
         guard let mostRecentDelegation = transfers.first(where: {
-            if $0.transfer.attributes.first(where: { $0.key == "type" && $0.value == "DELEGATION" }) != nil {
+            if $0.transfer.attributes.first(where: { $0.key == "delegate" }) != nil {
+                //Is stake Transaction
                 return true
             } else {
-                return false
+                //Is unstake transaction
+                if $0.transfer.attributes.first(where: { $0.key == "type" && $0.value == "DELEGATION" }) != nil {
+                    return true
+                //Not a stake or unstake transaction
+                } else {
+                    return false
+                }
             }
         }) else { return nil }
-
-        // Staking transactions have the following attributes:
-        // type:DELEGATION
-        // delegate:<delegateaddress>
-        //
-        // Un-Staking transactions just have:
-        // type:DELEGATION
-        //
-        // In other words, if delegate:<delegateaddress> is present, it was a staking transaction
-        // If it is absent, it's an unstaking transaction
         guard let attribute = mostRecentDelegation.transfer.attributes.first(where: { $0.key == "delegate" }) else { return nil }
         return attribute.value
     }
