@@ -218,9 +218,9 @@ class GiftViewController: UIViewController {
         coinGeckoClient.load(resource)
         
         let result = wallet.createExportablePaperWallet()
-        guard case .success(let paperWallet) = result else { return handleCreatePaperWalletError() }
-        guard let address = paperWallet.address else { return handleCreatePaperWalletError() }
-        guard let privKey = paperWallet.privateKey else { return handleCreatePaperWalletError() }
+        guard case .success(let paperWallet) = result else { return }
+        guard let address = paperWallet.address else { return }
+        guard let privKey = paperWallet.privateKey else { return }
         self.address = address
         self.privKey = privKey
         let feeLevel: FeeLevel = .regular
@@ -263,10 +263,6 @@ class GiftViewController: UIViewController {
         
         guard recipientName != nil && !recipientName!.isEmpty else { return }
         createButton.setEnabled()
-    }
-    
-    func handleCreatePaperWalletError() {
-        
     }
     
     private func setButtonStates() {
@@ -319,12 +315,6 @@ class GiftViewController: UIViewController {
                                    rate: rate.rate,
                                    amount: self.rawAmount!)
             self.gift = gift
-
-            //for testing sharing without creating transaction
-//            DispatchQueue.main.async {
-//                let share = ShareGiftViewController(gift: gift)
-//                self.present(share, animated: true, completion: nil)
-//            }
             
             _ = self.sender.createTransaction(address: address.description,
                                               amount: amount,

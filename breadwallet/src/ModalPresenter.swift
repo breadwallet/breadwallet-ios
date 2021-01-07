@@ -298,6 +298,7 @@ class ModalPresenter: Subscriber, Trackable {
                 giftView?.present(vc, animated: true, completion: nil)
             }
             giftView.onPublishSuccess = { [weak self] in
+                self?.saveEvent("gift.send")
                 self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
             }
             
