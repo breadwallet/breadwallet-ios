@@ -34,14 +34,7 @@ class RootNavigationController: UINavigationController {
 extension RootNavigationController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         if viewController is HomeScreenViewController {
-            UserDefaults.selectedCurrencyCode = nil
             navigationBar.tintColor = .navigationTint
-        } else if let accountView = viewController as? AccountViewController {
-            UserDefaults.selectedCurrencyCode = accountView.currency.code
-            //TODO:CRYPTO p2p sync management
-//            if accountView.currency is Bitcoin {
-//                UserDefaults.mostRecentSelectedCurrencyCode = accountView.currency.code
-//            }
         }
     }
     

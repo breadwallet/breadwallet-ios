@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Баланс";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Регистрация этого токена была отменена из-за того, что эмитент решил прекратить поддержку ERC20. \n\nВероятно, вы все равно можете отправлять эти токены на другую платформу. Для получения дополнительной информации посетите нашу страницу поддержки.";
+"Account.delistedToken" = "Этот токен был исключен из списка. \n\nВозможно, вы все еще сможете отправить эти токены на другую платформу. Для получения более подробной информации посетите нашу страницу поддержки.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ за %2$@";
 /* Loading Wallet Message */
@@ -186,12 +186,39 @@
 "Button.yes" = "Да";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Поместите ваш ID-номер в центр данного поля";
+"CloudBackup.backupDeleted" = "Резервная копия удалена";
+"CloudBackup.backupDeletedMessage" = "Ваша резервная копия iCloud была удалена после слишком большого количества неудачных попыток ввода PIN-кода. Приложение перезапустится.";
+"CloudBackup.backupMenuTitle" = "Резервное копирование iCloud";
+"CloudBackup.createButton" = "Создать новый кошелек";
+"CloudBackup.createWarning" = "Обнаружен ранее созданный кошелек. Рекомендуется использовать эту резервную копию. Вы уверены, что хотите продолжить создание нового кошелька?";
+"CloudBackup.enableBody1" = "Для работы этой функции необходимо включить Связку ключей iCloud.";
+"CloudBackup.enableBody2" = "Должно получиться так:";
+"CloudBackup.enableButton" = "Я включил Связку ключей iCloud";
+"CloudBackup.enableTitle" = "Включить связку ключей";
+"CloudBackup.encryptBackupMessage" = "Введите PIN-код, чтобы зашифровать резервную копию";
+"CloudBackup.mainBody" = "Обратите внимание, что резервное копирование в iCloud настолько же безопасно, насколько и ваша учетная запись iCloud. Мы по-прежнему рекомендуем записать фразу для восстановления на следующем шаге и хранить ее в безопасности. Фраза восстановления - единственный способ восстановить ваш кошелек, если вы больше не можете получить доступ к iCloud.";
+"CloudBackup.mainTitle" = "Резервное копирование iCloud Recovery";
+"CloudBackup.mainWarning" = "Чтобы эта функция работала, в приложении «Настройки» iOS необходимо включить «Связку ключей iCloud».";
+"CloudBackup.mainWarningConfirmation" = "Вы действительно хотите отключить резервное копирование iCloud? Это удалит вашу резервную копию со всех устройств.";
+"CloudBackup.pinAttempts" = "Осталось попыток до удаления резервной копии: %1$@";
+"CloudBackup.recoverButton" = "Восстановление из ключа восстановления";
+"CloudBackup.recoverHeader" = "Введите PIN-код для разблокировки резервного копирования iCloud";
+"CloudBackup.restoreButton" = "Восстановление из резервной копии iCloud";
+"CloudBackup.selectTitle" = "Выберите Резервное копирование";
+"CloudBackup.step1" = "Запустите приложение \"Настройки\".";
+"CloudBackup.step2" = "Коснитесь своего имени Apple ID.";
+"CloudBackup.step3" = "Нажмите iCloud.";
+"CloudBackup.step4" = "Убедитесь, что связка ключей iCloud включена";
+"CloudBackup.understandText" = "Я понимаю, что эта функция не будет работать, если не будет включена Связка ключей iCloud.";
+"CloudBackup.warningBody" = "Ваша резервная копия iCloud будет удалена после еще %1$@ попыток неправильного ввода PIN-кода.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Сумма для отправки:";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Комиссия сети:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Комиссия сети (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Время обработки: Эта транзакция должна быть завершена через %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -276,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "Ожидаемое исполнение: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 минут";
+"FeeSelector.lessThanMinutes" = "&lt;$1$d минут";
 /* Priority fee */
 "FeeSelector.priority" = "Приоритет";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "Название кошелька";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Управление кошельком";
+"MarketData.high24h" = "24ч высокий";
+"MarketData.low24h" = "24 часа низкая";
+"MarketData.marketCap" = "Рыночная капитализация";
+"MarketData.volume" = "Объем торгов";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Добавить кошелек";
 /* Menu button title */
@@ -512,12 +544,17 @@
 "Prompts.NoScreenLock.body.android" = "Для защиты вашего кошелька требуется блокировка экрана вашего устройства. Перейдите в \"Настройки\" > \"Безопасность\" > \"Блокировка экрана\" и включите, чтобы продолжить.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Блокировка экрана отключена";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Ваш бумажный ключ нужно сохранить на случай, если вы потеряете или смените свой телефон.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Фразу для восстановления необходимо сохранить на случай, если вы потеряете или поменяете телефон.";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "Создайте бумажный ключ на случай, если вы потеряете или смените ваш телефон. Ключ будет также необходим, если вы измените настройки безопасности на вашем телефоне.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Необходимо совершить действие";
+"Prompts.RateApp.dontShow" = "Не спрашивай снова";
+"Prompts.RateApp.enjoyingBrd" = "Наслаждаешься BRD?";
+"Prompts.RateApp.googlePlayReview" = "Ваш отзыв помогает развивать сообщество BRD.";
+"Prompts.RateApp.noThanks" = "Нет, спасибо";
+"Prompts.RateApp.rateUs" = "Обзор нас";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Ваш кошелек, возможно, дал сбой. Зачастую это можно исправить, повторно просканировав цепочку ключей.";
 /* Transaction rejected prompt title */
@@ -606,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "Для сброса PIN-кода введите слова из вашего бумажного ключа в расположенные ниже поля.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Вы неверно ввели слово. Пожалуйста, повторите попытку.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Почти готово! Введите следующие слова из вашего ключа восстановления.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Подтверждение ключа восстановления";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Введите ключ восстановления";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Пожалуйста, введите ваш ключ восстановления, чтобы отвязать этот кошелек от вашего устройства.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Вы уверены, что хотите выполнить настройку ключа восстановления позже?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Почти сделано! Введите следующие слова из фразы восстановления.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Подтвердите фразу для восстановления";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Введите фразу восстановления";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Введите фразу для восстановления, чтобы отменить связь этого кошелька с вашим устройством.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Вы уверены, что хотите настроить фразу для восстановления позже?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Настроить позже";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Сгенерировать ключ восстановления";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Создать фразу для восстановления";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "Ключ необходим, чтобы вернуть ваши средства, если вы смените или потеряете ваш телефон.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Сгенерируйте приватный ключ восстановления";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Создайте свою личную фразу для восстановления";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Перейти к кошельку";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Как это работает — Шаг %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Некоторые из введенных вами слов не совпадают с вашим ключом восстановления. Пожалуйста, повторите попытку.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Некоторые из введенных вами слов не соответствуют фразе для восстановления. Пожалуйста, попробуйте еще раз.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Держите его в безопасности";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Восстановление кошелька";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Пожалуйста, введите ключ восстановления кошелька, который вы хотите восстановить.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Введите фразу для восстановления кошелька, который вы хотите восстановить.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Расслабьтесь, покупайте и торгуйте";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Не забудьте записать эти слова. Вернитесь к предыдущему шагу, если вы забыли это сделать.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Пожалуйста, введите ваш ключ восстановления, чтобы сбросить ваш PIN-код.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Введите фразу для восстановления, чтобы сбросить PIN-код.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Покупайте и торгуйте, зная, что ваши средства защищены лучшей системой безопасности и конфиденциальности в этой сфере.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Храните ваш ключ в безопасном месте. Только с помощью него вы сможете восстановить ваш кошелек. BRD не хранит его копию.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Поздравляем! Вы закончили настройку ключа восстановления.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Поздравляю! Вы завершили настройку фразы восстановления.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Теперь вы готовы вносить депозит, торговать и покупать криптовалюту из вашего кошелька BRD.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Запустите новый кошелек, протерев текущий кошелек с устройства.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Запишите ваш ключ";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Запишите ваш ключ восстановления еще раз";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Снова запишите фразу для восстановления";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Запишите эти слова по порядку.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Ваш ключ восстановления";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Ваша фраза для восстановления";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ из %2$@";
 /* No amount entered error message. */
@@ -728,9 +765,9 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "Единственный способ получения доступа к вашим биткойнам в случае потери или изменения вашего телефона.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Бумажный ключ";
+"SecurityCenter.paperKeyTitle" = "Фраза восстановления";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "Бумажный ключ";
 /* PIN button description */
@@ -758,7 +795,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "Сумма";
 /* Balance: $4.00 */
-"Send.balance" = "Баланс: ";
+"Send.balance" = "Баланс: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Баланс:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Разрешить доступ к камере в: \"Настройки\" > \"Приложения\" > \"BRD\" > \"Разрешения\"";
 /* Permission required to access camera */
@@ -815,12 +854,22 @@
 "Send.noFeesError" = "Условия Network Fee загружаются. Повторите попытку.";
 /* Paste button label */
 "Send.pasteLabel" = "Вставить";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "Недействительный PayID.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "Нет адреса %1$s связанного с этим PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Произошла ошибка при получении адреса этого PayID. Пожалуйста, повторите попытку позже.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Не удалось опубликовать транзакцию.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "Не удалось загрузить запрос на оплату";
 /* Scan button label */
 "Send.scanLabel" = "Сканировать";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Отправка Макс:";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Отправить";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -912,13 +961,17 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Выписать бумажный ключ";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Вы выписывали свой бумажный ключ в последний раз \n%1$@";
+"StartPaperPhrase.date" = "Последнее записано на \n %1$@";
 /* button label */
 "StartViewController.createButton" = "Создать новый кошелек";
 /* Start view message */
 "StartViewController.message" = "Самый надежный и безопасный способ использования биткойна.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Восстановить кошелек";
+"SupportForm.feedbackAppreciated" = "Будем рады вашему отзыву";
+"SupportForm.helpUsImprove" = "Помогите нам улучшить";
+"SupportForm.notNow" = "Не сейчас";
+"SupportForm.pleaseDescribe" = "Пожалуйста, опишите ваш опыт";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Активность";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1121,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Лимит газа";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Стоимость газа";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Скрыть подробности";
 /* Label showing the transaction was started (initialized) */
@@ -1220,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Не удалось";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Чтобы открыть новый кошелек или восстановить существующий, вы должны сначала отвязать кошелек, который в настоящее время установлен. Чтобы продолжить, введите текущий бумажный ключ (Paper Key).";
+"WipeWallet.instruction" = "Пожалуйста, введите фразу для восстановления, чтобы стереть этот кошелек с вашего устройства.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Отвязать ваш кошелек, чтобы удалить его с этого устройства. Как только вы отвяжете этот кошелек, вы сможете открыть новый кошелек или восстановить другой на этом устройстве.";
 /* Start wipe wallet view warning */

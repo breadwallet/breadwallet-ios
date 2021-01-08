@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 /**
  *  Standardizes colors and fonts.
@@ -199,5 +200,65 @@ class Theme: BRDTheme {
     // returns a color with the given enum
     private static func color(_ hex: ColorHex) -> UIColor {
         return UIColor.fromHex(hex.rawValue)
+    }
+}
+
+@available(iOS 13.6, *)
+struct ThemePreview: View {
+    
+    func colorRectangle(color: Color, label: String) -> some View {
+        return ZStack {
+            Rectangle()
+                .fill(color)
+            Text(label)
+                .font(Font(Theme.h3Title))
+                .foregroundColor(Color(Theme.primaryText))
+        }
+    }
+    
+    var body: some View {
+        VStack {
+            Text("h0Title")
+                .font(Font(Theme.h0Title))
+            Text("h1Title")
+                .font(Font(Theme.h1Title))
+            Text("h2Title")
+                .font(Font(Theme.h2Title))
+            Text("h3Title")
+                .font(Font(Theme.h3Title))
+            Text("body1")
+                .font(Font(Theme.body1))
+            Text("body2")
+                .font(Font(Theme.body2))
+            Text("body3")
+                .font(Font(Theme.body3))
+            Group {
+                HStack {
+                    self.colorRectangle(color: Color(Theme.primaryBackground), label: "primaryBackground")
+                    self.colorRectangle(color: Color(Theme.secondaryBackground), label: "secondaryBackground")
+                    self.colorRectangle(color: Color(Theme.tertiaryBackground), label: "tertiaryBackground")
+                }
+                HStack {
+                    self.colorRectangle(color: Color(Theme.accent), label: "accent")
+                    self.colorRectangle(color: Color(Theme.accentHighlighted), label: "accentHighlighted")
+                }
+                HStack {
+                    self.colorRectangle(color: Color(Theme.error), label: "error")
+                    self.colorRectangle(color: Color(Theme.success), label: "success")
+                }
+                HStack {
+                    self.colorRectangle(color: Color(Theme.primaryText), label: "primaryText")
+                    self.colorRectangle(color: Color(Theme.secondaryText), label: "secondaryText")
+                    self.colorRectangle(color: Color(Theme.tertiaryText), label: "tertiaryText")
+                }.background(Color(Theme.primaryBackground))
+            }
+        }
+    }
+}
+
+@available(iOS 13.6, *)
+struct Theme_Previews: PreviewProvider {
+    static var previews: some View {
+        ThemePreview()
     }
 }

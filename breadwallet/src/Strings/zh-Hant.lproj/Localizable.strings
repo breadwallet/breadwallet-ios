@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "餘額";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "這個令牌已遭摘牌，因為發行人決定停止ERC20支援。\n\n您仍然能夠將這些令牌發送至另一個平台。關於進一步細節，請訪問我們的支援網頁。";
+"Account.delistedToken" = "該令牌已被除名。 \n\n您可能仍然可以將這些令牌發送到另一個平台。有關更多詳細信息，請訪問我們的支持頁面。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ 每 %2$@";
 /* Loading Wallet Message */
@@ -186,12 +186,39 @@
 "Button.yes" = "要";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "將您的 ID 在方塊置中";
+"CloudBackup.backupDeleted" = "備份已刪除";
+"CloudBackup.backupDeletedMessage" = "PIN嘗試失敗次數過多後，您的iCloud備份已被刪除。該應用程序現在將重新啟動。";
+"CloudBackup.backupMenuTitle" = "iCloud備份";
+"CloudBackup.createButton" = "建立新的電子錢包";
+"CloudBackup.createWarning" = "檢測到先前備份的錢包。建議使用此備份。您確定要繼續創建新的錢包嗎？";
+"CloudBackup.enableBody1" = "要啟用此功能，必須打開iCloud鑰匙串。";
+"CloudBackup.enableBody2" = "它應該如下所示：";
+"CloudBackup.enableButton" = "我已開啟iCloud鑰匙串";
+"CloudBackup.enableTitle" = "啟用鑰匙串";
+"CloudBackup.encryptBackupMessage" = "輸入密碼以加密備份";
+"CloudBackup.mainBody" = "請注意，iCloud備份僅與您的iCloud帳戶一樣安全。我們仍然建議在接下來的步驟中寫下恢復短語並保持其安全。如果您無法再訪問iCloud，則恢復短語是恢復錢包的唯一方法。";
+"CloudBackup.mainTitle" = "iCloud恢復備份";
+"CloudBackup.mainWarning" = "必須在iOS設置應用中打開iCloud鑰匙串才能使用此功能";
+"CloudBackup.mainWarningConfirmation" = "您確定要禁用iCloud備份嗎？這將從所有設備上刪除您的備份。";
+"CloudBackup.pinAttempts" = "清除備份之前還有剩余嘗試： %1$@";
+"CloudBackup.recoverButton" = "從恢復密鑰還原";
+"CloudBackup.recoverHeader" = "輸入PIN碼以解鎖iCloud備份";
+"CloudBackup.restoreButton" = "從iCloud備份還原";
+"CloudBackup.selectTitle" = "選擇備份";
+"CloudBackup.step1" = "啟動設置應用。";
+"CloudBackup.step2" = "點擊您的Apple ID名稱。";
+"CloudBackup.step3" = "點按iCloud。";
+"CloudBackup.step4" = "驗證iCloud鑰匙串是否已打開";
+"CloudBackup.understandText" = "我了解除非啟用iCloud鑰匙串，否則此功能將無法使用。";
+"CloudBackup.warningBody" = "在嘗試了%1$@次不正確的PIN後，您的iCloud備份將被清除。";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "寄送金額：";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "網絡費：";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "網路費用（ETH）:";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "處理時間：該筆交易預計在 %1$@ 後完成。";
 /* Label for "send" button on final confirmation screen */
@@ -276,6 +303,7 @@
 "FeeSelector.estimatedDeliver" = "預計發送時間：%1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5 分鐘";
+"FeeSelector.lessThanMinutes" = "&lt;$1$d 分钟";
 /* Priority fee */
 "FeeSelector.priority" = "優先";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +418,10 @@
 "ManageWallet.textFeildLabel" = "電子錢包名稱";
 /* Manage wallet modal title */
 "ManageWallet.title" = "管理電子錢包";
+"MarketData.high24h" = "24 小时高";
+"MarketData.low24h" = "24小時低";
+"MarketData.marketCap" = "市值";
+"MarketData.volume" = "交易量";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "增加錢包";
 /* Menu button title */
@@ -512,12 +544,17 @@
 "Prompts.NoScreenLock.body.android" = "需要裝置螢幕鎖定來保護您的錢包。前往「設定」 > 「安全性」 > 「螢幕鎖定」，啟用來繼續。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "螢幕鎖定已停用";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "必須儲存紙上金鑰，以防萬一您遺失或換電話。";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "如果丟失或更換手機，必須保存恢復短語。";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "設定您的紙上金鑰,以防您遺失或更換手機。如果變更手機的安全設定,也需要您的金鑰。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要採取動作";
+"Prompts.RateApp.dontShow" = "不要再問了";
+"Prompts.RateApp.enjoyingBrd" = "享受BRD嗎？";
+"Prompts.RateApp.googlePlayReview" = "您的評論有助於擴大BRD社區。";
+"Prompts.RateApp.noThanks" = "不用了，謝謝";
+"Prompts.RateApp.rateUs" = "評論我們";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "您的電子錢包可能不同步。這通常可以經由重新掃描區塊鏈來修正。";
 /* Transaction rejected prompt title */
@@ -606,30 +643,30 @@
 "RecoverWallet.subheader_reset_pin" = "為重設 PIN 碼，請在下方空格內輸入您的紙本金鑰上的字串。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "你輸入的字詞不正確,請再試一次。";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "快完成了！請輸入以下取自復原金鑰的字詞。";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "確認復原金鑰";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "輸入復原金鑰";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "請輸入復原金鑰,以便取消這個錢包與裝置的連結。";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "確定要稍後再設定復原金鑰嗎？";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "快完成了！在您的恢復短語中輸入以下單詞。";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "確認恢復短語";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "輸入恢復短語";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "請輸入您的恢復短語以斷開該錢包與設備的鏈接。";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "您確定要稍後設置恢復短語嗎？";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "稍後再設定";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "產生復原金鑰";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "生成恢復短語";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "如果你升級或遺失手機,想要復原資金時,就需要這個金鑰。";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "產生私人復原金鑰";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "生成您的私人恢復短語";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "前往錢包";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "運作方式 - 步驟 %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "你輸入的某些字詞與復原金鑰不符,請再試一次。";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "您輸入的某些單詞與您的恢復短語不匹配。請再試一遍。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "請保護金鑰的安全";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +678,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "復原錢包";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "請依據想復原的錢包輸入復原金鑰。";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "請輸入您要恢復的錢包的恢復短語。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "輕鬆購買,安心交易";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "請記得寫下這些字詞；如果忘了,請滑動返回。";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "請輸入復原金鑰,以便重設 PIN 碼。";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "請輸入您的恢復短語以重置您的PIN碼。";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "儘管放心購買與交易,你的資金經由商業界最高層級的安全性和隱私權所保護。";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "請將金鑰儲存在安全的位置,因為金鑰是你復原錢包的唯一途徑；BRD 並不會保留副本。";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "恭喜！你已經完成復原金鑰設定了。";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "恭喜你！您已完成恢復短語的設置。";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "你已經設定完畢,可以透過 BRD 錢包存放,交易和購買加密貨幣了。";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +705,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "通過從設備中擦除當前錢包來啟動新錢包。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "寫下你的金鑰";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "再次寫下你的復原金鑰";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "再次寫下您的恢復短語";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "請依序寫下以下字詞。";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "你的復原金鑰";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "您的恢復短語";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%2$@ 之 %1$@";
 /* No amount entered error message. */
@@ -728,9 +765,9 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "您的手機遺失或升級時，存取您的比特幣唯一的方式。";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "紙本金鑰";
+"SecurityCenter.paperKeyTitle" = "恢復短語";
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "紙本金鑰";
 /* PIN button description */
@@ -758,7 +795,9 @@
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
-"Send.balance" = "餘額：";
+"Send.balance" = "餘額：%1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "餘額:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "到「設定」 > 「應用程式」 > 「BRD」 > 「權限」允許相機存取";
 /* Permission required to access camera */
@@ -815,12 +854,22 @@
 "Send.noFeesError" = "正在下載網路資金現況。請再試一次。";
 /* Paste button label */
 "Send.pasteLabel" = "貼上";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "無效的PayID。";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "沒有與此PayID相關的%1$s地址。";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "檢索此PayID的地址時出錯。請稍後再試。";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "無法公布交易。";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "無法載入付款要求";
 /* Scan button label */
 "Send.scanLabel" = "掃描";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "發送上限：";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "寄送";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -912,13 +961,17 @@
 /* button label */
 "StartPaperPhrase.buttonTitle" = "寫下紙本金鑰";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "您最近一次在 %1$@ 寫下了您的紙本金鑰";
+"StartPaperPhrase.date" = "最後寫下\n %1$@";
 /* button label */
 "StartViewController.createButton" = "創建新錢包";
 /* Start view message */
 "StartViewController.message" = "使用比特幣最安全、最有保障的方式。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "恢復錢包";
+"SupportForm.feedbackAppreciated" = "我們希望收到您的反饋";
+"SupportForm.helpUsImprove" = "幫助我們改善";
+"SupportForm.notNow" = "現在不要";
+"SupportForm.pleaseDescribe" = "請描述您的經歷";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "活動";
 /* Syncing view connectiong state header text */
@@ -1068,6 +1121,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas 限價";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas 價格";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "隱藏細節";
 /* Label showing the transaction was started (initialized) */
@@ -1220,7 +1275,7 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "失敗";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "啟用新錢包或恢復已存在錢包，您必須先移除目前已安裝錢包的連結。欲繼續，鍵入目前錢包的私密金鑰。";
+"WipeWallet.instruction" = "請輸入您的恢復短語，以從設備中清除此錢包。";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "自此裝置移除您錢包的連結。一旦移除此錢包的連結，您可在此裝置上啟用新錢包或恢復其他不同錢包。";
 /* Start wipe wallet view warning */
