@@ -130,41 +130,42 @@ extension BRAPIClient {
 
 // Converts an array of CurrencyMetaData to a dictionary keyed on uid
 private func processCurrencies(_ currencies: [CurrencyMetaData], completion: ([CurrencyId: CurrencyMetaData]) -> Void) {
-    var currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
+    let currencyMetaData = currencies.reduce(into: [CurrencyId: CurrencyMetaData](), { (dict, token) in
         dict[token.uid] = token
     })
-    let tst = CurrencyMetaData(uid: "ethereum-testnet:0x722dd3f80bac40c951b51bdd28dd19d435762180",
-                               code: "TST",
-                               isSupported: true,
-                               colors: (.blue, .blue),
-                               name: "Test Standard Token",
-                               tokenAddress: "0x722dd3f80bac40c951b51bdd28dd19d435762180",
-                               decimals: 18,
-                               alternateCode: nil,
-                               coinGeckoId: nil)
+    //Change currencyMetaData to var and uncomment the currencies below for testing
+//    let tst = CurrencyMetaData(uid: "ethereum-testnet:0x722dd3f80bac40c951b51bdd28dd19d435762180",
+//                               code: "TST",
+//                               isSupported: true,
+//                               colors: (.blue, .blue),
+//                               name: "Test Standard Token",
+//                               tokenAddress: "0x722dd3f80bac40c951b51bdd28dd19d435762180",
+//                               decimals: 18,
+//                               alternateCode: nil,
+//                               coinGeckoId: nil)
+//
+//    let bsv = CurrencyMetaData(uid: "bitcoinsv-mainnet:__native__",
+//                               code: "BSV",
+//                               isSupported: true,
+//                               colors: (.yellow, .blue),
+//                               name: "BSV",
+//                               tokenAddress: nil,
+//                               decimals: 8,
+//                               alternateCode: nil,
+//                               coinGeckoId: nil)
+//    let xtz = CurrencyMetaData(uid: "tezos-mainnet:__native__",
+//                               code: "XTZ",
+//                               isSupported: true,
+//                               colors: (.blue, .blue),
+//                               name: "Tezos",
+//                               tokenAddress: nil,
+//                               decimals: 8,
+//                               alternateCode: nil,
+//                               coinGeckoId: "tezos")
     
-    let bsv = CurrencyMetaData(uid: "bitcoinsv-mainnet:__native__",
-                               code: "BSV",
-                               isSupported: true,
-                               colors: (.yellow, .blue),
-                               name: "BSV",
-                               tokenAddress: nil,
-                               decimals: 8,
-                               alternateCode: nil,
-                               coinGeckoId: nil)
-    let xtz = CurrencyMetaData(uid: "tezos-mainnet:__native__",
-                               code: "XTZ",
-                               isSupported: true,
-                               colors: (.blue, .blue),
-                               name: "Tezos",
-                               tokenAddress: nil,
-                               decimals: 8,
-                               alternateCode: nil,
-                               coinGeckoId: "tezos")
-    
-    currencyMetaData[tst.uid] = tst
-    currencyMetaData[bsv.uid] = bsv
-    currencyMetaData[xtz.uid] = xtz
+//    currencyMetaData[tst.uid] = tst
+//    currencyMetaData[bsv.uid] = bsv
+//    currencyMetaData[xtz.uid] = xtz
     print("[CurrencyList] tokens updated: \(currencies.count) tokens")
     completion(currencyMetaData)
 }
