@@ -94,8 +94,8 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     private var address: String? {
-        if payIdAddress != nil {
-            return payIdAddress
+        if resolvedAddress != nil {
+            return resolvedAddress?.cryptoAddress
         }
         if let protoRequest = paymentProtocolRequest {
             return protoRequest.primaryTarget?.description
@@ -104,8 +104,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
-    private var payIdAddress: String?
-    private var payId: String?
+    private var resolvedAddress: ResolvedAddress?
     
     private var currentFeeBasis: TransferFeeBasis?
     private var isSendingMax = false {
@@ -213,9 +212,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         addressCell.didReceivePaymentRequest = { [weak self] request in
             self?.handleRequest(request)
         }
-        addressCell.didReceivePayId = { [weak self] result in
+        addressCell.didReceiveResolvedAddress = { [weak self] result, type in
             DispatchQueue.main.async {
-                self?.handlePayIdResponse(result, id: self?.addressCell.address ?? "", shouldShowError: true)
+                self?.handleResolvableResponse(result, type: type, id: self?.addressCell.address ?? "", shouldShowError: true)
             }
         }
         amountView.balanceTextForAmount = { [weak self] amount, rate in
@@ -341,13 +340,13 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         guard let pasteboard = UIPasteboard.general.string, !pasteboard.utf8.isEmpty else {
             return showAlert(title: S.Alert.error, message: S.Send.emptyPasteboard, buttonLabel: S.Button.ok)
         }
-
-        if let path = PayId(address: pasteboard) {
+        
+        if let resolver = ResolvableFactory.resolver(pasteboard) {
             self.addressCell.setContent(pasteboard)
             self.addressCell.showPayIdSpinner()
-            path.fetchAddress(forCurrency: currency) { response in
+            resolver.fetchAddress(forCurrency: currency) { response in
                 DispatchQueue.main.async {
-                    self.handlePayIdResponse(response, id: pasteboard, shouldShowError: true)
+                    self.handleResolvableResponse(response, type: resolver.type, id: pasteboard, shouldShowError: true)
                 }
             }
             return
@@ -361,7 +360,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         handleRequest(request)
     }
     
-    private func handlePayIdResponse(_ response: Result<(String, String?), PayIdError>, id: String, shouldShowError: Bool) {
+    private func handleResolvableResponse(_ response: Result<(String, String?), ResolvableError>,
+                                          type: ResolvableType,
+                                          id: String,
+                                          shouldShowError: Bool) {
         switch response {
         case .success(let addressDetails):
             let address = addressDetails.0
@@ -376,28 +378,20 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             //Here we have a valid address from PayID
             //After this event, the addresscell should be in an un-editable state similar
             //to when a payment request is recieved
-            payIdAddress = address
-            payId = id
+            self.resolvedAddress = ResolvedAddress(humanReadableAddress: id,
+                                                   cryptoAddress: address,
+                                                   label: type.label)
             if tag != nil {
                 self.hideDestinationTag()
             }
-            addressCell.showPayId()
+            addressCell.showResolveableState(type: type)
             addressCell.hideActionButtons()
             if let destinationTag = tag {
                 attributeCell?.setContent(destinationTag)
             }
-        case .failure(let error):
+        case .failure(_):
             if shouldShowError {
-                switch error {
-                case .badResponse:
-                    showErrorMessage(S.PayId.invalidPayID)
-                case .currencyNotSupported:
-                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
-                case .invalidAddress:
-                    showErrorMessage(String(format: S.PayId.invalidPayID, currency.name))
-                case .invalidPayID:
-                    showErrorMessage(S.PayId.invalidPayID)
-                }
+                showErrorMessage(type == .fio ? S.FIO.invalid : S.PayId.invalidPayID)
             }
             self.resetPayId()
         }
@@ -413,11 +407,10 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     
     private func resetPayId() {
-        payIdAddress = nil
-        payId = nil
-        addressCell.hidePayID()
+        resolvedAddress = nil
+        addressCell.hideResolveableState()
         addressCell.setContent("")
-        addressCell.hidePayID()
+        addressCell.hideResolveableState()
     }
 
     @objc private func scanTapped() {
@@ -555,7 +548,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency,
-                                                 payId: payId)
+                                                 resolvedAddress: resolvedAddress)
         confirm.successCallback = send
         confirm.cancelCallback = sender.reset
         

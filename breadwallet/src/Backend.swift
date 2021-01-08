@@ -22,7 +22,6 @@ class Backend {
     
     private var apiClient: BRAPIClient
     private var kvStore: BRReplicatedKVStore?
-    private var pigeonExchange: PigeonExchange?
     private var exchangeUpdater: ExchangeUpdater?
     private var eventManager: EventManager?
     private let userAgentFetcher = UserAgentFetcher()
@@ -39,10 +38,6 @@ class Backend {
     
     static var kvStore: BRReplicatedKVStore? {
         return shared.kvStore
-    }
-    
-    static var pigeonExchange: PigeonExchange? {
-        return shared.pigeonExchange
     }
 
     static var eventManager: EventManager? {
@@ -67,7 +62,6 @@ class Backend {
         guard let key = authenticator.apiAuthKey else { return assertionFailure() }
         shared.apiClient = BRAPIClient(authenticator: authenticator)
         shared.kvStore = try? BRReplicatedKVStore(encryptionKey: key, remoteAdaptor: KVStoreAdaptor(client: shared.apiClient))
-        shared.pigeonExchange = PigeonExchange()
         shared.exchangeUpdater = ExchangeUpdater()
         shared.eventManager = EventManager(adaptor: shared.apiClient)
     }
@@ -77,7 +71,6 @@ class Backend {
         URLCache.shared.removeAllCachedResponses()
         shared.eventManager = nil
         shared.exchangeUpdater = nil
-        shared.pigeonExchange = nil
         shared.kvStore = nil
         shared.apiClient = BRAPIClient(authenticator: NoAuthWalletAuthenticator())
     }

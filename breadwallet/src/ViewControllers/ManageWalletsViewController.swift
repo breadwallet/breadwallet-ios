@@ -42,8 +42,6 @@ class ManageWalletsViewController: UITableViewController {
             }
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         }
-        
-        setupAddButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +53,10 @@ class ManageWalletsViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         assetCollection.saveChanges()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        setupAddButton()
     }
     
     private func removeCurrency(_ identifier: CurrencyId) {
@@ -69,6 +71,7 @@ class ManageWalletsViewController: UITableViewController {
     }
     
     private func setupAddButton() {
+        guard tableView.tableFooterView == nil else { return }
         let topInset: CGFloat = C.padding[1]
         let leftRightInset: CGFloat = C.padding[2]
         let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right

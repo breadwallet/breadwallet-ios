@@ -117,11 +117,6 @@ class ApplicationController: Subscriber, Trackable {
             self.enterOnboarding()
         }
         
-        Store.lazySubscribe(self,
-                            selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
-                            callback: { _ in self.didUnlockWallet() }
-        )
-        
         if keyStore.noWallet {
             enterOnboarding()
         } else {
@@ -233,12 +228,6 @@ class ApplicationController: Subscriber, Trackable {
         }
     }
     
-    func didUnlockWallet() {
-        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
-            pigeonExchange.fetchInbox()
-        }
-    }
-    
     private func resume() {
         fetchBackendUpdates()
         coreSystem.resume()
@@ -328,14 +317,6 @@ class ApplicationController: Subscriber, Trackable {
             Backend.kvStore?.syncAllKeys { error in
                 print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
                 Store.trigger(name: .didSyncKVStore)
-                if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
-                    if !Store.state.isLoginRequired {
-                        pigeonExchange.fetchInbox()
-                    }
-                    if !Store.state.isPushNotificationsEnabled {
-                        pigeonExchange.startPolling()
-                    }
-                }
             }
         }
 

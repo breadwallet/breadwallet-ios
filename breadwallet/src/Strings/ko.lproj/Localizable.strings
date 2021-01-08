@@ -213,6 +213,8 @@
 "CloudBackup.warningBody" = "잘못된 PIN 시도를 %1$@ 더 시도하면 iCloud 백업이 삭제됩니다.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "보낼 금액:";
+"Confirmation.destinationTag" = "목적지 태그";
+"Confirmation.destinationTag_EmptyHint" = "(빈)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "네트워크 수수료:";
 /* Network Fee: (ETH) */
@@ -303,7 +305,7 @@
 "FeeSelector.estimatedDeliver" = "예상 배송 시간: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5분";
-"FeeSelector.lessThanMinutes" = "&lt;$1$d 분";
+"FeeSelector.lessThanMinutes" = "<%1$d 분";
 /* Priority fee */
 "FeeSelector.priority" = "우선 순위";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -520,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "지원되지 않는 서명 형태";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "신용할 수 없는 증명서";
+"Platform.transaction_cancelled" = "거래 취소";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "주요 지원 및 제품 업데이트르 받을 첫 주인공이 되어 보세요.";
 /* Placeholder text for an email address text field. */
@@ -792,6 +795,7 @@
 "Segwit.Enable" = "활성화";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "투 더 문";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "금액";
 /* Balance: $4.00 */
@@ -816,12 +820,16 @@
 "Send.destinationTag_optional" = "대상 태그 (선택 사항)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "대상 태그 (필수)";
+"Send.destinationTag_required_error" = "대상 주소에 유효한 대상 태그가 필요합니다.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "클립보드가 비어 있습니다";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "자신에게는 보낼 수 없습니다.";
 /* Network Fee: $0.01 */
 "Send.fee" = "네트워크 비용: %1$@";
+"Send.fio_invalid" = "잘못된 FIO 주소입니다.";
+"Send.fio_noAddress" = "이 FIO 주소와 연결된 %1$s 주소가 없습니다.";
+"Send.fio_retrievalError" = "이 FIO 주소에 대한 주소를 검색하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "인증되지 않은 수취인입니다.";
 /* Insufficient funds error */
@@ -1107,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Confirmations";
+"TransactionDetails.destinationTag" = "목적지 태그";
+"TransactionDetails.destinationTag_EmptyHint" = "(빈)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "귀하의 트랜잭션이 여기에 표시됩니다.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1237,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN 코드 입력 필수";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "이 거래 승인";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Fastsync를 끄시겠습니까?";
 /* Explanation for wallet connection setting */

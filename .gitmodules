@@ -1,6 +1,3 @@
-[submodule "Modules/swift-protobuf"]
-	path = Modules/swift-protobuf
-	url = https://github.com/breadwallet/swift-protobuf/
 [submodule "Modules/walletkit"]
 	path = Modules/walletkit
 	url = https://github.com/blockset-corp/walletkit.git

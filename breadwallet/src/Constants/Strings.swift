@@ -847,6 +847,18 @@ enum S {
                                                 comment: "Error message for error in retrieving the address from the PayID endpoint")
     }
     
+    enum FIO {
+        static let invalid = NSLocalizedString("Send.fio_invalid",
+                                               value: "Invalid FIO address.",
+                                               comment: "")
+        static let noAddress = NSLocalizedString("Send.fio_noAddress",
+                                               value: "There is no %1$s address associated with this FIO address.",
+                                               comment: "")
+        static let retrievalError = NSLocalizedString("Send.fio_retrievalError",
+                                               value: "There was an error retrieving the address for this FIO address. Please try again later.",
+                                               comment: "")
+    }
+    
     enum CloudBackup {
         static let mainBody = NSLocalizedString("CloudBackup.mainBody",
                                                 value:"Please note, iCloud backup is only as secure as your iCloud account. We still recommend writing down your recovery phrase in the following step and keeping it secure. The recovery phrase is the only way to recover your wallet if you can no longer access iCloud.",

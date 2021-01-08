@@ -81,7 +81,7 @@ extension BRAPIClient {
                     self.log("error fetching experiments: \(e)")
                 }
                 
-                _ = Store.perform(action: UpdateExperiments(experiments))
+                Store.perform(action: UpdateExperiments(experiments))
                 
             } else {
                 self.log("error fetching experiments: \(String(describing: err))")
