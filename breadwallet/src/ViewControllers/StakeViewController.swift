@@ -256,7 +256,7 @@ extension StakeViewController: UITextFieldDelegate {
 
 extension StakeViewController: ModalDisplayable {
     var faqArticleId: String? {
-        return ""
+        return "staking"
     }
     
     var faqCurrency: Currency? {
