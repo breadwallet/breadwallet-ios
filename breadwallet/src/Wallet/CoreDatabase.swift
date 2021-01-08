@@ -59,7 +59,7 @@ class CoreDatabase {
             off += MemoryLayout<UInt32>.size
             var timestamp = UnsafeRawPointer(buf).advanced(by: off).assumingMemoryBound(to: UInt32.self).pointee.littleEndian
             timestamp = (timestamp == 0) ? timestamp : timestamp + UInt32(NSTimeIntervalSince1970)
-            transactions.append(System.TransactionBlob.btc(bytes: bytes, blockHeight: blockHeight, timestamp: timestamp))
+            transactions.append(System.TransactionBlob.btc((bytes: bytes, blockHeight: blockHeight, timestamp: timestamp)))
         }
         
         if sqlite3_errcode(self.db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(self.db))) }
@@ -106,7 +106,7 @@ class CoreDatabase {
             let prevBlockBlob = sqlite3_column_blob(sql, 10).assumingMemoryBound(to: UInt8.self)
             let prevBlock = [UInt8](Data(bytes: prevBlockBlob, count: hashBytes)) // stored as UInt256
             
-            blocks.append(System.BlockBlob.btc(hash: blockHash,
+            blocks.append(System.BlockBlob.btc((hash: blockHash,
                                                height: height,
                                                nonce: nonce,
                                                target: target,
@@ -116,7 +116,7 @@ class CoreDatabase {
                                                flags: flags,
                                                hashes: hashes,
                                                merkleRoot: merkleRoot,
-                                               prevBlock: prevBlock))
+                                               prevBlock: prevBlock)))
         }
         
         if sqlite3_errcode(self.db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(self.db))) }
@@ -137,10 +137,10 @@ class CoreDatabase {
             
             let (timestamp, timestampOverflow) = UInt64(bitPattern: sqlite3_column_int64(sql, 3)).addingReportingOverflow(UInt64(NSTimeIntervalSince1970))
             
-            peers.append(System.PeerBlob.btc(address: address,
+            peers.append(System.PeerBlob.btc((address: address,
                                              port: port,
                                              services: services,
-                                             timestamp: timestampOverflow ? nil : UInt32(timestamp)))
+                                             timestamp: timestampOverflow ? nil : UInt32(timestamp))))
         }
         
         if sqlite3_errcode(self.db) != SQLITE_DONE { print(String(cString: sqlite3_errmsg(self.db))) }
