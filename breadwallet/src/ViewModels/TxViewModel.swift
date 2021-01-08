@@ -8,6 +8,7 @@
 
 import Foundation
 import WalletKit
+import UIKit
 
 /// Representation of a transaction
 protocol TxViewModel {
@@ -61,9 +62,9 @@ extension TxViewModel {
         guard tx.timestamp > 0 else { return tx.isValid ? S.Transaction.justNow : "" }
         let date = Date(timeIntervalSince1970: tx.timestamp)
         
-        //If timestamp is this year, use short formatter without year
-        //otherwise, use formatter with year
-        if date.hasEqualYear(Date()) {
+        if date.hasEqualDay(Date()) {
+            return DateFormatter.justTime.string(from: date)
+        } else if date.hasEqualYear(Date()) {
             return DateFormatter.shortDateFormatter.string(from: date)
         } else {
             return DateFormatter.mediumDateFormatter.string(from: date)
@@ -74,6 +75,22 @@ extension TxViewModel {
         guard let code = tx.metaData?.tokenTransfer, !code.isEmpty else { return nil }
         return code
     }
+    
+    var icon: StatusIcon {
+        if tx.confirmations < currency.confirmationsUntilFinal {
+            return .pending(CGFloat(tx.confirmations)/CGFloat(currency.confirmationsUntilFinal))
+        }
+        
+        if tx.status == .invalid {
+            return .failed
+        }
+        
+        if tx.direction == .received || tx.direction == .recovered {
+            return .received
+        }
+        
+        return .sent
+    }
 }
 
 // MARK: - Formatting
@@ -82,6 +99,12 @@ extension DateFormatter {
     static let longDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.setLocalizedDateFormatFromTemplate("MMMM d, yyy h:mm a")
+        return df
+    }()
+    
+    static let justTime: DateFormatter = {
+        let df = DateFormatter()
+        df.setLocalizedDateFormatFromTemplate("h:mm a")
         return df
     }()
     

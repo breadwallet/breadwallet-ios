@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "我的 BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "您似乎在使用第三方鍵盤，這可能會記錄您按下的鍵並竊取您的「紙鑰」。請切換至預設的 Android 鍵盤以獲得額外的保護。";
+"Alert.customKeyboard.android" = "您似乎正在使用第三方鍵盤，該鍵盤可以記錄您鍵入的內容並竊取您的恢復短語。請切換到默認的Android鍵盤以提供額外的保護。";
 /* Error alert title */
 "Alert.error" = "錯誤";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "您的 BRD 加密資料最近已被判定為無效，因爲您的 Android 螢幕鎖定已被停用。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "無法繼續執行動作，因為您的螢幕鎖定設置有變動（例如，密碼關閉、指紋變動）。基於安全考量，Android 已永久關鎖您的密鑰庫。因此，必須透過解除安裝來消除您的 BRD 應用程式資料。\n\n別擔心，您的資金仍然安全！ 重新安裝應用程式，並使用紙密鑰來復原您的錢包。";
+"Alert.keystore.invalidated.uninstall.android" = "我們無法繼續，因為您的屏幕鎖定設置已更改（例如，密碼已禁用，指紋已更改）。為了安全起見，Android已永久鎖定您的密鑰存儲區。因此，必須通過卸載來擦除BRD應用程序數據。 \n\n不用擔心，您的資金仍然安全！重新安裝該應用程序並使用您的恢復短語恢復您的錢包。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "無法繼續執行動作，因為您的螢幕鎖定設置有變動（例如，密碼關閉、指紋變動）。基於安全考量，Android 已永久關鎖您的密鑰庫。因此，您的 BRD 應用程式資料必須消除。\n\n別擔心，您的資金仍然安全！使用紙密鑰來復原您的錢包。";
+"Alert.keystore.invalidated.wipe.android" = "我們無法繼續，因為您的屏幕鎖定設置已更改（例如，密碼已禁用，指紋已更改）。為了安全起見，Android已永久鎖定您的密鑰存儲區。因此，必須清除您的BRD應用數據。 \n\n不用擔心，您的資金仍然安全！使用您的恢復短語恢復您的錢包。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android 金鑰儲存區錯誤";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "已成功複製所有的電子錢包位址。";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "紙上金鑰已設定";
+"Alerts.paperKeySet" = "恢復短語集";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "太棒了！";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "總計：";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "輸入之文字與您的紙金鑰不符，請再試一次";
+"ConfirmPaperPhrase.error" = "輸入的單詞與您的恢復短語不匹配。請再試一遍。";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "要確保每項資料都正確寫下，請從紙上金鑰輸入下列字組。";
+"ConfirmPaperPhrase.label" = "為確保所有內容均正確記錄，請從您的恢復短語中輸入以下單詞。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "字組 #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "復原電子錢包";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "如果變更手機上的安全設定,則需要使用紙上金鑰才能開啟錢包。\n\n您確定要稍後設定紙上金鑰嗎？";
+"Modal.PaperKeySkip.Body.Android" = "如果您更改手機上的安全設置，則必須輸入恢復短語才能打開錢包。 \n\n您確定要稍後設置恢復短語嗎？";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "繼續設定";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "如果丟失或更換手機，必須保存恢復短語。";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "設定您的紙上金鑰,以防您遺失或更換手機。如果變更手機的安全設定,也需要您的金鑰。";
+"Prompts.PaperKey.Body.Android" = "設置恢復短語，以防萬一您丟失或更換手機。如果更改手機的安全設置，則還需要密鑰。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要採取動作";
 "Prompts.RateApp.dontShow" = "不要再問了";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "重設 PIN 碼";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "輸入紙本金鑰";
+"RecoverWallet.instruction" = "輸入恢復短語";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "以您的紙本金鑰復原您的 BRD";
+"RecoverWallet.intro" = "使用您的恢復短語恢復您的BRD。";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "紙本金鑰";
+"RecoverWallet.invalid" = "您輸入的恢復短語無效。請仔細檢查每個單詞，然後重試。";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "左箭頭";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "右箭頭";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "針對您想要復原的錢包輸入紙本金鑰。";
+"RecoverWallet.subheader" = "輸入您要恢復的錢包的恢復短語。";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "為重設 PIN 碼，請在下方空格內輸入您的紙本金鑰上的字串。";
+"RecoverWallet.subheader_reset_pin" = "要重置PIN碼，請在下面的框中輸入恢復短語中的單詞。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "你輸入的字詞不正確,請再試一次。";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "恢復短語";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "紙本金鑰";
+"SecurityCenter.paperKeyTitle.android" = "恢復短語";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "保護您的 BRD，防範未經授權的使用者。";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "分享匿名資料？";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "再寫一次紙本金鑰";
+"StartPaperPhrase.againButtonTitle" = "再次寫下恢復短語";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "您的手機遺失、損壞或升級時，紙本金鑰是復原\n BRD 唯一的方式。\n\n我們會向您出示一個字串，請寫在紙上並妥善保管。";
+"StartPaperPhrase.body" = "如果手機丟失，被盜，損壞或升級，則恢復短語是恢復BRD的唯一方法。 \n\n我們將為您顯示單詞列表，以便在紙上寫下並保持安全。";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "如果您的手機遺失,遭竊,損壞或升級,您的紙上金鑰是恢復比特幣錢包 (BRD) 的唯一方法。\n\n如果變更裝置上的安全設定,也需要提供紙上金鑰。\n\n我們將向您展示一張單詞列表,寫在一張紙上並妥善保管。";
+"StartPaperPhrase.Body.Android" = "如果手機丟失，被盜，損壞或升級，則恢復短語是恢復BRD的唯一方法。 \n\n如果您更改設備上的安全設置，則還需要輸入恢復短語。 \n\n我們將為您顯示單詞列表，以便在紙上寫下並保持安全。";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "寫下紙本金鑰";
+"StartPaperPhrase.buttonTitle" = "記下恢復短語";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "最後寫下\n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "自此裝置移除您錢包的連結。一旦移除此錢包的連結，您可在此裝置上啟用新錢包或恢復其他不同錢包。";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "您將再也無法從這項裝置存取目前的 BRD 錢包。餘額會留在片段上。";
+"WipeWallet.startWarning" = "您當前的錢包將從此設備中刪除。如果您希望將來恢復它，則需要輸入恢復短語。";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "移除錢包連結";
 /* Wipe wallet button title */

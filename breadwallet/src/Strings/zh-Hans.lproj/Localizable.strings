@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "我的 BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "看起来您正在使用第三方键盘，它可以记录您键入的内容并窃取您的密钥（Paper Key）。请切换到默认的安卓键盘以便获得额外保护。";
+"Alert.customKeyboard.android" = "您似乎正在使用第三方键盘，该键盘可以记录您键入的内容并窃取您的恢复短语。请切换到默认的Android键盘以提供额外的保护。";
 /* Error alert title */
 "Alert.error" = "错误";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "您的 BRD 加密数据最近因为您的安卓系统屏幕锁定被禁用而失效。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "我们无法继续，因为您的屏幕锁定设置已更改(例如，密码已禁用，指纹已更改)。出于安全考虑，安卓已永久锁定了您的密钥存储。因此，您必须通过卸载删除BRD应用数据。\n\n请放心，您的资金很安全！ 重新安装应用后才能用纸质密匙还原您的钱包。";
+"Alert.keystore.invalidated.uninstall.android" = "我们无法继续，因为您的屏幕锁定设置已更改（例如，密码已禁用，指纹已更改）。为了安全起见，Android已永久锁定您的密钥存储区。因此，必须通过卸载来擦除BRD应用程序数据。 \n\n不用担心，您的资金仍然安全！重新安装该应用程序并使用您的恢复短语恢复您的钱包。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "我们无法继续，因为您的屏幕锁定设置已更改(例如，密码已禁用，指纹已更改)。出于安全考虑，安卓已永久锁定了您的密钥存储。因此，必须擦除您的BRD应用数据。\n\n请放心，您的资金很安全！ 用你的纸质密匙还原您的钱包。";
+"Alert.keystore.invalidated.wipe.android" = "我们无法继续，因为您的屏幕锁定设置已更改（例如，密码已禁用，指纹已更改）。为了安全起见，Android已永久锁定您的密钥存储区。因此，必须清除您的BRD应用数据。 \n\n不用担心，您的资金仍然安全！使用您的恢复短语恢复您的钱包。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "安卓系统密钥库错误";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "所有的钱包地址已被成功复制。";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "纸上密钥已设置";
+"Alerts.paperKeySet" = "恢复短语集";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "太棒了！";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "费用总计：";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "您输入的单词与纸密钥 (Paper Key) 不匹配。请重试。";
+"ConfirmPaperPhrase.error" = "输入的单词与您的恢复短语不匹配。请再试一遍。";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "为确保一切均被正确地书写，请在您的纸键输入以下文字。";
+"ConfirmPaperPhrase.label" = "为确保所有内容均正确记录，请从您的恢复短语中输入以下单词。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "单词#%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "恢复钱包";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "更改手机安全设置后,打开钱包需要输入纸钥。\n\n您希望稍后再设置纸钥吗？";
+"Modal.PaperKeySkip.Body.Android" = "如果您更改手机上的安全设置，则必须输入恢复短语才能打开钱包。 \n\n您确定要稍后设置恢复短语吗？";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "继续设置";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "如果丢失或更换手机，必须保存恢复短语。";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "设置纸钥,避免手机丢失或更换带来的不便。您需要提供密钥以更改手机安全设置。";
+"Prompts.PaperKey.Body.Android" = "设置恢复短语，以防万一您丢失或更换手机。如果更改手机的安全设置，则还需要密钥。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "需要采取的行动";
 "Prompts.RateApp.dontShow" = "不要再问了";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "复位 PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "输入纸键";
+"RecoverWallet.instruction" = "输入恢复短语";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "用您的纸键恢复您的 BRD。";
+"RecoverWallet.intro" = "使用您的恢复短语恢复您的BRD。";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "您输入的纸键无效。请仔细检查每个单词并重试。";
+"RecoverWallet.invalid" = "您输入的恢复短语无效。请仔细检查每个单词，然后重试。";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "左箭头键";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "右箭头键";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "输入您想恢复的钱包的纸键。";
+"RecoverWallet.subheader" = "输入您要恢复的钱包的恢复短语。";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "要重置 PIN 码，请在下面的框中输入纸上密钥中的单词。";
+"RecoverWallet.subheader_reset_pin" = "要重置PIN码，请在以下框中输入恢复短语中的单词。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "您输入的字词不正确。请再试一次。";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "恢复短语";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "纸键";
+"SecurityCenter.paperKeyTitle.android" = "恢复短语";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "保护您的 BRD 免遭未授权用户盗用。";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "共享匿名数据？";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "再次书写纸键";
+"StartPaperPhrase.againButtonTitle" = "再次写下恢复短语";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "如果您的手机丢失、被盗、损坏或升级，纸上密钥是恢复 BRD 的唯一方法。\n\n\n我们将向您显示一张单词表，请将其写在纸上并保存在安全的地方。";
+"StartPaperPhrase.body" = "如果手机丢失，被盗，损坏或升级，则恢复短语是恢复BRD的唯一方法。 \n\n我们将为您显示单词列表，以便在纸上写下并保持安全。";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "在手机丢失,被盗,损坏或升级情况下,纸钥是您恢复 BRD 的唯一方法。\n\n您需要提供纸钥以更改手机安全设置。\n\n我们将向您展示一份单词列表,请您记录在纸上并妥善保管。";
+"StartPaperPhrase.Body.Android" = "如果手机丢失，被盗，损坏或升级，则恢复短语是恢复BRD的唯一方法。 \n\n如果您更改设备上的安全设置，则还需要输入恢复短语。 \n\n我们将为您显示单词列表，以便在纸上写下并保持安全。";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "写下纸键";
+"StartPaperPhrase.buttonTitle" = "记下恢复短语";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "最后写下\n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "取消钱包链接可将其从本设备移除。一旦钱包链接被取消，您可以启用新钱包，或恢复本设备的其他钱包。";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "您无法再在这个设备上使用现在的BRD钱包。 现在的一切资金都留在纸键上。";
+"WipeWallet.startWarning" = "您当前的钱包将从此设备中删除。如果您希望将来恢复它，则需要输入恢复短语。";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "取消钱包的链接";
 /* Wipe wallet button title */

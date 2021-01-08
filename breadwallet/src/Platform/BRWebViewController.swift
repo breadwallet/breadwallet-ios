@@ -51,7 +51,7 @@ open class BRWebViewController: UIViewController, WKNavigationDelegate, BRWebSoc
     }
     
     // Sometimes the webview will open partner widgets.  This is the list of hosts the webview will allow.
-    private let hostAllowList:[String] = ["trade-ui.sandbox.coinify.com", "trade-ui.coinify.com"]
+    private let hostAllowList: [String] = ["trade-ui.sandbox.coinify.com", "trade-ui.coinify.com"]
 
     private let messageUIPresenter = MessageUIPresenter()
 

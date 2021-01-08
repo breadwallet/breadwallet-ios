@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 private let largeFontSize: CGFloat = 28.0
 private let smallFontSize: CGFloat = 14.0
@@ -16,6 +17,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
     
     // MARK: - Views
     private let intrinsicSizeView = UIView()
+    private let extendedTouchArea = ExtendedTouchArea()
     private let currencyName = UILabel(font: .customBody(size: 18.0))
     private let exchangeRateLabel = UILabel(font: .customBody(size: 28.0))
     private let modeLabel = UILabel(font: .customBody(size: 12.0), color: .transparentWhiteText) // debug info
@@ -49,19 +51,32 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         return view
     }()
     
+    private var marketDataView: UIView?
+    
     // MARK: Constraints
     private var headerHeight: NSLayoutConstraint?
     private var historyPeriodPillX: NSLayoutConstraint?
     private var historyPeriodPillY: NSLayoutConstraint?
     
     // MARK: Properties
-    static let headerViewMaxHeight: CGFloat = 375.0
+    private static  let marketDataHeight: CGFloat = 110
     static let headerViewMinHeight: CGFloat = 160.0
     private let currency: Currency
     private var isChartHidden = false
     private var shouldLockExpandingChart = false
     private var isScrubbing = false
     var setHostContentOffset: ((CGFloat) -> Void)?
+    static var headerViewMaxHeight: CGFloat {
+        return Self.shouldShowMarketData ? 375.0 + AccountHeaderView.marketDataHeight : 375.0
+    }
+    
+    static var shouldShowMarketData: Bool {
+        if #available(iOS 13, *), !E.isIPhone5 {
+            return true
+        } else {
+            return false
+        }
+    }
     
     // MARK: Init
     
@@ -74,6 +89,10 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         }
         super.init(frame: CGRect())
         setup()
+    }
+    
+    func setExtendedTouchDelegate(_ view: UIView) {
+        self.extendedTouchArea.delegateView = view
     }
     
     // MARK: Setup
@@ -96,6 +115,14 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         priceInfoStackView.addArrangedSubview(priceDateLabel)
         addSubview(modeLabel)
         addSubview(graphButtonStackView)
+        
+        if #available(iOS 13, *), Self.shouldShowMarketData, let id = currency.coinGeckoId {
+            let hosting = UIHostingController(rootView: MarketDataView(currencyId: id))
+            self.marketDataView = hosting.view
+            hosting.view.backgroundColor = .clear
+            addSubview(hosting.view)
+        }
+        
         addSubview(balanceSeparator)
         addSubview(balanceCell)
         if let delistedTokenView = delistedTokenView {
@@ -104,6 +131,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         graphButtons.forEach {
             graphButtonStackView.addArrangedSubview($0.button)
         }
+        addSubview(extendedTouchArea)
     }
     
     private func addConstraints() {
@@ -128,18 +156,30 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         if let delistedTokenView = delistedTokenView {
             delistedTokenView.constrain([
                 delistedTokenView.topAnchor.constraint(equalTo: priceInfoStackView.topAnchor),
-                delistedTokenView.bottomAnchor.constraint(equalTo: balanceCell.topAnchor),
+                delistedTokenView.bottomAnchor.constraint(equalTo: balanceCell.topAnchor, constant: -C.padding[1]),
                 delistedTokenView.widthAnchor.constraint(equalTo: widthAnchor),
                 delistedTokenView.leadingAnchor.constraint(equalTo: leadingAnchor)])
         }
+        
+        let graphBottom = marketDataView == nil ? balanceCell.topAnchor : marketDataView!.topAnchor
+        
         graphButtonStackView.constrain([
             graphButtonStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 52.0),
             graphButtonStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -52.0),
             graphButtonStackView.topAnchor.constraint(equalTo: chartView.bottomAnchor, constant: 0),
-            graphButtonStackView.bottomAnchor.constraint(equalTo: balanceCell.topAnchor, constant: -C.padding[1]),
+            graphButtonStackView.bottomAnchor.constraint(equalTo: graphBottom, constant: -C.padding[1]),
             graphButtonStackView.heightAnchor.constraint(equalToConstant: 30.0)])
         graphButtonStackView.clipsToBounds = true
         graphButtonStackView.layer.masksToBounds = true
+        
+        if let marketView = marketDataView {
+            marketView.constrain([
+                marketView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: C.padding[2]),
+                marketView.bottomAnchor.constraint(equalTo: balanceCell.topAnchor, constant: -C.padding[1]),
+                marketView.heightAnchor.constraint(equalToConstant: AccountHeaderView.marketDataHeight),
+                marketView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]) ])
+        }
+        
         balanceSeparator.constrain([
             balanceSeparator.leadingAnchor.constraint(equalTo: leadingAnchor),
             balanceSeparator.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -160,6 +200,12 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             historyPeriodPill.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.1),
             historyPeriodPill.heightAnchor.constraint(equalToConstant: 28.0)])
         
+        extendedTouchArea.constrain([
+            extendedTouchArea.leadingAnchor.constraint(equalTo: leadingAnchor),
+            extendedTouchArea.bottomAnchor.constraint(equalTo: balanceCell.bottomAnchor),
+            extendedTouchArea.trailingAnchor.constraint(equalTo: trailingAnchor),
+            extendedTouchArea.topAnchor.constraint(equalTo: graphButtonStackView.bottomAnchor)
+        ])
     }
 
     private func setInitialData() {
@@ -214,6 +260,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         if currency.shouldHideChart {
             self.collapseHeader(animated: false)
         }
+        extendedTouchArea.ignoringView = balanceCell.currencyTapView
     }
     
     private func setGraphViewScrubbingCallbacks() {
@@ -255,6 +302,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             self.priceChangeView.alpha = 1.0
             self.graphButtonStackView.alpha = 1.0
             self.historyPeriodPill.alpha = historyPeriodPillAlpha
+            self.marketDataView?.alpha = 1.0
         })
     }
     
@@ -275,6 +323,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
         priceChangeView.alpha = 0.0
         graphButtonStackView.alpha = 0.0
         historyPeriodPill.alpha = 0.0
+        self.marketDataView?.alpha = 0.0
     }
     
     func setOffset(_ offset: CGFloat) {

@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mit BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Det ser ud til at du bruger et tastatur fra en tredjepart, som kan optage det du skriver og stjæle din Paper Key. Skift til standard Android-tastaturet for ekstra beskyttelse.";
+"Alert.customKeyboard.android" = "Det ser ud til, at du bruger et tredjeparts tastatur, som kan registrere, hvad du skriver og stjæle din gendannelsesfrase. Skift til standard Android-tastaturet for ekstra beskyttelse.";
 /* Error alert title */
 "Alert.error" = "Fejl";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Dine BRD-krypterede data blev for nyligt ugyldiggjort, eftersom din Android skærmlås blev deaktiveret.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Vi kan ikke fortsætte, fordi dine indstillinger for skærmlåsen er blevet ændret (f.eks. adgangskoden deaktiveret, fingeraftryk ændret). Af sikkerhedshensyn har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata fjernes fuldstændigt ved at afinstallere.\n\nBare rolig, dine midler er stadig sikre! Geninstallr appen og gendan din pung vha. din papirnøgle.";
+"Alert.keystore.invalidated.uninstall.android" = "Vi kan ikke fortsætte, fordi dine skærmlåsindstillinger er blevet ændret (f.eks. Adgangskode blev deaktiveret, fingeraftryk blev ændret). Af sikkerhedsmæssige årsager har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata slettes ved at afinstallere dem. \n\nBare rolig, dine midler er stadig sikre! Geninstaller appen, og gendan din tegnebog ved hjælp af din gendannelsesfrase.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Vi kan ikke fortsætte, fordi dine indstillinger for skærmlåsen er blevet ændret (f.eks. adgangskoden deaktiveret, fingeraftryk ændret). Af sikkerhedshensyn har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata fjernes fuldstændugt.\n\nBare rolig, dine midler er stadig sikre! Gendan din pung vha. din papirtast.";
+"Alert.keystore.invalidated.wipe.android" = "Vi kan ikke fortsætte, fordi dine skærmlåsindstillinger er blevet ændret (f.eks. Adgangskode blev deaktiveret, fingeraftryk blev ændret). Af sikkerhedsmæssige årsager har Android permanent låst din nøglelager. Derfor skal dine BRD-appdata slettes. \n\nBare rolig, dine midler er stadig sikre! Gendan din tegnebog ved hjælp af din gendannelsesfrase.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fejl";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Alle pungens adresser er kopieret.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Paper key indstillet";
+"Alerts.paperKeySet" = "Gendannelsessæt sæt";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Fedt!";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Samlede omkostninger:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Ordene du har indtastet matcher ikke din papirnøgle. Prøv venligst igen.";
+"ConfirmPaperPhrase.error" = "De indtastede ord matcher ikke din gendannelsessætning. Prøv igen.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "For at sørge for, at alt blev skrevet korrekt, bedes du indtaste følgende ord fra din paper key.";
+"ConfirmPaperPhrase.label" = "For at sikre, at alt blev skrevet korrekt, skal du indtaste følgende ord fra din gendannelsessætning.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Ord #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Gendan pung";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Din papirnøgle er nødvendig for at du kan åbne din tegnebog, hvis du ændrer sikkerhedsindstillingerne på din telefon.\n\nEr du sikker på at du vil oprette din papirnøgle senere?";
+"Modal.PaperKeySkip.Body.Android" = "Din gendannelsesfrase er nødvendig for at åbne din tegnebog, hvis du ændrer sikkerhedsindstillingerne på din telefon. \n\nEr du sikker på, at du vil konfigurere din gendannelsesfrase senere?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Fortsæt oprettelse";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "Din gendannelsessætning skal gemmes, hvis du mister eller ændrer din telefon.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Opret din papirnøgle, i tilfælde af at du mister eller udskifter din telefon. Din nøgle er også påkrævet, hvis du ændrer sikkerhedsindstillingerne på din telefon.";
+"Prompts.PaperKey.Body.Android" = "Konfigurer din gendannelsesfrase, hvis du nogensinde mister eller udskifter din telefon. Din nøgle er også påkrævet, hvis du ændrer telefonens sikkerhedsindstillinger.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Handling påkrævet";
 "Prompts.RateApp.dontShow" = "Spørg ikke igen";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Nulstil PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Indtast paper key";
+"RecoverWallet.instruction" = "Indtast gendannelsesfrase";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Gendan dit BRD med din paper key.";
+"RecoverWallet.intro" = "Gendan din BRD med din gendannelsesfrase.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "Den paper key du indtastede er ugyldig. Dobbelttjek hvert ord og prøv igen.";
+"RecoverWallet.invalid" = "Den gendannelsessætning, du indtastede, er ugyldig. Dobbeltkontrol af hvert ord, og prøv igen.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Venstre pil";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Højre pil";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Indtast paper key til pungen du vil gendanne.";
+"RecoverWallet.subheader" = "Indtast gendannelsessætningen for den tegnebog, du vil gendanne.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "For at nulstille din PIN, skal du indtaste ordene fra din paper key i boksene nedenfor.";
+"RecoverWallet.subheader_reset_pin" = "For at nulstille din pinkode skal du indtaste ordene fra din gendannelsessætning i felterne nedenfor.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Ordet du indtastede er forkert. Prøv igen.";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "Gendannelsesfrase";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Paper key";
+"SecurityCenter.paperKeyTitle.android" = "Gendannelsesfrase";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Beskytter dit BRD mod uberettigede brugere.";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Del anonyme data?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Skriv paper key ned igen";
+"StartPaperPhrase.againButtonTitle" = "Skriv genoprettelsesfrasen igen";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Din paper key er den eneste måde at gendanne dit BRD på, hvis din telefon mistes, stjæles, går i stykker eller opgraderes.\n\nVi viser dig en liste over word du skal skrive ned på et papir, og holde sikkert.";
+"StartPaperPhrase.body" = "Din gendannelsessætning er den eneste måde at gendanne din BRD på, hvis din telefon går tabt, stjålet, ødelagt eller opgraderes. \n\nVi viser dig en liste over ord, du kan skrive ned på et stykke papir og holder dig sikker.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Din papirnøgle er den eneste måde hvorpå du kan gendanne din BRD, hvis din telefon går tabt, bliver stjålet, ødelagt eller opgraderet.\n\nDin papirnøgle er også påkrævet, hvis du ændrer sikkerhedsindstillingerne på din enhed.\n\nVi viser dig en liste med ord, som du skal skrive ned på et stykke papir og opbevare sikkert.";
+"StartPaperPhrase.Body.Android" = "Din gendannelsessætning er den eneste måde at gendanne din BRD på, hvis din telefon går tabt, stjålet, ødelagt eller opgraderes. \n\nDin gendannelsessætning er også påkrævet, hvis du ændrer sikkerhedsindstillingerne på din enhed. \n\nVi viser dig en liste over ord, du kan skrive ned på et stykke papir og holder dig sikker.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Skriv paper key ned";
+"StartPaperPhrase.buttonTitle" = "Skriv gendannelsesfrase ned";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "Sidst skrevet ned på \n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Fjern link til pung for at fjerne den fra denne enhed. Når linket til denne pung er fjernet, kan du starte en ny pung eller gendanne en anden pung på denne enhed.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Du vil ikke længere være i stand til at få adgang til din nuværende BRD tegnebog fra denne enhed. Saldoen vil forblive på frasen.";
+"WipeWallet.startWarning" = "Din nuværende tegnebog fjernes fra denne enhed. Hvis du ønsker at gendanne den i fremtiden, skal du indtaste din gendannelsesfrase.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Fjern link til pung";
 /* Wipe wallet button title */

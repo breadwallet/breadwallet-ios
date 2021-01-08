@@ -126,9 +126,17 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                         break
                     }
                     self.updateTransactions()
-
                 default:
                     break
+                }
+            }
+        }
+        
+        wallet?.subscribeManager(self) { [weak self] event in
+            guard let `self` = self else { return }
+            DispatchQueue.main.async {
+                if case .blockUpdated(_) = event {
+                    self.updateTransactions()
                 }
             }
         }

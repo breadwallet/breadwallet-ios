@@ -618,6 +618,7 @@ enum S {
         static let regularTime = NSLocalizedString("FeeSelector.regularTime", value: "10-60 minutes", comment: "E.g. [This transaction is predicted to complete in] 10-60 minutes")
         static let priorityTime = NSLocalizedString("FeeSelector.priorityTime", value: "10-30 minutes", comment: "E.g. [This transaction is predicted to complete in] 10-30 minutes")
         static let ethTime = NSLocalizedString("FeeSelector.ethTime", value: "2-5 minutes", comment: "E.g. [This transaction is predicted to complete in] 2-5 minutes")
+        static let lessThanMinutes = NSLocalizedString("FeeSelector.lessThanMinutes", value: "&lt;%1$d minutes", comment: "")
     }
 
     enum Confirmation {
@@ -901,5 +902,12 @@ enum S {
         static let recoverWarning = NSLocalizedString("CloudBackup.createWarning", value: "A previously backed up wallet has been detected. Using this backup is recommended. Are you sure you want to proceeed with restoring from a recovery phrase?", comment: "")
         static let restoreButton = NSLocalizedString("CloudBackup.restoreButton", value: "Restore from iCloud Backup", comment: "")
         static let backupMenuTitle = NSLocalizedString("CloudBackup.backupMenuTitle", value: "iCloud Backup", comment: "")
+    }
+    
+    enum MarketData {
+        static let high24h = NSLocalizedString("MarketData.high24h", value: "24h high", comment: "")
+        static let low24h = NSLocalizedString("MarketData.low24h", value: "24h low", comment: "")
+        static let marketCap = NSLocalizedString("MarketData.marketCap", value: "Market Cap", comment: "")
+        static let volume = NSLocalizedString("MarketData.volume", value: "Trading Volume", comment: "")
     }
 }

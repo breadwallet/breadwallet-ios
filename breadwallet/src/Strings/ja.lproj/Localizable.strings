@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "マイブレッド";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "現在、サードパーティーのキーボードを使用しているようです。これを使うと入力した内容が記録され、ペーパー・キーが盗まれる可能性があります。追加の保護措置としてAndroidのデフォルトキーボードに切り替えてください。";
+"Alert.customKeyboard.android" = "サードパーティのキーボードを使用しているようです。キーボードを使用すると、入力内容を記録し、回復フレーズを盗むことができます。保護を強化するには、デフォルトのAndroidキーボードに切り替えてください。";
 /* Error alert title */
 "Alert.error" = "エラー";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "お使いのAndroidロック画面が無効にされたため、暗号化されたブレッドのデータはつい最近無効になりました。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータをアンインストールして消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！アプリを再インストールし、ペーパーキーを使用してウォレットを復元してください。";
+"Alert.keystore.invalidated.uninstall.android" = "画面ロックの設定が変更されたため、続行できません（例：パスワードが無効になっている、指紋が変更されている）。セキュリティ上の理由から、Androidはキーストアを完全にロックしています。したがって、BRDアプリのデータはアンインストールによってワイプする必要があります。 \n\n心配しないでください、あなたの資金はまだ安全です！アプリを再インストールし、回復フレーズを使用してウォレットを回復します。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータを消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！ペーパーキーを使用してウォレットを復元してください。";
+"Alert.keystore.invalidated.wipe.android" = "画面ロックの設定が変更されたため、続行できません（例：パスワードが無効になっている、指紋が変更されている）。セキュリティ上の理由から、Androidはキーストアを完全にロックしています。したがって、BRDアプリのデータをワイプする必要があります。 \n\n心配しないでください、あなたの資金はまだ安全です！回復フレーズを使用してウォレットを回復します。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStoreエラー";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "すべてのウォレットアドレスが正常にコピーされました。";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "復元フレーズがセットされました。";
+"Alerts.paperKeySet" = "リカバリフレーズセット";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "いいね！";
 /* Alert Header label (the PIN was set) */
@@ -230,9 +230,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "費用合計：";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "入力された言葉がお客様のペーパーキーと一致しません。もう一度お試し下さい。";
+"ConfirmPaperPhrase.error" = "入力した単語は、回復フレーズと一致しません。もう一度お試しください。";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "全て正しく書き留められていることを確認するため、復元フレーズの中から下記の単語を入力してください。";
+"ConfirmPaperPhrase.label" = "すべてが正しく記述されていることを確認するには、回復フレーズから次の単語を入力してください。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "フレーズ #%1$@";
 /* Agree to legal terms button */
@@ -443,7 +443,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "ウォレットを復元";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "ペーパー・キーはお客様の携帯電話でセキュリティ設定を変更した場合,ウォレットを開くために必要となります。\n\nペーパー・キーを後からセットアップしますか？";
+"Modal.PaperKeySkip.Body.Android" = "スマートフォンのセキュリティ設定を変更した場合、ウォレットを開くにはリカバリフレーズが必要です。 \n\n後でリカバリフレーズを設定してもよろしいですか？";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "セットアップを続けます";
 /* Paper Key Skip modal I'll do it later button */
@@ -547,7 +547,7 @@
 /* Warning about recovery phrase (formerly paper key). */
 "Prompts.PaperKey.body" = "電話を紛失または変更した場合に備えて、回復フレーズを保存する必要があります。";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "携帯電話を紛失または交換した場合に備え,ペーパー・キーをセットアップします。お客様のキーは,携帯電話のセキュリティ設定を変更した場合にも必要となります。";
+"Prompts.PaperKey.Body.Android" = "スマートフォンを紛失または交換した場合に備えて、回復フレーズを設定します。スマートフォンのセキュリティ設定を変更する場合も、キーが必要です。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "アクションが要求されました";
 "Prompts.RateApp.dontShow" = "もう聞かないで";
@@ -624,11 +624,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PINコードをリセット";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "復元フレーズを入力してください";
+"RecoverWallet.instruction" = "回復フレーズを入力してください";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "復元フレーズを使用し、あなたのブレッドを復元する。";
+"RecoverWallet.intro" = "回復フレーズを使用してBRDを回復します。";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "あなたが入力した復元フレーズは無効です。それぞれの単語を再確認の上、もう一度お試しください。";
+"RecoverWallet.invalid" = "入力したリカバリフレーズは無効です。各単語を再確認して、もう一度お試しください。";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "左矢印";
 /* Next button label */
@@ -638,9 +638,9 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "右矢印";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "復元を希望するウォレットの復元フレーズを入力してください。";
+"RecoverWallet.subheader" = "回復するウォレットの回復フレーズを入力します。";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "PINコードをリセットするには、復元フレーズの中から当てはまる単語を下記ボックスの中に入力してください。";
+"RecoverWallet.subheader_reset_pin" = "PINをリセットするには、リカバリフレーズの単語を下のボックスに入力します。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "入力した単語は正しくありません。もう一度入力してください。";
 /* Instructs the user to enter words from the set of recovery phrase words. */
@@ -769,7 +769,7 @@
  * to not break existing client code. */
 "SecurityCenter.paperKeyTitle" = "回復フレーズ";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "復元フレーズ";
+"SecurityCenter.paperKeyTitle.android" = "回復フレーズ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "アクセス権限のないユーザーからあなたのブレッドを守ります。";
 /* PIN button title */
@@ -953,13 +953,13 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "匿名データをシェアしますか?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "復元フレーズをもう一度書き留めてください";
+"StartPaperPhrase.againButtonTitle" = "回復フレーズを書き留めます";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\n\n単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
+"StartPaperPhrase.body" = "スマートフォンが紛失、盗難、破損、またはアップグレードされた場合にリカバリフレーズを使用することで、BRDを復元できます。 \n\n一枚の紙に書き留めて安全を保つための単語のリストをお見せします。";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "お客様のペーパー・キーは携帯電話の紛失,盗難,故障またはアップグレードした際にBRDを復元する唯一の方法です。\n\nペーパー・キーはお客様のデバイスでセキュリティ設定を変更した際も必要となります。\n\n紙に書き留めて保管する単語リストを表示します。";
+"StartPaperPhrase.Body.Android" = "スマートフォンが紛失、盗難、破損、またはアップグレードされた場合にリカバリフレーズを使用することで、BRDを復元できます。 \n\nデバイスのセキュリティ設定を変更する場合も、リカバリフレーズが必要です。 \n\n一枚の紙に書き留めて安全を保つための単語のリストをお見せします。";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
+"StartPaperPhrase.buttonTitle" = "回復フレーズを書き留めます";
 /* Argument is date; date should be on a new line */
 "StartPaperPhrase.date" = "最後に書き留めた\n %1$@";
 /* button label */
@@ -1279,7 +1279,7 @@ Wallet connection settings menu item title. */
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "ご利用ウォレットのリンクを解除してこの機器から解除してください。このウォレットのリンクが解除されると、この機器で新しいウォレットを起動したり、別のウォレット再び利用できるようになります。";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "この端末から現在使用中のBRDウォレットへのアクセスはできなくなります。復元する際は復元フレーズが必要になります。";
+"WipeWallet.startWarning" = "現在のウォレットはこのデバイスから削除されます。後で復元する場合は、リカバリフレーズを入力する必要があります。";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "ウォレットのリンクを解除";
 /* Wipe wallet button title */

@@ -16,39 +16,44 @@ enum FeeLevel: Int {
     
     //Time in millis
     func preferredTime(forCurrency currency: Currency) -> Int {
-
-        //Eth == 1min
-        if currency.isEthereumCompatible {
-            return Int(C.secondsInMinute) * 1 * 1000 // 1 mins
-        }
-
-        //All others == 3 mins
-        guard currency.uid == Currencies.btc.uid else {
-            return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
+        
+        if currency.uid == Currencies.btc.uid {
+            switch self {
+            case .economy:
+                return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
+            case .regular:
+                return Int(C.secondsInMinute) * 30 * 1000 //30 mins
+            case .priority:
+                return Int(C.secondsInMinute) * 10 * 1000 //10 mins
+            }
         }
         
-
-        //BTC is custom
-        switch self {
-        case .economy:
-            return Int(C.secondsInMinute) * 60 * 7 * 1000 //7 hrs
-        case .regular:
-            return Int(C.secondsInMinute) * 30 * 1000 //30 mins
-        case .priority:
-            return Int(C.secondsInMinute) * 10 * 1000 //10 mins
+        if currency.isEthereumCompatible {
+            switch self {
+            case .economy:
+                return Int(C.secondsInMinute) * 5 * 1000
+            case .regular:
+                return Int(C.secondsInMinute) * 3 * 1000
+            case .priority:
+                return Int(C.secondsInMinute) * 1 * 1000
+            }
         }
+        
+        return Int(C.secondsInMinute) * 3 * 1000 // 3 mins
     }
 }
 
 class FeeSelector: UIView {
 
-    init() {
+    init(currency: Currency) {
+        self.currency = currency
         super.init(frame: .zero)
         setupViews()
     }
 
     var didUpdateFee: ((FeeLevel) -> Void)?
 
+    private let currency: Currency
     private let topBorder = UIView(color: .secondaryShadow)
     private let header = UILabel(font: .customMedium(size: 16.0), color: .darkText)
     private let subheader = UILabel(font: .customBody(size: 14.0), color: .grayTextTint)
@@ -76,7 +81,7 @@ class FeeSelector: UIView {
             warning.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -C.padding[2]),
             warning.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -C.padding[1])])
         header.text = S.FeeSelector.title
-        subheader.text = String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.regularTime)
+        subheader.text = currency.feeText(forIndex: 1)
         control.constrain([
             control.leadingAnchor.constraint(equalTo: warning.leadingAnchor),
             control.topAnchor.constraint(equalTo: subheader.bottomAnchor, constant: 4.0),
@@ -85,15 +90,15 @@ class FeeSelector: UIView {
             switch myself.control.selectedSegmentIndex {
             case 0:
                 myself.didUpdateFee?(.economy)
-                myself.subheader.text = String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.economyTime)
+                myself.subheader.text = self.currency.feeText(forIndex: 0)
                 myself.warning.text = S.FeeSelector.economyWarning
             case 1:
                 myself.didUpdateFee?(.regular)
-                myself.subheader.text = String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.regularTime)
+                myself.subheader.text = self.currency.feeText(forIndex: 1)
                 myself.warning.text = ""
             case 2:
                 myself.didUpdateFee?(.priority)
-                myself.subheader.text = String(format: S.FeeSelector.estimatedDelivery, S.FeeSelector.priorityTime)
+                myself.subheader.text = self.currency.feeText(forIndex: 2)
                 myself.warning.text = ""
             default:
                 assertionFailure("Undefined fee selection index")
