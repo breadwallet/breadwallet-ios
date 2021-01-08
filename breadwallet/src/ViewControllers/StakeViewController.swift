@@ -102,12 +102,12 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         pasteButton.tap = pasteTapped
         button.tap = stakeTapped
         button.isEnabled = false
+        address.delegate = self
         
         //Shouldn't be allowed to send stake/unstake transaction while a pending transaction
         //is present
         if currency.wallet?.hasPendingTxn == true {
             button.isEnabled = false
-            address.isEnabled = false
             infoView.text = "Pending Transaction - please try later"
             infoView.textColor = Theme.accent
         } else {
@@ -116,7 +116,6 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
                 addressCaption.text = "You're Staked!"
                 addressCaption.textColor = UIColor.green
                 address.text = validatorAddress
-                address.isEnabled = false
                 pasteButton.isUserInteractionEnabled = false
                 pasteButton.isHidden = true
                 button.isEnabled = true
@@ -197,7 +196,8 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
                                                       address: address,
                                                       isUsingBiometrics: true,
                                                       currency: currency,
-                                                      shouldShowMaskView: true)
+                                                      shouldShowMaskView: true,
+                                                      isStake: true)
         let transitionDelegate = PinTransitioningDelegate()
         transitionDelegate.shouldShowMaskView = true
         confirmation.transitioningDelegate = transitionDelegate
@@ -217,7 +217,6 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             button.isEnabled = true
             pasteButton.isEnabled = false
             pasteButton.isHidden = true
-            address.isEnabled = false
         } else {
             showInvalidAddress()
         }
@@ -230,7 +229,6 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
             button.isEnabled = true
             pasteButton.isEnabled = false
             pasteButton.isHidden = true
-            address.isEnabled = false
         } else {
             showInvalidAddress()
         }
@@ -246,6 +244,12 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
         infoView.textColor = .red
     }
     
+}
+
+extension StakeViewController: UITextFieldDelegate {
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return false
+    }
 }
 
 // MARK: - ModalDisplayable
