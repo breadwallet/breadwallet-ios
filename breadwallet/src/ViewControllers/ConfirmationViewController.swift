@@ -177,7 +177,15 @@ class ConfirmationViewController: UIViewController, ContentBoxPresenter {
     
     private func setInitialData() {
         view.backgroundColor = .clear
-        payLabel.text = isStake ? "Stake" : S.Confirmation.send
+        if isStake {
+            if addressText == currency.wallet?.receiveAddress {
+                payLabel.text = "Unstake"
+            } else {
+                payLabel.text = "Stake"
+            }
+        } else {
+            payLabel.text = S.Confirmation.send
+        }
 
         let totalAmount = (amount.currency == feeAmount.currency) ? amount + feeAmount : amount
         let displayTotal = Amount(amount: totalAmount,
