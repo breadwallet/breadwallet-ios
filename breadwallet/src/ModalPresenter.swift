@@ -311,9 +311,19 @@ class ModalPresenter: Subscriber, Trackable {
                 top.present(alert, animated: true, completion: nil)
                 
             case .privateKey:
-                if let wallet = Currencies.btc.instance?.wallet {
-                    self.presentKeyImport(wallet: wallet, scanResult: scanResult)
-                }
+                let alert = UIAlertController(title: S.Settings.importTile, message: nil, preferredStyle: .actionSheet)
+                alert.addAction(UIAlertAction(title: "BTC", style: .default, handler: { _ in
+                    if let wallet = Currencies.btc.instance?.wallet {
+                        self.presentKeyImport(wallet: wallet, scanResult: scanResult)
+                    }
+                }))
+                alert.addAction(UIAlertAction(title: "BCH", style: .default, handler: { _ in
+                    if let wallet = Currencies.bch.instance?.wallet {
+                        self.presentKeyImport(wallet: wallet, scanResult: scanResult)
+                    }
+                }))
+                alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+                top.present(alert, animated: true, completion: nil)
             case .deepLink(let url):
                 UIApplication.shared.open(url)
             case .invalid:
@@ -389,12 +399,11 @@ class ModalPresenter: Subscriber, Trackable {
                     menuNav.pushViewController(ReScanViewController(system: self.system, wallet: bchWallet), animated: true)
                 }))
             }
-            //TODO:CRYPTO_V2 - add bch importing once blockchaindb supports it
-//            bchItems.append(MenuItem(title: S.Settings.importTile, callback: {
-//                menuNav.dismiss(animated: true, completion: { [unowned self] in
-//                    self.presentKeyImport(wallet: bchWallet)
-//                })
-//            }))
+            bchItems.append(MenuItem(title: S.Settings.importTile, callback: {
+                menuNav.dismiss(animated: true, completion: { [unowned self] in
+                    self.presentKeyImport(wallet: bchWallet)
+                })
+            }))
             
         }
         var bchMenu = MenuItem(title: String(format: S.Settings.currencyPageTitle, Currencies.bch.instance?.name ?? "Bitcoin Cash"), subMenu: bchItems, rootNav: menuNav)
