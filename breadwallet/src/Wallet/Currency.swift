@@ -213,7 +213,11 @@ class Currency: CurrencyWithIcon {
     }
 
     var isGiftingEnabled: Bool {
-        return isBitcoin
+        if #available(iOS 13.0, *), isBitcoin {
+            return true
+        } else {
+            return false
+        }
     }
     
     // MARK: Init
