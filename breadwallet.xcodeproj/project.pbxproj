@@ -53,6 +53,8 @@
 		3A0063BE2509D36500C74A97 /* ExtendedTouchArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0063BD2509D36500C74A97 /* ExtendedTouchArea.swift */; };
 		3A0915CA24D8B31200CDC6A4 /* EnableKeychainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0915C924D8B31100CDC6A4 /* EnableKeychainView.swift */; };
 		3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A0C6087242A5CC900F0FBC2 /* WalletKit */; };
+		3A188FEC257FF1A300957819 /* GiftCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */; };
+		3A188FF82582835600957819 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FF72582835600957819 /* Sharing.swift */; };
 		3A1D416E250957A00089FE63 /* MarketDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D416D250957A00089FE63 /* MarketDataView.swift */; };
 		3A1D4180250965730089FE63 /* MarketDataPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D417F250965730089FE63 /* MarketDataPublisher.swift */; };
 		3A211D1D2242AF0500C2A906 /* Bip38Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */; };
@@ -63,9 +65,13 @@
 		3A611A0C2322139D004B8E36 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0B2322139D004B8E36 /* Dot.swift */; };
 		3A611A0F2325738C004B8E36 /* AnimatedBlockSetLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */; };
 		3A65DE812447E9AF0025C56E /* AccountInitializationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */; };
+		3A6785F1256F2F1A0065F835 /* RedeemGiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */; };
+		3A6785FB257019220065F835 /* RedeemTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */; };
 		3A69884F24591F4A0084953D /* PayIdTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69884E24591F4A0084953D /* PayIdTests.swift */; };
 		3A69885E24591F890084953D /* PayId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A69885D24591F890084953D /* PayId.swift */; };
 		3A6A3C7E24DDC90300ACAC70 /* BackupSynchronizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */; };
+		3A6C13FF257D463300EA0689 /* GiftHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */; };
+		3A6C1406257D594A00EA0689 /* ShareGiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */; };
 		3A6CA703244239FD001833CA /* WalletInitializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6CA702244239FD001833CA /* WalletInitializer.swift */; };
 		3A6FD42D24E456B800068ECE /* KeyStoreUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD42C24E456B800068ECE /* KeyStoreUtils.swift */; };
 		3A6FD42F24E4570900068ECE /* KeyStore+CloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD42E24E4570900068ECE /* KeyStore+CloudBackup.swift */; };
@@ -86,6 +92,11 @@
 		3AEA2CAB24D3219200DA4C3A /* SelectBackupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */; };
 		3AEF7B72234A4E3C005BE184 /* RequestUrlTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */; };
 		3AF78B3B2523B05E00FBB280 /* FioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AF78B3A2523B05E00FBB280 /* FioTests.swift */; };
+		3AFAD9302567EE15005853E8 /* GiftViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD92F2567EE15005853E8 /* GiftViewController.swift */; };
+		3AFAD937256826F3005853E8 /* BorderedTextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD936256826F3005853E8 /* BorderedTextInput.swift */; };
+		3AFAD94825698A74005853E8 /* Gift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94725698A74005853E8 /* Gift.swift */; };
+		3AFAD94F25699112005853E8 /* TxGiftCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD94E25699112005853E8 /* TxGiftCell.swift */; };
+		3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
@@ -546,7 +557,6 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
-
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -566,6 +576,16 @@
 				754AE0B71DFCA870007FD001 /* libbz2.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AFAD90D25674F57005853E8 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed App Clips";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		75A2A7E21DA5934400A983D8 /* Embed Watch Content */ = {
@@ -640,6 +660,8 @@
 		22E773031EE7813000397E0E /* Bonjour.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bonjour.swift; path = src/Platform/Bonjour.swift; sourceTree = "<group>"; };
 		3A0063BD2509D36500C74A97 /* ExtendedTouchArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ExtendedTouchArea.swift; path = src/Views/ExtendedTouchArea.swift; sourceTree = "<group>"; };
 		3A0915C924D8B31100CDC6A4 /* EnableKeychainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EnableKeychainView.swift; path = src/CloudBackup/EnableKeychainView.swift; sourceTree = "<group>"; };
+		3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftCurrencyCell.swift; path = src/Gifting/GiftCurrencyCell.swift; sourceTree = "<group>"; };
+		3A188FF72582835600957819 /* Sharing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Sharing.swift; path = src/Gifting/Sharing.swift; sourceTree = "<group>"; };
 		3A1D416D250957A00089FE63 /* MarketDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MarketDataView.swift; path = src/Views/MarketDataView.swift; sourceTree = "<group>"; };
 		3A1D417F250965730089FE63 /* MarketDataPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MarketDataPublisher.swift; path = src/Utilities/MarketDataPublisher.swift; sourceTree = "<group>"; };
 		3A211D1C2242AF0500C2A906 /* Bip38Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip38Tests.swift; sourceTree = "<group>"; };
@@ -650,9 +672,13 @@
 		3A611A0B2322139D004B8E36 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dot.swift; path = src/Views/Dot.swift; sourceTree = "<group>"; };
 		3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnimatedBlockSetLogo.swift; path = src/AnimatedBlockSetLogo.swift; sourceTree = "<group>"; };
 		3A65DE802447E9AF0025C56E /* AccountInitializationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInitializationTests.swift; sourceTree = "<group>"; };
+		3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedeemGiftViewController.swift; sourceTree = "<group>"; };
+		3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RedeemTransitioningDelegate.swift; path = src/Views/RedeemTransitioningDelegate.swift; sourceTree = "<group>"; };
 		3A69884E24591F4A0084953D /* PayIdTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayIdTests.swift; sourceTree = "<group>"; };
 		3A69885D24591F890084953D /* PayId.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayId.swift; sourceTree = "<group>"; };
 		3A6A3C7D24DDC90300ACAC70 /* BackupSynchronizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BackupSynchronizer.swift; path = src/BackupSynchronizer.swift; sourceTree = "<group>"; };
+		3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftHeaderView.swift; path = src/Gifting/GiftHeaderView.swift; sourceTree = "<group>"; };
+		3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ShareGiftViewController.swift; path = src/Gifting/ShareGiftViewController.swift; sourceTree = "<group>"; };
 		3A6CA702244239FD001833CA /* WalletInitializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletInitializer.swift; sourceTree = "<group>"; };
 		3A6FD42C24E456B800068ECE /* KeyStoreUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyStoreUtils.swift; sourceTree = "<group>"; };
 		3A6FD42E24E4570900068ECE /* KeyStore+CloudBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "KeyStore+CloudBackup.swift"; sourceTree = "<group>"; };
@@ -673,6 +699,12 @@
 		3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBackupView.swift; path = src/CloudBackup/SelectBackupView.swift; sourceTree = "<group>"; };
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
 		3AF78B3A2523B05E00FBB280 /* FioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FioTests.swift; sourceTree = "<group>"; };
+		3AFAD8FE25674F56005853E8 /* BRDClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BRDClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3AFAD92F2567EE15005853E8 /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftViewController.swift; path = src/Gifting/GiftViewController.swift; sourceTree = "<group>"; };
+		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
+		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
+		3AFAD94E25699112005853E8 /* TxGiftCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TxGiftCell.swift; path = src/Gifting/TxGiftCell.swift; sourceTree = "<group>"; };
+		3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftingStatusUpdater.swift; path = src/Gifting/GiftingStatusUpdater.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
@@ -1155,6 +1187,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3AFAD8FB25674F56005853E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		75A2A78D1DA5934300A983D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1280,6 +1319,15 @@
 			name = BlockSetAnimation;
 			sourceTree = "<group>";
 		};
+		3A6785EF256F2EF70065F835 /* ReceiveGift */ = {
+			isa = PBXGroup;
+			children = (
+				3A6785F0256F2F1A0065F835 /* RedeemGiftViewController.swift */,
+				3A6785FA257019220065F835 /* RedeemTransitioningDelegate.swift */,
+			);
+			name = ReceiveGift;
+			sourceTree = "<group>";
+		};
 		3A6FD41E24E4568800068ECE /* KeyStore */ = {
 			isa = PBXGroup;
 			children = (
@@ -1331,6 +1379,21 @@
 				3ADE270B248F35B80023B770 /* ResolvedAddressLabel.swift */,
 			);
 			name = PayId;
+			sourceTree = "<group>";
+		};
+		3AFAD92E2567ED22005853E8 /* Gifting */ = {
+			isa = PBXGroup;
+			children = (
+				3AFAD92F2567EE15005853E8 /* GiftViewController.swift */,
+				3A6C13FE257D463300EA0689 /* GiftHeaderView.swift */,
+				3AFAD936256826F3005853E8 /* BorderedTextInput.swift */,
+				3AFAD94E25699112005853E8 /* TxGiftCell.swift */,
+				3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */,
+				3A6C1405257D594A00EA0689 /* ShareGiftViewController.swift */,
+				3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */,
+				3A188FF72582835600957819 /* Sharing.swift */,
+			);
+			name = Gifting;
 			sourceTree = "<group>";
 		};
 		710B035B21F6603C007E8A2A /* Utilities */ = {
@@ -1423,6 +1486,7 @@
 				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
 				22A9A9961DF63426000F0016 /* libbz2.framework */,
 				CEA7E67B1F09A9D2001F8C27 /* Screenshots.xctest */,
+				3AFAD8FE25674F56005853E8 /* BRDClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1448,6 +1512,8 @@
 				CE916E321EDA800E00D641D6 /* UserDefaultsUpdater.swift */,
 				75A2A79A1DA5934300A983D8 /* Assets.xcassets */,
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
+				3A6785EF256F2EF70065F835 /* ReceiveGift */,
+				3AFAD92E2567ED22005853E8 /* Gifting */,
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
@@ -1970,6 +2036,7 @@
 				7CBD57902107FAFA0042C388 /* PairedWalletIndex.swift */,
 				22A9A93D1DF61945000F0016 /* TxMetaData.swift */,
 				CE45C1FA1E74F89C002C3847 /* WalletInfo.swift */,
+				3AFAD94725698A74005853E8 /* Gift.swift */,
 			);
 			name = "KVStore Objects";
 			sourceTree = "<group>";
@@ -2219,6 +2286,23 @@
 			productReference = 22A9A9961DF63426000F0016 /* libbz2.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		3AFAD8FD25674F56005853E8 /* BRDClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */;
+			buildPhases = (
+				3AFAD8FA25674F56005853E8 /* Sources */,
+				3AFAD8FB25674F56005853E8 /* Frameworks */,
+				3AFAD8FC25674F56005853E8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BRDClip;
+			productName = BRDClip;
+			productReference = 3AFAD8FE25674F56005853E8 /* BRDClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
 		75A2A78F1DA5934300A983D8 /* breadwallet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
@@ -2233,6 +2317,7 @@
 				75A2A8031DA5935F00A983D8 /* Embed App Extensions */,
 				22A9A9831DF63288000F0016 /* Embed Frameworks */,
 				7CDC6A5521125C14004AE68E /* Thin Frameworks */,
+				3AFAD90D25674F57005853E8 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
@@ -2309,13 +2394,16 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = BR;
-				LastSwiftUpdateCheck = 0920;
+				LastSwiftUpdateCheck = 1220;
 				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = "Breadwinner AG";
 				TargetAttributes = {
 					22A9A9951DF63426000F0016 = {
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
+					};
+					3AFAD8FD25674F56005853E8 = {
+						CreatedOnToolsVersion = 12.2;
 					};
 					759DA0D71DAC8668008CC49B = {
 						CreatedOnToolsVersion = 8.0;
@@ -2401,12 +2489,20 @@
 				759DA0D71DAC8668008CC49B /* submodules */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
+				3AFAD8FD25674F56005853E8 /* BRDClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		22A9A9941DF63426000F0016 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3AFAD8FC25674F56005853E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2698,6 +2794,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		3AFAD8FA25674F56005853E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		75A2A78C1DA5934300A983D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2744,12 +2847,14 @@
 				2218BD771E8F55430091D5E8 /* BRAPIClient+Assets.swift in Sources */,
 				3AEA2C9C24D122EA00DA4C3A /* CloudBackupView.swift in Sources */,
 				22A9A94D1DF61945000F0016 /* BRHTTPFileMiddleware.swift in Sources */,
+				3A188FEC257FF1A300957819 /* GiftCurrencyCell.swift in Sources */,
 				CE8644251F2C160200033129 /* ConfirmationViewController.swift in Sources */,
 				7CBA74E820227D1300FBBFA9 /* MenuCell.swift in Sources */,
 				CEE9A2E920AB4F9A00C5CF2F /* BRAPIClient+Metrics.swift in Sources */,
 				CEBF32F01DDCD30600348FC6 /* AccountViewController.swift in Sources */,
 				CEE1F5631DF13E5A00D733AD /* ModalHeaderView.swift in Sources */,
 				9A39B1252202AE9E00E5018B /* MultiframeAnimation.swift in Sources */,
+				3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */,
 				CE5F21DB1E4A93A500C47B8E /* LoginTransitionDelegate.swift in Sources */,
 				71C44E942264BE2C00EF4459 /* BaseRecoveryKeyViewController.swift in Sources */,
 				CEAA9EA81DC3342E0066731D /* PinView.swift in Sources */,
@@ -2789,6 +2894,7 @@
 				7C72D13622662BB40091B185 /* Wallet.swift in Sources */,
 				CEC6F8451E886723000795B8 /* PaymentRequest.swift in Sources */,
 				CE274A611FD7C902000A4E62 /* RootNavigationController.swift in Sources */,
+				3A6C1406257D594A00EA0689 /* ShareGiftViewController.swift in Sources */,
 				CE4C1CC81ED88B600063E184 /* URLController.swift in Sources */,
 				CE20C9171DBE6F2A00C8397A /* UIButton+BRWAdditions.swift in Sources */,
 				CE3CDB9720D443CE007059F6 /* CutoutLabel.swift in Sources */,
@@ -2803,6 +2909,7 @@
 				CE0CD1591DBFBCF5004023DA /* ModalPresenter.swift in Sources */,
 				7CEA35D5232A9D1200FB58C4 /* Identifier.swift in Sources */,
 				CEE20C2F1EA3E5820086F724 /* BlinkingView.swift in Sources */,
+				3A6C13FF257D463300EA0689 /* GiftHeaderView.swift in Sources */,
 				CEC6AA441DEFCDE900EE5AFD /* ModalViewController.swift in Sources */,
 				CEF7D94622CE6AC000939D19 /* HistoryPeriodButton.swift in Sources */,
 				3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */,
@@ -2881,6 +2988,7 @@
 				22A9A94E1DF61945000F0016 /* BRHTTPIndexMiddleware.swift in Sources */,
 				71173059220CCC91001931B3 /* PromptView.swift in Sources */,
 				CE8CD8DD1E2D9EF200785E02 /* Sender.swift in Sources */,
+				3AFAD94825698A74005853E8 /* Gift.swift in Sources */,
 				CE4DFB2C1E9BE5880014009E /* ReScanViewController.swift in Sources */,
 				7C9724661FF07B9A004248C4 /* StatusPip.swift in Sources */,
 				7C35E712200AC2080064808F /* TxViewModel.swift in Sources */,
@@ -2890,6 +2998,7 @@
 				22A9A9551DF61945000F0016 /* BRTar.swift in Sources */,
 				CEAA9E971DC18E1F0066731D /* PhraseView.swift in Sources */,
 				3A6A3C7E24DDC90300ACAC70 /* BackupSynchronizer.swift in Sources */,
+				3AFAD937256826F3005853E8 /* BorderedTextInput.swift in Sources */,
 				CEF3E82F1DE534C5007C0A9E /* GradientView.swift in Sources */,
 				CE6D0F991DE8B75900BD4BCF /* DismissModalAnimator.swift in Sources */,
 				CE4C1CC61ED65D830063E184 /* DrawableCircle.swift in Sources */,
@@ -2904,6 +3013,7 @@
 				22A9A94C1DF61945000F0016 /* BRGeoLocationPlugin.swift in Sources */,
 				CEAA9EA61DC3246F0066731D /* StartNavigationDelegate.swift in Sources */,
 				7CBF4B6420081BCE00E003AA /* KeyedDecodingContainer+Additions.swift in Sources */,
+				3A188FF82582835600957819 /* Sharing.swift in Sources */,
 				22A9A94B1DF61945000F0016 /* BRCoding.swift in Sources */,
 				22A9A9561DF61945000F0016 /* BRWalletPlugin.swift in Sources */,
 				CE6B829A1FE3A7B6007A41B9 /* UIScrollView+Additions.swift in Sources */,
@@ -2916,8 +3026,10 @@
 				CEAA9E911DC0FDFE0066731D /* UIViewPropertyAnimator+BRWAdditions.swift in Sources */,
 				7C1931CD2327371A0061DE20 /* CoreDatabase.swift in Sources */,
 				22E773041EE7813000397E0E /* Bonjour.swift in Sources */,
+				3AFAD9302567EE15005853E8 /* GiftViewController.swift in Sources */,
 				7CE940E61FEB8A5F005A2B53 /* TxDetailRowCell.swift in Sources */,
 				3AB3EE0F227A23B400414616 /* ASADataFormatter.swift in Sources */,
+				3AFAD94F25699112005853E8 /* TxGiftCell.swift in Sources */,
 				CEAA9EA01DC2F9F50066731D /* UIFont+BRWAdditions.swift in Sources */,
 				CEF61B121ECF52C700C7EA6A /* AmountViewController.swift in Sources */,
 				CEBF32F21DDCE10D00348FC6 /* AccountHeaderView.swift in Sources */,
@@ -2950,8 +3062,10 @@
 				CE4DFB2E1E9C26DA0014009E /* ShareDataViewController.swift in Sources */,
 				CE1E5F261EF083A600BD0F72 /* ImportKeyViewController.swift in Sources */,
 				CE25BF931DFDA7A600BC67B6 /* MessageUIPresenter.swift in Sources */,
+				3A6785FB257019220065F835 /* RedeemTransitioningDelegate.swift in Sources */,
 				CE20C90C1DBC59E600C8397A /* StartFlowPresenter.swift in Sources */,
 				CE20C8FC1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift in Sources */,
+				3A6785F1256F2F1A0065F835 /* RedeemGiftViewController.swift in Sources */,
 				9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */,
 				CEA3626A1E01150D0061FC0E /* CGContext+Additions.swift in Sources */,
 				7C6ACCB41FEB34470028ABFA /* TxLabelCell.swift in Sources */,
@@ -3181,6 +3295,260 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		3AFAD91025674F57005853E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		3AFAD91125674F57005853E8 /* Debug-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug-Internal";
+		};
+		3AFAD91225674F57005853E8 /* Debug-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Debug-Testnet";
+		};
+		3AFAD91325674F57005853E8 /* Screenshots */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Screenshots;
+		};
+		3AFAD91425674F57005853E8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		3AFAD91525674F57005853E8 /* Release-Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release-Testflight";
+		};
+		3AFAD91625674F57005853E8 /* Release-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release-Internal";
+		};
+		3AFAD91725674F57005853E8 /* Release-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = BRDClip/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 4.5.4;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = "Release-Testnet";
 		};
 		759DA0D81DAC8668008CC49B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -4786,6 +5154,21 @@
 				CEE0EF611EBF8D7F0018DB36 /* Release-Testflight */,
 				7CF5934A21B9B15D00A49FED /* Release-Internal */,
 				7CF5935621B9C1AD00A49FED /* Release-Testnet */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3AFAD91025674F57005853E8 /* Debug */,
+				3AFAD91125674F57005853E8 /* Debug-Internal */,
+				3AFAD91225674F57005853E8 /* Debug-Testnet */,
+				3AFAD91325674F57005853E8 /* Screenshots */,
+				3AFAD91425674F57005853E8 /* Release */,
+				3AFAD91525674F57005853E8 /* Release-Testflight */,
+				3AFAD91625674F57005853E8 /* Release-Internal */,
+				3AFAD91725674F57005853E8 /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -19,6 +19,15 @@ extension NetworkFee {
 
 /// Wrapper for BRCrypto Wallet
 class Wallet {
+    
+    // MARK: Init
+    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
+        print("[gifting] wallet init for: \(currency.code)")
+        self.core = core
+        self.currency = currency
+        self.system = system
+    }
+    
     enum CreateTransferError: Error {
         case invalidAddress
         case invalidAmountOrFee
@@ -27,7 +36,20 @@ class Wallet {
     let currency: Currency
     private let core: WalletKit.Wallet
     private unowned let system: CoreSystem
-
+    lazy private var giftingStatusUpdater: GiftingStatusUpdater = {
+        return GiftingStatusUpdater(wallet: self)
+    }()
+    
+    func startGiftingMonitor() {
+        let giftTxns = transfers.filter({ $0.metaData?.gift != nil })
+        guard let kvStore = Backend.kvStore else { return }
+        giftingStatusUpdater.monitor(txns: giftTxns, kvStore: kvStore)
+    }
+    
+    func stopGiftingMonitor() {
+        
+    }
+    
     // MARK: - Network
     
     var manager: WalletManager {
@@ -80,7 +102,7 @@ class Wallet {
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return }
         let networkFee = feeForLevel(level: fee)
-        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
+        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: nil, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)
                 return
@@ -213,6 +235,10 @@ class Wallet {
     func unsubscribeManager(_ subscriber: Subscriber) {
         managerSubscriptions.removeValue(forKey: subscriber.hashValue)
     }
+    
+    func createExportablePaperWallet() -> Result<ExportablePaperWallet, ExportablePaperWalletError> {
+        return manager.createExportablePaperWallet()
+    }
 
     private func publishEvent(_ event: WalletEvent) {
         DispatchQueue.main.async { [weak self] in
@@ -228,14 +254,6 @@ class Wallet {
                 .flatMap { $0.value }
                 .forEach { $0(event) }
         }
-    }
-
-    // MARK: Init
-
-    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
-        self.core = core
-        self.currency = currency
-        self.system = system
     }
 }
 

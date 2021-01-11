@@ -95,7 +95,8 @@ class URLController: Trackable, Subscriber {
 
             case "debug":
                 handleDebugLink(url)
-                
+            case "gift":
+                handleGiftUrl(url: url)
             default:
                 print("unknown deep link: \(target)")
             }
@@ -184,6 +185,10 @@ class URLController: Trackable, Subscriber {
 
     private func present(alert: UIAlertController) {
         Store.trigger(name: .showAlert(alert))
+    }
+    
+    private func handleGiftUrl(url: URL) {
+        Store.trigger(name: .handleGift(url))
     }
 }
 

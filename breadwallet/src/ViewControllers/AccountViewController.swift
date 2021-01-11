@@ -32,10 +32,9 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
         footerView.receiveCallback = { [unowned self] in
             Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.buyCallback = { [unowned self] in
-            Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
-        footerView.sellCallback = { [unowned self] in
-            Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
+        footerView.giftCallback = {
+            Store.perform(action: RootModalActions.Present(modal: .gift))
+        }
     }
     
     deinit {
@@ -128,15 +127,18 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        wallet?.startGiftingMonitor()
         if shouldAnimateRewardsView {
             expandRewardsView()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.footerView.jiggle()
         }
         
         saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.appeared.name]))
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         footerHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
         createFooterHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
