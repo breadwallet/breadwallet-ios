@@ -21,7 +21,8 @@ struct CloudBackupView: View {
     @SwiftUI.State private var didSeeFirstToggle = false
     @SwiftUI.State private var didEnableKeyChain = false
     @SwiftUI.State private var showingDisableAlert = false
-  
+    @SwiftUI.State private var didToggleOffDuringOnboarding = false
+    
     private let synchronizer: BackupSynchronizer
     
     init(synchronizer: BackupSynchronizer) {
@@ -36,7 +37,7 @@ struct CloudBackupView: View {
             .if(isBackupOnAtLoad) {
                 self.addAlert(content: $0)
             }
-            .if(!isBackupOnAtLoad) {
+            .if(!isBackupOnAtLoad || self.synchronizer.context == .onboarding) {
                 self.addSheet(content: $0)
             }
             .if(self.synchronizer.context == .onboarding) {
@@ -50,13 +51,27 @@ struct CloudBackupView: View {
                 .fill(Color(Theme.primaryBackground))
             VStack {
                 CloudBackupViewBody()
-                Toggle(isOn: $isBackupOn) {
-                    Text(S.CloudBackup.mainToggleTitle)
-                        .font(Font(Theme.body1))
-                        .foregroundColor(Color(Theme.secondaryText))
-                }.onReceive(Just(isBackupOn), perform: self.onToggleChange)
+                if #available(iOS 14, *) {
+                    Toggle(isOn: $isBackupOn) {
+                        Text(S.CloudBackup.mainToggleTitle)
+                            .font(Font(Theme.body1))
+                            .foregroundColor(Color(Theme.secondaryText))
+                    }
+                    .toggleStyle(SwitchToggleStyle(tint: Color(Theme.accent)))
+                    .onReceive(Just(isBackupOn), perform: self.onToggleChange)
                     .if(!E.isIPhone5, content: { $0.padding() })
                     .if(E.isIPhone5, content: { $0.padding([.leading, .trailing]) })
+                } else {
+                    Toggle(isOn: $isBackupOn) {
+                        Text(S.CloudBackup.mainToggleTitle)
+                            .font(Font(Theme.body1))
+                            .foregroundColor(Color(Theme.secondaryText))
+                    }
+                    .onReceive(Just(isBackupOn), perform: self.onToggleChange)
+                    .if(!E.isIPhone5, content: { $0.padding() })
+                    .if(E.isIPhone5, content: { $0.padding([.leading, .trailing]) })
+                }
+                
                 HStack {
                     Image(systemName: "exclamationmark.circle")
                         .resizable()
@@ -72,6 +87,25 @@ struct CloudBackupView: View {
                 }.background(Color(Theme.secondaryBackground))
                 .cornerRadius(4.0)
                 .padding()
+                if self.synchronizer.context == .onboarding {
+                    Button(action: {
+                        if !didToggleOffDuringOnboarding {
+                            self.showingDetail = true
+                        } else {
+                            self.synchronizer.completion?()
+                        }
+                    }, label: {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 4.0)
+                                .fill(Color(Theme.accent))
+                            Text(S.Button.continueAction)
+                                .font(Font(Theme.body1))
+                                .foregroundColor(Color(Theme.primaryText))
+                        }
+                    })
+                    .frame(height: 44.0)
+                    .padding([.leading, .trailing, .bottom])
+                }
             }
         }
         .edgesIgnoringSafeArea(.all)
@@ -112,6 +146,10 @@ struct CloudBackupView: View {
         //SWIFTUI:HACK - onReceive gets called at launch - we want to ignore the first result
         guard didSeeFirstToggle else { didSeeFirstToggle = true; return }
 
+        if synchronizer.context == .onboarding && value == false {
+            didToggleOffDuringOnboarding = true
+        }
+        
         //Turn off mode
         if isBackupOnAtLoad {
             if value == false && !didToggle {

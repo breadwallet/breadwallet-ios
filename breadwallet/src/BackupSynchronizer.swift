@@ -28,6 +28,11 @@ class BackupSynchronizer {
         self.context = context
         self.keyStore = keyStore
         self.navController = navController
+        if context == .onboarding {
+            enableBackup(callback: { success in
+                print("[CloudBackups] Enabled backup during onboarding: \(success)")
+            })
+        }
     }
     
     var isBackedUp: Bool {
