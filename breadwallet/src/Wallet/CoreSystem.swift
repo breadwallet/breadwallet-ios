@@ -17,6 +17,7 @@ class CoreSystem: Subscriber, Trackable {
     private let queue = DispatchQueue(label: "com.brd.CoreSystem", qos: .utility)
     private let listenerQueue = DispatchQueue(label: "com.brd.CoreSystem.listener", qos: .utility)
     private let keyStore: KeyStore
+    fileprivate var btcWalletCreationCallback: (() -> Void)?
     
     // MARK: Wallets + Currencies
 
@@ -63,7 +64,8 @@ class CoreSystem: Subscriber, Trackable {
     }
     
     /// Creates and configures the System with the Account and BDB authentication token.
-    func create(account: Account, authToken: String?) {
+    func create(account: Account, authToken: String?, btcWalletCreationCallback: @escaping () -> Void) {
+        self.btcWalletCreationCallback = btcWalletCreationCallback
         guard let kvStore = Backend.kvStore else { return assertionFailure() }
         print("[SYS] create | account timestamp: \(account.timestamp)")
         assert(self.system == nil)
@@ -528,6 +530,10 @@ class CoreSystem: Subscriber, Trackable {
         DispatchQueue.main.async {
             let walletState = self.walletState(for: wallet, displayOrder: displayOrder)
             Store.perform(action: WalletChange(wallet.currency).set(walletState))
+            if wallet.currency.isBitcoin {
+                //At this point Currencies.btc.wallet != nil
+                self.btcWalletCreationCallback?()
+            }
         }
     }
     
@@ -650,6 +656,9 @@ extension CoreSystem: SystemListener {
 
     func handleManagerEvent(system: System, manager: WalletKit.WalletManager, event: WalletManagerEvent) {
         print("[SYS] \(manager.network) manager event: \(event)")
+        if manager.network.name == "Tezos" {
+            print("[TEZOS] manager event: \(event)")
+        }
         switch event {
         case .created:
             break
@@ -747,6 +756,9 @@ extension CoreSystem: SystemListener {
 
     func handleWalletEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, event: WalletEvent) {
         print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+        if manager.network.name == "Tezos" {
+            print("[TEZOS] wallet event: \(event)")
+        }
         switch event {
         case .created:
             if let wallet = addWallet(wallet) {

@@ -9,6 +9,8 @@
 import UIKit
 import LocalAuthentication
 import SwiftUI
+import WalletKit
+
 // swiftlint:disable type_body_length
 // swiftlint:disable cyclomatic_complexity
 
@@ -167,6 +169,37 @@ class ModalPresenter: Subscriber, Trackable {
                 self?.presentPlatformWebViewController(url)
             }
         }
+        
+        Store.subscribe(self, name: .handleGift(URL(string: "foo.com")!)) { [weak self] in
+            guard let trigger = $0 else { return }
+            if case let .handleGift(url) = trigger {
+                if let gift = QRCode(url: url, viewModel: nil) {
+                    self?.handleGift(qrCode: gift)
+                }
+            }
+        }
+        
+        Store.subscribe(self, name: .reImportGift(nil)) { [weak self] in
+            guard let trigger = $0 else { return }
+            if case let .reImportGift(viewModel) = trigger {
+                guard let gift = viewModel?.gift else { return assertionFailure() }
+                let code = QRCode(url: URL(string: gift.url!)!, viewModel: viewModel)
+                guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
+                self?.presentKeyImport(wallet: wallet, scanResult: code)
+            }
+        }
+    }
+    
+    private func handleGift(qrCode: QRCode) {
+        guard let wallet = Currencies.btc.instance?.wallet else { return }
+        guard case .gift(let key, _) = qrCode else { return }
+        guard let privKey = Key.createFromString(asPrivate: key) else { return }
+        wallet.createSweeper(forKey: privKey) { result in
+            DispatchQueue.main.async {
+                let giftView = RedeemGiftViewController(qrCode: qrCode, wallet: wallet, sweeperResult: result)
+                self.topViewController?.present(giftView, animated: true, completion: nil)
+            }
+        }
     }
 
     private func presentModal(_ type: RootModal) {
@@ -244,7 +277,62 @@ class ModalPresenter: Subscriber, Trackable {
         case .receiveLegacy:
             guard let btc = Currencies.btc.instance else { return nil }
             return makeReceiveView(currency: btc, isRequestAmountVisible: false, isBTCLegacy: true)
+        case .gift :
+            guard let currency = Currencies.btc.instance else { return nil }
+            guard let wallet = system.wallet(for: currency),
+                let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+            let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
+            let giftView = GiftViewController(sender: sender, wallet: wallet, currency: currency)
+            
+            giftView.presentVerifyPin = { [weak self, weak giftView] bodyText, success in
+                guard let `self` = self else { return }
+                let vc = VerifyPinViewController(bodyText: bodyText,
+                                                 pinLength: Store.state.pinLength,
+                                                 walletAuthenticator: self.keyStore,
+                                                 pinAuthenticationType: .transactions,
+                                                 success: success)
+                vc.transitioningDelegate = self.verifyPinTransitionDelegate
+                vc.modalPresentationStyle = .overFullScreen
+                vc.modalPresentationCapturesStatusBarAppearance = true
+                giftView?.view.isFrameChangeBlocked = true
+                giftView?.present(vc, animated: true, completion: nil)
+            }
+            giftView.onPublishSuccess = { [weak self] in
+                self?.saveEvent("gift.send")
+                self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
+            }
+            
+            topViewController?.present(giftView, animated: true, completion: {
+                Store.perform(action: RootModalActions.Present(modal: .none))
+            })
+            return nil
+        case .stake(let currency):
+            return makeStakeView(currency: currency)
         }
+    }
+
+    private func makeStakeView(currency: Currency) -> UIViewController? {
+        guard let wallet = system.wallet(for: currency),
+            let kvStore = Backend.kvStore else { assertionFailure(); return nil }
+        let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
+        let stakeView = StakeViewController(currency: currency, sender: sender)
+        stakeView.presentVerifyPin = { [weak self, weak stakeView] bodyText, success in
+            guard let `self` = self else { return }
+            let vc = VerifyPinViewController(bodyText: bodyText,
+                                             pinLength: Store.state.pinLength,
+                                             walletAuthenticator: self.keyStore,
+                                             pinAuthenticationType: .transactions,
+                                             success: success)
+            vc.transitioningDelegate = self.verifyPinTransitionDelegate
+            vc.modalPresentationStyle = .overFullScreen
+            vc.modalPresentationCapturesStatusBarAppearance = true
+            stakeView?.view.isFrameChangeBlocked = true
+            stakeView?.present(vc, animated: true, completion: nil)
+        }
+        stakeView.onPublishSuccess = { [weak self] in
+            self?.alertPresenter?.presentAlert(.sendSuccess, completion: {})
+        }
+        return ModalViewController(childViewController: stakeView)
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {
@@ -328,6 +416,8 @@ class ModalPresenter: Subscriber, Trackable {
                 UIApplication.shared.open(url)
             case .invalid:
                 break
+            case .gift:
+                self.handleGift(qrCode: scanResult)
             }
         }
     }
@@ -1020,12 +1110,8 @@ class ModalPresenter: Subscriber, Trackable {
                                                  displayFeeLevel: displayFeeLevel,
                                                  address: address,
                                                  isUsingBiometrics: false,
-                                                 currency: currency)
-        let transitionDelegate = PinTransitioningDelegate()
-        transitionDelegate.shouldShowMaskView = true
-        confirm.transitioningDelegate = transitionDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
+                                                 currency: currency,
+                                                 shouldShowMaskView: true)
         confirm.successCallback = {
             callback(true)
         }

@@ -102,9 +102,9 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
                             self.rate = state[self.currency]?.currentRate
         })
         
-        Store.subscribe(self, name: .txMemoUpdated("")) { [weak self] trigger in
+        Store.subscribe(self, name: .txMetaDataUpdated("")) { [weak self] trigger in
             guard let trigger = trigger else { return }
-            if case .txMemoUpdated(let txHash) = trigger {
+            if case .txMetaDataUpdated(let txHash) = trigger {
                 _ = self?.reload(txHash: txHash)
             }
         }
@@ -115,7 +115,6 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         wallet?.subscribe(self) { [weak self] event in
             guard let `self` = self else { return }
             DispatchQueue.main.async {
-                print("[TXLIST] \(Date()) \(self.wallet?.currency.code ?? "") wallet event: \(event)")
                 switch event {
                 case .balanceUpdated, .transferAdded, .transferDeleted:
                     self.updateTransactions()
@@ -135,7 +134,7 @@ class TransactionsTableViewController: UITableViewController, Subscriber, Tracka
         wallet?.subscribeManager(self) { [weak self] event in
             guard let `self` = self else { return }
             DispatchQueue.main.async {
-                if case .blockUpdated(_) = event {
+                if case .blockUpdated = event {
                     self.updateTransactions()
                 }
             }

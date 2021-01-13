@@ -37,6 +37,16 @@ extension UIButton {
         button.layer.masksToBounds = true
         return button
     }
+    
+    static func rounded(image: String) -> UIButton {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(named: image), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .transparentWhite
+        button.layer.cornerRadius = 5
+        button.layer.masksToBounds = true
+        return button
+    }
 
     static func outline(title: String) -> UIButton {
         let button = UIButton(type: .system)

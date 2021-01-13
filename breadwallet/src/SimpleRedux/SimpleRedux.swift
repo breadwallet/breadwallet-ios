@@ -60,7 +60,7 @@ enum TriggerName {
     case showAlert(UIAlertController?)
     case didWipeWallet
     case didUpgradePin
-    case txMemoUpdated(String)
+    case txMetaDataUpdated(String)
     case promptShareData
     case didWritePaperKey
     case wipeWalletNoPrompt
@@ -73,7 +73,8 @@ enum TriggerName {
     case showInAppNotification(BRDMessage?)
     case didSyncKVStore
     case createAccount(Currency?, ((Wallet?) -> Void)?)
-    
+    case handleGift(URL)
+    case reImportGift(TxViewModel?)
 } //NB : remember to add to triggers to == fuction below
 
 extension TriggerName: Equatable {}
@@ -118,7 +119,7 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
         return true
     case (.didUpgradePin, .didUpgradePin):
         return true
-    case (.txMemoUpdated, .txMemoUpdated):
+    case (.txMetaDataUpdated, .txMetaDataUpdated):
         return true
     case (.promptShareData, .promptShareData):
         return true
@@ -143,6 +144,10 @@ func == (lhs: TriggerName, rhs: TriggerName) -> Bool {
     case (.didSyncKVStore, .didSyncKVStore):
         return true
     case (.createAccount, .createAccount):
+        return true
+    case (.handleGift, .handleGift):
+        return true
+    case (.reImportGift, .reImportGift):
         return true
     default:
         return false

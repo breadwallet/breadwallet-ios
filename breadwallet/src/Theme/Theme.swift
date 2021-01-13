@@ -113,6 +113,10 @@ class Theme: BRDTheme {
         return font(.h3Title, .title3)
     }
     
+    static var boldTitle: UIFont {
+        return UIFont(name: FontName.bold.rawValue, size: 16.0) ?? UIFont.header
+    }
+    
     static var body1: UIFont {
         return font(.body1, .body )
     }

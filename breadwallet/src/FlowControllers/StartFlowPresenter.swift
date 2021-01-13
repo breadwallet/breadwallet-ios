@@ -24,18 +24,20 @@ class StartFlowPresenter: Subscriber, Trackable {
     private let loginTransitionDelegate = LoginTransitionDelegate()
     private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)
     private var onboardingCompletionHandler: LoginCompletionHandler?
-    
-    private let startupScreen = StartupScreen()
+    private let shouldDisableBiometrics: Bool
+    private var startupScreen: StartupScreen? = StartupScreen()
     
     // MARK: - Public
 
     init(keyMaster: KeyStore,
-         rootViewController: RootNavigationController, 
+         rootViewController: RootNavigationController,
+         shouldDisableBiometrics: Bool,
          createHomeScreen: @escaping (UINavigationController) -> HomeScreenViewController) {
         self.keyMaster = keyMaster
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
+        self.shouldDisableBiometrics = shouldDisableBiometrics
         
         // no onboarding, make home screen visible after unlock
         if !keyMaster.noWallet {
@@ -54,11 +56,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func pushStartupScreen() {
-        rootViewController.pushViewController(self.startupScreen, animated: false)
+        guard let startupScreen = self.startupScreen else { return }
+        rootViewController.pushViewController(startupScreen, animated: false)
     }
     
     private func popStartupScreen() {
         rootViewController.popViewController(animated: false)
+        DispatchQueue.main.async { [weak self] in
+            self?.startupScreen = nil
+        }
     }
     
     /// Onboarding
@@ -328,7 +334,8 @@ class StartFlowPresenter: Subscriber, Trackable {
 
     private func presentLoginFlow(for context: LoginViewController.Context) {
         let loginView = LoginViewController(for: context,
-                                            keyMaster: keyMaster)
+                                            keyMaster: keyMaster,
+                                            shouldDisableBiometrics: shouldDisableBiometrics)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true

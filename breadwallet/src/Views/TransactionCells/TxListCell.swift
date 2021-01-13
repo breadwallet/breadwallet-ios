@@ -57,6 +57,7 @@ class TxListCell: UITableViewCell {
             if #available(iOS 13, *) {
                 timestamp.isHidden = false
                 NSLayoutConstraint.activate(completeConstraints)
+                NSLayoutConstraint.deactivate(pendingConstraints)
             } else {
                 timestamp.isHidden = true
                 NSLayoutConstraint.deactivate(completeConstraints)
@@ -69,6 +70,7 @@ class TxListCell: UITableViewCell {
             timestamp.isHidden = false
             if #available(iOS 13, *) {
                 NSLayoutConstraint.activate(completeConstraints)
+                NSLayoutConstraint.deactivate(pendingConstraints)
             } else {
                 NSLayoutConstraint.deactivate(pendingConstraints)
                 NSLayoutConstraint.activate(completeConstraints)

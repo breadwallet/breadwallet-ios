@@ -261,7 +261,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
         guard let address = address else { return }
         guard let amount = amount else { return }
-        sender.estimateFee(address: address, amount: amount, tier: feeLevel) { self.handleFeeEstimationResult($0) }
+        sender.estimateFee(address: address, amount: amount, tier: feeLevel, isStake: false) { self.handleFeeEstimationResult($0) }
         updateLimits()
     }
     
@@ -535,28 +535,23 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         let feeCurrency = sender.wallet.feeCurrency
         let fee = Amount(cryptoAmount: feeBasis.fee, currency: feeCurrency)
         
-        let displyAmount = Amount(amount: amount,
+        let displayAmount = Amount(amount: amount,
                                   rate: amountView.selectedRate,
                                   maximumFractionDigits: Amount.highPrecisionDigits)
         let feeAmount = Amount(amount: fee,
                                rate: (amountView.selectedRate != nil) ? feeCurrency.state?.currentRate : nil,
                                maximumFractionDigits: Amount.highPrecisionDigits)
 
-        let confirm = ConfirmationViewController(amount: displyAmount,
+        let confirm = ConfirmationViewController(amount: displayAmount,
                                                  fee: feeAmount,
                                                  displayFeeLevel: feeLevel,
                                                  address: address,
                                                  isUsingBiometrics: sender.canUseBiometrics,
                                                  currency: currency,
-                                                 resolvedAddress: resolvedAddress)
+                                                 resolvedAddress: resolvedAddress,
+                                                 shouldShowMaskView: false)
         confirm.successCallback = send
         confirm.cancelCallback = sender.reset
-        
-        confirmTransitioningDelegate.shouldShowMaskView = false
-        confirm.transitioningDelegate = confirmTransitioningDelegate
-        confirm.modalPresentationStyle = .overFullScreen
-        confirm.modalPresentationCapturesStatusBarAppearance = true
-
         present(confirm, animated: true, completion: nil)
         return
     }

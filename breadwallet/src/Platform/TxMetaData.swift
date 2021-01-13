@@ -10,7 +10,7 @@ import Foundation
 
 /// Stores additional information about a given transaction
 final class TxMetaData: BRKVStoreObject, Codable {
-    var classVersion: Int = 3
+    var classVersion: Int = 4
     
     var blockHeight: Int = 0
     var exchangeRate: Double = 0
@@ -21,6 +21,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
     var deviceId: String = ""
     var comment = ""
     var tokenTransfer = ""
+    var isReceivedGift: Bool = false
+    var gift: Gift?
     
     enum CodingKeys: String, CodingKey {
         case classVersion
@@ -33,6 +35,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
         case created = "c"
         case comment = "comment"
         case tokenTransfer = "tokenTransfer"
+        case isReceivedGift = "isReceivedGift"
+        case gift = "gift"
     }
 
     required init(from decoder: Decoder) throws {
@@ -50,8 +54,18 @@ final class TxMetaData: BRKVStoreObject, Codable {
         created = try container.decode(Date.self, forKey: .created)
         comment = try container.decode(String.self, forKey: .comment)
 
+        if !comment.isEmpty {
+            print("[gifting] error: \(comment)")
+        }
+        
         //tokenTransfer is sometimes not present in TxMetaData from Android so we shouldn't throw if it doesn't exist
         tokenTransfer = (try? container.decode(String.self, forKey: .tokenTransfer)) ?? ""
+        isReceivedGift = (try? container.decode(Bool.self, forKey: .isReceivedGift)) ?? false
+        do {
+            gift = try container.decode(Gift.self, forKey: .gift)
+        } catch let e {
+            print("[gifting] error: \(e)")
+        }
         super.init(key: "", version: 0, lastModified: Date(), deleted: true, data: Data())
     }
 
@@ -83,7 +97,9 @@ final class TxMetaData: BRKVStoreObject, Codable {
          feeRate: Double?,
          deviceId: String,
          comment: String?,
-         tokenTransfer: String?) {
+         tokenTransfer: String?,
+         isReceivedGift: Bool = false,
+         gift: Gift? = nil) {
         print("[TxMetaData] new \(key) \(transaction.created?.description ?? "now")")
         super.init(key: key,
                    version: 0,
@@ -105,6 +121,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
         }
 
         self.tokenTransfer = tokenTransfer ?? ""
+        self.isReceivedGift = isReceivedGift
+        self.gift = gift
     }
     
     override func getData() -> Data? {
@@ -126,6 +144,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
         deviceId = s.deviceId
         comment = s.comment
         tokenTransfer = s.tokenTransfer
+        isReceivedGift = s.isReceivedGift
+        gift = s.gift
     }
     
     // MARK: -
@@ -137,6 +157,8 @@ final class TxMetaData: BRKVStoreObject, Codable {
                        comment: String?,
                        feeRate: Double?,
                        tokenTransfer: String?,
+                       isReceivedGift: Bool,
+                       gift: Gift?,
                        kvStore: BRReplicatedKVStore) -> TxMetaData {
         let newData = TxMetaData(key: key,
                                  transaction: tx,
@@ -145,8 +167,11 @@ final class TxMetaData: BRKVStoreObject, Codable {
                                  feeRate: feeRate ?? 0.0,
                                  deviceId: UserDefaults.deviceID,
                                  comment: comment,
-                                 tokenTransfer: tokenTransfer)
+                                 tokenTransfer: tokenTransfer,
+                                 isReceivedGift: isReceivedGift,
+                                 gift: gift)
         do {
+            print("[gifting] create tx metadata: \(gift != nil)")
             _ = try kvStore.set(newData)
         } catch let error {
             print("[TxMetaData] could not create metadata: \(error)")
@@ -160,6 +185,17 @@ final class TxMetaData: BRKVStoreObject, Codable {
             return try kvStore.set(self) as? TxMetaData
         } catch let error {
             print("[TxMetaData] could not update metadata: \(error)")
+            return nil
+        }
+    }
+    
+    func updateGift(gift: Gift, kvStore: BRReplicatedKVStore) -> TxMetaData? {
+        self.gift = gift
+        do {
+            print("[gifting] updated tx metadata")
+            return try kvStore.set(self) as? TxMetaData
+        } catch let error {
+            print("[gifting] could not update metadata: \(error)")
             return nil
         }
     }

@@ -19,15 +19,38 @@ extension NetworkFee {
 
 /// Wrapper for BRCrypto Wallet
 class Wallet {
+    
+    // MARK: Init
+    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
+        print("[gifting] wallet init for: \(currency.code)")
+        self.core = core
+        self.currency = currency
+        self.system = system
+    }
+    
     enum CreateTransferError: Error {
         case invalidAddress
         case invalidAmountOrFee
+        case internalError
     }
     
     let currency: Currency
     private let core: WalletKit.Wallet
     private unowned let system: CoreSystem
-
+    lazy private var giftingStatusUpdater: GiftingStatusUpdater = {
+        return GiftingStatusUpdater(wallet: self)
+    }()
+    
+    func startGiftingMonitor() {
+        let giftTxns = transfers.filter({ $0.metaData?.gift != nil })
+        guard let kvStore = Backend.kvStore else { return }
+        giftingStatusUpdater.monitor(txns: giftTxns, kvStore: kvStore)
+    }
+    
+    func stopGiftingMonitor() {
+        
+    }
+    
     // MARK: - Network
     
     var manager: WalletManager {
@@ -77,10 +100,22 @@ class Wallet {
     public func estimateFee (address: String,
                              amount: Amount,
                              fee: FeeLevel,
+                             isStake: Bool,
                              completion: @escaping (TransferFeeBasis?) -> Void) {
         guard let target = WalletKit.Address.create(string: address, network: core.manager.network) else { return }
         let networkFee = feeForLevel(level: fee)
-        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, completion: { result in
+        
+        //Stake/Unstake transactions need the DelegationOp attributed or else the
+        //estimate fee call will fail
+        var attributes: Set<TransferAttribute>?
+        if isStake {
+            if let delegationAttribute = core.transferAttributes.first(where: { $0.key == "DelegationOp" }) {
+                delegationAttribute.value = "1"
+                attributes = Set([delegationAttribute])
+            }
+        }
+        
+        core.estimateFee(target: target, amount: amount.cryptoAmount, fee: networkFee, attributes: attributes, completion: { result in
             guard case let .success(feeBasis) = result else {
                 completion(nil)
                 return
@@ -140,6 +175,35 @@ class Wallet {
         //TODO:CRYPTO need WalletKit.Wallet interface -- this only works for single-address networks
         return core.target == Address.create(string: address, network: core.manager.network)
     }
+    
+    // Returns the staked validator address or nil
+    // if this wallet isn't staked
+    var stakedValidatorAddress: String? {        
+        guard let mostRecentDelegation = transfers.first(where: {
+            if $0.transfer.attributes.first(where: { $0.key == "delegate" }) != nil {
+                //Is stake Transaction
+                return true
+            } else {
+                //Is unstake transaction
+                if $0.transfer.attributes.first(where: { $0.key == "type" && $0.value == "DELEGATION" }) != nil {
+                    return true
+                //Not a stake or unstake transaction
+                } else {
+                    return false
+                }
+            }
+        }) else { return nil }
+        guard let attribute = mostRecentDelegation.transfer.attributes.first(where: { $0.key == "delegate" }) else { return nil }
+        return attribute.value
+    }
+    
+    var isStaked: Bool {
+        return stakedValidatorAddress != nil
+    }
+    
+    var hasPendingTxn: Bool {
+        return !transfers.filter({ $0.isPending }).isEmpty
+    }
 
     // MARK: Sending
 
@@ -193,6 +257,25 @@ class Wallet {
         return PaymentProtocolRequest.create(wallet: core, forBitPay: jsonData)
     }
 
+    // MARK: Staking
+    
+    func stake(address: String?, feeBasis: TransferFeeBasis) -> CreateTransferResult {
+        guard let address = address else { return .failure(.invalidAddress) }
+        guard let target = Address.create(string: address, network: core.manager.network) else {
+            return .failure(.invalidAddress)
+        }
+        guard let delegationAttribute = core.transferAttributes.first(where: { $0.key == "DelegationOp" }) else {
+            return .failure(.internalError) }
+        delegationAttribute.value = "1"
+        guard let transfer = core.createTransfer(target: target,
+                                                 amount: Amount.zero(currency).cryptoAmount,
+                                                 estimatedFeeBasis: feeBasis,
+                                                 attributes: Set([delegationAttribute])) else {
+            return .failure(.invalidAmountOrFee)
+        }
+        return .success(transfer)
+    }
+    
     // MARK: Event Subscriptions
 
     private var subscriptions: [Int: [WalletEventCallback]] = [:]
@@ -213,6 +296,10 @@ class Wallet {
     func unsubscribeManager(_ subscriber: Subscriber) {
         managerSubscriptions.removeValue(forKey: subscriber.hashValue)
     }
+    
+    func createExportablePaperWallet() -> Result<ExportablePaperWallet, ExportablePaperWalletError> {
+        return manager.createExportablePaperWallet()
+    }
 
     private func publishEvent(_ event: WalletEvent) {
         DispatchQueue.main.async { [weak self] in
@@ -228,14 +315,6 @@ class Wallet {
                 .flatMap { $0.value }
                 .forEach { $0(event) }
         }
-    }
-
-    // MARK: Init
-
-    init(core: WalletKit.Wallet, currency: Currency, system: CoreSystem) {
-        self.core = core
-        self.currency = currency
-        self.system = system
     }
 }
 

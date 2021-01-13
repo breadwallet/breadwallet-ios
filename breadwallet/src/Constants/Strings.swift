@@ -922,4 +922,8 @@ enum S {
         static let marketCap = NSLocalizedString("MarketData.marketCap", value: "Market Cap", comment: "")
         static let volume = NSLocalizedString("MarketData.volume", value: "Trading Volume", comment: "")
     }
+    
+    enum Staking {
+        static let stakingTitle = NSLocalizedString("Staking.stakingTitle", value: "Staking", comment: "")
+    }
 }
