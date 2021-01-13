@@ -49,7 +49,7 @@ struct FeeBasis {
 
 /// Wrapper for BRCrypto Transfer
 class Transaction {
-    private let transfer: WalletKit.Transfer
+    let transfer: WalletKit.Transfer
     let wallet: Wallet
 
     var currency: Currency { return wallet.currency }
@@ -140,12 +140,18 @@ class Transaction {
     var gift: Gift? { return metaData?.gift }
     
     private var metaDataKey: String? {
-        // The hash is a hex string, it was previously converted to bytes through UInt256
-        // which resulted in a reverse-order byte array due to UInt256 being little-endian.
-        // Reverse bytes to maintain backwards-compatibility with keys derived using the old scheme.
-        guard let sha256hash = Data(hexString: hash, reversed: true)?.sha256.hexString else { return nil }
-        //TODO:CRYPTO_V2 generic tokens
-        return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
+        if currency.isTezos {
+            guard let reversedData = hash.data(using: .utf8)?.reversed() else { return nil }
+            let hash = Data(reversedData).sha256.hexString
+            return "txn2-\(hash)"
+        } else {
+            // The hash is a hex string, it was previously converted to bytes through UInt256
+            // which resulted in a reverse-order byte array due to UInt256 being little-endian.
+            // Reverse bytes to maintain backwards-compatibility with keys derived using the old scheme.
+            guard let sha256hash = Data(hexString: hash, reversed: true)?.sha256.hexString else { return nil }
+            //TODO:CRYPTO_V2 generic tokens
+            return currency.isERC20Token ? "tkxf-\(sha256hash)" : "txn2-\(sha256hash)"
+        }
     }
     
     /// Creates and stores new metadata in KV store if it does not exist

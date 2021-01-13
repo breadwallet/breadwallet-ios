@@ -61,6 +61,8 @@
 		3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A36328C225301D60043EBA4 /* PriceChangeView.swift */; };
 		3A3D63DC22F10B4F000DE920 /* AddWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */; };
 		3A3D63DE22F10B58000DE920 /* ManageWalletsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */; };
+		3A529E4C253B957200BD0A17 /* StakingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A529E4B253B957200BD0A17 /* StakingCell.swift */; };
+		3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */; };
 		3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */; };
 		3A611A0C2322139D004B8E36 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0B2322139D004B8E36 /* Dot.swift */; };
 		3A611A0F2325738C004B8E36 /* AnimatedBlockSetLogo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */; };
@@ -668,6 +670,8 @@
 		3A36328C225301D60043EBA4 /* PriceChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChangeView.swift; path = src/Views/PriceChangeView.swift; sourceTree = "<group>"; };
 		3A3D63DB22F10B4F000DE920 /* AddWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AddWalletsViewController.swift; path = src/ViewControllers/AddWalletsViewController.swift; sourceTree = "<group>"; };
 		3A3D63DD22F10B57000DE920 /* ManageWalletsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ManageWalletsViewController.swift; path = src/ViewControllers/ManageWalletsViewController.swift; sourceTree = "<group>"; };
+		3A529E4B253B957200BD0A17 /* StakingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StakingCell.swift; sourceTree = "<group>"; };
+		3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StakeViewController.swift; path = src/ViewControllers/StakeViewController.swift; sourceTree = "<group>"; };
 		3A5C9B2A22A5676F00C907C1 /* PriceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PriceChange.swift; path = src/Models/PriceChange.swift; sourceTree = "<group>"; };
 		3A611A0B2322139D004B8E36 /* Dot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Dot.swift; path = src/Views/Dot.swift; sourceTree = "<group>"; };
 		3A611A0E2325738C004B8E36 /* AnimatedBlockSetLogo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AnimatedBlockSetLogo.swift; path = src/AnimatedBlockSetLogo.swift; sourceTree = "<group>"; };
@@ -699,7 +703,6 @@
 		3AEA2CAA24D3219200DA4C3A /* SelectBackupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBackupView.swift; path = src/CloudBackup/SelectBackupView.swift; sourceTree = "<group>"; };
 		3AEF7B71234A4E3C005BE184 /* RequestUrlTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestUrlTests.swift; sourceTree = "<group>"; };
 		3AF78B3A2523B05E00FBB280 /* FioTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FioTests.swift; sourceTree = "<group>"; };
-		3AFAD8FE25674F56005853E8 /* BRDClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BRDClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AFAD92F2567EE15005853E8 /* GiftViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftViewController.swift; path = src/Gifting/GiftViewController.swift; sourceTree = "<group>"; };
 		3AFAD936256826F3005853E8 /* BorderedTextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BorderedTextInput.swift; path = src/Gifting/BorderedTextInput.swift; sourceTree = "<group>"; };
 		3AFAD94725698A74005853E8 /* Gift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Gift.swift; path = src/Platform/Gift.swift; sourceTree = "<group>"; };
@@ -1187,13 +1190,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AFAD8FB25674F56005853E8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		75A2A78D1DA5934300A983D8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1308,6 +1304,15 @@
 			);
 			name = libbz2;
 			path = Modules/libbz2;
+			sourceTree = "<group>";
+		};
+		3A529E4A253B956000BD0A17 /* Staking */ = {
+			isa = PBXGroup;
+			children = (
+				3A529E4B253B957200BD0A17 /* StakingCell.swift */,
+				3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */,
+			);
+			name = Staking;
 			sourceTree = "<group>";
 		};
 		3A611A0D23257354004B8E36 /* BlockSetAnimation */ = {
@@ -1486,7 +1491,6 @@
 				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
 				22A9A9961DF63426000F0016 /* libbz2.framework */,
 				CEA7E67B1F09A9D2001F8C27 /* Screenshots.xctest */,
-				3AFAD8FE25674F56005853E8 /* BRDClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1514,6 +1518,7 @@
 				CE5E6C991EB9135000A476DB /* Icon.xcassets */,
 				3A6785EF256F2EF70065F835 /* ReceiveGift */,
 				3AFAD92E2567ED22005853E8 /* Gifting */,
+				3A529E4A253B956000BD0A17 /* Staking */,
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
@@ -2286,23 +2291,6 @@
 			productReference = 22A9A9961DF63426000F0016 /* libbz2.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		3AFAD8FD25674F56005853E8 /* BRDClip */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */;
-			buildPhases = (
-				3AFAD8FA25674F56005853E8 /* Sources */,
-				3AFAD8FB25674F56005853E8 /* Frameworks */,
-				3AFAD8FC25674F56005853E8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = BRDClip;
-			productName = BRDClip;
-			productReference = 3AFAD8FE25674F56005853E8 /* BRDClip.app */;
-			productType = "com.apple.product-type.application.on-demand-install-capable";
-		};
 		75A2A78F1DA5934300A983D8 /* breadwallet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 75A2A7E31DA5934400A983D8 /* Build configuration list for PBXNativeTarget "breadwallet" */;
@@ -2402,9 +2390,6 @@
 						CreatedOnToolsVersion = 8.1;
 						ProvisioningStyle = Automatic;
 					};
-					3AFAD8FD25674F56005853E8 = {
-						CreatedOnToolsVersion = 12.2;
-					};
 					759DA0D71DAC8668008CC49B = {
 						CreatedOnToolsVersion = 8.0;
 						ProvisioningStyle = Automatic;
@@ -2489,20 +2474,12 @@
 				759DA0D71DAC8668008CC49B /* submodules */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
-				3AFAD8FD25674F56005853E8 /* BRDClip */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		22A9A9941DF63426000F0016 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3AFAD8FC25674F56005853E8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2794,13 +2771,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3AFAD8FA25674F56005853E8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		75A2A78C1DA5934300A983D8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2814,6 +2784,7 @@
 				9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */,
 				754AE0BC1DFE8A46007FD001 /* SecureAllocator.swift in Sources */,
 				22A9A94A1DF61945000F0016 /* BRCameraPlugin.swift in Sources */,
+				3A529E4C253B957200BD0A17 /* StakingCell.swift in Sources */,
 				3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */,
 				CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
@@ -3097,6 +3068,7 @@
 				713CD88A2240198A004657D4 /* RecoveryKeyIntroViewController.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
+				3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3296,260 +3268,6 @@
 			};
 			name = Release;
 		};
-		3AFAD91025674F57005853E8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Debug;
-		};
-		3AFAD91125674F57005853E8 /* Debug-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Debug-Internal";
-		};
-		3AFAD91225674F57005853E8 /* Debug-Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Debug-Testnet";
-		};
-		3AFAD91325674F57005853E8 /* Screenshots */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Screenshots;
-		};
-		3AFAD91425674F57005853E8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		3AFAD91525674F57005853E8 /* Release-Testflight */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Testflight";
-		};
-		3AFAD91625674F57005853E8 /* Release-Internal */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Internal";
-		};
-		3AFAD91725674F57005853E8 /* Release-Testnet */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_ENABLE_OBJC_WEAK = YES;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
-				CODE_SIGN_ENTITLEMENTS = BRDClip/BRDClip.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"BRDClip/Preview Content\"";
-				DEVELOPMENT_TEAM = 4R7S6N88W9;
-				ENABLE_PREVIEWS = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = BRDClip/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 4.5.4;
-				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.Clip;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = "Release-Testnet";
-		};
 		759DA0D81DAC8668008CC49B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3618,6 +3336,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
@@ -3677,6 +3396,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
@@ -3911,6 +3631,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG INTERNAL";
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
@@ -4111,6 +3832,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT INTERNAL";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
@@ -4317,6 +4039,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT TESTNET";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
@@ -4601,6 +4324,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SCREENSHOTS TESTNET";
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
@@ -4808,6 +4532,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TESTNET";
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
 				SWIFT_INSTALL_OBJC_HEADER = NO;
@@ -5008,6 +4733,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TESTFLIGHT;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_INCLUDE_PATHS = "$(SDK_DIR)/usr/include $(SRCROOT)/Modules $(SRCROOT)/breadwallet/src/Platform $(SRCROOT)/Modules/breadwallet-core/Swift/Core";
@@ -5154,21 +4880,6 @@
 				CEE0EF611EBF8D7F0018DB36 /* Release-Testflight */,
 				7CF5934A21B9B15D00A49FED /* Release-Internal */,
 				7CF5935621B9C1AD00A49FED /* Release-Testnet */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3AFAD90F25674F57005853E8 /* Build configuration list for PBXNativeTarget "BRDClip" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3AFAD91025674F57005853E8 /* Debug */,
-				3AFAD91125674F57005853E8 /* Debug-Internal */,
-				3AFAD91225674F57005853E8 /* Debug-Testnet */,
-				3AFAD91325674F57005853E8 /* Screenshots */,
-				3AFAD91425674F57005853E8 /* Release */,
-				3AFAD91525674F57005853E8 /* Release-Testflight */,
-				3AFAD91625674F57005853E8 /* Release-Internal */,
-				3AFAD91725674F57005853E8 /* Release-Testnet */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

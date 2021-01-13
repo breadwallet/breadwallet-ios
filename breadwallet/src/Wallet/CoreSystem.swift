@@ -656,6 +656,9 @@ extension CoreSystem: SystemListener {
 
     func handleManagerEvent(system: System, manager: WalletKit.WalletManager, event: WalletManagerEvent) {
         print("[SYS] \(manager.network) manager event: \(event)")
+        if manager.network.name == "Tezos" {
+            print("[TEZOS] manager event: \(event)")
+        }
         switch event {
         case .created:
             break
@@ -753,6 +756,9 @@ extension CoreSystem: SystemListener {
 
     func handleWalletEvent(system: System, manager: WalletKit.WalletManager, wallet: WalletKit.Wallet, event: WalletEvent) {
         print("[SYS] \(manager.network) wallet event: \(wallet.currency.code) \(event)")
+        if manager.network.name == "Tezos" {
+            print("[TEZOS] wallet event: \(event)")
+        }
         switch event {
         case .created:
             if let wallet = addWallet(wallet) {

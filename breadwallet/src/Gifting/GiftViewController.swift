@@ -218,9 +218,9 @@ class GiftViewController: UIViewController {
         coinGeckoClient.load(resource)
         
         let result = wallet.createExportablePaperWallet()
-        guard case .success(let paperWallet) = result else { return handleCreatePaperWalletError() }
-        guard let address = paperWallet.address else { return handleCreatePaperWalletError() }
-        guard let privKey = paperWallet.privateKey else { return handleCreatePaperWalletError() }
+        guard case .success(let paperWallet) = result else { return }
+        guard let address = paperWallet.address else { return }
+        guard let privKey = paperWallet.privateKey else { return }
         self.address = address
         self.privKey = privKey
         let feeLevel: FeeLevel = .regular
@@ -265,10 +265,6 @@ class GiftViewController: UIViewController {
         createButton.setEnabled()
     }
     
-    func handleCreatePaperWalletError() {
-        
-    }
-    
     private func setButtonStates() {
         guard let rate = rate else { return }
         guard let maximum = maximum, let minimum = minimum else {
@@ -301,7 +297,7 @@ class GiftViewController: UIViewController {
 
         guard let amount = extraSwitch.isOn ? totalWithExtra : selectedAmount else { return }
 
-        sender.estimateFee(address: address.description, amount: amount, tier: .regular, completion: { [weak self] feeBasis in
+        sender.estimateFee(address: address.description, amount: amount, tier: .regular, isStake: false, completion: { [weak self] feeBasis in
             guard let `self` = self else { return }
             guard let feeBasis = feeBasis else { return }
             let feeCurrency = self.sender.wallet.feeCurrency
@@ -319,12 +315,6 @@ class GiftViewController: UIViewController {
                                    rate: rate.rate,
                                    amount: self.rawAmount!)
             self.gift = gift
-
-            //for testing sharing without creating transaction
-//            DispatchQueue.main.async {
-//                let share = ShareGiftViewController(gift: gift)
-//                self.present(share, animated: true, completion: nil)
-//            }
             
             _ = self.sender.createTransaction(address: address.description,
                                               amount: amount,

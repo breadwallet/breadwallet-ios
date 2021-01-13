@@ -40,7 +40,7 @@ class RedeemContainer: UIView {
     }
 }
 
-class RedeemGiftViewController: UIViewController, Subscriber {
+class RedeemGiftViewController: UIViewController, Subscriber, Trackable {
     
     let container = RedeemContainer()
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
@@ -225,6 +225,7 @@ class RedeemGiftViewController: UIViewController, Subscriber {
     }
     
     private func redeemSuccess() {
+        saveEvent("gift.redeem")
         statusCircle.drawCheckBox()
         UIView.animate(withDuration: 0.2, animations: {
             self.body.text = "Your gift has been successfully redeemed. It will appear in your bitcoin wallet."
