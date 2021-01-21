@@ -1,6 +1,3 @@
 [submodule "Modules/walletkit"]
 	path = Modules/walletkit
 	url = https://github.com/blockset-corp/walletkit.git
-[submodule "Modules/mobile-font"]
-	path = Modules/mobile-font
-	url = ../mobile-font.git
