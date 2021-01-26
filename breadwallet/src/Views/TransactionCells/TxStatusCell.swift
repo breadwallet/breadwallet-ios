@@ -40,25 +40,20 @@ class TxStatusCell: UITableViewCell, Subscriber {
     }
     
     private func addConstraints() {
-
         container.constrain(toSuperviewEdges: UIEdgeInsets(top: C.padding[1],
                                                            left: C.padding[1],
                                                            bottom: -C.padding[2],
                                                            right: -C.padding[1]))
-        
         statusIndicator.constrain([
             statusIndicator.topAnchor.constraint(equalTo: container.topAnchor),
             statusIndicator.centerXAnchor.constraint(equalTo: container.centerXAnchor),
             statusIndicator.widthAnchor.constraint(equalToConstant: statusIndicator.width),
-            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)
-            ])
-        
+            statusIndicator.heightAnchor.constraint(equalToConstant: statusIndicator.height)])
         statusLabel.constrain([
             statusLabel.leadingAnchor.constraint(equalTo: container.leadingAnchor),
             statusLabel.trailingAnchor.constraint(equalTo: container.trailingAnchor),
             statusLabel.topAnchor.constraint(equalTo: statusIndicator.bottomAnchor),
-            statusLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
-            ])
+            statusLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)])
     }
     
     // MARK: -

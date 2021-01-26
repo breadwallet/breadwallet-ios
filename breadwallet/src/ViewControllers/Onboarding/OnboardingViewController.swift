@@ -12,7 +12,7 @@ import AVKit
 enum OnboardingExitAction {
     case restoreWallet
     case createWallet
-    case createWalletBuyCoin
+    case restoreCloudBackup
 }
 
 typealias DidExitOnboardingWithAction = ((OnboardingExitAction) -> Void)
@@ -57,7 +57,7 @@ class OnboardingViewController: UIViewController {
     var videoPlayers: [AVPlayer] = [AVPlayer]()
     var videoLayers: [AVPlayerLayer] = [AVPlayerLayer]()
     
-    var videoRates: [Float] = [1.0, 1.0, 1.0]
+    var videoRates: [Float] = [1.2, 1.2, 1.2]
     
     // Each video clip is embedded as an AVPlayerLayer within a container view.
     // Visibility of the container views is controlled by setting their alpha
@@ -110,7 +110,7 @@ class OnboardingViewController: UIViewController {
     // Used to ensure we only animate the landing page on the first appearance.
     var appearanceCount: Int = 0
     
-    let pageCount: Int = 4
+    let pageCount: Int = 3
     
     let globePageIndex = 1
     let coinsPageIndex = 2
@@ -155,19 +155,24 @@ class OnboardingViewController: UIViewController {
     var lastPageIndex: Int { return pageCount - 1 }
     
     // CTA's that appear at the bottom of the screen
-    private var topButton = BRDButton(title: "", type: .primary)
-    private var bottomButton = BRDButton(title: "", type: .darkOpaque)
-    private var nextButton = BRDButton(title: S.OnboardingScreen.next, type: .primary)
+    private let topButton = BRDButton(title: "", type: .primary)
+    private let middleButton = BRDButton(title: "", type: .darkOpaque)
+    private let bottomButton = BRDButton(title: "", type: .darkOpaque)
+    private let nextButton = BRDButton(title: S.OnboardingScreen.next, type: .primary)
     
     // Constraints used to show and hide the bottom buttons.
     private var topButtonAnimationConstraint: NSLayoutConstraint?
+    private var middleButtonAnimationConstraint: NSLayoutConstraint?
     private var bottomButtonAnimationConstraint: NSLayoutConstraint?
     private var nextButtonAnimationConstraint: NSLayoutConstraint?
     
     private let backButton = UIButton(type: .custom)
     private let skipButton = UIButton(type: .custom)
         
-    required init(didExitOnboarding: DidExitOnboardingWithAction?) {
+    private let cloudBackupExists: Bool
+    
+    required init(doesCloudBackupExist: Bool, didExitOnboarding: DidExitOnboardingWithAction?) {
+        self.cloudBackupExists = doesCloudBackupExist
         super.init(nibName: nil, bundle: nil)
         didExitWithAction = didExitOnboarding
     }
@@ -177,8 +182,7 @@ class OnboardingViewController: UIViewController {
     }
     
     private func exitWith(action exitAction: OnboardingExitAction) {
-        guard let didExitWithAction = didExitWithAction else { return }
-        didExitWithAction(exitAction)
+        didExitWithAction?(exitAction)
     }
             
     // Starts the video clip for the given page.
@@ -422,21 +426,33 @@ class OnboardingViewController: UIViewController {
     }
     
     private func topButtonText(pageIndex: Int) -> String {
-        switch pageIndex {
-        case 0:                 return S.OnboardingScreen.getStarted
-        case lastPageIndex:     return S.OnboardingScreen.buyCoin
-        default:
-            return ""
+        if pageIndex == 0 {
+            if cloudBackupExists {
+                return S.CloudBackup.restoreButton
+            } else {
+                return S.OnboardingScreen.getStarted
+            }
         }
+        return ""
     }
 
-    private func bottomButtonText(pageIndex: Int) -> String {
-        switch pageIndex {
-        case 0:                 return S.OnboardingScreen.restoreWallet
-        case lastPageIndex:     return S.OnboardingScreen.browseFirst
-        default:
-            return ""
+    private func middleButtonText(pageIndex: Int) -> String {
+        //no middle button if no backup detected
+        if pageIndex == 0 && cloudBackupExists {
+            return S.CloudBackup.recoverButton
         }
+        return ""
+    }
+    
+    private func bottomButtonText(pageIndex: Int) -> String {
+        if pageIndex == 0 {
+            if cloudBackupExists {
+                return S.CloudBackup.createButton
+            } else {
+                return S.OnboardingScreen.restoreWallet
+            }
+        }
+        return ""
     }
     
     let buttonHeight: CGFloat = 48.0
@@ -445,27 +461,38 @@ class OnboardingViewController: UIViewController {
     let nextButtonBottomMargin: CGFloat = 20.0
         
     private var buttonsHiddenYOffset: CGFloat {
-        return buttonHeight + 10.0
+        return (buttonHeight + 40.0)
     }
     
-    // returns the height of the two bottom buttons plus the associated vertical margins
-    private var buttonsVisibleYOffset: CGFloat {
-        let topButtonHeight = buttonHeight
-        let bottomButtonHeight = buttonHeight
-        return -(topButtonHeight + bottomButtonHeight + bottomButtonBottomMargin + buttonsVerticalMargin)
+    private var bottomButtonVisibleYOffset: CGFloat {
+        return -buttonsVerticalMargin
+    }
+    
+    private var middleButtonVisibleYOffset: CGFloat {
+        return -(buttonsVerticalMargin*2 + buttonHeight)
+    }
+    
+    private var topButtonVisibleYOffset: CGFloat {
+        if cloudBackupExists {
+            return middleButtonVisibleYOffset - (buttonsVerticalMargin + buttonHeight)
+        } else {
+            return middleButtonVisibleYOffset
+        }
     }
         
     private var nextButtonVisibleYOffset: CGFloat {
-        return -(buttonHeight + nextButtonBottomMargin)
+        return -nextButtonBottomMargin
     }
     
     private func setUpBottomButtons() {
         // Set the buttons up for the first page; the title text will be updated
         // once we reach the last page of the onboarding flow.
         topButton.title = topButtonText(pageIndex: 0)
+        middleButton.title = middleButtonText(pageIndex: 0)
         bottomButton.title = bottomButtonText(pageIndex: 0)
         
         view.addSubview(topButton)
+        view.addSubview(middleButton)
         view.addSubview(bottomButton)
         view.addSubview(nextButton)
         
@@ -474,19 +501,28 @@ class OnboardingViewController: UIViewController {
         
         // Position the top button just below the bottom of the view (or safe area / notch) to start with
         // so that we can animate it up into view.
-        topButtonAnimationConstraint = topButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+        topButtonAnimationConstraint = topButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                                       constant: buttonsHiddenYOffset)
-        nextButtonAnimationConstraint = nextButton.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+        nextButtonAnimationConstraint = nextButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                                                                             constant: buttonsHiddenYOffset)
-        
-        bottomButtonAnimationConstraint = bottomButton.topAnchor.constraint(equalTo: topButton.bottomAnchor,
-                                                                            constant: buttonsVerticalMargin)
+        middleButtonAnimationConstraint = middleButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                                      constant: buttonsHiddenYOffset)
+        bottomButtonAnimationConstraint = bottomButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                                                                            constant: buttonsHiddenYOffset)
         topButton.constrain([
             topButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
             topButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: buttonLeftRightMargin),
             topButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -buttonLeftRightMargin),                
             topButton.heightAnchor.constraint(equalToConstant: buttonHeight),
             topButtonAnimationConstraint
+            ])
+        
+        middleButton.constrain([
+            middleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
+            middleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: buttonLeftRightMargin),
+            middleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -buttonLeftRightMargin),
+            middleButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+            middleButtonAnimationConstraint
             ])
         
         bottomButton.constrain([
@@ -506,6 +542,10 @@ class OnboardingViewController: UIViewController {
         
         topButton.tap = { [unowned self] in
             self.topButtonTapped()
+        }
+        
+        middleButton.tap = { [unowned self] in
+            self.middleButtonTapped()
         }
         
         bottomButton.tap = { [unowned self] in
@@ -625,7 +665,7 @@ class OnboardingViewController: UIViewController {
     private func animateLandingPage() {
 
         let delay = 0.2
-        let duration = 0.5
+        let duration = 0.3//0.5
                 
         // animate heading position
         let constraint = headingConstraints[0]
@@ -640,19 +680,32 @@ class OnboardingViewController: UIViewController {
         })            
         
         topButton.alpha = 0
+        middleButton.alpha = 0
         bottomButton.alpha = 0
         
         // fade-in animation for the buttons
         UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIView.AnimationOptions.curveEaseIn, animations: { 
             self.topButton.alpha = 1
             self.bottomButton.alpha = 1
+            self.middleButton.alpha = 1
         })
 
         // slide-up animation for the top button
         UIView.animate(withDuration: (duration * 1.5), delay: delay, options: UIView.AnimationOptions.curveEaseInOut, animations: { 
-            self.topButtonAnimationConstraint?.constant = self.buttonsVisibleYOffset
+            self.topButtonAnimationConstraint?.constant = self.topButtonVisibleYOffset
             self.view.layoutIfNeeded()
         })
+        
+        if self.cloudBackupExists {
+            middleButtonAnimationConstraint?.constant = (buttonsVerticalMargin * 2.0)
+            view.layoutIfNeeded()
+            
+            // slide-up animation for the middle button
+            UIView.animate(withDuration: (duration * 1.5), delay: delay * 1.5, options: UIView.AnimationOptions.curveEaseInOut, animations: {
+                self.middleButtonAnimationConstraint?.constant = self.middleButtonVisibleYOffset
+                self.view.layoutIfNeeded()
+            })
+        }
         
         bottomButtonAnimationConstraint?.constant = (buttonsVerticalMargin * 3.0)
         view.layoutIfNeeded()
@@ -660,7 +713,7 @@ class OnboardingViewController: UIViewController {
         // slide-up animation for the bottom button
         UIView.animate(withDuration: (duration * 1.5), delay: (delay * 2.0), options: UIView.AnimationOptions.curveEaseInOut, animations: { 
             // animate the bottom button up to its correct offset relative to the top button
-            self.bottomButtonAnimationConstraint?.constant = self.buttonsVerticalMargin
+            self.bottomButtonAnimationConstraint?.constant = self.bottomButtonVisibleYOffset
             self.view.layoutIfNeeded()
         })
         
@@ -672,7 +725,12 @@ class OnboardingViewController: UIViewController {
     }
         
     private func animateToNextPage() {
-        guard !isPaging, pageIndex >= 0, pageIndex + 1 < pageCount else {
+        guard !isPaging, pageIndex >= 0, pageIndex < pageCount else {
+            return
+        }
+        
+        if pageIndex == lastPageIndex {
+            exitWith(action: .createWallet)
             return
         }
         
@@ -682,7 +740,7 @@ class OnboardingViewController: UIViewController {
         
         startVideoClipForPage(pageIndex: nextIndex)
         
-        let pageAnimationDuration = 1.0
+        let pageAnimationDuration = 0.6//1.0
         let delay = animationDelays[nextIndex]
         
         let currentHeadingLabel = headingLabels[pageIndex]
@@ -725,33 +783,42 @@ class OnboardingViewController: UIViewController {
                                         nextHeadingLabel.superview?.layoutIfNeeded()
                                     })
                                     
-                                    if self.pageIndex == 0 {
-                                        
-                                        // Animate the top/bottom buttons down and out
-                                        UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: { 
-                                            self.topButtonAnimationConstraint?.constant = self.buttonsHiddenYOffset
-                                            self.view.layoutIfNeeded()
-                                        })
-                                    }
-                                    
-                                    if nextIndex == self.lastPageIndex {
-                                        
-                                        // animate the Next button down
-                                        UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.3, animations: { 
-                                            self.nextButtonAnimationConstraint?.constant = self.buttonsHiddenYOffset
-                                            self.view.layoutIfNeeded()
-                                        })
-                                        
-                                        // update the title and animate the top & bottom buttons back into view
-                                        self.topButton.title = self.topButtonText(pageIndex: nextIndex)
-                                        self.bottomButton.title = self.bottomButtonText(pageIndex: nextIndex)
-                                        self.topButton.isHidden = true
-                                        self.bottomButton.backgroundColor = UIColor.primaryButton
-                                        
-                                        UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4, animations: { 
-                                            self.topButtonAnimationConstraint?.constant = self.buttonsVisibleYOffset
-                                            self.view.layoutIfNeeded()
-                                        })
+//                                    if self.pageIndex == 0 {
+//
+//                                        // Animate the top/bottom buttons down and out
+//                                        UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
+//                                            self.topButtonAnimationConstraint?.constant = self.buttonsHiddenYOffset
+//                                            self.view.layoutIfNeeded()
+//                                        })
+//                                    }
+//
+//                                    if nextIndex == self.lastPageIndex {
+//
+//                                        // animate the Next button down
+//                                        UIView.addKeyframe(withRelativeStartTime: 0.3, relativeDuration: 0.3, animations: {
+//                                            self.nextButtonAnimationConstraint?.constant = self.buttonsHiddenYOffset
+//                                            self.view.layoutIfNeeded()
+//                                        })
+//
+//                                        // update the title and animate the top & bottom buttons back into view
+//                                        self.topButton.title = self.topButtonText(pageIndex: nextIndex)
+//                                        self.bottomButton.title = self.bottomButtonText(pageIndex: nextIndex)
+//                                        self.topButton.isHidden = true
+//                                        self.bottomButton.backgroundColor = UIColor.primaryButton
+//
+//                                        UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4, animations: {
+//                                            self.topButtonAnimationConstraint?.constant = self.buttonsVisibleYOffset
+//                                            self.view.layoutIfNeeded()
+//                                        })
+                                        // Animate buttons down
+                                        [self.topButtonAnimationConstraint,
+                                         self.middleButtonAnimationConstraint,
+                                         self.bottomButtonAnimationConstraint].forEach { constraint in
+                                            UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.5, animations: {
+                                                constraint?.constant = self.buttonsHiddenYOffset
+                                                self.view.layoutIfNeeded()
+                                            })
+//                                        }
                                     }
                                     
             }, completion: { [weak self] _ in
@@ -768,7 +835,8 @@ class OnboardingViewController: UIViewController {
                 // clip a bit more time to finish. The first clip is a bit longer than the others and
                 // includes a slick bitcoin transfer animation at the end.
                 if nextIndex == 1 {
-                    UIView.animate(withDuration: 0.5, delay: self.firstTransitionDelay, options: .curveEaseInOut, animations: { 
+                    //0.5
+                    UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseInOut, animations: {
                         self.nextButtonAnimationConstraint?.constant = self.nextButtonVisibleYOffset
                         self.view.layoutIfNeeded()                    
                     }, completion: { _ in
@@ -782,22 +850,36 @@ class OnboardingViewController: UIViewController {
         
     private func topButtonTapped() {
         if self.pageIndex == 0 {
-            // 'Create new wallet'
-            self.animateToNextPage()
-            logEvent(.getStartedButton, screen: .landingPage)
-        } else if self.pageIndex == self.lastPageIndex {
-            // 'Buy some coin'
-            exitWith(action: .createWalletBuyCoin)
-            logEvent(.buyCoinButton, screen: .finalPage)
+            if cloudBackupExists {
+                exitWith(action: .restoreCloudBackup)
+            } else {
+               // 'Create new wallet'
+               self.animateToNextPage()
+               logEvent(.getStartedButton, screen: .landingPage)
+            }
         }
     }
     
+    private func middleButtonTapped() {
+        showAlert(message: S.CloudBackup.recoverWarning,
+                  button: S.CloudBackup.recoverButton,
+                  completion: { [weak self] in
+                    self?.exitWith(action: .restoreWallet)
+                    self?.logEvent(.restoreWalletButton, screen: .landingPage)
+                })
+    }
+    
     private func bottomButtonTapped() {
-        
         if pageIndex == 0 {
-            // 'Restore wallet'
-            exitWith(action: .restoreWallet)
-            logEvent(.restoreWalletButton, screen: .landingPage)
+            if cloudBackupExists {
+                showAlert(message: S.CloudBackup.createWarning, button: S.CloudBackup.createButton, completion: { [weak self] in
+                    self?.animateToNextPage()
+                })
+            } else {
+               // 'Restore wallet'
+               exitWith(action: .restoreWallet)
+               logEvent(.restoreWalletButton, screen: .landingPage)
+            }
         } else if pageIndex == self.lastPageIndex {
             // 'I'll browse first'
             exitWith(action: .createWallet)
@@ -855,11 +937,21 @@ class OnboardingViewController: UIViewController {
         setUpPages()
         setupSubviews()
     }
+    
+    private func showAlert(message: String, button: String, completion: @escaping () -> Void) {
+        let alert = UIAlertController(title: S.Alert.warning,
+                                      message: message,
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: {_ in }))
+        alert.addAction(UIAlertAction(title: button, style: .default, handler: {_ in
+            completion()
+        }))
+        present(alert, animated: true, completion: nil)
+    }
 }
 
 // analytics
 extension OnboardingViewController: Trackable {
-    
     func logEvent(_ event: Event, screen: Screen) {
         saveEvent(context: .onboarding, screen: screen, event: event)
     }

@@ -27,10 +27,13 @@ class AssetListTableView: UITableViewController, Subscriber {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupAddWalletButton()
         if Store.state.wallets.isEmpty {
             showLoadingState(true)
         }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        setupAddWalletButton()
     }
     
     override func viewDidLoad() {
@@ -47,8 +50,9 @@ class AssetListTableView: UITableViewController, Subscriber {
     }
     
     private func setupAddWalletButton() {
+        guard tableView.tableFooterView == nil else { return }
         let topInset: CGFloat = 0
-        let leftRightInset: CGFloat = C.padding[2]
+        let leftRightInset: CGFloat = C.padding[1]
         let width = tableView.frame.width - tableView.contentInset.left - tableView.contentInset.right
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: addWalletButtonHeight))
         

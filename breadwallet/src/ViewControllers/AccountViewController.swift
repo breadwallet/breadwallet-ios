@@ -33,10 +33,9 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             Store.perform(action: RootModalActions.Present(modal: .send(currency: self.currency))) }
         footerView.receiveCallback = { [unowned self] in
             Store.perform(action: RootModalActions.Present(modal: .receive(currency: self.currency))) }
-        footerView.buyCallback = { [unowned self] in
-            Store.perform(action: RootModalActions.Present(modal: .buy(currency: self.currency))) }
-        footerView.sellCallback = { [unowned self] in
-            Store.perform(action: RootModalActions.Present(modal: .sell(currency: self.currency))) }
+        footerView.giftCallback = {
+            Store.perform(action: RootModalActions.Present(modal: .gift))
+        }
     }
     
     deinit {
@@ -76,6 +75,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     private var headerContainerSearchHeight: NSLayoutConstraint?
     private var rewardsViewHeightConstraint: NSLayoutConstraint?
     private var rewardsView: RewardsView?
+    private var extraCell: UIView?
     private let rewardsAnimationDuration: TimeInterval = 0.5
     private let rewardsShrinkTimerDuration: TimeInterval = 6.0
     private var rewardsShrinkTimer: Timer?
@@ -94,12 +94,13 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         return rewardsViewState == .expanded ? RewardsView.expandedSize : (RewardsView.normalSize)
     }
     
-    private var shouldShowRewardsView: Bool {
-        return currency.isBRDToken
+    private var shouldShowExtraView: Bool {
+        return currency.isBRDToken || currency.supportsStaking
     }
     
     private var shouldAnimateRewardsView: Bool {
-        return shouldShowRewardsView && UserDefaults.shouldShowBRDRewardsAnimation
+        //only Rewards view gets animated...not staking view
+        return shouldShowExtraView && UserDefaults.shouldShowBRDRewardsAnimation && currency.isBRDToken
     }
     
     override func viewDidLoad() {
@@ -111,8 +112,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         addSubscriptions()
         setInitialData()
         
-        if shouldShowRewardsView {
-            addRewardsView()
+        if shouldShowExtraView {
+            addAccessoryView()
         }
         transactionsTableView?.didScrollToYOffset = { [unowned self] offset in
             self.headerView.setOffset(offset)
@@ -129,15 +130,18 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        wallet?.startGiftingMonitor()
         if shouldAnimateRewardsView {
             expandRewardsView()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            self.footerView.jiggle()
         }
         
         saveEvent(makeEventName([EventContext.wallet.name, currency.code, Event.appeared.name]))
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         footerHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
         createFooterHeightConstraint?.constant = AccountFooterView.height + view.safeAreaInsets.bottom
@@ -253,7 +257,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
             }
         }
         
-        let handleTimeout: (Timer) -> Void = { [weak self] timer in
+        let handleTimeout: (Timer) -> Void = { [weak self] _ in
             activity.dismiss(animated: true, completion: {
                 self?.showErrorMessage(S.AccountCreation.timeout)
             })
@@ -278,6 +282,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
                    transactionsTableView.view.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)])
            })
            view.sendSubviewToBack(transactionsTableView.view)
+            headerView.setExtendedTouchDelegate(transactionsTableView.tableView)
         }
     }
         
@@ -343,10 +348,41 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         })
     }
     
-    // The rewards view is a separate UIView that is displayed in the BRD wallet,
+    // The accoessry view is a separate UIView that is displayed in the BRD wallet or staking compatible currencies,
     // under the table view header, above the transaction cells.
-    private func addRewardsView() {
+    private func addAccessoryView() {
+        if currency.supportsStaking {
+            addStakingView()
+        } else if currency.isBRDToken {
+            addRewardsView()
+        }
+    }
+    
+    private func addStakingView() {
+        let staking = StakingCell(currency: currency)
+        view.addSubview(staking)
+        extraCell = staking
+
+        //Rewards view has an intrinsic grey padding view, so it doesn't need top padding.
+        let rewardsViewTopConstraint = staking.topAnchor.constraint(equalTo: headerView.bottomAnchor)
+        // Start the rewards view at a height of zero if animating, otherwise at the normal height.
+        let initialHeight = shouldAnimateRewardsView ? 0 : RewardsView.normalSize
+        rewardsViewHeightConstraint = staking.heightAnchor.constraint(equalToConstant: initialHeight)
         
+        staking.constrain([
+            rewardsViewTopConstraint,
+            rewardsViewHeightConstraint,
+                            staking.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                            staking.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
+        
+        tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
+        
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self,
+                                                          action: #selector(rewardsViewTapped))
+        extraCell?.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    private func addRewardsView() {
         let rewards = RewardsView()
         view.addSubview(rewards)
         rewardsView = rewards
@@ -360,8 +396,8 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
         rewards.constrain([
             rewardsViewTopConstraint,
             rewardsViewHeightConstraint,
-            rewards.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
+                            rewards.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                            rewards.trailingAnchor.constraint(equalTo: view.trailingAnchor)])
         
         tableViewTopConstraint?.constant = shouldAnimateRewardsView ? 0 : tableViewTopConstraintConstant(for: .normal)
         
@@ -407,9 +443,12 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     @objc private func rewardsViewTapped() {
-        saveEvent(rewardsTappedEvent)
-        SupportManager.shared.presentSupportTopic(for: "BRD_REWARDS", from: self)
-//        Store.trigger(name: .openPlatformUrl("/rewards"))
+        if currency.isBRDToken {
+            saveEvent(rewardsTappedEvent)
+//            Store.trigger(name: .openPlatformUrl("/rewards"))
+        } else if currency.isTezos {
+            Store.perform(action: RootModalActions.Present(modal: .stake(currency: self.currency)))
+        }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {

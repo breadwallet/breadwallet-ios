@@ -15,6 +15,8 @@ enum AlertType {
     case addressesCopied
     case sweepSuccess(callback: () -> Void)
     case accountCreation
+    case cloudBackupRestoreSuccess(callback: () -> Void)
+    case cloudBackupSuccess
     case none
 
     var header: String {
@@ -29,7 +31,7 @@ enum AlertType {
             return S.Alerts.copiedAddressesHeader
         case .sweepSuccess:
             return S.Import.success
-        case .accountCreation:
+        case .accountCreation, .cloudBackupRestoreSuccess, .cloudBackupSuccess:
             return "Success"
         case .none:
             return "none"
@@ -50,6 +52,10 @@ enum AlertType {
             return S.Import.successBody
         case .accountCreation:
             return "Hedera Account succesfully created."
+        case .cloudBackupRestoreSuccess:
+            return "Account succesfully restored from Cloud backup"
+        case .cloudBackupSuccess:
+            return "Account backed up with iCloud Keychain"
         case .none:
             return "none"
         }
@@ -75,6 +81,10 @@ func == (lhs: AlertType, rhs: AlertType) -> Bool {
     case (.sweepSuccess, .sweepSuccess):
         return true
     case (.accountCreation, .accountCreation):
+        return true
+    case (.cloudBackupRestoreSuccess, .cloudBackupRestoreSuccess):
+        return true
+    case (.cloudBackupSuccess, .cloudBackupSuccess):
         return true
     case (.none, .none):
         return true

@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Balans";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Dit token is verwijderd omdat de uitgever besloot de ERC20-ondersteuning stop te zetten. \n\nMogelijk kunt u deze tokens nog steeds naar een ander platform verzenden. Ga voor meer informatie naar onze ondersteuningspagina.";
+"Account.delistedToken" = "Dit token is verwijderd. \n\nMogelijk kunt u deze tokens nog steeds naar een ander platform verzenden. Ga voor meer informatie naar onze ondersteuningspagina.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ per %2$@";
 /* Loading Wallet Message */
@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mijn BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Het lijkt erop dat u een toetsenbord van een derde gebruikt. Deze kan bijhouden wat u typt en eventueel uw sleutel stelen. Schakel alstublieft over naar het standaard Android toetsenbord voor extra veiligheid.";
+"Alert.customKeyboard.android" = "Het lijkt erop dat u een toetsenbord van een derde partij gebruikt, dat kan opnemen wat u typt en uw herstelzin kan stelen. Schakel over naar het standaard Android-toetsenbord voor extra bescherming.";
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Uw door BRD geëncrypteerde data is onlangs ongeldig gemaakt omdat uw Android schermvergrendeling is uitgeschakeld.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. wachtwoord was uitgeschakeld, vingerafdrukken waren gewijzigd). Om veiligheidsredenen heeft Android uw sleutelarchief permanent gesloten. Daarom moeten uw BRD-app-gegevens worden gewist door de installatie ongedaan te maken.\n\nGeen zorgen, uw geld is nog steeds veilig! Installeer de app opnieuw en herstel uw portemonnee met behulp van uw papieren sleutel.";
+"Alert.keystore.invalidated.uninstall.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. Wachtwoord is uitgeschakeld, vingerafdrukken zijn gewijzigd). Om veiligheidsredenen heeft Android uw sleutelopslag permanent vergrendeld. Daarom moeten uw BRD-app-gegevens worden gewist door de installatie ongedaan te maken. \n\nMaak je geen zorgen, je geld is nog steeds veilig! Installeer de app opnieuw en herstel uw portemonnee met uw herstelzin.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. wachtwoord was uitgeschakeld, vingerafdrukken waren gewijzigd). Om veiligheidsredenen heeft Android uw sleutelarchief permanent gesloten. Daarom moeten uw BRD-app-gegevens worden gewist.\n\nGeen zorgen, uw geld is nog steeds veilig! Herstel uw portemonnee met behulp van uw papieren sleutel.";
+"Alert.keystore.invalidated.wipe.android" = "We kunnen niet doorgaan omdat uw instellingen voor schermvergrendeling zijn gewijzigd (bijv. Wachtwoord is uitgeschakeld, vingerafdrukken zijn gewijzigd). Om veiligheidsredenen heeft Android uw sleutelopslag permanent vergrendeld. Daarom moeten uw BRD-app-gegevens worden gewist. \n\nMaak je geen zorgen, je geld is nog steeds veilig! Herstel uw portemonnee met behulp van uw herstelzin.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStore fout";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Alle wallet-adressen zijn succesvol gekopieerd.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Paper key set";
+"Alerts.paperKeySet" = "Herstelsgroepset";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Geweldig!";
 /* Alert Header label (the PIN was set) */
@@ -186,12 +186,41 @@
 "Button.yes" = "Ja";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centreer je ID in het daarvoor bestemde vak";
+"CloudBackup.backupDeleted" = "Back-up gewist";
+"CloudBackup.backupDeletedMessage" = "Uw iCloud-back-up is gewist na te veel mislukte PIN-pogingen. De app zal nu opnieuw opstarten.";
+"CloudBackup.backupMenuTitle" = "iCloud-back-up";
+"CloudBackup.createButton" = "Nieuwe wallet maken";
+"CloudBackup.createWarning" = "Er is een portemonnee gedetecteerd waarvan eerder een back-up is gemaakt. Het gebruik van deze back-up wordt aanbevolen. Weet u zeker dat u wilt doorgaan met het aanmaken van een nieuwe portemonnee?";
+"CloudBackup.enableBody1" = "iCloud Keychain moet ingeschakeld zijn om deze functie te laten werken.";
+"CloudBackup.enableBody2" = "Het zou er als volgt uit moeten zien:";
+"CloudBackup.enableButton" = "Ik heb iCloud-sleutelhanger ingeschakeld";
+"CloudBackup.enableTitle" = "Schakel Keychain in";
+"CloudBackup.encryptBackupMessage" = "Voer een pincode in om de back-up te versleutelen";
+"CloudBackup.mainBody" = "Houd er rekening mee dat iCloud-back-up slechts zo veilig is als uw iCloud-account. We raden u toch aan om uw herstelzin in de volgende stap op te schrijven en veilig te bewaren. De herstelzin is de enige manier om uw portemonnee te herstellen als u geen toegang meer hebt tot iCloud.";
+"CloudBackup.mainTitle" = "iCloud-herstelback-up";
+"CloudBackup.mainWarning" = "iCloud-sleutelhanger moet zijn ingeschakeld in de app iOS-instellingen om deze functie te laten werken";
+"CloudBackup.mainWarningConfirmation" = "Weet u zeker dat u iCloud-back-up wilt uitschakelen? Hiermee wordt uw back-up van alle apparaten verwijderd.";
+"CloudBackup.pinAttempts" = "Pogingen blijven voordat back-up wordt gewist: %1$ @";
+"CloudBackup.recoverButton" = "Herstellen vanaf herstelsleutel";
+"CloudBackup.recoverHeader" = "Voer de PIN-code in om een iCloud-back-up te ontgrendelen";
+"CloudBackup.restoreButton" = "Herstellen van iCloud Backup";
+"CloudBackup.selectTitle" = "Kies Back-up";
+"CloudBackup.step1" = "Start de app Instellingen.";
+"CloudBackup.step2" = "Tik op uw Apple ID-naam.";
+"CloudBackup.step3" = "Tik op iCloud.";
+"CloudBackup.step4" = "Controleer of iCloud-sleutelhanger is ingeschakeld";
+"CloudBackup.understandText" = "Ik begrijp dat deze functie alleen werkt als iCloud-sleutelhanger is ingeschakeld.";
+"CloudBackup.warningBody" = "Uw iCloud-back-up wordt gewist na nog %1$@ onjuiste pincode-pogingen.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Bedrag om te versturen:";
+"Confirmation.destinationTag" = "Bestemmingstag";
+"Confirmation.destinationTag_EmptyHint" = "(leeg)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Netwerk fee:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Netwerkkosten (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Verwerkingstijd: deze transactie wordt voltooid in %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -203,9 +232,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Totale Prijs:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "De ingevulde woorden komen niet overeen met uw paper key. Probeer het opnieuw.";
+"ConfirmPaperPhrase.error" = "De ingevoerde woorden komen niet overeen met uw herstelzin. Probeer het a.u.b. opnieuw.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Voer de volgende woorden in van je papieren sleutel om te verzekeren dat alles correct is opgeschreven.";
+"ConfirmPaperPhrase.label" = "Voer de volgende woorden uit uw herstelzin in om er zeker van te zijn dat alles correct is opgeschreven.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Woord #%1$@";
 /* Agree to legal terms button */
@@ -276,6 +305,7 @@
 "FeeSelector.estimatedDeliver" = "Geschatte levering: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 tot 5 minuten";
+"FeeSelector.lessThanMinutes" = "<%1$d minuten";
 /* Priority fee */
 "FeeSelector.priority" = "Voorrang";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +420,10 @@
 "ManageWallet.textFeildLabel" = "Portemonnee Naam";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Portemonnee Beheren";
+"MarketData.high24h" = "24u hoog";
+"MarketData.low24h" = "24u laag";
+"MarketData.marketCap" = "Marktkapitalisatie";
+"MarketData.volume" = "Handelsvolume";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Voeg Wallet toe";
 /* Menu button title */
@@ -411,7 +445,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Portemonnee Herstellen";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "U heeft uw papieren sleutel nodig om uw wallet te openen als u uw beveiligingsinstellingen op uw telefoon wijzigt.\n\nWeet u zeker dat u uw papieren sleutel later wilt instellen?";
+"Modal.PaperKeySkip.Body.Android" = "Uw herstelzin is vereist om uw portemonnee te openen als u de beveiligingsinstellingen op uw telefoon wijzigt. \n\nWeet u zeker dat u uw herstelzin later wilt instellen?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Doorgaan met instellen";
 /* Paper Key Skip modal I'll do it later button */
@@ -488,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "niet-ondersteund handtekening type";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "niet-vertrouwd certificaat";
+"Platform.transaction_cancelled" = "Transactie geannuleerd";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "Wees de eerste om belangrijke support- en productupdates te ontvangen";
 /* Placeholder text for an email address text field. */
@@ -512,12 +547,17 @@
 "Prompts.NoScreenLock.body.android" = "Een schermvergrendeling voor uw apparaat is nodig om uw portemonnee te beveiligen. Ga naar \"Instellingen\" > \"Beveiliging\" > \"Schermvergrendeling\" en stel in om door te gaan.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Schermvergrendeling uitgeschakeld";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Uw Papiersleutel moet opgeslagen worden voor het geval dat u uw telefoon ooit verliest of vervangt.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Uw herstelzin moet worden opgeslagen voor het geval u uw telefoon verliest of wijzigt.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Stel uw papieren sleutel in voor het geval dat u uw telefoon ooit kwijtraakt of vervangt. U heeft uw sleutel nodig indien u de beveiligingsinstellingen van uw telefoon aanpast.";
+"Prompts.PaperKey.Body.Android" = "Stel uw herstelzin in voor het geval u ooit uw telefoon kwijtraakt of vervangt. Uw sleutel is ook vereist als u de beveiligingsinstellingen van uw telefoon wijzigt.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Actie Vereist";
+"Prompts.RateApp.dontShow" = "Vraag het niet nog eens";
+"Prompts.RateApp.enjoyingBrd" = "Genieten van BRD?";
+"Prompts.RateApp.googlePlayReview" = "Uw beoordeling helpt de BRD-gemeenschap te laten groeien.";
+"Prompts.RateApp.noThanks" = "Nee bedankt";
+"Prompts.RateApp.rateUs" = "Beoordeel ons";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Je portemonnee is misschien niet gesynchroniseerd. Dit kan vaak worden verholpen door de blokketen opnieuw te scannen.";
 /* Transaction rejected prompt title */
@@ -587,11 +627,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PIN Resetten";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Papieren Sleutel Invoeren";
+"RecoverWallet.instruction" = "Voer de herstelzin in";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Herstel je BRD met je papieren sleutel.";
+"RecoverWallet.intro" = "Herstel uw BRD met uw herstelzin.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "De papieren sleutel die je hebt ingevoerd is ongeldig. Check ieder woord a.u.b. en probeer het opnieuw.";
+"RecoverWallet.invalid" = "De ingevoerde herstelzin is ongeldig. Controleer elk woord nogmaals en probeer het opnieuw.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Linker Pijl";
 /* Next button label */
@@ -601,35 +641,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Rechter Pijl";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Voer de papieren sleutel in voor de portemonnee die je wilt herstellen.";
+"RecoverWallet.subheader" = "Voer de herstelzin in voor de portemonnee die u wilt herstellen.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Om je PIN te resetten moet je de woorden van je papieren sleutel in onderstaande velden invoeren.";
+"RecoverWallet.subheader_reset_pin" = "Om uw pincode opnieuw in te stellen, voert u de woorden uit uw herstelzin in de onderstaande vakken in.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "Het woord dat u ingevoerd heeft is niet juist. Probeer het nogmaals.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Bijna klaar! Voer de volgende woorden in van uw herstelcode.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bevestig herstelcode";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Voer herstelcode in";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Voer uw herstelcode in om deze wallet van uw apparaat te ontkoppelen.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Weet u zeker dat u uw herstelcode later in wilt stellen?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Bijna klaar! Typ de volgende woorden uit uw herstelzin.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Bevestig de herstelzin";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Voer de herstelzin in";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Voer uw herstelzin in om deze portemonnee van uw apparaat te ontkoppelen.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Weet u zeker dat u uw herstelzin later wilt instellen?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Later instellen";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Herstelcode aanmaken";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Genereer een herstelzin";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "De code is vereist om uw geld terug te krijgen als u een upgrade uitvoert of uw telefoon verliest.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Maak uw persoonlijke herstelcode aan";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Genereer uw persoonlijke herstelzin";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Ga naar Wallet";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Hoe werkt het - Stap %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Enkele van de woorden die u heeft ingevoerd komen niet overeen met uw herstelcode. Probeer het nogmaals.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Sommige van de ingevoerde woorden komen niet overeen met uw herstelzin. Probeer het a.u.b. opnieuw.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Houd het veilig";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +681,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Herstel uw wallet";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Voer de herstelcode in van de wallet die u wilt herstellen.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Voer de herstelzin in van de portemonnee die u wilt herstellen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Ontspan, koop en handel";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Vergeet niet om deze woorden op te schrijven. Veeg terug als u het vergeten bent.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Voer uw herstelcode in om uw PIN opnieuw in te stellen.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Voer uw herstelzin in om uw pincode opnieuw in te stellen.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Koop en handel in de wetenschap dat uw fondsen beschermd zijn met de beste veiligheid en privacy die er zijn.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Bewaar uw code op een veilige plek. Dit is de enige manier om uw wallet terug te krijgen. BRD bewaart geen kopie.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Gefeliciteerd! U heeft de instellingen van uw herstelcode voltooid.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Gefeliciteerd! U heeft het instellen van uw herstelzin voltooid.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "U bent nu klaar om te storten, handelen en crypto van uw BRD-wallet te kopen.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +708,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Start een nieuwe portefeuille door de huidige portefeuille van uw apparaat te wissen.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Noteer uw code";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Noteer nogmaals uw herstelcode";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Schrijf uw herstelzin opnieuw op";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Noteer de volgende woorden op volgorde.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Uw herstelcode";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Uw herstelzin";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ van %2$@";
 /* No amount entered error message. */
@@ -728,11 +768,11 @@
 "SecurityCenter.faceIdTitle" = "Face-ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "De enige manier om toegang te hebben tot je Bitcoins is als je je telefoon verliest of upgrade.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Papieren Sleutel";
+"SecurityCenter.paperKeyTitle" = "Herstelzin";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Papieren Sleutel";
+"SecurityCenter.paperKeyTitle.android" = "Herstelzin";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Beschermt je BRD van ongeautoriseerde gebruikers.";
 /* PIN button title */
@@ -755,10 +795,13 @@
 "Segwit.Enable" = "Activeer";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "Naar de maan";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "Bedrag";
 /* Balance: $4.00 */
-"Send.balance" = "Balans: ";
+"Send.balance" = "Balans: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Balans:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Sta cameratoegang toe via \"Instellingen\" > \"Apps\" > \"BRD\" > \"Toestemmingen\"";
 /* Permission required to access camera */
@@ -777,12 +820,16 @@
 "Send.destinationTag_optional" = "Bestemmingstag (optioneel)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "Bestemmingstag (verplicht)";
+"Send.destinationTag_required_error" = "Een geldige Destination Tag is vereist voor het doeladres.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "Plakbord is leeg";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "Kan niet naar jezelf sturen.";
 /* Network Fee: $0.01 */
 "Send.fee" = "Netwerkkosten: %1$@";
+"Send.fio_invalid" = "Ongeldig FIO-adres.";
+"Send.fio_noAddress" = "Er is geen %1$s adres gekoppeld aan dit FIO-adres.";
+"Send.fio_retrievalError" = "Er is een fout opgetreden bij het ophalen van het adres voor dit FIO-adres. Probeer het later opnieuw.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "Begunstigde is niet gecertifcieerd.";
 /* Insufficient funds error */
@@ -815,12 +862,22 @@
 "Send.noFeesError" = "Voorwaarden voor Netwerkkosten worden gedownload. Probeer het opnieuw.";
 /* Paste button label */
 "Send.pasteLabel" = "Plakken";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "Ongeldige PayID.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "Er is geen %1$s adres gekoppeld aan deze PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Er is een fout opgetreden bij het ophalen van het adres voor deze PayID. Probeer het later opnieuw.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Kon de transactie niet publiceren.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "Kon de betalingsaanvraag niet laden";
 /* Scan button label */
 "Send.scanLabel" = "Scannen";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Max verzenden:";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Versturen";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -904,21 +961,25 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonieme Data Delen?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Schrijf Papieren Sleutel Opnieuw Op";
+"StartPaperPhrase.againButtonTitle" = "Schrijf de herstelzin opnieuw op";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Je papieren sleutel is de enige manier om je BRD te herstellen als je telefoon verloren, gestolen, kapot of geüpgrade is.\n\nWe zullen je een lijst met woorden laten zie die je op een papiertje moet schrijven en veilig moet bewaren.";
+"StartPaperPhrase.body" = "Uw herstelzin is de enige manier om uw BRD te herstellen als uw telefoon verloren, gestolen, defect of geüpgraded is. \n\nWe laten u een lijst met woorden zien die u op een vel papier kunt schrijven en veilig kunt bewaren.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Uw papieren sleutel is de enige manier om uw BRD te herstellen indien u uw telefoon kwijtraakt of als deze gestolen of geüpgraded wordt. \n\nU heeft uw papieren sleutel tevens nodig indien u de beveiligingsinstellingen van uw apparaat aanpast.\n\nWe tonen u een lijst met woorden die u op een stuk papier kunt opschrijven en veilig dient te bewaren.";
+"StartPaperPhrase.Body.Android" = "Uw herstelzin is de enige manier om uw BRD te herstellen als uw telefoon verloren, gestolen, defect of geüpgraded is. \n\nUw herstelzin is ook vereist als u de beveiligingsinstellingen op uw apparaat wijzigt. \n\nWe laten u een lijst met woorden zien die u op een vel papier kunt schrijven en veilig kunt bewaren.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Schrijf Papieren Sleutel Op";
+"StartPaperPhrase.buttonTitle" = "Schrijf de herstelzin op";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "Je hebt voor het laatst je papieren sleutel opgeschreven op \n%1$@";
+"StartPaperPhrase.date" = "Laatst opgeschreven \n %1$@";
 /* button label */
 "StartViewController.createButton" = "Nieuwe wallet maken";
 /* Start view message */
 "StartViewController.message" = "De veiligste en betrouwbaarste manier om bitcoin te gebruiken.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Wallet herstellen";
+"SupportForm.feedbackAppreciated" = "We zijn benieuwd naar uw feedback";
+"SupportForm.helpUsImprove" = "Help ons verbeteren";
+"SupportForm.notNow" = "Niet nu";
+"SupportForm.pleaseDescribe" = "Beschrijf uw ervaring";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Activiteit";
 /* Syncing view connectiong state header text */
@@ -1054,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Bevestigingen";
+"TransactionDetails.destinationTag" = "Bestemmingstag";
+"TransactionDetails.destinationTag_EmptyHint" = "(leeg)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Je transacties zullen hier verschijnen.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1068,6 +1131,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gaslimiet";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gasprijs";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Details verbergen";
 /* Label showing the transaction was started (initialized) */
@@ -1182,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN Vereist";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autoriseer deze transactie";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Weet u zeker dat u Fastsync wilt uitschakelen?";
 /* Explanation for wallet connection setting */
@@ -1220,11 +1291,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Mislukt";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Om een nieuwe portemonnee te beginnen of een bestaande te laden, moet u eerst de portemonnee die momenteel geïnstalleerd is ontkoppelen. Voer de Papieren Sleutel van de huidige portemonnee in om door te gaan.";
+"WipeWallet.instruction" = "Voer uw herstelzin in om deze portemonnee van uw apparaat te wissen.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Ontkoppel je portemonnee om het te verwijderen van dit toestel. Wanneer deze portemonnee ontkoppeld is kunt u een nieuwe portemonnee beginnen of een andere portemonnee laden op dit toestel.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "U zal niet langer uw huidige BRD portemonnee kunnen bereiken vanaf dit apparaat. Uw saldo zal hetzelfde blijven.";
+"WipeWallet.startWarning" = "Uw huidige portemonnee wordt van dit apparaat verwijderd. Als u het in de toekomst wilt herstellen, moet u uw herstelzin invoeren.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Portemonnee Ontkoppelen";
 /* Wipe wallet button title */

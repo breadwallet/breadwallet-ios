@@ -21,11 +21,11 @@
       },
       {
         "package": "CoinGecko",
-        "repositoryURL": "https://github.com/breadwallet/CoinGecko",
+        "repositoryURL": "https://github.com/breadwallet/coingecko",
         "state": {
           "branch": null,
-          "revision": "be65fb1d75e62b103f9a1988b05d5d5690396ff3",
-          "version": "1.0.1"
+          "revision": "c46a8fd0ea9752e465006d477553bf0c5a78c931",
+          "version": "1.0.2"
         }
       }
     ]

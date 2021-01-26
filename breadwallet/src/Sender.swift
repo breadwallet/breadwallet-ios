@@ -49,6 +49,7 @@ class Sender: Subscriber {
     private let authenticator: TransactionAuthenticator
     
     private var comment: String?
+    private var gift: Gift?
     private var transfer: WalletKit.Transfer?
     private var protocolRequest: PaymentProtocolRequest?
     var maximum: Amount?
@@ -91,8 +92,8 @@ class Sender: Subscriber {
 
     // MARK: Create
 
-    func estimateFee(address: String, amount: Amount, tier: FeeLevel, completion: @escaping (TransferFeeBasis?) -> Void) {
-        wallet.estimateFee(address: address, amount: amount, fee: tier, completion: completion)
+    func estimateFee(address: String, amount: Amount, tier: FeeLevel, isStake: Bool, completion: @escaping (TransferFeeBasis?) -> Void) {
+        wallet.estimateFee(address: address, amount: amount, fee: tier, isStake: isStake, completion: completion)
     }
     
     public func estimateLimitMaximum (address: String,
@@ -107,7 +108,7 @@ class Sender: Subscriber {
         wallet.estimateLimitMinimum(address: address, fee: fee, completion: completion)
     }
 
-    private func validate(address: String, amount: Amount) -> SenderValidationResult {
+    private func validate(address: String, amount: Amount, feeBasis: TransferFeeBasis? = nil) -> SenderValidationResult {
         guard wallet.currency.isValidAddress(address) else { return .invalidAddress }
         guard !wallet.isOwnAddress(address) else { return .ownAddress }
 
@@ -121,20 +122,31 @@ class Sender: Subscriber {
             guard amount <= balance else { return .insufficientFunds }
         }
         if wallet.feeCurrency != wallet.currency {
-            guard let feeBalance = wallet.feeCurrency.state?.balance, !feeBalance.isZero else { return .insufficientGas }
+            if let feeBalance = wallet.feeCurrency.state?.balance, let feeBasis = feeBasis {
+                let feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: wallet.feeCurrency)
+                if feeBalance.tokenValue < feeAmount.tokenValue {
+                    return .insufficientGas
+                }
+            }
         }
         return .ok
     }
 
-    func createTransaction(address: String, amount: Amount, feeBasis: TransferFeeBasis, comment: String?, attribute: String? = nil) -> SenderValidationResult {
+    func createTransaction(address: String,
+                           amount: Amount,
+                           feeBasis: TransferFeeBasis,
+                           comment: String?,
+                           attribute: String? = nil,
+                           gift: Gift? = nil) -> SenderValidationResult {
         // Dismissing the views when sending will cause transfer to be non nil. This fixes a crash
         transfer = nil
-        let result = validate(address: address, amount: amount)
+        //assert(transfer == nil)
+        let result = validate(address: address, amount: amount, feeBasis: feeBasis)
         guard case .ok = result else { return result }
-
         switch wallet.createTransfer(to: address, amount: amount, feeBasis: feeBasis, attribute: attribute) {
         case .success(let transfer):
             self.comment = comment
+            self.gift = gift
             self.transfer = transfer
             return .ok
         case .failure(let error) where error == .invalidAddress:
@@ -155,7 +167,7 @@ class Sender: Subscriber {
         guard let amount = protoReq.totalAmount else {
             return .invalidRequest("No Amount Specified")
         }
-        return validate(address: address, amount: Amount(cryptoAmount: amount, currency: wallet.currency))
+        return validate(address: address, amount: Amount(cryptoAmount: amount, currency: wallet.currency), feeBasis: nil)
     }
 
     func createTransaction(protocolRequest protoReq: PaymentProtocolRequest,
@@ -188,6 +200,27 @@ class Sender: Subscriber {
         } else {
             sendWithPinVerification(transfer: transfer, pinVerifier: pinVerifier, completion: completion)
         }
+    }
+    
+    func stake(address: String, pinVerifier: @escaping PinVerifier, completion: @escaping SendCompletion) {
+        wallet.estimateFee(address: address,
+                           amount: Amount.zero(wallet.currency),
+                           fee: .regular,
+                           isStake: true,
+                           completion: { basis in
+            DispatchQueue.main.async {
+                guard let basis = basis else { return }
+                let result = self.wallet.currency.wallet?.stake(address: address, feeBasis: basis)
+                guard case .success(let transfer) = result else {
+                    return completion(.creationError(message: "no tx")) }
+                pinVerifier { pin in
+                    guard self.authenticator.signAndSubmit(transfer: transfer, wallet: self.wallet, withPin: pin) else {
+                        return completion(.creationError(message: S.Send.Error.authenticationError))
+                    }
+                    self.waitForSubmission(of: transfer, completion: completion)
+                }
+            }
+        })
     }
     
     private func sendWithPinVerification(transfer: Transfer,
@@ -292,10 +325,19 @@ class Sender: Subscriber {
                              rate: rate)
         let feeRate = tx.feeBasis?.pricePerCostFactor.tokenValue.doubleValue
 
+        let newGift: Gift? = gift != nil ? Gift(shared: false,
+                                                claimed: false,
+                                                reclaimed: false,
+                                                txnHash: transfer.hash?.description,
+                                                keyData: gift!.keyData,
+                                                name: gift!.name,
+                                                rate: gift!.rate,
+                                                amount: gift!.amount) : nil
         tx.createMetaData(rate: rate,
                           comment: comment,
                           feeRate: feeRate,
                           tokenTransfer: nil,
+                          gift: newGift,
                           kvStore: kvStore)
 
         // for non-native token transfers, the originating transaction on the network's primary wallet captures the fee spent
@@ -308,6 +350,18 @@ class Sender: Subscriber {
                                             kvStore: kvStore,
                                             rate: rate)
             originatingTx.createMetaData(rate: rate, tokenTransfer: wallet.currency.code, kvStore: kvStore)
+        }
+        
+        if newGift != nil {
+            //gifing needs a delay for some reason
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                print("[gifting] txMetaDataUpdated: \(tx.hash)")
+                Store.trigger(name: .txMetaDataUpdated(tx.hash))
+            }
+        } else {
+            DispatchQueue.main.async {
+                Store.trigger(name: .txMetaDataUpdated(tx.hash))
+            }
         }
     }
 }

@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "잔액";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "발행자가 ERC20 지원을 중단하기로 결정했기 때문에 이 토큰은 목록에서 제외되었습니다. \n\n하지만 이 토큰을 다른 플랫폼으로 보낼 수는 있습니다. 자세한 내용은 지원 페이지를 방문하십시오.";
+"Account.delistedToken" = "이 토큰은 목록에서 삭제되었습니다. \n\n여전히 이러한 토큰을 다른 플랫폼으로 보낼 수 있습니다. 자세한 내용은 지원 페이지를 참조하십시오.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@ 당 %1$@";
 /* Loading Wallet Message */
@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "나의 BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "제3자가 제공한 키보드를 사용하고 계신 것 같습니다, 귀하의 입력을 기록하고 귀하의 페이퍼 키가 도난 당할 수 있습니다. 추가적인 보호를 위해 기본 안드로이드 키보드로 전환해 주세요.";
+"Alert.customKeyboard.android" = "입력 한 내용을 기록하고 복구 문구를 훔칠 수있는 타사 키보드를 사용중인 것 같습니다. 추가 보호를 위해 기본 Android 키보드로 전환하십시오.";
 /* Error alert title */
 "Alert.error" = "오류";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "귀하의 안드로이드 잠금 화면이 꺼져서 귀하의 암호화 된 데이터가 최근 무효화 되었습니다.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "화면 잠금 설정이 변경되어 진행할 수 없습니다 (예: 암호가 비활성화되거나 지문이 변경된 경우). 보안을 위해, 안드로이가 키 입력을 영구적으로 잠갔습니다. 따라서, 당신의 BRD 앱 데이터는 앱을 제거하여 지워야 합니다.\n\n걱정하지 마세요. 고객님의 자금은 매우 안전합니다! 종이 키를 사용하여 앱을 재설치하고 월렛을 복구하십시오.";
+"Alert.keystore.invalidated.uninstall.android" = "화면 잠금 설정이 변경 되었기 때문에 진행할 수 없습니다 (예 : 비밀번호 사용 안함, 지문 변경). 보안을 위해 Android는 키 저장소를 영구적으로 잠급니다. 따라서 제거하여 BRD 앱 데이터를 지워야합니다. \n\n걱정하지 마세요. 귀하의 자금은 여전히 안전합니다! 앱을 다시 설치하고 복구 문구를 사용하여 지갑을 복구하세요.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "화면 잠금 설정이 변경되어 진행할 수 없습니다 (예: 암호가 비활성화되거나 지문이 변경된 경우). 보안을 위해, 안드로이가 키 입력을 영구적으로 잠갔습니다. 따라서, 당신의 BRD 앱 데이터는 지워야 합니다.\n\n걱정하지 마세요. 고객님의 자금은 매우 안전합니다! 종이 키를 사용하여 월렛을 복구하십시오.";
+"Alert.keystore.invalidated.wipe.android" = "화면 잠금 설정이 변경 되었기 때문에 진행할 수 없습니다 (예 : 비밀번호 사용 안함, 지문 변경). 보안을 위해 Android는 키 저장소를 영구적으로 잠급니다. 따라서 BRD 앱 데이터를 삭제해야합니다. \n\n걱정하지 마세요. 귀하의 자금은 여전히 안전합니다! 복구 문구를 사용하여 지갑을 복구하십시오.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "안드로이드 키스토어 오류";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "모든 지갑 주소들이 성공적으로 복사됨.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "종이 열쇠 준비";
+"Alerts.paperKeySet" = "복구 문구 세트";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "굉장해요!";
 /* Alert Header label (the PIN was set) */
@@ -186,12 +186,41 @@
 "Button.yes" = "예";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "박스안에 귀하의 ID를 중앙에 두세요";
+"CloudBackup.backupDeleted" = "백업이 지워짐";
+"CloudBackup.backupDeletedMessage" = "PIN 시도가 너무 많이 실패하면 iCloud 백업이 지워졌습니다. 이제 앱이 다시 시작됩니다.";
+"CloudBackup.backupMenuTitle" = "iCloud 백업";
+"CloudBackup.createButton" = "새 지갑 만들기";
+"CloudBackup.createWarning" = "이전에 백업 한 지갑이 감지되었습니다. 이 백업을 사용하는 것이 좋습니다. 새 지갑 생성을 진행 하시겠습니까?";
+"CloudBackup.enableBody1" = "이 기능이 작동하려면 iCloud 키 체인이 켜져 있어야합니다.";
+"CloudBackup.enableBody2" = "다음과 같이 표시되어야합니다.";
+"CloudBackup.enableButton" = "iCloud 키 체인을 켰습니다";
+"CloudBackup.enableTitle" = "키 체인 활성화";
+"CloudBackup.encryptBackupMessage" = "백업을 암호화하려면 PIN을 입력하세요.";
+"CloudBackup.mainBody" = "iCloud 백업은 iCloud 계정만큼만 안전합니다. 다음 단계에서 복구 문구를 기록하고 안전하게 보관하는 것이 좋습니다. 복구 문구는 더 이상 iCloud에 액세스 할 수없는 경우 지갑을 복구하는 유일한 방법입니다.";
+"CloudBackup.mainTitle" = "iCloud 복구 백업";
+"CloudBackup.mainWarning" = "이 기능이 작동하려면 iOS 설정 앱에서 iCloud 키 체인이 켜져 있어야합니다.";
+"CloudBackup.mainWarningConfirmation" = "iCloud 백업을 비활성화 하시겠습니까? 모든 장치에서 백업이 삭제됩니다.";
+"CloudBackup.pinAttempts" = "백업을 지우기 전에 남은 시도 : %1$@";
+"CloudBackup.recoverButton" = "복구 키에서 복원";
+"CloudBackup.recoverHeader" = "iCloud 백업을 잠금 해제하려면 PIN을 입력하세요.";
+"CloudBackup.restoreButton" = "iCloud 백업에서 복원";
+"CloudBackup.selectTitle" = "백업 선택";
+"CloudBackup.step1" = "설정 앱을 시작합니다.";
+"CloudBackup.step2" = "Apple ID 이름을 탭합니다.";
+"CloudBackup.step3" = "iCloud를 탭합니다.";
+"CloudBackup.step4" = "iCloud 키 체인이 켜져 있는지 확인";
+"CloudBackup.understandText" = "iCloud 키 체인이 활성화되지 않으면이 기능이 작동하지 않음을 이해합니다.";
+"CloudBackup.warningBody" = "잘못된 PIN 시도를 %1$@ 더 시도하면 iCloud 백업이 삭제됩니다.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "보낼 금액:";
+"Confirmation.destinationTag" = "목적지 태그";
+"Confirmation.destinationTag_EmptyHint" = "(빈)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "네트워크 수수료:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "네트워크 요금 (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "처리 시간: 이 거래는 %1$@에 완료될 것으로 예상됩니다.";
 /* Label for "send" button on final confirmation screen */
@@ -203,9 +232,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "총 금액:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "입력하신 단어가 귀하의 페이퍼 키와 일치하지 않습니다. 다시 시도하십시오.";
+"ConfirmPaperPhrase.error" = "입력 한 단어가 복구 문구와 일치하지 않습니다. 다시 시도하십시오.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "모든 것이 정확하게 적혀 있는지 확인하기 위해, 귀하의 종이 열쇠로부터 다음의 단어들을 입력해 주세요.";
+"ConfirmPaperPhrase.label" = "모든 것이 올바르게 기록되었는지 확인하려면 복구 문구에서 다음 단어를 입력하십시오.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "단어 #%1$@";
 /* Agree to legal terms button */
@@ -276,6 +305,7 @@
 "FeeSelector.estimatedDeliver" = "예상 배송 시간: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2-5분";
+"FeeSelector.lessThanMinutes" = "<%1$d 분";
 /* Priority fee */
 "FeeSelector.priority" = "우선 순위";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +420,10 @@
 "ManageWallet.textFeildLabel" = "지갑 이름";
 /* Manage wallet modal title */
 "ManageWallet.title" = "지갑 관리";
+"MarketData.high24h" = "24 시간 최고";
+"MarketData.low24h" = "24 시간 최저";
+"MarketData.marketCap" = "시가 총액";
+"MarketData.volume" = "거래량";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "지갑 추가";
 /* Menu button title */
@@ -411,7 +445,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "지갑 복구하기";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "휴대폰의 보안 설정 변경 하였다면, 지갑을 열기 위해서도 종이 열쇠는 필요합니다.\n\n종이 열쇠 설정을 정말 나중에 하시겠습니까?";
+"Modal.PaperKeySkip.Body.Android" = "휴대폰의 보안 설정을 변경 한 경우 지갑을 열려면 복구 문구가 필요합니다. \n\n나중에 복구 문구를 설정 하시겠습니까?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "설정 계속하";
 /* Paper Key Skip modal I'll do it later button */
@@ -488,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "지원되지 않는 서명 형태";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "신용할 수 없는 증명서";
+"Platform.transaction_cancelled" = "거래 취소";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "주요 지원 및 제품 업데이트르 받을 첫 주인공이 되어 보세요.";
 /* Placeholder text for an email address text field. */
@@ -512,12 +547,17 @@
 "Prompts.NoScreenLock.body.android" = "귀하의 지갑을 보호하시려면 장치 화면 잠금이 필요합니다. 계속하시려면 \"설정\" > \"보안\" > \"화면 잠금\"가셔서 켜 주세요.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "화면 잠금 꺼짐";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "귀하의 종이 열쇠는 귀하의 핸드폰일 잃어버리거나 바꿀 경우에 대비해 저장되어야만 합니다.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "휴대 전화를 분실하거나 변경하는 경우 복구 문구를 저장해야합니다.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "휴대폰 분실 및 변경을 대비하여 종이 열쇠를 설정하세요. 당신의 열쇠는 휴대폰 보안설정 변경 시에도 필요합니다.";
+"Prompts.PaperKey.Body.Android" = "전화기를 분실하거나 교체 할 경우를 대비하여 복구 문구를 설정하십시오. 휴대 전화의 보안 설정을 변경하는 경우에도 키가 필요합니다.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "조치 필요함";
+"Prompts.RateApp.dontShow" = "다시 묻지마";
+"Prompts.RateApp.enjoyingBrd" = "BRD를 즐기십니까?";
+"Prompts.RateApp.googlePlayReview" = "귀하의 검토는 BRD 커뮤니티의 성장을 돕습니다.";
+"Prompts.RateApp.noThanks" = "아니요, 괜찮아요";
+"Prompts.RateApp.rateUs" = "우리를 검토";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "귀하의 지갑이 동기화 되어 있지 않을 수 있습니다. 블록체인을 재스캔하면 대부분 고쳐집니다.";
 /* Transaction rejected prompt title */
@@ -587,11 +627,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PIN 재설정";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "페이퍼 키 입력";
+"RecoverWallet.instruction" = "복구 문구 입력";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "페이퍼 키를 사용해 브레드를 복구해 주세요.";
+"RecoverWallet.intro" = "복구 문구로 BRD를 복구하십시오.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "올바르지 않은 페이퍼 키를 입력하셨습니다. 각 단어를 재확인한 후 다시 시도해 주세요.";
+"RecoverWallet.invalid" = "입력 한 복구 문구가 잘못되었습니다. 각 단어를 다시 확인하고 다시 시도하십시오.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "왼쪽 화살표";
 /* Next button label */
@@ -601,35 +641,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "오른쪽 화살표";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "복구하려는 지갑의 페이퍼 키를 입력해 주세요.";
+"RecoverWallet.subheader" = "복구하려는 지갑의 복구 문구를 입력하십시오.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "PIN을 재설정하려면, 페이퍼 키의 단어들을 아래 상자에 입력해 주세요.";
+"RecoverWallet.subheader_reset_pin" = "PIN을 재설정하려면 아래 상자에 복구 문구의 단어를 입력하세요.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "입력한 단어가 올바르지 않습니다. 다시 시도해 주세요.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "거의 됐습니다! 복구 키에서 다음 단어를 입력하세요.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "복구 키 확인";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "복구 키 입력";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "기기에서 이 지갑을 연결 해제하려면 복구 키를 입력하세요.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "복구 키를 나중에 설정하겠습니까?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "거의 완료되었습니다! 복구 문구에서 다음 단어를 입력하십시오.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "복구 문구 확인";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "복구 문구 입력";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "기기에서이 지갑의 연결을 해제하려면 복구 문구를 입력하세요.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "나중에 복구 문구를 설정 하시겠습니까?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "나중에 설정";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "복구 키 생성";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "복구 문구 생성";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "이 키는 스마트폰을 업그레이드 또는 분실하는 경우 돈을 복구할 때 필수입니다.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "개인 복구 키 생성";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "개인 복구 문구 생성";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "지갑으로 이동";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "작동 원리 - %1$@ 단계";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "입력한 단어 일부가 복구 키와 일치하지 않습니다. 다시 시도해 주세요.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "입력 한 단어 중 일부가 복구 문구와 일치하지 않습니다. 다시 시도하십시오.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "안전하게 보관하세요.";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +681,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "내 지갑 복구";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "복구하고자 하는 지갑의 복구 키를 입력해 주세요.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "복구하려는 지갑의 복구 문구를 입력하세요.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "편안하게 구매하고 거래하세요.";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "이 단어들을 잊지 말고 적어 두세요. 잊으셨다면 가볍게 밀어 뒤로 가세요.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "PIN을 초기화하려면 복구 키를 입력해 주세요.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "PIN을 재설정하려면 복구 문구를 입력하세요.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "비즈니스 최고의 보안과 개인정보 보호정책으로 자금이 보호받는다는 사실을 인지하며 구매하고 거래하세요.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "안전한 장소에 키를 보관하세요. 지갑을 복구할 유일한 방법입니다. BRD는 복사본을 보관하지 않습니다.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "축하합니다! 복구 키 설정이 완료되었습니다.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "축하합니다! 복구 문구 설정을 완료했습니다.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "BRD 지갑에서 암호화화폐를 예금하고 거래하고 구매할 준비가 끝났습니다.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +708,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "기기에서 현재 지갑을 닦아서 새 지갑을 시작합니다.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "키를 적어 주세요.";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "복구 키를 다시 적어 주세요.";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "복구 문구를 다시 기록하십시오.";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "다음 단어를 순서대로 적으세요.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "내 복구 키";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "복구 문구";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%2$@ 중 %1$@";
 /* No amount entered error message. */
@@ -728,11 +768,11 @@
 "SecurityCenter.faceIdTitle" = "페이스 ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "전화를 분실하거나 업그레이드하는 경우, 비트코인에 액세스할 수 있는 유일한 방법입니다.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "페이퍼 키";
+"SecurityCenter.paperKeyTitle" = "복구 문구";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "페이퍼 키";
+"SecurityCenter.paperKeyTitle.android" = "복구 문구";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "허가받지 않은 사용자로부터 브레드를 보호하세요.";
 /* PIN button title */
@@ -755,10 +795,13 @@
 "Segwit.Enable" = "활성화";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "투 더 문";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "금액";
 /* Balance: $4.00 */
-"Send.balance" = "잔액: ";
+"Send.balance" = "잔액: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "잔액:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "\"설정\" > \"앱\" > \"BRD\" > \"허용\"에서 카메라 접속을 허용해 주세요";
 /* Permission required to access camera */
@@ -777,12 +820,16 @@
 "Send.destinationTag_optional" = "대상 태그 (선택 사항)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "대상 태그 (필수)";
+"Send.destinationTag_required_error" = "대상 주소에 유효한 대상 태그가 필요합니다.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "클립보드가 비어 있습니다";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "자신에게는 보낼 수 없습니다.";
 /* Network Fee: $0.01 */
 "Send.fee" = "네트워크 비용: %1$@";
+"Send.fio_invalid" = "잘못된 FIO 주소입니다.";
+"Send.fio_noAddress" = "이 FIO 주소와 연결된 %1$s 주소가 없습니다.";
+"Send.fio_retrievalError" = "이 FIO 주소에 대한 주소를 검색하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "인증되지 않은 수취인입니다.";
 /* Insufficient funds error */
@@ -815,12 +862,22 @@
 "Send.noFeesError" = "네트워크 수수료 조건을 다운로드 중입니다. 다시 시도하십시오.";
 /* Paste button label */
 "Send.pasteLabel" = "붙여넣기";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "잘못된 PayID입니다.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "이 PayID와 연결된 %1$s 주소가 없습니다.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "이 PayID의 주소를 검색하는 중에 오류가 발생했습니다. 나중에 다시 시도하십시오.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "전송할 수 없습니다.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "결제 요청을 불러올 수 없었습니다";
 /* Scan button label */
 "Send.scanLabel" = "스캔";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "최대 보내기 :";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "보내기";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -904,21 +961,25 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "익명 데이터를 공유하시겠습니까?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "페이퍼 키를 다시 쓰기";
+"StartPaperPhrase.againButtonTitle" = "복구 문구를 다시 기록";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "페이퍼 키는 핸드폰을 분실하거나, 도난당하거나, 망가지거나, 업그레이드한 경우 브레드를 다시 살릴 수 있는 유일한 방법입니다.\n\n저희가 제시하는 단어 목록을 잘 적어서 안전하게 보관해 주세요.";
+"StartPaperPhrase.body" = "복구 문구는 휴대 전화가 분실, 도난, 파손 또는 업그레이드 된 경우 BRD를 복원하는 유일한 방법입니다. \n\n종이에 적어 안전하게 보관할 단어 목록을 보여드립니다.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "당신의 종이 열쇠는 휴대폰 분실, 도난, 파손 또는 업그레이드 시, BRD 복구를 위한 유일한 수단입니다.\n\n기기의 보안설정 후에도 당신의 종이 열쇠는 반드시 필요합니다.\n\n단어 리스트를 보여드릴 테니, 종이에 기입 후 안전하게 보관하세요.";
+"StartPaperPhrase.Body.Android" = "복구 문구는 휴대 전화가 분실, 도난, 파손 또는 업그레이드 된 경우 BRD를 복원하는 유일한 방법입니다. \n\n장치의 보안 설정을 변경하는 경우에도 복구 문구가 필요합니다. \n\n종이에 적어 안전하게 보관할 단어 목록을 보여드립니다.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "페이퍼 키 작성하기";
+"StartPaperPhrase.buttonTitle" = "복구 문구 기록";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "%1$@ 에 마지막으로 페이퍼 키를 작성하셨습니다.";
+"StartPaperPhrase.date" = "마지막 기록 \n %1$@";
 /* button label */
 "StartViewController.createButton" = "새 지갑 생성하기";
 /* Start view message */
 "StartViewController.message" = "비트코인을 사용하는 가장 안정되고 안전한 방법.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "지갑 복구하기";
+"SupportForm.feedbackAppreciated" = "우리는 당신의 의견을 사랑합니다";
+"SupportForm.helpUsImprove" = "우리가 개선하도록 도와주세요";
+"SupportForm.notNow" = "지금은 아님";
+"SupportForm.pleaseDescribe" = "당신의 경험을 설명하십시오";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "활동";
 /* Syncing view connectiong state header text */
@@ -1054,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Confirmations";
+"TransactionDetails.destinationTag" = "목적지 태그";
+"TransactionDetails.destinationTag_EmptyHint" = "(빈)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "귀하의 트랜잭션이 여기에 표시됩니다.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1068,6 +1131,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas Limit";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas Price";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "세부 정보 숨기기";
 /* Label showing the transaction was started (initialized) */
@@ -1182,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN 코드 입력 필수";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "이 거래 승인";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Fastsync를 끄시겠습니까?";
 /* Explanation for wallet connection setting */
@@ -1220,11 +1291,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "실패함";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "새 지갑을 시작하거나 기존 지갑을 복구하려면, 먼저 현재 설치된 지갑의 연결을 해제해야 합니다. 계속하려면, 현재 지갑의 종이 키를 입력하세요.";
+"WipeWallet.instruction" = "기기에서이 지갑을 삭제하려면 복구 문구를 입력하세요.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "지갑의 연결을 해제하여 이 기기에서 제거하세요. 이 지갑의 연결이 해제되면, 새로운 지갑을 시작하거나 이 기기에 다른 지갑을 복구할 수 있습니다.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "이장치에서 현재 BRD 지갑을 더는 이용할 수 없게 됩니다. 잔고는 남아 있게 됩니다.";
+"WipeWallet.startWarning" = "현재 지갑이이 기기에서 제거됩니다. 나중에 복원하려면 복구 문구를 입력해야합니다.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "지갑 연결 해제";
 /* Wipe wallet button title */

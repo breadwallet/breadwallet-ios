@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Este token se ha eliminado de la lista porque el emisor ha decidido abandonar la compatibilidad con ERC20. \n\nTodavía pueda enviar estos tokens a otra plataforma. Para obtener más información, visite nuestra página de asistencia.";
+"Account.delistedToken" = "Este token se ha eliminado de la lista. \n\nTodavía pueda enviar estos tokens a otra plataforma. Para obtener más información, visite nuestra página de asistencia.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ por %2$@";
 /* Loading Wallet Message */
@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Mi Coinsquare";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Parece que estás usando un teclado de un tercero que puede grabar lo que escribes y robar tu clave de papel. Cambia al teclado predeterminado de Android para obtener protección adicional.";
+"Alert.customKeyboard.android" = "Parece que está utilizando un teclado de terceros, que puede grabar lo que escribe y robar su frase de recuperación. Cambie al teclado de Android predeterminado para una protección adicional.";
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Tus datos codificados en Coinsquare fueron anulados recientemente debido a que no estaba habilitada tu pantalla de bloqueo de Android.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "No podemos continuar porque su configuración de bloqueo de la pantalla ha cambiado (por ejemplo, la contraseña se ha deshabilitado, se han cambiado las huellas dactilares). Por razones de seguridad, Android ha bloqueado su almacenamiento de contraseñas de manera permanente. Por lo tanto, los datos de la aplicación Coinsquare se deben borrar mediante la desinstalación.\n\n¡No se preocupe, sus fondos están asegurados! Reinstale la aplicación y recupere su monedero introduciendo su clave impresa.";
+"Alert.keystore.invalidated.uninstall.android" = "No podemos continuar porque se ha cambiado la configuración de bloqueo de pantalla (por ejemplo, se desactivó la contraseña, se cambiaron las huellas digitales). Por motivos de seguridad, Android ha bloqueado permanentemente su almacén de claves. Por lo tanto, los datos de la aplicación Coinsquare deben borrarse mediante la desinstalación. \n\n¡No se preocupe, sus fondos aún están seguros! Reinstale la aplicación y recupere su billetera usando su frase de recuperación.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "No podemos continuar porque su configuración de bloqueo de la pantalla ha cambiado (por ejemplo, la contraseña se ha deshabilitado, se han cambiado las huellas dactilares). Por razones de seguridad, Android ha bloqueado su almacenamiento de contraseñas de manera permanente. Por lo tanto, se deben borrar los datos de la aplicación Coinsquare.\n\n¡No se preocupe, sus fondos están asegurados! Recupere su monedero introduciendo su clave impresa.";
+"Alert.keystore.invalidated.wipe.android" = "No podemos continuar porque se ha cambiado la configuración de bloqueo de pantalla (por ejemplo, se desactivó la contraseña, se cambiaron las huellas digitales). Por motivos de seguridad, Android ha bloqueado permanentemente su almacén de claves. Por lo tanto, se deben borrar los datos de su aplicación Coinsquare. \n\n¡No se preocupe, sus fondos aún están seguros! Recupera tu billetera usando tu frase de recuperación.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Error de Android KeyStore";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Todas las direcciones de la cartera se han copiado con éxito.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Conjunto de claves en papel";
+"Alerts.paperKeySet" = "Conjunto de frases de recuperación";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "¡Genial!";
 /* Alert Header label (the PIN was set) */
@@ -186,12 +186,41 @@
 "Button.yes" = "Sí";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centra tu ID en el recuadro";
+"CloudBackup.backupDeleted" = "Copia de seguridad borrada";
+"CloudBackup.backupDeletedMessage" = "Tu copia de seguridad de iCloud ha sido borrada después de demasiados intentos fallidos de PIN. La aplicación se reiniciará ahora.";
+"CloudBackup.backupMenuTitle" = "Copia de seguridad de iCloud";
+"CloudBackup.createButton" = "Crear nueva cartera";
+"CloudBackup.createWarning" = "Se ha detectado una billetera con copia de seguridad anterior. Se recomienda utilizar esta copia de seguridad. ¿Está seguro de que desea continuar con la creación de una nueva billetera?";
+"CloudBackup.enableBody1" = "El llavero de iCloud debe estar activado para que esta función funcione.";
+"CloudBackup.enableBody2" = "Debería tener el siguiente aspecto:";
+"CloudBackup.enableButton" = "He activado el llavero de iCloud";
+"CloudBackup.enableTitle" = "Habilitar llavero";
+"CloudBackup.encryptBackupMessage" = "Ingrese el PIN para cifrar la copia de seguridad";
+"CloudBackup.mainBody" = "Tenga en cuenta que la copia de seguridad de iCloud es tan segura como su cuenta de iCloud. Aún así, recomendamos anotar su frase de recuperación en el siguiente paso y mantenerla segura. La frase de recuperación es la única forma de recuperar su billetera si ya no puede acceder a iCloud.";
+"CloudBackup.mainTitle" = "Copia de seguridad de recuperación de iCloud";
+"CloudBackup.mainWarning" = "El llavero de iCloud debe estar activado en la aplicación de configuración de iOS para que esta función funcione";
+"CloudBackup.mainWarningConfirmation" = "¿Estás seguro de que deseas desactivar la copia de seguridad de iCloud? Esto eliminará su copia de seguridad de todos los dispositivos.";
+"CloudBackup.pinAttempts" = "Intentos restantes antes de borrar la copia de seguridad: %1$@";
+"CloudBackup.recoverButton" = "Restaurar desde la clave de recuperación";
+"CloudBackup.recoverHeader" = "Ingrese el PIN para desbloquear la copia de seguridad de iCloud";
+"CloudBackup.restoreButton" = "Restaurar desde copia de seguridad de iCloud";
+"CloudBackup.selectTitle" = "Elija Backup";
+"CloudBackup.step1" = "Inicie la aplicación de configuración.";
+"CloudBackup.step2" = "Toca el nombre de tu Apple ID.";
+"CloudBackup.step3" = "Toca iCloud.";
+"CloudBackup.step4" = "Verifica que el llavero de iCloud esté encendido";
+"CloudBackup.understandText" = "Entiendo que esta función no funcionará a menos que iCloud Keychain esté habilitado.";
+"CloudBackup.warningBody" = "Tu copia de seguridad de iCloud se borrará después de %1$@ más intentos de PIN incorrectos.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Cantidad a enviar:";
+"Confirmation.destinationTag" = "Etiqueta de destino";
+"Confirmation.destinationTag_EmptyHint" = "(vacío)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Tarifa de la red:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Tarifa de red (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Tiempo de procesamiento: se prevé que esta transacción se completará en %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -203,9 +232,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Costo total:";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "Las palabras introducidas no coinciden con tu clave en papel. Inténtalo de nuevo.";
+"ConfirmPaperPhrase.error" = "Las palabras ingresadas no coinciden con su frase de recuperación. Inténtalo de nuevo.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Para asegurarte de que todo se ha guardado de forma correcta, introduce las palabras a continuación de la clave en papel.";
+"ConfirmPaperPhrase.label" = "Para asegurarse de que todo se haya escrito correctamente, ingrese las siguientes palabras de su frase de recuperación.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Palabra #%1$@";
 /* Agree to legal terms button */
@@ -276,6 +305,7 @@
 "FeeSelector.estimatedDeliver" = "Entrega estimada: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 a 5 minutos";
+"FeeSelector.lessThanMinutes" = "<%1$d minutos";
 /* Priority fee */
 "FeeSelector.priority" = "Prioridad";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +420,10 @@
 "ManageWallet.textFeildLabel" = "Nombre de la cartera";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Gestionar cartera";
+"MarketData.high24h" = "24h alto";
+"MarketData.low24h" = "24h bajo";
+"MarketData.marketCap" = "Capitalización del mercado";
+"MarketData.volume" = "Volumen de comercio";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Añadir billetera";
 /* Menu button title */
@@ -411,7 +445,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Recuperar cartera";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "Tu clave de papel es necesaria para abrir tu cartera si cambias los ajustes de seguridad en tu teléfono.\n\n¿Estás seguro de que quieres configurar más tarde tu clave de papel?";
+"Modal.PaperKeySkip.Body.Android" = "Se requiere su frase de recuperación para abrir su billetera si cambia la configuración de seguridad en su teléfono. \n\n¿Estás seguro de que deseas configurar tu frase de recuperación más tarde?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Seguir con la configuración";
 /* Paper Key Skip modal I'll do it later button */
@@ -488,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "tipo de firma no compatible";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "el certificado no es de confianza";
+"Platform.transaction_cancelled" = "Transacción cancelada";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "Sé el primero en recibir soporte y actualizaciones importantes de productos";
 /* Placeholder text for an email address text field. */
@@ -512,12 +547,17 @@
 "Prompts.NoScreenLock.body.android" = "Es necesario que el dispositivo cuente con un bloqueo de pantalla para proteger tu monedero electrónico. Ve a «Ajustes», selecciona «Seguridad» y habilita la opción de «Bloqueo de pantalla» para continuar.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "El bloqueo de pantalla no está habilitado";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "Debes tener tu clave de papel guardada por si pierdes o cambias de teléfono.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Su frase de recuperación debe guardarse en caso de que pierda o cambie su teléfono.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Configura tu clave de papel por si pierdes o cambias tu teléfono. Tu clave también es necesaria si cambias los ajustes de seguridad del teléfono.";
+"Prompts.PaperKey.Body.Android" = "Configure su frase de recuperación en caso de que alguna vez pierda o reemplace su teléfono. Su clave también es necesaria si cambia la configuración de seguridad de su teléfono.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Acción obligatoria";
+"Prompts.RateApp.dontShow" = "No preguntes de nuevo";
+"Prompts.RateApp.enjoyingBrd" = "¿Disfrutas de Coinsquare?";
+"Prompts.RateApp.googlePlayReview" = "Su revisión ayuda a hacer crecer la comunidad Coinsquare.";
+"Prompts.RateApp.noThanks" = "No, gracias.";
+"Prompts.RateApp.rateUs" = "Revisenos";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "Tu cartera puede no estar sincronizada. Esto a menudo puede arreglarse volviendo a escanear la cadena de bloques.";
 /* Transaction rejected prompt title */
@@ -587,11 +627,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Restablecer PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Introducir clave en papel";
+"RecoverWallet.instruction" = "Ingrese la frase de recuperación";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Recupera tu Coinsquare con la clave en papel.";
+"RecoverWallet.intro" = "Recupera su Coinsquare con su frase de recuperación.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "La clave en papel que acabas de introducir no es válida. Vuelve a comprobar cada palabra e inténtalo de nuevo.";
+"RecoverWallet.invalid" = "La frase de recuperación que ingresó no es válida. Vuelva a comprobar cada palabra y vuelva a intentarlo.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Flecha izquierda";
 /* Next button label */
@@ -601,35 +641,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Flecha derecha";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Introduce la clave en papel para la cartera que deseas recuperar.";
+"RecoverWallet.subheader" = "Ingrese la frase de recuperación para la billetera que desea recuperar.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Para restablecer el PIN, introduce las palabras de tu clave en papel en los cuadros a continuación.";
+"RecoverWallet.subheader_reset_pin" = "Para restablecer su PIN, ingrese las palabras de su frase de recuperación en los cuadros a continuación.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "La palabra que ha introducido es incorrecta. Vuelva a intentarlo.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "¡Casi listo! Introduzca las siguientes palabras de su clave de recuperación.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar clave de recuperación";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Introducir clave de recuperación";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Introduzca su clave de recuperación para desvincular esta billetera de su dispositivo.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "¿Está seguro de que desea configurar su clave de recuperación más tarde?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "¡Casi termino! Ingrese las siguientes palabras de su frase de recuperación.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar la frase de recuperación";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Ingrese la frase de recuperación";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Ingrese su frase de recuperación para desvincular esta billetera de su dispositivo.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "¿Estás seguro de que deseas configurar tu frase de recuperación más tarde?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Configurar más tarde";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Generar clave de recuperación";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Generar frase de recuperación";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "Esta clave es necesaria para recuperar su dinero si cambia o pierde su teléfono.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Genere su clave de recuperación privada";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Genera su frase de recuperación privada";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Ir a billetera";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Cómo funciona - Paso %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Algunas de las palabras que introdujo no coinciden con su clave de recuperación. Vuelva a intentarlo.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Algunas de las palabras que ingresó no coinciden con su frase de recuperación. Inténtalo de nuevo.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Manténgala segura";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +681,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Recupere su billetera";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Introduzca la clave de recuperación de la billetera que desee recuperar.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Ingrese la frase de recuperación de la billetera que desea recuperar.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Relájese, compre e intercambie";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Recuerde escribir estas palabras. Deslice hacia atrás si las ha olvidado.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Introduzca su clave de recuperación para restablecer su PIN.";
-/* Assures the user that Coinsquare will keep the user's funds secure. */
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Introduce tu frase de recuperación para restablecer tu PIN.";
+/* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Compre e intercambie sabiendo que sus fondos están protegidos por la mejor seguridad y privacidad del mercado.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Guarde su clave en un lugar seguro. Esta es la única forma de recuperar su billetera. Coinsquare no guarda una copia.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "¡Felicitaciones! Ha completado la configuración de su clave de recuperación.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "¡Felicidades! Completó la configuración de la frase de recuperación.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Ya está listo para depositar, intercambiar y comprar criptomonedas desde su billetera de Coinsquare.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +708,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Inicie una nueva cartera limpiando la cartera actual de su dispositivo.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Escriba su clave";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Vuelva a escribir su clave de recuperación";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Escriba su frase de recuperación de nuevo";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Escriba las siguientes palabras en orden.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "Su clave de recuperación";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Su frase de recuperación";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ de %2$@";
 /* No amount entered error message. */
@@ -728,11 +768,11 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "La única manera de acceder a tu bitcoin si pierdes o actualizas tu teléfono.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Clave en papel";
+"SecurityCenter.paperKeyTitle" = "Frase de recuperación";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Clave en papel";
+"SecurityCenter.paperKeyTitle.android" = "Frase de recuperación";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protege tu Coinsquare de usuarios no autorizados.";
 /* PIN button title */
@@ -755,10 +795,13 @@
 "Segwit.Enable" = "Habilitar";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "A la luna";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "Cantidad";
 /* Balance: $4.00 */
-"Send.balance" = "Saldo: ";
+"Send.balance" = "Saldo: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Saldo:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Para permitir el acceso a la cámara, ve a «Ajustes», selecciona «Aplicaciones», busca la aplicación «Coinsquare» y selecciona la opción «Permisos»";
 /* Permission required to access camera */
@@ -777,12 +820,16 @@
 "Send.destinationTag_optional" = "Etiqueta de destino (Opcional)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "Etiqueta de destino (Requerido)";
+"Send.destinationTag_required_error" = "Se requiere una etiqueta de destino válida para la dirección de destino.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "Pasteboard está vacío";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "No puedes enviártelo a ti mismo.";
 /* Network Fee: $0.01 */
 "Send.fee" = "Tarifa de red: %1$@";
+"Send.fio_invalid" = "Dirección FIO no válida.";
+"Send.fio_noAddress" = "No hay ninguna dirección %1$s asociada con esta dirección FIO.";
+"Send.fio_retrievalError" = "Se produjo un error al recuperar la dirección para esta dirección FIO. Por favor, inténtelo de nuevo más tarde.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "La identidad del beneficiario no está certificada.";
 /* Insufficient funds error */
@@ -815,12 +862,22 @@
 "Send.noFeesError" = "Se están descargando las condiciones de tarifa de red. Inténtalo de nuevo.";
 /* Paste button label */
 "Send.pasteLabel" = "Pegar";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayID inválido.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "No hay una dirección %1$s asociada con este PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Se produjo un error al recuperar la dirección de este PayID. Por favor, inténtelo de nuevo más tarde.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "No se pudo publicar la transacción.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "No se pudo cargar la solicitud de pago";
 /* Scan button label */
 "Send.scanLabel" = "Escanear";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Envío máximo:";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Enviar";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -904,21 +961,25 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "¿Compartir datos anónimos?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Apunta nuevamente la clave en papel";
+"StartPaperPhrase.againButtonTitle" = "Escriba la frase de recuperación de nuevo";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Tu clave de papel es la única manera de restaurar tu Coinsquare si pierdes tu teléfono, o te lo roban, se rompe o se actualiza.\n\nTe mostraremos una lista de palabras para apuntar en un trozo de papel y guardarlo en un sitio seguro.";
+"StartPaperPhrase.body" = "Su frase de recuperación es la única manera de restaurar su Coinsquare si su teléfono se pierde, es robado, roto o actualizado. \n\nLe mostraremos una lista de palabras para escribir en una hoja de papel y mantenerlas a salvo.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Tu clave de papel es la única manera de recuperar tu Coinsquare si pierdes el teléfono o te lo roban, se rompe o lo actualizas.\n\nTu clave de papel también es necesaria si cambias los ajustes de seguridad del dispositivo.\n\nTe mostraremos una lista de palabras que deberás anotar en un papel que tendrás que guardar en un lugar seguro.";
+"StartPaperPhrase.Body.Android" = "Su frase de recuperación es la única manera de restaurar su Coinsquare si su teléfono se pierde, es robado, roto o actualizado. \n\nSu frase de recuperación también es necesaria si cambia la configuración de seguridad en su dispositivo. \n\nLe mostraremos una lista de palabras para escribir en una hoja de papel y mantenerlas a salvo.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Apuntar la clave en papel";
+"StartPaperPhrase.buttonTitle" = "Escriba la frase de recuperación";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "La última vez que anotaste tu clave en papel fue el [\n%1$@";
+"StartPaperPhrase.date" = "La última vez que se escribió en\n %1$@";
 /* button label */
 "StartViewController.createButton" = "Crear nuevo monedero";
 /* Start view message */
 "StartViewController.message" = "La forma más segura de usar bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recuperar monedero";
+"SupportForm.feedbackAppreciated" = "Nos encantaría que sus comentarios";
+"SupportForm.helpUsImprove" = "Ayúdanos a mejorar";
+"SupportForm.notNow" = "Ahora no";
+"SupportForm.pleaseDescribe" = "Por favor describa su experiencia";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Actividad";
 /* Syncing view connectiong state header text */
@@ -1054,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Сonfirmaciones";
+"TransactionDetails.destinationTag" = "Etiqueta de destino";
+"TransactionDetails.destinationTag_EmptyHint" = "(vacío)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "Tus transacciones aparecerán aquí.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1068,6 +1131,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Límite de gasolina";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Precio de la gasolina";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Ocultar detalles";
 /* Label showing the transaction was started (initialized) */
@@ -1182,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN requerido";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autorizar esta transacción";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "¿Estás seguro de que quieres apagar Fastsync?";
 /* Explanation for wallet connection setting */
@@ -1220,11 +1291,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "No se ha realizado";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Para iniciar un nuevo monedero o restaurar un monedero existente, primero debes desvincular el monedero que está instalado actualmente. Para continuar, introduce la clave en papel del monedero actual.";
+"WipeWallet.instruction" = "Ingrese su frase de recuperación para borrar esta billetera de su dispositivo.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Desvincula tu monedero para eliminarlo de este dispositivo. Una vez que tu monedero esté desvinculado, puedes iniciar un nuevo monedero o recuperar un monedero diferente en este dispositivo.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Ya no podrás acceder a tu cartera Coinsquare actual desde este dispositivo. El saldo se mantendrá en la frase.";
+"WipeWallet.startWarning" = "Su billetera actual se eliminará de este dispositivo. Si desea restaurarlo en el futuro, deberá ingresar su Frase de recuperación.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Desvincular monedero";
 /* Wipe wallet button title */

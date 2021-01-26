@@ -10,25 +10,143 @@
 
 import Foundation
 
-enum PayIdError: Error {
+enum ResolvableError: Error {
     case invalidPayID
     case badResponse
     case currencyNotSupported
     case invalidAddress
 }
 
-class PayId {
+protocol Resolvable {
+    init?(address: String)
+    var type: ResolvableType { get }
+    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<(String, String?), ResolvableError>) -> Void)
+}
+
+enum ResolvableType {
+    case payId
+    case fio
+    
+    var label: String {
+        switch self {
+        case .payId:
+            return "PayID"
+        case .fio:
+            return "FIO"
+        }
+    }
+}
+
+struct ResolvedAddress {
+    let humanReadableAddress: String
+    let cryptoAddress: String
+    let label: String
+}
+
+enum ResolvableFactory {
+    static func resolver(_ address: String) -> Resolvable? {
+        if let fio = Fio(address: address) {
+            return fio
+        }
+        
+        if let payId = PayId(address: address) {
+            return payId
+        }
+        
+        return nil
+    }
+}
+
+private class Fio: Resolvable {
+    
+    private let address: String
+    
+    let type: ResolvableType = .fio
+    
+    required init?(address: String) {
+        self.address = address
+        guard isValidAddress(address) else { return nil }
+    }
+    
+    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<(String, String?), ResolvableError>) -> Void) {
+        let url = URL(string: "https://api.fio.services/v1/chain/get_pub_address")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let body = [
+            "fio_address": address,
+            "chain_code": currency.network.currency.code.uppercased(),
+            "token_code": currency.code.uppercased()
+        ]
+        
+        let data = try? JSONEncoder().encode(body)
+        request.httpBody = data
+  
+        URLSession.shared.dataTask(with: request, completionHandler: { data, _, _ in
+            guard let data = data else { callback(.failure(.badResponse)); return }
+            print("[fio] data: \(String(data: data, encoding: .utf8)!)")
+            
+            if (try? JSONDecoder().decode(FioError.self, from: data)) != nil {
+                callback(.failure(.currencyNotSupported))
+                return
+            }
+            
+            do {
+                let response = try JSONDecoder().decode(FioResponse.self, from: data)
+                callback(.success((response.address(), response.tag())))
+            } catch _ {
+                callback(.failure(.currencyNotSupported))
+            }
+        }).resume()
+    }
+    
+    private func isValidAddress(_ address: String) -> Bool {
+        let pattern = ".+\\@.+"
+        let range = address.range(of: pattern, options: .regularExpression)
+        return range != nil
+    }
+    
+    private struct FioResponse: Codable {
+        let public_address: String
+        
+        func address() -> String {
+            let components = public_address.components(separatedBy: "?dt=")
+            if !components.isEmpty {
+                return components[0]
+            } else {
+                return ""
+            }
+        }
+        
+        func tag() -> String? {
+            let components = public_address.components(separatedBy: "?dt=")
+            if components.count == 2 {
+                return components[1]
+            } else {
+                return nil
+            }
+        }
+    }
+    
+    private struct FioError: Codable {
+        let message: String
+    }
+}
+
+private class PayId: Resolvable {
+    
+    let type: ResolvableType = .payId
     
     private let separator = "$"
     private let address: String
     
-    init?(address: String) {
+    required init?(address: String) {
         self.address = address
         guard isValidAddress(address) else { return nil }
     }
     
     // response: (String, String?) == (cryptoAddress, destinationTag(optional) )
-    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<(String, String?), PayIdError>) -> Void) {
+    func fetchAddress(forCurrency currency: Currency, callback: @escaping (Result<(String, String?), ResolvableError>) -> Void) {
         guard currency.payId != nil else { callback(.failure(.currencyNotSupported)); return }
         let components = address.components(separatedBy: separator)
         guard components.count == 2, !components[0].isEmpty, !components[1].isEmpty else {

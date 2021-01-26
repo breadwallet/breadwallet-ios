@@ -10,11 +10,16 @@
 
 import UIKit
 
-class PayIdLabel: UILabel {
+class ResolvedAddressLabel: UILabel {
+    
+    var type: ResolvableType? {
+        didSet {
+            self.text = type?.label
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.text = "PayID"
         self.backgroundColor = .secondaryButton
         self.layer.cornerRadius = 2.0
         self.layer.masksToBounds = true

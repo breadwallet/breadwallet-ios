@@ -8,7 +8,6 @@
 
 import UIKit
 
-@available(iOS 10.0, *)
 extension UIViewPropertyAnimator {
 
     static func springAnimation(_ duration: TimeInterval,

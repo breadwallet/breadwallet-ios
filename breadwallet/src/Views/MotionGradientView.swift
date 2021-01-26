@@ -33,7 +33,8 @@ class MotionGradientLayer: CAGradientLayer {
 
     private var gradientColors = [UIColor.newGradientEnd.cgColor, UIColor.newGradientStart.cgColor]
     private var motion: CMMotionManager?
-
+    private let queue = OperationQueue()
+    
     override init() {
         super.init()
         setup()
@@ -51,22 +52,21 @@ class MotionGradientLayer: CAGradientLayer {
         colors = gradientColors
         startMotion()
     }
-
+    
     private func startMotion() {
-        colors = gradientColors
-        drawsAsynchronously = true
+        let motion = CMMotionManager()
+        guard motion.isAccelerometerAvailable else { return }
         speed = 0
         add(CABasicAnimation.motionAnimation(colors: gradientColors.reversed()), forKey: "MotionShift")
 
-        let motion = CMMotionManager()
-        if motion.isAccelerometerAvailable {
-            motion.startAccelerometerUpdates(to: OperationQueue.main, withHandler: { [weak self] (data, _) in
-                guard let data = data else { return }
-                var x = data.acceleration.x + 0.5
-                x = max(min(x, 1), 0)
+        motion.startAccelerometerUpdates(to: queue, withHandler: { [weak self] (data, _) in
+            guard let data = data else { return }
+            var x = data.acceleration.x + 0.5
+            x = max(min(x, 1), 0)
+            DispatchQueue.main.async {
                 self?.timeOffset = x
-            })
-        }
+            }
+        })
         self.motion = motion
     }
 

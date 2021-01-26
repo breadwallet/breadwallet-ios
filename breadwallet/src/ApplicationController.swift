@@ -48,7 +48,8 @@ class ApplicationController: Subscriber, Trackable {
     private let notificationHandler = NotificationHandler()
     private var appRatingManager = AppRatingManager()
     private var backgroundTaskID: UIBackgroundTaskIdentifier = .invalid
-
+    private var shouldDisableBiometrics = false
+    
     private var isReachable = true {
         didSet {
             if oldValue == false && isReachable {
@@ -74,13 +75,13 @@ class ApplicationController: Subscriber, Trackable {
     /// didFinishLaunchingWithOptions
     func launch(application: UIApplication, options: [UIApplication.LaunchOptionsKey: Any]?) {
         self.application = application
+        handleLaunchOptions(options)
         application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
         
         UNUserNotificationCenter.current().delegate = notificationHandler
         EventMonitor.shared.register(.pushNotifications)
         
         setup()
-        handleLaunchOptions(options)
         Reachability.addDidChangeCallback({ isReachable in
             self.isReachable = isReachable
         })
@@ -118,11 +119,6 @@ class ApplicationController: Subscriber, Trackable {
             self.enterOnboarding()
         }
         
-        Store.lazySubscribe(self,
-                            selector: { $0.isLoginRequired != $1.isLoginRequired && $1.isLoginRequired == false },
-                            callback: { _ in self.didUnlockWallet() }
-        )
-        
         if keyStore.noWallet {
             enterOnboarding()
         } else {
@@ -157,21 +153,24 @@ class ApplicationController: Subscriber, Trackable {
         self.startBackendServices()
         self.setWalletInfo(account: account)
         authenticateWithBackend { jwt in
-            self.coreSystem.create(account: account, authToken: jwt)
-
+            self.coreSystem.create(account: account,
+                                   authToken: jwt,
+                                   btcWalletCreationCallback: self.handleDeferedLaunchURL)
+            
             self.modalPresenter = ModalPresenter(keyStore: self.keyStore,
                                                  system: self.coreSystem,
                                                  window: self.window,
                                                  alertPresenter: self.alertPresenter)
-            
-            // deep link handling
-            self.urlController = URLController(walletAuthenticator: self.keyStore)
-            if let url = self.launchURL {
-                _ = self.urlController?.handleUrl(url)
-                self.launchURL = nil
-            }
-
             self.coreSystem.connect()
+        }
+    }
+    
+    private func handleDeferedLaunchURL() {
+        // deep link handling
+        self.urlController = URLController(walletAuthenticator: self.keyStore)
+        if let url = self.launchURL {
+            _ = self.urlController?.handleUrl(url)
+            self.launchURL = nil
         }
     }
     
@@ -189,16 +188,13 @@ class ApplicationController: Subscriber, Trackable {
     }
     
     private func handleLaunchOptions(_ options: [UIApplication.LaunchOptionsKey: Any]?) {
-        if let url = options?[.url] as? URL {
-            do {
-                let file = try Data(contentsOf: url)
-                if !file.isEmpty {
-                    Store.trigger(name: .openFile(file))
-                }
-            } catch let error {
-                print("Could not open file at: \(url), error: \(error)")
-            }
-        }
+        guard let activityDictionary = options?[.userActivityDictionary] as? [String: Any] else { return }
+        guard let activity = activityDictionary["UIApplicationLaunchOptionsUserActivityKey"] as? NSUserActivity else { return }
+        guard let url = activity.webpageURL else { return }
+        
+        //handle gift url at launch
+        launchURL = url
+        shouldDisableBiometrics = true
     }
     
     private func setupDefaults() {
@@ -231,12 +227,6 @@ class ApplicationController: Subscriber, Trackable {
         Backend.kvStore?.syncAllKeys { error in
             print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
             Store.trigger(name: .didSyncKVStore)
-        }
-    }
-    
-    func didUnlockWallet() {
-        if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
-            pigeonExchange.fetchInbox()
         }
     }
     
@@ -329,14 +319,6 @@ class ApplicationController: Subscriber, Trackable {
             Backend.kvStore?.syncAllKeys { error in
                 print("[KV] finished syncing. result: \(error == nil ? "ok" : error!.localizedDescription)")
                 Store.trigger(name: .didSyncKVStore)
-                if let pigeonExchange = Backend.pigeonExchange, pigeonExchange.isPaired {
-                    if !Store.state.isLoginRequired {
-                        pigeonExchange.fetchInbox()
-                    }
-                    if !Store.state.isPushNotificationsEnabled {
-                        pigeonExchange.startPolling()
-                    }
-                }
             }
         }
 
@@ -364,8 +346,8 @@ class ApplicationController: Subscriber, Trackable {
         
         startFlowController = StartFlowPresenter(keyMaster: keyStore,
                                                  rootViewController: navigationController,
-                                                 createHomeScreen: createHomeScreen,
-                                                 createBuyScreen: createBuyScreen)
+                                                 shouldDisableBiometrics: shouldDisableBiometrics,
+                                                 createHomeScreen: createHomeScreen)
     }
     
     private func setupAppearance() {
@@ -424,19 +406,6 @@ class ApplicationController: Subscriber, Trackable {
             nc.setDarkStyle()
             navigationController.present(nc, animated: true, completion: nil)
         }
-    }
-    
-    /// Creates an instance of the buy screen. This may be invoked from the StartFlowPresenter if the user
-    /// goes through onboarding and decides to buy coin right away.
-    private func createBuyScreen() -> BRWebViewController {
-        let buyScreen = BRWebViewController(bundleName: C.webBundle,
-                                            mountPoint: "/buy",
-                                            walletAuthenticator: keyStore,
-                                            system: coreSystem)
-        buyScreen.startServer()
-        buyScreen.preload()
-        
-        return buyScreen
     }
     
     /// Creates an instance of the home screen. This may be invoked from StartFlowPresenter.presentOnboardingFlow().
@@ -501,6 +470,8 @@ class ApplicationController: Subscriber, Trackable {
 
 extension ApplicationController {
     func open(url: URL) -> Bool {
+        //If this is the same as launchURL, it has already been handled in didFinishLaunchingWithOptions
+        guard launchURL != url else { return true }
         if let urlController = urlController {
             return urlController.handleUrl(url)
         } else {

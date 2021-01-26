@@ -55,7 +55,10 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
     var didTapScanQR: (() -> Void)?
     
     var okToShowPrompts: Bool {
-        // On the initial display we need to load the walletes in the asset list table view first.
+        //Don't show any prompts on the first couple launches
+        guard UserDefaults.appLaunchCount > 2 else { return false }
+        
+        // On the initial display we need to load the wallets in the asset list table view first.
         // There's already a lot going on, so don't show the home-screen prompts right away.
         return !Store.state.wallets.isEmpty
     }
@@ -65,7 +68,6 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         formatter.isLenient = true
         formatter.numberStyle = .currency
         formatter.generatesDecimalNumbers = true
-        formatter.negativeFormat = formatter.positiveFormat.replacingCharacters(in: formatter.positiveFormat.range(of: "#")!, with: "-#")
         return formatter
     }()
 

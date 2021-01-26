@@ -19,7 +19,10 @@ extension UIView {
         let locations: [CGFloat] = [0.0, 1.0]
         guard let gradient = CGGradient(colorsSpace: colorSpace, colors: colors, locations: locations) else { return }
         guard let context = UIGraphicsGetCurrentContext() else { return }
-        context.drawLinearGradient(gradient, start: .zero, end: CGPoint(x: rect.width, y: 0.0), options: [])
+        context.drawLinearGradient(gradient,
+                                   start: CGPoint(x: 0.0, y: rect.height),
+                                   end: CGPoint(x: rect.width, y: 0.0),
+                                   options: [])
     }
 
     func drawGradient(start: UIColor, end: UIColor, _ rect: CGRect) {

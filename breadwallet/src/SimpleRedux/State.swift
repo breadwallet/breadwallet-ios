@@ -121,7 +121,6 @@ extension State {
 enum RootModal {
     case none
     case send(currency: Currency)
-    case sendForRequest(request: PigeonRequest)
     case receive(currency: Currency)
     case loginScan
     case requestAmount(currency: Currency, address: String)
@@ -129,6 +128,8 @@ enum RootModal {
     case sell(currency: Currency?)
     case trade
     case receiveLegacy
+    case stake(currency: Currency)
+    case gift
 }
 
 enum SyncState {
@@ -214,8 +215,6 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
         return true
     case (.send(let lhsCurrency), .send(let rhsCurrency)):
         return lhsCurrency == rhsCurrency
-    case (.sendForRequest(let lhsRequest), .sendForRequest(let rhsRequest)):
-        return lhsRequest.address == rhsRequest.address
     case (.receive(let lhsCurrency), .receive(let rhsCurrency)):
         return lhsCurrency == rhsCurrency
     case (.loginScan, .loginScan):
@@ -233,6 +232,10 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
     case (.trade, .trade):
         return true
     case (.receiveLegacy, .receiveLegacy):
+        return true
+    case (.stake(let lhsCurrency), .stake(let rhsCurrency)):
+        return lhsCurrency == rhsCurrency
+    case (.gift, .gift):
         return true
     default:
         return false

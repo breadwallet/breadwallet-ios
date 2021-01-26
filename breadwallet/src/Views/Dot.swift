@@ -43,19 +43,21 @@ class Dot: UIView {
     }
     
     func animate(withDelay delay: TimeInterval) {
-        UIView.animateKeyframes(withDuration: 4.0, delay: delay, options: .calculationModeCubic, animations: {
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.05, animations: {
-                self.alpha = 1.0
+        UIView.animateKeyframes(withDuration: 4.0, delay: delay, options: .calculationModeCubic, animations: { [weak self] in
+             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.05, animations: {
+                self?.alpha = 1.0
             })
             UIView.addKeyframe(withRelativeStartTime: 0.05, relativeDuration: 0.7, animations: {
-                self.frame = self.endFrame!
+                if let endFrame = self?.endFrame {
+                    self?.frame = endFrame
+                }
             })
             UIView.addKeyframe(withRelativeStartTime: 0.7, relativeDuration: 0.2, animations: {
-                self.alpha = 0.0
+                self?.alpha = 0.0
             })
-        }, completion: { _ in
-            self.reset()
-            self.animate(withDelay: delay)
+        }, completion: { [weak self] _ in
+            self?.reset()
+            self?.animate(withDelay: delay)
         })
     }
     
