@@ -7,7 +7,7 @@ jobs:
   build:
 
     macos:
-      xcode: 11.4.1 # Specify the Xcode version to use
+      xcode: 12.3.0 # Specify the Xcode version to use
 
     steps:
       - checkout
