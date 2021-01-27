@@ -13,25 +13,25 @@ jobs:
       - checkout
 
         # next four run commands to work around xcodebuild bug using private repos for swift pacakages
-        - run:
-            name: Use Default SCM (To Work Around XCode 12 bug)
-            command : |
-                sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+      - run:
+          name: Use Default SCM (To Work Around XCode 12 bug)
+          command : |
+            sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
 
-        - run:
-            name: Renove ssh Key (To Work Around XCode 12 bug)
-            command : |
-                rm ~/.ssh/id_rsa || true
+      - run:
+          name: Renove ssh Key (To Work Around XCode 12 bug)
+          command : |
+            rm ~/.ssh/id_rsa || true
 
-        - run:
-            name: Set Known Host IPs for bitbucket (To Work Around XCode 12 bug)
-            command : |
-                for ip in $(dig @8.8.8.8 bitbucket.org +short); do ssh-keyscan bitbucket.org,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+      - run:
+          name: Set Known Host IPs for bitbucket (To Work Around XCode 12 bug)
+          command : |
+            for ip in $(dig @8.8.8.8 bitbucket.org +short); do ssh-keyscan bitbucket.org,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
 
-        - run:
-            name: Set Known Host IPs for github (To Work Around XCode 12 bug)
-            command : |
-                for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+      - run:
+          name: Set Known Host IPs for github (To Work Around XCode 12 bug)
+          command : |
+            for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
 
       #Configure github Repo
       - run:
