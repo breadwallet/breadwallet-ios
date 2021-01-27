@@ -11,8 +11,29 @@ jobs:
 
     steps:
       - checkout
-      #Configure github Repo
 
+        # next four run commands to work around xcodebuild bug using private repos for swift pacakages
+        - run:
+            name: Use Default SCM (To Work Around XCode 12 bug)
+            command : |
+                sudo defaults write com.apple.dt.Xcode IDEPackageSupportUseBuiltinSCM YES
+
+        - run:
+            name: Renove ssh Key (To Work Around XCode 12 bug)
+            command : |
+                rm ~/.ssh/id_rsa || true
+
+        - run:
+            name: Set Known Host IPs for bitbucket (To Work Around XCode 12 bug)
+            command : |
+                for ip in $(dig @8.8.8.8 bitbucket.org +short); do ssh-keyscan bitbucket.org,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+
+        - run:
+            name: Set Known Host IPs for github (To Work Around XCode 12 bug)
+            command : |
+                for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts || true
+
+      #Configure github Repo
       - run:
           name: Pull Submodules
           command: |
@@ -29,7 +50,7 @@ jobs:
       - restore_cache:
           keys:
             - v1-dependencies
-            
+
 
 
       # save cache
@@ -38,19 +59,19 @@ jobs:
             - ~/Library/Caches/Homebrew
 
           key: v1-dependencies
-          
+
       - run:
           name: check  Key
           command: |
             mkdir -p ~/cert
 
             echo $IOS_DISTRIBUTION_CERT > ~/cert/base64cert
-            base64 -d  ~/cert/base64cert > ~/cert/ios_distribution.cer            
-            
+            base64 -d  ~/cert/base64cert > ~/cert/ios_distribution.cer
+
             echo $IOS_DISTRIBUTION_P12 > ~/cert/base64p12
             base64 -d  ~/cert/base64p12 > ~/cert/ios_distribution.p12
             ls -la ~/cert
-            
+
 
       - run:
           name: install  Key
@@ -58,53 +79,53 @@ jobs:
             security create-keychain -p test  ~/Library/Keychains/default.keychain
             security unlock-keychain -p test ~/Library/Keychains/default.keychain
             security set-keychain-settings -t 9999 -l ~/Library/Keychains/default.keychain
-            
+
             security -v import .circleci/cert/apple.cer                                         -k ~/Library/Keychains/default.keychain -T /usr/bin/codesign
             security -v import ~/cert/ios_distribution.cer                                 -k ~/Library/Keychains/default.keychain -T /usr/bin/codesign
             security -v import  ~/cert/ios_distribution.p12  -t agg -P $IOS_DISTRIBUTION_P12_PASS -k ~/Library/Keychains/default.keychain -T /usr/bin/codesign
             security find-certificate -a  ~/Library/Keychains/default.keychain
-           
+
             security default-keychain -s ~/Library/Keychains/default.keychain
 
 
       - run:
           name: Install prerequisites
           command: |
-            sudo gem install xcpretty 
+            sudo gem install xcpretty
             brew --cache
             brew install ghostscript SwiftLint
-            
+
       - run:
           name: check   Key
           command: |
-             security list-keychains -d user -s ~/Library/Keychains/default.keychain    
-             
+             security list-keychains -d user -s ~/Library/Keychains/default.keychain
+
       - run:
-          name: Rename provision 
+          name: Rename provision
           command: |
             sed "s/PRODUCT_BUNDLE_IDENTIFIER = cash.just.wallet;/PRODUCT_BUNDLE_IDENTIFIER = cash.just.wallet;\                PROVISIONING_PROFILE_SPECIFIER = wallet-CNI-distribution2;\                CODE_SIGN_IDENTITY = \"iPhone Distribution\";\                CODE_SIGN_STYLE = Manual;/g"  breadwallet.xcodeproj/project.pbxproj  > breadwallet.xcodeproj/project.pbxproj.rnm
 
-            cp breadwallet.xcodeproj/project.pbxproj.rnm breadwallet.xcodeproj/project.pbxproj 
+            cp breadwallet.xcodeproj/project.pbxproj.rnm breadwallet.xcodeproj/project.pbxproj
             mkdir test_output
             cp breadwallet.xcodeproj/project.pbxproj.rnm test_output
             uuid=`grep UUID -A1 -a .circleci/mobileprovision/wallet-CNI-distribution2.mobileprovision | grep -io "[-A-F0-9]\{36\}"`
             mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
             cp .circleci/mobileprovision/wallet-CNI-distribution2.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$uuid.mobileprovision
             ls -la ~/Library/MobileDevice/Provisioning\ Profiles
-            
+
             git status
-            
+
       - run:
-          name: xcodebuild help 
+          name: xcodebuild help
           command: |
             xcodebuild --help
             xcodebuild -project breadwallet.xcodeproj -list
-                        
+
       - run:
-          name: xcodebuild clean 
+          name: xcodebuild clean
           command: |
             xcodebuild clean -workspace breadwallet.xcworkspace -scheme breadwallet | xcpretty
-            
+
       - run:
           name: xcodebuild  build submodules (disabled)
           command: |
@@ -112,30 +133,30 @@ jobs:
             security set-keychain-settings -lut 9999
             security unlock-keychain -p test ~/Library/Keychains/default.keychain
             echo xcodebuild  build  -verbose   -workspace breadwallet.xcworkspace   -scheme submodules
-            
+
       - run:
-          name: makebuild 
+          name: makebuild
           command: |
             security default-keychain
             security set-keychain-settings -lut 9999
             security unlock-keychain -p test ~/Library/Keychains/default.keychain
             git config --global user.name "circleci"
             git config --global user.email circleci@just.cash
-            git add --all * 
+            git add --all *
             git commit -m "circleci build"
             mkdir build
             cp .circleci/config/exportOptions.plist build
             ./scripts/makebuild.sh 4.3.${CIRCLE_BUILD_NUM} ${CIRCLE_BUILD_NUM} ci
             ./scripts/uploadbuild.sh ${CIRCLE_BRANCH}
-            
+
       - run:
           name: xcodebuild  build (disabled)
           command: |
             security default-keychain
             security set-keychain-settings -lut 9999
             security unlock-keychain -p test ~/Library/Keychains/default.keychain
-            echo xcodebuild  build  -verbose   -workspace breadwallet.xcworkspace   -scheme breadwallet | xcpretty 
-            
+            echo xcodebuild  build  -verbose   -workspace breadwallet.xcworkspace   -scheme breadwallet | xcpretty
+
 
 
       - run:
@@ -145,7 +166,7 @@ jobs:
             ls -la .
 
 
-            
+
       # Collect XML test results data to show in the UI, and save the same XML
       # files under test-results folder in the Artifacts tab
       - store_test_results:
