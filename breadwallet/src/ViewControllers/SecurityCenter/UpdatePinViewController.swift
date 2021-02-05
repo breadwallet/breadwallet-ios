@@ -172,7 +172,7 @@ class UpdatePinViewController: UIViewController, Subscriber {
             pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
             pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
-            pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
+            pinPadBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) ])
         pinPad.view.constrain(toSuperviewEdges: nil)
         pinPad.didMove(toParent: self)
     }
