@@ -64,7 +64,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var paymentProtocolRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    private var feeLevel: FeeLevel = .regular {
+    public var feeLevel: FeeLevel = .regular {
         didSet {
             updateFees()
         }
