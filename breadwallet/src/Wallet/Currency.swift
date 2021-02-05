@@ -216,7 +216,7 @@ class Currency: CurrencyWithIcon {
 
     var isGiftingEnabled: Bool {
         if #available(iOS 13.0, *), isBitcoin {
-            return true
+            return false
         } else {
             return false
         }
