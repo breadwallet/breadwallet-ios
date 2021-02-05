@@ -172,11 +172,11 @@ class UpdatePinViewController: UIViewController, Subscriber {
             pinPadBackground.widthAnchor.constraint(equalToConstant: floor(view.bounds.width/3.0)*3.0),
             pinPadBackground.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             pinPadBackground.heightAnchor.constraint(equalToConstant: pinPad.height),
-            pinPadBackground.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
+            pinPadBackground.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: E.isIPhoneX ? -C.padding[3] : 0.0) ])
         pinPad.view.constrain(toSuperviewEdges: nil)
         pinPad.didMove(toParent: self)
     }
-    
+
     private func addCloudView() {
         guard type == .recoverBackup, #available(iOS 13.6, *) else { return }
         let hosting = UIHostingController(rootView: CloudBackupIcon(style: .down))
