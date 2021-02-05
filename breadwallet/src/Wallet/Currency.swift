@@ -215,11 +215,12 @@ class Currency: CurrencyWithIcon {
     }
 
     var isGiftingEnabled: Bool {
-        if #available(iOS 13.0, *), isBitcoin {
-            return false
-        } else {
-            return false
-        }
+//        if #available(iOS 13.0, *), isBitcoin {
+//            return true
+//        } else {
+//            return false
+//        }
+        return false
     }
     
     var supportsStaking: Bool {
