@@ -1194,6 +1194,7 @@ extension ModalPresenter {
             vc.onPublishSuccess = {
                 completion()
             }
+            vc.feeLevel = .superEconomy
             vc.disableUI()
         }
     }
@@ -1211,8 +1212,14 @@ extension ModalPresenter {
 
 extension SendViewController {
     func disableUI() {
-        self.amountView.view.isUserInteractionEnabled = false
+        // Remove Fee Selector
+        self.amountView.feeSelector.isHidden = true
+        let constraint = NSLayoutConstraint.init(item: self.amountView.feeSelector, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 0.0)
+        self.amountView.feeSelector.addConstraint(constraint)
+        // Remove Paste and Scan
         self.addressCell.isUserInteractionEnabled = false
-        self.memoCell.isUserInteractionEnabled = false
+        self.addressCell.paste.isHidden = true
+        self.addressCell.scan.isHidden = true
+        self.addressCell.textField.trailingAnchor.constraint(equalTo: self.addressCell.scan.trailingAnchor).isActive = true
     }
 }

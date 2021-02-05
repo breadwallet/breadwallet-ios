@@ -87,7 +87,7 @@ class AmountViewController: UIViewController, Trackable {
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
     private let feeLabel = UILabel()
     private let tapView = UIView()
-    private let feeSelector: FeeSelector
+    public let feeSelector: FeeSelector
     private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
     
     //Controlled by SendViewController
