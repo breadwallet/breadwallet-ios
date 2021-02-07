@@ -55,7 +55,7 @@ Simplicity and ease-of-use is **BRD**'s core design principle. A simple recovery
 
 1. Clone the repo: `git clone git@github.com:breadwallet/breadwallet-ios.git`
 2  Update submodules `git submodule update --recursive`
-3. Install imagemagick and ghostscript `brew install imagemagick && brew install ghostscript`
+3. Install imagemagick and ghostscript `brew install imagemagick && brew install ghostscript && brew install swiftlint`
 4. Open the `breadwallet.xcworkspace` file
 
 ## Advanced Setup
