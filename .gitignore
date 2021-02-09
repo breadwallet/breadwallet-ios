@@ -66,6 +66,9 @@ fastlane/test_output
 Screenshots/shots
 .DS_Store
 
+# AppCode IDE local user files
+.idea/
+
 breadwallet/Icon.xcassets/AppIcon-Internal.appiconset
 breadwallet/Config.plist
 /Modules/breadwallet-core
