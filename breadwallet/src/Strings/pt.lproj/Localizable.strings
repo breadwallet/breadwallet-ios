@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "Saldo";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "Este token foi retirado porque o emissor decidiu suspender o suporte do ERC20. \n\nAinda pode enviar estes tokens para outra plataforma. Para obter mais informações, visite a nossa página de suporte.";
+"Account.delistedToken" = "Este token foi retirado. \n\nAinda pode enviar estes tokens para outra plataforma. Para obter mais informações, visite a nossa página de suporte.";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%1$@ por %2$@";
 /* Loading Wallet Message */
@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "Minha BRD";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "Ao que parece, está a utilizar um teclado de terceiros, o qual pode gravar aquilo que digita e furtar a sua Paper Key. Por favor, mude para o teclado predefinido do Android, a fim de ficar mais protegido.";
+"Alert.customKeyboard.android" = "Parece que você está usando um teclado de terceiros, que pode gravar o que você digita e roubar sua frase de recuperação. Mude para o teclado Android padrão para proteção extra.";
 /* Error alert title */
 "Alert.error" = "Erro";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "Os seus dados encriptados pelo BRD foram recentemente invalidados porque o seu ecrã de bloqueio do Android estava desativado.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. \nPortanto, os dados do seu aplicativo BRD devem ser apagados a desinstalação.pel\n\nNão se preocupe, seus fundos continuam seguros! Reinstale a aplicação e recupere a sua carteira usando a chave de papel.";
+"Alert.keystore.invalidated.uninstall.android" = "Não podemos prosseguir porque as configurações de bloqueio de tela foram alteradas (por exemplo, a senha foi desativada, as impressões digitais foram alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de chaves. Portanto, os dados do aplicativo BRD devem ser apagados desinstalando. \n\nNão se preocupe, seus fundos ainda estão seguros! Reinstale o aplicativo e recupere sua carteira usando sua frase de recuperação.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "Não podemos continuarporque as suasconfigurações de bloqueio de ecrã foram alteradas ( a sua password foi desativada, e as impressões digitaisforam alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de passwords. Portanto, os seus dados da aplicação BRD devem ser apagados.\n\nNão se preocupe, seus fundos continuam seguros! Recupere asua carteira usando a sua chave de papel.";
+"Alert.keystore.invalidated.wipe.android" = "Não podemos prosseguir porque as configurações de bloqueio de tela foram alteradas (por exemplo, a senha foi desativada, as impressões digitais foram alteradas). Por motivos de segurança, o Android bloqueou permanentemente seu armazenamento de chaves. Portanto, os dados do seu aplicativo BRD devem ser apagados. \n\nNão se preocupe, seus fundos ainda estão seguros! Recupere sua carteira usando sua frase de recuperação.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Erro na KeyStore do Android";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "Todos os endereços de carteiras foram copiados com sucesso.";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "Chave de Papel Definida";
+"Alerts.paperKeySet" = "Conjunto de frases de recuperação";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "Incrível!";
 /* Alert Header label (the PIN was set) */
@@ -186,12 +186,41 @@
 "Button.yes" = "Sim";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "Centre a sua ID na caixa";
+"CloudBackup.backupDeleted" = "Backup Apagado";
+"CloudBackup.backupDeletedMessage" = "Seu backup do iCloud foi apagado após muitas tentativas malsucedidas de PIN. O aplicativo será reiniciado agora.";
+"CloudBackup.backupMenuTitle" = "Backup do iCloud";
+"CloudBackup.createButton" = "Criar Carteira Nova";
+"CloudBackup.createWarning" = "Foi detectada uma carteira com backup anterior. O uso deste backup é recomendado. Tem certeza de que deseja prosseguir com a criação de uma nova carteira?";
+"CloudBackup.enableBody1" = "As Chaves do iCloud devem estar ativadas para que este recurso funcione.";
+"CloudBackup.enableBody2" = "Deve ser parecido com o seguinte:";
+"CloudBackup.enableButton" = "Eu ativei o iCloud Keychain";
+"CloudBackup.enableTitle" = "Habilitar Keychain";
+"CloudBackup.encryptBackupMessage" = "Digite o PIN para criptografar o backup";
+"CloudBackup.mainBody" = "Por favor, note que o backup do iCloud é tão seguro quanto sua conta do iCloud. Ainda recomendamos escrever sua frase de recuperação na etapa seguinte e mantê-la segura. A frase de recuperação é a única maneira de recuperar sua carteira se você não puder mais acessar o iCloud.";
+"CloudBackup.mainTitle" = "Backup de recuperação do iCloud";
+"CloudBackup.mainWarning" = "O chaveiro iCloud deve estar ligado no aplicativo iOS Settings para que este recurso funcione";
+"CloudBackup.mainWarningConfirmation" = "Tem certeza de que deseja desativar o Backup do iCloud? Isso excluirá seu backup de todos os dispositivos.";
+"CloudBackup.pinAttempts" = "Tentativas restantes antes de apagar o backup: %1$@";
+"CloudBackup.recoverButton" = "Restaurar da chave de recuperação";
+"CloudBackup.recoverHeader" = "Digite o PIN para desbloquear o backup do iCloud";
+"CloudBackup.restoreButton" = "Restaurar do backup do iCloud";
+"CloudBackup.selectTitle" = "Escolha Backup";
+"CloudBackup.step1" = "Inicie o aplicativo Settings.";
+"CloudBackup.step2" = "Toque no nome do seu ID Apple.";
+"CloudBackup.step3" = "Toque em iCloud.";
+"CloudBackup.step4" = "Verifique se o chaveiro do iCloud está ligado";
+"CloudBackup.understandText" = "Entendo que este recurso não funcionará a menos que o iCloud Keychain esteja ativado.";
+"CloudBackup.warningBody" = "Seu backup do iCloud será apagado após mais %1$@ tentativas incorretas de PIN.";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "Montante a enviar:";
+"Confirmation.destinationTag" = "Tag de Destino";
+"Confirmation.destinationTag_EmptyHint" = "(vazio)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "Comissão da rede:";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "Taxa de Rede (ETH):";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "Tempo de processamento: Prevê-se que esta transação esteja concluída dentro de %1$@.";
 /* Label for "send" button on final confirmation screen */
@@ -203,9 +232,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Custo total";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "As palavras introduzidas não correspondem à sua paper key. Agradecemos que tente de novo.";
+"ConfirmPaperPhrase.error" = "As palavras inseridas não correspondem à sua frase de recuperação. Por favor, tente novamente.";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "Para ter certeza que tudo foi escrito corretamente, por favor introduza as seguintes palavras da sua chave de papel.";
+"ConfirmPaperPhrase.label" = "Para se certificar de que tudo foi escrito corretamente, digite as seguintes palavras da sua frase de recuperação.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Palavra #%1$@";
 /* Agree to legal terms button */
@@ -276,6 +305,7 @@
 "FeeSelector.estimatedDeliver" = "Entrega estimada: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2 a 5 minutos";
+"FeeSelector.lessThanMinutes" = "<%1$d minutos";
 /* Priority fee */
 "FeeSelector.priority" = "Prioridade";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +420,10 @@
 "ManageWallet.textFeildLabel" = "Nome da Carteira";
 /* Manage wallet modal title */
 "ManageWallet.title" = "Gerir Carteira";
+"MarketData.high24h" = "24h de altura";
+"MarketData.low24h" = "24h baixo";
+"MarketData.marketCap" = "Valor de mercado";
+"MarketData.volume" = "Volume de negócios";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "Adicionar Carteira";
 /* Menu button title */
@@ -411,7 +445,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "Recuperar Carteira";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "A sua chave de papel é necessária para abrir a sua carteira se alterar as definições de segurança do seu telefone. \n\nTem a certeza de que quer definir a sua chave de papel mais tarde?";
+"Modal.PaperKeySkip.Body.Android" = "Sua frase de recuperação é necessária para abrir a carteira se você alterar as configurações de segurança do telefone. \n\nTem certeza de que deseja configurar sua frase de recuperação mais tarde?";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "Continuar Definição";
 /* Paper Key Skip modal I'll do it later button */
@@ -488,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "tipo de assinatura não suportado";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "certificado não fidedigno";
+"Platform.transaction_cancelled" = "Transação cancelada";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "Seja o primeiro a receber atualizações de suporte e produtos importantes";
 /* Placeholder text for an email address text field. */
@@ -512,12 +547,17 @@
 "Prompts.NoScreenLock.body.android" = "É necessário um bloqueio de ecrã no dispositivo para salvaguardar a sua carteira. Vá a \"Definições\" > \"Segurança\" > \"Bloqueio de ecrã\" e ative para continuar.";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Bloqueio de ecrã desativado";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "O seu Paper Key deve ser guardado para o caso de perder ou alterar o seu telemóvel.";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "Sua frase de recuperação deve ser salva para o caso de você perder ou trocar de telefone.";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "Defina a sua chave de papel para o caso de perder ou substituir o seu telefone. A sua chave também é necessária se alterar as definições de segurança do seu telefone.";
+"Prompts.PaperKey.Body.Android" = "Configure sua frase de recuperação para o caso de você perder ou substituir seu telefone. Sua chave também é necessária se você alterar as configurações de segurança do telefone.";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Ação Necessária";
+"Prompts.RateApp.dontShow" = "Não pergunte novamente";
+"Prompts.RateApp.enjoyingBrd" = "Apreciando o BRD?";
+"Prompts.RateApp.googlePlayReview" = "Sua análise ajuda a aumentar a comunidade BRD.";
+"Prompts.RateApp.noThanks" = "Não, obrigado";
+"Prompts.RateApp.rateUs" = "Revise-nos";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "A sua carteira pode estar dessincronizada. Isto pode ser frequentemente resolvido ao voltar a digitalizar a blockchain.";
 /* Transaction rejected prompt title */
@@ -587,11 +627,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "Redefinir PIN";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "Introduzir Chave de Papel";
+"RecoverWallet.instruction" = "Digite a frase de recuperação";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Recupere a sua BRD com a sua chave de papel.";
+"RecoverWallet.intro" = "Recupere seu BRD com sua frase de recuperação.";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "A chave de papel que introduziu é inválida. Por favor verifique cada palavra e tente novamente.";
+"RecoverWallet.invalid" = "A frase de recuperação que você inseriu é inválida. Verifique novamente cada palavra e tente novamente.";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "Seta para a Esquerda";
 /* Next button label */
@@ -601,35 +641,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "Seta para a Direita";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "Introduza a chave de papel para a carteira que quer recuperar.";
+"RecoverWallet.subheader" = "Digite a frase de recuperação da carteira que deseja recuperar.";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "Para redefinir o seu PIN, introduza as palavras da sua chave de papel nas caixas abaixo.";
+"RecoverWallet.subheader_reset_pin" = "Para redefinir seu PIN, digite as palavras de sua frase de recuperação nas caixas abaixo.";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "A palavra que introduziu está incorrecta. Por favor, tente outra vez.";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quase pronto! Introduza as seguintes palavras da sua chave de recuperação.";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar Chave de Recuperação";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "Introduzir Chave de Recuperação";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Por favor, introduza a sua chave de recuperação para desvincular esta carteira deste dispositivo.";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Tem a certeza que pretende definir a sua chave de recuperação mais tarde?";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "Quase pronto! Digite as seguintes palavras de sua frase de recuperação.";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "Confirmar frase de recuperação";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "Digite frase de recuperação";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "Digite sua frase de recuperação para desvincular esta carteira do seu dispositivo.";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "Tem certeza de que deseja configurar sua frase de recuperação mais tarde?";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "Definir Mais Tarde";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "Gerar Chave de Recuperação";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "Gerar frase de recuperação";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "Esta chave é necessária para recuperar o seu dinheiro caso mude ou perca o seu telefone.";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "Gerar a sua chave de recuperação privada";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "Gere sua frase de recuperação privada";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "Ir para Carteira";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "Como funciona - Passo %1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "Algumas das palavras que introduziu não correspondem à sua chave de recuperação.\nPor favor, tente outra vez.";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "Algumas das palavras que você inseriu não correspondem à sua frase de recuperação. Por favor, tente novamente.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "Mantenha-a segura";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +681,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "Recuperar a Sua Carteira";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Por favor, introduza a chave de recuperação da carteira que pretende recuperar.";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "Digite a frase de recuperação da carteira que deseja recuperar.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "Relaxe, compre, e troque";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "Lembre-se de apontar estas palavras. Deslize para trás caso se tenha esquecido.";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "Por favor, introduza a sua chave de recuperação para redefinir o seu PIN.";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "Insira sua frase de recuperação para redefinir seu PIN.";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Compre e troque sabendo que os seus fundos estão protegidos pela melhor segurança e privacidade na área.";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "Guarde a sua chave numa localização segura. Esta é a única forma de recuperar a sua carteira. A BRD não guarda uma cópia.";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "Parabéns! Completou a definição da sua chave de recuperação.";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "Parabéns! Você concluiu a configuração da frase de recuperação.";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "Está pronto para depositar, trocar, e comprar crypto a partir da sua carteira BRD.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +708,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "Comece uma nova carteira, limpando a carteira actual do seu dispositivo.";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "Tome nota da sua chave";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "Tome nota novamente da sua chave de recuperação";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "Escreva sua frase de recuperação novamente";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "Tome nota das seguintes palavras em ordem.";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "A Sua Chave de Recuperação";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "Sua Frase de Recuperação";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@ de %2$@";
 /* No amount entered error message. */
@@ -728,11 +768,11 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "A única forma de aceder às suas bitcoins se perder ou atualizar o seu telefone.";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "Chave de Papel";
+"SecurityCenter.paperKeyTitle" = "Frase de recuperação";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "Chave de Papel";
+"SecurityCenter.paperKeyTitle.android" = "Frase de recuperação";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "Protege a sua BRD de utilizadores não autorizados.";
 /* PIN button title */
@@ -755,10 +795,13 @@
 "Segwit.Enable" = "Ativar";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "Até à Lua";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "Quantia";
 /* Balance: $4.00 */
-"Send.balance" = "Saldo: ";
+"Send.balance" = "Saldo: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "Saldo:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "Permita o acesso à câmara em \"Definições\" > \"Aplicações\" > \"BRD\" > \"Permissões\"";
 /* Permission required to access camera */
@@ -777,12 +820,16 @@
 "Send.destinationTag_optional" = "Etiqueta de Destino (Opcional)";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "Etiqueta de Destino (Obrigatório)";
+"Send.destinationTag_required_error" = "Uma etiqueta de destino válida é necessária para o endereço de destino.";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "A área de transferência está vazia";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "Não é possível enviar ao próprio.";
 /* Network Fee: $0.01 */
 "Send.fee" = "Taxa de rede: %1$@";
+"Send.fio_invalid" = "Endereço FIO inválido.";
+"Send.fio_noAddress" = "Não há endereço %1$s associado a este endereço FIO.";
+"Send.fio_retrievalError" = "Ocorreu um erro ao recuperar o endereço para este endereço FIO. Por favor, tente novamente mais tarde.";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "A identidade do beneficiário não está certificada.";
 /* Insufficient funds error */
@@ -815,12 +862,22 @@
 "Send.noFeesError" = "As condições da Taxa de Rede estão a ser descarregadas. Agradecemos que tente de novo.";
 /* Paste button label */
 "Send.pasteLabel" = "Colar";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayID inválido.";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "Não há %1$s endereço associado a este PayID.";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "Ocorreu um erro ao recuperar o endereço para este PayID. Por favor, tente novamente mais tarde.";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Não foi possível publicar a transação.";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "Não foi possível carregar a solicitação de pagamento";
 /* Scan button label */
 "Send.scanLabel" = "Digitalizar";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "Enviando Max: ";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "Enviar";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -904,21 +961,25 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Partilhar Dados Anónimos?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "Escrever Novamente Chave de Papel";
+"StartPaperPhrase.againButtonTitle" = "Escreva a frase de recuperação novamente";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "A chave de papel é a única forma de restaurar a sua BRD se o seu telefone for perdido, roubado, partido ou atualizado.\n\nVamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
+"StartPaperPhrase.body" = "Sua frase de recuperação é a única maneira de restaurar seu BRD se seu telefone for perdido, roubado, quebrado ou atualizado.\n\nVamos mostrar-lhe uma lista de palavras para anotar num pedaço de papel e manter em segurança.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "A sua chave de papel é a única forma de restaurar a sua BRD se o seu telefone se perder, partir, for roubado ou atualizado.\n\nA sua chave de papel também é necessária se alterar as definições de segurança do seu dispositivo.\n\nVamos mostrar-lhe uma lista de palavras para escrever numa folha de papel e manter em segurança.";
+"StartPaperPhrase.Body.Android" = "Sua frase de recuperação é a única maneira de restaurar seu BRD se seu telefone estiver perdido, roubado, quebrado ou atualizado.\n\nSua frase de recuperação também é necessária se você alterar as configurações de segurança do seu dispositivo.\n\nVamos mostrar-lhe uma lista de palavras para escrever num pedaço de papel e manter em segurança.";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "Escrever Chave de Papel";
+"StartPaperPhrase.buttonTitle" = "Escreva a frase de recuperação";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "A última vez que escreveu a sua chave de papel foi em \n%1$@";
+"StartPaperPhrase.date" = "Última anotação em\n %1$@";
 /* button label */
 "StartViewController.createButton" = "Criar Carteira Nova";
 /* Start view message */
 "StartViewController.message" = "A forma mais protegida e segura de utilizar a bitcoin.";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "Recuperar Carteira";
+"SupportForm.feedbackAppreciated" = "Adoraríamos o seu comentário";
+"SupportForm.helpUsImprove" = "Ajude-nos a melhorar";
+"SupportForm.notNow" = "Agora não";
+"SupportForm.pleaseDescribe" = "Por favor, descreva sua experiência";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "Atividade";
 /* Syncing view connectiong state header text */
@@ -1054,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "Confirmações";
+"TransactionDetails.destinationTag" = "Tag de Destino";
+"TransactionDetails.destinationTag_EmptyHint" = "(vazio)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "As suas transações aparecerão aqui.";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1068,6 +1131,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Limite de GAS";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Preço da GAS";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "Ocultar Detalhes";
 /* Label showing the transaction was started (initialized) */
@@ -1182,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PIN Obrigatório";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "Autorizar esta transação";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Tem certeza de que deseja desativar o Fastsync?";
 /* Explanation for wallet connection setting */
@@ -1220,11 +1291,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "Falhou";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "Para iniciar uma nova carteira ou restaurar uma carteira já existente, tem de começar por eliminar a ligação à carteira que está instalada neste momento. Para continuar, introduza a Chave em Papel que se encontra atualmente associada à carteira.";
+"WipeWallet.instruction" = "Digite sua frase de recuperação para limpar esta carteira do seu dispositivo.";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "Elimine a ligação à sua carteira, a fim de a remover deste dispositivo. Assim que a ligação à carteira tiver sido eliminada, pode iniciar uma nova carteira ou recuperar outra carteira neste dispositivo.";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "Não poderá mais aceder à sua BRD wallet a partir deste dispositivo. O saldo permanecerá na frase.";
+"WipeWallet.startWarning" = "Sua carteira atual será removida deste dispositivo. Se desejar restaurá-lo no futuro, você precisará inserir sua frase de recuperação.";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "Eliminar a ligação à carteira";
 /* Wipe wallet button title */

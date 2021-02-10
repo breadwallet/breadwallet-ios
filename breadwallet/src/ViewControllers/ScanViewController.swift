@@ -34,18 +34,29 @@ class ScanViewController: UIViewController, Trackable {
     private let paymentRequestCurrencyRestriction: Currency?
     fileprivate let guide = CameraGuideView()
     fileprivate let session = AVCaptureSession()
-    private let toolbar = UIView()
+    private let toolbar = UIStackView()
     private let close = UIButton.close
     private let flash = UIButton.icon(image: #imageLiteral(resourceName: "Flash"), accessibilityLabel: S.Scanner.flashButtonLabel)
+    private let cameraRoll: UIButton = {
+        let button: UIButton
+        if #available(iOS 13.0, *) {
+            button = UIButton.icon(image: UIImage(systemName: "photo.on.rectangle") ?? UIImage(), accessibilityLabel: "import")
+        } else {
+            button = UIButton(type: .system)
+            button.setTitle("import", for: .normal)
+        }
+        return button
+    }()
+    
     fileprivate var currentUri = ""
     private var toolbarHeightConstraint: NSLayoutConstraint?
-    private let toolbarHeight: CGFloat = 48.0
+    private let toolbarHeight: CGFloat = 54.0
     private var hasCompleted = false
     
-    init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeys: Bool = false, completion: @escaping ScanCompletion) {
+    init(forPaymentRequestForCurrency currencyRestriction: Currency? = nil, forScanningPrivateKeysOnly: Bool = false, completion: @escaping ScanCompletion) {
         self.completion = completion
         self.paymentRequestCurrencyRestriction = currencyRestriction
-        self.allowScanningPrivateKeysOnly = forScanningPrivateKeys
+        self.allowScanningPrivateKeysOnly = forScanningPrivateKeysOnly
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .fullScreen
     }
@@ -53,40 +64,19 @@ class ScanViewController: UIViewController, Trackable {
     override func viewDidLoad() {
         view.backgroundColor = .black
         toolbar.backgroundColor = .secondaryButton
-
+        toolbar.distribution = .fillEqually
+        
         view.addSubview(toolbar)
-        toolbar.addSubview(close)
-        toolbar.addSubview(flash)
+        toolbar.addArrangedSubview(close)
+        toolbar.addArrangedSubview(UIView())
+        toolbar.addArrangedSubview(cameraRoll)
+        toolbar.addArrangedSubview(UIView())
+        toolbar.addArrangedSubview(flash)
         view.addSubview(guide)
 
         toolbar.constrainBottomCorners(sidePadding: 0, bottomPadding: 0)
         toolbarHeightConstraint = toolbar.heightAnchor.constraint(equalToConstant: toolbarHeight)
         toolbar.constrain([toolbarHeightConstraint])
-        if E.isIPhoneX {
-            close.constrain([
-                close.constraint(.leading, toView: toolbar),
-                close.constraint(.top, toView: toolbar, constant: 2.0),
-                close.constraint(.width, constant: 44.0),
-                close.constraint(.height, constant: 44.0) ])
-            
-            flash.constrain([
-                flash.constraint(.trailing, toView: toolbar),
-                flash.constraint(.top, toView: toolbar, constant: 2.0),
-                flash.constraint(.width, constant: 44.0),
-                flash.constraint(.height, constant: 44.0) ])
-        } else {
-            close.constrain([
-                close.constraint(.leading, toView: toolbar),
-                close.constraint(.top, toView: toolbar, constant: 2.0),
-                close.constraint(.bottom, toView: toolbar, constant: -2.0),
-                close.constraint(.width, constant: 44.0) ])
-            
-            flash.constrain([
-                flash.constraint(.trailing, toView: toolbar),
-                flash.constraint(.top, toView: toolbar, constant: 2.0),
-                flash.constraint(.bottom, toView: toolbar, constant: -2.0),
-                flash.constraint(.width, constant: 44.0) ])
-        }
 
         guide.constrain([
             guide.constraint(.leading, toView: view, constant: C.padding[6]),
@@ -101,18 +91,20 @@ class ScanViewController: UIViewController, Trackable {
                 self.completion(nil)
             })
         }
-
+        
+        cameraRoll.tap = importCameraRoll
         addCameraPreview()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        //Animate guide on appear
         UIView.spring(0.8, animations: {
             self.guide.transform = .identity
         }, completion: { _ in })
     }
     
-    @available(iOS 11.0, *)
     override func viewSafeAreaInsetsDidChange() {
         toolbarHeightConstraint?.constant = toolbarHeight + view.safeAreaInsets.bottom
     }
@@ -158,6 +150,14 @@ class ScanViewController: UIViewController, Trackable {
             }
         }
     }
+    
+    private func importCameraRoll() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+        present(imagePicker, animated: true, completion: nil)
+    }
 
     override var prefersStatusBarHidden: Bool {
         return true
@@ -192,7 +192,10 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
         }
         
         if allowScanningPrivateKeysOnly {
-            guard case .privateKey(_) = result else {
+            switch result {
+            case .privateKey, .gift:
+                break
+            default:
                 guide.state = .negative
                 return
             }
@@ -239,8 +242,55 @@ extension ScanViewController: AVCaptureMetadataOutputObjectsDelegate {
             
         case .deepLink:
             saveEvent("scan.deepLink")
+        case .gift:
+            saveEvent("scan.gift")
         default:
             assertionFailure("unexpected result")
         }
+    }
+}
+
+//Image Picker Delegate
+extension ScanViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        var newImage: UIImage
+        if let possibleImage = info[.editedImage] as? UIImage {
+            newImage = possibleImage
+        } else if let possibleImage = info[.originalImage] as? UIImage {
+            newImage = possibleImage
+        } else {
+            return
+        }
+
+        if let features = detectQRCode(newImage), !features.isEmpty {
+            for case let row as CIQRCodeFeature in features {
+                if let message = row.messageString {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.handleURI(message)
+                    }
+                }
+            }
+        }
+    }
+    
+    func detectQRCode(_ image: UIImage?) -> [CIFeature]? {
+        //sourced: https://stackoverflow.com/questions/35956538/how-to-read-qr-code-from-static-image
+        if let image = image, let ciImage = CIImage.init(image: image) {
+            var options: [String: Any]
+            let context = CIContext()
+            options = [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+            let qrDetector = CIDetector(ofType: CIDetectorTypeQRCode, context: context, options: options)
+            if ciImage.properties.keys.contains((kCGImagePropertyOrientation as String)) {
+                options = [CIDetectorImageOrientation: ciImage.properties[(kCGImagePropertyOrientation as String)] ?? 1]
+            } else {
+                options = [CIDetectorImageOrientation: 1]
+            }
+            let features = qrDetector?.features(in: ciImage, options: options)
+            return features
+
+        }
+        return nil
     }
 }

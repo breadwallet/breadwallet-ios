@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class TxListCell: UITableViewCell {
 
@@ -20,6 +21,8 @@ class TxListCell: UITableViewCell {
     private let failedIndicator = UIButton(type: .system)
     private var pendingConstraints = [NSLayoutConstraint]()
     private var completeConstraints = [NSLayoutConstraint]()
+    private var statusIconContainer: UIView?
+    private var statusIconHosting: Any?
     
     // MARK: Vars
     
@@ -35,7 +38,12 @@ class TxListCell: UITableViewCell {
     func setTransaction(_ viewModel: TxListViewModel, showFiatAmounts: Bool, rate: Rate, isSyncing: Bool) {
         self.viewModel = viewModel
         
-        timestamp.text = viewModel.shortTimestamp
+        if #available(iOS 13.0, *) {
+            if let hosting = statusIconHosting as? UIHostingController<TxStatusIcon> {
+                hosting.rootView = TxStatusIcon(status: viewModel.icon)
+            }
+        }
+        
         descriptionLabel.text = viewModel.shortDescription
         amount.attributedText = viewModel.amount(showFiatAmounts: showFiatAmounts, rate: rate)
         
@@ -43,23 +51,48 @@ class TxListCell: UITableViewCell {
         
         switch viewModel.status {
         case .invalid:
+            timestamp.text = S.Transaction.failed
             failedIndicator.isHidden = false
             statusIndicator.isHidden = true
-            timestamp.isHidden = true
-            NSLayoutConstraint.deactivate(completeConstraints)
-            NSLayoutConstraint.activate(pendingConstraints)
+            if #available(iOS 13, *) {
+                timestamp.isHidden = false
+                NSLayoutConstraint.activate(completeConstraints)
+                NSLayoutConstraint.deactivate(pendingConstraints)
+            } else {
+                timestamp.isHidden = true
+                NSLayoutConstraint.deactivate(completeConstraints)
+                NSLayoutConstraint.activate(pendingConstraints)
+            }
         case .complete:
+            timestamp.text = viewModel.shortTimestamp
             failedIndicator.isHidden = true
             statusIndicator.isHidden = true
             timestamp.isHidden = false
-            NSLayoutConstraint.deactivate(pendingConstraints)
-            NSLayoutConstraint.activate(completeConstraints)
+            if #available(iOS 13, *) {
+                NSLayoutConstraint.activate(completeConstraints)
+                NSLayoutConstraint.deactivate(pendingConstraints)
+            } else {
+                NSLayoutConstraint.deactivate(pendingConstraints)
+                NSLayoutConstraint.activate(completeConstraints)
+            }
         default:
             failedIndicator.isHidden = true
             statusIndicator.isHidden = false
-            timestamp.isHidden = true
-            NSLayoutConstraint.deactivate(completeConstraints)
-            NSLayoutConstraint.activate(pendingConstraints)
+            timestamp.isHidden = false
+            timestamp.text = "\(viewModel.confirmations)/\(viewModel.currency.confirmationsUntilFinal) " + S.TransactionDetails.confirmationsLabel
+            
+            if #available(iOS 13, *) {
+                NSLayoutConstraint.activate(completeConstraints)
+                NSLayoutConstraint.deactivate(pendingConstraints)
+            } else {
+               NSLayoutConstraint.deactivate(completeConstraints)
+               NSLayoutConstraint.activate(pendingConstraints)
+            }
+        }
+  
+        if #available(iOS 13, *) {
+            failedIndicator.isHidden = true
+            statusIndicator.isHidden = true
         }
     }
     
@@ -72,6 +105,13 @@ class TxListCell: UITableViewCell {
     }
     
     private func addSubviews() {
+        if #available(iOS 13.0, *) {
+            let icon = TxStatusIcon(status: .sent)
+            let iconContainer = UIHostingController(rootView: icon)
+            contentView.addSubview(iconContainer.view)
+            statusIconContainer = iconContainer.view
+            statusIconHosting = iconContainer
+        }
         contentView.addSubview(timestamp)
         contentView.addSubview(descriptionLabel)
         contentView.addSubview(statusIndicator)
@@ -81,12 +121,23 @@ class TxListCell: UITableViewCell {
     }
     
     private func addConstraints() {
+        if let statusIcon = statusIconContainer {
+            statusIcon.constrain([
+                statusIcon.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2]),
+                statusIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+            ])
+        }
+        
+        let leadingXAnchor = statusIconContainer == nil ? contentView.leadingAnchor : statusIconContainer!.trailingAnchor
+        
         timestamp.constrain([
             timestamp.topAnchor.constraint(equalTo: contentView.topAnchor, constant: C.padding[2]),
-            timestamp.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: C.padding[2])])
+            timestamp.leadingAnchor.constraint(equalTo: leadingXAnchor, constant: C.padding[2])])
         descriptionLabel.constrain([
             descriptionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[2]),
-            descriptionLabel.trailingAnchor.constraint(equalTo: timestamp.trailingAnchor)])
+            descriptionLabel.leadingAnchor.constraint(equalTo: timestamp.leadingAnchor),
+            descriptionLabel.trailingAnchor.constraint(lessThanOrEqualTo: amount.leadingAnchor, constant: -C.padding[2])
+        ])
         pendingConstraints = [
             descriptionLabel.centerYAnchor.constraint(equalTo: statusIndicator.centerYAnchor),
             descriptionLabel.leadingAnchor.constraint(equalTo: statusIndicator.trailingAnchor, constant: C.padding[1]),
@@ -107,7 +158,6 @@ class TxListCell: UITableViewCell {
         amount.constrain([
             amount.topAnchor.constraint(equalTo: contentView.topAnchor),
             amount.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-            amount.leadingAnchor.constraint(equalTo: descriptionLabel.trailingAnchor, constant: C.padding[6]),
             amount.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -C.padding[2])])
         separator.constrainBottomCorners(height: 0.5)
     }
@@ -115,8 +165,7 @@ class TxListCell: UITableViewCell {
     private func setupStyle() {
         selectionStyle = .none
         amount.textAlignment = .right
-        amount.setContentHuggingPriority(.required, for: .horizontal)
-        timestamp.setContentHuggingPriority(.required, for: .vertical)
+        descriptionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         descriptionLabel.lineBreakMode = .byTruncatingTail
         
         failedIndicator.setTitle(S.Transaction.failed, for: .normal)

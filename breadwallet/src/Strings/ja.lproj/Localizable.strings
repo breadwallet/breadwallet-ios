@@ -23,7 +23,7 @@
 /* Account balance */
 "Account.balance" = "残高";
 /* Delisted token alert banner message */
-"Account.delistedToken" = "発行者がERC20のサポートを終了することを決定した為、このトークンはリストから外れています。 \n\nそれらのトークンを他のプラットフォームに転送することは依然可能かもしれません。詳しくは、サポートページをご覧ください。";
+"Account.delistedToken" = "このトークンは上場廃止となりました。 \n\nこれらのトークンを別のプラットフォームに送信できる場合があります。詳しくは、サポートページをご覧ください。";
 /* $10000 per BTC */
 "Account.exchangeRate" = "%2$@あたり%1$@";
 /* Loading Wallet Message */
@@ -45,7 +45,7 @@
 /* Default wallet name */
 "AccountHeader.defaultWalletName" = "マイブレッド";
 /* Third party keyboard warning */
-"Alert.customKeyboard.android" = "現在、サードパーティーのキーボードを使用しているようです。これを使うと入力した内容が記録され、ペーパー・キーが盗まれる可能性があります。追加の保護措置としてAndroidのデフォルトキーボードに切り替えてください。";
+"Alert.customKeyboard.android" = "サードパーティのキーボードを使用しているようです。キーボードを使用すると、入力内容を記録し、回復フレーズを盗むことができます。保護を強化するには、デフォルトのAndroidキーボードに切り替えてください。";
 /* Error alert title */
 "Alert.error" = "エラー";
 /* Keystore error */
@@ -53,9 +53,9 @@
 /* KeyStore error, keys are invalidated */
 "Alert.keystore.invalidated.android" = "お使いのAndroidロック画面が無効にされたため、暗号化されたブレッドのデータはつい最近無効になりました。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータをアンインストールして消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！アプリを再インストールし、ペーパーキーを使用してウォレットを復元してください。";
+"Alert.keystore.invalidated.uninstall.android" = "画面ロックの設定が変更されたため、続行できません（例：パスワードが無効になっている、指紋が変更されている）。セキュリティ上の理由から、Androidはキーストアを完全にロックしています。したがって、BRDアプリのデータはアンインストールによってワイプする必要があります。 \n\n心配しないでください、あなたの資金はまだ安全です！アプリを再インストールし、回復フレーズを使用してウォレットを回復します。";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "画面ロック設定が変更されたため（パスワードが無効になった、指紋が変更されたなど）、進めることができません。セキュリティ上の理由から、Androidはキーストアを永久にロックしました。したがって、BRDアプリのデータを消去する必要があります。\n\n心配はいりません、あなたの資金は今でも安全です！ペーパーキーを使用してウォレットを復元してください。";
+"Alert.keystore.invalidated.wipe.android" = "画面ロックの設定が変更されたため、続行できません（例：パスワードが無効になっている、指紋が変更されている）。セキュリティ上の理由から、Androidはキーストアを完全にロックしています。したがって、BRDアプリのデータをワイプする必要があります。 \n\n心配しないでください、あなたの資金はまだ安全です！回復フレーズを使用してウォレットを回復します。";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android KeyStoreエラー";
 /* No internet alert message */
@@ -71,7 +71,7 @@
 /* Addresses Copied Alert sub header */
 "Alerts.copiedAddressesSubheader" = "すべてのウォレットアドレスが正常にコピーされました。";
 /* Alert Header Label (the paper key was set) */
-"Alerts.paperKeySet" = "復元フレーズがセットされました。";
+"Alerts.paperKeySet" = "リカバリフレーズセット";
 /* Alert Subheader label (playfully positive) */
 "Alerts.paperKeySetSubheader" = "いいね！";
 /* Alert Header label (the PIN was set) */
@@ -186,12 +186,41 @@
 "Button.yes" = "はい";
 /* Camera plugin instruction */
 "CameraPlugin.centerInstruction" = "ご自身のIDをこのボックス内の中央に配置してください";
+"CloudBackup.backupDeleted" = "バックアップが消去されました";
+"CloudBackup.backupDeletedMessage" = "PINの試行が何度も失敗した後、iCloudバックアップが消去されました。アプリが再起動します。";
+"CloudBackup.backupMenuTitle" = "iCloudバックアップ";
+"CloudBackup.createButton" = "新しいウォレットを作成する";
+"CloudBackup.createWarning" = "以前にバックアップされたウォレットが検出されました。このバックアップを使用することをお勧めします。新しいウォレットを作成してよろしいですか？";
+"CloudBackup.enableBody1" = "この機能を使用するには、iCloudキーチェーンをオンにする必要があります。";
+"CloudBackup.enableBody2" = "次のようになります。";
+"CloudBackup.enableButton" = "iCloudキーチェーンをオンにしました";
+"CloudBackup.enableTitle" = "キーチェーンを有効にする";
+"CloudBackup.encryptBackupMessage" = "バックアップを暗号化するにはPINを入力してください";
+"CloudBackup.mainBody" = "iCloudバックアップは、iCloudアカウントと同じくらい安全です。次の手順でリカバリフレーズを書き留めて、安全に保管することをお勧めします。回復フレーズは、iCloudにアクセスできなくなった場合にウォレットを回復する唯一の方法です。";
+"CloudBackup.mainTitle" = "iCloudリカバリバックアップ";
+"CloudBackup.mainWarning" = "この機能を使用するには、iOS設定アプリでiCloudキーチェーンをオンにする必要があります";
+"CloudBackup.mainWarningConfirmation" = "iCloudバックアップを無効にしてもよろしいですか？これにより、すべてのデバイスからバックアップが削除されます。";
+"CloudBackup.pinAttempts" = "バックアップを消去する前に残っている試行： %1$@";
+"CloudBackup.recoverButton" = "回復キーから復元";
+"CloudBackup.recoverHeader" = "PINを入力してiCloudバックアップのロックを解除します";
+"CloudBackup.restoreButton" = "iCloudバックアップから復元";
+"CloudBackup.selectTitle" = "バックアップを選択";
+"CloudBackup.step1" = "設定アプリを起動します。";
+"CloudBackup.step2" = "Apple ID名をタップします。";
+"CloudBackup.step3" = "iCloudをタップします。";
+"CloudBackup.step4" = "iCloudキーチェーンがオンになっていることを確認する";
+"CloudBackup.understandText" = "この機能はiCloudキーチェーンが有効になっていないと機能しないことを理解しています。";
+"CloudBackup.warningBody" = "あなたのiCloudバックアップは、あと%1$@回の間違ったPIN試行の後に消去されます。";
 /* Amount to Send: ($1.00) */
 "Confirmation.amountLabel" = "送る金額：";
+"Confirmation.destinationTag" = "宛先タグ";
+"Confirmation.destinationTag_EmptyHint" = "(空)";
 /* Network Fee: ($1.00) */
 "Confirmation.feeLabel" = "ネットワーク手数料：";
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "ネットワーク料金（ETH）:";
+/* Label for Hedera Memo field on transaction confirmation screen */
+"Confirmation.hederaMemo" = "Hedera Memo";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "処理時間: この取引は%1$@で完了する見込みです。";
 /* Label for "send" button on final confirmation screen */
@@ -203,9 +232,9 @@
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "費用合計：";
 /* Confirm paper phrase error message */
-"ConfirmPaperPhrase.error" = "入力された言葉がお客様のペーパーキーと一致しません。もう一度お試し下さい。";
+"ConfirmPaperPhrase.error" = "入力した単語は、回復フレーズと一致しません。もう一度お試しください。";
 /* Confirm paper phrase view label. */
-"ConfirmPaperPhrase.label" = "全て正しく書き留められていることを確認するため、復元フレーズの中から下記の単語を入力してください。";
+"ConfirmPaperPhrase.label" = "すべてが正しく記述されていることを確認するには、回復フレーズから次の単語を入力してください。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "フレーズ #%1$@";
 /* Agree to legal terms button */
@@ -276,6 +305,7 @@
 "FeeSelector.estimatedDeliver" = "推定送金時間: %1$@";
 /* [This transaction will complete in] 2-5 minutes */
 "FeeSelector.ethTime" = "2〜5分";
+"FeeSelector.lessThanMinutes" = "<%1$d 分";
 /* Priority fee */
 "FeeSelector.priority" = "優先度";
 /* E.g. [This transaction is predicted to complete in] 10-30 minutes */
@@ -390,6 +420,10 @@
 "ManageWallet.textFeildLabel" = "ウォレットの名前";
 /* Manage wallet modal title */
 "ManageWallet.title" = "ウォレットを管理";
+"MarketData.high24h" = "24時間高";
+"MarketData.low24h" = "24時間低";
+"MarketData.marketCap" = "時価総額";
+"MarketData.volume" = "取引量";
 /* "Add [a] Wallet [to the home screen]" */
 "MenuButton.addWallet" = "ウォレットの追加";
 /* Menu button title */
@@ -411,7 +445,7 @@
 /* button label */
 "MenuViewController.recoverButton" = "ウォレットを復元";
 /* Paper Key Skip modal body (Android-version) */
-"Modal.PaperKeySkip.Body.Android" = "ペーパー・キーはお客様の携帯電話でセキュリティ設定を変更した場合,ウォレットを開くために必要となります。\n\nペーパー・キーを後からセットアップしますか？";
+"Modal.PaperKeySkip.Body.Android" = "スマートフォンのセキュリティ設定を変更した場合、ウォレットを開くにはリカバリフレーズが必要です。 \n\n後でリカバリフレーズを設定してもよろしいですか？";
 /* Paper Key Skip modal Continue Set Up button */
 "Modal.PaperKeySkip.Button.ContinueSetUp" = "セットアップを続けます";
 /* Paper Key Skip modal I'll do it later button */
@@ -488,6 +522,7 @@
 "PaymentProtocol.Errors.unsupportedSignatureType" = "サポートされていないタイプの署名です";
 /* Untrusted certificate payment protocol error message */
 "PaymentProtocol.Errors.untrustedCertificate" = "信頼できない証明書";
+"Platform.transaction_cancelled" = "キャンセルされた取引";
 /* Body text for a prompt that asks the user to subscribe to email updates to find out product updates. */
 "Prompts.Email.body" = "誰よりも早く重要なサポートを受け,製品をアップデートしましょう";
 /* Placeholder text for an email address text field. */
@@ -512,12 +547,17 @@
 "Prompts.NoScreenLock.body.android" = "ウォレットを守るため機器の画面をロックする必要があります。「設定」 > 「セキュリティ」 > 「画面ロック」で有効にしてから続行してください。";
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "画面ロックが無効になっています";
-/* Warning about recovery key (formerly paper key). */
-"Prompts.PaperKey.body" = "携帯電話の紛失時や変更時に備えて、お客様の復元フレーズは必ず保管しておいてください。";
+/* Warning about recovery phrase (formerly paper key). */
+"Prompts.PaperKey.body" = "電話を紛失または変更した場合に備えて、回復フレーズを保存する必要があります。";
 /* Warning about paper key (Android-version) */
-"Prompts.PaperKey.Body.Android" = "携帯電話を紛失または交換した場合に備え,ペーパー・キーをセットアップします。お客様のキーは,携帯電話のセキュリティ設定を変更した場合にも必要となります。";
+"Prompts.PaperKey.Body.Android" = "スマートフォンを紛失または交換した場合に備えて、回復フレーズを設定します。スマートフォンのセキュリティ設定を変更する場合も、キーが必要です。";
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "アクションが要求されました";
+"Prompts.RateApp.dontShow" = "もう聞かないで";
+"Prompts.RateApp.enjoyingBrd" = "BRDを楽しんでいますか？";
+"Prompts.RateApp.googlePlayReview" = "あなたのレビューは、BRDコミュニティの成長に役立ちます。";
+"Prompts.RateApp.noThanks" = "結構です";
+"Prompts.RateApp.rateUs" = "私たちをレビュー";
 /* Transaction rejected prompt body */
 "Prompts.RecommendRescan.body" = "あなたのウォレットは同期されていない可能性があります。ブロックチェーンを再スキャンすることで修復できる可能性があります。";
 /* Transaction rejected prompt title */
@@ -587,11 +627,11 @@
 /* Reset PIN with paper key: header */
 "RecoverWallet.header_reset_pin" = "PINコードをリセット";
 /* Enter paper key instruction */
-"RecoverWallet.instruction" = "復元フレーズを入力してください";
+"RecoverWallet.instruction" = "回復フレーズを入力してください";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "復元フレーズを使用し、あなたのブレッドを復元する。";
+"RecoverWallet.intro" = "回復フレーズを使用してBRDを回復します。";
 /* Invalid paper key message */
-"RecoverWallet.invalid" = "あなたが入力した復元フレーズは無効です。それぞれの単語を再確認の上、もう一度お試しください。";
+"RecoverWallet.invalid" = "入力したリカバリフレーズは無効です。各単語を再確認して、もう一度お試しください。";
 /* Previous button accessibility label */
 "RecoverWallet.leftArrow" = "左矢印";
 /* Next button label */
@@ -601,35 +641,35 @@
 /* Next button accessibility label */
 "RecoverWallet.rightArrow" = "右矢印";
 /* Recover wallet sub-header */
-"RecoverWallet.subheader" = "復元を希望するウォレットの復元フレーズを入力してください。";
+"RecoverWallet.subheader" = "回復するウォレットの回復フレーズを入力します。";
 /* Reset PIN with paper key: sub-header */
-"RecoverWallet.subheader_reset_pin" = "PINコードをリセットするには、復元フレーズの中から当てはまる単語を下記ボックスの中に入力してください。";
+"RecoverWallet.subheader_reset_pin" = "PINをリセットするには、リカバリフレーズの単語を下のボックスに入力します。";
 /* Instructs the user to enter words from the set of recovery key words. */
 "RecoveryKeyFlow.confirmRecoveryInputError" = "入力した単語は正しくありません。もう一度入力してください。";
-/* Instructs the user to enter words from the set of recovery key words. */
-"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "もうすぐです ! 復元キーから単語を入力してください。";
-/* Title for the confirmation step of the recovery key flow. */
-"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "復元キーの確認";
-/* Title displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKey" = "復元キーの入力";
-/* Subtitle displayed when the user starts the process of entering a recovery key */
-"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "復元キーを入力して,端末からウォレットを解除してください。";
-/* Body text for an alert dialog asking the user whether to set up the recovery key later */
-"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "復元キーの使用は後からでよろしいですか？";
+/* Instructs the user to enter words from the set of recovery phrase words. */
+"RecoveryKeyFlow.confirmRecoveryKeySubtitle" = "ほぼ完了しました！回復フレーズから次の単語を入力します。";
+/* Title for the confirmation step of the recovery phrase flow. */
+"RecoveryKeyFlow.confirmRecoveryKeyTitle" = "回復フレーズの確認";
+/* Title displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKey" = "回復フレーズを入力してください";
+/* Subtitle displayed when the user starts the process of entering a recovery phrase */
+"RecoveryKeyFlow.enterRecoveryKeySubtitle" = "デバイスからこのウォレットのリンクを解除するには、リカバリフレーズを入力してください。";
+/* Body text for an alert dialog asking the user whether to set up the recovery phrase later */
+"RecoveryKeyFlow.exitRecoveryKeyPromptBody" = "後でリカバリフレーズを設定してもよろしいですか？";
 /* Title for an alert dialog asking the user whether to set up the recovery key later */
 "RecoveryKeyFlow.exitRecoveryKeyPromptTitle" = "後から行う";
-/* Button text for the 'Generate Recovery Key' button */
-"RecoveryKeyFlow.generateKeyButton" = "復元キーを生成する";
+/* Button text for the 'Generate Recovery Phrase' button */
+"RecoveryKeyFlow.generateKeyButton" = "回復フレーズの生成";
 /* Subtext for the recovery key landing page. */
 "RecoveryKeyFlow.generateKeyExplanation" = "携帯のアップグレードや紛失の際に,保有資金を復元するためにこのキーが必要です。";
-/* Default title for the recovery key landing page */
-"RecoveryKeyFlow.generateKeyTitle" = "秘密復元キーを生成します";
+/* Default title for the recovery phrase landing page */
+"RecoveryKeyFlow.generateKeyTitle" = "プライベートな回復フレーズを生成する";
 /* Title for a button that takes the user to the wallet after setting up the recovery key. */
 "RecoveryKeyFlow.goToWalletButtonTitle" = "ウォレットへ";
 /* Hint text for recovery key intro page, e.g., Step 2 */
 "RecoveryKeyFlow.howItWorksStep" = "使い方 - ステップ%1$@";
-/* Error text displayed when the user enters an incorrect recovery key */
-"RecoveryKeyFlow.invalidPhrase" = "入力した単語にお客様の復元キーと一致しないものがあります。\nもう一度入力してください。";
+/* Error text displayed when the user enters an incorrect recovery phrase */
+"RecoveryKeyFlow.invalidPhrase" = "入力した単語の一部が回復フレーズと一致しません。もう一度お試しください。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.keepSecure" = "安全に保管";
 /* Informs the user that the recovery is only required for recovering a wallet. */
@@ -641,19 +681,19 @@
 /* Title displayed when the user starts the process of recovering a wallet */
 "RecoveryKeyFlow.recoveryYourWallet" = "ウォレットの復元";
 /* Subtitle displayed when the user starts the process of recovering a wallet */
-"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "復元したいウォレットの復元キーを入力してください。";
+"RecoveryKeyFlow.recoveryYourWalletSubtitle" = "回復するウォレットの回復フレーズを入力してください。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.relaxBuyTrade" = "安心の購入と取引";
 /* Reminds the user to write down the recovery key words. */
 "RecoveryKeyFlow.rememberToWriteDownReminder" = "単語はメモしましたか。忘れていたら,スワイプして戻ってください。";
-/* Instruction displayed when the user is resetting the PIN, which requires the recovery key to be entered */
-"RecoveryKeyFlow.resetPINInstruction" = "復元キーを入力して,PINコードをリセットしてください。";
+/* Instruction displayed when the user is resetting the PIN, which requires the recovery phrase to be entered */
+"RecoveryKeyFlow.resetPINInstruction" = "PINをリセットするには、回復フレーズを入力してください。";
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "お客様の資産は最も安全に個人情報を守りながら保護されていますので,安心して購入や取引ができます。";
 /* Recommends that the user stores the recovery key in a secure location */
 "RecoveryKeyFlow.storeSecurelyRecommendation" = "キーは安全な場所に保管してください。ウォレットを復元できるのはこのキーだけです。BRD はキーを保存していません。";
-/* Title for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successHeading" = "おつかれさまです ! 復元キーの設定は完了しました。";
+/* Title for the success page after the recovery phrase has been set up */
+"RecoveryKeyFlow.successHeading" = "おめでとう！回復フレーズの設定が完了しました。";
 /* Subtitle for the success page after the recovery key has been set up */
 "RecoveryKeyFlow.successSubheading" = "BRD ウォレットで仮想通貨を保管・購入・取引をする準備ができました。";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
@@ -668,12 +708,12 @@
 "RecoveryKeyFlow.wipeWalletSubtext" = "デバイスから現在のウォレットを消去して、新しいウォレットを開始します。";
 /* Title for recovery key intro page */
 "RecoveryKeyFlow.writeItDown" = "復元キーをメモする";
-/* Title for the recovery key landing page if the key has already been generated. */
-"RecoveryKeyFlow.writeKeyAgain" = "もう一度,復元キーをメモする";
+/* Title for the recovery phrase landing page if the key has already been generated. */
+"RecoveryKeyFlow.writeKeyAgain" = "回復フレーズをもう一度書き留めます";
 /* Subtitle for the write recovery key screen */
 "RecoveryKeyFlow.writeKeyScreenSubtitle" = "以下の単語を順番通りにメモしてください。";
-/* Title for the write recovery key screen */
-"RecoveryKeyFlow.writeKeyScreenTitle" = "お客様の復元キー";
+/* Title for the write recovery phrase screen */
+"RecoveryKeyFlow.writeKeyScreenTitle" = "あなたの回復フレーズ";
 /* Title for the step number when the user pages through the recovery words */
 "RecoveryKeyFlow.writeKeyStepTitle" = "%1$@の%2$@";
 /* No amount entered error message. */
@@ -728,11 +768,11 @@
 "SecurityCenter.faceIdTitle" = "Face ID";
 /* Paper Key button description */
 "SecurityCenter.paperKeyDescription" = "あなたが携帯電話を紛失したり、アップグレードした場合にご自身のビットコインへアクセスできる唯一の方法です。";
-/* Recovery Key button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
+/* Recovery Phrase button title. This used to be called 'paper key', so leaving the string key as `paperKeyTitle` in order
  * to not break existing client code. */
-"SecurityCenter.paperKeyTitle" = "復元フレーズ";
+"SecurityCenter.paperKeyTitle" = "回復フレーズ";
 /* Paper Key button title */
-"SecurityCenter.paperKeyTitle.android" = "復元フレーズ";
+"SecurityCenter.paperKeyTitle.android" = "回復フレーズ";
 /* PIN button description */
 "SecurityCenter.pinDescription" = "アクセス権限のないユーザーからあなたのブレッドを守ります。";
 /* PIN button title */
@@ -755,10 +795,13 @@
 "Segwit.Enable" = "有効化する";
 /* Segwit button label that takes the user back to the home screen once SegWit is enabled. */
 "Segwit.HomeButton" = "月へ";
+"Send_fio_toLabel" = "FIO";
 /* Send money amount label */
 "Send.amountLabel" = "金額";
 /* Balance: $4.00 */
-"Send.balance" = "残高: ";
+"Send.balance" = "残高: %1$@";
+/* Balance: $4.00 for iOS, the balance can't have a parameter */
+"Send.balanceString" = "残高:";
 /* Instructions how to allow the camera access for the app */
 "Send.cameraUnavailabeMessage.android" = "「設定」 > 「アプリ」 > 「ブレッド」 > 「許可」でカメラへのアクセスを許可してください";
 /* Permission required to access camera */
@@ -777,12 +820,16 @@
 "Send.destinationTag_optional" = "宛先タグ（オプション）";
 /* Required Destination Tag label */
 "Send.destinationTag_required" = "宛先タグ（必須）";
+"Send.destinationTag_required_error" = "ターゲットアドレスには有効な宛先タグが必要です。";
 /* Emtpy pasteboard error message */
 "Send.emptyPasteboard" = "ペーストボードが空です";
 /* "(you) can't send (to your)self" */
 "Send.ethSendSelf" = "自分に送金することはできません。";
 /* Network Fee: $0.01 */
 "Send.fee" = "ネットワーク手数料: %1$@";
+"Send.fio_invalid" = "無効なFIOアドレス。";
+"Send.fio_noAddress" = "このFIOアドレスに関連付けられている%1$sアドレスはありません。";
+"Send.fio_retrievalError" = "このFIOアドレスのアドレスの取得中にエラーが発生しました。後でもう一度やり直してください。";
 /* Payee identity not certified alert title. */
 "Send.identityNotCertified" = "受取人の本人確認が行われていません。";
 /* Insufficient funds error */
@@ -815,12 +862,22 @@
 "Send.noFeesError" = "ネットワーク手数料の諸条件のダウンロード中です。もう一度お試し下さい。";
 /* Paste button label */
 "Send.pasteLabel" = "貼り付け";
+/* Error message for invalid PayID */
+"Send.payId_invalid" = "PayIDが無効です。";
+/* Error message for no address associated with a PayID for a given currency */
+"Send.payId_noAddress" = "このPayIDに関連付けられている%1$sアドレスはありません。";
+/* Error message for error in retrieving the address from the PayID endpoint */
+"Send.payId_retrievalError" = "このPayIDの住所の取得中にエラーが発生しました。後でもう一度やり直してください。";
+/* PayID label */
+"Send.payId_toLabel" = "PayID";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "取引を実行できませんでした。";
 /* Could not load remote request error message */
 "Send.remoteRequestError" = "支払い要求がロードできませんでした";
 /* Scan button label */
 "Send.scanLabel" = "スキャン";
+/* Sending Max: $4.00 for iOS, the balance can't have a parameter */
+"Send.sendingMax" = "最大送信：";
 /* Send button label (the action, "press here to send") */
 "Send.sendLabel" = "送金する";
 /* Send button label (for special case where the user specified send amount is too high and does not leave a balance to cover fees.) */
@@ -904,21 +961,25 @@
 /* Share data switch label. */
 "ShareData.toggleLabel" = "匿名データをシェアしますか?";
 /* button label */
-"StartPaperPhrase.againButtonTitle" = "復元フレーズをもう一度書き留めてください";
+"StartPaperPhrase.againButtonTitle" = "回復フレーズを書き留めます";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "復元フレーズは、スマートフォンを紛失したり、盗まれたり、壊れたり、アップグレードした場合に、ご自身のブレッドを元に戻せる唯一の方法です。\n\n単語の一覧を表示しますので、紙に書き留めて安全に保管してください。";
+"StartPaperPhrase.body" = "スマートフォンが紛失、盗難、破損、またはアップグレードされた場合にリカバリフレーズを使用することで、BRDを復元できます。 \n\n一枚の紙に書き留めて安全を保つための単語のリストをお見せします。";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "お客様のペーパー・キーは携帯電話の紛失,盗難,故障またはアップグレードした際にBRDを復元する唯一の方法です。\n\nペーパー・キーはお客様のデバイスでセキュリティ設定を変更した際も必要となります。\n\n紙に書き留めて保管する単語リストを表示します。";
+"StartPaperPhrase.Body.Android" = "スマートフォンが紛失、盗難、破損、またはアップグレードされた場合にリカバリフレーズを使用することで、BRDを復元できます。 \n\nデバイスのセキュリティ設定を変更する場合も、リカバリフレーズが必要です。 \n\n一枚の紙に書き留めて安全を保つための単語のリストをお見せします。";
 /* button label */
-"StartPaperPhrase.buttonTitle" = "復元フレーズを書き留めてください";
+"StartPaperPhrase.buttonTitle" = "回復フレーズを書き留めます";
 /* Argument is date; date should be on a new line */
-"StartPaperPhrase.date" = "あなたが最後に復元フレーズを書き留めたのは %1$@です";
+"StartPaperPhrase.date" = "最後に書き留めた\n %1$@";
 /* button label */
 "StartViewController.createButton" = "新しいウォレットを作成する";
 /* Start view message */
 "StartViewController.message" = "最も安全にビットコインを使う手段。";
 /* Recover your wallet from a backup */
 "StartViewController.recoverButton" = "ウォレットを復元する";
+"SupportForm.feedbackAppreciated" = "フィードバックをお待ちしています";
+"SupportForm.helpUsImprove" = "改善にご協力ください";
+"SupportForm.notNow" = "今はやめろ";
+"SupportForm.pleaseDescribe" = "あなたの経験を教えてください";
 /* Syncing view done syncing state header text */
 "SyncingView.activity" = "アクティビティ";
 /* Syncing view connectiong state header text */
@@ -1054,6 +1115,8 @@
 /* Block height and confirmations label
 eg. 182930 (45061 confirmations) */
 "TransactionDetails.confirmationsLabel" = "確認";
+"TransactionDetails.destinationTag" = "宛先タグ";
+"TransactionDetails.destinationTag_EmptyHint" = "(空)";
 /* Empty transaction list message. */
 "TransactionDetails.emptyMessage" = "あなたの取引はこちらに表示されます。";
 /* e.g. the users balance after the transaction was compeleted */
@@ -1068,6 +1131,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "ガソリン上限";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "ガソリン価格";
+/* Label for Hedera Memo field on transaction details screen */
+"TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "詳細を隠す";
 /* Label showing the transaction was started (initialized) */
@@ -1182,6 +1247,12 @@ eg. 182930 (45061 confirmations) */
 "VerifyPin.title" = "PINコードが必要です";
 /* Authorize transaction with touch id message */
 "VerifyPin.touchIdMessage" = "このトランザクションを認証する";
+"Wallet.one_day" = "1d";
+"Wallet.one_month" = "1m";
+"Wallet.one_week" = "1w";
+"Wallet.one_year" = "1y";
+"Wallet.three_months" = "3m";
+"Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
 "WalletConnectionSettings.confirmation" = "Fastsyncをオフにしてもよろしいですか？";
 /* Explanation for wallet connection setting */
@@ -1220,11 +1291,11 @@ Wallet connection settings menu item title. */
 /* Failed wipe wallet alert title */
 "WipeWallet.failedTitle" = "失敗しました";
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
-"WipeWallet.instruction" = "新しいウォレットを起動したり既存のウォレットを復元するには、まず現在インストールされているウォレットのリンクを解除する必要があります。現在使用しているウォレットの復元フレーズを入力して続行してください。";
+"WipeWallet.instruction" = "デバイスからこのウォレットをワイプするには、リカバリフレーズを入力してください。";
 /* Instructions for unlinking the wallet */
 "WipeWallet.startMessage" = "ご利用ウォレットのリンクを解除してこの機器から解除してください。このウォレットのリンクが解除されると、この機器で新しいウォレットを起動したり、別のウォレット再び利用できるようになります。";
 /* Start wipe wallet view warning */
-"WipeWallet.startWarning" = "この端末から現在使用中のBRDウォレットへのアクセスはできなくなります。復元する際は復元フレーズが必要になります。";
+"WipeWallet.startWarning" = "現在のウォレットはこのデバイスから削除されます。後で復元する場合は、リカバリフレーズを入力する必要があります。";
 /* Unlink this wallet from this device. */
 "WipeWallet.title" = "ウォレットのリンクを解除";
 /* Wipe wallet button title */

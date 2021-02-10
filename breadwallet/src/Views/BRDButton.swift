@@ -77,12 +77,12 @@ class BRDButton: UIControl {
                 let translate = CATransform3DTranslate(shrink, 0, drop, 0)
 
                 UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { 
-                    self.container.layer.transform = translate                    
+                    self.container.layer.transform = translate
                 }, completion: nil)
                 
             } else {
-                UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { 
-                    self.container.transform = CGAffineTransform.identity                  
+                UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: {
+                    self.container.transform = CGAffineTransform.identity
                 }, completion: nil)
             }
         }

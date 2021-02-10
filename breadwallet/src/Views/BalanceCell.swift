@@ -18,7 +18,7 @@ class BalanceCell: UIView, Subscriber {
     private let primaryBalance: UpdatingLabel
     private let secondaryBalance: UpdatingLabel
     private let conversionSymbol = UIImageView(image: #imageLiteral(resourceName: "conversion"))
-    private let currencyTapView = UIView()
+    let currencyTapView = UIView()
     private var regularConstraints: [NSLayoutConstraint] = []
     private var swappedConstraints: [NSLayoutConstraint] = []
     private var hasInitialized = false

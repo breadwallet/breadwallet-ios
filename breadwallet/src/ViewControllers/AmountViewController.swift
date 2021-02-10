@@ -26,12 +26,12 @@ class AmountViewController: UIViewController, Trackable {
             let title = currency.defaultUnitName
             self.currencyToggle = BRDButton(title: title, type: .tertiary)
         }
-        self.feeSelector = FeeSelector()
+        self.feeSelector = FeeSelector(currency: currency)
         self.pinPad = PinPadViewController(style: .white,
                                            keyboardType: .decimalPad,
                                            maxDigits: Int(currency.defaultUnit.decimals),
                                            shouldShowBiometrics: false)
-        self.canEditFee = currency.isBitcoin
+        self.canEditFee = currency.isBitcoin || currency.isEthereumCompatible
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -87,7 +87,7 @@ class AmountViewController: UIViewController, Trackable {
     private let cursor = BlinkingView(blinkColor: C.defaultTintColor)
     private let feeLabel = UILabel()
     private let tapView = UIView()
-    private let feeSelector: FeeSelector
+    public let feeSelector: FeeSelector
     private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
     
     //Controlled by SendViewController

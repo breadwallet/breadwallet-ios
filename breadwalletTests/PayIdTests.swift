@@ -15,25 +15,31 @@ import XCTest
 class PayIdTests : XCTestCase {
     
     func testPaymentPathInit() {
-        XCTAssertNotNil(PayId(address: "GiveDirectly$payid.charity"))
-        XCTAssertNotNil(PayId(address: "test5$payid.test.coinselect.com"))
-        XCTAssertNotNil(PayId(address: "reza$payid.test.coinselect.com"))
-        XCTAssertNotNil(PayId(address: "pay$wietse.com"))
-        XCTAssertNotNil(PayId(address: "john.smith$dev.payid.es"))
-        XCTAssertNotNil(PayId(address: "pay$zochow.ski"))
+        assertIsPayId(address: "GiveDirectly$payid.charity")
+        assertIsPayId(address: "test5$payid.test.coinselect.com")
+        assertIsPayId(address: "reza$payid.test.coinselect.com")
+        assertIsPayId(address: "pay$wietse.com")
+        assertIsPayId(address: "john.smith$dev.payid.es")
+        assertIsPayId(address: "pay$zochow.ski")
         
-        XCTAssertNil(PayId(address: ""))
-        XCTAssertNil(PayId(address: "test5payid.test.coinselect.com"))
-        XCTAssertNil(PayId(address: "payid.test.coinselect.com"))
-        XCTAssertNil(PayId(address: "rAPERVgXZavGgiGv6xBgtiZurirW2yAmY"))
-        XCTAssertNil(PayId(address: "unknown"))
-        XCTAssertNil(PayId(address: "0x2c4d5626b6559927350db12e50143e2e8b1b9951"))
-        XCTAssertNil(PayId(address: "$payid.charity"))
-        XCTAssertNil(PayId(address: "payid.charity$"))
+        XCTAssertNil(ResolvableFactory.resolver(""))
+        XCTAssertNil(ResolvableFactory.resolver("test5payid.test.coinselect.com"))
+        XCTAssertNil(ResolvableFactory.resolver("payid.test.coinselect.com"))
+        XCTAssertNil(ResolvableFactory.resolver("rAPERVgXZavGgiGv6xBgtiZurirW2yAmY"))
+        XCTAssertNil(ResolvableFactory.resolver("unknown"))
+        XCTAssertNil(ResolvableFactory.resolver("0x2c4d5626b6559927350db12e50143e2e8b1b9951"))
+        XCTAssertNil(ResolvableFactory.resolver("$payid.charity"))
+        XCTAssertNil(ResolvableFactory.resolver("payid.charity$"))
     }
     
+    func assertIsPayId(address: String) {
+        let payID = ResolvableFactory.resolver(address)
+        XCTAssertNotNil(payID, "Resolver should not be nil for \(address)")
+        XCTAssertTrue(payID!.type == .payId, "Resolver should not be type Payid for \(address)")
+    }
+
     func testBTC() {
-        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = ResolvableFactory.resolver("adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.btc) { result in
@@ -42,9 +48,9 @@ class PayIdTests : XCTestCase {
         }
         waitForExpectations(timeout: 60, handler: nil)
     }
-    
+
     func testEth() {
-        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = ResolvableFactory.resolver("adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.eth) { result in
@@ -53,9 +59,9 @@ class PayIdTests : XCTestCase {
         }
         waitForExpectations(timeout: 60, handler: nil)
     }
-    
+
     func testUnsuportedCurrency() {
-        let path = PayId(address: "adrian$stage2.breadwallet.com/payid/")
+        let path = ResolvableFactory.resolver("adrian$stage2.breadwallet.com/payid/")
         XCTAssertNotNil(path)
         let exp = expectation(description: "Fetch PayId address")
         path?.fetchAddress(forCurrency: TestCurrencies.bch) { address in
@@ -69,8 +75,8 @@ class PayIdTests : XCTestCase {
         }
         waitForExpectations(timeout: 60, handler: nil)
     }
-    
-    func handleResult(_ result: Result<(String, String?), PayIdError>, expected: String) {
+
+    func handleResult(_ result: Result<(String, String?), ResolvableError>, expected: String) {
         switch result {
         case .success(let address):
             XCTAssertTrue(address.0 == expected)

@@ -8,6 +8,7 @@
 
 import UIKit
 import WalletKit
+import SwiftUI
 
 typealias LoginCompletionHandler = ((Account) -> Void)
 
@@ -18,27 +19,25 @@ class StartFlowPresenter: Subscriber, Trackable {
     private let rootViewController: RootNavigationController
     private var navigationController: ModalNavigationController?
     private let navigationControllerDelegate: StartNavigationDelegate
-    private let keyMaster: KeyMaster
+    private let keyMaster: KeyStore
     private var loginViewController: UIViewController?
     private let loginTransitionDelegate = LoginTransitionDelegate()
     private var createHomeScreen: ((UINavigationController) -> HomeScreenViewController)
-    private var createBuyScreen: (() -> BRWebViewController)?
-    private var shouldBuyCoinAfterOnboarding: Bool = false
     private var onboardingCompletionHandler: LoginCompletionHandler?
-    
-    private let startupScreen = StartupScreen()
+    private let shouldDisableBiometrics: Bool
+    private var startupScreen: StartupScreen? = StartupScreen()
     
     // MARK: - Public
 
-    init(keyMaster: KeyMaster,
-         rootViewController: RootNavigationController, 
-         createHomeScreen: @escaping (UINavigationController) -> HomeScreenViewController,
-         createBuyScreen: @escaping () -> BRWebViewController) {
+    init(keyMaster: KeyStore,
+         rootViewController: RootNavigationController,
+         shouldDisableBiometrics: Bool,
+         createHomeScreen: @escaping (UINavigationController) -> HomeScreenViewController) {
         self.keyMaster = keyMaster
         self.rootViewController = rootViewController
         self.navigationControllerDelegate = StartNavigationDelegate()
         self.createHomeScreen = createHomeScreen
-        self.createBuyScreen = createBuyScreen
+        self.shouldDisableBiometrics = shouldDisableBiometrics
         
         // no onboarding, make home screen visible after unlock
         if !keyMaster.noWallet {
@@ -57,11 +56,15 @@ class StartFlowPresenter: Subscriber, Trackable {
     }
     
     private func pushStartupScreen() {
-        rootViewController.pushViewController(self.startupScreen, animated: false)
+        guard let startupScreen = self.startupScreen else { return }
+        rootViewController.pushViewController(startupScreen, animated: false)
     }
     
     private func popStartupScreen() {
         rootViewController.popViewController(animated: false)
+        DispatchQueue.main.async { [weak self] in
+            self?.startupScreen = nil
+        }
     }
     
     /// Onboarding
@@ -75,7 +78,8 @@ class StartFlowPresenter: Subscriber, Trackable {
         // the onboarding process, including post-walkthrough events such as PIN entry and paper-key entry.
         EventMonitor.shared.register(.onboarding)
         
-        let onboardingScreen = OnboardingViewController(didExitOnboarding: { [weak self] (action) in
+        let onboardingScreen = OnboardingViewController(doesCloudBackupExist: keyMaster.doesCloudBackupExist(),
+                                                        didExitOnboarding: { [weak self] (action) in
             guard let `self` = self else { return }
             
             switch action {
@@ -83,11 +87,8 @@ class StartFlowPresenter: Subscriber, Trackable {
                 self.enterRecoverWalletFlow()
             case .createWallet:
                 self.enterCreateWalletFlow()
-            case .createWalletBuyCoin:
-                // This will be checked in dismissStartFlow(), which is called after the PIN
-                // and paper key flows are finished.
-                self.shouldBuyCoinAfterOnboarding = true
-                self.enterCreateWalletFlow()
+            case .restoreCloudBackup:
+                self.enterRecoverCloudBackup()
             }
         })
         
@@ -97,9 +98,6 @@ class StartFlowPresenter: Subscriber, Trackable {
         if let onboardingFlow = navigationController {
             onboardingFlow.modalPresentationStyle = .fullScreen
             onboardingFlow.setNavigationBarHidden(true, animated: false)
-            
-            // This will be set to true if the user exits onboarding with the `createWalletBuyCoin` action.
-            shouldBuyCoinAfterOnboarding = false
             
             rootViewController.present(onboardingFlow, animated: false) {
                 
@@ -167,6 +165,59 @@ class StartFlowPresenter: Subscriber, Trackable {
         
         self.navigationController?.pushViewController(recoverWalletViewController, animated: true)
     }
+    
+    private func enterRecoverCloudBackup() {
+        guard #available(iOS 13.6, *) else { return }
+        let backups = keyMaster.listBackups()
+        if backups.count > 1 {
+            let selectView = SelectBackupView(backups: backups) {
+                guard case let .success(backup) = $0 else {
+                    self.navigationController?.popToRootViewController(animated: true)
+                    return
+                }
+                self.recoverBackup(backup)
+            }
+            navigationController?.setClearNavbar()
+            navigationController?.setNavigationBarHidden(false, animated: false)
+            let vc = LightStatusBarHost(rootView: selectView)
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+            recoverBackup(backups.first!)
+        }
+    }
+    
+    @available(iOS 13.6, *)
+    private func recoverBackup(_ backup: CloudBackup) {
+        let update = UpdatePinViewController(keyMaster: self.keyMaster,
+                                             type: .recoverBackup,
+                                             showsBackButton: true,
+                                             phrase: nil,
+                                             eventContext: .recoverCloud,
+                                             backupKey: backup.identifier)
+        update.didRecoverAccount = { [weak self] account in
+            self?.handleRecoveredAccount(account)
+        }
+        navigationController?.setClearNavbar()
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.pushViewController(update, animated: true)
+    }
+    
+    private func handleRecoveredAccount(_ recoveredAccount: Account) {
+        var account = recoveredAccount
+        DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            self?.keyMaster.fetchCreationDate(for: account) { updatedAccount in
+                account = updatedAccount
+                DispatchQueue.main.async {
+                    self?.onboardingCompletionHandler?(account)
+                }
+            }
+        }
+        Store.perform(action: Alert.Show(.cloudBackupRestoreSuccess(callback: { [weak self] in
+            self?.navigationController?.dismiss(animated: true) {
+                self?.navigationController = nil
+            }
+        })))
+    }
 
     private func pushPinCreationViewForRecoveredWallet(recoveredAccount: Account) {
         var account = recoveredAccount
@@ -210,10 +261,11 @@ class StartFlowPresenter: Subscriber, Trackable {
         pinCreationViewController.setPinSuccess = { [unowned self] pin in
             autoreleasepool {
                 guard let (_, account) = self.keyMaster.setRandomSeedPhrase() else { self.handleWalletCreationError(); return }
-                UserDefaults.selectedCurrencyCode = nil // to land on home screen after new wallet creation //TODO:CRYPTO no longer used
                 DispatchQueue.main.async {
-                    self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: .onboarding)
-                    self.onboardingCompletionHandler?(account)
+                    self.enterCloudBackup(pin: pin, callback: {
+                          self.pushStartPaperPhraseCreationViewController(pin: pin, eventContext: .onboarding)
+                          self.onboardingCompletionHandler?(account)
+                    })
                 }
             }
         }
@@ -221,6 +273,20 @@ class StartFlowPresenter: Subscriber, Trackable {
         navigationController?.setClearNavbar()
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.pushViewController(pinCreationViewController, animated: true)
+    }
+    
+    private func enterCloudBackup(pin: String, callback: @escaping () -> Void) {
+        guard #available(iOS 13.6, *) else { callback(); return }
+        //We don't need to show the backup view if backup is already on
+        guard !keyMaster.doesCloudBackupExist() else { callback(); return }
+        guard let navController = navigationController else { return }
+        let synchronizer = BackupSynchronizer(context: .onboarding,
+                                              keyStore: self.keyMaster,
+                                              navController: navController)
+        synchronizer.completion = callback
+        let cloudView = CloudBackupView(synchronizer: synchronizer)
+        let hosting = LightStatusBarHost(rootView: cloudView)
+        navigationController?.pushViewController(hosting, animated: true)
     }
 
     private func handleWalletCreationError() {
@@ -251,26 +317,9 @@ class StartFlowPresenter: Subscriber, Trackable {
         
         // Onboarding is finished.
         EventMonitor.shared.deregister(.onboarding)
-        
-        if self.shouldBuyCoinAfterOnboarding {
-            self.presentPostOnboardingBuyScreen()
-        } else {
-            navigationController.dismiss(animated: true) { [unowned self] in
-                self.navigationController = nil
-            }
-        }
-    }
-    
-    private func presentPostOnboardingBuyScreen() {
-        guard let createBuyScreen = createBuyScreen else { return }
-        
-        let buyScreen = createBuyScreen()
-        
-        buyScreen.didClose = { [unowned self] in
+        navigationController.dismiss(animated: true) { [unowned self] in
             self.navigationController = nil
         }
-        
-        self.navigationController?.pushViewController(buyScreen, animated: true)
     }
     
     // MARK: - Login
@@ -285,7 +334,8 @@ class StartFlowPresenter: Subscriber, Trackable {
 
     private func presentLoginFlow(for context: LoginViewController.Context) {
         let loginView = LoginViewController(for: context,
-                                            keyMaster: keyMaster)
+                                            keyMaster: keyMaster,
+                                            shouldDisableBiometrics: shouldDisableBiometrics)
         loginView.transitioningDelegate = loginTransitionDelegate
         loginView.modalPresentationStyle = .overFullScreen
         loginView.modalPresentationCapturesStatusBarAppearance = true
