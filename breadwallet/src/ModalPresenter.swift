@@ -629,6 +629,11 @@ class ModalPresenter: Subscriber, Trackable {
             // About
             MenuItem(title: S.Settings.about, icon: MenuItem.Icon.about) {
                 menuNav.pushViewController(AboutViewController(), animated: true)
+            },
+            
+            // Export Transfer History
+            MenuItem(title: S.Settings.exportTransfers, icon: MenuItem.Icon.export) { [weak self] in
+                self?.presentExportTransfers()
             }
         ]
 
@@ -943,6 +948,33 @@ class ModalPresenter: Subscriber, Trackable {
 
     // MARK: - Prompts
 
+    func presentExportTransfers() {
+        let alert = UIAlertController(title: S.ExportTransfers.header, message: S.ExportTransfers.body, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: S.ExportTransfers.confirmExport, style: .default, handler: { (_) in
+            self.topViewController?.present(BRActivityViewController(message: ""), animated: true, completion: nil)
+            DispatchQueue.global(qos: .background).async {
+                guard let csvFile = CsvExporter.instance.exportTransfers(wallets: self.system.wallets) else {
+                    DispatchQueue.main.async {
+                        self.topViewController?.dismiss(animated: true) {
+                            self.topViewController?.showAlert(
+                                title: S.ExportTransfers.exportFailedTitle,
+                                message: S.ExportTransfers.exportFailedBody)
+                        }
+                    }
+                    return
+                }
+                DispatchQueue.main.async {
+                    self.topViewController?.dismiss(animated: true) {
+                        let activityViewController = UIActivityViewController(activityItems: [csvFile], applicationActivities: nil)
+                        self.topViewController?.present(activityViewController, animated: true, completion: nil)
+                    }
+                }
+            }
+        }))
+        alert.addAction(UIAlertAction(title: S.Button.cancel, style: .cancel, handler: nil))
+        topViewController?.present(alert, animated: true, completion: nil)
+    }
+    
     func presentBiometricsMenuItem() {
         let biometricsSettings = BiometricsSettingsViewController(self.keyStore)
         biometricsSettings.addCloseNavigationItem(tintColor: .white)
