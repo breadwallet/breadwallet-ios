@@ -56,6 +56,11 @@
                BlueprintName = "breadwalletTests"
                ReferencedContainer = "container:breadwallet.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "CoinGeckoTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "YES">
