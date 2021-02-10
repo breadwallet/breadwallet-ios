@@ -311,6 +311,7 @@ enum S {
         static let shareData = NSLocalizedString("Settings.shareData", value:"Share Anonymous Data", comment: "Share anonymous data label")
         static let earlyAccess = NSLocalizedString("Settings.earlyAccess", value:"Join Early Access", comment: "Join Early access label")
         static let about = NSLocalizedString("Settings.about", value:"About", comment: "About label")
+        static let exportTransfers = NSLocalizedString("Settings.exportTransfers", value:"Export transaction history to CSV", comment: "Export transfers")
         static let review = NSLocalizedString("Settings.review", value: "Leave us a Review", comment: "Leave review button label")
         static let rewards = NSLocalizedString("Settings.rewards", value: "Rewards", comment: "Rewards menu item text")
         static let enjoying = NSLocalizedString("Settings.enjoying", value: "Are you enjoying BRD?", comment: "Are you enjoying BRD alert message body")
@@ -378,6 +379,14 @@ enum S {
         static let header = NSLocalizedString("ShareData.header", value:"Share Data?", comment: "Share data header")
         static let body = NSLocalizedString("ShareData.body", value:"Help improve BRD by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.", comment: "Share data view body")
         static let toggleLabel = NSLocalizedString("ShareData.toggleLabel", value:"Share Anonymous Data?", comment: "Share data switch label.")
+    }
+    
+    enum ExportTransfers {
+        static let header = NSLocalizedString("ExportTransfers.header", value:"Export transactions?", comment: "Export transfers header")
+        static let body = NSLocalizedString("ExportTransfers.body", value:"This will generate a CSV file including all completed transactions from all enabled wallets.", comment: "Export transfers body")
+        static let confirmExport = NSLocalizedString("ExportTransfers.confirmExport", value:"Export Transfers", comment: "Export transfers button")
+        static let exportFailedTitle = NSLocalizedString("ExportTransfers.exportFailedTitle", value:"Export Failed", comment: "Export dialog error title")
+        static let exportFailedBody = NSLocalizedString("ExportTransfers.exportFailedBody", value:"Failed to export CSV file, please try again.", comment: "Export dialog error message")
     }
 
     enum WalletConnectionSettings {

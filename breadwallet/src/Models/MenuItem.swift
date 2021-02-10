@@ -19,6 +19,7 @@ struct MenuItem {
         static let rewards = UIImage(named: "Star")
         static let about = UIImage(named: "about")
         static let atmMap = UIImage(named: "placemark")
+        static let export = UIImage(named: "Export")
     }
     
     var title: String
