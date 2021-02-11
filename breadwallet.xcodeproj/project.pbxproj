@@ -355,19 +355,7 @@
 		9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF721FE64E200D5058C /* RewardsView.swift */; };
 		9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */; };
 		B379B8CA250BFC520041B859 /* CashUI in Frameworks */ = {isa = PBXBuildFile; productRef = B379B8C9250BFC520041B859 /* CashUI */; };
-		B379B96025101BB00041B859 /* SendVerificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95525101BB00041B859 /* SendVerificationView.xib */; };
-		B379B96125101BB00041B859 /* ActivityView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95625101BB00041B859 /* ActivityView.xib */; };
-		B379B96225101BB00041B859 /* AtmLocationsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95725101BB00041B859 /* AtmLocationsView.xib */; };
-		B379B96325101BB00041B859 /* VerifyCashCodeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95825101BB00041B859 /* VerifyCashCodeView.xib */; };
-		B379B96425101BB00041B859 /* WithdrawalStatusView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95925101BB00041B859 /* WithdrawalStatusView.xib */; };
-		B379B96525101BB00041B859 /* ListView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95A25101BB00041B859 /* ListView.xib */; };
-		B379B96625101BB00041B859 /* ActivityTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95B25101BB00041B859 /* ActivityTableViewCell.xib */; };
-		B379B96725101BB00041B859 /* MenuView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95C25101BB00041B859 /* MenuView.xib */; };
-		B379B96825101BB00041B859 /* AtmInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B379B95D25101BB00041B859 /* AtmInfoView.xib */; };
 		B379B96925101BB00041B859 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B379B95F25101BB00041B859 /* Assets.xcassets */; };
-		B3A9EA832527D32D00C18CCD /* SupportListStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */; };
-		B3A9EA862527D33400C18CCD /* support.json in Resources */ = {isa = PBXBuildFile; fileRef = B3A9EA852527D33400C18CCD /* support.json */; };
-		B3B22F25253E0B84004DC2A7 /* ListViewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE0BC980215ACBE100E68B2B /* TokenImageNoBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */; };
@@ -991,27 +979,12 @@
 		9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "rewardsIcon-64.gif"; path = "src/Views/AnimatedIcons/Rewards Icon Frames/rewardsIcon-64.gif"; sourceTree = "<group>"; };
 		9AE8FFF721FE64E200D5058C /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsView.swift; path = src/Views/RewardsView.swift; sourceTree = "<group>"; };
 		9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsIconView.swift; path = src/Views/AnimatedIcons/RewardsIconView.swift; sourceTree = "<group>"; };
-		B379B95525101BB00041B859 /* SendVerificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SendVerificationView.xib; sourceTree = "<group>"; };
-		B379B95625101BB00041B859 /* ActivityView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityView.xib; sourceTree = "<group>"; };
-		B379B95725101BB00041B859 /* AtmLocationsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AtmLocationsView.xib; sourceTree = "<group>"; };
-		B379B95825101BB00041B859 /* VerifyCashCodeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VerifyCashCodeView.xib; sourceTree = "<group>"; };
-		B379B95925101BB00041B859 /* WithdrawalStatusView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WithdrawalStatusView.xib; sourceTree = "<group>"; };
-		B379B95A25101BB00041B859 /* ListView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListView.xib; sourceTree = "<group>"; };
-		B379B95B25101BB00041B859 /* ActivityTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ActivityTableViewCell.xib; sourceTree = "<group>"; };
-		B379B95C25101BB00041B859 /* MenuView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuView.xib; sourceTree = "<group>"; };
-		B379B95D25101BB00041B859 /* AtmInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AtmInfoView.xib; sourceTree = "<group>"; };
 		B379B95F25101BB00041B859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SupportListStoryboard.storyboard; sourceTree = "<group>"; };
-		B3A9EA852527D33400C18CCD /* support.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = support.json; sourceTree = "<group>"; };
-		B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListViewTableViewCell.xib; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenImageNoBackground.swift; path = src/Views/TokenImageNoBackground.swift; sourceTree = "<group>"; };
 		CE0CD1581DBFBCF5004023DA /* ModalPresenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = ModalPresenter.swift; path = src/ModalPresenter.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		CE0ED79824098302000AA24F /* AddressTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressTests.swift; sourceTree = "<group>"; };
-		CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CheckoutConfirmationViewController.swift; path = src/Pigeon/CheckoutConfirmationViewController.swift; sourceTree = "<group>"; };
-		CE0FC0F81F72417200E7C626 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE0FC0F91F72417500E7C626 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE12289C20D3695400EC6F81 /* MotionGradientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MotionGradientView.swift; path = src/Views/MotionGradientView.swift; sourceTree = "<group>"; };
 		CE124CFD1E68F57700DFA146 /* Async.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Async.swift; path = src/Extensions/Async.swift; sourceTree = "<group>"; };
 		CE124CFF1E69170900DFA146 /* SyncingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SyncingView.swift; path = src/Views/SyncingView.swift; sourceTree = "<group>"; };
@@ -1037,12 +1010,6 @@
 		CE274A601FD7C902000A4E62 /* RootNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RootNavigationController.swift; path = src/ViewControllers/RootNavigationController.swift; sourceTree = "<group>"; };
 		CE27F9581E2C8EA300F7F7F2 /* Amount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Amount.swift; sourceTree = "<group>"; };
 		CE29901B1EFD6DE50093A0F2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE2A1C4D210B7BB7003E9B69 /* PigeonRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PigeonRequest.swift; path = src/Pigeon/PigeonRequest.swift; sourceTree = "<group>"; };
-		CE29901F1EFD6E060093A0F2 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE2990201EFD6F3E0093A0F2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE2990211EFD6F4B0093A0F2 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE2990221EFD6F500093A0F2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		CE2990231EFD6F5D0093A0F2 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		CE3645471E7B424D0079D0CF /* WhiteNumberPad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WhiteNumberPad.swift; path = src/Views/PinPadCells/WhiteNumberPad.swift; sourceTree = "<group>"; };
 		CE3645491E7B426B0079D0CF /* ClearNumberPad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClearNumberPad.swift; path = src/Views/PinPadCells/ClearNumberPad.swift; sourceTree = "<group>"; };
 		CE36454B1E7B42850079D0CF /* WhiteDecimalPad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WhiteDecimalPad.swift; path = src/Views/PinPadCells/WhiteDecimalPad.swift; sourceTree = "<group>"; };
@@ -1854,29 +1821,9 @@
 		B379B95325101BB00041B859 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B3A9EA842527D33400C18CCD /* Other */,
-				B379B95425101BB00041B859 /* XIB */,
 				B379B95E25101BB00041B859 /* Assets */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		B379B95425101BB00041B859 /* XIB */ = {
-			isa = PBXGroup;
-			children = (
-				B3A9EA822527D32D00C18CCD /* SupportListStoryboard.storyboard */,
-				B379B95525101BB00041B859 /* SendVerificationView.xib */,
-				B379B95625101BB00041B859 /* ActivityView.xib */,
-				B379B95725101BB00041B859 /* AtmLocationsView.xib */,
-				B379B95825101BB00041B859 /* VerifyCashCodeView.xib */,
-				B379B95925101BB00041B859 /* WithdrawalStatusView.xib */,
-				B379B95A25101BB00041B859 /* ListView.xib */,
-				B379B95B25101BB00041B859 /* ActivityTableViewCell.xib */,
-				B379B95C25101BB00041B859 /* MenuView.xib */,
-				B379B95D25101BB00041B859 /* AtmInfoView.xib */,
-				B3B22F24253E0B84004DC2A7 /* ListViewTableViewCell.xib */,
-			);
-			path = XIB;
 			sourceTree = "<group>";
 		};
 		B379B95E25101BB00041B859 /* Assets */ = {
@@ -1885,28 +1832,6 @@
 				B379B95F25101BB00041B859 /* Assets.xcassets */,
 			);
 			path = Assets;
-			sourceTree = "<group>";
-		};
-		B3A9EA842527D33400C18CCD /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				B3A9EA852527D33400C18CCD /* support.json */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		CE08B2A120F66807009FA568 /* Pigeon */ = {
-			isa = PBXGroup;
-			children = (
-				CE08B2A220F66822009FA568 /* BRAPIClient+Pigeon.swift */,
-				CEA0471020FD1B9B00F2694A /* PigeonCrypto.swift */,
-				CEB7A98320FE76D600368AF9 /* PigeonMessages.swift */,
-				7C6628382107B8D600ABCD10 /* PigeonExchange.swift */,
-				CE2A1C4D210B7BB7003E9B69 /* PigeonRequest.swift */,
-				CE77F201210E4C010092CC8F /* LinkStatusCircle.swift */,
-				CE0F58A42111670E00ACF5F8 /* CheckoutConfirmationViewController.swift */,
-			);
-			name = Pigeon;
 			sourceTree = "<group>";
 		};
 		CE1E5F241EF081F300BD0F72 /* Import */ = {
@@ -2604,7 +2529,6 @@
 				9AE8010121FFF81F00D5058C /* rewardsIcon-1.gif in Resources */,
 				9AE8011221FFF81F00D5058C /* rewardsIcon-51.gif in Resources */,
 				9AE800E521FFF81F00D5058C /* rewardsIcon-15.gif in Resources */,
-				B379B96625101BB00041B859 /* ActivityTableViewCell.xib in Resources */,
 				9AE800F721FFF81F00D5058C /* rewardsIcon-8.gif in Resources */,
 				9AE800D721FFF81F00D5058C /* rewardsIcon-44.gif in Resources */,
 				9AE800FB21FFF81F00D5058C /* rewardsIcon-32.gif in Resources */,
@@ -2622,7 +2546,6 @@
 				9AE8011321FFF81F00D5058C /* rewardsIcon-57.gif in Resources */,
 				9AE800D621FFF81F00D5058C /* rewardsIcon-36.gif in Resources */,
 				9A926F4822034B3700CC2263 /* CellHighlight-41.png in Resources */,
-				B379B96525101BB00041B859 /* ListView.xib in Resources */,
 				9A926F6122034B3800CC2263 /* CellHighlight-47.png in Resources */,
 				9AE800D021FFF81F00D5058C /* rewardsIcon-17.gif in Resources */,
 				9A926F7322034B3800CC2263 /* CellHighlight-81.png in Resources */,
@@ -2632,22 +2555,18 @@
 				9AE800EE21FFF81F00D5058C /* rewardsIcon-46.gif in Resources */,
 				9A926F5122034B3800CC2263 /* CellHighlight-83.png in Resources */,
 				9A926F7B22034B3800CC2263 /* CellHighlight-79.png in Resources */,
-				B3A9EA832527D32D00C18CCD /* SupportListStoryboard.storyboard in Resources */,
 				9AE8010621FFF81F00D5058C /* rewardsIcon-67.gif in Resources */,
 				9AE800F221FFF81F00D5058C /* rewardsIcon-61.gif in Resources */,
 				9A926F6322034B3800CC2263 /* CellHighlight-76.png in Resources */,
 				9A926F7822034B3800CC2263 /* CellHighlight-42.png in Resources */,
 				9A926F5322034B3800CC2263 /* CellHighlight-2.png in Resources */,
 				CE4C1CD01ED8BCC70063E184 /* BIP39Words.plist in Resources */,
-				B379B96725101BB00041B859 /* MenuView.xib in Resources */,
-				B379B96825101BB00041B859 /* AtmInfoView.xib in Resources */,
 				9A926F6E22034B3800CC2263 /* CellHighlight-17.png in Resources */,
 				9AE8010521FFF81F00D5058C /* rewardsIcon-65.gif in Resources */,
 				9A926F8822034B3800CC2263 /* CellHighlight-27.png in Resources */,
 				B379B96925101BB00041B859 /* Assets.xcassets in Resources */,
 				75A2A79E1DA5934300A983D8 /* LaunchScreen.storyboard in Resources */,
 				9AE800DF21FFF81F00D5058C /* rewardsIcon-30.gif in Resources */,
-				B379B96025101BB00041B859 /* SendVerificationView.xib in Resources */,
 				9AE800E421FFF81F00D5058C /* rewardsIcon-5.gif in Resources */,
 				9A926F4A22034B3800CC2263 /* CellHighlight-49.png in Resources */,
 				9A926F5F22034B3800CC2263 /* CellHighlight-58.png in Resources */,
@@ -2705,7 +2624,6 @@
 				9A926F9222034B3800CC2263 /* CellHighlight-21.png in Resources */,
 				9A926F8122034B3800CC2263 /* CellHighlight-28.png in Resources */,
 				9A926F7722034B3800CC2263 /* CellHighlight-44.png in Resources */,
-				B379B96425101BB00041B859 /* WithdrawalStatusView.xib in Resources */,
 				9A926F4B22034B3800CC2263 /* CellHighlight-11.png in Resources */,
 				9AE800FD21FFF81F00D5058C /* rewardsIcon-59.gif in Resources */,
 				9A926F8222034B3800CC2263 /* CellHighlight-20.png in Resources */,
@@ -2723,7 +2641,6 @@
 				9AE800EC21FFF81F00D5058C /* rewardsIcon-3.gif in Resources */,
 				9AE8011521FFF81F00D5058C /* rewardsIcon-64.gif in Resources */,
 				9A926F4422034B3700CC2263 /* CellHighlight-29.png in Resources */,
-				B379B96125101BB00041B859 /* ActivityView.xib in Resources */,
 				9AE8010A21FFF81F00D5058C /* rewardsIcon-49.gif in Resources */,
 				9A926F8522034B3800CC2263 /* CellHighlight-23.png in Resources */,
 				CE29901A1EFD6DE50093A0F2 /* Localizable.strings in Resources */,
@@ -2749,7 +2666,6 @@
 				9A926F8322034B3800CC2263 /* CellHighlight-70.png in Resources */,
 				9A926F5C22034B3800CC2263 /* CellHighlight-16.png in Resources */,
 				9A926F7022034B3800CC2263 /* CellHighlight-1.png in Resources */,
-				B3A9EA862527D33400C18CCD /* support.json in Resources */,
 				9A926F4E22034B3800CC2263 /* CellHighlight-71.png in Resources */,
 				9AE800E621FFF81F00D5058C /* rewardsIcon-21.gif in Resources */,
 				9A926F5022034B3800CC2263 /* CellHighlight-80.png in Resources */,
@@ -2760,7 +2676,6 @@
 				9A926F5E22034B3800CC2263 /* CellHighlight-66.png in Resources */,
 				9AE8010F21FFF81F00D5058C /* rewardsIcon-14.gif in Resources */,
 				9AE800F421FFF81F00D5058C /* rewardsIcon-19.gif in Resources */,
-				B379B96225101BB00041B859 /* AtmLocationsView.xib in Resources */,
 				9AE8010821FFF81F00D5058C /* rewardsIcon-42.gif in Resources */,
 				9A926F6522034B3800CC2263 /* CellHighlight-63.png in Resources */,
 				9AE800F121FFF81F00D5058C /* rewardsIcon-53.gif in Resources */,
@@ -2772,8 +2687,6 @@
 				9A926F6B22034B3800CC2263 /* CellHighlight-39.png in Resources */,
 				9A926F5B22034B3800CC2263 /* CellHighlight-32.png in Resources */,
 				9A926F7522034B3800CC2263 /* CellHighlight-33.png in Resources */,
-				B3B22F25253E0B84004DC2A7 /* ListViewTableViewCell.xib in Resources */,
-				B379B96325101BB00041B859 /* VerifyCashCodeView.xib in Resources */,
 				9A926F6C22034B3800CC2263 /* CellHighlight-61.png in Resources */,
 				9A926F9422034B3800CC2263 /* CellHighlight-56.png in Resources */,
 			);
@@ -5088,7 +5001,7 @@
 			repositoryURL = "https://github.com/atmcoin/cash-ui-ios.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
+				minimumVersion = 5.1.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
