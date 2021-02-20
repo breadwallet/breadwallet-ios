@@ -186,7 +186,7 @@ class ImportKeyViewController: UIViewController, Subscriber {
         guard let balance = sweeper.balance else { return self.showErrorMessage(S.Import.Error.empty) }
         let balanceAmount = Amount(cryptoAmount: balance, currency: wallet.currency)
         guard !balanceAmount.isZero else { return self.showErrorMessage(S.Import.Error.empty) }
-        sweeper.estimate(fee: wallet.feeForLevel(level: .regular)) { result in
+        sweeper.estimate(fee: wallet.feeForLevel(level: .superEconomy)) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let feeBasis):
