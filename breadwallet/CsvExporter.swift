@@ -41,7 +41,8 @@ class CsvExporter {
                 in: .userDomainMask,
                 appropriateFor: tempCsvDir,
                 create: true)
-            let tempCsvUrl = tempDir.appendingPathComponent("\(UUID().uuidString)-transactions.csv")
+            let timestamp = DateFormatter.filenameDateFormatter.string(from: Date())
+            let tempCsvUrl = tempDir.appendingPathComponent("BRD-transactions-\(timestamp).csv")
             let created = FileManager.default.createFile(atPath: tempCsvUrl.path, contents: nil, attributes: nil)
             
             assert(created)
@@ -63,6 +64,14 @@ private extension String {
     func forCsv() -> String {
         return "\"\(self)\""
     }
+}
+
+extension DateFormatter {
+    static let filenameDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateFormat = "MMMM-d-yyy_hh-mm-ss"
+        return df
+    }()
 }
 
 private extension FileHandle {
@@ -93,7 +102,16 @@ private extension FileHandle {
         let fromAddress: String
         let amount: String
         let direction: String
+        let feeAmount: String
+        let feeCurrencyCode: String
+        let memo: String
 
+        if transfer.metaData?.tokenTransfer.isEmpty ?? true {
+            memo = transfer.metaData?.comment ?? ""
+        } else {
+            memo = String(format: S.Transaction.tokenTransfer, transfer.metaData!.tokenTransfer.uppercased())
+        }
+        
         switch transfer.direction {
         case .sent:
             direction = "sent"
@@ -101,10 +119,14 @@ private extension FileHandle {
             value.negate()
             amount = value.description
             fromAddress = transfer.currency.isBitcoinCompatible ? "" : transfer.fromAddress
+            feeAmount = transfer.fee.tokenValue.description
+            feeCurrencyCode = transfer.fee.currency.code.lowercased()
         default:
             direction = "received"
             amount = transfer.amount.tokenValue.description
             fromAddress = transfer.fromAddress
+            feeAmount = ""
+            feeCurrencyCode = ""
         }
         
         // NOTE: Strip '0x' prefix for WalletKit versions below 9.x.x
@@ -120,9 +142,9 @@ private extension FileHandle {
             transfer.toAddress.forCsv(),
             amount,
             transfer.amount.currency.code.lowercased().forCsv(),
-            transfer.fee.tokenValue.description,
-            transfer.fee.currency.code.lowercased().forCsv(),
-            transfer.metaData?.comment.forCsv() ?? "".forCsv()
+            feeAmount,
+            feeCurrencyCode.forCsv(),
+            memo.forCsv()
         ])
     }
 }

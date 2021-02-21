@@ -280,12 +280,22 @@ class Sender: Subscriber {
         }
 
         self.wallet.subscribe(self) { event in
-            guard case .transferSubmitted(let eventTransfer, let success) = event,
-                eventTransfer.hash == transfer.hash else { return }
-            guard success else { return handleFailure() }
-            // for token transfers wait for the transaction in the native wallet to be submitted
-            guard !self.isOriginatingTransferNeeded else { return }
-            handleSuccess(nil)
+            guard case .transferSubmitted(let eventTransfer, _) = event,
+                  transfer == eventTransfer || (transfer.hash != nil && transfer.hash == eventTransfer.hash) else { return }
+            switch eventTransfer.state {
+            case .submitted,
+                 .included,
+                 .pending:
+                // for token transfers wait for the transaction in the native wallet to be submitted
+                guard !self.isOriginatingTransferNeeded else { return }
+                handleSuccess(nil)
+            case .failed,
+                 .deleted:
+                handleFailure()
+            case .created,
+                 .signed:
+                return
+            }
         }
 
         if isOriginatingTransferNeeded, let primaryWallet = wallet.networkPrimaryWallet {
