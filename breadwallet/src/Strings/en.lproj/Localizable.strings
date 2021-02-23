@@ -1364,3 +1364,6 @@ Wallet connection settings menu item title. */
 /* Tab Bar */
 "JustCash.tabBar_activity" = "Activity";
 "JustCash.tabBar_atmCashRedeem" = "ATM Cash Redeem";
+
+/* Send View */
+"JustCash.redeem_title" = "for ATM Cash";

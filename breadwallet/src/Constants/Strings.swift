@@ -981,5 +981,8 @@ enum S {
         // Tab Bar
         static let activity = NSLocalizedString("JustCash.tabBar_activity", value: "Activity", comment: "Home Screen History and Pending transactions toolbar button")
         static let atmCashRedeem = NSLocalizedString("JustCash.tabBar_atmCashRedeem", value: "ATM Cash Redeem", comment: "Home Screen atm cash redeem toolbar button")
+        
+        // Send View
+        static let sendTitle = NSLocalizedString("JustCash.redeem_title", comment: "Send BTC for ATM Cash")
     }
 }
