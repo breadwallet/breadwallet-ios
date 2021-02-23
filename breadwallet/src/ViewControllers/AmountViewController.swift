@@ -16,7 +16,10 @@ class AmountViewController: UIViewController, Trackable {
     private let currency: Currency
     private var canEditFee: Bool
     
-    init(currency: Currency, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false) {
+    init(currency: Currency, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false, isRedeeming: Bool = false) {
+        defer {
+            self.isRedeeming = false
+        }
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
         self.isRequesting = isRequesting
@@ -89,6 +92,14 @@ class AmountViewController: UIViewController, Trackable {
     private let tapView = UIView()
     public let feeSelector: FeeSelector
     private var currentBalanceText: (NSAttributedString?, NSAttributedString?)
+    
+    var isRedeeming: Bool = false {
+        didSet {
+            feeSelector.isHidden = true
+            let constraint = NSLayoutConstraint.init(item: feeSelector, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 0.0)
+            feeSelector.addConstraint(constraint)
+        }
+    }
     
     //Controlled by SendViewController
     var isSendViewSendingMax = false
