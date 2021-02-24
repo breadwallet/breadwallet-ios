@@ -12,7 +12,7 @@ import UIKit
 import WalletKit
 import CoinGecko
 
-class GiftViewController: UIViewController {
+class GiftViewController: UIViewController, Trackable {
     
     var presentVerifyPin: ((String, @escaping ((String) -> Void)) -> Void)?
     var onPublishSuccess: (() -> Void)?
@@ -359,7 +359,8 @@ class GiftViewController: UIViewController {
                 switch result {
                 case .success:
                     self.onPublishSuccess?()
-                    guard let gift = self.gift else { return }                    
+                    guard let gift = self.gift else { return }
+                    self.saveEvent(context: .gift, event: .send)
                     let share = ShareGiftViewController(gift: gift)
                     DispatchQueue.main.async {
                         self.present(share, animated: true, completion: nil)
