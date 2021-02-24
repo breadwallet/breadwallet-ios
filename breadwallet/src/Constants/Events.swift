@@ -21,6 +21,7 @@ public enum EventContext: String {
     case jailbreak
     case fastSync
     case recoverCloud
+    case gift
     var name: String { return rawValue }
 }
 
@@ -92,6 +93,10 @@ public enum Event: String {
     // fastSync
     case enable
     case disable
+    
+    // gift
+    case send
+    case redeem
     
     case fixerFetch
     
