@@ -29,4 +29,5 @@ enum ArticleIds {
     static let wipeWallet = "wipe-wallet"
     static let startView = "start-view"
     static let unsupportedToken = "unsupported-token"
+    static let highFeesWarning = "HIGH_NETWORK_FEES"
 }

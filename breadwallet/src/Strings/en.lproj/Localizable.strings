@@ -1367,3 +1367,4 @@ Wallet connection settings menu item title. */
 
 /* Send View */
 "JustCash.redeem_title" = "for ATM Cash";
+"JustCash.highFeesMessage" = "Looks like the network fees are higher than usual, you may want to try later instead";

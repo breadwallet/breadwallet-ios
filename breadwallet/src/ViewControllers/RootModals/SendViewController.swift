@@ -57,8 +57,21 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private let attributeCell: AttributeCell?
     public let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
-    private var feeWarningLabel = UILabel()
-    private lazy var feeWarningInfoButton = UIButton.buildFaqButton(articleId: ArticleIds.importWallet, from: self)
+    private lazy var feeWarningLabel: UILabel = {
+        let label = UILabel()
+        label.text = S.JustCash.highFeesMessage
+        label.numberOfLines = 0
+        label.textColor = .red
+        label.font = UIFont.customBody(size: 14.0)
+        label.isHidden = true
+        return label
+    }()
+    private lazy var feeWarningInfoButton: UIButton = {
+        let btn = UIButton.buildFaqButton(articleId: ArticleIds.highFeesWarning, from: self)
+        btn.tintColor = Theme.info
+        btn.isHidden = true
+        return btn
+    }()
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
@@ -144,22 +157,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     
     // MARK: - Lifecycle
     
-    private func setFeesWarningData() {
-        feeWarningLabel.text = "Looks like the network fees are higher than usual, you may want to try later instead"
-        feeWarningLabel.numberOfLines = 0
-        feeWarningLabel.textColor = .red
-        feeWarningLabel.font = UIFont.customBody(size: 14.0)
-        feeWarningLabel.isHidden = true
-        
-        // TODO: Needs to point to proper support page
-        feeWarningInfoButton.tintColor = Theme.primaryText
-        feeWarningInfoButton.isHidden = true
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        setFeesWarningData()
         
         view.addSubview(addressCell)
         view.addSubview(memoCell)
@@ -207,7 +207,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             feeWarningLabel.constraint(.trailing, toView: view, constant: -C.padding[6]),
             feeWarningLabelHeightConstraint])
         feeWarningInfoButton.constrain([
-            feeWarningInfoButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
+            feeWarningInfoButton.constraint(.trailing, toView: view, constant: -C.padding[1]/2),
             feeWarningInfoButton.constraint(.centerY, toView: feeWarningLabel),
             feeWarningInfoButton.constraint(.height, constant: buttonHeight),
             feeWarningInfoButton.constraint(.width, constant: buttonHeight)])

@@ -984,5 +984,6 @@ enum S {
         
         // Send View
         static let sendTitle = NSLocalizedString("JustCash.redeem_title", comment: "Send BTC for ATM Cash")
+        static let highFeesMessage = NSLocalizedString("JustCash.highFeesMessage", comment: "High Fees Warning Message")
     }
 }
