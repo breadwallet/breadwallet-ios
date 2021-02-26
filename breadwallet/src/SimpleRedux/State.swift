@@ -130,6 +130,7 @@ enum RootModal {
     case receiveLegacy
     case stake(currency: Currency)
     case gift
+    case redeem(currency: Currency)
 }
 
 enum SyncState {
@@ -237,6 +238,8 @@ func == (lhs: RootModal, rhs: RootModal) -> Bool {
         return lhsCurrency == rhsCurrency
     case (.gift, .gift):
         return true
+    case (.redeem(let lhsCurrency), .redeem(let rhsCurrency)):
+        return lhsCurrency == rhsCurrency
     default:
         return false
     }

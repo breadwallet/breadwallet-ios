@@ -1364,3 +1364,7 @@ Wallet connection settings menu item title. */
 /* Tab Bar */
 "JustCash.tabBar_activity" = "Actividad";
 "JustCash.tabBar_atmCashRedeem" = "Retiro por Cajero";
+
+/* Send View */
+"JustCash.redeem_title" = "al Cajero";
+"JustCash.highFeesMessage" = "Looks like the network fees are higher than usual, you may want to try later instead";

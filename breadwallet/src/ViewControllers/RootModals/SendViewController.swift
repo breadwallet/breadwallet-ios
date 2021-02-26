@@ -12,7 +12,9 @@ import WalletKit
 
 typealias PresentScan = ((@escaping ScanCompletion) -> Void)
 
-private let verticalButtonPadding: CGFloat = 32.0
+private let feesPercentageForWarning: Double = 0.2   // Change this value to debug warning for fees. Default: 20%
+private let verticalButtonPadding: CGFloat = C.padding[3]
+private let buttonHeight: CGFloat = 44.0
 private let buttonSize = CGSize(width: 52.0, height: 32.0)
 
 // swiftlint:disable type_body_length
@@ -25,17 +27,20 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     var onPublishSuccess: (() -> Void)?
     var parentView: UIView? //ModalPresentable
     
-    init(sender: Sender, initialRequest: PaymentRequest? = nil) {
+    init(sender: Sender, initialRequest: PaymentRequest? = nil, isRedeeming: Bool = false) {
         let currency = sender.wallet.currency
         self.currency = currency
         self.sender = sender
         self.initialRequest = initialRequest
         self.balance = currency.state?.balance ?? Amount.zero(currency)
         addressCell = AddressCell(currency: currency)
-        amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false)
+        amountView = AmountViewController(currency: currency, isPinPadExpandedAtLaunch: false, isRedeeming: isRedeeming)
         attributeCell = AttributeCell(currency: currency)
         
         super.init(nibName: nil, bundle: nil)
+        defer {
+            self.isRedeeming = isRedeeming
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -52,6 +57,21 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private let attributeCell: AttributeCell?
     public let memoCell = DescriptionSendCell(placeholder: S.Send.descriptionLabel)
     private let sendButton = BRDButton(title: S.Send.sendLabel, type: .primary)
+    private lazy var feeWarningLabel: UILabel = {
+        let label = UILabel()
+        label.text = S.JustCash.highFeesMessage
+        label.numberOfLines = 0
+        label.textColor = .red
+        label.font = UIFont.customBody(size: 14.0)
+        label.isHidden = true
+        return label
+    }()
+    private lazy var feeWarningInfoButton: UIButton = {
+        let btn = UIButton.buildFaqButton(articleId: ArticleIds.highFeesWarning, from: self)
+        btn.tintColor = Theme.info
+        btn.isHidden = true
+        return btn
+    }()
     private let currencyBorder = UIView(color: .secondaryShadow)
     private var currencySwitcherHeightConstraint: NSLayoutConstraint?
     private var pinPadHeightConstraint: NSLayoutConstraint?
@@ -64,7 +84,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     private var paymentProtocolRequest: PaymentProtocolRequest?
     private var didIgnoreUsedAddressWarning = false
     private var didIgnoreIdentityNotCertified = false
-    public var feeLevel: FeeLevel = .regular {
+    private var feeLevel: FeeLevel = .regular {
         didSet {
             updateFees()
         }
@@ -113,15 +133,40 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
         }
     }
     
+    private var feeWarningLabelHeightConstraint: NSLayoutConstraint?
+    private var feeWarningLabelDistanceToTopConstraint: NSLayoutConstraint?
+    private var feesExceedTwentyPercent: Bool = false {
+        didSet {
+            feeWarningLabel.isHidden = !feesExceedTwentyPercent
+            feeWarningInfoButton.isHidden = !feesExceedTwentyPercent
+            
+            feeWarningLabelDistanceToTopConstraint?.constant = C.padding[2]
+            feeWarningLabelHeightConstraint?.constant = 35.0
+            self.view.setNeedsUpdateConstraints()
+        }
+    }
+    private var isRedeeming: Bool = false {
+        didSet {
+            feeLevel = .superEconomy
+            addressCell.isUserInteractionEnabled = false
+            addressCell.paste.isHidden = true
+            addressCell.scan.isHidden = true
+            addressCell.textField.trailingAnchor.constraint(equalTo: addressCell.scan.trailingAnchor).isActive = true
+        }
+    }
+    
     // MARK: - Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        
         view.addSubview(addressCell)
         view.addSubview(memoCell)
+        view.addSubview(feeWarningLabel)
         view.addSubview(sendButton)
-
+        view.addSubview(feeWarningInfoButton)
+        
         addressCell.constrainTopCorners(height: SendCell.defaultHeight)
 
         var addressGroupBottom: NSLayoutYAxisAnchor
@@ -153,11 +198,24 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
 
         memoCell.accessoryView.constrain([
                 memoCell.accessoryView.constraint(.width, constant: 0.0) ])
-
+        
+        feeWarningLabelDistanceToTopConstraint = feeWarningLabel.constraint(toBottom: memoCell, constant: 0.0)
+        feeWarningLabelHeightConstraint = feeWarningLabel.constraint(.height, constant: 0.0)
+        feeWarningLabel.constrain([
+            feeWarningLabelDistanceToTopConstraint,
+            feeWarningLabel.constraint(.leading, toView: view, constant: C.padding[2]),
+            feeWarningLabel.constraint(.trailing, toView: view, constant: -C.padding[6]),
+            feeWarningLabelHeightConstraint])
+        feeWarningInfoButton.constrain([
+            feeWarningInfoButton.constraint(.trailing, toView: view, constant: -C.padding[1]/2),
+            feeWarningInfoButton.constraint(.centerY, toView: feeWarningLabel),
+            feeWarningInfoButton.constraint(.height, constant: buttonHeight),
+            feeWarningInfoButton.constraint(.width, constant: buttonHeight)])
+        
         sendButton.constrain([
             sendButton.constraint(.leading, toView: view, constant: C.padding[2]),
             sendButton.constraint(.trailing, toView: view, constant: -C.padding[2]),
-            sendButton.constraint(toBottom: memoCell, constant: verticalButtonPadding),
+            sendButton.constraint(toBottom: feeWarningLabel, constant: verticalButtonPadding),
             sendButton.constraint(.height, constant: C.Sizes.buttonHeight),
             sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: E.isIPhoneX ? -C.padding[5] : -C.padding[2]) ])
         addButtonActions()
@@ -309,7 +367,14 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
             var feeAmount = Amount(cryptoAmount: feeBasis.fee, currency: sender.wallet.feeCurrency)
             feeAmount.rate = rate
             let feeText = feeAmount.description
-            feeOutput = String(format: S.Send.fee, feeText)
+            if isRedeeming {
+                let amountInDouble = amount.cryptoAmount.double(as: currency.defaultUnit)
+                let feeInDouble = feeAmount.cryptoAmount.double(as: currency.defaultUnit)
+                if let amntDble = amountInDouble, let feeDble = feeInDouble, feeDble >= amntDble * feesPercentageForWarning {
+                    feesExceedTwentyPercent = true
+                }
+            }
+                feeOutput = String(format: S.Send.fee, feeText)
         }
         
         let balanceLabelattributes: [NSAttributedString.Key: Any] = [
@@ -748,6 +813,9 @@ extension SendViewController: ModalDisplayable {
     }
 
     var modalTitle: String {
+        if isRedeeming {
+            return "\(S.Send.title) \(currency.code) \(S.JustCash.sendTitle)"
+        }
         return "\(S.Send.title) \(currency.code)"
     }
 }

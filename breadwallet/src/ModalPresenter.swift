@@ -312,6 +312,8 @@ class ModalPresenter: Subscriber, Trackable {
             return nil
         case .stake(let currency):
             return makeStakeView(currency: currency)
+        case .redeem(let currency):
+            return makeSendView(currency: currency, isRedeeming: true)
         }
     }
 
@@ -340,6 +342,10 @@ class ModalPresenter: Subscriber, Trackable {
     }
 
     private func makeSendView(currency: Currency) -> UIViewController? {
+        makeSendView(currency: currency, isRedeeming: false)
+    }
+    
+    private func makeSendView(currency: Currency, isRedeeming: Bool) -> UIViewController? {
         guard let wallet = system.wallet(for: currency),
             let kvStore = Backend.kvStore else { assertionFailure(); return nil }
         guard !(currency.state?.isRescanning ?? false) else {
@@ -351,7 +357,8 @@ class ModalPresenter: Subscriber, Trackable {
 
         let sender = Sender(wallet: wallet, authenticator: keyStore, kvStore: kvStore)
         let sendVC = SendViewController(sender: sender,
-                                        initialRequest: currentRequest)
+                                        initialRequest: currentRequest,
+                                        isRedeeming: isRedeeming)
         currentRequest = nil
 
         let root = ModalViewController(childViewController: sendVC)
@@ -1188,14 +1195,12 @@ extension ModalPresenter {
         
         assert(request != nil)
         self.currentRequest = request
-        let modal = RootModal.send(currency: currency!)
+        let modal = RootModal.redeem(currency: currency!)
         self.presentModal(modal) { (viewController) in
             let vc = (viewController as! ModalViewController).childViewController as! SendViewController
             vc.onPublishSuccess = {
                 completion()
             }
-            vc.feeLevel = .superEconomy
-            vc.disableUI()
         }
     }
     
@@ -1207,19 +1212,5 @@ extension ModalPresenter {
     func presentSupportPages() {
         guard let vc = SupportManager.shared.supportCategories() else { return }
         self.menuNavController!.pushViewController(vc, animated: true)
-    }
-}
-
-extension SendViewController {
-    func disableUI() {
-        // Remove Fee Selector
-        self.amountView.feeSelector.isHidden = true
-        let constraint = NSLayoutConstraint.init(item: self.amountView.feeSelector, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 0.0)
-        self.amountView.feeSelector.addConstraint(constraint)
-        // Remove Paste and Scan
-        self.addressCell.isUserInteractionEnabled = false
-        self.addressCell.paste.isHidden = true
-        self.addressCell.scan.isHidden = true
-        self.addressCell.textField.trailingAnchor.constraint(equalTo: self.addressCell.scan.trailingAnchor).isActive = true
     }
 }
