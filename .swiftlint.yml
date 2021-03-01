@@ -5,6 +5,7 @@ disabled_rules:
   - weak_delegate
   - todo
   - comment_spacing
+  - inclusive_language
 
 opt_in_rules:
   - empty_count
