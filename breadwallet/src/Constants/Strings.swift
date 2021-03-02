@@ -323,6 +323,8 @@ enum S {
         static let enableSegwit = NSLocalizedString("Settings.EnableSegwit", value: "Enable Segwit", comment: "")
         static let atmMapMenuItemTitle = NSLocalizedString("Settings.atmMapMenuItemTitle", value: "Crypto ATM Map", comment: "ATM map menu item title")
         static let atmMapMenuItemSubtitle = NSLocalizedString("Settings.atmMapMenuItemSubtitle", value: "Available in the USA only", comment: "ATM map menu item title explaining that it's a feature only available in the USA")
+        static let shareWithWidget = NSLocalizedString("Settings.shareWithWidget", value: "Share portfolio data with widgets", comment: "Enables sharing balance to widget")
+
     }
 
     enum About {
@@ -934,5 +936,42 @@ enum S {
     
     enum Staking {
         static let stakingTitle = NSLocalizedString("Staking.stakingTitle", value: "Staking", comment: "")
+    }
+    
+    enum Widget {
+
+        static let assetTitle = NSLocalizedString("Widget.assetTitle", value: "Asset", comment: "Single asset widget title")
+        static let assetDescription = NSLocalizedString("Widget.assetDescription", value: "Stay up to date with your favorite crypto asset", comment: "Single asset widget description")
+        static let assetListTitle = NSLocalizedString("Widget.assetListTitle", value: "Asset list", comment: "Asset list widget title")
+        static let assetListDescription = NSLocalizedString("Widget.assetListDescription", value: "Stay up to date with your favorite crypto assets", comment: "Asset list widget description")
+        static let portfolioTitle = NSLocalizedString("Widget.portfolioTitle", value: "Portfolio", comment: "Portfolio widget title")
+        static let portfolioDescription = NSLocalizedString("Widget.portfolioDescription", value: "Stay up to date with your portfolio", comment: "Portfolio description")
+        static let enablePortfolio = NSLocalizedString("Widget.enablePortfolio", value: "Enable in app\npreferences", comment: "Portfolio widget description if data sharing is disabled")
+        static let portfolioSummary = NSLocalizedString("Widget.portfolioSummary", value: "Portfolio\nSummary", comment: "Portfolio widget description if data sharing is enabled")
+        static let colorSectionSystem = NSLocalizedString("Widget.colorSectionSystem", value: "System Colors", comment: "Title of color grouping in widget color picker")
+        static let colorSectionBasic = NSLocalizedString("Widget.colorSectionBasic", value: "Basic Colors", comment: "Title of color grouping in widget color picker")
+        static let colorSectionCurrency = NSLocalizedString("Widget.colorSectionCurrency", value: "Currency Colors", comment: "Title of color grouping in widget color picker")
+        static let colorSectionText = NSLocalizedString("Widget.colorSectionText", value: "Theme Text Colors", comment: "Title of color grouping in widget color picker")
+        static let colorSectionBackground = NSLocalizedString("Widget.colorSectionBackground", value: "Theme Background Colors", comment: "Title of color grouping in widget color picker")
+
+        enum Color {
+            static let autoLightDark = NSLocalizedString("Widget.Color.autoLightDark", value: "System Auto Light / Dark", comment: "Name of color based on os theme light/dark")
+            static let white = NSLocalizedString("Widget.Color.white", value: "White", comment: "Name of color - White")
+            static let black = NSLocalizedString("Widget.Color.black", value: "Black", comment: "Name of color - Black")
+            static let gray = NSLocalizedString("Widget.Color.gray", value: "Gray", comment: "Name of color - Gray")
+            static let red = NSLocalizedString("Widget.Color.red", value: "Red", comment: "Name of color - Red")
+            static let green = NSLocalizedString("Widget.Color.green", value: "Green", comment: "Name of color - Green")
+            static let blue = NSLocalizedString("Widget.Color.blue", value: "Blue", comment: "Name of color - Blue")
+            static let orange = NSLocalizedString("Widget.Color.orange", value: "Orange", comment: "Name of color - Orange")
+            static let yellow = NSLocalizedString("Widget.Color.yellow", value: "Yellow", comment: "Name of color - Yellow")
+            static let pink = NSLocalizedString("Widget.Color.pink", value: "Pink", comment: "Name of color - Pink")
+            static let purple = NSLocalizedString("Widget.Color.purple", value: "Purple", comment: "Name of color - Purple")
+            static let primaryBackground = NSLocalizedString("Widget.Color.primaryBackground", value: "Primary", comment: "Name of color - Primary Background")
+            static let secondaryBackground = NSLocalizedString("Widget.Color.secondaryBackground", value: "Secondary", comment: "Name of color - Secondary Background")
+            static let tertiaryBackground = NSLocalizedString("Widget.Color.tertiaryBackground", value: "Tertiary", comment: "Name of color - Tertiary Background")
+            static let primaryText = NSLocalizedString("Widget.Color.primaryText", value: "Primary", comment: "Name of color - Primary Text")
+            static let secondaryText = NSLocalizedString("Widget.Color.secondaryText", value: "Secondary", comment: "Name of color - Secondary Text")
+            static let tertiaryText = NSLocalizedString("Widget.Color.tertiaryText", value: "Tertiary", comment: "Name of color - Tertiary Text")
+        }
     }
 }

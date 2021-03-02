@@ -132,6 +132,12 @@
 	<string>Used to determine where you are - never recorded or shared with anyone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Used to scan barcodes</string>
+	<key>NSUserActivityTypes</key>
+	<array>
+		<string>AssetIntent</string>
+		<string>AssetListIntent</string>
+		<string>PortfolioIntent</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Font-Bold.otf</string>
@@ -218,5 +224,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>APP_GROUPS_ID</key>
+	<string>group.${APP_GROUPS_ID}</string>
 </dict>
 </plist>
