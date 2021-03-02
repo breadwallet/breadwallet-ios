@@ -147,6 +147,7 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
     }
     private var isRedeeming: Bool = false {
         didSet {
+            if isRedeeming == false { return }
             feeLevel = .superEconomy
             addressCell.isUserInteractionEnabled = false
             addressCell.paste.isHidden = true
@@ -189,6 +190,9 @@ class SendViewController: UIViewController, Subscriber, ModalPresentable, Tracka
                 amountView.view.topAnchor.constraint(equalTo: addressGroupBottom),
                 amountView.view.trailingAnchor.constraint(equalTo: view.trailingAnchor) ])
         })
+        if isRedeeming {
+            amountView.isEditable = false
+        }
 
         memoCell.constrain([
             memoCell.widthAnchor.constraint(equalTo: amountView.view.widthAnchor),
