@@ -36,6 +36,7 @@ class SupportCenterContainer: UIViewController {
                 webView.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor) ])
         })
         addTopCorners()
+        webView.webView?.scrollView.bounces = false
     }
 
     func preload() {
