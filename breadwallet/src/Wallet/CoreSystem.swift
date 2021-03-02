@@ -26,6 +26,8 @@ class CoreSystem: Subscriber, Trackable {
     private(set) var currencies = [CurrencyId: Currency]()
     /// Active wallets
     private(set) var wallets = [CurrencyId: Wallet]()
+    // Service that manages sharing data with widget extension
+    private(set) var widgetDataShareService: WidgetDataShareService
 
     func wallet(for currency: Currency) -> Wallet? {
         return wallets[currency.uid]
@@ -37,6 +39,7 @@ class CoreSystem: Subscriber, Trackable {
 
     init(keyStore: KeyStore) {
         self.keyStore = keyStore
+        self.widgetDataShareService = DefaultWidgetDataShareService()
         Store.subscribe(self, name: .optInSegWit) { [weak self] _ in
             guard let `self` = self else { return }
             self.queue.async {

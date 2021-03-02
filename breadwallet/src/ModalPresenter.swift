@@ -583,7 +583,17 @@ class ModalPresenter: Subscriber, Trackable {
             MenuItem(title: S.SecurityCenter.Cells.paperKeyTitle) { [weak self] in
                 guard let `self` = self else { return }
                 self.presentWritePaperKey(fromViewController: menuNav)
-            }
+            },
+
+            // Portfolio data for widget
+            MenuItem(title: S.Settings.shareWithWidget,
+                     accessoryText: { [weak self] in
+                         self?.system.widgetDataShareService.sharingEnabled ?? false ? "ON" : "OFF"
+                     },
+                     callback: { [weak self] in
+                         self?.system.widgetDataShareService.sharingEnabled.toggle()
+                         (menuNav.topViewController as? MenuViewController)?.reloadMenu()
+                     })
         ]
         
         // Add iCloud backup

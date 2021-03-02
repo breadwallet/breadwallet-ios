@@ -900,6 +900,8 @@
 "Settings.advancedTitle" = "Advanced Settings";
 /* ATM map menu item title explaining that it's a feature only available in the USA */
 "Settings.atmMapMenuItemSubtitle" = "Available in the USA only";
+/* Enables sharing portfolio data with widget extension */
+"Settings.shareWithWidget" = "Share portfolio data with widgets";
 /* ATM map menu item title */
 "Settings.atmMapMenuItemTitle" = "Crypto ATM Map";
 /* i.e. the currency which will be displayed */
@@ -1310,3 +1312,63 @@ Wallet connection settings menu item title. */
 "WritePaperPhrase.previous" = "Previous";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d of %2$d";
+/* Single asset widget title */
+"Widget.assetTitle" = "Asset";
+/* Single asset widget description */
+"Widget.assetDescription" = "Stay up to date with your favorite crypto asset";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Asset list";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Stay up to date with your favorite crypto assets";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "Portfolio";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Stay up to date with your portfolio";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "Enable in app\npreferences";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "Portfolio\nSummary";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "System Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Basic Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Currency Colors";
+/* "Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Theme Text Colors";
+/* "Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Theme Background Colors";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "System Auto Light / Dark";
+/* Name of color - White */
+"Widget.Color.white" = "White";
+/* Name of color - Black */
+"Widget.Color.black" = "Black";
+/* Name of color - Gray */
+"Widget.Color.gray" = "Gray";
+/* Name of color - Red */
+"Widget.Color.red" = "Red";
+/* Name of color - Green */
+"Widget.Color.green" = "Green";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Blue";
+/* Name of color - Orange */
+"Widget.Color.orange" = "Orange";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Yellow";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Pink";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Purple";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" =  "Primary";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" =  "Secondary";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" =  "Tertiary";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" =  "Primary";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" =  "Secondary";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" =  "Tertiary";

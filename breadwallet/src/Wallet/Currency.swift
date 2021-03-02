@@ -114,6 +114,7 @@ class Currency: CurrencyWithIcon {
         if isBitcoinCash {
             return E.isTestnet ? ["bchtest"] : ["bitcoincash"]
         }
+
         if isEthereumCompatible {
             return ["ethereum"]
         }
