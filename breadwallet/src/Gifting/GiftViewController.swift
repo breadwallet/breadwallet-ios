@@ -406,6 +406,7 @@ class GiftViewController: UIViewController, Trackable {
     private func enableExtraSwitch() {
         extraSwitch.isOn = false
         extraSwitch.isEnabled = true
+        extraLabel.textColor = UIColor.white
     }
     
     private func addButtons() {
