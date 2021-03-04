@@ -89,6 +89,7 @@ class GiftViewController: UIViewController, Trackable {
         addSubviews()
         setupConstraints()
         setInitialData()
+        subscribeToKeyboardNotifications()
     }
     
     private func addSubviews() {
@@ -169,6 +170,13 @@ class GiftViewController: UIViewController, Trackable {
             createButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -C.padding[2]),
             createButton.heightAnchor.constraint(equalToConstant: 44.0),
             createButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -C.padding[4])])
+    }
+
+    private func subscribeToKeyboardNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow(_:)),
+                                               name: UIApplication.keyboardWillShowNotification,
+                                               object: nil)
     }
     
     private func setInitialData() {
@@ -294,6 +302,7 @@ class GiftViewController: UIViewController, Trackable {
         guard let privKey = privKey else { return }
         guard let rate = rate else { return }
         let comment = recipientName != nil ? "Gift to \(recipientName!)" : "Gift"
+        name.textField.resignFirstResponder()
 
         guard let amount = extraSwitch.isOn ? totalWithExtra : selectedAmount else { return }
 
@@ -451,6 +460,23 @@ extension GiftViewController {
             selectedButton.setSelected()
             previousSelectedButton?.setUnSelected()
         })
+
+        if name.textField.text?.isEmpty ?? true {
+            name.textField.becomeFirstResponder()
+        }
+    }
+
+    @objc func keyboardWillShow(_ notification: Notification?) {
+        let key = UIApplication.keyboardFrameEndUserInfoKey
+        guard let frame = (notification?.userInfo?[key] as? NSValue)?.cgRectValue else {
+            return
+        }
+
+        let keyboardFrame = scrollView.convert(frame, from: scrollView.window)
+        let offset = CGPoint(x: scrollView.contentOffset.y,
+                             y: createButton.frame.maxY - keyboardFrame.minY + C.padding[2])
+
+        scrollView.setContentOffset(offset, animated: true)
     }
 }
 

@@ -22,6 +22,7 @@ class ShareGiftView: UIView {
     let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let closeButton = UIButton.close
     private let qr = UIImageView()
     private let name = UILabel(font: Theme.h0Title, color: UIColor.white)
     private let subHeader = UILabel(font: Theme.h2Title, color: UIColor.white)
@@ -37,7 +38,8 @@ class ShareGiftView: UIView {
     private let showButton: Bool
     
     var didTapShare: (() -> Void)?
-        
+    var didTapClose: (() -> Void)?
+
     init(gift: Gift, showButton: Bool = true) {
         self.gift = gift
         self.showButton = showButton
@@ -57,6 +59,7 @@ class ShareGiftView: UIView {
         addSubview(blurView)
         addSubview(scrollView)
         scrollView.addSubview(contentView)
+        contentView.addSubview(closeButton)
         contentView.addSubview(qr)
         contentView.addSubview(name)
         contentView.addSubview(subHeader)
@@ -160,6 +163,8 @@ class ShareGiftView: UIView {
     }
     
     private func setInitialData() {
+        closeButton.tintColor = .white
+        closeButton.isHidden = !showButton
         qr.image = gift.qrImage()
         qr.contentMode = .scaleAspectFit
         name.text = gift.name ?? "no name"
@@ -191,8 +196,11 @@ class ShareGiftView: UIView {
         contentView.layer.masksToBounds = true
         scrollView.backgroundColor = UIColor.clear
         
-        share.tap = {
-            self.didTapShare?()
+        share.tap = { [weak self] in
+            self?.didTapShare?()
+        }
+        closeButton.tap = { [weak self] in
+            self?.didTapClose?()
         }
     }
     
@@ -219,6 +227,7 @@ class ShareGiftViewController: UIViewController {
             shareView.didTapShare = coordinator.showShare
             self.coordinator.parent = self
         }
+        shareView.didTapClose = coordinator.closeAction
     }
     
     required init?(coder: NSCoder) {
