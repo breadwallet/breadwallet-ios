@@ -34,6 +34,12 @@ class GiftSharingCoordinator {
         UIApplication.topViewController()?.present(alert, animated: true, completion: nil)
     }
     
+    func closeAction() {
+        DispatchQueue.main.async {
+            UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     @available(iOS 13.0, *)
     private func shareUrl() {
         let ac = UIActivityViewController(activityItems: [URL(string: gift.url!)!], applicationActivities: [])
@@ -65,9 +71,7 @@ class GiftSharingCoordinator {
             if success {
                 self?.markAsShared()
             }
-            DispatchQueue.main.async {
-                UIApplication.shared.keyWindow?.rootViewController?.dismiss(animated: true, completion: nil)
-            }
+            self?.closeAction()
         }
         activity.excludedActivityTypes = [.addToReadingList, .assignToContact, .markupAsPDF, .openInIBooks]
         UIApplication.topViewController()?.present(activity, animated: true)
