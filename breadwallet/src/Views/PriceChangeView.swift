@@ -19,6 +19,7 @@ class PriceChangeView: UIView, Subscriber {
         didSet {
             //These cells get recycled, so we need to cancel any previous subscriptions
             Store.unsubscribe(self)
+            setInitialData()
             subscribeToPriceChange()
         }
     }
@@ -91,6 +92,8 @@ class PriceChangeView: UIView, Subscriber {
         image.alpha = 0.0
         percentLabel.textColor = UIColor.white.withAlphaComponent(0.6)
         absoluteLabel.textColor = UIColor.white.withAlphaComponent(0.6)
+        percentLabel.text = nil
+        absoluteLabel.text = nil
     }
     
     private func handlePriceChange() {

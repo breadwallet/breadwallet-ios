@@ -40,8 +40,6 @@ class ExchangeUpdater: Subscriber {
                 Store.perform(action: WalletChange($0).setExchangeRate(rate))
             }
         }
-        
-        setHardcodedRates()
     }
     
     // MARK: - Private
@@ -73,31 +71,6 @@ class ExchangeUpdater: Subscriber {
         
         group.notify(queue: .main) {
             handler(.success(combinedResults))
-        }
-    }
-    
-    // MARK: - Hardcoded
-    private func setHardcodedRates() {
-        setHardcoded(rate: 100, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "AVM")
-        setHardcoded(rate: 1, baseCurrencyCode: "EUR", forCryptoCurrencyCode: "EUR.AVM")
-    }
-    
-    private func setHardcoded(rate: Double, baseCurrencyCode base: String, forCryptoCurrencyCode cryptoCode: String) {
-        guard let currency = Store.state.currencies.first(where: { $0.code == cryptoCode }) else { return }
-        let currentFiatCode = Store.state.defaultCurrencyCode
-        
-        //If default currency is the currency of the base rate, we don't need to convert
-        guard currentFiatCode != base else {
-            let rate = Rate(code: currentFiatCode, name: currency.name, rate: rate, reciprocalCode: currency.code)
-            Store.perform(action: WalletChange(currency).setExchangeRate(rate))
-            return
-        }
-        
-        convert(from: base, to: currentFiatCode) { exchangeRate in
-            DispatchQueue.main.async {
-                let rate = Rate(code: currentFiatCode, name: currency.name, rate: rate*exchangeRate, reciprocalCode: currency.code)
-                Store.perform(action: WalletChange(currency).setExchangeRate(rate))
-            }
         }
     }
     
