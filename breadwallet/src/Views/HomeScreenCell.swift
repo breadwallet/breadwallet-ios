@@ -80,13 +80,8 @@ class HomeScreenCell: UITableViewCell, Subscriber {
         fiatBalance.text = viewModel.fiatBalance
         fiatBalance.textColor = viewModel.currency.isSupported ? .white : .disabledWhiteText
         tokenBalance.text = viewModel.tokenBalance
-        if !viewModel.currency.shouldHideChart {
-            priceChangeView.isHidden = false
-            priceChangeView.currency = viewModel.currency
-        } else {
-            priceChangeView.isHidden = true
-            priceChangeView.currency = nil
-        }
+        priceChangeView.isHidden = false
+        priceChangeView.currency = viewModel.currency
         container.setNeedsDisplay()
         Store.subscribe(self, selector: { $0[viewModel.currency]?.syncState != $1[viewModel.currency]?.syncState },
                         callback: { state in
