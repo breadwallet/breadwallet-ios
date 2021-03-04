@@ -204,6 +204,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
 
     private func setInitialData() {
+        view.clipsToBounds = true
         searchHeaderview.isHidden = true
         searchHeaderview.didCancel = { [weak self] in
             self?.hideSearchHeaderView()
