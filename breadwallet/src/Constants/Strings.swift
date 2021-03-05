@@ -486,7 +486,7 @@ enum S {
         }
         enum PaperKey {
             static let title = NSLocalizedString("Prompts.PaperKey.title", value: "Action Required", comment: "An action is required (You must do this action).")
-            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Your recovery phrase must be saved in case you lose or change your phone.", comment: "Warning about recovery phrase.")
+            static let body = NSLocalizedString("Prompts.PaperKey.body", value: "Please write down your recovery phrase and store it somewhere that is safe and secure.", comment: "Warning about recovery phrase.")
         }
         enum UpgradePin {
             static let title = NSLocalizedString("Prompts.UpgradePin.title", value: "Upgrade PIN", comment: "Upgrade PIN prompt title.")
