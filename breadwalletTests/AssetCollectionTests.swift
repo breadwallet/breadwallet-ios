@@ -20,7 +20,8 @@ class AssetCollectionTests: XCTestCase {
                                 ("ethereum-mainnet:0x0000000000085d4780B73119b644AE5ecd22b376", "tusd"),
                                 ("ripple-mainnet:__native__", "xrp"),
                                 ("ethereum-mainnet:0x86fa049857e0209aa7d9e616f7eb3b3b78ecfdb0", "eos"),
-                                ("ethereum-mainnet:0xE41d2489571d322189246DaFA5ebDe1F4699F498", "zrx")]
+                                ("ethereum-mainnet:0xE41d2489571d322189246DaFA5ebDe1F4699F498", "zrx"),
+                                ("ethereum-mainnet:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", "usdc")]
         .map { (CurrencyId(rawValue: $0.0), $0.1) }
 
     
