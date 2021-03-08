@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>APP_GROUPS_ID</key>
+	<string>group.${APP_GROUPS_ID}</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -56,7 +58,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>4.8.1</string>
+	<string>4.9</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -112,7 +114,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
@@ -224,7 +226,5 @@
 			</dict>
 		</dict>
 	</array>
-	<key>APP_GROUPS_ID</key>
-	<string>group.${APP_GROUPS_ID}</string>
 </dict>
 </plist>
