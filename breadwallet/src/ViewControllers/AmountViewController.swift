@@ -18,7 +18,7 @@ class AmountViewController: UIViewController, Trackable {
     
     init(currency: Currency, isPinPadExpandedAtLaunch: Bool, isRequesting: Bool = false, isRedeeming: Bool = false) {
         defer {
-            self.isRedeeming = false
+            self.isRedeeming = isRedeeming
         }
         self.currency = currency
         self.isPinPadExpandedAtLaunch = isPinPadExpandedAtLaunch
@@ -95,6 +95,7 @@ class AmountViewController: UIViewController, Trackable {
     
     var isRedeeming: Bool = false {
         didSet {
+            if !isRedeeming { return }
             feeSelector.isHidden = true
             let constraint = NSLayoutConstraint.init(item: feeSelector, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1.0, constant: 0.0)
             feeSelector.addConstraint(constraint)
