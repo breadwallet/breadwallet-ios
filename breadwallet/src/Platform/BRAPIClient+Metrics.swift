@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import iAd
+import StoreKit
 
 // swiftlint:disable function_parameter_count
 
@@ -72,7 +73,10 @@ extension BRAPIClient {
         req.setValue("application/json", forHTTPHeaderField: "Content-Type")
         req.setValue("application/json", forHTTPHeaderField: "Accept")
         req.httpBody = data
-        self.dataTaskWithRequest(req, authenticated: true, handler: { _, _, _ in
+        self.dataTaskWithRequest(req, authenticated: true, handler: { responseData, _, _ in
+            if payload.metric == "launch" && responseData != nil {
+                self.handleAttribution(data: responseData!)
+            }
         }).resume()
     }
     
@@ -102,6 +106,17 @@ extension BRAPIClient {
                 completion(AnyCodable(value: ""))
             }
         })
+    }
+    
+    // At most, update the conversion value every 24 hours.
+    private func handleAttribution(data: Data) {
+        guard let responseJson = try? JSONDecoder().decode([String: Int].self, from: data) else { return }
+        guard let conversionValue = responseJson["value"] else { return }
+        if #available(iOS 14.0, *) {
+            SKAdNetwork.updateConversionValue(conversionValue)
+        } else {
+            SKAdNetwork.registerAppForAdNetworkAttribution()
+        }
     }
 }
 
