@@ -848,13 +848,13 @@ enum S {
     
     enum PayId {
         static let invalidPayID = NSLocalizedString("Send.payId_invalid",
-                                                    value: "Invalid PayId",
+                                                    value: "Invalid PayString",
                                                     comment: "Error message for invalid PayID")
         static let noAddress = NSLocalizedString("Send.payId_noAddress",
-                                                 value: "There is no %1$s address associated with this PayID.",
+                                                 value: "There is no %1$s address associated with this PayString.",
                                                  comment: "Error message for no address associated with a PayID for a given currency")
         static let retrievalError = NSLocalizedString("Send.payId_retrievalError",
-                                                value: "There was an error retrieving the address for this PayID. Please try again later.",
+                                                value: "There was an error retrieving the address for this PayString. Please try again later.",
                                                 comment: "Error message for error in retrieving the address from the PayID endpoint")
     }
     
