@@ -359,7 +359,7 @@ class AccountViewController: UIViewController, Subscriber, Trackable {
     }
     
     private func addStakingView() {
-        let staking = StakingCell(currency: currency)
+        let staking = StakingCell(currency: currency, wallet: wallet)
         view.addSubview(staking)
         extraCell = staking
 

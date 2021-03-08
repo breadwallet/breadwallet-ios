@@ -96,5 +96,26 @@ extension UIImage {
             }
         }
     }
+    
+    static func fetchAsync(from imageUrl: String, callback: @escaping (UIImage?, URL?) -> Void) {
+        guard let url = URL(string: imageUrl) else {
+            callback(nil, nil)
+            return
+        }
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            let data = try? Data(contentsOf: url)
+            
+            if let imageData = data, let image = UIImage(data: imageData) {
+                DispatchQueue.main.async {
+                    callback(image, url)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    callback(nil, nil)
+                }
+            }
+        }
+    }
 
 }
