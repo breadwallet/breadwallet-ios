@@ -935,7 +935,24 @@ enum S {
     }
     
     enum Staking {
-        static let stakingTitle = NSLocalizedString("Staking.stakingTitle", value: "Staking", comment: "")
+        static let stakingTitle = NSLocalizedString("Staking.stakingTitle", value: "Staking", comment: "Modal title: Staking modal")
+        static let pendingTransaction = NSLocalizedString("Staking.pendingTransaction", value: "Transaction pending...", comment: "Status label: current staking transaction is pending")
+        static let remove = NSLocalizedString("Staking.remove", value: "Remove", comment: "Button label: remove selected baker")
+        static let add = NSLocalizedString("Staking.add", value: "+ Select Baker", comment: "Button label: select a baker")
+        static let stake = NSLocalizedString("Staking.stake", value: "Stake", comment: "Button label: Stake the selected baker")
+        static let unstake = NSLocalizedString("Staking.unstake", value: "Unstake", comment: "Button label: Unstake the selected baker")
+        static let modalHeadline = NSLocalizedString("Staking.modalHeadline", value: "Earn money while holding", comment: "Headline for staking modal")
+        static let modalBody = NSLocalizedString("Staking.modalBody", value: "Delegate your Tezos account to a validator to earn a reward while keeping full security and control of your coins.", comment: "Body copy for staking modal")
+        static let selectBakerTitle = NSLocalizedString("Staking.selectBakerTitle", value: "Select XTZ Delegate", comment: "Modal title: Select Baker modal")
+        static let roiHeader = NSLocalizedString("Staking.roiHeader", value: "Est. ROI", comment: "Baker cell: ROI field header")
+        static let feeHeader = NSLocalizedString("Staking.feeHeader", value: "Fee:", comment: "Baker cell: Fee field header")
+        static let cellFreeSpaceHeader = NSLocalizedString("Staking.cellFreeSpaceHeader", value: "Free Space", comment: "Baker cell: Free Space field header")
+        static let tezosMultiasset = NSLocalizedString("Staking.tezosMultiasset", value: "Multiasset Pool", comment: "Tezos XTZ baker asset type")
+        static let tezosOnly = NSLocalizedString("Staking.tezosOnly", value: "Tezos-only", comment: "Tezos XTZ baker asset type")
+        static let tezosDune = NSLocalizedString("Staking.tezosDune", value: "Tezos & Dune", comment: "Tezos XTZ baker asset type")
+        static let stakingActiveFlag = NSLocalizedString("Staking.stakingActiveFlag", value: "ACTIVE", comment: "UI flag showing state of Tezos staking")
+        static let stakingInactiveFlag = NSLocalizedString("Staking.stakingInactiveFlag", value: "INACTIVE", comment: "UI flag showing state of Tezos staking")
+        static let stakingPendingFlag = NSLocalizedString("Staking.stakingPendingFlag", value: "PENDING", comment: "UI flag showing state of Tezos staking")
     }
     
     enum Widget {

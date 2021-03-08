@@ -100,6 +100,12 @@
 		3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
+		4F3AB11A25D53F4300B378DC /* ExternalAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */; };
+		4F3AB11B25D53F4300B378DC /* ExternalAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */; };
+		4F3AB12325D53F5D00B378DC /* BakingBadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */; };
+		4F3AB12425D53F5D00B378DC /* Baker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12225D53F5D00B378DC /* Baker.swift */; };
+		4F3AB12A25D58AB400B378DC /* SelectBakerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */; };
+		4F3AB13425D5E7F900B378DC /* SelectBakerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
 		710B036421F8C208007E8A2A /* AppRatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036321F8C208007E8A2A /* AppRatingManager.swift */; };
@@ -798,6 +804,12 @@
 		3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftingStatusUpdater.swift; path = src/Gifting/GiftingStatusUpdater.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
+		4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalAPIClient.swift; path = src/ExternalAPIClient/ExternalAPIClient.swift; sourceTree = "<group>"; };
+		4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalAPIRequest.swift; path = src/ExternalAPIClient/ExternalAPIRequest.swift; sourceTree = "<group>"; };
+		4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BakingBadRequest.swift; path = src/ExternalAPIClient/BakingBad/BakingBadRequest.swift; sourceTree = "<group>"; };
+		4F3AB12225D53F5D00B378DC /* Baker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Baker.swift; path = src/ExternalAPIClient/BakingBad/Baker.swift; sourceTree = "<group>"; };
+		4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectBakerViewController.swift; path = src/ViewControllers/SelectBakerViewController.swift; sourceTree = "<group>"; };
+		4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBakerCell.swift; path = src/ViewControllers/SelectBakerCell.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		710B036321F8C208007E8A2A /* AppRatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRatingManager.swift; path = src/Utilities/AppRatingManager.swift; sourceTree = "<group>"; };
@@ -1455,6 +1467,8 @@
 			children = (
 				3A529E4B253B957200BD0A17 /* StakingCell.swift */,
 				3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */,
+				4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */,
+				4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */,
 			);
 			name = Staking;
 			sourceTree = "<group>";
@@ -1543,6 +1557,25 @@
 				3A188FF72582835600957819 /* Sharing.swift */,
 			);
 			name = Gifting;
+			sourceTree = "<group>";
+		};
+		4F3AB11725D53F0000B378DC /* ExternalAPIClient */ = {
+			isa = PBXGroup;
+			children = (
+				4F3AB12025D53F4900B378DC /* BakingBad */,
+				4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */,
+				4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */,
+			);
+			name = ExternalAPIClient;
+			sourceTree = "<group>";
+		};
+		4F3AB12025D53F4900B378DC /* BakingBad */ = {
+			isa = PBXGroup;
+			children = (
+				4F3AB12225D53F5D00B378DC /* Baker.swift */,
+				4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */,
+			);
+			name = BakingBad;
 			sourceTree = "<group>";
 		};
 		710B035B21F6603C007E8A2A /* Utilities */ = {
@@ -1671,6 +1704,7 @@
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
+				4F3AB11725D53F0000B378DC /* ExternalAPIClient */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
@@ -3119,6 +3153,7 @@
 				3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */,
 				CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
+				4F3AB12A25D58AB400B378DC /* SelectBakerViewController.swift in Sources */,
 				E843C1172188D19000F46672 /* OnboardingViewController.swift in Sources */,
 				3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */,
 				7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */,
@@ -3253,11 +3288,13 @@
 				711730572204FDFB001931B3 /* HomeScreenHiglightableCell.swift in Sources */,
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
 				3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */,
+				4F3AB11B25D53F4300B378DC /* ExternalAPIRequest.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
 				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
 				CE97710B216FB50B00B9F621 /* EnableSegwitView.swift in Sources */,
 				CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */,
+				4F3AB11A25D53F4300B378DC /* ExternalAPIClient.swift in Sources */,
 				CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */,
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CE65C66A207D41BB000C99C4 /* AssetIndex.swift in Sources */,
@@ -3276,6 +3313,7 @@
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */,
 				7CB593E122F8C8FE005A230A /* AuthenticationClient.swift in Sources */,
+				4F3AB12425D53F5D00B378DC /* Baker.swift in Sources */,
 				71988B0821EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				3A7605F724D0BB1F0057C1F4 /* CloudBackup.swift in Sources */,
@@ -3383,6 +3421,7 @@
 				CE36454C1E7B42850079D0CF /* WhiteDecimalPad.swift in Sources */,
 				CE5F21D91E4A922700C47B8E /* DismissLoginAnimator.swift in Sources */,
 				7C45481A2187E65B0002E884 /* AnyCodable.swift in Sources */,
+				4F3AB12325D53F5D00B378DC /* BakingBadRequest.swift in Sources */,
 				CECCE5A51E02408300D99448 /* UIView+FrameChangeBlocking.swift in Sources */,
 				3A3D63DC22F10B4F000DE920 /* AddWalletsViewController.swift in Sources */,
 				22A9A94F1DF61945000F0016 /* BRHTTPRouter.swift in Sources */,
@@ -3402,6 +3441,7 @@
 				713CD88A2240198A004657D4 /* RecoveryKeyIntroViewController.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
+				4F3AB13425D5E7F900B378DC /* SelectBakerCell.swift in Sources */,
 				3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

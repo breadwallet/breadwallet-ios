@@ -100,6 +100,11 @@ public enum Event: String {
     
     case fixerFetch
     
+    //staking
+    case stake
+    case unstake
+    case changeBaker
+    
     var name: String { return rawValue }
 }
 
