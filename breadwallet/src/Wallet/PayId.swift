@@ -30,7 +30,7 @@ enum ResolvableType {
     var label: String {
         switch self {
         case .payId:
-            return "PayID"
+            return "PayString"
         case .fio:
             return "FIO"
         }
