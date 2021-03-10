@@ -548,7 +548,7 @@
 /* Device encryption prompt title */
 "Prompts.NoScreenLock.title.android" = "Screen lock disabled";
 /* Warning about recovery phrase (formerly paper key). */
-"Prompts.PaperKey.body" = "Your recovery phrase must be saved in case you lose or change your phone.";
+"Prompts.PaperKey.body" = "Please write down your recovery phrase and store it somewhere that is safe and secure.";
 /* Warning about paper key (Android-version) */
 "Prompts.PaperKey.Body.Android" = "Set up your recovery phrase in case you ever lose or replace your phone. Your key is also required if you change your phone's security settings.";
 /* An action is required (You must do this action). */
