@@ -111,6 +111,9 @@ class ApplicationController: Subscriber, Trackable {
         })
         
         Store.subscribe(self, name: .didWipeWallet) { [unowned self] _ in
+            if let modalPresenter = self.modalPresenter {
+                Store.unsubscribe(modalPresenter)
+            }
             self.modalPresenter = nil
             self.rootNavigationController?.viewControllers = []
             
