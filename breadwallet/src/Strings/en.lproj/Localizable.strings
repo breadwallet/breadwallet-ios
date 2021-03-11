@@ -231,12 +231,27 @@
 "Confirmation.to" = "To";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Total Cost:";
+"ConfirmGift.paperWalletAmount" = "Paper Wallet Amount";
+"ConfirmGift.processingTime" = "Validating this paper wallet on the network may take up to 60 minutes";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "The words entered do not match your recovery phrase. Please try again.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "To make sure everything was written down correctly, please enter the following words from your recovery phrase.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Word #%1$@";
+"CreateGift.amountLabel" = "Choose amount ($USD)";
+"CreateGift.create" = "Create";
+"CreateGift.customAmountHint" = "Custom amount ($500 max)";
+"CreateGift.description" = "We'll create what's called a ";
+"CreateGift.inputAmountError" = "You must select a gift amount.";
+"CreateGift.inputRecipientNameError" = "You must enter the name of the recipient.";
+"CreateGift.insufficientBalanceError" = "You have insufficient funds to send a gift.";
+"CreateGift.insufficientBalanceForAmountError" = "You have insufficient funds to send a gift of this amount.";
+"CreateGift.recipientName" = "Recipient's name";
+"CreateGift.serverError" = "A server error occurred. Please try again later.";
+"CreateGift.subtitle" = "Send bitcoin to someone even if they don't have a wallet.";
+"CreateGift.title" = "Give the Gift of Bitcoin";
+"CreateGift.unexpectedError" = "An unexpected error occurred. Please contact support.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "Agree";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "Messaging Unavailable";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "Fingerprint not recognized. Please try again.";
+"ExportConfirmation.cancel" = "Cancel";
+"ExportConfirmation.continue" = "Continue";
+"ExportConfirmation.message" = "This will generate a CSV file including all completed transactions from all enabled wallets.";
+"ExportConfirmation.title" = "Export transactions?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "This will generate a CSV file including all completed transactions from all enabled wallets.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "Export Transfers";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "Failed to export CSV file, please try again.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "Export Failed";
+/* "Export transfers header" */
+"ExportTransfers.header" = "Export transactions?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "You can customize your Face ID spending limit from the %1$@.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -900,8 +929,6 @@
 "Settings.advancedTitle" = "Advanced Settings";
 /* ATM map menu item title explaining that it's a feature only available in the USA */
 "Settings.atmMapMenuItemSubtitle" = "Available in the USA only";
-/* Enables sharing portfolio data with widget extension */
-"Settings.shareWithWidget" = "Share portfolio data with widgets";
 /* ATM map menu item title */
 "Settings.atmMapMenuItemTitle" = "Crypto ATM Map";
 /* i.e. the currency which will be displayed */
@@ -916,6 +943,8 @@
 "Settings.EnableSegwit" = "Enable Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Are you enjoying BRD?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "Export transaction history to CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID Spending Limit";
 /* Redeem the funds stored on this private key. */
@@ -936,6 +965,8 @@
 "Settings.rewards" = "Rewards";
 /* Share anonymous data label */
 "Settings.shareData" = "Share Anonymous Data";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "Share portfolio data with widgets";
 /* Sync blockchain label */
 "Settings.sync" = "Sync Blockchain";
 /* Settings title */
@@ -962,6 +993,49 @@
 "ShareData.header" = "Share Data?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Share Anonymous Data?";
+"ShareGift.approximateTotal" = "Approximate Total";
+"ShareGift.footerMessage1" = "A network fee will be deducted from the total when claimed.\nActual value depends on current price of bitcoin.";
+"ShareGift.footerMessage2" = "Download the BRD app for iPhone or Android.\nFor more information visit brd.com/gift";
+"ShareGift.tagLine" = "Someone gifted you bitcoin!";
+"ShareGift.walletName" = "Bitcoin";
+/* Button label: select a baker */
+"Staking.add" = "+ Select Baker";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "Free Space";
+"Staking.changeValidator" = "Change";
+"Staking.descriptionTezos" = "Delegate your Tezos account to a validator to earn a reward while keeping full security and control of your coins.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "Fee:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "Transaction pending...";
+/* Button label: remove selected baker */
+"Staking.remove" = "Remove";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "Est. ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "Select XTZ Delegate";
+"Staking.stake" = "Stake";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "ACTIVE";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "INACTIVE";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "PENDING";
+/* Staking banner title */
+"Staking.stakingTitle" = "Staking";
+"Staking.stakingTo" = "staking to %1$s";
+"Staking.statusPending" = "Pending";
+"Staking.statusStaked" = "Staked!";
+"Staking.subTitle" = "Earn money while holding";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "Tezos & Dune";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "Multiasset Pool";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Tezos-only";
+"Staking.title" = "Stake %1$s";
+"Staking.unstake" = "Unstake";
+"Staking.validatorHint" = "Enter Validator Address";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Write Down Recovery Phrase Again";
 /* Paper key explanation text. */
@@ -1086,10 +1160,12 @@
 "Transaction.sendingTo" = "sending to %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "sent to %1$@";
+"Transaction.stakingTo" = "staking to %1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Starting balance: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "Fee for token transfer: %1$@";
+"Transaction.toRecipient" = "to %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Waiting to be confirmed. Some merchants require confirmation to complete a transaction. Estimated time: 1-2 hours.";
 /* e.g. I received money from an account. */
@@ -1133,6 +1209,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas Limit";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas Price";
+"TransactionDetails.gift" = "Gift";
+"TransactionDetails.giftedTo" = "Gifted to %1$s";
 /* Label for Hedera Memo field on transaction details screen */
 "TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
@@ -1159,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "receiving from %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "receiving via %1$@";
+"TransactionDetails.reclaim" = "Reclaim";
+"TransactionDetails.resend" = "Resend";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Sent %1$@";
 /* Sent $5.00 */
@@ -1253,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "Staking";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1284,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet has changed its name to BRD, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welcome to BRD!";
+/* Single asset widget description */
+"Widget.assetDescription" = "Stay up to date with your favorite crypto asset";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Stay up to date with your favorite crypto assets";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Asset list";
+/* Single asset widget title */
+"Widget.assetTitle" = "Asset";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "System Auto Light / Dark";
+/* Name of color - Black */
+"Widget.Color.black" = "Black";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Blue";
+/* Name of color - Gray */
+"Widget.Color.gray" = "Gray";
+/* Name of color - Green */
+"Widget.Color.green" = "Green";
+/* Name of color - Orange */
+"Widget.Color.orange" = "Orange";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Pink";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "Primary";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "Primary";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Purple";
+/* Name of color - Red */
+"Widget.Color.red" = "Red";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "Secondary";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "Secondary";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "Tertiary";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "Tertiary";
+/* Name of color - White */
+"Widget.Color.white" = "White";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Yellow";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Theme Background Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Basic Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Currency Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "System Colors";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Theme Text Colors";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "Enable in app\npreferences";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Stay up to date with your portfolio";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "Portfolio\nSummary";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "Portfolio";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Are you sure you want to delete this wallet?";
 /* Wipe wallet alert title */
@@ -1312,63 +1453,3 @@ Wallet connection settings menu item title. */
 "WritePaperPhrase.previous" = "Previous";
 /* 1 of 3 */
 "WritePaperPhrase.step" = "%1$d of %2$d";
-/* Single asset widget title */
-"Widget.assetTitle" = "Asset";
-/* Single asset widget description */
-"Widget.assetDescription" = "Stay up to date with your favorite crypto asset";
-/* Asset list widget title */
-"Widget.assetListTitle" = "Asset list";
-/* Asset list widget description */
-"Widget.assetListDescription" = "Stay up to date with your favorite crypto assets";
-/* Portfolio widget title */
-"Widget.portfolioTitle" = "Portfolio";
-/* Portfolio description */
-"Widget.portfolioDescription" = "Stay up to date with your portfolio";
-/* Portfolio widget description if data sharing is disabled */
-"Widget.enablePortfolio" = "Enable in app\npreferences";
-/* Portfolio widget description if data sharing is enabled */
-"Widget.portfolioSummary" = "Portfolio\nSummary";
-/* Title of color grouping in widget color picker */
-"Widget.colorSectionSystem" = "System Colors";
-/* Title of color grouping in widget color picker */
-"Widget.colorSectionBasic" = "Basic Colors";
-/* Title of color grouping in widget color picker */
-"Widget.colorSectionCurrency" = "Currency Colors";
-/* "Title of color grouping in widget color picker */
-"Widget.colorSectionText" = "Theme Text Colors";
-/* "Title of color grouping in widget color picker */
-"Widget.colorSectionBackground" = "Theme Background Colors";
-/* Name of color based on os theme light/dark */
-"Widget.Color.autoLightDark" = "System Auto Light / Dark";
-/* Name of color - White */
-"Widget.Color.white" = "White";
-/* Name of color - Black */
-"Widget.Color.black" = "Black";
-/* Name of color - Gray */
-"Widget.Color.gray" = "Gray";
-/* Name of color - Red */
-"Widget.Color.red" = "Red";
-/* Name of color - Green */
-"Widget.Color.green" = "Green";
-/* Name of color - Blue */
-"Widget.Color.blue" = "Blue";
-/* Name of color - Orange */
-"Widget.Color.orange" = "Orange";
-/* Name of color - Yellow */
-"Widget.Color.yellow" = "Yellow";
-/* Name of color - Pink */
-"Widget.Color.pink" = "Pink";
-/* Name of color - Purple */
-"Widget.Color.purple" = "Purple";
-/* Name of color - Primary Background */
-"Widget.Color.primaryBackground" =  "Primary";
-/* Name of color - Secondary Background */
-"Widget.Color.secondaryBackground" =  "Secondary";
-/* Name of color - Tertiary Background */
-"Widget.Color.tertiaryBackground" =  "Tertiary";
-/* Name of color - Primary Text */
-"Widget.Color.primaryText" =  "Primary";
-/* Name of color - Secondary Text */
-"Widget.Color.secondaryText" =  "Secondary";
-/* Name of color - Tertiary Text */
-"Widget.Color.tertiaryText" =  "Tertiary";

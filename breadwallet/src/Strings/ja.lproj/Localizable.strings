@@ -220,7 +220,7 @@
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "ネットワーク料金（ETH）:";
 /* Label for Hedera Memo field on transaction confirmation screen */
-"Confirmation.hederaMemo" = "Hedera Memo";
+"Confirmation.hederaMemo" = "ヘデラメモ";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "処理時間: この取引は%1$@で完了する見込みです。";
 /* Label for "send" button on final confirmation screen */
@@ -231,12 +231,27 @@
 "Confirmation.to" = "送金先";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "費用合計：";
+"ConfirmGift.paperWalletAmount" = "紙の財布の金額";
+"ConfirmGift.processingTime" = "ネットワーク上でこの紙のウォレットを検証するには、最大60分かかる場合があります";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "入力した単語は、回復フレーズと一致しません。もう一度お試しください。";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "すべてが正しく記述されていることを確認するには、回復フレーズから次の単語を入力してください。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "フレーズ #%1$@";
+"CreateGift.amountLabel" = "金額を選択（$ USD）";
+"CreateGift.create" = "作成する";
+"CreateGift.customAmountHint" = "カスタム金額（最大$ 500）";
+"CreateGift.description" = "と呼ばれるものを作成します";
+"CreateGift.inputAmountError" = "ギフトの金額を選択する必要があります。";
+"CreateGift.inputRecipientNameError" = "受信者の名前を入力する必要があります。";
+"CreateGift.insufficientBalanceError" = "贈り物を送るのに十分な資金がありません。";
+"CreateGift.insufficientBalanceForAmountError" = "この金額のギフトを送るのに十分な資金がありません。";
+"CreateGift.recipientName" = "受取人の氏名";
+"CreateGift.serverError" = "サーバーエラーが発生しました。後でもう一度やり直してください。";
+"CreateGift.subtitle" = "財布を持っていなくてもビットコインを誰かに送ってください。";
+"CreateGift.title" = "ビットコインのギフトを贈る";
+"CreateGift.unexpectedError" = "予期しないエラーが発生しました。サポートにお問い合わせください。";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "同意する";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "メッセージの送受信ができません";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "指紋が認識されませんでした。もう一度やり直してください。";
+"ExportConfirmation.cancel" = "キャンセル";
+"ExportConfirmation.continue" = "継続する";
+"ExportConfirmation.message" = "これにより、有効なすべてのウォレットから完了したすべてのトランザクションを含むCSVファイルが生成されます。";
+"ExportConfirmation.title" = "輸出取引？";
+/* "Export transfers body" */
+"ExportTransfers.body" = "これにより、有効なすべてのウォレットから完了したすべてのトランザクションを含むCSVファイルが生成されます。";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "エクスポート転送";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "CSVファイルのエクスポートに失敗しました。再試行してください。";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "エクスポートに失敗しました";
+/* "Export transfers header" */
+"ExportTransfers.header" = "輸出取引？";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "%1$@からFace ID使用限度額をカスタマイズすることができます。";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "Segwitを有効にする";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "ブレッドをお楽しみいただいていますか?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "トランザクション履歴をCSVにエクスポート";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID使用限度額";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "リワード";
 /* Share anonymous data label */
 "Settings.shareData" = "匿名データをシェアする";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "ポートフォリオデータをウィジェットと共有する";
 /* Sync blockchain label */
 "Settings.sync" = "ブロックチェーン同期";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "データを共有しますか?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "匿名データをシェアしますか?";
+"ShareGift.approximateTotal" = "おおよその合計";
+"ShareGift.footerMessage1" = "ネットワーク料金は、請求時に合計から差し引かれます。\n実際の値はビットコインの現在の価格によって異なります。";
+"ShareGift.footerMessage2" = "iPhoneまたはAndroid用のBRDアプリをダウンロードします。\n詳細については、brd.com / giftをご覧ください。";
+"ShareGift.tagLine" = "誰かがあなたにビットコインをプレゼントしました！";
+"ShareGift.walletName" = "ビットコイン";
+/* Button label: select a baker */
+"Staking.add" = "+ベイカーを選択";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "フリースペース";
+"Staking.changeValidator" = "変化する";
+"Staking.descriptionTezos" = "Tezosアカウントをバリデーターに委任して、コインの完全なセキュリティと制御を維持しながら報酬を獲得します。";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "費用：";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "トランザクション保留中...";
+/* Button label: remove selected baker */
+"Staking.remove" = "削除する";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "EST（東部基準時。 ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "XTZデリゲートを選択します";
+"Staking.stake" = "ステーク";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "アクティブ";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "非活性";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "保留中";
+/* Staking banner title */
+"Staking.stakingTitle" = "ステーキング";
+"Staking.stakingTo" = "%1$sへのステーキング";
+"Staking.statusPending" = "保留中";
+"Staking.statusStaked" = "賭けた！";
+"Staking.subTitle" = "持ちながらお金を稼ぐ";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "テゾス＆デューン";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "マルチアセットプール";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "テゾスのみ";
+"Staking.title" = "ステーク%1$s";
+"Staking.unstake" = "アンステーク";
+"Staking.validatorHint" = "バリデーターアドレスを入力してください";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "回復フレーズを書き留めます";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "%1$@に送金中";
 /* sent to <address> */
 "Transaction.sentTo" = "%1$@に送金済み";
+"Transaction.stakingTo" = "%1$sへのステーキング";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "期首残高: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "トークン送金の手数料: %1$@";
+"Transaction.toRecipient" = "〜 %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "承認を待っています。トランザクションの完了には承認が必要となる場合があります。推定時間: 1-2時間。";
 /* e.g. I received money from an account. */
@@ -1131,8 +1209,10 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "ガソリン上限";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "ガソリン価格";
+"TransactionDetails.gift" = "贈り物";
+"TransactionDetails.giftedTo" = "%1$s贈られました";
 /* Label for Hedera Memo field on transaction details screen */
-"TransactionDetails.hederaMemo" = "Hedera Memo";
+"TransactionDetails.hederaMemo" = "ヘデラメモ";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "詳細を隠す";
 /* Label showing the transaction was started (initialized) */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "%1$@から受け取っています";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "%1$@経由で受け取り中";
+"TransactionDetails.reclaim" = "再利用";
+"TransactionDetails.resend" = "再送信";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@を送金しました";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "ステーキング";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwalletは新しい機能や見た目を備えて、BRDという名前に生まれ変わりました。\n\nヘルプをご覧になるには、画面右上にある(?)からお探しください。";
 /* Top title of welcome screen */
 "Welcome.title" = "BRDへようこそ！";
+/* Single asset widget description */
+"Widget.assetDescription" = "お気に入りの暗号資産を最新の状態に保つ";
+/* Asset list widget description */
+"Widget.assetListDescription" = "お気に入りの暗号資産を最新の状態に保つ";
+/* Asset list widget title */
+"Widget.assetListTitle" = "資産リスト";
+/* Single asset widget title */
+"Widget.assetTitle" = "資産";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "システムオートライト/ダーク";
+/* Name of color - Black */
+"Widget.Color.black" = "ブラック";
+/* Name of color - Blue */
+"Widget.Color.blue" = "青い";
+/* Name of color - Gray */
+"Widget.Color.gray" = "グレー";
+/* Name of color - Green */
+"Widget.Color.green" = "緑";
+/* Name of color - Orange */
+"Widget.Color.orange" = "オレンジ";
+/* Name of color - Pink */
+"Widget.Color.pink" = "ピンク";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "プライマリ";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "プライマリ";
+/* Name of color - Purple */
+"Widget.Color.purple" = "紫の";
+/* Name of color - Red */
+"Widget.Color.red" = "赤";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "二次";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "二次";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "三次";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "三次";
+/* Name of color - White */
+"Widget.Color.white" = "白い";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "黄";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "テーマの背景色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "基本色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "通貨の色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "システムカラー";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "テーマのテキストの色";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "アプリで有効にする\n環境設定";
+/* Portfolio description */
+"Widget.portfolioDescription" = "ポートフォリオを最新の状態に保つ";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "ポートフォリオ\n概要";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "ポートフォリオ";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "本当にこのウォレットを削除しますか？";
 /* Wipe wallet alert title */

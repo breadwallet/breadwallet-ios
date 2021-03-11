@@ -231,12 +231,27 @@
 "Confirmation.to" = "Naar";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Totale Prijs:";
+"ConfirmGift.paperWalletAmount" = "Hoeveelheid papieren portemonnee";
+"ConfirmGift.processingTime" = "Het valideren van deze papieren portemonnee op het netwerk kan tot 60 minuten duren";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "De ingevoerde woorden komen niet overeen met uw herstelzin. Probeer het a.u.b. opnieuw.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "Voer de volgende woorden uit uw herstelzin in om er zeker van te zijn dat alles correct is opgeschreven.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Woord #%1$@";
+"CreateGift.amountLabel" = "Kies bedrag ($ USD)";
+"CreateGift.create" = "Creëer";
+"CreateGift.customAmountHint" = "Aangepast bedrag (maximaal $ 500)";
+"CreateGift.description" = "We maken een zogeheten";
+"CreateGift.inputAmountError" = "U moet een geschenkbedrag selecteren.";
+"CreateGift.inputRecipientNameError" = "U moet de naam van de ontvanger invoeren.";
+"CreateGift.insufficientBalanceError" = "Je hebt onvoldoende saldo om een cadeau te sturen.";
+"CreateGift.insufficientBalanceForAmountError" = "U heeft onvoldoende saldo om dit bedrag te schenken.";
+"CreateGift.recipientName" = "Naam ontvanger";
+"CreateGift.serverError" = "Er is een serverfout opgetreden. Probeer het later nog eens.";
+"CreateGift.subtitle" = "Stuur bitcoin naar iemand, zelfs als ze geen portemonnee hebben.";
+"CreateGift.title" = "Geef Bitcoin cadeau";
+"CreateGift.unexpectedError" = "Er is een onverwachte fout opgetreden. Neem dan contact op met ondersteuning.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "Akkoord";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "Bericht versturen niet beschikbaar";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "Vingerafdruk niet herkend. Probeer het alstublieft opnieuw.";
+"ExportConfirmation.cancel" = "annuleren";
+"ExportConfirmation.continue" = "Doorgaan met";
+"ExportConfirmation.message" = "Dit genereert een CSV-bestand met alle voltooide transacties van alle ingeschakelde wallets.";
+"ExportConfirmation.title" = "Transacties exporteren?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "Dit genereert een CSV-bestand met alle voltooide transacties van alle ingeschakelde wallets.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "Overboekingen exporteren";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "Het exporteren van CSV-bestand is mislukt. Probeer het opnieuw.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "Export mislukt";
+/* "Export transfers header" */
+"ExportTransfers.header" = "Transacties exporteren?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Je kunt de bestedingslimiet van je Face-ID aanpassen vanuit het %1$@.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "Activeer SegWit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Vind je BRD leuk?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "Exporteer transactiegeschiedenis naar CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Bestedingslimiet Face-ID";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "Beloningen";
 /* Share anonymous data label */
 "Settings.shareData" = "Deel Anonieme Data";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "Deel portfoliogegevens met widgets";
 /* Sync blockchain label */
 "Settings.sync" = "Synchroniseer Blockchain";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "Data Delen?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonieme Data Delen?";
+"ShareGift.approximateTotal" = "Totaal bij benadering";
+"ShareGift.footerMessage1" = "Bij het claimen wordt een netwerkvergoeding van het totaalbedrag afgetrokken.\n De werkelijke waarde is afhankelijk van de huidige prijs van bitcoin.";
+"ShareGift.footerMessage2" = "Download de BRD-app voor iPhone of Android.\n Ga voor meer informatie naar brd.com/gift";
+"ShareGift.tagLine" = "Iemand heeft je bitcoin cadeau gedaan!";
+"ShareGift.walletName" = "Bitcoin";
+/* Button label: select a baker */
+"Staking.add" = "+ Selecteer Baker";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "Vrije ruimte";
+"Staking.changeValidator" = "Verandering";
+"Staking.descriptionTezos" = "Delegeer uw Tezos-account aan een validator om een beloning te verdienen terwijl u de volledige veiligheid en controle over uw munten behoudt.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "Vergoeding:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "Transactie in behandeling ...";
+/* Button label: remove selected baker */
+"Staking.remove" = "Verwijderen";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "Est. ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "Selecteer XTZ Delegate";
+"Staking.stake" = "Inzet";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "ACTIEF";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "INACTIEF";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "IN AFWACHTING";
+/* Staking banner title */
+"Staking.stakingTitle" = "Uitzetten";
+"Staking.stakingTo" = "uitzetten naar %1$s";
+"Staking.statusPending" = "In Afwachting";
+"Staking.statusStaked" = "Uitgezet!";
+"Staking.subTitle" = "Verdien geld terwijl je vasthoudt";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "Tezos & Dune";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "Multiasset-zwembad";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Alleen Tezos";
+"Staking.title" = "%1$s inzetten";
+"Staking.unstake" = "Ongedaan maken";
+"Staking.validatorHint" = "Voer Validator-adres in";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schrijf de herstelzin opnieuw op";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "versturen naar %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "verstuurd naar %1$@";
+"Transaction.stakingTo" = "uitzetten naar %1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Startbalans: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "Fee voor token verzending: %1$@";
+"Transaction.toRecipient" = "naar %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Wachtend op bevestiging. Sommige handelaren willen bevestiging om een transactie af te roden. Geschatte tijd: 1-2 uur.";
 /* e.g. I received money from an account. */
@@ -1131,6 +1209,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gaslimiet";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gasprijs";
+"TransactionDetails.gift" = "Geschenk";
+"TransactionDetails.giftedTo" = "Geschonken aan %1$s";
 /* Label for Hedera Memo field on transaction details screen */
 "TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "ontvangen van %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "ontvangen via %1$@";
+"TransactionDetails.reclaim" = "Reclaim";
+"TransactionDetails.resend" = "Opnieuw verzenden";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Verstuurd %1$@";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "Uitzetten";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet is omgedoopt tot BRD, met een gloednieuw uiterlijk en enkele nieuwe functies.\n\nAls u hulp nodig hebt, zoek naar de (?) rechtsboven in de meeste schermen.";
 /* Top title of welcome screen */
 "Welcome.title" = "Welkom bij BRD!";
+/* Single asset widget description */
+"Widget.assetDescription" = "Blijf op de hoogte van uw favoriete cryptovaluta";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Blijf op de hoogte van uw favoriete cryptovaluta";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Asset lijst";
+/* Single asset widget title */
+"Widget.assetTitle" = "Bedrijfsmiddel";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "Systeem Auto Licht / Donker";
+/* Name of color - Black */
+"Widget.Color.black" = "Zwart";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Blauw";
+/* Name of color - Gray */
+"Widget.Color.gray" = "Grijs";
+/* Name of color - Green */
+"Widget.Color.green" = "Groen";
+/* Name of color - Orange */
+"Widget.Color.orange" = "Oranje";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Roze";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "Primair";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "Primair";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Purper";
+/* Name of color - Red */
+"Widget.Color.red" = "Rood";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "Ondergeschikt";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "Ondergeschikt";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "Tertiair";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "Tertiair";
+/* Name of color - White */
+"Widget.Color.white" = "Wit";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Geel";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Thema achtergrondkleuren";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Basiskleuren";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Valutakleuren";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "Systeemkleuren";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Thema Tekstkleuren";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "Schakel in app\n voorkeuren";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Blijf op de hoogte van uw portfolio";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "Portefeuille\n Overzicht";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "Portefeuille";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Weet je zeker dat je deze portomonnee wilt verwijderen?";
 /* Wipe wallet alert title */

@@ -231,12 +231,27 @@
 "Confirmation.to" = "Til";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Samlede omkostninger:";
+"ConfirmGift.paperWalletAmount" = "Papir tegnebog beløb";
+"ConfirmGift.processingTime" = "Validering af denne papirpung på netværket kan tage op til 60 minutter";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "De indtastede ord matcher ikke din gendannelsessætning. Prøv igen.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "For at sikre, at alt blev skrevet korrekt, skal du indtaste følgende ord fra din gendannelsessætning.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Ord #%1$@";
+"CreateGift.amountLabel" = "Vælg beløb ($ USD)";
+"CreateGift.create" = "skab";
+"CreateGift.customAmountHint" = "Tilpasset beløb (maks. $ 500)";
+"CreateGift.description" = "Vi opretter det, der kaldes en";
+"CreateGift.inputAmountError" = "Du skal vælge et gavebeløb.";
+"CreateGift.inputRecipientNameError" = "Du skal indtaste modtagerens navn.";
+"CreateGift.insufficientBalanceError" = "Du har ikke tilstrækkelige midler til at sende en gave.";
+"CreateGift.insufficientBalanceForAmountError" = "Du har ikke tilstrækkelige midler til at sende en gave på dette beløb.";
+"CreateGift.recipientName" = "modtagers navn";
+"CreateGift.serverError" = "Der opstod en serverfejl. Prøv igen senere.";
+"CreateGift.subtitle" = "Send bitcoin til nogen, selvom de ikke har en tegnebog.";
+"CreateGift.title" = "Giv Bitcoin gave";
+"CreateGift.unexpectedError" = "Der opstod en uventet fejl. Kontakt support.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "Enig";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "Beskeder utilgængelig";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "Fingeraftryk ikke genkendt. Prøv igen.";
+"ExportConfirmation.cancel" = "Afbestille";
+"ExportConfirmation.continue" = "Blive ved";
+"ExportConfirmation.message" = "Dette genererer en CSV-fil, der inkluderer alle gennemførte transaktioner fra alle aktiverede tegnebøger.";
+"ExportConfirmation.title" = "Eksporttransaktioner?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "Dette genererer en CSV-fil, der inkluderer alle gennemførte transaktioner fra alle aktiverede tegnebøger.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "Eksport overførsler";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "Kunne ikke eksportere CSV-filen, prøv igen.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "Eksport mislykkedes";
+/* "Export transfers header" */
+"ExportTransfers.header" = "Eksporttransaktioner?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Du kan tilpasse din Face ID betalingsgrænse fra %1$@.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "Aktivér Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Nyder du BRD?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "Eksporter transaktionshistorik til CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID betalingsgrænse";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "Belønninger";
 /* Share anonymous data label */
 "Settings.shareData" = "Del anonyme data";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "Del porteføljedata med widgets";
 /* Sync blockchain label */
 "Settings.sync" = "Synkroniser blokkæde";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "Del data?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Del anonyme data?";
+"ShareGift.approximateTotal" = "Omtrentlig total";
+"ShareGift.footerMessage1" = "Et netafgift trækkes fra det samlede beløb, når det kræves.\n Den faktiske værdi afhænger af den aktuelle pris på bitcoin.";
+"ShareGift.footerMessage2" = "Download BRD-appen til iPhone eller Android.\n For mere information besøg brd.com/gift";
+"ShareGift.tagLine" = "Nogen gav dig bitcoin!";
+"ShareGift.walletName" = "Bitcoin";
+/* Button label: select a baker */
+"Staking.add" = "+ Vælg Baker";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "Fri plads";
+"Staking.changeValidator" = "Lave om";
+"Staking.descriptionTezos" = "Delegér din Tezos-konto til en validator for at optjene en belønning, mens du holder fuld sikkerhed og kontrol med dine mønter.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "Betaling:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "Transaktion afventer ...";
+/* Button label: remove selected baker */
+"Staking.remove" = "Fjern";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "Est. ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "Vælg XTZ-delegeret";
+"Staking.stake" = "Indsats";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "AKTIV";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "INAKTIV";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "VERSERENDE";
+/* Staking banner title */
+"Staking.stakingTitle" = "Indsats";
+"Staking.stakingTo" = "indsats til %1$s";
+"Staking.statusPending" = "Afventede";
+"Staking.statusStaked" = "Indsat!";
+"Staking.subTitle" = "Tjen penge, mens du holder";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "Tezos & Dune";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "Multiasset-pool";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Kun tezos";
+"Staking.title" = "Indsats %1$s";
+"Staking.unstake" = "Fjern indsatsen";
+"Staking.validatorHint" = "Indtast Validator-adresse";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Skriv genoprettelsesfrasen igen";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "sender til %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "sendt til %1$@";
+"Transaction.stakingTo" = "indsats til %1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Startbalance: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "Gebyr for token-overførsel: %1$@";
+"Transaction.toRecipient" = "til %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Venter på bekræftelse. Nogen forhandlere kræver bekræftelse for at gennemføre en transaktion. Anslået tid: 1-2 timer.";
 /* e.g. I received money from an account. */
@@ -1131,6 +1209,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gasgrænse";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gaspris";
+"TransactionDetails.gift" = "Gave";
+"TransactionDetails.giftedTo" = "Begavet til %1$s";
 /* Label for Hedera Memo field on transaction details screen */
 "TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "modtager fra %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "modtager via %1$@";
+"TransactionDetails.reclaim" = "Gendan";
+"TransactionDetails.resend" = "Send igen";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Sendt %1$@";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "Indsats";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet har skiftet navn til BRD med et helt nyt look og nogle nye funktioner.\n\nHvis du har brug for hjælp, led efter (?) øverst til højre på de fleste skærme.";
 /* Top title of welcome screen */
 "Welcome.title" = "Velkommen til BRD!";
+/* Single asset widget description */
+"Widget.assetDescription" = "Bliv opdateret med dit yndlings krypto-aktiv";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Bliv opdateret med dine foretrukne kryptoaktiver";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Liste over aktiver";
+/* Single asset widget title */
+"Widget.assetTitle" = "Aktiv";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "System Auto Lys / Mørk";
+/* Name of color - Black */
+"Widget.Color.black" = "Sort";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Blå";
+/* Name of color - Gray */
+"Widget.Color.gray" = "Grå";
+/* Name of color - Green */
+"Widget.Color.green" = "Grøn";
+/* Name of color - Orange */
+"Widget.Color.orange" = "orange";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Lyserød";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "Primær";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "Primær";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Lilla";
+/* Name of color - Red */
+"Widget.Color.red" = "Rød";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "Sekundær";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "Sekundær";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "Tertiære";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "Tertiære";
+/* Name of color - White */
+"Widget.Color.white" = "hvid";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Gul";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Tema baggrundsfarver";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Grundlæggende farver";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Valutafarver";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "Systemfarver";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Tema tekstfarver";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "Aktivér i app\n præferencer";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Bliv opdateret med din portefølje";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "Portefølje\n Resumé";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "Portefølje";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Er du sikker på at du vil slette denne wallet?";
 /* Wipe wallet alert title */
