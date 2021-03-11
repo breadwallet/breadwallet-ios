@@ -863,13 +863,13 @@
 /* Paste button label */
 "Send.pasteLabel" = "Paste";
 /* Error message for invalid PayID */
-"Send.payId_invalid" = "Invalid PayID.";
+"Send.payId_invalid" = "Invalid PayString.";
 /* Error message for no address associated with a PayID for a given currency */
-"Send.payId_noAddress" = "There is no %1$s address associated with this PayID.";
+"Send.payId_noAddress" = "There is no %1$s address associated with this PayString.";
 /* Error message for error in retrieving the address from the PayID endpoint */
-"Send.payId_retrievalError" = "There was an error retrieving the address for this PayID. Please try again later.";
+"Send.payId_retrievalError" = "There was an error retrieving the address for this PayString. Please try again later.";
 /* PayID label */
-"Send.payId_toLabel" = "PayID";
+"Send.payId_toLabel" = "PayString";
 /* Could not publish transaction alert title */
 "Send.publishTransactionError" = "Could not publish transaction.";
 /* Could not load remote request error message */
