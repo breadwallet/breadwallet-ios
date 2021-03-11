@@ -220,7 +220,7 @@
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "네트워크 요금 (ETH):";
 /* Label for Hedera Memo field on transaction confirmation screen */
-"Confirmation.hederaMemo" = "Hedera Memo";
+"Confirmation.hederaMemo" = "헤 데라 메모";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "처리 시간: 이 거래는 %1$@에 완료될 것으로 예상됩니다.";
 /* Label for "send" button on final confirmation screen */
@@ -231,12 +231,27 @@
 "Confirmation.to" = "수취인";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "총 금액:";
+"ConfirmGift.paperWalletAmount" = "종이 지갑 금액";
+"ConfirmGift.processingTime" = "네트워크에서이 종이 지갑을 확인하는 데 최대 60 분이 걸릴 수 있습니다.";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "입력 한 단어가 복구 문구와 일치하지 않습니다. 다시 시도하십시오.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "모든 것이 올바르게 기록되었는지 확인하려면 복구 문구에서 다음 단어를 입력하십시오.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "단어 #%1$@";
+"CreateGift.amountLabel" = "금액 선택 ($ USD)";
+"CreateGift.create" = "창조하다";
+"CreateGift.customAmountHint" = "맞춤 금액 (최대 $ 500)";
+"CreateGift.description" = "우리는";
+"CreateGift.inputAmountError" = "선물 금액을 선택해야합니다.";
+"CreateGift.inputRecipientNameError" = "받는 사람의 이름을 입력해야합니다.";
+"CreateGift.insufficientBalanceError" = "선물을 보낼 자금이 부족합니다.";
+"CreateGift.insufficientBalanceForAmountError" = "이 금액의 선물을 보낼 수있는 자금이 부족합니다.";
+"CreateGift.recipientName" = "수령인의 이름";
+"CreateGift.serverError" = "서버 오류가 발생했습니다. 나중에 다시 시도하세요.";
+"CreateGift.subtitle" = "지갑이 없어도 누군가에게 비트 코인을 보냅니다.";
+"CreateGift.title" = "비트 코인 선물하기";
+"CreateGift.unexpectedError" = "예기치 않은 오류가 발생했습니다. 지원팀에 문의하세요.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "동의하기";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "메시지 사용불가";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "지문 인식되지 않음. 다시 시도해 주세요.";
+"ExportConfirmation.cancel" = "취소";
+"ExportConfirmation.continue" = "계속하다";
+"ExportConfirmation.message" = "이렇게하면 활성화 된 모든 지갑에서 완료된 모든 트랜잭션이 포함 된 CSV 파일이 생성됩니다.";
+"ExportConfirmation.title" = "수출 거래?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "이렇게하면 활성화 된 모든 지갑에서 완료된 모든 트랜잭션이 포함 된 CSV 파일이 생성됩니다.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "수출 송금";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "CSV 파일을 내 보내지 못했습니다. 다시 시도하십시오.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "내보내기 실패";
+/* "Export transfers header" */
+"ExportTransfers.header" = "수출 거래?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "%1$@에서 페이스 ID 지출 한도를 사용자 설정할 수 있습니다.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "Segwit 활성화";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "브레드를 사용하고 있으신가요?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "거래 내역을 CSV로 내보내기";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "페이스 ID 지출 한도";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "보상";
 /* Share anonymous data label */
 "Settings.shareData" = "익명 데이터 공유";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "위젯으로 포트폴리오 데이터 공유";
 /* Sync blockchain label */
 "Settings.sync" = "블록체인 동기화";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "데이터를 공유하시겠습니까?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "익명 데이터를 공유하시겠습니까?";
+"ShareGift.approximateTotal" = "대략적인 합계";
+"ShareGift.footerMessage1" = "청구시 총액에서 네트워크 요금이 공제됩니다.\n 실제 가치는 현재 비트 코인 가격에 따라 다릅니다.";
+"ShareGift.footerMessage2" = "iPhone 또는 Android 용 BRD 앱을 다운로드하십시오.\n 자세한 내용은 brd.com/gift를 방문하십시오.";
+"ShareGift.tagLine" = "누군가 당신에게 비트 코인을 선물했습니다!";
+"ShareGift.walletName" = "비트 코인";
+/* Button label: select a baker */
+"Staking.add" = "+ 베이커 선택";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "자유 공간";
+"Staking.changeValidator" = "변화";
+"Staking.descriptionTezos" = "Tezos 계정을 검증 자에게 위임하여 코인에 대한 완전한 보안과 제어를 유지하면서 보상을 받으세요.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "회비:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "거래 보류 중 ...";
+/* Button label: remove selected baker */
+"Staking.remove" = "삭제";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "동부 표준시. ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "XTZ 대리인 선택";
+"Staking.stake" = "말뚝";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "유효한";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "비활성";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "보류 중";
+/* Staking banner title */
+"Staking.stakingTitle" = "스테이 킹";
+"Staking.stakingTo" = "%1$s 스테이 킹";
+"Staking.statusPending" = "보류 중";
+"Staking.statusStaked" = "스테이크!";
+"Staking.subTitle" = "잡고있는 동안 돈을 버십시오";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "테 조스 & 듄";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "다중 자산 풀";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Tezos 전용";
+"Staking.title" = "%1$s 지분";
+"Staking.unstake" = "언 스테이크";
+"Staking.validatorHint" = "검증 인 주소 입력";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "복구 문구를 다시 기록";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "%1$@으로 보내기";
 /* sent to <address> */
 "Transaction.sentTo" = "%1$@으로 전송되었습니다";
+"Transaction.stakingTo" = "%1$s 스테이 킹";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "기초 잔액: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "토큰 송금 수수료: %1$@";
+"Transaction.toRecipient" = "%1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "확인 대기 중. 일부 판매자는 트랜잭션을 완료하기 위해 확인을 요구합니다. 예상 소요 시간: 1~2시간.";
 /* e.g. I received money from an account. */
@@ -1131,8 +1209,10 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas Limit";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas Price";
+"TransactionDetails.gift" = "선물";
+"TransactionDetails.giftedTo" = "%1$s 에게 선물 함";
 /* Label for Hedera Memo field on transaction details screen */
-"TransactionDetails.hederaMemo" = "Hedera Memo";
+"TransactionDetails.hederaMemo" = "헤 데라 메모";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "세부 정보 숨기기";
 /* Label showing the transaction was started (initialized) */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "%1$@(으)로부터 받는 중";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "%1$@으로 수취 중";
+"TransactionDetails.reclaim" = "개심";
+"TransactionDetails.resend" = "재전송";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@ 보냄";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "스테이 킹";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet이 이름을 BRD로 바꾸고 새롭게 단장하였으며 새로운 기능도 갖췄습니다.\n\n도움이 필요하시면 대부분 화면에서 우측 상단에 있는 (?)을(를) 클릭하십시오.";
 /* Top title of welcome screen */
 "Welcome.title" = "BRD에 환영합니다!";
+/* Single asset widget description */
+"Widget.assetDescription" = "좋아하는 암호화 자산으로 최신 상태 유지";
+/* Asset list widget description */
+"Widget.assetListDescription" = "좋아하는 암호화 자산으로 최신 상태 유지";
+/* Asset list widget title */
+"Widget.assetListTitle" = "자산 목록";
+/* Single asset widget title */
+"Widget.assetTitle" = "유산";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "시스템 자동 밝음 / 어두움";
+/* Name of color - Black */
+"Widget.Color.black" = "검정";
+/* Name of color - Blue */
+"Widget.Color.blue" = "푸른";
+/* Name of color - Gray */
+"Widget.Color.gray" = "회색";
+/* Name of color - Green */
+"Widget.Color.green" = "초록";
+/* Name of color - Orange */
+"Widget.Color.orange" = "주황색";
+/* Name of color - Pink */
+"Widget.Color.pink" = "분홍";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "일 순위";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "일 순위";
+/* Name of color - Purple */
+"Widget.Color.purple" = "보라색";
+/* Name of color - Red */
+"Widget.Color.red" = "빨간";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "중고등 학년";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "중고등 학년";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "제삼기";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "제삼기";
+/* Name of color - White */
+"Widget.Color.white" = "하얀";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "노랑";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "테마 배경색";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "기본 색상";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "통화 색상";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "시스템 색상";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "테마 텍스트 색상";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "앱에서 사용\n 선호도";
+/* Portfolio description */
+"Widget.portfolioDescription" = "포트폴리오로 최신 상태 유지";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "포트폴리오\n 요약";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "포트폴리오";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "정말 이 월렛을 삭제할까요?";
 /* Wipe wallet alert title */

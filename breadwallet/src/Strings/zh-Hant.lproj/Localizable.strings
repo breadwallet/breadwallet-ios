@@ -220,7 +220,7 @@
 /* Network Fee: (ETH) */
 "Confirmation.feeLabelETH" = "網路費用（ETH）:";
 /* Label for Hedera Memo field on transaction confirmation screen */
-"Confirmation.hederaMemo" = "Hedera Memo";
+"Confirmation.hederaMemo" = "赫德拉回憶錄";
 /* eg. Processing time: This transaction is predicted to complete in [10-60 minutes]. */
 "Confirmation.processingTime" = "處理時間：該筆交易預計在 %1$@ 後完成。";
 /* Label for "send" button on final confirmation screen */
@@ -231,12 +231,27 @@
 "Confirmation.to" = "給";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "總計：";
+"ConfirmGift.paperWalletAmount" = "紙錢包金額";
+"ConfirmGift.processingTime" = "在網絡上驗證此紙錢包可能最多需要60分鐘";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "輸入的單詞與您的恢復短語不匹配。請再試一遍。";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "為確保所有內容均正確記錄，請從您的恢復短語中輸入以下單詞。";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "字組 #%1$@";
+"CreateGift.amountLabel" = "選擇金額（美元）";
+"CreateGift.create" = "創建";
+"CreateGift.customAmountHint" = "自定義金額（最高$ 500）";
+"CreateGift.description" = "我們將創建一個所謂的";
+"CreateGift.inputAmountError" = "您必須選擇禮物金額。";
+"CreateGift.inputRecipientNameError" = "您必須輸入收件人的姓名。";
+"CreateGift.insufficientBalanceError" = "您沒有足夠的資金來發送禮物。";
+"CreateGift.insufficientBalanceForAmountError" = "您的資金不足，無法發送此數量的禮物。";
+"CreateGift.recipientName" = "收件人的名字";
+"CreateGift.serverError" = "發生服務器錯誤。請稍後再試。";
+"CreateGift.subtitle" = "即使沒有錢包，也可以將比特幣發送給某人。";
+"CreateGift.title" = "送出比特幣的禮物";
+"CreateGift.unexpectedError" = "一個意料之外的問題發生了。請聯繫支持。";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "同意";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "無法使用傳訊";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "指紋無法識別。請再試一次。";
+"ExportConfirmation.cancel" = "取消";
+"ExportConfirmation.continue" = "繼續";
+"ExportConfirmation.message" = "這將生成一個CSV文件，其中包括來自所有啟用的錢包的所有已完成的交易。";
+"ExportConfirmation.title" = "出口交易？";
+/* "Export transfers body" */
+"ExportTransfers.body" = "這將生成一個CSV文件，其中包括來自所有啟用的錢包的所有已完成的交易。";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "出口轉移";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "無法導出CSV文件，請重試。";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "導出失敗";
+/* "Export transfers header" */
+"ExportTransfers.header" = "出口交易？";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "您可由 %1$@ 自訂 Face ID 消費上限。";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "啟用 Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "您喜歡 BRD 嗎？";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "將交易記錄導出為CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID 消費上限";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "獎勵";
 /* Share anonymous data label */
 "Settings.shareData" = "分享匿名資料";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "與小部件共享投資組合數據";
 /* Sync blockchain label */
 "Settings.sync" = "與區塊鏈同步";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "分享資料？";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "分享匿名資料？";
+"ShareGift.approximateTotal" = "大約合計";
+"ShareGift.footerMessage1" = "索賠時將從總費用中扣除網絡費用。\n實際價值取決於比特幣的當前價格。";
+"ShareGift.footerMessage2" = "下載適用於iPhone或Android的BRD應用程序。\n有關更多信息，請訪問brd.com/gift";
+"ShareGift.tagLine" = "有人給了你比特幣！";
+"ShareGift.walletName" = "比特幣";
+/* Button label: select a baker */
+"Staking.add" = "+選擇貝克";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "可用空間";
+"Staking.changeValidator" = "改變";
+"Staking.descriptionTezos" = "將您的Tezos帳戶委託給驗證者以賺取獎勵，同時保持對硬幣的完全安全性和控制力。";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "費用：";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "交易待處理中...";
+/* Button label: remove selected baker */
+"Staking.remove" = "移除";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "美東時間。投資報酬率";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "選擇XTZ代表";
+"Staking.stake" = "賭注";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "積極的";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "不活躍";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "待辦的";
+/* Staking banner title */
+"Staking.stakingTitle" = "放樣";
+"Staking.stakingTo" = "下注到%1$s";
+"Staking.statusPending" = "作業中";
+"Staking.statusStaked" = "臭！";
+"Staking.subTitle" = "持有時賺錢";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "特佐斯與沙丘";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "多資產池";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "僅限Tezos";
+"Staking.title" = "賭注%1$s";
+"Staking.unstake" = "放心";
+"Staking.validatorHint" = "輸入驗證人地址";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "再次寫下恢復短語";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "正在寄送至 %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "寄送至 %1$@";
+"Transaction.stakingTo" = "下注到%1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "開始餘額：%1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "代幣傳送費用：%1$@";
+"Transaction.toRecipient" = "至%1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "正在等待確認。部分商家要求確認完成交易。預估時間：1-2 小時。";
 /* e.g. I received money from an account. */
@@ -1131,8 +1209,10 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Gas 限價";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Gas 價格";
+"TransactionDetails.gift" = "禮物";
+"TransactionDetails.giftedTo" = "送給%1$s";
 /* Label for Hedera Memo field on transaction details screen */
-"TransactionDetails.hederaMemo" = "Hedera Memo";
+"TransactionDetails.hederaMemo" = "赫德拉回憶錄";
 /* Hide Details button */
 "TransactionDetails.hideDetails" = "隱藏細節";
 /* Label showing the transaction was started (initialized) */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "正收取自 %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "正在經 %1$@ 收到";
+"TransactionDetails.reclaim" = "回收";
+"TransactionDetails.resend" = "重新發送";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "已送出 %1$@";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "放樣";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet 已經改名爲 BRD，有嶄新的面貌和一些新功能。\n\n如果需要協助，就在大部分畫面的右上角尋找(?)。";
 /* Top title of welcome screen */
 "Welcome.title" = "歡迎使用 BRD！";
+/* Single asset widget description */
+"Widget.assetDescription" = "隨時了解您最喜歡的加密資產";
+/* Asset list widget description */
+"Widget.assetListDescription" = "隨時了解您喜歡的加密資產";
+/* Asset list widget title */
+"Widget.assetListTitle" = "資產清單";
+/* Single asset widget title */
+"Widget.assetTitle" = "資產";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "系統自動亮/暗";
+/* Name of color - Black */
+"Widget.Color.black" = "黑色的";
+/* Name of color - Blue */
+"Widget.Color.blue" = "藍色";
+/* Name of color - Gray */
+"Widget.Color.gray" = "灰色的";
+/* Name of color - Green */
+"Widget.Color.green" = "綠色的";
+/* Name of color - Orange */
+"Widget.Color.orange" = "橘子";
+/* Name of color - Pink */
+"Widget.Color.pink" = "粉色的";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "基本的";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "基本的";
+/* Name of color - Purple */
+"Widget.Color.purple" = "紫色的";
+/* Name of color - Red */
+"Widget.Color.red" = "紅色的";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "次要的";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "次要的";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "第三";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "第三";
+/* Name of color - White */
+"Widget.Color.white" = "白色的";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "黃色的";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "主題背景顏色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "基本顏色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "貨幣顏色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "系統顏色";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "主題文字顏色";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "在應用程式中啟用\n優先";
+/* Portfolio description */
+"Widget.portfolioDescription" = "隨時了解您的投資組合";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "文件夾\n概括";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "文件夾";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "確定要刪除此錢包嗎？";
 /* Wipe wallet alert title */
