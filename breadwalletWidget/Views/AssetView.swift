@@ -36,7 +36,8 @@ struct AssetViewSmall: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
         
     var body: some View {
-        ZStack {
+                
+        GeometryReader { (geometry) in
             VStack {
                 HStack(alignment: .top, spacing: 2) {
                     
@@ -59,10 +60,15 @@ struct AssetViewSmall: View {
                 // Price
                 Text(viewModel.price)
                     .font(.title)
+                    .minimumScaleFactor(0.1)
                     .multilineTextAlignment(.leading)
                     .lineLimit(1)
                     .scaledToFill()
                     .foregroundColor(viewModel.textColor(in: colorScheme))
+                    .frame(
+                        maxWidth: geometry.size.width * 0.8,
+                        maxHeight: geometry.size.height * 0.16
+                    )
             }
             .padding()
         }

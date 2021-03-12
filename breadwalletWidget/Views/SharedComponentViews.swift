@@ -234,7 +234,8 @@ struct AssetDescriptionView: View {
 
 struct BetterDivider: View {
 
-    @State var color: Color
+    @State var viewModel: AssetViewModel
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
 
     var body: some View {
         GeometryReader { geometry in
@@ -242,8 +243,8 @@ struct BetterDivider: View {
                 path.move(to: .zero)
                 path.addLine(to: CGPoint(x: geometry.size.width, y: 0))
             }
-                .stroke(lineWidth: 0.33)
-                .foregroundColor(color)
+            .stroke(lineWidth: 0.33)
+            .foregroundColor(viewModel.textColor(in: colorScheme))
         }
             .padding(.all, 0)
             .frame(height: 0.33)

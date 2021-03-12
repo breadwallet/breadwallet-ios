@@ -267,21 +267,19 @@ private extension DefaultWidgetService {
                     charts: [CurrencyId: MarketChart]) -> [CurrencyId: MarketInfo] {
 
         var result = [CurrencyId: MarketInfo]()
-
-        for (currencyId, chart) in charts {
-            let currency = currencies.first(where: { $0.uid == currencyId })
-            let coinGeckoId = currency?.coinGeckoId ?? "error"
+        
+        for currency in currencies {
+            let coinGeckoId = currency.coinGeckoId ?? "error"
             let simplePrice = priceList.first(where: { $0.id == coinGeckoId})
-            let amount = widgetDataShareService?.amount(for: currencyId)
+            let amount = widgetDataShareService?.amount(for: currency.uid)
 
-            if let price = simplePrice, currency != nil {
-                result[currencyId] = MarketInfo(id: currencyId,
-                                                amount: amount,
-                                                simplePrice: price,
-                                                chart: chart)
+            if let price = simplePrice {
+                result[currency.uid] = MarketInfo(id: currency.uid,
+                                                  amount: amount,
+                                                  simplePrice: price,
+                                                  chart: charts[currency.uid])
             }
         }
-
         return result
     }
 }

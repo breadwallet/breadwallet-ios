@@ -83,7 +83,7 @@ struct AssetListGridView: View {
                 }
                 if idx < min(viewModel.assets.count - 1, singleColumnLimit - 1) {
                     if viewModel.anyAsset.showSeparators {
-                        BetterDivider(color: viewModel.anyAsset.textColor(in: colorScheme))
+                        BetterDivider(viewModel: viewModel.assets[idx])
                     }
                 }
             }
@@ -117,7 +117,7 @@ struct AssetListGridView: View {
                 }
                 if idx < count - 1 {
                     if viewModel.anyAsset.showSeparators {
-                        BetterDivider(color: viewModel.anyAsset.textColor(in: colorScheme))
+                        BetterDivider(viewModel: viewModel.assets[idx])
                     }
                 }
             }
