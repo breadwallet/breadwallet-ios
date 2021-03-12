@@ -28,7 +28,7 @@ extension MarketInfo {
     init(id: CurrencyId,
          amount: Double?,
          simplePrice: SimplePrice,
-         chart: MarketChart) {
+         chart: MarketChart?) {
         self.id = id
         self.price = simplePrice.price
         self.amount = amount
@@ -36,9 +36,9 @@ extension MarketInfo {
         self.vol24hr = simplePrice.vol24hr
         self.change24hr = simplePrice.change24hr
         self.lastUpdatedAt = simplePrice.lastUpdatedAt
-        self.candles = chart.dataPoints.map {
+        self.candles = chart?.dataPoints.map {
             .init(uniformPrice: $0.price.float, timestamp: $0.timestamp)
-        }
+        } ?? []
     }
 }
 

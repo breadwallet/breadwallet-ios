@@ -48,7 +48,8 @@ enum WidgetFormatter {
             return nil
         }
 
-        return locale.object(forKey: NSLocale.Key.currencySymbol) as? String
+        let symbol = locale.object(forKey: NSLocale.Key.currencySymbol) as? String
+        return (symbol?.contains("$") ?? false) ? "$" : symbol
     }
 
     static func localeByCurrencyCode(_ currencyCode: String) -> NSLocale? {
