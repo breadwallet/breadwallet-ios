@@ -134,7 +134,7 @@ extension DateFormatter {
 
     static let mediumDateFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.setLocalizedDateFormatFromTemplate("MMM d, YYYY")
+        df.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
         return df
     }()
 }
