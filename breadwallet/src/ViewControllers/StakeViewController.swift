@@ -114,8 +114,8 @@ class StakeViewController: UIViewController, Subscriber, Trackable, ModalPresent
     }
     
     private func setInitialData() {
-        titleLabel.text = S.Staking.modalHeadline
-        caption.text = S.Staking.modalBody
+        titleLabel.text = S.Staking.subTitle
+        caption.text = S.Staking.descriptionTezos
         titleLabel.textAlignment = .center
         caption.textAlignment = .center
         caption.numberOfLines = 0
