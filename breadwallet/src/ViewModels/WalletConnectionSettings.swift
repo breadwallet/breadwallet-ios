@@ -31,7 +31,7 @@ class WalletConnectionSettings {
         assert(currency.tokenType == .native)
         switch currency.uid {
         case Currencies.btc.uid:
-            return .p2p_only
+            return .api_only
         case Currencies.bch.uid:
             return .api_only
         case Currencies.eth.uid:

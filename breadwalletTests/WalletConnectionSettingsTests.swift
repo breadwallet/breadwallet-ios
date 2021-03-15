@@ -42,7 +42,7 @@ class WalletConnectionSettingsTests: XCTestCase {
         guard let kv = client?.kv else { XCTFail("KV store should exist"); return }
         let walletInfo = WalletInfo(name: "Test") // empty WalletInfo with no saved modes
         let settings = WalletConnectionSettings(system: system, kvStore: kv, walletInfo: walletInfo)
-        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .p2p_only,
+        let expectedDefaultModes: [AppCurrency: WalletManagerMode] = [TestCurrencies.btc: .api_only,
                                                                       TestCurrencies.bch: .api_only,
                                                                       TestCurrencies.eth: .api_only]
 

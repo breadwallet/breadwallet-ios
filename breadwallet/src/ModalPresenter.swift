@@ -171,21 +171,25 @@ class ModalPresenter: Subscriber, Trackable {
         }
         
         Store.subscribe(self, name: .handleGift(URL(string: "foo.com")!)) { [weak self] in
-            guard let trigger = $0 else { return }
+            guard let trigger = $0, let `self` = self else { return }
             if case let .handleGift(url) = trigger {
                 if let gift = QRCode(url: url, viewModel: nil) {
-                    self?.handleGift(qrCode: gift)
+                    let eventName = self.makeEventName([EventContext.gift.name, Event.redeem.name])
+                    self.saveEvent(eventName, attributes: ["\(eventName).method": "link"])
+                    self.handleGift(qrCode: gift)
                 }
             }
         }
         
         Store.subscribe(self, name: .reImportGift(nil)) { [weak self] in
-            guard let trigger = $0 else { return }
+            guard let trigger = $0, let `self` = self else { return }
             if case let .reImportGift(viewModel) = trigger {
                 guard let gift = viewModel?.gift else { return assertionFailure() }
                 let code = QRCode(url: URL(string: gift.url!)!, viewModel: viewModel)
                 guard let wallet = Currencies.btc.instance?.wallet else { return assertionFailure() }
-                self?.presentKeyImport(wallet: wallet, scanResult: code)
+                let eventName = self.makeEventName([EventContext.gift.name, Event.redeem.name])
+                self.saveEvent(eventName, attributes: ["\(eventName).method": "reclaim"])
+                self.presentKeyImport(wallet: wallet, scanResult: code)
             }
         }
     }
@@ -417,6 +421,8 @@ class ModalPresenter: Subscriber, Trackable {
             case .invalid:
                 break
             case .gift:
+                let eventName = makeEventName([EventContext.gift.name, Event.redeem.name])
+                saveEvent(eventName, attributes: ["\(eventName).method": "scan"])
                 self.handleGift(qrCode: scanResult)
             }
         }
