@@ -60,32 +60,56 @@ struct E {
             return false
         #endif
     }()
-    
+        
     static var isIPhone4: Bool {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         return UIApplication.shared.keyWindow?.bounds.height == 480.0
+        #endif
     }
     
     static var isIPhone5: Bool {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         let bounds = UIApplication.shared.keyWindow?.bounds
         return bounds?.width == 320 && bounds?.height == 568
+        #endif
     }
     
     static var isIPhone6: Bool {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         let bounds = UIApplication.shared.keyWindow?.bounds
         return bounds?.width == 375 && bounds?.height == 667
+        #endif
     }
     
     static let isIPhoneX: Bool = {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         return (UIScreen.main.bounds.size.height == 812.0) || (UIScreen.main.bounds.size.height == 896.0)
+        #endif
     }()
     
     static var isIPhone6OrSmaller: Bool {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         return isIPhone6 || isIPhone5 || isIPhone4
+        #endif
     }
     
     static var isSmallScreen: Bool {
+        #if IS_EXTENSION_ENVIRONMENT
+        return false
+        #else
         let bounds = UIApplication.shared.keyWindow?.bounds
         return bounds?.width == 320
+        #endif
     }
     
     static let osVersion: String = {

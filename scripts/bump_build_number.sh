@@ -23,6 +23,8 @@ xcodeproj="breadwallet.xcodeproj"
 # the first plist will be used as the source of the current build/version number
 plists=(
         "breadwallet/Info.plist"
+        "breadwalletWidget/Info.plist"
+        "breadwalletIntentHandler/Info.plist "
         #"breadwallet WatchKit App/Info.plist"
         #"breadwallet WatchKit Extension/Info.plist"
         #"MessagesExtension/Info.plist"

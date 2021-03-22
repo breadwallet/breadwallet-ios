@@ -114,6 +114,7 @@ class Currency: CurrencyWithIcon {
         if isBitcoinCash {
             return E.isTestnet ? ["bchtest"] : ["bitcoincash"]
         }
+
         if isEthereumCompatible {
             return ["ethereum"]
         }
@@ -174,15 +175,6 @@ class Currency: CurrencyWithIcon {
             return "0.0.39768"
         }
         return nil
-    }
-    
-    var shouldHideChart: Bool {
-        //AVM and EUR.AVM don't have real exchange rates, so we hide the chart
-        if uid == "ethereum-mainnet:0xF01Cd2f1c9E42c509d309aC8C5b29B6dA8E64b1a" ||
-            uid == "ethereum-mainnet:0x74004a7227615fb52b82d17ffabfa376907d8a4d" {
-            return true
-        }
-        return false
     }
 
     /// Returns a transfer URI with the given address
@@ -501,6 +493,7 @@ enum Currencies: String, CaseIterable {
     case xrp
     case hbar
     case xtz
+    case usdc
     
     var code: String { return rawValue }
     var uid: CurrencyId {
@@ -522,6 +515,8 @@ enum Currencies: String, CaseIterable {
             uids = "hedera-mainnet:__native__"
         case .xtz:
             uids = "tezos-mainnet:__native__"
+        case .usdc:
+            uids = "ethereum-mainnet:0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         }
         return CurrencyId(rawValue: uids)
     }

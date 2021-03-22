@@ -111,6 +111,9 @@ class ApplicationController: Subscriber, Trackable {
         })
         
         Store.subscribe(self, name: .didWipeWallet) { [unowned self] _ in
+            if let modalPresenter = self.modalPresenter {
+                Store.unsubscribe(modalPresenter)
+            }
             self.modalPresenter = nil
             self.rootNavigationController?.viewControllers = []
             
@@ -398,7 +401,8 @@ class ApplicationController: Subscriber, Trackable {
     
     /// Creates an instance of the home screen. This may be invoked from StartFlowPresenter.presentOnboardingFlow().
     private func createHomeScreen(navigationController: UINavigationController) -> HomeScreenViewController {
-        let homeScreen = HomeScreenViewController(walletAuthenticator: keyStore as WalletAuthenticator)
+        let homeScreen = HomeScreenViewController(walletAuthenticator: keyStore as WalletAuthenticator,
+                                                  widgetDataShareService: self.coreSystem.widgetDataShareService)
         
         addHomeScreenHandlers(homeScreen: homeScreen, navigationController: navigationController)
         

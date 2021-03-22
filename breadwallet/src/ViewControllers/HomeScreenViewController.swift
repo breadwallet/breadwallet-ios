@@ -11,6 +11,7 @@ import UIKit
 class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     private let walletAuthenticator: WalletAuthenticator
+    private let widgetDataShareService: WidgetDataShareService
     private let assetList = AssetListTableView()
     private let subHeaderView = UIView()
     private let logo = UIImageView(image: UIImage(named: "LogoGradientSmall"))
@@ -70,8 +71,9 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
 
     // MARK: -
     
-    init(walletAuthenticator: WalletAuthenticator) {
+    init(walletAuthenticator: WalletAuthenticator, widgetDataShareService: WidgetDataShareService) {
         self.walletAuthenticator = walletAuthenticator
+        self.widgetDataShareService = widgetDataShareService
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -280,6 +282,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         },
                         callback: { _ in
                             self.updateTotalAssets()
+                            self.updateAmountsForWidgets()
         })
         
         // prompts
@@ -306,6 +309,7 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
             $0.wallets.count != $1.wallets.count
         }, callback: { _ in
             self.updateTotalAssets()
+            self.updateAmountsForWidgets()
         })
     }
     
@@ -321,6 +325,20 @@ class HomeScreenViewController: UIViewController, Subscriber, Trackable {
         totalAssetsNumberFormatter.currencySymbol = Store.state.orderedWallets.first?.currentRate?.currencySymbol ?? ""
         
         self.total.text = totalAssetsNumberFormatter.string(from: fiatTotal as NSDecimalNumber)
+    }
+    
+    private func updateAmountsForWidgets() {
+        let info: [CurrencyId: Double] = Store.state.wallets
+            .map { ($0, $1) }
+            .reduce(into: [CurrencyId: Double]()) {
+                if let balance = $1.1.balance {
+                    let unit = $1.1.currency.defaultUnit
+                    $0[$1.0] = balance.cryptoAmount.double(as: unit) ?? 0
+                }
+            }
+
+        widgetDataShareService.updatePortfolio(info: info)
+        widgetDataShareService.quoteCurrencyCode = Store.state.defaultCurrencyCode
     }
     
     // MARK: Actions

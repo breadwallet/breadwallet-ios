@@ -52,7 +52,6 @@
 		22E773041EE7813000397E0E /* Bonjour.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E773031EE7813000397E0E /* Bonjour.swift */; };
 		3A0063BE2509D36500C74A97 /* ExtendedTouchArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0063BD2509D36500C74A97 /* ExtendedTouchArea.swift */; };
 		3A0915CA24D8B31200CDC6A4 /* EnableKeychainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A0915C924D8B31100CDC6A4 /* EnableKeychainView.swift */; };
-		3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */ = {isa = PBXBuildFile; productRef = 3A0C6087242A5CC900F0FBC2 /* WalletKit */; };
 		3A188FEC257FF1A300957819 /* GiftCurrencyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FEB257FF1A300957819 /* GiftCurrencyCell.swift */; };
 		3A188FF82582835600957819 /* Sharing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A188FF72582835600957819 /* Sharing.swift */; };
 		3A1D416E250957A00089FE63 /* MarketDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1D416D250957A00089FE63 /* MarketDataView.swift */; };
@@ -79,7 +78,6 @@
 		3A6FD42F24E4570900068ECE /* KeyStore+CloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6FD42E24E4570900068ECE /* KeyStore+CloudBackup.swift */; };
 		3A7605F424CF6A680057C1F4 /* CloudBackupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7605F324CF6A680057C1F4 /* CloudBackupTests.swift */; };
 		3A7605F724D0BB1F0057C1F4 /* CloudBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A7605F624D0BB1F0057C1F4 /* CloudBackup.swift */; };
-		3A858B2A250A781700812B36 /* CoinGecko in Frameworks */ = {isa = PBXBuildFile; productRef = 3A858B29250A781700812B36 /* CoinGecko */; };
 		3A858B2C250A7A9300812B36 /* TxStatusIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A858B2B250A7A9300812B36 /* TxStatusIcon.swift */; };
 		3A88E1D1251533070097C3C2 /* LinkStatusCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A88E1D0251533070097C3C2 /* LinkStatusCircle.swift */; };
 		3A93890922A303800081FCF9 /* BezierView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A93890722A3037F0081FCF9 /* BezierView.swift */; };
@@ -102,6 +100,12 @@
 		3AFAD9562569F722005853E8 /* GiftingStatusUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */; };
 		3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571424E2E0BA00087527 /* UIHelpers.swift */; };
 		3AFB571724E2E10A00087527 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AFB571624E2E10A00087527 /* RadioButton.swift */; };
+		4F3AB11A25D53F4300B378DC /* ExternalAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */; };
+		4F3AB11B25D53F4300B378DC /* ExternalAPIRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */; };
+		4F3AB12325D53F5D00B378DC /* BakingBadRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */; };
+		4F3AB12425D53F5D00B378DC /* Baker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12225D53F5D00B378DC /* Baker.swift */; };
+		4F3AB12A25D58AB400B378DC /* SelectBakerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */; };
+		4F3AB13425D5E7F900B378DC /* SelectBakerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */; };
 		71014F7C2327E49400DA1373 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
 		710B036221F67888007E8A2A /* MockClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036121F67888007E8A2A /* MockClasses.swift */; };
 		710B036421F8C208007E8A2A /* AppRatingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 710B036321F8C208007E8A2A /* AppRatingManager.swift */; };
@@ -355,6 +359,78 @@
 		9AE8011521FFF81F00D5058C /* rewardsIcon-64.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */; };
 		9AE8FFF821FE64E200D5058C /* RewardsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF721FE64E200D5058C /* RewardsView.swift */; };
 		9AE8FFFA21FE6FE000D5058C /* RewardsIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */; };
+		9F00EA9325DDEED200A99218 /* brd-tokens.tar in Resources */ = {isa = PBXBuildFile; fileRef = 7CC7D8D421581C41007E1B9A /* brd-tokens.tar */; };
+		9F00EAA825DDEF7900A99218 /* ImageStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00EAA725DDEF7800A99218 /* ImageStorageService.swift */; };
+		9F00EAD025DDF28400A99218 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00EAAF25DDF15200A99218 /* Bundle+Extensions.swift */; };
+		9F00EAD725DDF28F00A99218 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00EAAF25DDF15200A99218 /* Bundle+Extensions.swift */; };
+		9F00EADE25DDF29800A99218 /* ImageStorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00EAA725DDEF7800A99218 /* ImageStorageService.swift */; };
+		9F00EAE525DDF93C00A99218 /* BRTar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9411DF61945000F0016 /* BRTar.swift */; };
+		9F00EAEC25DDF93D00A99218 /* BRTar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9A9411DF61945000F0016 /* BRTar.swift */; };
+		9F00EAF425DDFC9600A99218 /* Currency+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F00EAF325DDFC9600A99218 /* Currency+Extensions.swift */; };
+		9F0EA16425E2902700D4225E /* WidgetDataShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0EA16325E2902700D4225E /* WidgetDataShareService.swift */; };
+		9F0EA16525E2902700D4225E /* WidgetDataShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0EA16325E2902700D4225E /* WidgetDataShareService.swift */; };
+		9F0EA16C25E2904400D4225E /* WidgetDataShareService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F0EA16325E2902700D4225E /* WidgetDataShareService.swift */; };
+		9F13F5C925DDD73A0031AEC7 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
+		9F13F5D025DDD73B0031AEC7 /* fiatcurrencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 71014F7B2327E49400DA1373 /* fiatcurrencies.json */; };
+		9F2118AC25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2118AB25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift */; };
+		9F2118C025DD7D7D00ABD2C8 /* CoinGecko+Extesions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2118AB25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift */; };
+		9F2118F525DDBC6200ABD2C8 /* Formatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2118F425DDBC6200ABD2C8 /* Formatter+Extensions.swift */; };
+		9F29A99C25D5C605000FEB40 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F29A99B25D5C605000FEB40 /* Intents.framework */; };
+		9F29A99F25D5C605000FEB40 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29A99E25D5C605000FEB40 /* IntentHandler.swift */; };
+		9F29A9A325D5C605000FEB40 /* breadwalletIntentHandler.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9F29A99A25D5C605000FEB40 /* breadwalletIntentHandler.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9F29A9BB25D5C75B000FEB40 /* AssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F29A9BA25D5C75B000FEB40 /* AssetView.swift */; };
+		9F29A9CF25D5C8AD000FEB40 /* BreadwalletWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9FB0CA1625D5AD180057DD11 /* BreadwalletWidget.intentdefinition */; };
+		9F3C301725DA841100C7C398 /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* currencies.json */; };
+		9F3C301E25DA841100C7C398 /* currencies.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C54FF9D21658669007BF3EF /* currencies.json */; };
+		9F3C302525DA8B2F00C7C398 /* WidgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9FAF7625D5D0140014F729 /* WidgetService.swift */; };
+		9F3C305625DA902E00C7C398 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C305525DA902E00C7C398 /* Currency.swift */; };
+		9F3C305725DA902E00C7C398 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C305525DA902E00C7C398 /* Currency.swift */; };
+		9F3C307125DA926800C7C398 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF292F1EF9D76F005C330A /* Environment.swift */; };
+		9F3C307825DA926800C7C398 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEBF292F1EF9D76F005C330A /* Environment.swift */; };
+		9F3C307F25DA929600C7C398 /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEA35D4232A9D1200FB58C4 /* Identifier.swift */; };
+		9F3C308625DA929600C7C398 /* Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CEA35D4232A9D1200FB58C4 /* Identifier.swift */; };
+		9F3C308D25DA94C400C7C398 /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
+		9F3C309425DA94C600C7C398 /* UIColor+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE20C8FB1DBB0F3A00C8397A /* UIColor+BRWAdditions.swift */; };
+		9F3C309B25DA951200C7C398 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3170C229C70C00088F97C /* Theme.swift */; };
+		9F3C30A225DA951200C7C398 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71A3170C229C70C00088F97C /* Theme.swift */; };
+		9F3C30A925DA954300C7C398 /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
+		9F3C30B025DA954300C7C398 /* UIFont+BRWAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA9E9F1DC2F9F50066731D /* UIFont+BRWAdditions.swift */; };
+		9F3C311B25DAC14900C7C398 /* Numeric+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55325D5B79D00E42BE3 /* Numeric+Extensions.swift */; };
+		9F3C313E25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C313B25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift */; };
+		9F3C313F25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C313B25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift */; };
+		9F3C314725DACF1300C7C398 /* AssetListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C314625DACF1300C7C398 /* AssetListViewModel.swift */; };
+		9F3C315725DACF3300C7C398 /* PortfolioView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C315525DACF3300C7C398 /* PortfolioView.swift */; };
+		9F3C315825DACF3300C7C398 /* AssetListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C315625DACF3300C7C398 /* AssetListView.swift */; };
+		9F3C316C25DACFF000C7C398 /* LogoStyle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3C316B25DACFF000C7C398 /* LogoStyle+Extensions.swift */; };
+		9F9F89E025D7E202004AC3C3 /* MinimalistAssetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9F89DF25D7E202004AC3C3 /* MinimalistAssetView.swift */; };
+		9F9FAF7725D5D0140014F729 /* WidgetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F9FAF7625D5D0140014F729 /* WidgetService.swift */; };
+		9FB0CA1125D5AD180057DD11 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FB0CA1025D5AD180057DD11 /* WidgetKit.framework */; };
+		9FB0CA1225D5AD180057DD11 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3ABD8D0D24E1CF1500EC4C91 /* SwiftUI.framework */; };
+		9FB0CA1525D5AD180057DD11 /* BreadwalletWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FB0CA1425D5AD180057DD11 /* BreadwalletWidget.swift */; };
+		9FB0CA1825D5AD190057DD11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9FB0CA1725D5AD190057DD11 /* Assets.xcassets */; };
+		9FB0CA1A25D5AD190057DD11 /* BreadwalletWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9FB0CA1625D5AD180057DD11 /* BreadwalletWidget.intentdefinition */; };
+		9FB0CA1B25D5AD190057DD11 /* BreadwalletWidget.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 9FB0CA1625D5AD180057DD11 /* BreadwalletWidget.intentdefinition */; };
+		9FB0CA1E25D5AD190057DD11 /* breadwalletWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 9FB0CA0F25D5AD180057DD11 /* breadwalletWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9FBF66BD25D5F1AB007F172D /* AssetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FBF66BC25D5F1AB007F172D /* AssetViewModel.swift */; };
+		9FD519D525E310D300F9D856 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
+		9FD519DC25E310D800F9D856 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE20C371EA5B4680086F724 /* Strings.swift */; };
+		9FD519E325E3185F00F9D856 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE29901C1EFD6DE50093A0F2 /* Localizable.strings */; };
+		9FD519E425E3185F00F9D856 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE29901C1EFD6DE50093A0F2 /* Localizable.strings */; };
+		9FDDE55725D5B79D00E42BE3 /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55025D5B79D00E42BE3 /* Date+Extension.swift */; };
+		9FDDE55825D5B79D00E42BE3 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55125D5B79D00E42BE3 /* String+Extensions.swift */; };
+		9FDDE55925D5B79D00E42BE3 /* CGTypes+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55225D5B79D00E42BE3 /* CGTypes+Extensions.swift */; };
+		9FDDE55A25D5B79D00E42BE3 /* Numeric+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55325D5B79D00E42BE3 /* Numeric+Extensions.swift */; };
+		9FDDE55B25D5B79D00E42BE3 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55525D5B79D00E42BE3 /* ChartView.swift */; };
+		9FDDE55C25D5B79D00E42BE3 /* ChartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE55625D5B79D00E42BE3 /* ChartViewModel.swift */; };
+		9FDDE57225D5B82A00E42BE3 /* AssetWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE57125D5B82A00E42BE3 /* AssetWidget.swift */; };
+		9FDDE57925D5B85000E42BE3 /* AssetListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE57825D5B85000E42BE3 /* AssetListWidget.swift */; };
+		9FDDE58C25D5B88F00E42BE3 /* PortfolioWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FDDE58B25D5B88F00E42BE3 /* PortfolioWidget.swift */; };
+		9FDDE5AC25D5B96000E42BE3 /* mock-candles.json in Resources */ = {isa = PBXBuildFile; fileRef = 9FDDE5AB25D5B96000E42BE3 /* mock-candles.json */; };
+		A243915E84E4AA2AE09D687F /* SharedComponentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2439874424CF77054369327 /* SharedComponentViews.swift */; };
+		A24391B09865778F327FD609 /* PortfolioViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243907548F9B61AEED41A04 /* PortfolioViewModel.swift */; };
+		A24395E9DFDD64D08DDC45B4 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243988A5DA12A405BFEB9F6 /* Configuration.swift */; };
+		A243978083345DAFD36DA7A4 /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24399A172C828ECD708E17D /* MarketInfo.swift */; };
+		A2439D019C08106D6E14D70A /* MarketInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = A24399A172C828ECD708E17D /* MarketInfo.swift */; };
 		CE0822641FCD1BD100EF371D /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */; };
 		CE0822661FCE059A00EF371D /* HomeScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0822651FCE059A00EF371D /* HomeScreenCell.swift */; };
 		CE0BC980215ACBE100E68B2B /* TokenImageNoBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */; };
@@ -560,6 +636,20 @@
 			remoteGlobalIDString = 75A2A78F1DA5934300A983D8;
 			remoteInfo = breadwallet;
 		};
+		9F29A9A125D5C605000FEB40 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9F29A99925D5C605000FEB40;
+			remoteInfo = breadwalletIntentHandler;
+		};
+		9FB0CA1C25D5AD190057DD11 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9FB0CA0E25D5AD180057DD11;
+			remoteInfo = breadwalletWidgetExtension;
+		};
 		CEA7E6801F09A9D2001F8C27 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 75A2A7881DA5934300A983D8 /* Project object */;
@@ -607,6 +697,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				9FB0CA1E25D5AD190057DD11 /* breadwalletWidgetExtension.appex in Embed App Extensions */,
+				9F29A9A325D5C605000FEB40 /* breadwalletIntentHandler.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -712,6 +804,12 @@
 		3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftingStatusUpdater.swift; path = src/Gifting/GiftingStatusUpdater.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
+		4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalAPIClient.swift; path = src/ExternalAPIClient/ExternalAPIClient.swift; sourceTree = "<group>"; };
+		4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExternalAPIRequest.swift; path = src/ExternalAPIClient/ExternalAPIRequest.swift; sourceTree = "<group>"; };
+		4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BakingBadRequest.swift; path = src/ExternalAPIClient/BakingBad/BakingBadRequest.swift; sourceTree = "<group>"; };
+		4F3AB12225D53F5D00B378DC /* Baker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Baker.swift; path = src/ExternalAPIClient/BakingBad/Baker.swift; sourceTree = "<group>"; };
+		4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SelectBakerViewController.swift; path = src/ViewControllers/SelectBakerViewController.swift; sourceTree = "<group>"; };
+		4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SelectBakerCell.swift; path = src/ViewControllers/SelectBakerCell.swift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		710B036321F8C208007E8A2A /* AppRatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRatingManager.swift; path = src/Utilities/AppRatingManager.swift; sourceTree = "<group>"; };
@@ -979,6 +1077,47 @@
 		9AE800CF21FFF81F00D5058C /* rewardsIcon-64.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; name = "rewardsIcon-64.gif"; path = "src/Views/AnimatedIcons/Rewards Icon Frames/rewardsIcon-64.gif"; sourceTree = "<group>"; };
 		9AE8FFF721FE64E200D5058C /* RewardsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsView.swift; path = src/Views/RewardsView.swift; sourceTree = "<group>"; };
 		9AE8FFF921FE6FE000D5058C /* RewardsIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RewardsIconView.swift; path = src/Views/AnimatedIcons/RewardsIconView.swift; sourceTree = "<group>"; };
+		9F00EAA725DDEF7800A99218 /* ImageStorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorageService.swift; sourceTree = "<group>"; };
+		9F00EAAF25DDF15200A99218 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
+		9F00EAF325DDFC9600A99218 /* Currency+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Currency+Extensions.swift"; sourceTree = "<group>"; };
+		9F0EA16325E2902700D4225E /* WidgetDataShareService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataShareService.swift; sourceTree = "<group>"; };
+		9F0EA17325E29DC500D4225E /* breadwalletWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = breadwalletWidgetExtension.entitlements; sourceTree = "<group>"; };
+		9F2118AB25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoinGecko+Extesions.swift"; sourceTree = "<group>"; };
+		9F2118F425DDBC6200ABD2C8 /* Formatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Formatter+Extensions.swift"; sourceTree = "<group>"; };
+		9F29A99A25D5C605000FEB40 /* breadwalletIntentHandler.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = breadwalletIntentHandler.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9F29A99B25D5C605000FEB40 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
+		9F29A99E25D5C605000FEB40 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
+		9F29A9A025D5C605000FEB40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9F29A9BA25D5C75B000FEB40 /* AssetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetView.swift; sourceTree = "<group>"; };
+		9F3C305525DA902E00C7C398 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
+		9F3C313B25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ColorOption+ExtensionUI.swift"; sourceTree = "<group>"; };
+		9F3C314625DACF1300C7C398 /* AssetListViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetListViewModel.swift; sourceTree = "<group>"; };
+		9F3C315525DACF3300C7C398 /* PortfolioView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioView.swift; sourceTree = "<group>"; };
+		9F3C315625DACF3300C7C398 /* AssetListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetListView.swift; sourceTree = "<group>"; };
+		9F3C316B25DACFF000C7C398 /* LogoStyle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LogoStyle+Extensions.swift"; sourceTree = "<group>"; };
+		9F9F89DF25D7E202004AC3C3 /* MinimalistAssetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MinimalistAssetView.swift; sourceTree = "<group>"; };
+		9F9FAF7625D5D0140014F729 /* WidgetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetService.swift; sourceTree = "<group>"; };
+		9FB0CA0F25D5AD180057DD11 /* breadwalletWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = breadwalletWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FB0CA1025D5AD180057DD11 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		9FB0CA1425D5AD180057DD11 /* BreadwalletWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreadwalletWidget.swift; sourceTree = "<group>"; };
+		9FB0CA1625D5AD180057DD11 /* BreadwalletWidget.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = BreadwalletWidget.intentdefinition; sourceTree = "<group>"; };
+		9FB0CA1725D5AD190057DD11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9FB0CA1925D5AD190057DD11 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9FBF66BC25D5F1AB007F172D /* AssetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetViewModel.swift; sourceTree = "<group>"; };
+		9FDDE55025D5B79D00E42BE3 /* Date+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		9FDDE55125D5B79D00E42BE3 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		9FDDE55225D5B79D00E42BE3 /* CGTypes+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGTypes+Extensions.swift"; sourceTree = "<group>"; };
+		9FDDE55325D5B79D00E42BE3 /* Numeric+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Numeric+Extensions.swift"; sourceTree = "<group>"; };
+		9FDDE55525D5B79D00E42BE3 /* ChartView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
+		9FDDE55625D5B79D00E42BE3 /* ChartViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewModel.swift; sourceTree = "<group>"; };
+		9FDDE57125D5B82A00E42BE3 /* AssetWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetWidget.swift; sourceTree = "<group>"; };
+		9FDDE57825D5B85000E42BE3 /* AssetListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetListWidget.swift; sourceTree = "<group>"; };
+		9FDDE58B25D5B88F00E42BE3 /* PortfolioWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioWidget.swift; sourceTree = "<group>"; };
+		9FDDE5AB25D5B96000E42BE3 /* mock-candles.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "mock-candles.json"; sourceTree = "<group>"; };
+		A243907548F9B61AEED41A04 /* PortfolioViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioViewModel.swift; sourceTree = "<group>"; };
+		A2439874424CF77054369327 /* SharedComponentViews.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SharedComponentViews.swift; sourceTree = "<group>"; };
+		A243988A5DA12A405BFEB9F6 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		A24399A172C828ECD708E17D /* MarketInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarketInfo.swift; sourceTree = "<group>"; };
 		CE0822631FCD1BD100EF371D /* HomeScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenViewController.swift; path = src/ViewControllers/HomeScreenViewController.swift; sourceTree = "<group>"; };
 		CE0822651FCE059A00EF371D /* HomeScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HomeScreenCell.swift; path = src/Views/HomeScreenCell.swift; sourceTree = "<group>"; };
 		CE0BC97F215ACBE100E68B2B /* TokenImageNoBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TokenImageNoBackground.swift; path = src/Views/TokenImageNoBackground.swift; sourceTree = "<group>"; };
@@ -1199,11 +1338,9 @@
 				3ABD8D1B24E1CF1500EC4C91 /* SwiftUI.framework in Frameworks */,
 				7CBC6B2E21751ECA00899AFB /* iAd.framework in Frameworks */,
 				22A9A9661DF61FEE000F0016 /* WebKit.framework in Frameworks */,
-				3A0C6088242A5CC900F0FBC2 /* WalletKit in Frameworks */,
 				22A9A9641DF61FE7000F0016 /* Security.framework in Frameworks */,
 				22A9A9621DF61FE0000F0016 /* SystemConfiguration.framework in Frameworks */,
 				22A9A9601DF61FD8000F0016 /* CoreLocation.framework in Frameworks */,
-				3A858B2A250A781700812B36 /* CoinGecko in Frameworks */,
 				22A9A95E1DF61FD0000F0016 /* PushKit.framework in Frameworks */,
 				22717B062315D3E300F77F4E /* CloudKit.framework in Frameworks */,
 				223DB21B1DF69F0F0076A151 /* libbz2.framework in Frameworks */,
@@ -1221,6 +1358,23 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9F29A99725D5C605000FEB40 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F29A99C25D5C605000FEB40 /* Intents.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FB0CA0C25D5AD180057DD11 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FB0CA1225D5AD180057DD11 /* SwiftUI.framework in Frameworks */,
+				9FB0CA1125D5AD180057DD11 /* WidgetKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1313,6 +1467,8 @@
 			children = (
 				3A529E4B253B957200BD0A17 /* StakingCell.swift */,
 				3A529E5B253CAD3F00BD0A17 /* StakeViewController.swift */,
+				4F3AB12925D58AB400B378DC /* SelectBakerViewController.swift */,
+				4F3AB13325D5E7F900B378DC /* SelectBakerCell.swift */,
 			);
 			name = Staking;
 			sourceTree = "<group>";
@@ -1403,6 +1559,25 @@
 			name = Gifting;
 			sourceTree = "<group>";
 		};
+		4F3AB11725D53F0000B378DC /* ExternalAPIClient */ = {
+			isa = PBXGroup;
+			children = (
+				4F3AB12025D53F4900B378DC /* BakingBad */,
+				4F3AB11825D53F4300B378DC /* ExternalAPIClient.swift */,
+				4F3AB11925D53F4300B378DC /* ExternalAPIRequest.swift */,
+			);
+			name = ExternalAPIClient;
+			sourceTree = "<group>";
+		};
+		4F3AB12025D53F4900B378DC /* BakingBad */ = {
+			isa = PBXGroup;
+			children = (
+				4F3AB12225D53F5D00B378DC /* Baker.swift */,
+				4F3AB12125D53F5D00B378DC /* BakingBadRequest.swift */,
+			);
+			name = BakingBad;
+			sourceTree = "<group>";
+		};
 		710B035B21F6603C007E8A2A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1479,6 +1654,8 @@
 				75A2A7921DA5934300A983D8 /* breadwallet */,
 				75A2A7A71DA5934300A983D8 /* breadwalletTests */,
 				75A2A7B21DA5934300A983D8 /* breadwalletUITests */,
+				9FB0CA1325D5AD180057DD11 /* breadwalletWidget */,
+				9F29A99D25D5C605000FEB40 /* breadwalletIntentHandler */,
 				75B6F52F1DA71DCC0031A93F /* Modules */,
 				CEA7E67C1F09A9D2001F8C27 /* Screenshots */,
 				75A2A7F11DA5935F00A983D8 /* Frameworks */,
@@ -1494,6 +1671,8 @@
 				75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */,
 				22A9A9961DF63426000F0016 /* libbz2.framework */,
 				CEA7E67B1F09A9D2001F8C27 /* Screenshots.xctest */,
+				9FB0CA0F25D5AD180057DD11 /* breadwalletWidgetExtension.appex */,
+				9F29A99A25D5C605000FEB40 /* breadwalletIntentHandler.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1525,6 +1704,7 @@
 				3A7605F524D0BB0E0057C1F4 /* CloudBackup */,
 				CEE20C321EA5B2EC0086F724 /* Constants */,
 				CE20C8F01DBAF6E100C8397A /* Extensions */,
+				4F3AB11725D53F0000B378DC /* ExternalAPIClient */,
 				CE20C90A1DBC59C500C8397A /* FlowControllers */,
 				CEAA9E9C1DC2F8270066731D /* Fonts */,
 				75A2A79C1DA5934300A983D8 /* LaunchScreen.storyboard */,
@@ -1605,6 +1785,8 @@
 				22A9A9631DF61FE7000F0016 /* Security.framework */,
 				22A9A9611DF61FE0000F0016 /* SystemConfiguration.framework */,
 				22A9A9651DF61FEE000F0016 /* WebKit.framework */,
+				9FB0CA1025D5AD180057DD11 /* WidgetKit.framework */,
+				9F29A99B25D5C605000FEB40 /* Intents.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1816,6 +1998,113 @@
 				9AE800C621FFF81C00D5058C /* rewardsIcon-70.gif */,
 			);
 			name = "Rewards Icon Frames";
+			sourceTree = "<group>";
+		};
+		9F29A99D25D5C605000FEB40 /* breadwalletIntentHandler */ = {
+			isa = PBXGroup;
+			children = (
+				9F29A99E25D5C605000FEB40 /* IntentHandler.swift */,
+				9F29A9A025D5C605000FEB40 /* Info.plist */,
+			);
+			path = breadwalletIntentHandler;
+			sourceTree = "<group>";
+		};
+		9F29A9B925D5C723000FEB40 /* Widgets */ = {
+			isa = PBXGroup;
+			children = (
+				9FDDE57125D5B82A00E42BE3 /* AssetWidget.swift */,
+				9FDDE57825D5B85000E42BE3 /* AssetListWidget.swift */,
+				9FDDE58B25D5B88F00E42BE3 /* PortfolioWidget.swift */,
+			);
+			path = Widgets;
+			sourceTree = "<group>";
+		};
+		9F29A9C825D5C760000FEB40 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9FDDE55425D5B79D00E42BE3 /* ChartView */,
+				9F29A9BA25D5C75B000FEB40 /* AssetView.swift */,
+				9F3C315625DACF3300C7C398 /* AssetListView.swift */,
+				9F3C315525DACF3300C7C398 /* PortfolioView.swift */,
+				9F9F89DF25D7E202004AC3C3 /* MinimalistAssetView.swift */,
+				A2439874424CF77054369327 /* SharedComponentViews.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		9F3C306425DA903400C7C398 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9F3C305525DA902E00C7C398 /* Currency.swift */,
+				A24399A172C828ECD708E17D /* MarketInfo.swift */,
+				A243988A5DA12A405BFEB9F6 /* Configuration.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9F9FAF8625D5D02E0014F729 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				9F9FAF7625D5D0140014F729 /* WidgetService.swift */,
+				9F00EAA725DDEF7800A99218 /* ImageStorageService.swift */,
+				9F0EA16325E2902700D4225E /* WidgetDataShareService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9FB0CA1325D5AD180057DD11 /* breadwalletWidget */ = {
+			isa = PBXGroup;
+			children = (
+				9F3C306425DA903400C7C398 /* Model */,
+				9F9FAF8625D5D02E0014F729 /* Services */,
+				9FDDE54F25D5B79D00E42BE3 /* Extensions */,
+				9FBF66C425D5F1AF007F172D /* ViewModels */,
+				9F29A9C825D5C760000FEB40 /* Views */,
+				9F29A9B925D5C723000FEB40 /* Widgets */,
+				9FB0CA1425D5AD180057DD11 /* BreadwalletWidget.swift */,
+				9FB0CA1625D5AD180057DD11 /* BreadwalletWidget.intentdefinition */,
+				9F0EA17325E29DC500D4225E /* breadwalletWidgetExtension.entitlements */,
+				9FB0CA1725D5AD190057DD11 /* Assets.xcassets */,
+				9FB0CA1925D5AD190057DD11 /* Info.plist */,
+				9FDDE5AB25D5B96000E42BE3 /* mock-candles.json */,
+			);
+			path = breadwalletWidget;
+			sourceTree = "<group>";
+		};
+		9FBF66C425D5F1AF007F172D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				9FBF66BC25D5F1AB007F172D /* AssetViewModel.swift */,
+				9F3C314625DACF1300C7C398 /* AssetListViewModel.swift */,
+				A243907548F9B61AEED41A04 /* PortfolioViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		9FDDE54F25D5B79D00E42BE3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9FDDE55025D5B79D00E42BE3 /* Date+Extension.swift */,
+				9FDDE55125D5B79D00E42BE3 /* String+Extensions.swift */,
+				9FDDE55325D5B79D00E42BE3 /* Numeric+Extensions.swift */,
+				9FDDE55225D5B79D00E42BE3 /* CGTypes+Extensions.swift */,
+				9F3C313B25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift */,
+				9F3C316B25DACFF000C7C398 /* LogoStyle+Extensions.swift */,
+				9F2118AB25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift */,
+				9F2118F425DDBC6200ABD2C8 /* Formatter+Extensions.swift */,
+				9F00EAAF25DDF15200A99218 /* Bundle+Extensions.swift */,
+				9F00EAF325DDFC9600A99218 /* Currency+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9FDDE55425D5B79D00E42BE3 /* ChartView */ = {
+			isa = PBXGroup;
+			children = (
+				9FDDE55525D5B79D00E42BE3 /* ChartView.swift */,
+				9FDDE55625D5B79D00E42BE3 /* ChartViewModel.swift */,
+			);
+			path = ChartView;
 			sourceTree = "<group>";
 		};
 		CE1E5F241EF081F300BD0F72 /* Import */ = {
@@ -2314,11 +2603,13 @@
 			);
 			dependencies = (
 				22A9A99C1DF63426000F0016 /* PBXTargetDependency */,
+				9FB0CA1D25D5AD190057DD11 /* PBXTargetDependency */,
+				9F29A9A225D5C605000FEB40 /* PBXTargetDependency */,
 			);
 			name = breadwallet;
 			packageProductDependencies = (
-				3A0C6087242A5CC900F0FBC2 /* WalletKit */,
-				3A858B29250A781700812B36 /* CoinGecko */,
+				3A0C6087242A5CC900F0FBC2,
+				3A858B29250A781700812B36,
 			);
 			productName = breadwallet;
 			productReference = 75A2A7901DA5934300A983D8 /* breadwallet.app */;
@@ -2359,6 +2650,46 @@
 			productName = breadwalletUITests;
 			productReference = 75A2A7AF1DA5934300A983D8 /* breadwalletUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		9F29A99925D5C605000FEB40 /* breadwalletIntentHandler */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9F29A9AC25D5C605000FEB40 /* Build configuration list for PBXNativeTarget "breadwalletIntentHandler" */;
+			buildPhases = (
+				9F29A99625D5C605000FEB40 /* Sources */,
+				9F29A99725D5C605000FEB40 /* Frameworks */,
+				9F29A99825D5C605000FEB40 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = breadwalletIntentHandler;
+			packageProductDependencies = (
+				9F3C2FAA25DA7F2F00C7C398,
+			);
+			productName = breadwalletIntentHandler;
+			productReference = 9F29A99A25D5C605000FEB40 /* breadwalletIntentHandler.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		9FB0CA0E25D5AD180057DD11 /* breadwalletWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9FB0CA2725D5AD190057DD11 /* Build configuration list for PBXNativeTarget "breadwalletWidgetExtension" */;
+			buildPhases = (
+				9FB0CA0B25D5AD180057DD11 /* Sources */,
+				9FB0CA0C25D5AD180057DD11 /* Frameworks */,
+				9FB0CA0D25D5AD180057DD11 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = breadwalletWidgetExtension;
+			packageProductDependencies = (
+				9F3C2FA625DA7F1C00C7C398,
+			);
+			productName = breadwalletWidgetExtension;
+			productReference = 9FB0CA0F25D5AD180057DD11 /* breadwalletWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 		CEA7E67A1F09A9D2001F8C27 /* Screenshots */ = {
 			isa = PBXNativeTarget;
@@ -2434,6 +2765,12 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = 75A2A78F1DA5934300A983D8;
 					};
+					9F29A99925D5C605000FEB40 = {
+						CreatedOnToolsVersion = 12.4;
+					};
+					9FB0CA0E25D5AD180057DD11 = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					CEA7E67A1F09A9D2001F8C27 = {
 						CreatedOnToolsVersion = 8.3.3;
 						LastSwiftMigration = 1020;
@@ -2465,7 +2802,7 @@
 			);
 			mainGroup = 75A2A7871DA5934300A983D8;
 			packageReferences = (
-				3A858B28250A781700812B36 /* XCRemoteSwiftPackageReference "coingecko" */,
+				3A858B28250A781700812B36,
 			);
 			productRefGroup = 75A2A7911DA5934300A983D8 /* Products */;
 			projectDirPath = "";
@@ -2477,6 +2814,8 @@
 				759DA0D71DAC8668008CC49B /* submodules */,
 				22A9A9951DF63426000F0016 /* libbz2 */,
 				CEA7E67A1F09A9D2001F8C27 /* Screenshots */,
+				9FB0CA0E25D5AD180057DD11 /* breadwalletWidgetExtension */,
+				9F29A99925D5C605000FEB40 /* breadwalletIntentHandler */,
 			);
 		};
 /* End PBXProject section */
@@ -2690,6 +3029,29 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9F29A99825D5C605000FEB40 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F13F5D025DDD73B0031AEC7 /* fiatcurrencies.json in Resources */,
+				9FD519E425E3185F00F9D856 /* Localizable.strings in Resources */,
+				9F3C301E25DA841100C7C398 /* currencies.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FB0CA0D25D5AD180057DD11 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F00EA9325DDEED200A99218 /* brd-tokens.tar in Resources */,
+				9FD519E325E3185F00F9D856 /* Localizable.strings in Resources */,
+				9FDDE5AC25D5B96000E42BE3 /* mock-candles.json in Resources */,
+				9FB0CA1825D5AD190057DD11 /* Assets.xcassets in Resources */,
+				9F13F5C925DDD73A0031AEC7 /* fiatcurrencies.json in Resources */,
+				9F3C301725DA841100C7C398 /* currencies.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEA7E6791F09A9D2001F8C27 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2791,6 +3153,7 @@
 				3A5C9B2B22A5676F00C907C1 /* PriceChange.swift in Sources */,
 				CEA9178620C07FBB00F29B31 /* SyncingHeaderView.swift in Sources */,
 				CEC6AA3B1DEE4EB000EE5AFD /* CGRect+Additions.swift in Sources */,
+				4F3AB12A25D58AB400B378DC /* SelectBakerViewController.swift in Sources */,
 				E843C1172188D19000F46672 /* OnboardingViewController.swift in Sources */,
 				3A36328D225301D60043EBA4 /* PriceChangeView.swift in Sources */,
 				7C5AC8A6203B93D3001B221E /* TxListCell.swift in Sources */,
@@ -2837,6 +3200,8 @@
 				CE1D84B61EAEB2F4002A5D7B /* UIBarButtonItem+Additions.swift in Sources */,
 				CE5E6C961EB8CCF500A476DB /* SupportCenterContainer.swift in Sources */,
 				CE4B6C1A1E219CA600CF935B /* RescanCoordinator.swift in Sources */,
+				9F0EA16C25E2904400D4225E /* WidgetDataShareService.swift in Sources */,
+				9FB0CA1B25D5AD190057DD11 /* BreadwalletWidget.intentdefinition in Sources */,
 				CE6D0E5C1E14BFA700137DF1 /* KeyboardNotificationInfo.swift in Sources */,
 				CEA05CC31F21B53C00D850F0 /* FeeSelector.swift in Sources */,
 				E89C0611216A8BE70012CE0D /* GetUserEmailPromptView.swift in Sources */,
@@ -2923,11 +3288,13 @@
 				711730572204FDFB001931B3 /* HomeScreenHiglightableCell.swift in Sources */,
 				CEEC70901E95D5C100EF788E /* PushNotificationsViewController.swift in Sources */,
 				3AFB571524E2E0BA00087527 /* UIHelpers.swift in Sources */,
+				4F3AB11B25D53F4300B378DC /* ExternalAPIRequest.swift in Sources */,
 				222C42501E90492800078EB5 /* BRAPIClient+KV.swift in Sources */,
 				CE5E6C941EB7964900A476DB /* WalletDisabledView.swift in Sources */,
 				CEF3E8341DE57166007C0A9E /* AnimatableIcon.swift in Sources */,
 				CE97710B216FB50B00B9F621 /* EnableSegwitView.swift in Sources */,
 				CEF3E8321DE55540007C0A9E /* CheckView.swift in Sources */,
+				4F3AB11A25D53F4300B378DC /* ExternalAPIClient.swift in Sources */,
 				CECCE5A91E0378FB00D99448 /* PinPadViewController.swift in Sources */,
 				CEF3D2DB1E8B55C80070178E /* UISlider+Gradient.swift in Sources */,
 				CE65C66A207D41BB000C99C4 /* AssetIndex.swift in Sources */,
@@ -2946,6 +3313,7 @@
 				CEE65DF01E39056F0002994D /* Rate.swift in Sources */,
 				CEDB09331FEAA21C001AF56A /* TxDetailViewModel.swift in Sources */,
 				7CB593E122F8C8FE005A230A /* AuthenticationClient.swift in Sources */,
+				4F3AB12425D53F5D00B378DC /* Baker.swift in Sources */,
 				71988B0821EF8A0E008B8EA0 /* BRUserAgentHeaderGenerator.swift in Sources */,
 				CEE20C361EA5B4620086F724 /* Constants.swift in Sources */,
 				3A7605F724D0BB1F0057C1F4 /* CloudBackup.swift in Sources */,
@@ -3053,6 +3421,7 @@
 				CE36454C1E7B42850079D0CF /* WhiteDecimalPad.swift in Sources */,
 				CE5F21D91E4A922700C47B8E /* DismissLoginAnimator.swift in Sources */,
 				7C45481A2187E65B0002E884 /* AnyCodable.swift in Sources */,
+				4F3AB12325D53F5D00B378DC /* BakingBadRequest.swift in Sources */,
 				CECCE5A51E02408300D99448 /* UIView+FrameChangeBlocking.swift in Sources */,
 				3A3D63DC22F10B4F000DE920 /* AddWalletsViewController.swift in Sources */,
 				22A9A94F1DF61945000F0016 /* BRHTTPRouter.swift in Sources */,
@@ -3072,6 +3441,7 @@
 				713CD88A2240198A004657D4 /* RecoveryKeyIntroViewController.swift in Sources */,
 				CE6D0F971DE8B73A00BD4BCF /* ModalTransitionDelegate.swift in Sources */,
 				1B1AFFA01FB7EF7C00E61908 /* BiometricsSettingsViewController.swift in Sources */,
+				4F3AB13425D5E7F900B378DC /* SelectBakerCell.swift in Sources */,
 				3A529E5C253CAD3F00BD0A17 /* StakeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3129,6 +3499,76 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9F29A99625D5C605000FEB40 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9F3C305725DA902E00C7C398 /* Currency.swift in Sources */,
+				9F3C311B25DAC14900C7C398 /* Numeric+Extensions.swift in Sources */,
+				9F29A9CF25D5C8AD000FEB40 /* BreadwalletWidget.intentdefinition in Sources */,
+				9F2118C025DD7D7D00ABD2C8 /* CoinGecko+Extesions.swift in Sources */,
+				9F29A99F25D5C605000FEB40 /* IntentHandler.swift in Sources */,
+				9FD519DC25E310D800F9D856 /* Strings.swift in Sources */,
+				9F3C307825DA926800C7C398 /* Environment.swift in Sources */,
+				9F9FAF7725D5D0140014F729 /* WidgetService.swift in Sources */,
+				9F00EAD725DDF28F00A99218 /* Bundle+Extensions.swift in Sources */,
+				9F00EADE25DDF29800A99218 /* ImageStorageService.swift in Sources */,
+				9F3C30B025DA954300C7C398 /* UIFont+BRWAdditions.swift in Sources */,
+				9F3C308625DA929600C7C398 /* Identifier.swift in Sources */,
+				9F3C30A225DA951200C7C398 /* Theme.swift in Sources */,
+				9F3C309425DA94C600C7C398 /* UIColor+BRWAdditions.swift in Sources */,
+				A243978083345DAFD36DA7A4 /* MarketInfo.swift in Sources */,
+				9F3C313F25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift in Sources */,
+				9F0EA16525E2902700D4225E /* WidgetDataShareService.swift in Sources */,
+				9F00EAEC25DDF93D00A99218 /* BRTar.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9FB0CA0B25D5AD180057DD11 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9FDDE55825D5B79D00E42BE3 /* String+Extensions.swift in Sources */,
+				9F3C308D25DA94C400C7C398 /* UIColor+BRWAdditions.swift in Sources */,
+				9F3C316C25DACFF000C7C398 /* LogoStyle+Extensions.swift in Sources */,
+				9F00EAD025DDF28400A99218 /* Bundle+Extensions.swift in Sources */,
+				9FDDE57225D5B82A00E42BE3 /* AssetWidget.swift in Sources */,
+				9F3C309B25DA951200C7C398 /* Theme.swift in Sources */,
+				9F2118AC25DD74EA00ABD2C8 /* CoinGecko+Extesions.swift in Sources */,
+				9FD519D525E310D300F9D856 /* Strings.swift in Sources */,
+				9FB0CA1A25D5AD190057DD11 /* BreadwalletWidget.intentdefinition in Sources */,
+				9FB0CA1525D5AD180057DD11 /* BreadwalletWidget.swift in Sources */,
+				9F3C302525DA8B2F00C7C398 /* WidgetService.swift in Sources */,
+				9F3C315725DACF3300C7C398 /* PortfolioView.swift in Sources */,
+				9FDDE55B25D5B79D00E42BE3 /* ChartView.swift in Sources */,
+				9F3C315825DACF3300C7C398 /* AssetListView.swift in Sources */,
+				9F29A9BB25D5C75B000FEB40 /* AssetView.swift in Sources */,
+				9F3C314725DACF1300C7C398 /* AssetListViewModel.swift in Sources */,
+				9F9F89E025D7E202004AC3C3 /* MinimalistAssetView.swift in Sources */,
+				9FBF66BD25D5F1AB007F172D /* AssetViewModel.swift in Sources */,
+				9F3C307125DA926800C7C398 /* Environment.swift in Sources */,
+				9F0EA16425E2902700D4225E /* WidgetDataShareService.swift in Sources */,
+				9F2118F525DDBC6200ABD2C8 /* Formatter+Extensions.swift in Sources */,
+				9F3C307F25DA929600C7C398 /* Identifier.swift in Sources */,
+				9FDDE55725D5B79D00E42BE3 /* Date+Extension.swift in Sources */,
+				9F3C305625DA902E00C7C398 /* Currency.swift in Sources */,
+				9FDDE55C25D5B79D00E42BE3 /* ChartViewModel.swift in Sources */,
+				9FDDE58C25D5B88F00E42BE3 /* PortfolioWidget.swift in Sources */,
+				9F00EAE525DDF93C00A99218 /* BRTar.swift in Sources */,
+				9FDDE55925D5B79D00E42BE3 /* CGTypes+Extensions.swift in Sources */,
+				9F00EAA825DDEF7900A99218 /* ImageStorageService.swift in Sources */,
+				9FDDE57925D5B85000E42BE3 /* AssetListWidget.swift in Sources */,
+				9FDDE55A25D5B79D00E42BE3 /* Numeric+Extensions.swift in Sources */,
+				9F3C30A925DA954300C7C398 /* UIFont+BRWAdditions.swift in Sources */,
+				9F3C313E25DACEDA00C7C398 /* ColorOption+ExtensionUI.swift in Sources */,
+				A2439D019C08106D6E14D70A /* MarketInfo.swift in Sources */,
+				A243915E84E4AA2AE09D687F /* SharedComponentViews.swift in Sources */,
+				A24391B09865778F327FD609 /* PortfolioViewModel.swift in Sources */,
+				9F00EAF425DDFC9600A99218 /* Currency+Extensions.swift in Sources */,
+				A24395E9DFDD64D08DDC45B4 /* Configuration.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CEA7E6771F09A9D2001F8C27 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3155,6 +3595,16 @@
 			isa = PBXTargetDependency;
 			target = 75A2A78F1DA5934300A983D8 /* breadwallet */;
 			targetProxy = 75A2A7B01DA5934300A983D8 /* PBXContainerItemProxy */;
+		};
+		9F29A9A225D5C605000FEB40 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9F29A99925D5C605000FEB40 /* breadwalletIntentHandler */;
+			targetProxy = 9F29A9A125D5C605000FEB40 /* PBXContainerItemProxy */;
+		};
+		9FB0CA1D25D5AD190057DD11 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9FB0CA0E25D5AD180057DD11 /* breadwalletWidgetExtension */;
+			targetProxy = 9FB0CA1C25D5AD190057DD11 /* PBXContainerItemProxy */;
 		};
 		CEA7E6811F09A9D2001F8C27 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3418,6 +3868,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = org.voisine.breadwallet;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -3452,6 +3903,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = org.voisine.breadwallet;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -3653,6 +4105,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = com.brd.internalQA;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -3857,6 +4310,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = com.brd.internalQA;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -4065,6 +4519,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = com.brd.testnetQA;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -4202,6 +4657,530 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = breadwallet;
+			};
+			name = "Release-Testnet";
+		};
+		9F29A9A425D5C605000FEB40 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9F29A9A525D5C605000FEB40 /* Debug-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG INTERNAL IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Internal";
+		};
+		9F29A9A625D5C605000FEB40 /* Debug-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Testnet";
+		};
+		9F29A9A725D5C605000FEB40 /* Screenshots */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SCREENSHOTS TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Screenshots;
+		};
+		9F29A9A825D5C605000FEB40 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = IS_EXTENSION_ENVIRONMENT;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9F29A9A925D5C605000FEB40 /* Release-Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release-Testflight";
+		};
+		9F29A9AA25D5C605000FEB40 /* Release-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT INTERNAL IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release-Internal";
+		};
+		9F29A9AB25D5C605000FEB40 /* Release-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletIntentHandler/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA.breadwalletIntentHandler;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release-Testnet";
+		};
+		9FB0CA1F25D5AD190057DD11 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = org.voisine.breadwallet;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9FB0CA2025D5AD190057DD11 /* Debug-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = com.brd.internalQA;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG INTERNAL IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Internal";
+		};
+		9FB0CA2125D5AD190057DD11 /* Debug-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = com.brd.testnetQA;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug-Testnet";
+		};
+		9FB0CA2225D5AD190057DD11 /* Screenshots */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = org.voisine.breadwallet;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG SCREENSHOTS TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Screenshots;
+		};
+		9FB0CA2325D5AD190057DD11 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = org.voisine.breadwallet;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = IS_EXTENSION_ENVIRONMENT;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9FB0CA2425D5AD190057DD11 /* Release-Testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = org.voisine.breadwallet;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = org.voisine.breadwallet.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release-Testflight";
+		};
+		9FB0CA2525D5AD190057DD11 /* Release-Internal */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = com.brd.internalQA;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.internalQA.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT INTERNAL IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Release-Internal";
+		};
+		9FB0CA2625D5AD190057DD11 /* Release-Testnet */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS_ID = com.brd.testnetQA;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = breadwalletWidget/breadwalletWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 4;
+				DEVELOPMENT_TEAM = 4R7S6N88W9;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = breadwalletWidget/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 4.7;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.brd.testnetQA.breadwalletWidget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "TESTFLIGHT TESTNET IS_EXTENSION_ENVIRONMENT";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Release-Testnet";
 		};
@@ -4349,6 +5328,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = org.voisine.breadwallet;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -4558,6 +5538,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = com.brd.testnetQA;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -4762,6 +5743,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				APP_GROUPS_ID = org.voisine.breadwallet;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Internal";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = breadwallet/breadwallet.entitlements;
@@ -4971,6 +5953,36 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		9F29A9AC25D5C605000FEB40 /* Build configuration list for PBXNativeTarget "breadwalletIntentHandler" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9F29A9A425D5C605000FEB40 /* Debug */,
+				9F29A9A525D5C605000FEB40 /* Debug-Internal */,
+				9F29A9A625D5C605000FEB40 /* Debug-Testnet */,
+				9F29A9A725D5C605000FEB40 /* Screenshots */,
+				9F29A9A825D5C605000FEB40 /* Release */,
+				9F29A9A925D5C605000FEB40 /* Release-Testflight */,
+				9F29A9AA25D5C605000FEB40 /* Release-Internal */,
+				9F29A9AB25D5C605000FEB40 /* Release-Testnet */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9FB0CA2725D5AD190057DD11 /* Build configuration list for PBXNativeTarget "breadwalletWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9FB0CA1F25D5AD190057DD11 /* Debug */,
+				9FB0CA2025D5AD190057DD11 /* Debug-Internal */,
+				9FB0CA2125D5AD190057DD11 /* Debug-Testnet */,
+				9FB0CA2225D5AD190057DD11 /* Screenshots */,
+				9FB0CA2325D5AD190057DD11 /* Release */,
+				9FB0CA2425D5AD190057DD11 /* Release-Testflight */,
+				9FB0CA2525D5AD190057DD11 /* Release-Internal */,
+				9FB0CA2625D5AD190057DD11 /* Release-Testnet */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CEA7E6851F09A9D2001F8C27 /* Build configuration list for PBXNativeTarget "Screenshots" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -4989,7 +6001,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3A858B28250A781700812B36 /* XCRemoteSwiftPackageReference "coingecko" */ = {
+		3A858B28250A781700812B36 = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/breadwallet/coingecko";
 			requirement = {
@@ -5000,13 +6012,23 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3A0C6087242A5CC900F0FBC2 /* WalletKit */ = {
+		3A0C6087242A5CC900F0FBC2 = {
 			isa = XCSwiftPackageProductDependency;
 			productName = WalletKit;
 		};
-		3A858B29250A781700812B36 /* CoinGecko */ = {
+		3A858B29250A781700812B36 = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3A858B28250A781700812B36 /* XCRemoteSwiftPackageReference "coingecko" */;
+			package = 3A858B28250A781700812B36;
+			productName = CoinGecko;
+		};
+		9F3C2FA625DA7F1C00C7C398 = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A858B28250A781700812B36;
+			productName = CoinGecko;
+		};
+		9F3C2FAA25DA7F2F00C7C398 = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3A858B28250A781700812B36;
 			productName = CoinGecko;
 		};
 /* End XCSwiftPackageProductDependency section */

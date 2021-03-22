@@ -231,12 +231,27 @@
 "Confirmation.to" = "На";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Общая стоимость:";
+"ConfirmGift.paperWalletAmount" = "Сумма бумажного кошелька";
+"ConfirmGift.processingTime" = "Проверка этого бумажного кошелька в сети может занять до 60 минут.";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "Введенные слова не соответствуют вашей фразе для восстановления. Пожалуйста, попробуйте еще раз.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "Чтобы убедиться, что все записано правильно, введите следующие слова из фразы для восстановления.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Слово #%1$@";
+"CreateGift.amountLabel" = "Выберите сумму ($ USD)";
+"CreateGift.create" = "Создавать";
+"CreateGift.customAmountHint" = "Специальная сумма (макс. 500 долларов США)";
+"CreateGift.description" = "Мы создадим то, что называется";
+"CreateGift.inputAmountError" = "Вы должны выбрать сумму подарка.";
+"CreateGift.inputRecipientNameError" = "Вы должны ввести имя получателя.";
+"CreateGift.insufficientBalanceError" = "У вас недостаточно средств для отправки подарка.";
+"CreateGift.insufficientBalanceForAmountError" = "У вас недостаточно средств для отправки подарка на эту сумму.";
+"CreateGift.recipientName" = "Имя получателя";
+"CreateGift.serverError" = "Произошла ошибка сервера. Пожалуйста, повторите попытку позже.";
+"CreateGift.subtitle" = "Отправляйте биткойны кому-нибудь, даже если у них нет кошелька.";
+"CreateGift.title" = "Подарить Биткойн в подарок";
+"CreateGift.unexpectedError" = "Произошла непредвиденная ошибка. Обратитесь в службу поддержки.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "Согласен";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "Опция обмена сообщениями недоступна";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "Отпечаток пальца не идентифицирован. Повторите попытку.";
+"ExportConfirmation.cancel" = "Отмена";
+"ExportConfirmation.continue" = "Продолжать";
+"ExportConfirmation.message" = "Будет создан файл CSV, включающий все завершенные транзакции со всех включенных кошельков.";
+"ExportConfirmation.title" = "Экспортные операции?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "Будет создан файл CSV, включающий все завершенные транзакции со всех включенных кошельков.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "Экспортные переводы";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "Не удалось экспортировать файл CSV, попробуйте еще раз.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "Ошибка экспорта";
+/* "Export transfers header" */
+"ExportTransfers.header" = "Экспортные операции?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Вы можете индивидуально настроить ваш лимит расходов Face ID от %1$@.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "Активировать Segwit";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Нравится ли вам использовать BRD?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "Экспорт истории транзакций в CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Лимит расходов Face ID";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "Вознаграждения";
 /* Share anonymous data label */
 "Settings.shareData" = "Поделиться анонимными данными";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "Делитесь данными портфолио с виджетами";
 /* Sync blockchain label */
 "Settings.sync" = "Синхронизация с Blockchain";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "Поделиться данными?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Поделиться анонимными данными?";
+"ShareGift.approximateTotal" = "Приблизительная сумма";
+"ShareGift.footerMessage1" = "Плата за сеть будет вычтена из общей суммы при подаче заявки.\n Фактическое значение зависит от текущей цены биткойна.";
+"ShareGift.footerMessage2" = "Загрузите приложение BRD для iPhone или Android.\n Для получения дополнительной информации посетите brd.com/gift.";
+"ShareGift.tagLine" = "Кто-то подарил вам биткойны!";
+"ShareGift.walletName" = "Биткойн";
+/* Button label: select a baker */
+"Staking.add" = "+ Выбрать Бейкера";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "Свободное место";
+"Staking.changeValidator" = "Изменять";
+"Staking.descriptionTezos" = "Передайте свою учетную запись Tezos валидатору, чтобы получить вознаграждение, сохраняя при этом полную безопасность и контроль над своими монетами.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "Платеж:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "Ожидается транзакция ...";
+/* Button label: remove selected baker */
+"Staking.remove" = "Удалить";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "Стандартное восточное время. Рентабельность инвестиций";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "Выберите делегата XTZ";
+"Staking.stake" = "Ставка";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "АКТИВНЫЙ";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "НЕАКТИВНЫЙ";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "В ОЖИДАНИИ";
+/* Staking banner title */
+"Staking.stakingTitle" = "Ставка";
+"Staking.stakingTo" = "ставка на %1$s";
+"Staking.statusPending" = "В ожидании";
+"Staking.statusStaked" = "Ставка!";
+"Staking.subTitle" = "Зарабатывай, пока держишь";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "Тезос и Дюна";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "Пул с несколькими активами";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Только Tezos";
+"Staking.title" = "Ставка %1$s";
+"Staking.unstake" = "Unstake";
+"Staking.validatorHint" = "Введите адрес валидатора";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Запишите фразу восстановления еще раз";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "отправка по адресу %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "отправлено по адресу %1$@";
+"Transaction.stakingTo" = "ставка на %1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Начальный баланс: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "Сбор за передачу токена: %1$@";
+"Transaction.toRecipient" = "в %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Ожидает подтверждения. Некоторые продавцы требуют подтверждения для выполнения транзакции. Предполагаемое время: 1-2 часа.";
 /* e.g. I received money from an account. */
@@ -1131,6 +1209,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Лимит газа";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Стоимость газа";
+"TransactionDetails.gift" = "Подарок";
+"TransactionDetails.giftedTo" = "Подарено %1$s";
 /* Label for Hedera Memo field on transaction details screen */
 "TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "получение от %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "идет получение через %1$@";
+"TransactionDetails.reclaim" = "Вернуть";
+"TransactionDetails.resend" = "Отправить снова";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "Отправить %1$@";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "Ставка";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet сменил свое название на BRD и обзавелся новым дизайном и функциями.\n\nЕсли вам нужна помощь, то ищите иконку (?) в правом верхнем углу большинства экранов.";
 /* Top title of welcome screen */
 "Welcome.title" = "Добро пожаловать в BRD!";
+/* Single asset widget description */
+"Widget.assetDescription" = "Будьте в курсе ваших любимых криптоактивов";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Будьте в курсе ваших любимых криптоактивов";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Список активов";
+/* Single asset widget title */
+"Widget.assetTitle" = "Актив";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "Система Авто Свет / Темнота";
+/* Name of color - Black */
+"Widget.Color.black" = "Чернить";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Синий";
+/* Name of color - Gray */
+"Widget.Color.gray" = "серый";
+/* Name of color - Green */
+"Widget.Color.green" = "Зеленый";
+/* Name of color - Orange */
+"Widget.Color.orange" = "апельсин";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Розовый";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "Начальный";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "Начальный";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Фиолетовый";
+/* Name of color - Red */
+"Widget.Color.red" = "красный";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "Вторичный";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "Вторичный";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "Третичный";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "Третичный";
+/* Name of color - White */
+"Widget.Color.white" = "белый";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Желтый";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Цвета фона темы";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Основные цвета";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Цвета валюты";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "Системные цвета";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Цвета текста темы";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "Включить в приложении\n предпочтения";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Будьте в курсе своего портфолио";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "портфолио\n Резюме";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "портфолио";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Вы действительно хотите удалить этот кошелек?";
 /* Wipe wallet alert title */

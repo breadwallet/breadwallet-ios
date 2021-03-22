@@ -231,12 +231,27 @@
 "Confirmation.to" = "An";
 /* Total Cost: ($5.00) */
 "Confirmation.totalLabel" = "Gesamtkosten:";
+"ConfirmGift.paperWalletAmount" = "Geldbörse Betrag";
+"ConfirmGift.processingTime" = "Die Validierung dieser Brieftasche im Netzwerk kann bis zu 60 Minuten dauern";
 /* Confirm paper phrase error message */
 "ConfirmPaperPhrase.error" = "Die eingegebenen Wörter stimmen nicht mit Ihrer Wiederherstellungsphrase überein. Bitte versuche es erneut.";
 /* Confirm paper phrase view label. */
 "ConfirmPaperPhrase.label" = "Um sicherzustellen, dass alles korrekt aufgeschrieben wurde, geben Sie bitte die folgenden Wörter aus Ihrem Wiederherstellungssatz ein.";
 /* Word label eg. Word #1, Word #2 */
 "ConfirmPaperPhrase.word" = "Wort #%1$@";
+"CreateGift.amountLabel" = "Betrag auswählen ($ USD)";
+"CreateGift.create" = "Erstellen";
+"CreateGift.customAmountHint" = "Benutzerdefinierter Betrag (max. 500 USD)";
+"CreateGift.description" = "Wir erstellen das, was als a bezeichnet wird";
+"CreateGift.inputAmountError" = "Sie müssen einen Geschenkbetrag auswählen.";
+"CreateGift.inputRecipientNameError" = "Sie müssen den Namen des Empfängers eingeben.";
+"CreateGift.insufficientBalanceError" = "Sie haben nicht genügend Geld, um ein Geschenk zu verschicken.";
+"CreateGift.insufficientBalanceForAmountError" = "Sie haben nicht genügend Geld, um ein Geschenk dieses Betrags zu senden.";
+"CreateGift.recipientName" = "Name des Empfängers";
+"CreateGift.serverError" = "Ein Serverfehler ist aufgetreten. Bitte versuchen Sie es später noch einmal.";
+"CreateGift.subtitle" = "Senden Sie Bitcoin an jemanden, auch wenn dieser keine Brieftasche hat.";
+"CreateGift.title" = "Geben Sie das Geschenk von Bitcoin";
+"CreateGift.unexpectedError" = "Ein unerwarteter Fehler ist aufgetreten. Bitte wenden Sie sich an den Support.";
 /* Agree to legal terms button */
 "Crowdsale.agree" = "Zustimmen";
 /* As in "(tap here to) buy (some) tokens" */
@@ -273,6 +288,20 @@
 "ErrorMessages.messagingUnavailableTitle" = "Nachrichtensystem nicht verfügbar";
 /* Fingerprint was not recognized by the scanner, please try scanning again */
 "ErrorMessages.touchIdFailed.android" = "Fingerabdruck nicht erkannt. Bitte erneut versuchen.";
+"ExportConfirmation.cancel" = "Stornieren";
+"ExportConfirmation.continue" = "Fortsetzen";
+"ExportConfirmation.message" = "Dadurch wird eine CSV-Datei generiert, die alle abgeschlossenen Transaktionen aus allen aktivierten Brieftaschen enthält.";
+"ExportConfirmation.title" = "Transaktionen exportieren?";
+/* "Export transfers body" */
+"ExportTransfers.body" = "Dadurch wird eine CSV-Datei generiert, die alle abgeschlossenen Transaktionen aus allen aktivierten Brieftaschen enthält.";
+/* "Export transfers button" */
+"ExportTransfers.confirmExport" = "Transfers exportieren";
+/* "Export dialog error message" */
+"ExportTransfers.exportFailedBody" = "CSV-Datei konnte nicht exportiert werden. Bitte versuchen Sie es erneut.";
+/* "Export dialog error title" */
+"ExportTransfers.exportFailedTitle" = "Export fehlgeschlagen";
+/* "Export transfers header" */
+"ExportTransfers.header" = "Transaktionen exportieren?";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "Sie können Ihr Ausgabenlimit für Face ID im %1$@ anpassen.";
 /* Text describing the purpose of the Face ID settings in the BRD app. */
@@ -914,6 +943,8 @@
 "Settings.EnableSegwit" = "SegWit aktivieren";
 /* Are you enjoying bread alert message body */
 "Settings.enjoying" = "Gefällt dir BRD?";
+/* Export transaction history menu item */
+"Settings.exportTransfers" = "Exportieren Sie den Transaktionsverlauf in CSV";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID Ausgabenlimit";
 /* Redeem the funds stored on this private key. */
@@ -934,6 +965,8 @@
 "Settings.rewards" = "Belohnungen";
 /* Share anonymous data label */
 "Settings.shareData" = "Übermittle anonyme Nutzungsdaten";
+/* "Enables sharing balance to widget" */
+"Settings.shareWithWidget" = "Teilen Sie Portfoliodaten mit Widgets";
 /* Sync blockchain label */
 "Settings.sync" = "Blockchain-Synchronisation";
 /* Settings title */
@@ -960,6 +993,49 @@
 "ShareData.header" = "Nutzungsdaten übermitteln?";
 /* Share data switch label. */
 "ShareData.toggleLabel" = "Anonyme Nutzungsdaten übermitteln?";
+"ShareGift.approximateTotal" = "Ungefähre Summe";
+"ShareGift.footerMessage1" = "Eine Netzwerkgebühr wird von der Gesamtsumme abgezogen, wenn sie geltend gemacht wird.\n Der tatsächliche Wert hängt vom aktuellen Bitcoin-Preis ab.";
+"ShareGift.footerMessage2" = "Laden Sie die BRD-App für iPhone oder Android herunter.\n Weitere Informationen finden Sie unter brd.com/gift";
+"ShareGift.tagLine" = "Jemand hat dir Bitcoin geschenkt!";
+"ShareGift.walletName" = "Bitcoin";
+/* Button label: select a baker */
+"Staking.add" = "+ Wählen Sie Baker";
+/* Baker cell: Free Space field header */
+"Staking.cellFreeSpaceHeader" = "Freiraum";
+"Staking.changeValidator" = "Veränderung";
+"Staking.descriptionTezos" = "Delegieren Sie Ihr Tezos-Konto an einen Prüfer, um eine Belohnung zu erhalten und gleichzeitig die volle Sicherheit und Kontrolle über Ihre Münzen zu behalten.";
+/* Baker cell: Fee field header */
+"Staking.feeHeader" = "Gebühr:";
+/* Status label: current staking transaction is pending */
+"Staking.pendingTransaction" = "Transaktion ausstehend ...";
+/* Button label: remove selected baker */
+"Staking.remove" = "Entfernen";
+/* Baker cell: ROI field header */
+"Staking.roiHeader" = "Europäische Sommerzeit. ROI";
+/* Modal title: Select Baker modal */
+"Staking.selectBakerTitle" = "Wählen Sie XTZ-Delegat";
+"Staking.stake" = "Anteil";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingActiveFlag" = "AKTIV";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingInactiveFlag" = "INAKTIV";
+/* UI flag showing state of Tezos staking */
+"Staking.stakingPendingFlag" = "STEHT AUS";
+/* Staking banner title */
+"Staking.stakingTitle" = "Abstecken";
+"Staking.stakingTo" = "Abstecken auf %1$s";
+"Staking.statusPending" = "Ausstehend";
+"Staking.statusStaked" = "Eingesteckt!";
+"Staking.subTitle" = "Verdiene Geld, während du hältst";
+/* Tezos XTZ baker asset type */
+"Staking.tezosDune" = "Tezos & Dune";
+/* Tezos XTZ baker asset type */
+"Staking.tezosMultiasset" = "Multiasset Pool";
+/* Tezos XTZ baker asset type */
+"Staking.tezosOnly" = "Nur Tezos";
+"Staking.title" = "Einsatz %1$s";
+"Staking.unstake" = "Unstake";
+"Staking.validatorHint" = "Geben Sie die Validator-Adresse ein";
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Schreiben Sie die Wiederherstellungsphrase erneut auf";
 /* Paper key explanation text. */
@@ -1084,10 +1160,12 @@
 "Transaction.sendingTo" = "wird gesendet an %1$@";
 /* sent to <address> */
 "Transaction.sentTo" = "gesendet an %1$@";
+"Transaction.stakingTo" = "Abstecken auf %1$s";
 /* eg. Starting balance: $50.00 */
 "Transaction.starting" = "Startguthaben: %1$@";
 /* e.g. "[The money you paid was a] Fee for token transfer: BRD" (BRD is the token that was transfered) */
 "Transaction.tokenTransfer" = "Gebühr für Token-Übertragung: %1$@";
+"Transaction.toRecipient" = "bis %1$s";
 /* Waiting to be confirmed string */
 "Transaction.waiting" = "Bestätigung ausstehend. Einige Händler fordern eine Bestätigung, um Transaktionen abzuschließen. Voraussichtliche Dauer: 1–2 Stunden.";
 /* e.g. I received money from an account. */
@@ -1131,6 +1209,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.gasLimitHeader" = "Benzinbegrenzung";
 /* Tx detail field header */
 "TransactionDetails.gasPriceHeader" = "Benzinpreis";
+"TransactionDetails.gift" = "Geschenk";
+"TransactionDetails.giftedTo" = "Begabt zu %1$s";
 /* Label for Hedera Memo field on transaction details screen */
 "TransactionDetails.hederaMemo" = "Hedera Memo";
 /* Hide Details button */
@@ -1157,6 +1237,8 @@ eg. 182930 (45061 confirmations) */
 "TransactionDetails.receivingFrom" = "unterwegs von %1$@";
 /* receiving via <address> */
 "TransactionDetails.receivingVia" = "wird empfangen über %1$@";
+"TransactionDetails.reclaim" = "Zurückfordern";
+"TransactionDetails.resend" = "Erneut senden";
 /* "Sent [$5] to [address]" => This is the "Sent [$5]" part. */
 "TransactionDetails.sent" = "%1$@ gesendet";
 /* Sent $5.00 */
@@ -1251,6 +1333,7 @@ eg. 182930 (45061 confirmations) */
 "Wallet.one_month" = "1m";
 "Wallet.one_week" = "1w";
 "Wallet.one_year" = "1y";
+"Wallet.stakingTitle" = "Abstecken";
 "Wallet.three_months" = "3m";
 "Wallet.three_years" = "3y";
 /* Turn off fast sync confirmation question */
@@ -1282,6 +1365,66 @@ Wallet connection settings menu item title. */
 "Welcome.body" = "Breadwallet heißt jetzt BRD und hat ein brandneues Erscheinungsbild sowie einige neue Funktionen.\n\nWenn Sie Hilfe benötigen, halten Sie Ausschau nach dem (?), das auf den meisten Bildschirm oben rechts zu finden ist.";
 /* Top title of welcome screen */
 "Welcome.title" = "Willkommen bei BRD!";
+/* Single asset widget description */
+"Widget.assetDescription" = "Bleiben Sie mit Ihrem bevorzugten Krypto-Asset auf dem Laufenden";
+/* Asset list widget description */
+"Widget.assetListDescription" = "Bleiben Sie mit Ihren bevorzugten Krypto-Assets auf dem Laufenden";
+/* Asset list widget title */
+"Widget.assetListTitle" = "Asset-Liste";
+/* Single asset widget title */
+"Widget.assetTitle" = "Anlagegut";
+/* Name of color based on os theme light/dark */
+"Widget.Color.autoLightDark" = "System Auto Hell / Dunkel";
+/* Name of color - Black */
+"Widget.Color.black" = "Schwarz";
+/* Name of color - Blue */
+"Widget.Color.blue" = "Blau";
+/* Name of color - Gray */
+"Widget.Color.gray" = "Grau";
+/* Name of color - Green */
+"Widget.Color.green" = "Grün";
+/* Name of color - Orange */
+"Widget.Color.orange" = "Orange";
+/* Name of color - Pink */
+"Widget.Color.pink" = "Rosa";
+/* Name of color - Primary Background */
+"Widget.Color.primaryBackground" = "Primär";
+/* Name of color - Primary Text */
+"Widget.Color.primaryText" = "Primär";
+/* Name of color - Purple */
+"Widget.Color.purple" = "Lila";
+/* Name of color - Red */
+"Widget.Color.red" = "rot";
+/* Name of color - Secondary Background */
+"Widget.Color.secondaryBackground" = "Sekundär";
+/* Name of color - Secondary Text */
+"Widget.Color.secondaryText" = "Sekundär";
+/* Name of color - Tertiary Background */
+"Widget.Color.tertiaryBackground" = "Tertiär";
+/* Name of color - Tertiary Text */
+"Widget.Color.tertiaryText" = "Tertiär";
+/* Name of color - White */
+"Widget.Color.white" = "Weiß";
+/* Name of color - Yellow */
+"Widget.Color.yellow" = "Gelb";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBackground" = "Themenhintergrundfarben";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionBasic" = "Grundfarben";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionCurrency" = "Währungsfarben";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionSystem" = "Systemfarben";
+/* Title of color grouping in widget color picker */
+"Widget.colorSectionText" = "Thementextfarben";
+/* Portfolio widget description if data sharing is disabled */
+"Widget.enablePortfolio" = "In App aktivieren\n Vorlieben";
+/* Portfolio description */
+"Widget.portfolioDescription" = "Bleiben Sie mit Ihrem Portfolio auf dem Laufenden";
+/* Portfolio widget description if data sharing is enabled */
+"Widget.portfolioSummary" = "Portfolio\n Zusammenfassung";
+/* Portfolio widget title */
+"Widget.portfolioTitle" = "Portfolio";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Sind Sie sicher, dass Sie dieses Wallet löschen möchten?";
 /* Wipe wallet alert title */

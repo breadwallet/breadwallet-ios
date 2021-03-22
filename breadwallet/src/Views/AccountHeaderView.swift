@@ -257,7 +257,7 @@ class AccountHeaderView: UIView, GradientDrawable, Subscriber, Trackable {
             self.shouldLockExpandingChart = true
             self.collapseHeader()
         }
-        if currency.shouldHideChart {
+        if currency.state?.currentRate == nil {
             self.collapseHeader(animated: false)
         }
         extendedTouchArea.ignoringView = balanceCell.currencyTapView
