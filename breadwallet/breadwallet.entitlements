@@ -25,9 +25,5 @@
 	<array>
 		<string>group.$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
-	<key>keychain-access-groups</key>
-	<array>
-		<string>$(AppIdentifierPrefix)org.voisine.breadwallet</string>
-	</array>
 </dict>
 </plist>
