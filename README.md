@@ -1,3 +1,5 @@
+# This repository is unmaintained, BRD iOS has moved to [https://github.com/breadwallet/brd-mobile](https://github.com/breadwallet/brd-mobile)
+
 [![Bread](/images/top-logo.png)](https://itunes.apple.com/app/breadwallet/id885251393)
 
 ## BRD is the simple and secure wallet for bitcoin, ethereum, and other digital assets. Today, BRD is one of the largest non-custodial mobile wallets used by over 6 million users and protects an estimated nearly $7B USD.
