@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-protocol BezierViewDataSource: class {
+protocol BezierViewDataSource: AnyObject {
     var bezierViewDataPoints: [CGPoint] { get }
 }
 

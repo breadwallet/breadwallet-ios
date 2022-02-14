@@ -15,7 +15,7 @@ private extension C {
     static let detailsButtonHeight: CGFloat = 65.0
 }
 
-protocol TxDetaiViewControllerDelegate: class {
+protocol TxDetaiViewControllerDelegate: AnyObject {
     func txDetailDidDismiss(detailViewController: TxDetailViewController)
 }
 
