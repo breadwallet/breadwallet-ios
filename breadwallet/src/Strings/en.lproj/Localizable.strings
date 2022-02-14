@@ -1,9 +1,9 @@
 /* App name */
-"About.appName.android" = "Coinsquare";
+"About.appName.android" = "Fabriik";
 /* About screen blog label */
 "About.blog" = "Blog";
 /* About screen footer */
-"About.footer" = "Made by the global Coinsquare team. Version %1$@ Build %2$@";
+"About.footer" = "Made by the global Fabriik team. Version %1$@ Build %2$@";
 /* Privay Policy button label */
 "About.privacy" = "Privacy Policy";
 /* About screen reddit label */
@@ -15,7 +15,7 @@
 /* About screen twitter label */
 "About.twitter" = "Twitter";
 /* About screen wallet ID label */
-"About.walletID" = "Coinsquare Wallet ID";
+"About.walletID" = "Fabriik Wallet ID";
 /* Close modal button accessibility label */
 "AccessibilityLabels.close" = "Close";
 /* Support center accessibiliy label */
@@ -43,19 +43,19 @@
 /* Confirm Account Creation Title */
 "AccountCreation.title" = "Confirm Account Creation";
 /* Default wallet name */
-"AccountHeader.defaultWalletName" = "My Coinsquare";
+"AccountHeader.defaultWalletName" = "My Fabriik";
 /* Third party keyboard warning */
 "Alert.customKeyboard.android" = "It looks like you are using a third-party keyboard, which can record what you type and steal your Recovery Phrase. Please switch to the default Android keyboard for extra protection.";
 /* Error alert title */
 "Alert.error" = "Error";
 /* Keystore error */
-"Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@coinsquare.com";
+"Alert.keystore.generic.android" = "There is a problem with your Android OS keystore, please contact support@Fabriik.com";
 /* KeyStore error, keys are invalidated */
-"Alert.keystore.invalidated.android" = "Your Coinsquare encrypted data was recently invalidated because your Android lock screen was disabled.";
+"Alert.keystore.invalidated.android" = "Your Fabriik encrypted data was recently invalidated because your Android lock screen was disabled.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must uninstall. */
-"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your recovery phrase.";
+"Alert.keystore.invalidated.uninstall.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Fabriik app data must be wiped by uninstalling.\n\nDon’t worry, your funds are still secure! Reinstall the app and recover your wallet using your recovery phrase.";
 /* Warn user key store data has been invalidate because the user changed their security settings. The user must wipe their app data. */
-"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Coinsquare app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your recovery phrase.";
+"Alert.keystore.invalidated.wipe.android" = "We can't proceed because your screen lock settings have been changed (e.g. password was disabled, fingerprints were changed). For security purposes, Android has permanently locked your key store. Therefore, your Fabriik app data must be wiped.\n\nDon’t worry, your funds are still secure! Recover your wallet using your recovery phrase.";
 /* Keystore error title */
 "Alert.keystore.title.android" = "Android Key Store Error";
 /* No internet alert message */
@@ -85,11 +85,11 @@
 /* Fingerprint was recognized by the scanner */
 "Alerts.touchIdSucceeded.android" = "Fingerprint recognized";
 /* Tell the user where they can enable permissions to access device storage. */
-"Android.allowFileSystemAccess" = "Please enable storage permissions in your device settings: \"Settings\" > \"Apps\" > \"Coinsquare\" > \"Permissions\".";
+"Android.allowFileSystemAccess" = "Please enable storage permissions in your device settings: \"Settings\" > \"Apps\" > \"Fabriik\" > \"Permissions\".";
 /* The "home" screen is the name of the top level menu for the app. */
 "Android.BCH.welcome.message" = "Any BCH in your wallet can be accessed through the home screen.";
 /* Warning about using apps that can alter the screen */
-"Android.screenAlteringMessage" = "We've detected an app that is incompatible with Coinsquare running on your device. For security reasons, please disable any screen altering or light filtering apps to proceed.";
+"Android.screenAlteringMessage" = "We've detected an app that is incompatible with Fabriik running on your device. For security reasons, please disable any screen altering or light filtering apps to proceed.";
 /* An app that alters the screen ("screen-altering app") has been detected. */
 "Android.screenAlteringTitle" = "Screen Altering App Detected";
 /* JSON Serialization error message */
@@ -266,7 +266,7 @@
 /* Email unavailable alert title */
 "ErrorMessages.emailUnavailableTitle" = "Email Unavailable";
 /* Message that gets shown when we've detected the user has encountered the looping lock-screen bug. (preserve [ ] characters) */
-"ErrorMessages.loopingLockScreen.android" = "Coinsquare can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
+"ErrorMessages.loopingLockScreen.android" = "Fabriik can not be authenticated due to a bug in your version of Android. [Please tap here for more information.]";
 /* Messaging unavailable alert title */
 "ErrorMessages.messagingUnavailableMessage" = "This device isn't configured to send messages.";
 /* Messaging unavailable alert title */
@@ -275,14 +275,14 @@
 "ErrorMessages.touchIdFailed.android" = "Fingerprint not recognized. Please try again.";
 /* You can customize your Face ID Spending Limit from the [menu] */
 "FaceIDSettings.customizeText" = "You can customize your Face ID spending limit from the %1$@.";
-/* Text describing the purpose of the Face ID settings in the Coinsquare app. */
-"FaceIDSettings.explanatoryText" = "Use Face ID to unlock your Coinsquare app and send money.";
+/* Text describing the purpose of the Face ID settings in the Fabriik app. */
+"FaceIDSettings.explanatoryText" = "Use Face ID to unlock your Fabriik app and send money.";
 /* Face Id screen label */
-"FaceIDSettings.label" = "Use your face to unlock your Coinsquare and send money up to a set limit.";
+"FaceIDSettings.label" = "Use your face to unlock your Fabriik and send money up to a set limit.";
 /* Title of the screen for setting the Face ID Spending Limit */
 "FaceIDSettings.linkText" = "Face ID Spending Limit Screen";
-/* Setting to turn on Face ID for Coinsquare */
-"FaceIDSettings.switchLabel" = "Enable Face ID for Coinsquare";
+/* Setting to turn on Face ID for Fabriik */
+"FaceIDSettings.switchLabel" = "Enable Face ID for Fabriik";
 /* Face ID settings view title */
 "FaceIDSettings.title" = "Face ID";
 /* Text label for a toggle that enables Face ID for sending money. */
@@ -291,8 +291,8 @@
 "FaceIDSettings.unavailableAlertMessage" = "You have not set up Face ID on this device. Go to Settings->Face ID & Passcode to set it up now.";
 /* Face ID unavailable alert title */
 "FaceIDSettings.unavailableAlertTitle" = "Face ID Not Set Up";
-/* Text label for a toggle that enables Face ID for unlocking the Coinsquare app. */
-"FaceIDSettings.unlockTitleText" = "Enable Face ID to unlock Coinsquare";
+/* Text label for a toggle that enables Face ID for unlocking the Fabriik app. */
+"FaceIDSettings.unlockTitleText" = "Enable Face ID to unlock Fabriik";
 /* Face Id spending limit screen title */
 "FaceIDSpendingLimit.title" = "Face ID Spending Limit";
 /* Economy fee */
@@ -319,13 +319,13 @@
 /* Label for the Android file chooser when we need to prompt the user to select an image file. */
 "FileChooser.selectImageSource.android" = "Select Image Source";
 /* Fingerprint authentication settings screen description */
-"FingerprintSettings.description" = "Use your fingerprint to unlock your Coinsquare app and send transactions.";
+"FingerprintSettings.description" = "Use your fingerprint to unlock your Fabriik app and send transactions.";
 /* Switch label to enable fingerprint authentication to send money */
 "FingerprintSettings.sendMoney" = "Use fingerprint to send money";
 /* Fingerprint authentication settings sceen title */
 "FingerprintSettings.title" = "Fingerprint";
-/* Switch label to enable fingerprint authentication to unlock Coinsquare app */
-"FingerprintSettings.unlockApp" = "Use fingerprint to unlock Coinsquare";
+/* Switch label to enable fingerprint authentication to unlock Fabriik app */
+"FingerprintSettings.unlockApp" = "Use fingerprint to unlock Fabriik";
 /* This is the section that allows administration of the user's wallet */
 "HomeScreen.admin" = "Admin";
 /* Home screen menu button to buy some bitcoin */
@@ -361,13 +361,13 @@
 /* Caption for graphics */
 "Import.leftCaption" = "Wallet to be imported";
 /* Import wallet intro screen message */
-"Import.message" = "Importing a wallet transfers all the money from your other wallet into your Coinsquare wallet using a single transaction.";
+"Import.message" = "Importing a wallet transfers all the money from your other wallet into your Fabriik wallet using a single transaction.";
 /* Enter password alert view title */
 "Import.password" = "This private key is password protected.";
 /* password textfield placeholder */
 "Import.passwordPlaceholder" = "password";
 /* Caption for graphics */
-"Import.rightCaption" = "Your Coinsquare Wallet";
+"Import.rightCaption" = "Your Fabriik Wallet";
 /* Scan Private key button label */
 "Import.scan" = "Scan Private Key";
 /* Import wallet success alert title */
@@ -387,9 +387,9 @@
 /* Ignore jailbreak warning button */
 "JailbreakWarnings.ignore" = "Ignore";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Coinsquare's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
+"JailbreakWarnings.messageWithBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Fabriik's keychain data and steal your bitcoin! Wipe this wallet immediately and restore on a secure device.";
 /* Jailbreak warning message */
-"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Coinsquare's keychain data and steal your bitcoin. Please only use Coinsquare on a non-jailbroken device.";
+"JailbreakWarnings.messageWithoutBalance" = "DEVICE SECURITY COMPROMISED\n Any 'jailbreak' app can access Fabriik's keychain data and steal your bitcoin. Please only use Fabriik on a non-jailbroken device.";
 /* Jailbreak warning title */
 "JailbreakWarnings.title" = "WARNING";
 /* Wipe wallet button */
@@ -411,7 +411,7 @@
 /* Location services disabled error */
 "LocationPlugin.disabled" = "Location services are disabled.";
 /* No permissions for location services */
-"LocationPlugin.notAuthorized" = "Coinsquare does not have permission to access location services.";
+"LocationPlugin.notAuthorized" = "Fabriik does not have permission to access location services.";
 /* Wallet creation date prefix */
 "ManageWallet.creationDatePrefix" = "You created your wallet on %1$@";
 /* Manage wallet description text */
@@ -493,13 +493,13 @@
 /* Onboarding screen Page 1 title */
 "OnboardingPageOne.title" = "Welcome to your ATM enabled virtual currency wallet!";
 /* Onboarding screen Page 3 subtitle */
-"OnboardingPageThree.subtitle" = "Invest and diversify with Coinsquare, easily and securely.";
+"OnboardingPageThree.subtitle" = "Invest and diversify with Fabriik, easily and securely.";
 /* Onboarding screen Page 3 title */
 "OnboardingPageThree.title" = "Send and receive bitcoin, tokens, and other digital currencies.";
 /* Onboarding screen Page 2 subtitle */
 "OnboardingPageTwo.subtitle" = "We have over $6 billion USD worth of assets under protection.";
 /* Onboarding screen Page 2 title */
-"OnboardingPageTwo.title" = "Join millions of people around the world who trust Coinsquare.";
+"OnboardingPageTwo.title" = "Join millions of people around the world who trust Fabriik.";
 /* Eg. Send 1.0Eth to purchase CCC */
 "PaymentConfirmation.amountText" = "Send %1$@ to purchase %2$@";
 /* Payment confirmation view title */
@@ -554,8 +554,8 @@
 /* An action is required (You must do this action). */
 "Prompts.PaperKey.title" = "Action Required";
 "Prompts.RateApp.dontShow" = "Don't ask again";
-"Prompts.RateApp.enjoyingBrd" = "Enjoying Coinsquare?";
-"Prompts.RateApp.googlePlayReview" = "Your review helps grow the Coinsquare community.";
+"Prompts.RateApp.enjoyingBrd" = "Enjoying Fabriik?";
+"Prompts.RateApp.googlePlayReview" = "Your review helps grow the Fabriik community.";
 "Prompts.RateApp.noThanks" = "No thanks";
 "Prompts.RateApp.rateUs" = "Review us";
 /* Transaction rejected prompt body */
@@ -563,7 +563,7 @@
 /* Transaction rejected prompt title */
 "Prompts.RecommendRescan.title" = "Transaction Rejected";
 /* Share data prompt body */
-"Prompts.ShareData.body" = "Help improve Coinsquare by sharing your anonymous data with us";
+"Prompts.ShareData.body" = "Help improve Fabriik by sharing your anonymous data with us";
 /* Share data prompt title */
 "Prompts.ShareData.title" = "Share Anonymous Data";
 /* Enable touch ID prompt body */
@@ -577,7 +577,7 @@
 /* Button on fingerprint prompt so the user can enter their PIN instead */
 "Prompts.TouchId.usePin.android" = "PIN";
 /* Upgrade PIN prompt body. */
-"Prompts.UpgradePin.body" = "Coinsquare has upgraded to using a 6-digit PIN. Tap Continue to upgrade.";
+"Prompts.UpgradePin.body" = "Fabriik has upgraded to using a 6-digit PIN. Tap Continue to upgrade.";
 /* Upgrade PIN prompt title. */
 "Prompts.UpgradePin.title" = "Upgrade PIN";
 /* Body text for the push notifications prompt. */
@@ -585,11 +585,11 @@
 /* Push notifications are disabled alert title" */
 "PushNotifications.disabled" = "Notifications Disabled";
 /* Body text when push notifications are disabled. */
-"PushNotifications.disabledBody" = "Turn on notifications to receive special offers and updates from Coinsquare.";
+"PushNotifications.disabledBody" = "Turn on notifications to receive special offers and updates from Fabriik.";
 /* Body text when push notifications are enabled. */
-"PushNotifications.enabledBody" = "You’re receiving special offers and updates from Coinsquare.";
-/* Instructions to enable push notifications for Coinsquare in the phone's system settings. */
-"PushNotifications.enableInstructions" = "Looks like notifications are turned off. Please go to Settings to enable notifications from Coinsquare.";
+"PushNotifications.enabledBody" = "You’re receiving special offers and updates from Fabriik.";
+/* Instructions to enable push notifications for Fabriik in the phone's system settings. */
+"PushNotifications.enableInstructions" = "Looks like notifications are turned off. Please go to Settings to enable notifications from Fabriik.";
 /* Push notifications toggle switch label */
 "PushNotifications.label" = "Receive Push Notifications";
 /* Push notifications are off label */
@@ -605,9 +605,9 @@
 /* Google play review prompt, revivew button */
 "RateAppPrompt.Button.Dismiss.Android" = "No Thanks";
 /* Google play review prompt, dismiss button */
-"RateAppPrompt.Button.RateApp.Android" = "Rate Coinsquare";
+"RateAppPrompt.Button.RateApp.Android" = "Rate Fabriik";
 /* Google play review prompt title */
-"RateAppPrompt.Title.Android" = "Rate Coinsquare";
+"RateAppPrompt.Title.Android" = "Rate Fabriik";
 /* Address copied message. */
 "Receive.copied" = "Copied to clipboard.";
 /* Share via email button label */
@@ -629,7 +629,7 @@
 /* Enter paper key instruction */
 "RecoverWallet.instruction" = "Enter Recovery Phrase";
 /* Recover wallet intro */
-"RecoverWallet.intro" = "Recover your Coinsquare with your recovery phrase.";
+"RecoverWallet.intro" = "Recover your Fabriik with your recovery phrase.";
 /* Invalid paper key message */
 "RecoverWallet.invalid" = "The recovery phrase you entered is invalid. Please double-check each word and try again.";
 /* Previous button accessibility label */
@@ -691,11 +691,11 @@
 /* Assures the user that BRD will keep the user's funds secure. */
 "RecoveryKeyFlow.securityAssurance" = "Buy and trade knowing that your funds are protected by the best security and privacy in the business.";
 /* Recommends that the user stores the recovery key in a secure location */
-"RecoveryKeyFlow.storeSecurelyRecommendation" = "Store your key in a secure location. This is the only way to recover your wallet. Coinsquare does not keep a copy.";
+"RecoveryKeyFlow.storeSecurelyRecommendation" = "Store your key in a secure location. This is the only way to recover your wallet. Fabriik does not keep a copy.";
 /* Title for the success page after the recovery phrase has been set up */
 "RecoveryKeyFlow.successHeading" = "Congratulations! You completed your recovery phrase setup.";
 /* Subtitle for the success page after the recovery key has been set up */
-"RecoveryKeyFlow.successSubheading" = "You're all set to deposit, trade, and buy crypto from your Coinsquare wallet.";
+"RecoveryKeyFlow.successSubheading" = "You're all set to deposit, trade, and buy crypto from your Fabriik wallet.";
 /* Title displayed to the user on the intro screen when unlinking a wallet */
 "RecoveryKeyFlow.unlinkWallet" = "Unlink your wallet from this device.";
 /* Subtitle displayed to the user on the intro screen when unlinking a wallet. */
@@ -729,7 +729,7 @@
 /* extimated time */
 "ReScan.body1" = "20-45 minutes";
 /* Syncing explanation */
-"ReScan.body2" = "If a transaction shows as completed on the network but not in your Coinsquare.";
+"ReScan.body2" = "If a transaction shows as completed on the network but not in your Fabriik.";
 /* Syncing explanation */
 "ReScan.body3" = "You repeatedly get an error saying your transaction was rejected.";
 /* Start Sync button label */
@@ -745,7 +745,7 @@
 /* Rewards view expanded body. */
 "RewardsView.expandedBody" = "Learn how you can save on trading fees and unlock future rewards";
 /* Rewards view expanded title. */
-"RewardsView.expandedTitle" = "Introducing Coinsquare Rewards.";
+"RewardsView.expandedTitle" = "Introducing Fabriik Rewards.";
 /* Rewards view title */
 "RewardsView.normalTitle" = "Rewards";
 /* Scan bitcoin address camera flash toggle */
@@ -774,11 +774,11 @@
 /* Paper Key button title */
 "SecurityCenter.paperKeyTitle.android" = "Recovery Phrase";
 /* PIN button description */
-"SecurityCenter.pinDescription" = "Protects your Coinsquare from unauthorized users.";
+"SecurityCenter.pinDescription" = "Protects your Fabriik from unauthorized users.";
 /* PIN button title */
 "SecurityCenter.pinTitle" = "6-Digit PIN";
 /* Touch ID button description */
-"SecurityCenter.touchIdDescription" = "Conveniently unlock your Coinsquare and send money up to a set limit.";
+"SecurityCenter.touchIdDescription" = "Conveniently unlock your Fabriik and send money up to a set limit.";
 /* Touch ID button title */
 "SecurityCenter.touchIdTitle" = "Touch ID";
 /* Security center fingerprint authentication button */
@@ -803,13 +803,13 @@
 /* Balance: $4.00 for iOS, the balance can't have a parameter */
 "Send.balanceString" = "Balance: ";
 /* Instructions how to allow the camera access for the app */
-"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"Coinsquare\" > \"Permissions\"";
+"Send.cameraUnavailabeMessage.android" = "Allow camera access in \"Settings\" > \"Apps\" > \"Fabriik\" > \"Permissions\"";
 /* Permission required to access camera */
-"Send.cameraUnavailabeTitle.android" = "Coinsquare is not allowed to access the camera";
+"Send.cameraUnavailabeTitle.android" = "Fabriik is not allowed to access the camera";
 /* Camera not allowed message */
 "Send.cameraunavailableMessage" = "Go to Settings to allow camera access.";
 /* Camera not allowed alert title */
-"Send.cameraUnavailableTitle" = "Coinsquare is not allowed to access the camera";
+"Send.cameraUnavailableTitle" = "Fabriik is not allowed to access the camera";
 /* Warning when sending to self. */
 "Send.containsAddress" = "The destination is your own address. You cannot send to yourself.";
 /* Could not create transaction alert title */
@@ -913,7 +913,7 @@
 /* Enable segwit. */
 "Settings.EnableSegwit" = "Enable Segwit";
 /* Are you enjoying bread alert message body */
-"Settings.enjoying" = "Are you enjoying Coinsquare?";
+"Settings.enjoying" = "Are you enjoying Fabriik?";
 /* Face ID spending limit label */
 "Settings.faceIdLimit" = "Face ID Spending Limit";
 /* Redeem the funds stored on this private key. */
@@ -955,7 +955,7 @@
 /* Wipe/delete your wallet from the current device. */
 "Settings.wipe.android" = "Wipe wallet from this device";
 /* Share data view body */
-"ShareData.body" = "Help improve Coinsquare by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.";
+"ShareData.body" = "Help improve Fabriik by sharing your anonymous data with us. This does not include any financial information. We respect your financial privacy.";
 /* Share data header */
 "ShareData.header" = "Share Data?";
 /* Share data switch label. */
@@ -963,9 +963,9 @@
 /* button label */
 "StartPaperPhrase.againButtonTitle" = "Write Down Recovery Phrase Again";
 /* Paper key explanation text. */
-"StartPaperPhrase.body" = "Your recovery phrase is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.body" = "Your recovery phrase is the only way to restore your Fabriik if your phone is lost, stolen, broken, or upgraded.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* Paper key explanation text (Android-version) */
-"StartPaperPhrase.Body.Android" = "Your recovery phrase is the only way to restore your Coinsquare if your phone is lost, stolen, broken, or upgraded.\n\nYour recovery phrase is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
+"StartPaperPhrase.Body.Android" = "Your recovery phrase is the only way to restore your Fabriik if your phone is lost, stolen, broken, or upgraded.\n\nYour recovery phrase is also required if you change the security settings on your device.\n\nWe will show you a list of words to write down on a piece of paper and keep safe.";
 /* button label */
 "StartPaperPhrase.buttonTitle" = "Write Down Recovery Phrase";
 /* Argument is date; date should be on a new line */
@@ -1022,16 +1022,16 @@
 "TouchIdSettings.disabledWarning.body.android" = "You have not enabled fingerprint authentication on this device. Go to Settings -> Security to set up fingerprint authentication.";
 /* Fingerprint Is Not Setup */
 "TouchIdSettings.disabledWarning.title.android" = "Fingerprint Authentication Not Enabled";
-/* Text that describes the purpose of the Touch ID settings in the Coinsquare app. */
-"TouchIdSettings.explanatoryText" = "Use Touch ID to unlock your Coinsquare app and send money.";
+/* Text that describes the purpose of the Touch ID settings in the Fabriik app. */
+"TouchIdSettings.explanatoryText" = "Use Touch ID to unlock your Fabriik app and send money.";
 /* Touch Id screen label */
-"TouchIdSettings.label" = "Use your fingerprint to unlock your Coinsquare and send money up to a set limit.";
+"TouchIdSettings.label" = "Use your fingerprint to unlock your Fabriik and send money up to a set limit.";
 /* Link Text (see TouchIdSettings.customizeText) */
 "TouchIdSettings.linkText" = "Touch ID Spending Limit Screen";
 /* Spending Limit: b100,000 ($100) */
 "TouchIdSettings.spendingLimit" = "Spending limit: %1$@ (%2$@)";
 /* Touch id switch label. */
-"TouchIdSettings.switchLabel" = "Enable Touch ID for Coinsquare";
+"TouchIdSettings.switchLabel" = "Enable Touch ID for Fabriik";
 /* Enable fingerprint for this wallet called Bread */
 "TouchIdSettings.switchLabel.android" = "Enable Fingerprint Authentication";
 /* Touch ID settings view title */
@@ -1044,8 +1044,8 @@
 "TouchIdSettings.unavailableAlertMessage" = "You have not set up Touch ID on this device. Go to Settings->Touch ID & Passcode to set it up now.";
 /* Touch ID unavailable alert title */
 "TouchIdSettings.unavailableAlertTitle" = "Touch ID Not Set Up";
-/* Text label for the toggle that enables Touch ID for unlocking the Coinsquare app. */
-"TouchIdSettings.unlockTitleText" = "Enable Touch ID to unlock Coinsquare";
+/* Text label for the toggle that enables Touch ID for unlocking the Fabriik app. */
+"TouchIdSettings.unlockTitleText" = "Enable Touch ID to unlock Fabriik";
 /* Always require passcode option */
 "TouchIdSpendingLimit" = "Always require passcode";
 /* Touch ID spending limit screen body */
@@ -1204,7 +1204,7 @@ eg. 182930 (45061 confirmations) */
 /* Instruction to touch the sensor for fingerprint authentication */
 "UnlockScreen.touchIdInstructions.android" = "Touch Sensor";
 /* TouchID prompt text */
-"UnlockScreen.touchIdPrompt" = "Unlock your Coinsquare.";
+"UnlockScreen.touchIdPrompt" = "Unlock your Fabriik.";
 /* Device authentication body */
 "UnlockScreen.touchIdPrompt.android" = "Please unlock your Android device to continue.";
 /* Unlock with TouchID accessibility label */
@@ -1214,7 +1214,7 @@ eg. 182930 (45061 confirmations) */
 /* Update PIN caption text */
 "UpdatePin.caption" = "Remember this PIN. If you forget it, you won't be able to access your assets.";
 /* PIN creation info. */
-"UpdatePin.createInstruction" = "Your PIN will be used to unlock your Coinsquare and send money.";
+"UpdatePin.createInstruction" = "Your PIN will be used to unlock your Fabriik and send money.";
 /* Update PIN title */
 "UpdatePin.createTitle" = "Set PIN";
 /* Update PIN title */
@@ -1271,7 +1271,7 @@ Wallet connection settings menu item title. */
 /* Wallet connection settings view title */
 "WalletConnectionSettings.viewTitle" = "Fastsync";
 /* 'No wallet' warning for watch app */
-"Watch.noWalletWarning" = "Open the Coinsquare iPhone app to set up your wallet.";
+"Watch.noWalletWarning" = "Open the Fabriik iPhone app to set up your wallet.";
 /* Dismiss button label */
 "Webview.dismiss" = "Dismiss";
 /* Webview loading error message */
@@ -1279,9 +1279,9 @@ Wallet connection settings menu item title. */
 /* Updating webview message */
 "Webview.updating" = "Updating...";
 /* Welcome screen text. (?) will be replaced with the help icon users should look for. */
-"Welcome.body" = "Breadwallet has changed its name to Coinsquare, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.";
+"Welcome.body" = "Breadwallet has changed its name to Fabriik, with a brand new look and some new features.\n\nIf you need help, look for the (?) in the top right of most screens.";
 /* Top title of welcome screen */
-"Welcome.title" = "Welcome to Coinsquare!";
+"Welcome.title" = "Welcome to Fabriik!";
 /* Wipe wallet alert message */
 "WipeWallet.alertMessage" = "Are you sure you want to delete this wallet?";
 /* Wipe wallet alert title */
@@ -1293,7 +1293,7 @@ Wallet connection settings menu item title. */
 /* Enter phrase to wipe wallet instruction. (Important to explain it is the CURRENT [this wallet's] paper key that needs to be entered). */
 "WipeWallet.instruction" = "Please enter your recovery phrase to wipe this wallet from your device.";
 /* Instructions for unlinking the wallet */
-"WipeWallet.startMessage" = "Starting or recovering another wallet allows you to access and manage a different Coinsquare wallet on this device.";
+"WipeWallet.startMessage" = "Starting or recovering another wallet allows you to access and manage a different Fabriik wallet on this device.";
 /* Start wipe wallet view warning */
 "WipeWallet.startWarning" = "Your current wallet will be removed from this device. If you wish to restore it in the future, you will need to enter your Recovery Phrase.";
 /* Unlink this wallet from this device. */
