@@ -712,8 +712,6 @@
 		3AFAD9552569F722005853E8 /* GiftingStatusUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GiftingStatusUpdater.swift; path = src/Gifting/GiftingStatusUpdater.swift; sourceTree = "<group>"; };
 		3AFB571424E2E0BA00087527 /* UIHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIHelpers.swift; path = src/CloudBackup/UIHelpers.swift; sourceTree = "<group>"; };
 		3AFB571624E2E10A00087527 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RadioButton.swift; path = src/CloudBackup/RadioButton.swift; sourceTree = "<group>"; };
-		5F65968427BA6135002463BC /* WalletKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = WalletKit; path = ../WalletKit; sourceTree = "<group>"; };
-		5F65968627BA629B002463BC /* WalletKitSwift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = WalletKitSwift; path = ../WalletKit/WalletKitSwift; sourceTree = "<group>"; };
 		71014F7B2327E49400DA1373 /* fiatcurrencies.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fiatcurrencies.json; path = Resources/fiatcurrencies.json; sourceTree = "<group>"; };
 		710B036121F67888007E8A2A /* MockClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MockClasses.swift; path = MockClasses/MockClasses.swift; sourceTree = "<group>"; };
 		710B036321F8C208007E8A2A /* AppRatingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppRatingManager.swift; path = src/Utilities/AppRatingManager.swift; sourceTree = "<group>"; };
@@ -1396,15 +1394,6 @@
 			name = Gifting;
 			sourceTree = "<group>";
 		};
-		5F65968327BA6135002463BC /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				5F65968427BA6135002463BC /* WalletKit */,
-				5F65968627BA629B002463BC /* WalletKitSwift */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		710B035B21F6603C007E8A2A /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -1477,7 +1466,6 @@
 		75A2A7871DA5934300A983D8 = {
 			isa = PBXGroup;
 			children = (
-				5F65968327BA6135002463BC /* Packages */,
 				B379B95225101BB00041B859 /* JustCash */,
 				75A2A7921DA5934300A983D8 /* breadwallet */,
 				75A2A7A71DA5934300A983D8 /* breadwalletTests */,
@@ -2765,7 +2753,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint\nelse\n    if [ \"${CONFIGURATION}\" == \"Release\" ]; then\n        exit 0;\n    else\n        echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint or install via homebrew\"\n        exit 1\n    fi\nfi\n";
+			shellScript = "if [[ `uname -m` == 'arm64' ]]; then\n  export PATH=\"$PATH:/opt/homebrew/bin\"\nfi\n\nif which swiftlint >/dev/null; then\n    swiftlint\nelse\n    if [ \"${CONFIGURATION}\" == \"Release\" ]; then\n        exit 0;\n    else\n        echo \"error: SwiftLint not installed, download from https://github.com/realm/SwiftLint or install via homebrew\"\n        exit 1\n    fi\nfi\n";
 		};
 		7CDC6A5521125C14004AE68E /* Thin Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
